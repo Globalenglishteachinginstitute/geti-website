@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Global English Teaching Institute</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #222;
+      background: #f5f7fb;
+    }
+
+    header {
+      background: #123c73;
+      color: white;
+      padding: 20px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 14px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #123c73, #2878c8);
+      color: white;
+      text-align: center;
+      padding: 90px 20px;
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 20px;
+      margin-bottom: 30px;
+    }
+
+    .button {
+      display: inline-block;
+      background: white;
+      color: #123c73;
+      padding: 13px 25px;
+      margin: 5px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    section {
+      padding: 60px 8%;
+      text-align: center;
+    }
+
+    section h2 {
+      color: #123c73;
+      margin-bottom: 30px;
+      font-size: 30px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 30px 20px;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .card h3 {
+      color: #123c73;
+      margin-bottom: 10px;
+    }
+
+    .verify {
+      background: white;
+    }
+
+    input {
+      width: 300px;
+      max-width: 90%;
+      padding: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin: 10px;
+    }
+
+    .verify-button {
+      padding: 14px 25px;
+      background: #123c73;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    footer {
+      background: #123c73;
+      color: white;
+      text-align: center;
+      padding: 30px;
+    }
+
+    @media (max-width: 700px) {
+      .hero h1 {
+        font-size: 30px;
+      }
+
+      nav {
+        width: 100%;
+        margin-top: 15px;
+      }
+
+      nav a {
+        display: inline-block;
+        margin: 5px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+
+    <div class="logo">
+      GETI
+    </div>
+
+    <nav>
+      <a href="#home">HOME</a>
+      <a href="#about">ABOUT</a>
+      <a href="#programs">PROGRAMS</a>
+      <a href="#tefl">TEFL</a>
+      <a href="#tesol">TESOL</a>
+      <a href="#exams">EXAMS</a>
+      <a href="#verify">VERIFY</a>
+      <a href="#contact">CONTACT</a>
+    </nav>
+
+  </header>
+
+
+  <!-- HOME -->
+  <section class="hero" id="home">
+
+    <h1>
+      GLOBAL ENGLISH TEACHING INSTITUTE
+    </h1>
+
+    <p>
+      International English Education & Professional Training
+    </p>
+
+    <p>
+      Learn English. Build Skills. Earn Your Certificate.
+    </p>
+
+    <a href="#programs" class="button">
+      START LEARNING
+    </a>
+
+    <a href="#verify" class="button">
+      VERIFY CERTIFICATE
+    </a>
+
+  </section>
+
+
+  <!-- ABOUT -->
+  <section id="about">
+
+    <h2>About GETI</h2>
+
+    <p>
+      Global English Teaching Institute (GETI) is an English education
+      and professional training platform dedicated to helping learners
+      and teachers develop practical English language and teaching skills.
+    </p>
+
+  </section>
+
+
+  <!-- PROGRAMS -->
+  <section id="programs">
+
+    <h2>Our Programs</h2>
+
+    <div class="cards">
+
+      <div class="card">
+        <h3>English Courses</h3>
+        <p>
+          Improve your English from A1 to C2 through structured
+          lessons, practice and assessments.
+        </p>
+      </div>
+
+      <div class="card" id="tefl">
+        <h3>TEFL Training</h3>
+        <p>
+          Develop essential skills in English language teaching,
+          lesson planning and classroom management.
+        </p>
+      </div>
+
+      <div class="card" id="tesol">
+        <h3>TESOL Training</h3>
+        <p>
+          Learn modern approaches to teaching English to speakers
+          of other languages.
+        </p>
+      </div>
+
+      <div class="card" id="exams">
+        <h3>English Exams</h3>
+        <p>
+          Test your English knowledge and demonstrate your
+          language proficiency.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- CERTIFICATE VERIFICATION -->
+  <section class="verify" id="verify">
+
+    <h2>Certificate Verification</h2>
+
+    <p>
+      Enter your GETI certificate number to verify certificate information.
+    </p>
+
+    <input
+      type="text"
+      id="certificate"
+      placeholder="GETI-CERT-000001"
+    >
+
+    <button
+      class="verify-button"
+      onclick="verifyCertificate()">
+      VERIFY CERTIFICATE
+    </button>
+
+    <p id="result" style="margin-top:20px;"></p>
+
+  </section>
+
+
+  <!-- MISSION -->
+  <section>
+
+    <h2>Our Mission</h2>
+
+    <p>
+      Our mission is to make quality English education and professional
+      training accessible to learners and teachers around the world.
+    </p>
+
+  </section>
+
+
+  <!-- WHY GETI -->
+  <section>
+
+    <h2>Why Choose GETI?</h2>
+
+    <div class="cards">
+
+      <div class="card">
+        <h3>✓ A1–C2</h3>
+        <p>Complete English learning levels.</p>
+      </div>
+
+      <div class="card">
+        <h3>✓ TEFL</h3>
+        <p>Professional English teaching training.</p>
+      </div>
+
+      <div class="card">
+        <h3>✓ Online Learning</h3>
+        <p>Access learning resources online.</p>
+      </div>
+
+      <div class="card">
+        <h3>✓ Verification</h3>
+        <p>Online certificate verification system.</p>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- CONTACT -->
+  <section id="contact">
+
+    <h2>Contact GETI</h2>
+
+    <p>
+      Global English Teaching Institute
+    </p>
+
+    <p>
+      International English Education & Professional Training
+    </p>
+
+    <p>
+      Email: your-email@example.com
+    </p>
+
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer>
+
+    <h3>
+      GLOBAL ENGLISH TEACHING INSTITUTE
+    </h3>
+
+    <p>
+      Learn • Teach • Grow • Succeed
+    </p>
+
+    <p>
+      © 2026 GETI. All rights reserved.
+    </p>
+
+  </footer>
+
+
+  <!-- JAVASCRIPT -->
+  <script>
+
+    function verifyCertificate() {
+
+      const certificate =
+        document.getElementById("certificate").value.trim();
+
+      const result =
+        document.getElementById("result");
+
+      if (certificate === "") {
+
+        result.innerHTML =
+          "Please enter a certificate number.";
+
+        return;
+      }
+
+      result.innerHTML =
+        "Certificate ID received: " + certificate +
+        "<br><br>" +
+        "Verification database will be connected soon.";
+
+    }
+
+  </script>
+
+</body>
+</html>
