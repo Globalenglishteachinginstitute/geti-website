@@ -1,483 +1,156 @@
-```html
-<section id="verify">
-
-  <div class="verify-header">
-
-    <div class="verify-icon">
-      🎓
-    </div>
-
-    <h2>Certificate Verification</h2>
-
-    <p class="verify-subtitle">
-      Verify the authenticity of a certificate issued by
-      the Global English Teaching Institute (GETI).
-    </p>
-
-    <p class="verify-description">
-      Enter the certificate identification number below to
-      access the official certificate record and confirm
-      its registration in the GETI verification system.
-    </p>
-
-  </div>
-
-
-  <div class="verify-box">
-
-    <label
-      for="certificateId"
-      class="verify-label"
-    >
-      Certificate Number
-    </label>
-
-    <input
-      id="certificateId"
-      class="verify-input"
-      type="text"
-      placeholder="Example: GETI-CERT000001"
-      autocomplete="off"
-      spellcheck="false"
-    >
-
-    <p class="input-help">
-      Enter the certificate number exactly as it appears
-      on the certificate.
-    </p>
-
-
-    <div class="verify-buttons">
-
-      <button
-        type="button"
-        class="btn verify-button"
-        onclick="verifyCertificate()"
-      >
-        🔍 VERIFY CERTIFICATE
-      </button>
-
-      <button
-        type="button"
-        class="btn clear-button"
-        onclick="clearVerification()"
-      >
-        🧹 CLEAR
-      </button>
-
-    </div>
-
-
-    <div id="result"></div>
-
-  </div>
-
-
-  <div class="verification-note">
-
-    <strong>Official Verification Service</strong>
-
-    <p>
-      This online service allows users, employers,
-      educational institutions and other organizations
-      to verify certificate information registered with
-      the Global English Teaching Institute.
-    </p>
-
-  </div>
-
-</section>
-```
-
-Ampio ao amin'ny `<style>` koa ireto:
-
-```css
-/* ==========================================
-   PROFESSIONAL CERTIFICATE VERIFICATION
-========================================== */
-
-#verify {
-  max-width: 900px;
-  margin: auto;
-  padding: 80px 20px;
-}
-
-.verify-header {
-  text-align: center;
-  margin-bottom: 35px;
-}
-
-.verify-icon {
-  width: 70px;
-  height: 70px;
-  margin: 0 auto 15px auto;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: #082b59;
-  color: white;
-
-  border-radius: 50%;
-
-  font-size: 32px;
-
-  box-shadow:
-    0 6px 20px rgba(8,43,89,0.25);
-}
-
-.verify-header h2 {
-  margin-bottom: 12px;
-  color: #082b59;
-  font-size: 32px;
-}
-
-.verify-subtitle {
-  max-width: 700px;
-  margin: auto;
-  color: #333;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.verify-description {
-  max-width: 700px;
-  margin: 12px auto 0 auto;
-  color: #666;
-  font-size: 15px;
-}
-
-.verify-box {
-  background: white;
-  padding: 40px;
-
-  border-radius: 15px;
-
-  box-shadow:
-    0 8px 30px rgba(0,0,0,0.10);
-
-  border: 1px solid #e2e7ef;
-}
-
-.verify-label {
-  display: block;
-
-  color: #082b59;
-
-  font-size: 16px;
-  font-weight: bold;
-
-  margin-bottom: 8px;
-}
-
-.verify-input {
-  width: 100%;
-
-  padding: 16px 18px;
-
-  border: 2px solid #d5dce6;
-
-  border-radius: 8px;
-
-  font-size: 17px;
-
-  color: #222;
-
-  background: #fafbfd;
-
-  outline: none;
-
-  transition: 0.2s;
-}
-
-.verify-input:focus {
-  border-color: #082b59;
-
-  background: white;
-
-  box-shadow:
-    0 0 0 3px rgba(8,43,89,0.10);
-}
-
-.input-help {
-  color: #777;
-
-  font-size: 13px;
-
-  margin-top: 7px;
-
-  margin-bottom: 20px;
-}
-
-.verify-buttons {
-  display: flex;
-
-  gap: 12px;
-
-  margin-top: 10px;
-}
-
-.verify-buttons .btn {
-  margin: 0;
-  min-height: 50px;
-}
-
-.verify-button {
-  flex: 2;
-
-  background: #082b59;
-
-  color: white;
-
-  border: none;
-}
-
-.verify-button:hover {
-  background: #164b8f;
-}
-
-.clear-button {
-  flex: 1;
-
-  background: #687386;
-
-  color: white;
-
-  border: none;
-}
-
-.clear-button:hover {
-  background: #4f5969;
-}
-
-
-/* ==========================================
-   VERIFIED CERTIFICATE
-========================================== */
-
-#result {
-  margin-top: 30px;
-  padding: 25px;
-
-  border-radius: 12px;
-}
-
-#result.success {
-  background: #f0fbf4;
-
-  border: 1px solid #35a853;
-}
-
-#result.success h3 {
-  color: #188038;
-
-  text-align: center;
-
-  font-size: 23px;
-
-  margin-bottom: 20px;
-}
-
-.certificate-table {
-  width: 100%;
-
-  border-collapse: separate;
-
-  border-spacing: 0;
-
-  overflow: hidden;
-
-  border: 1px solid #dfe5ec;
-
-  border-radius: 8px;
-}
-
-.certificate-table th {
-  background: #082b59;
-
-  color: white;
-
-  font-weight: bold;
-
-  width: 35%;
-}
-
-.certificate-table td {
-  background: white;
-
-  color: #222;
-
-  font-weight: 500;
-}
-
-.certificate-table th,
-.certificate-table td {
-  padding: 14px;
-
-  border-bottom: 1px solid #e2e6eb;
-}
-
-.certificate-table tr:last-child th,
-.certificate-table tr:last-child td {
-  border-bottom: none;
-}
-
-
-/* ==========================================
-   VERIFICATION NOTE
-========================================== */
-
-.verification-note {
-  max-width: 800px;
-
-  margin: 25px auto 0 auto;
-
-  padding: 22px;
-
-  background: #eef4fb;
-
-  border-left: 5px solid #082b59;
-
-  border-radius: 8px;
-}
-
-.verification-note strong {
-  color: #082b59;
-
-  font-size: 16px;
-}
-
-.verification-note p {
-  margin-top: 7px;
-
-  color: #555;
-
-  font-size: 14px;
-}
-
-
-/* ==========================================
-   MOBILE
-========================================== */
-
-@media (max-width: 600px) {
-
-  #verify {
-    padding: 55px 15px;
-  }
-
-  .verify-box {
-    padding: 25px 18px;
-  }
-
-  .verify-header h2 {
-    font-size: 27px;
-  }
-
-  .verify-subtitle {
-    font-size: 16px;
-  }
-
-  .verify-buttons {
-    flex-direction: column;
-  }
-
-  .verify-buttons .btn {
-    width: 100%;
-  }
-
-  .certificate-table th,
-  .certificate-table td {
-    padding: 10px;
-
-    font-size: 13px;
-  }
-
-}
-```
-
-Ary rehefa **successful** ny verification, soloy ao amin'ny JavaScript ilay `result.innerHTML` ho:
-
 ```javascript
-result.innerHTML =
+function searchCertificates(type, value) {
 
-  "<div class='verified-badge'>" +
-  "✓ OFFICIALLY VERIFIED" +
-  "</div>" +
+  var sheet = SpreadsheetApp
+    .getActiveSpreadsheet()
+    .getSheetByName(CERTIFICATE_SHEET);
 
-  "<h3>Certificate Successfully Verified</h3>" +
+  if (!sheet) {
+    return {
+      success: false,
+      message: "Certificate database was not found."
+    };
+  }
 
-  "<p style='text-align:center;color:#555;margin-bottom:20px;'>" +
-  "The certificate information below matches a record " +
-  "registered in the Global English Teaching Institute " +
-  "(GETI) verification system." +
-  "</p>" +
+  var data = sheet
+    .getDataRange()
+    .getDisplayValues();
 
-  "<table class='certificate-table'>" +
+  if (data.length <= 1) {
+    return {
+      success: false,
+      message: "No certificate records found."
+    };
+  }
 
-  "<tr>" +
-  "<th>Name</th>" +
-  "<td>" +
-  escapeHtml(data.name) +
-  "</td>" +
-  "</tr>" +
+  var search = String(value || "")
+    .trim()
+    .toLowerCase();
 
-  "<tr>" +
-  "<th>Nationality</th>" +
-  "<td>" +
-  escapeHtml(data.nationality) +
-  "</td>" +
-  "</tr>" +
+  if (!search) {
+    return {
+      success: false,
+      message: "Please enter a name, certificate number, or search letter."
+    };
+  }
 
-  "<tr>" +
-  "<th>Certificate</th>" +
-  "<td>" +
-  escapeHtml(data.certificate) +
-  "</td>" +
-  "</tr>" +
+  var results = [];
 
-  "<tr>" +
-  "<th>Certificate ID</th>" +
-  "<td>" +
-  escapeHtml(data.certificateId) +
-  "</td>" +
-  "</tr>" +
+  for (var i = 1; i < data.length; i++) {
 
-  "<tr>" +
-  "<th>Certificate Type</th>" +
-  "<td>" +
-  escapeHtml(data.type) +
-  "</td>" +
-  "</tr>" +
+    var name = String(data[i][0] || "")
+      .trim()
+      .toLowerCase();
 
-  "</table>" +
+    var nationality = String(data[i][1] || "")
+      .trim()
+      .toLowerCase();
 
-  "<p style='text-align:center;margin-top:18px;color:#188038;font-weight:bold;'>" +
-  "✓ This certificate record has been successfully verified." +
-  "</p>";
-```
+    var certificate = String(data[i][2] || "")
+      .trim()
+      .toLowerCase();
 
-Ampio koa amin'ny CSS:
+    var certificateId = String(data[i][3] || "")
+      .trim()
+      .toLowerCase();
 
-```css
-.verified-badge {
-  width: fit-content;
+    var certificateType = String(data[i][4] || "")
+      .trim()
+      .toLowerCase();
 
-  margin: 0 auto 12px auto;
+    var found = false;
 
-  padding: 7px 15px;
+    /*
+     * NAME SEARCH
+     *
+     * Example:
+     * "r"       -> finds Rakoto, Berta, Aldo...
+     * "ra"      -> finds names containing "ra"
+     * "rakoto"  -> finds Rakoto...
+     */
+    if (type === "name") {
 
-  border-radius: 30px;
+      found =
+        name.indexOf(search) !== -1;
 
-  background: #dff5e5;
+    }
 
-  color: #188038;
+    /*
+     * CERTIFICATE ID SEARCH
+     */
+    else if (type === "id") {
 
-  font-size: 12px;
+      found =
+        certificateId.indexOf(search) !== -1;
 
-  font-weight: bold;
+    }
 
-  letter-spacing: 0.5px;
+    /*
+     * NATIONALITY SEARCH
+     */
+    else if (type === "nationality") {
+
+      found =
+        nationality.indexOf(search) !== -1;
+
+    }
+
+    /*
+     * GENERAL SEARCH
+     *
+     * Searches all important fields.
+     */
+    else if (type === "all") {
+
+      found =
+        name.indexOf(search) !== -1 ||
+        nationality.indexOf(search) !== -1 ||
+        certificate.indexOf(search) !== -1 ||
+        certificateId.indexOf(search) !== -1 ||
+        certificateType.indexOf(search) !== -1;
+
+    }
+
+    if (found) {
+
+      results.push({
+
+        name: data[i][0] || "",
+
+        nationality: data[i][1] || "",
+
+        certificate: data[i][2] || "",
+
+        id: data[i][3] || "",
+
+        type: data[i][4] || ""
+
+      });
+
+    }
+  }
+
+  return {
+
+    success: true,
+
+    count: results.length,
+
+    results: results
+
+  };
+}
+
+
+/*
+ * VERIFY ONE CERTIFICATE
+ */
+function verifyCertificate(value) {
+
+  return searchCertificates(
+    "id",
+    value
+  );
+
 }
 ```
