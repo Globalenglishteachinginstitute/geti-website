@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -104,10 +104,22 @@ img{
     gap:25px;
 }
 
+
+/* =========================================================
+   LOGO
+========================================================= */
+
 .logo{
     display:flex;
     align-items:center;
     gap:12px;
+}
+
+.logo-image{
+    width:58px;
+    height:58px;
+    object-fit:contain;
+    border-radius:50%;
 }
 
 .logo-symbol{
@@ -896,6 +908,19 @@ img{
         gap:30px;
     }
 
+    .logo-image{
+        width:48px;
+        height:48px;
+    }
+
+    .logo-text strong{
+        font-size:12px;
+    }
+
+    .logo-text span{
+        font-size:9px;
+    }
+
 }
 
 </style>
@@ -938,9 +963,27 @@ International English Education & Professional Training
 
 <a href="#home" class="logo">
 
-<div class="logo-symbol">
+<!-- =====================================================
+     YOUR GETI LOGO
+     Upload logo.png to the same GitHub repository
+===================================================== -->
+
+<img
+src="logo.png"
+alt="Global English Teaching Institute Logo"
+class="logo-image"
+onerror="this.style.display='none'; document.getElementById('fallbackLogo').style.display='flex';"
+>
+
+<div
+class="logo-symbol"
+id="fallbackLogo"
+style="display:none;">
+
 GETI
+
 </div>
+
 
 <div class="logo-text">
 
@@ -1890,21 +1933,11 @@ All rights reserved.
 
 <script>
 
-
-/*
- * GOOGLE APPS SCRIPT WEB APP
- */
-
 var API_URL =
 "https://script.google.com/macros/s/AKfycbzQ_YczGnSdh4GJZ73XTt8LfrUtdjJFAlUZGUx3Chhlk-0Es3rskQkun5LgrZYhkKRF/exec";
 
-
 var verifyType = "id";
 
-
-/*
- * MOBILE MENU
- */
 
 function toggleMenu(){
 
@@ -1915,10 +1948,6 @@ function toggleMenu(){
 
 }
 
-
-/*
- * SEARCH TYPE
- */
 
 function setVerifyType(type){
 
@@ -1987,13 +2016,9 @@ function setVerifyType(type){
 }
 
 
-/*
- * CERTIFICATE VERIFICATION
- *
- * Uses JSONP.
- * This avoids cross-origin problems
- * between GitHub Pages and Apps Script.
- */
+/* =========================================================
+   CERTIFICATE VERIFICATION
+========================================================= */
 
 function verifyCertificate(){
 
@@ -2038,9 +2063,7 @@ function verifyCertificate(){
             displayVerificationResults(data);
 
             try{
-
                 delete window[callbackName];
-
             }catch(e){}
 
         };
@@ -2078,9 +2101,9 @@ function verifyCertificate(){
 }
 
 
-/*
- * DISPLAY VERIFICATION RESULTS
- */
+/* =========================================================
+   DISPLAY RESULTS
+========================================================= */
 
 function displayVerificationResults(data){
 
@@ -2204,13 +2227,9 @@ function displayVerificationResults(data){
 }
 
 
-/*
- * AUTOMATIC VERIFICATION
- *
- * Example:
- *
- * ?verify=GETI-CERT000045
- */
+/* =========================================================
+   AUTOMATIC VERIFICATION
+========================================================= */
 
 (function(){
 
@@ -2234,6 +2253,7 @@ function displayVerificationResults(data){
 
         setVerifyType("id");
 
+
         setTimeout(
             function(){
 
@@ -2248,9 +2268,9 @@ function displayVerificationResults(data){
 })();
 
 
-/*
- * ESCAPE HTML
- */
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
 function escapeHTML(value){
 
@@ -2284,9 +2304,9 @@ function escapeHTML(value){
 }
 
 
-/*
- * CONTACT FORM
- */
+/* =========================================================
+   CONTACT FORM
+========================================================= */
 
 function sendMessage(){
 
