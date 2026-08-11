@@ -7,6 +7,11 @@
 
   <title>Global English Teaching Institute</title>
 
+  <meta
+    name="description"
+    content="Global English Teaching Institute - International English Education & Professional Training"
+  >
+
   <style>
     * {
       box-sizing: border-box;
@@ -20,283 +25,451 @@
 
     body {
       font-family: Arial, Helvetica, sans-serif;
-      line-height: 1.6;
+      background: #f4f7fb;
       color: #222;
-      background: #f5f7fb;
+      line-height: 1.6;
     }
 
-    header {
-      background: #123c73;
-      color: white;
-      padding: 18px 7%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    .navbar {
       position: sticky;
       top: 0;
-      z-index: 1000;
+      z-index: 9999;
+      background: #082b59;
+      color: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: auto;
+      min-height: 70px;
+      padding: 0 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .logo {
-      font-size: 25px;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    nav a {
       color: white;
       text-decoration: none;
-      margin: 5px 9px;
-      font-size: 14px;
+      font-size: 22px;
       font-weight: bold;
+      white-space: nowrap;
     }
 
-    nav a:hover {
-      color: #ffd700;
+    .logo span {
+      color: #ffd43b;
     }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 5px;
+    }
+
+    .nav-menu a {
+      color: white;
+      text-decoration: none;
+      padding: 12px 13px;
+      display: block;
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav-menu a:hover {
+      background: #164b8f;
+    }
+
+    .menu-button {
+      display: none;
+      background: transparent;
+      border: 0;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
 
     .hero {
-      background: linear-gradient(135deg, #123c73, #2878c8);
+      background:
+        linear-gradient(
+          rgba(8,43,89,0.93),
+          rgba(8,43,89,0.93)
+        );
+
       color: white;
       text-align: center;
       padding: 100px 20px;
     }
 
     .hero h1 {
-      font-size: 43px;
-      margin-bottom: 18px;
+      font-size: 42px;
+      margin-bottom: 15px;
     }
 
     .hero p {
       font-size: 20px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
-    .hero .subtitle {
+    .hero .tagline {
       font-size: 17px;
       margin-bottom: 30px;
     }
 
-    .button {
+    .btn {
       display: inline-block;
-      background: white;
-      color: #123c73;
-      padding: 13px 24px;
-      margin: 6px;
+      padding: 13px 22px;
+      margin: 5px;
       border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
       border: none;
       cursor: pointer;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 15px;
     }
 
-    .button:hover {
-      background: #ffd700;
+    .btn-primary {
+      background: #ffd43b;
+      color: #082b59;
     }
+
+    .btn-primary:hover {
+      background: #ffca00;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #082b59;
+    }
+
+    .btn-secondary:hover {
+      background: #e9eef5;
+    }
+
+    /* =========================
+       SECTIONS
+    ========================= */
 
     section {
-      padding: 65px 8%;
-      text-align: center;
+      max-width: 1100px;
+      margin: auto;
+      padding: 75px 20px;
     }
 
     section h2 {
-      color: #123c73;
-      margin-bottom: 25px;
-      font-size: 31px;
+      color: #082b59;
+      text-align: center;
+      font-size: 30px;
+      margin-bottom: 20px;
     }
 
-    section > p {
-      max-width: 900px;
-      margin: 0 auto 15px;
+    .section-intro {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 40px auto;
     }
+
+    /* =========================
+       CARDS
+    ========================= */
 
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 22px;
-      margin-top: 30px;
+      grid-template-columns:
+        repeat(4, 1fr);
+      gap: 20px;
     }
 
     .card {
       background: white;
-      padding: 30px 22px;
+      padding: 25px;
       border-radius: 10px;
-      box-shadow: 0 3px 14px rgba(0,0,0,0.08);
-      transition: transform 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
+      box-shadow: 0 3px 15px rgba(0,0,0,0.08);
     }
 
     .card h3 {
-      color: #123c73;
+      color: #082b59;
       margin-bottom: 12px;
     }
 
-    .verify {
+    .card p {
+      color: #555;
+    }
+
+    /* =========================
+       PROGRAMS
+    ========================= */
+
+    .program-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, 1fr);
+      gap: 25px;
+    }
+
+    .program {
       background: white;
+      border-left: 5px solid #082b59;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+    }
+
+    .program h3 {
+      color: #082b59;
+      margin-bottom: 10px;
+    }
+
+    /* =========================
+       VERIFICATION
+    ========================= */
+
+    #verify {
+      max-width: 850px;
     }
 
     .verify-box {
-      max-width: 650px;
-      margin: 25px auto 0;
-      background: #f5f7fb;
-      padding: 30px;
+      background: white;
+      padding: 35px;
       border-radius: 12px;
+      box-shadow: 0 3px 18px rgba(0,0,0,0.10);
     }
 
-    input {
-      width: 320px;
-      max-width: 90%;
-      padding: 14px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      margin: 10px;
-      font-size: 16px;
-      text-transform: uppercase;
+    .verify-box p {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .verify-input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #aaa;
+      border-radius: 7px;
+      font-size: 17px;
+      outline: none;
+    }
+
+    .verify-input:focus {
+      border-color: #082b59;
+    }
+
+    .verify-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .verify-buttons button {
+      flex: 1;
     }
 
     .verify-button {
-      padding: 14px 25px;
-      background: #123c73;
+      background: #082b59;
       color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 15px;
     }
 
     .verify-button:hover {
-      background: #2878c8;
+      background: #164b8f;
     }
 
     .clear-button {
-      padding: 14px 25px;
       background: #777;
       color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 15px;
-      margin-left: 5px;
+    }
+
+    .clear-button:hover {
+      background: #555;
     }
 
     #result {
+      display: none;
       margin-top: 25px;
-      text-align: left;
+      padding: 25px;
+      border-radius: 10px;
     }
 
     .success {
-      background: #eaf8ee;
-      border: 1px solid #48a868;
-      color: #155724;
-      padding: 20px;
-      border-radius: 8px;
+      background: #e8f7ed;
+      border: 1px solid #35a853;
+      color: #174d25;
     }
 
     .error {
-      background: #fdecec;
-      border: 1px solid #dc3545;
-      color: #721c24;
-      padding: 15px;
-      border-radius: 8px;
+      background: #fdeaea;
+      border: 1px solid #d93025;
+      color: #7a1712;
+    }
+
+    .success h3 {
+      color: #188038;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 23px;
     }
 
     .certificate-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 15px;
       background: white;
     }
 
     .certificate-table th,
     .certificate-table td {
-      border: 1px solid #ddd;
       padding: 12px;
+      border: 1px solid #ddd;
       text-align: left;
     }
 
     .certificate-table th {
-      background: #123c73;
+      background: #082b59;
+      color: white;
+      width: 35%;
+    }
+
+    /* =========================
+       MISSION
+    ========================= */
+
+    .mission {
+      background: #082b59;
+      color: white;
+      max-width: none;
+      text-align: center;
+    }
+
+    .mission h2 {
       color: white;
     }
 
-    .loading {
-      padding: 15px;
-      color: #123c73;
-      font-weight: bold;
+    .mission p {
+      max-width: 800px;
+      margin: auto;
+      font-size: 18px;
     }
+
+    /* =========================
+       CONTACT
+    ========================= */
 
     .contact-box {
       background: white;
-      max-width: 650px;
-      margin: 25px auto;
+      max-width: 700px;
+      margin: auto;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 3px 14px rgba(0,0,0,0.08);
+      box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+      text-align: center;
     }
 
     .contact-box a {
-      color: #123c73;
+      color: #082b59;
       font-weight: bold;
     }
 
+    /* =========================
+       FOOTER
+    ========================= */
+
     footer {
-      background: #123c73;
+      background: #061f40;
       color: white;
       text-align: center;
       padding: 35px 20px;
     }
 
-    footer p {
-      margin-top: 8px;
+    footer h3 {
+      margin-bottom: 8px;
     }
 
-    @media (max-width: 700px) {
-      header {
-        justify-content: center;
+    footer p {
+      margin: 5px 0;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 900px) {
+
+      .cards {
+        grid-template-columns:
+          repeat(2, 1fr);
       }
 
-      .logo {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 10px;
+      .nav-menu {
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+
+        background: #082b59;
+
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+
+        padding: 10px;
       }
 
-      nav a {
-        font-size: 12px;
-        margin: 4px;
+      .nav-menu.active {
+        display: flex;
       }
+
+      .menu-button {
+        display: block;
+      }
+
+      .nav-menu a {
+        padding: 14px;
+      }
+    }
+
+    @media (max-width: 600px) {
 
       .hero {
         padding: 70px 15px;
       }
 
       .hero h1 {
-        font-size: 29px;
+        font-size: 30px;
       }
 
       .hero p {
         font-size: 17px;
       }
 
-      .certificate-table {
-        font-size: 13px;
+      section {
+        padding: 55px 15px;
+      }
+
+      .cards,
+      .program-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .verify-buttons {
+        flex-direction: column;
       }
 
       .certificate-table th,
       .certificate-table td {
-        padding: 8px;
+        padding: 9px;
+        font-size: 14px;
+      }
+
+      .logo {
+        font-size: 18px;
       }
     }
   </style>
@@ -304,113 +477,226 @@
 
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <div class="logo">
-      GETI
+  <!-- =========================
+       NAVIGATION
+  ========================= -->
+
+  <nav class="navbar">
+
+    <div class="nav-container">
+
+      <a href="#home" class="logo">
+        GETI<span>.</span>
+      </a>
+
+      <button
+        class="menu-button"
+        onclick="toggleMenu()"
+        aria-label="Open menu"
+      >
+        ☰
+      </button>
+
+      <ul class="nav-menu" id="navMenu">
+
+        <li>
+          <a href="#home">HOME</a>
+        </li>
+
+        <li>
+          <a href="#about">ABOUT</a>
+        </li>
+
+        <li>
+          <a href="#programs">PROGRAMS</a>
+        </li>
+
+        <li>
+          <a href="#tefl">TEFL</a>
+        </li>
+
+        <li>
+          <a href="#tesol">TESOL</a>
+        </li>
+
+        <li>
+          <a href="#exams">EXAMS</a>
+        </li>
+
+        <li>
+          <a href="#verify">VERIFY</a>
+        </li>
+
+        <li>
+          <a href="#contact">CONTACT</a>
+        </li>
+
+      </ul>
+
     </div>
 
-    <nav>
-      <a href="#home">HOME</a>
-      <a href="#about">ABOUT</a>
-      <a href="#programs">PROGRAMS</a>
-      <a href="#tefl">TEFL</a>
-      <a href="#tesol">TESOL</a>
-      <a href="#exams">EXAMS</a>
-      <a href="#verify">VERIFY</a>
-      <a href="#contact">CONTACT</a>
-    </nav>
-  </header>
+  </nav>
 
 
-  <!-- HOME -->
-  <section class="hero" id="home">
+  <!-- =========================
+       HOME
+  ========================= -->
+
+  <header class="hero" id="home">
 
     <h1>
       GLOBAL ENGLISH TEACHING INSTITUTE
     </h1>
 
     <p>
-      International English Education &amp; Professional Training
+      International English Education &amp;
+      Professional Training
     </p>
 
-    <p class="subtitle">
+    <p class="tagline">
       Learn English. Build Skills. Earn Your Certificate.
     </p>
 
-    <a href="#programs" class="button">
+    <a
+      href="#programs"
+      class="btn btn-primary"
+    >
       START LEARNING
     </a>
 
-    <a href="#verify" class="button">
+    <a
+      href="#verify"
+      class="btn btn-secondary"
+    >
       VERIFY CERTIFICATE
     </a>
 
-  </section>
+  </header>
 
 
-  <!-- ABOUT -->
+  <!-- =========================
+       ABOUT
+  ========================= -->
+
   <section id="about">
 
     <h2>About GETI</h2>
 
-    <p>
-      Global English Teaching Institute (GETI) is an English education
-      and professional training platform dedicated to helping learners
-      and teachers develop practical English language and teaching skills.
+    <p class="section-intro">
+      Global English Teaching Institute (GETI) is an
+      English education and professional training
+      platform dedicated to helping learners and
+      teachers develop practical English language
+      and teaching skills.
     </p>
-
-  </section>
-
-
-  <!-- PROGRAMS -->
-  <section id="programs">
-
-    <h2>Our Programs</h2>
 
     <div class="cards">
 
       <div class="card">
-        <h3>English Courses</h3>
+        <h3>🌍 International</h3>
 
         <p>
-          Improve your English from A1 to C2 through structured
-          lessons, practice and assessments.
+          English education and professional
+          training for learners and teachers
+          around the world.
         </p>
       </div>
 
+      <div class="card">
+        <h3>📚 Practical Learning</h3>
 
-      <div class="card" id="tefl">
+        <p>
+          Structured lessons, practice,
+          assessments and professional
+          development.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>🎓 Certificates</h3>
+
+        <p>
+          Certificate information can be
+          verified online through the GETI
+          verification system.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>💻 Online Learning</h3>
+
+        <p>
+          Access English learning and
+          professional training resources
+          online.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       PROGRAMS
+  ========================= -->
+
+  <section id="programs">
+
+    <h2>Our Programs</h2>
+
+    <p class="section-intro">
+      Explore GETI English education and
+      professional training programs.
+    </p>
+
+    <div class="program-grid">
+
+      <div class="program">
+
+        <h3>English Courses</h3>
+
+        <p>
+          Improve your English from A1 to C2
+          through structured lessons, practice
+          and assessments.
+        </p>
+
+      </div>
+
+
+      <div class="program" id="tefl">
 
         <h3>TEFL Training</h3>
 
         <p>
-          Develop essential skills in English language teaching,
-          lesson planning and classroom management.
+          Develop essential skills in English
+          language teaching, lesson planning
+          and classroom management.
         </p>
 
       </div>
 
 
-      <div class="card" id="tesol">
+      <div class="program" id="tesol">
 
         <h3>TESOL Training</h3>
 
         <p>
-          Learn modern approaches to teaching English to speakers
-          of other languages.
+          Learn modern approaches to teaching
+          English to speakers of other languages.
         </p>
 
       </div>
 
 
-      <div class="card" id="exams">
+      <div class="program" id="exams">
 
         <h3>English Exams</h3>
 
         <p>
-          Test your English knowledge and demonstrate your
-          language proficiency.
+          Test your English knowledge and
+          demonstrate your language proficiency.
         </p>
 
       </div>
@@ -420,37 +706,46 @@
   </section>
 
 
-  <!-- CERTIFICATE VERIFICATION -->
-  <section class="verify" id="verify">
+  <!-- =========================
+       VERIFY
+  ========================= -->
+
+  <section id="verify">
 
     <h2>Certificate Verification</h2>
 
-    <p>
-      Enter your GETI certificate number to verify certificate information.
-    </p>
-
     <div class="verify-box">
 
+      <p>
+        Enter your GETI certificate number
+        to verify certificate information.
+      </p>
+
       <input
+        id="certificateId"
+        class="verify-input"
         type="text"
-        id="certificate"
         placeholder="GETI-CERT000001"
         autocomplete="off"
       >
 
-      <br>
+      <div class="verify-buttons">
 
-      <button
-        class="verify-button"
-        onclick="verifyCertificate()">
-        VERIFY CERTIFICATE
-      </button>
+        <button
+          class="btn verify-button"
+          onclick="verifyCertificate()"
+        >
+          🔍 VERIFY CERTIFICATE
+        </button>
 
-      <button
-        class="clear-button"
-        onclick="clearVerification()">
-        CLEAR
-      </button>
+        <button
+          class="btn clear-button"
+          onclick="clearVerification()"
+        >
+          🧹 CLEAR
+        </button>
+
+      </div>
 
       <div id="result"></div>
 
@@ -459,55 +754,74 @@
   </section>
 
 
-  <!-- MISSION -->
-  <section id="mission">
+  <!-- =========================
+       MISSION
+  ========================= -->
+
+  <section class="mission">
 
     <h2>Our Mission</h2>
 
     <p>
-      Our mission is to make quality English education and professional
-      training accessible to learners and teachers around the world.
+      Our mission is to make quality English
+      education and professional training
+      accessible to learners and teachers
+      around the world.
     </p>
 
   </section>
 
 
-  <!-- WHY GETI -->
-  <section id="why">
+  <!-- =========================
+       WHY GETI
+  ========================= -->
+
+  <section>
 
     <h2>Why Choose GETI?</h2>
 
     <div class="cards">
 
       <div class="card">
+
         <h3>✓ A1–C2</h3>
+
         <p>
           Complete English learning levels.
         </p>
+
       </div>
 
-
       <div class="card">
+
         <h3>✓ TEFL</h3>
+
         <p>
-          Professional English teaching training.
+          Professional English teaching
+          training.
         </p>
+
       </div>
 
-
       <div class="card">
+
         <h3>✓ Online Learning</h3>
+
         <p>
           Access learning resources online.
         </p>
+
       </div>
 
-
       <div class="card">
+
         <h3>✓ Verification</h3>
+
         <p>
-          Online certificate verification system.
+          Online certificate verification
+          system.
         </p>
+
       </div>
 
     </div>
@@ -515,21 +829,23 @@
   </section>
 
 
-  <!-- CONTACT -->
+  <!-- =========================
+       CONTACT
+  ========================= -->
+
   <section id="contact">
 
     <h2>Contact GETI</h2>
 
     <div class="contact-box">
 
-      <p>
-        <strong>
-          Global English Teaching Institute
-        </strong>
-      </p>
+      <h3>
+        Global English Teaching Institute
+      </h3>
 
       <p>
-        International English Education &amp; Professional Training
+        International English Education &amp;
+        Professional Training
       </p>
 
       <p>
@@ -544,7 +860,10 @@
   </section>
 
 
-  <!-- FOOTER -->
+  <!-- =========================
+       FOOTER
+  ========================= -->
+
   <footer>
 
     <h3>
@@ -562,261 +881,331 @@
   </footer>
 
 
-  <!-- JAVASCRIPT -->
+  <!-- =========================
+       JAVASCRIPT
+  ========================= -->
+
   <script>
 
     /*
-      ============================================================
-      GOOGLE APPS SCRIPT URL
-      ============================================================
+      ==========================================
+      GETI APPS SCRIPT WEB APP
+      ==========================================
     */
 
-    const APPS_SCRIPT_URL =
+    const VERIFY_API =
       "https://script.google.com/macros/s/AKfycbzQ_YczGnSdh4GJZ73XTt8LfrUtdjJFAlUZGUx3Chhlk-0Es3rskQkun5LgrZYhkKRF/exec";
 
 
     /*
-      ============================================================
-      VERIFY CERTIFICATE
-      ============================================================
+      ==========================================
+      MOBILE MENU
+      ==========================================
     */
 
-    function verifyCertificate() {
+    function toggleMenu() {
 
-      const input =
-        document.getElementById("certificate");
+      var menu =
+        document.getElementById("navMenu");
 
-      const result =
-        document.getElementById("result");
+      menu.classList.toggle("active");
 
-      const certificate =
+    }
+
+
+    /*
+      ==========================================
+      CLOSE MOBILE MENU
+      ==========================================
+    */
+
+    document
+      .querySelectorAll(".nav-menu a")
+      .forEach(function(link) {
+
+        link.addEventListener(
+          "click",
+          function() {
+
+            document
+              .getElementById("navMenu")
+              .classList.remove("active");
+
+          }
+        );
+
+      });
+
+
+    /*
+      ==========================================
+      ESCAPE HTML
+      ==========================================
+    */
+
+    function escapeHtml(text) {
+
+      var div =
+        document.createElement("div");
+
+      div.textContent =
+        text || "";
+
+      return div.innerHTML;
+
+    }
+
+
+    /*
+      ==========================================
+      VERIFY CERTIFICATE
+      ==========================================
+    */
+
+    function verifyCertificate(autoId) {
+
+      var input =
+        document.getElementById(
+          "certificateId"
+        );
+
+      var result =
+        document.getElementById(
+          "result"
+        );
+
+
+      var id =
+        autoId ||
         input.value.trim();
 
-      if (!certificate) {
+
+      if (!id) {
+
+        result.style.display =
+          "block";
+
+        result.className =
+          "error";
 
         result.innerHTML =
-          '<div class="error">' +
-          '❌ Please enter a certificate number.' +
-          '</div>';
+          "❌ Please enter a certificate number.";
 
         return;
+
       }
 
 
+      input.value =
+        id;
+
+
+      result.style.display =
+        "block";
+
+      result.className = "";
+
       result.innerHTML =
-        '<div class="loading">' +
-        '🔄 Verifying certificate...' +
-        '</div>';
+        "⏳ Checking certificate...";
 
 
       /*
-        Send certificate ID to Google Apps Script.
-
-        The Apps Script receives:
-        ?verify=GETI-CERT000001
+        SEND REQUEST TO APPS SCRIPT
       */
 
-      const url =
-        APPS_SCRIPT_URL +
+      fetch(
+        VERIFY_API +
         "?verify=" +
-        encodeURIComponent(certificate);
+        encodeURIComponent(id)
+      )
 
-
-      fetch(url)
-
-        .then(function(response) {
+      .then(
+        function(response) {
 
           if (!response.ok) {
-            throw new Error(
-              "Unable to connect to verification server."
-            );
-          }
-
-          return response.text();
-
-        })
-
-        .then(function(text) {
-
-          let data;
-
-          try {
-
-            data = JSON.parse(text);
-
-          }
-
-          catch (error) {
 
             throw new Error(
-              "Invalid response from verification server."
+              "Server error: " +
+              response.status
             );
 
           }
 
+          return response.json();
 
-          /*
-            SUCCESS
-          */
+        }
+      )
+
+      .then(
+        function(data) {
 
           if (data.success) {
 
-            displayCertificate(data);
+            result.className =
+              "success";
+
+
+            result.innerHTML =
+
+              "<h3>✅ Certificate Verified</h3>" +
+
+              "<table class='certificate-table'>" +
+
+              "<tr>" +
+              "<th>Name</th>" +
+              "<td>" +
+              escapeHtml(data.name) +
+              "</td>" +
+              "</tr>" +
+
+              "<tr>" +
+              "<th>Nationality</th>" +
+              "<td>" +
+              escapeHtml(data.nationality) +
+              "</td>" +
+              "</tr>" +
+
+              "<tr>" +
+              "<th>Certificate</th>" +
+              "<td>" +
+              escapeHtml(data.certificate) +
+              "</td>" +
+              "</tr>" +
+
+              "<tr>" +
+              "<th>Certificate ID</th>" +
+              "<td>" +
+              escapeHtml(data.certificateId) +
+              "</td>" +
+              "</tr>" +
+
+              "<tr>" +
+              "<th>Certificate Type</th>" +
+              "<td>" +
+              escapeHtml(data.type) +
+              "</td>" +
+              "</tr>" +
+
+              "</table>";
 
           }
-
-
-          /*
-            ERROR
-          */
 
           else {
 
+            result.className =
+              "error";
+
             result.innerHTML =
-              '<div class="error">' +
-              '❌ ' +
+              "❌ " +
               escapeHtml(
                 data.message ||
                 "Certificate not found."
-              ) +
-              '</div>';
+              );
 
           }
 
-        })
+        }
+      )
 
-        .catch(function(error) {
+      .catch(
+        function(error) {
+
+          console.error(error);
+
+          result.className =
+            "error";
 
           result.innerHTML =
-            '<div class="error">' +
-            '❌ ' +
-            escapeHtml(
-              error.message
-            ) +
-            '</div>';
+            "❌ Unable to connect to the certificate verification system.";
 
-        });
-
-    }
+        }
+      );
 
 
-    /*
-      ============================================================
-      DISPLAY CERTIFICATE
-      ============================================================
-    */
+      /*
+        SCROLL TO RESULT
+      */
 
-    function displayCertificate(data) {
+      setTimeout(
+        function() {
 
-      const result =
-        document.getElementById("result");
+          result.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
 
-
-      result.innerHTML =
-
-        '<div class="success">' +
-
-        '<h3>✅ Certificate Verified</h3>' +
-
-        '<table class="certificate-table">' +
-
-        '<tr>' +
-        '<th>Name</th>' +
-        '<td>' +
-        escapeHtml(data.name || "") +
-        '</td>' +
-        '</tr>' +
-
-        '<tr>' +
-        '<th>Nationality</th>' +
-        '<td>' +
-        escapeHtml(data.nationality || "") +
-        '</td>' +
-        '</tr>' +
-
-        '<tr>' +
-        '<th>Certificate</th>' +
-        '<td>' +
-        escapeHtml(data.certificate || "") +
-        '</td>' +
-        '</tr>' +
-
-        '<tr>' +
-        '<th>Certificate ID</th>' +
-        '<td>' +
-        escapeHtml(data.certificateId || "") +
-        '</td>' +
-        '</tr>' +
-
-        '<tr>' +
-        '<th>Certificate Type</th>' +
-        '<td>' +
-        escapeHtml(data.type || "") +
-        '</td>' +
-        '</tr>' +
-
-        '</table>' +
-
-        '</div>';
+        },
+        200
+      );
 
     }
 
 
     /*
-      ============================================================
-      CLEAR
-      ============================================================
+      ==========================================
+      CLEAR VERIFICATION
+      ==========================================
     */
 
     function clearVerification() {
 
-      document.getElementById(
-        "certificate"
-      ).value = "";
+      document
+        .getElementById("certificateId")
+        .value = "";
 
-      document.getElementById(
-        "result"
-      ).innerHTML = "";
+      var result =
+        document.getElementById(
+          "result"
+        );
 
-      document.getElementById(
-        "certificate"
-      ).focus();
+      result.style.display =
+        "none";
+
+      result.innerHTML =
+        "";
+
+      result.className =
+        "";
+
+      /*
+        Remove ?verify=... from URL
+      */
+
+      if (
+        window.history &&
+        window.history.replaceState
+      ) {
+
+        var cleanUrl =
+          window.location.origin +
+          window.location.pathname;
+
+        window.history.replaceState(
+          {},
+          document.title,
+          cleanUrl
+        );
+
+      }
 
     }
 
 
     /*
-      ============================================================
-      SECURITY / HTML ESCAPE
-      ============================================================
-    */
-
-    function escapeHtml(value) {
-
-      return String(value || "")
-
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-    }
-
-
-    /*
-      ============================================================
+      ==========================================
       ENTER KEY
-      ============================================================
+      ==========================================
     */
 
     document
-      .getElementById("certificate")
+      .getElementById("certificateId")
       .addEventListener(
         "keydown",
         function(event) {
 
-          if (event.key === "Enter") {
+          if (
+            event.key === "Enter"
+          ) {
 
             verifyCertificate();
 
@@ -824,6 +1213,85 @@
 
         }
       );
+
+
+    /*
+      ==========================================
+      AUTOMATIC VERIFICATION
+      ==========================================
+      
+      Example:
+
+      ?verify=GETI-CERT000001
+
+      ==========================================
+    */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function() {
+
+        var params =
+          new URLSearchParams(
+            window.location.search
+          );
+
+
+        var verifyId =
+          params.get("verify");
+
+
+        if (
+          verifyId &&
+          verifyId.trim() !== ""
+        ) {
+
+          /*
+            Open VERIFY section
+          */
+
+          var verifySection =
+            document.getElementById(
+              "verify"
+            );
+
+
+          if (verifySection) {
+
+            setTimeout(
+              function() {
+
+                verifySection.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start"
+                });
+
+              },
+              300
+            );
+
+          }
+
+
+          /*
+            Automatically verify
+          */
+
+          setTimeout(
+            function() {
+
+              verifyCertificate(
+                verifyId.trim()
+              );
+
+            },
+            500
+          );
+
+        }
+
+      }
+    );
 
   </script>
 
