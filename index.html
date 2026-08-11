@@ -6,8 +6,7 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>GLOBAL ENGLISH TEACHING INSTITUTE</title>
 
@@ -171,7 +170,6 @@ img{
             rgba(4,22,47,.78) 48%,
             rgba(4,22,47,.28) 100%
         ),
-
         url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1800&q=85")
         center/cover no-repeat;
 
@@ -449,7 +447,6 @@ img{
             rgba(5,24,49,.82),
             rgba(5,24,49,.82)
         ),
-
         url("https://images.unsplash.com/photo-1564981797816-1043664bf78d?auto=format&fit=crop&w=1800&q=85")
         center/cover no-repeat;
 
@@ -509,6 +506,165 @@ img{
 
 .training-card li{
     margin-bottom:8px;
+}
+
+
+/* =========================================================
+   TEFL LESSONS
+========================================================= */
+
+.lesson-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:22px;
+}
+
+.lesson-card{
+    background:#fff;
+    padding:28px;
+    border-radius:7px;
+    border-left:5px solid #0b2d5c;
+    box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+.lesson-number{
+    color:#b38a28;
+    font-size:13px;
+    font-weight:bold;
+    letter-spacing:1px;
+    text-transform:uppercase;
+}
+
+.lesson-card h3{
+    color:#0b2d5c;
+    margin:6px 0 10px;
+    font-size:21px;
+}
+
+.lesson-card p{
+    color:#687386;
+    font-size:14px;
+}
+
+.lesson-card ul{
+    margin-top:12px;
+    padding-left:20px;
+}
+
+.lesson-card li{
+    margin-bottom:5px;
+}
+
+
+/* =========================================================
+   EXAM
+========================================================= */
+
+.exam-section{
+    background:#eef3f8;
+}
+
+.exam-box{
+    max-width:1000px;
+    margin:auto;
+    background:#fff;
+    padding:40px;
+    border-radius:8px;
+    box-shadow:0 10px 35px rgba(0,0,0,.1);
+}
+
+.exam-info{
+    background:#f4f7fb;
+    padding:20px;
+    border-left:5px solid #b38a28;
+    margin-bottom:30px;
+}
+
+.exam-info strong{
+    color:#0b2d5c;
+}
+
+.question{
+    background:#fff;
+    border:1px solid #dce3eb;
+    border-radius:7px;
+    padding:22px;
+    margin-bottom:18px;
+}
+
+.question h3{
+    color:#0b2d5c;
+    font-size:18px;
+    margin-bottom:10px;
+}
+
+.question p{
+    font-weight:600;
+    margin-bottom:12px;
+}
+
+.option{
+    display:block;
+    padding:9px 10px;
+    margin:4px 0;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.option:hover{
+    background:#f2f5f9;
+}
+
+.option input{
+    margin-right:8px;
+}
+
+.exam-submit{
+    text-align:center;
+    margin-top:30px;
+}
+
+.exam-result{
+    margin-top:30px;
+    display:none;
+}
+
+.pass-box{
+    background:#eaf8ef;
+    border:2px solid #43a866;
+    color:#176b32;
+    padding:30px;
+    border-radius:8px;
+    text-align:center;
+}
+
+.fail-box{
+    background:#fdecec;
+    border:2px solid #d66;
+    color:#9d2020;
+    padding:30px;
+    border-radius:8px;
+    text-align:center;
+}
+
+.score-big{
+    font-size:48px;
+    font-weight:bold;
+    margin:10px 0;
+}
+
+.progress-wrap{
+    background:#e5e9ef;
+    height:14px;
+    border-radius:20px;
+    overflow:hidden;
+    margin:15px 0;
+}
+
+.progress-bar{
+    height:100%;
+    width:0;
+    background:#b38a28;
 }
 
 
@@ -816,6 +972,10 @@ img{
         border-bottom:1px solid #e5e8ee;
     }
 
+    .lesson-grid{
+        grid-template-columns:1fr;
+    }
+
 }
 
 @media(max-width:700px){
@@ -855,7 +1015,8 @@ img{
         grid-template-columns:1fr;
     }
 
-    .verification-box{
+    .verification-box,
+    .exam-box{
         padding:25px 18px;
     }
 
@@ -891,7 +1052,6 @@ img{
 </style>
 
 </head>
-
 
 <body>
 
@@ -972,7 +1132,11 @@ onclick="toggleMenu()">
 </li>
 
 <li>
-<a href="#tefl-course">TEFL</a>
+<a href="#tefl-lessons">TEFL LESSONS</a>
+</li>
+
+<li>
+<a href="#tefl-exam">TEFL EXAM</a>
 </li>
 
 <li>
@@ -1040,8 +1204,8 @@ TEFL and TESOL professional training.
 EXPLORE PROGRAMS
 </a>
 
-<a href="#verify" class="btn btn-white">
-VERIFY CERTIFICATE
+<a href="#tefl-lessons" class="btn btn-white">
+START TEFL TRAINING
 </a>
 
 </div>
@@ -1077,8 +1241,8 @@ VERIFY CERTIFICATE
 </div>
 
 <div class="stat">
-<strong>24/7</strong>
-<span>Online Access</span>
+<strong>100</strong>
+<span>TEFL Exam Questions</span>
 </div>
 
 </div>
@@ -1205,10 +1369,9 @@ Develop essential skills in English language
 teaching, lesson planning and classroom management.
 </p>
 
-<br>
-
-<a href="#tefl-course" class="btn btn-gold">
-ENTER TEFL
+<a href="#tefl-lessons" class="btn btn-gold"
+style="margin-top:18px;">
+STUDY TEFL
 </a>
 
 </div>
@@ -1273,8 +1436,8 @@ and develop the English skills needed for education,
 employment and global communication.
 </p>
 
-<a href="#verify" class="btn btn-gold">
-VERIFY YOUR CERTIFICATE
+<a href="#tefl-lessons" class="btn btn-gold">
+START TEFL TRAINING
 </a>
 
 </div>
@@ -1334,8 +1497,8 @@ Teaching English as a Foreign Language.
 
 <br>
 
-<a href="#tefl-course" class="btn btn-gold">
-START TEFL COURSE
+<a href="#tefl-lessons" class="btn btn-gold">
+VIEW TEFL LESSONS
 </a>
 
 </div>
@@ -1373,10 +1536,10 @@ Teaching English to Speakers of Other Languages.
 
 
 <!-- =========================================================
-     TEFL ONLINE COURSE
+     TEFL LESSONS
 ========================================================= -->
 
-<section class="section" id="tefl-course">
+<section class="section" id="tefl-lessons">
 
 <div class="container">
 
@@ -1386,90 +1549,25 @@ Teaching English to Speakers of Other Languages.
 ONLINE TEFL PROGRAM
 </div>
 
-<h2>TEFL Online Course</h2>
+<h2>TEFL Online Lessons</h2>
 
 <p>
-Complete the lessons below before taking the final TEFL examination.
+Study the lessons below before taking the 100-question
+TEFL Final Examination. The program covers essential
+areas of English language teaching.
 </p>
 
 </div>
 
 
-<div class="training-grid">
+<div class="lesson-grid" id="lessonGrid"></div>
 
 
-<div class="training-card">
+<div style="text-align:center;margin-top:40px;">
 
-<h3>📘 TEFL Lessons</h3>
-
-<p>
-Study each lesson carefully and prepare for the final examination.
-</p>
-
-<ul>
-
-<li>Lesson 1 — Introduction to TEFL</li>
-<li>Lesson 2 — Teaching Methodology</li>
-<li>Lesson 3 — Lesson Planning</li>
-<li>Lesson 4 — Classroom Management</li>
-<li>Lesson 5 — Teaching Grammar</li>
-<li>Lesson 6 — Teaching Vocabulary</li>
-<li>Lesson 7 — Teaching Speaking</li>
-<li>Lesson 8 — Teaching Listening</li>
-<li>Lesson 9 — Teaching Reading</li>
-<li>Lesson 10 — Teaching Writing</li>
-<li>Lesson 11 — Assessment</li>
-<li>Lesson 12 — Pronunciation</li>
-<li>Lesson 13 — Online Teaching</li>
-<li>Lesson 14 — Professional Development</li>
-
-</ul>
-
-<br>
-
-<a
-href="#tefl-exam"
-class="btn btn-gold">
-
-START TEFL EXAM
-
+<a href="#tefl-exam" class="btn btn-gold">
+GO TO 100-QUESTION TEFL EXAM
 </a>
-
-</div>
-
-
-<div class="training-card">
-
-<h3>🎓 TEFL Program</h3>
-
-<p>
-This online program is designed to develop practical English
-teaching knowledge and classroom skills.
-</p>
-
-<ul>
-
-<li>Structured TEFL lessons</li>
-<li>Teacher training content</li>
-<li>Online learning</li>
-<li>Final examination</li>
-<li>Automatic examination result</li>
-<li>Certificate pathway</li>
-
-</ul>
-
-<br>
-
-<a
-href="#tefl-exam"
-class="btn btn-gold">
-
-TAKE FINAL EXAM
-
-</a>
-
-</div>
-
 
 </div>
 
@@ -1482,299 +1580,67 @@ TAKE FINAL EXAM
      TEFL EXAM
 ========================================================= -->
 
-<section
-class="section"
-id="tefl-exam"
-style="background:#eef3f8;">
+<section class="section exam-section" id="tefl-exam">
 
 <div class="container">
 
 <div class="section-header">
 
 <div class="section-label">
-ONLINE EXAMINATION
+FINAL ONLINE EXAMINATION
 </div>
 
-<h2>TEFL Final Examination</h2>
+<h2>TEFL Final Examination — 100 Questions</h2>
 
 <p>
-Complete the examination and check your score automatically.
+Complete all 100 questions. You need at least
+<strong>70/100</strong> to PASS.
 </p>
 
 </div>
 
 
-<div class="verification-box">
+<div class="exam-box">
 
-<h2>
-TEFL Online Exam
-</h2>
+<div class="exam-info">
 
-<p class="verification-description">
+<strong>TEFL EXAM REQUIREMENTS</strong>
 
-Answer the questions below and submit your examination.
+<br><br>
 
-</p>
+• Total questions: <strong>100</strong><br>
+• Points: <strong>1 point per question</strong><br>
+• Maximum score: <strong>100/100</strong><br>
+• PASS MARK: <strong>70/100</strong><br>
+• 70–100 = <strong>PASS</strong><br>
+• 0–69 = <strong>FAIL</strong>
+
+</div>
 
 
 <form id="teflExamForm">
 
+<div id="questionsContainer"></div>
 
-<div class="training-card">
 
-<h3>Question 1</h3>
-
-<p>
-What does TEFL stand for?
-</p>
-
-<label>
-<input
-type="radio"
-name="q1"
-value="a">
-
-Teaching English as a Foreign Language
-
-</label>
-
-<br>
-
-<label>
-<input
-type="radio"
-name="q1"
-value="b">
-
-Teaching Education for Foreign Learners
-
-</label>
-
-<br>
-
-<label>
-<input
-type="radio"
-name="q1"
-value="c">
-
-Training English for Language
-
-</label>
-
-</div>
-
-
-<br>
-
-
-<div class="training-card">
-
-<h3>Question 2</h3>
-
-<p>
-What is lesson planning?
-</p>
-
-<label>
-<input
-type="radio"
-name="q2"
-value="a">
-
-Planning what learners will learn and how the lesson will be taught
-
-</label>
-
-<br>
-
-<label>
-<input
-type="radio"
-name="q2"
-value="b">
-
-Giving students homework only
-
-</label>
-
-<br>
-
-<label>
-<input
-type="radio"
-name="q2"
-value="c">
-
-Reading a dictionary
-
-</label>
-
-</div>
-
-
-<br>
-
-
-<div class="training-card">
-
-<h3>Question 3</h3>
-
-<p>
-Which skill involves understanding spoken English?
-</p>
-
-<label>
-<input
-type="radio"
-name="q3"
-value="a">
-
-Writing
-
-</label>
-
-<br>
-
-<label>
-<input
-type="radio"
-name="q3"
-value="b">
-
-Listening
-
-</label>
-
-<br>
-
-<label>
-<input
-type="radio"
-name="q3"
-value="c">
-
-Reading
-
-</label>
-
-</div>
-
-
-<br>
-
-
-<div class="training-card">
-
-<h3>Question 4</h3>
-
-<p>
-What is classroom management?
-</p>
-
-<label>
-<input
-type="radio"
-name="q4"
-value="a">
-
-Managing the learning environment and student behavior
-
-</label>
-
-<br>
-
-<label>
-<input
-type="radio"
-name="q4"
-value="b">
-
-Writing certificates
-
-</label>
-
-<br>
-
-<label>
-<input
-type="radio"
-name="q4"
-value="c">
-
-Learning vocabulary alone
-
-</label>
-
-</div>
-
-
-<br>
-
-
-<div class="training-card">
-
-<h3>Question 5</h3>
-
-<p>
-Which activity mainly develops speaking skills?
-</p>
-
-<label>
-<input
-type="radio"
-name="q5"
-value="a">
-
-Conversation practice
-
-</label>
-
-<br>
-
-<label>
-<input
-type="radio"
-name="q5"
-value="b">
-
-Silent reading
-
-</label>
-
-<br>
-
-<label>
-<input
-type="radio"
-name="q5"
-value="c">
-
-Copying a paragraph
-
-</label>
-
-</div>
-
-
-<br>
+<div class="exam-submit">
 
 <button
 type="button"
 class="btn btn-gold"
 onclick="submitTEFLExam()">
 
-SUBMIT TEFL EXAM
+SUBMIT 100-QUESTION TEFL EXAM
 
 </button>
+
+</div>
 
 
 <div
 id="teflExamResult"
-style="margin-top:25px;">
-
+class="exam-result">
 </div>
-
 
 </form>
 
@@ -1804,8 +1670,6 @@ Certificate Verification
 Verify the authenticity of a GETI certificate
 using the certificate number, student's name,
 or nationality.
-
-You can also search using a single letter.
 
 </p>
 
@@ -2076,7 +1940,8 @@ Learn • Teach • Grow • Succeed
 <li><a href="#home">Home</a></li>
 <li><a href="#about">About</a></li>
 <li><a href="#programs">Programs</a></li>
-<li><a href="#tefl-course">TEFL</a></li>
+<li><a href="#tefl-lessons">TEFL Lessons</a></li>
+<li><a href="#tefl-exam">TEFL Exam</a></li>
 <li><a href="#verify">Verify</a></li>
 
 </ul>
@@ -2093,7 +1958,8 @@ Learn • Teach • Grow • Succeed
 <li>English A1–C2</li>
 <li>TEFL</li>
 <li>TESOL</li>
-<li>English Exams</li>
+<li>100-Question TEFL Exam</li>
+<li>Certificate Verification</li>
 
 </ul>
 
@@ -2114,10 +1980,6 @@ All rights reserved.
 
 </footer>
 
-
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
 
 <script>
 
@@ -2141,6 +2003,1726 @@ function toggleMenu(){
         .getElementById("navMenu")
         .classList
         .toggle("show");
+
+}
+
+
+/* =========================================================
+   TEFL LESSONS
+========================================================= */
+
+var teflLessons = [
+
+{
+title:"Introduction to TEFL",
+text:"Learn what TEFL means, who TEFL teachers teach, and the main goals of teaching English as a foreign language.",
+points:[
+"Meaning and purpose of TEFL",
+"Role of the TEFL teacher",
+"English as a global language",
+"Teacher responsibilities"
+]
+},
+
+{
+title:"Second Language Acquisition",
+text:"Understand how learners acquire a second or foreign language and the factors that influence learning.",
+points:[
+"Input and interaction",
+"Learner differences",
+"Motivation",
+"Language development"
+]
+},
+
+{
+title:"Teaching Methodology",
+text:"Explore major approaches and methods used in English language teaching.",
+points:[
+"Grammar Translation",
+"Direct Method",
+"Audio-Lingual Method",
+"Communicative Language Teaching"
+]
+},
+
+{
+title:"Learner-Centered Teaching",
+text:"Learn how to make learners active participants in the classroom.",
+points:[
+"Student participation",
+"Pair and group work",
+"Autonomous learning",
+"Individual needs"
+]
+},
+
+{
+title:"Needs Analysis",
+text:"Learn how teachers identify what learners need English for and how this information guides instruction.",
+points:[
+"Learning goals",
+"Language needs",
+"Target situations",
+"Course planning"
+]
+},
+
+{
+title:"Lesson Planning",
+text:"Learn how to prepare effective lessons with clear objectives, stages, activities and assessment.",
+points:[
+"Learning objectives",
+"Lesson stages",
+"Timing",
+"Materials",
+"Assessment"
+]
+},
+
+{
+title:"Classroom Management",
+text:"Develop strategies for creating a positive, organized and productive learning environment.",
+points:[
+"Classroom rules",
+"Managing behavior",
+"Grouping students",
+"Teacher positioning"
+]
+},
+
+{
+title:"Teaching Grammar",
+text:"Learn effective ways to teach grammar through context, examples, practice and communication.",
+points:[
+"Form",
+"Meaning",
+"Use",
+"Controlled practice",
+"Communicative practice"
+]
+},
+
+{
+title:"Teaching Vocabulary",
+text:"Learn techniques for introducing, practicing and reviewing English vocabulary.",
+points:[
+"Meaning",
+"Pronunciation",
+"Spelling",
+"Collocations",
+"Context"
+]
+},
+
+{
+title:"Teaching Pronunciation",
+text:"Learn how to help learners produce and understand English sounds, stress and intonation.",
+points:[
+"Individual sounds",
+"Word stress",
+"Sentence stress",
+"Intonation",
+"Connected speech"
+]
+},
+
+{
+title:"Teaching Speaking",
+text:"Learn how to develop learners' fluency, accuracy, interaction and confidence.",
+points:[
+"Controlled speaking",
+"Free speaking",
+"Role plays",
+"Discussions",
+"Information gaps"
+]
+},
+
+{
+title:"Teaching Listening",
+text:"Learn how to prepare learners to understand spoken English in different situations.",
+points:[
+"Pre-listening",
+"While-listening",
+"Post-listening",
+"Listening for gist",
+"Listening for detail"
+]
+},
+
+{
+title:"Teaching Reading",
+text:"Learn strategies for helping learners understand written English.",
+points:[
+"Skimming",
+"Scanning",
+"Reading for detail",
+"Prediction",
+"Context clues"
+]
+},
+
+{
+title:"Teaching Writing",
+text:"Learn how to teach learners to produce clear, accurate and organized written English.",
+points:[
+"Paragraph structure",
+"Planning",
+"Drafting",
+"Revising",
+"Editing"
+]
+},
+
+{
+title:"Teaching Young Learners",
+text:"Understand how to teach children through age-appropriate activities and classroom techniques.",
+points:[
+"Games",
+"Songs",
+"Stories",
+"Movement",
+"Visual materials"
+]
+},
+
+{
+title:"Teaching Adults",
+text:"Explore strategies for teaching adult learners with practical goals and existing experience.",
+points:[
+"Adult motivation",
+"Real-world tasks",
+"Experience",
+"Professional English"
+]
+},
+
+{
+title:"Assessment and Testing",
+text:"Learn how to assess language knowledge and skills using appropriate assessment techniques.",
+points:[
+"Formative assessment",
+"Summative assessment",
+"Diagnostic assessment",
+"Reliability",
+"Validity"
+]
+},
+
+{
+title:"Error Correction and Feedback",
+text:"Learn when and how to correct learner errors while maintaining confidence and communication.",
+points:[
+"Immediate correction",
+"Delayed correction",
+"Peer correction",
+"Self-correction",
+"Constructive feedback"
+]
+},
+
+{
+title:"Online English Teaching",
+text:"Learn practical techniques for teaching English through digital platforms.",
+points:[
+"Online classroom management",
+"Digital materials",
+"Breakout rooms",
+"Online interaction",
+"Technical preparation"
+]
+},
+
+{
+title:"Professional Development",
+text:"Develop the habits and skills needed for continuous professional growth as an English teacher.",
+points:[
+"Reflective teaching",
+"Teacher development",
+"Professional goals",
+"Peer observation",
+"Continuous learning"
+]
+}
+
+];
+
+
+function loadTEFLLessons(){
+
+    var grid =
+        document.getElementById("lessonGrid");
+
+    if(!grid) return;
+
+    var html = "";
+
+    for(var i=0;i<teflLessons.length;i++){
+
+        var lesson = teflLessons[i];
+
+        html +=
+        '<div class="lesson-card">' +
+
+        '<div class="lesson-number">' +
+        'LESSON ' + (i+1) +
+        '</div>' +
+
+        '<h3>' +
+        escapeHTML(lesson.title) +
+        '</h3>' +
+
+        '<p>' +
+        escapeHTML(lesson.text) +
+        '</p>' +
+
+        '<ul>';
+
+        for(var j=0;j<lesson.points.length;j++){
+
+            html +=
+            '<li>' +
+            escapeHTML(lesson.points[j]) +
+            '</li>';
+
+        }
+
+        html +=
+        '</ul>' +
+
+        '</div>';
+
+    }
+
+    grid.innerHTML = html;
+
+}
+
+
+/* =========================================================
+   100 TEFL EXAM QUESTIONS
+========================================================= */
+
+var teflQuestions = [
+
+{
+q:"What does TEFL stand for?",
+a:[
+"Teaching English as a Foreign Language",
+"Teaching Education for Foreign Learners",
+"Training English for Language",
+"Teaching Every Foreign Language"
+],
+correct:0
+},
+
+{
+q:"What is one main role of a TEFL teacher?",
+a:[
+"To help learners develop English language skills",
+"To translate every sentence",
+"To avoid communication",
+"To teach only grammar rules"
+],
+correct:0
+},
+
+{
+q:"What is communicative language teaching mainly concerned with?",
+a:[
+"Using language for meaningful communication",
+"Memorizing grammar rules only",
+"Translating every text",
+"Copying vocabulary lists"
+],
+correct:0
+},
+
+{
+q:"What is learner-centered teaching?",
+a:[
+"Teaching that actively involves learners",
+"Teaching where the teacher does everything",
+"Teaching without activities",
+"Teaching only from a dictionary"
+],
+correct:0
+},
+
+{
+q:"What is learner motivation?",
+a:[
+"The reason or desire that encourages someone to learn",
+"A classroom rule",
+"A grammar structure",
+"A type of examination"
+],
+correct:0
+},
+
+{
+q:"What is a learning objective?",
+a:[
+"What learners should be able to do by the end of a lesson",
+"The teacher's salary",
+"The classroom location",
+"The textbook price"
+],
+correct:0
+},
+
+{
+q:"Why is lesson planning important?",
+a:[
+"It helps organize objectives, activities and timing",
+"It prevents students from speaking",
+"It removes the need for teaching",
+"It is only useful for examinations"
+],
+correct:0
+},
+
+{
+q:"Which is usually part of a lesson plan?",
+a:[
+"Learning objectives",
+"Teacher's home address",
+"Student's passport number",
+"School electricity bill"
+],
+correct:0
+},
+
+{
+q:"What is classroom management?",
+a:[
+"Managing the learning environment and student behavior",
+"Writing a dictionary",
+"Preparing certificates only",
+"Translating a textbook"
+],
+correct:0
+},
+
+{
+q:"Which classroom arrangement can encourage interaction?",
+a:[
+"Pair or group seating",
+"Students facing a blank wall",
+"Students working without communication",
+"Teacher speaking for the entire lesson"
+],
+correct:0
+},
+
+{
+q:"What is a warm-up activity?",
+a:[
+"An activity used to prepare learners for the lesson",
+"A final examination",
+"A certificate",
+"A homework grade"
+],
+correct:0
+},
+
+{
+q:"What does elicitation mean in teaching?",
+a:[
+"Getting information or language from learners",
+"Giving every answer immediately",
+"Stopping students from speaking",
+"Removing all classroom activities"
+],
+correct:0
+},
+
+{
+q:"What is scaffolding?",
+a:[
+"Temporary support that helps learners complete a task",
+"Punishing students",
+"Removing all instructions",
+"Giving students no help"
+],
+correct:0
+},
+
+{
+q:"What is differentiation?",
+a:[
+"Adapting teaching to different learner needs",
+"Using one task for everyone regardless of ability",
+"Teaching only advanced learners",
+"Removing assessment"
+],
+correct:0
+},
+
+{
+q:"What is formative assessment?",
+a:[
+"Assessment used during learning to provide feedback",
+"Only a final certificate",
+"An attendance list",
+"A school advertisement"
+],
+correct:0
+},
+
+{
+q:"What is summative assessment?",
+a:[
+"Assessment used to evaluate learning at the end of a period",
+"A warm-up",
+"A classroom game",
+"A pronunciation drill"
+],
+correct:0
+},
+
+{
+q:"What is diagnostic assessment?",
+a:[
+"Assessment used to identify strengths and weaknesses",
+"Assessment used only after graduation",
+"A classroom decoration",
+"A speaking game"
+],
+correct:0
+},
+
+{
+q:"What is assessment validity?",
+a:[
+"The extent to which an assessment measures what it is intended to measure",
+"How attractive a test looks",
+"How long a teacher works",
+"How many pages a test has"
+],
+correct:0
+},
+
+{
+q:"What is assessment reliability?",
+a:[
+"Consistency of assessment results",
+"The number of teachers",
+"The color of a test",
+"The length of a textbook"
+],
+correct:0
+},
+
+{
+q:"What is feedback?",
+a:[
+"Information that helps learners understand their performance",
+"A classroom punishment",
+"A textbook chapter",
+"A certificate number"
+],
+correct:0
+},
+
+{
+q:"Which is generally constructive feedback?",
+a:[
+"Specific information about what was done well and what can improve",
+"You are bad at English",
+"Everything is wrong",
+"No explanation is needed"
+],
+correct:0
+},
+
+{
+q:"What is delayed error correction?",
+a:[
+"Correcting errors after an activity rather than interrupting immediately",
+"Never correcting errors",
+"Correcting only exams",
+"Correcting before students speak"
+],
+correct:0
+},
+
+{
+q:"Why can delayed correction be useful during fluency activities?",
+a:[
+"It can reduce interruption of communication",
+"It prevents all learning",
+"It makes students silent",
+"It removes feedback"
+],
+correct:0
+},
+
+{
+q:"What is grammar?",
+a:[
+"The system of rules and structures used to form language",
+"Only pronunciation",
+"Only vocabulary",
+"A classroom game"
+],
+correct:0
+},
+
+{
+q:"When teaching grammar, what three areas are commonly considered?",
+a:[
+"Form, meaning and use",
+"Color, size and price",
+"Reading, passport and age",
+"Music, games and sports"
+],
+correct:0
+},
+
+{
+q:"What is controlled practice?",
+a:[
+"Practice where learners have limited choices and support",
+"Completely free conversation",
+"An examination certificate",
+"Independent research only"
+],
+correct:0
+},
+
+{
+q:"What is freer practice?",
+a:[
+"Practice allowing learners to use language more independently",
+"Copying one sentence repeatedly",
+"Teacher explanation only",
+"Memorizing a rule"
+],
+correct:0
+},
+
+{
+q:"What is vocabulary?",
+a:[
+"The words and expressions known or used by a language learner",
+"Only grammar rules",
+"Only pronunciation",
+"Only punctuation"
+],
+correct:0
+},
+
+{
+q:"Which is important when teaching a new vocabulary item?",
+a:[
+"Meaning, pronunciation and use",
+"Only spelling",
+"Only translation",
+"Only capitalization"
+],
+correct:0
+},
+
+{
+q:"What is a collocation?",
+a:[
+"Words that commonly occur together",
+"A type of examination",
+"A classroom rule",
+"A pronunciation mistake"
+],
+correct:0
+},
+
+{
+q:"Which activity can help learners practice vocabulary?",
+a:[
+"Matching words with meanings",
+"Ignoring the words",
+"Removing all examples",
+"Stopping learners from speaking"
+],
+correct:0
+},
+
+{
+q:"What is pronunciation?",
+a:[
+"The way sounds are produced and spoken",
+"The organization of paragraphs",
+"The meaning of vocabulary",
+"The structure of an exam"
+],
+correct:0
+},
+
+{
+q:"What is word stress?",
+a:[
+"Emphasis placed on a particular syllable",
+"The speed of reading",
+"The number of words",
+"A writing technique"
+],
+correct:0
+},
+
+{
+q:"What is intonation?",
+a:[
+"Changes in the pitch of the voice",
+"The spelling of a word",
+"The size of a paragraph",
+"The order of vocabulary"
+],
+correct:0
+},
+
+{
+q:"Which activity can help pronunciation?",
+a:[
+"Minimal-pair practice",
+"Silent copying only",
+"Writing certificates",
+"Reading a dictionary index"
+],
+correct:0
+},
+
+{
+q:"What is speaking fluency?",
+a:[
+"The ability to communicate smoothly with reasonable flow",
+"Perfect spelling",
+"Memorizing grammar rules",
+"Writing quickly"
+],
+correct:0
+},
+
+{
+q:"Which activity is useful for speaking practice?",
+a:[
+"Role play",
+"Silent copying",
+"Dictionary ordering",
+"Certificate printing"
+],
+correct:0
+},
+
+{
+q:"What is an information-gap activity?",
+a:[
+"An activity where learners have different information and communicate to complete a task",
+"A grammar test",
+"A reading dictionary",
+"A teacher lecture"
+],
+correct:0
+},
+
+{
+q:"What is listening for gist?",
+a:[
+"Listening to understand the general idea",
+"Listening to every individual sound",
+"Writing every word",
+"Translating every sentence"
+],
+correct:0
+},
+
+{
+q:"What is listening for detail?",
+a:[
+"Listening to identify specific information",
+"Only understanding the topic",
+"Reading the transcript silently",
+"Speaking without listening"
+],
+correct:0
+},
+
+{
+q:"What is pre-listening?",
+a:[
+"Preparation before learners listen to a recording or speaker",
+"An exam after listening",
+"A certificate",
+"A writing activity"
+],
+correct:0
+},
+
+{
+q:"What is skimming?",
+a:[
+"Reading quickly to get the general idea",
+"Reading every word carefully",
+"Writing a paragraph",
+"Listening for pronunciation"
+],
+correct:0
+},
+
+{
+q:"What is scanning?",
+a:[
+"Reading to find specific information",
+"Reading only the title",
+"Speaking freely",
+"Writing a story"
+],
+correct:0
+},
+
+{
+q:"What is reading for detail?",
+a:[
+"Reading carefully to understand specific information",
+"Looking only at pictures",
+"Reading only the first sentence",
+"Listening to a conversation"
+],
+correct:0
+},
+
+{
+q:"What is the purpose of prediction before reading?",
+a:[
+"To activate knowledge and anticipate content",
+"To prevent comprehension",
+"To replace reading",
+"To test spelling only"
+],
+correct:0
+},
+
+{
+q:"What is a paragraph?",
+a:[
+"A group of sentences organized around a main idea",
+"A single letter",
+"A pronunciation sound",
+"A classroom rule"
+],
+correct:0
+},
+
+{
+q:"What is drafting in writing?",
+a:[
+"Producing an initial version of a text",
+"Printing a certificate",
+"Reading aloud only",
+"Taking attendance"
+],
+correct:0
+},
+
+{
+q:"What is editing?",
+a:[
+"Checking and improving a written text",
+"Speaking without preparation",
+"Listening to music",
+"Changing classroom seats"
+],
+correct:0
+},
+
+{
+q:"What is process writing?",
+a:[
+"Writing through stages such as planning, drafting, revising and editing",
+"Writing once without checking",
+"Memorizing a paragraph",
+"Copying a textbook"
+],
+correct:0
+},
+
+{
+q:"What is a task-based approach?",
+a:[
+"Using meaningful tasks as a central part of language learning",
+"Teaching only vocabulary lists",
+"Using no communication",
+"Teaching only translation"
+],
+correct:0
+},
+
+{
+q:"What is a communicative activity?",
+a:[
+"An activity where learners use language to communicate meaning",
+"Copying grammar rules",
+"Memorizing a word list",
+"Silent examination only"
+],
+correct:0
+},
+
+{
+q:"Why are authentic materials useful?",
+a:[
+"They expose learners to language used in real contexts",
+"They always contain perfect grammar",
+"They eliminate the need for teaching",
+"They are only for advanced learners"
+],
+correct:0
+},
+
+{
+q:"What is an authentic material?",
+a:[
+"Language material created for real-world use rather than specifically for learners",
+"A teacher's private lesson plan",
+"A certificate",
+"A grammar answer key"
+],
+correct:0
+},
+
+{
+q:"What is an adaptation of material?",
+a:[
+"Changing material to better suit learners and objectives",
+"Deleting the entire course",
+"Stopping assessment",
+"Changing the teacher"
+],
+correct:0
+},
+
+{
+q:"What is learner autonomy?",
+a:[
+"The ability of learners to take responsibility for their learning",
+"The teacher doing everything",
+"Students never studying",
+"Only classroom attendance"
+],
+correct:0
+},
+
+{
+q:"What is self-assessment?",
+a:[
+"Learners evaluating their own learning or performance",
+"The teacher grading another teacher",
+"A certificate check",
+"A school timetable"
+],
+correct:0
+},
+
+{
+q:"What is peer assessment?",
+a:[
+"Learners evaluating each other's work using criteria",
+"A teacher giving a lecture",
+"A final certificate",
+"An attendance record"
+],
+correct:0
+},
+
+{
+q:"What is a rubric?",
+a:[
+"A set of criteria used to evaluate performance",
+"A classroom poster",
+"A vocabulary list",
+"A pronunciation sound"
+],
+correct:0
+},
+
+{
+q:"What is a placement test?",
+a:[
+"A test used to determine an appropriate level or class",
+"A graduation certificate",
+"A speaking game",
+"A lesson warmer"
+],
+correct:0
+},
+
+{
+q:"What is a proficiency test?",
+a:[
+"A test measuring overall language ability",
+"A test only about classroom behavior",
+"A teacher attendance test",
+"A school fee receipt"
+],
+correct:0
+},
+
+{
+q:"What is a progress test?",
+a:[
+"A test measuring learning after instruction over a period",
+"A passport check",
+"A placement interview only",
+"A classroom decoration"
+],
+correct:0
+},
+
+{
+q:"What is a syllabus?",
+a:[
+"A plan of what will be taught in a course",
+"A student's passport",
+"A teacher's salary",
+"A classroom rule"
+],
+correct:0
+},
+
+{
+q:"What is a curriculum?",
+a:[
+"The broader educational plan including goals, content and learning experiences",
+"Only one worksheet",
+"Only one exam",
+"Only vocabulary"
+],
+correct:0
+},
+
+{
+q:"What is needs analysis?",
+a:[
+"Identifying learners' goals, needs and target language requirements",
+"Counting students",
+"Checking attendance",
+"Choosing a classroom color"
+],
+correct:0
+},
+
+{
+q:"Why is context important when teaching language?",
+a:[
+"It helps learners understand how and when language is used",
+"It makes grammar unnecessary",
+"It removes vocabulary",
+"It prevents communication"
+],
+correct:0
+},
+
+{
+q:"What is register?",
+a:[
+"The level or style of language appropriate to a situation",
+"A classroom register book",
+"A pronunciation error",
+"A grammar tense"
+],
+correct:0
+},
+
+{
+q:"What is formal language?",
+a:[
+"Language appropriate for more official or professional situations",
+"Language used only with close friends",
+"Slang only",
+"Random vocabulary"
+],
+correct:0
+},
+
+{
+q:"What is informal language?",
+a:[
+"Language commonly used in relaxed or familiar situations",
+"Only academic writing",
+"Only legal documents",
+"Only examinations"
+],
+correct:0
+},
+
+{
+q:"What is culture in language teaching?",
+a:[
+"Understanding cultural practices, meanings and communication conventions",
+"Teaching geography only",
+"Teaching history only",
+"Memorizing flags"
+],
+correct:0
+},
+
+{
+q:"Why should teachers promote cultural awareness?",
+a:[
+"To help learners communicate appropriately across cultures",
+"To prevent communication",
+"To replace grammar",
+"To eliminate diversity"
+],
+correct:0
+},
+
+{
+q:"What is an inclusive classroom?",
+a:[
+"A classroom where learners are respected and supported",
+"A classroom for one learner only",
+"A classroom without activities",
+"A classroom without assessment"
+],
+correct:0
+},
+
+{
+q:"What is differentiation in an inclusive classroom?",
+a:[
+"Providing appropriate support or challenge for different learners",
+"Giving exactly the same support to everyone",
+"Teaching only strong students",
+"Ignoring learner differences"
+],
+correct:0
+},
+
+{
+q:"What is teacher talk time?",
+a:[
+"The amount of classroom time during which the teacher speaks",
+"The teacher's working hours",
+"The lesson duration",
+"The time spent marking exams"
+],
+correct:0
+},
+
+{
+q:"Why can excessive teacher talk time be a problem?",
+a:[
+"It may reduce opportunities for learners to speak",
+"It always improves fluency",
+"It increases student interaction",
+"It guarantees learning"
+],
+correct:0
+},
+
+{
+q:"What is student talk time?",
+a:[
+"The amount of classroom time learners spend speaking",
+"The teacher's explanation",
+"The examination time",
+"The homework deadline"
+],
+correct:0
+},
+
+{
+q:"What is pair work?",
+a:[
+"Two learners working together on a task",
+"A teacher working alone",
+"A whole-school exam",
+"Students reading silently"
+],
+correct:0
+},
+
+{
+q:"What is group work?",
+a:[
+"Several learners working together on a task",
+"One learner working alone",
+"Teacher lecture only",
+"Individual examination only"
+],
+correct:0
+},
+
+{
+q:"What is a role play?",
+a:[
+"Learners act out a situation using language",
+"Learners copy a textbook",
+"Learners memorize a grammar table",
+"Teachers grade exams"
+],
+correct:0
+},
+
+{
+q:"What is a debate?",
+a:[
+"A structured discussion involving different viewpoints",
+"A vocabulary list",
+"A pronunciation drill",
+"A listening transcript"
+],
+correct:0
+},
+
+{
+q:"What is a presentation?",
+a:[
+"A planned spoken delivery of information to an audience",
+"A grammar worksheet",
+"A silent reading activity",
+"A certificate"
+],
+correct:0
+},
+
+{
+q:"What is task sequencing?",
+a:[
+"Organizing learning activities in a logical progression",
+"Randomly choosing activities",
+"Removing objectives",
+"Teaching without planning"
+],
+correct:0
+},
+
+{
+q:"What is lesson timing?",
+a:[
+"Planning how much time to allocate to lesson stages and activities",
+"Choosing the classroom clock",
+"Setting examination fees",
+"Writing certificates"
+],
+correct:0
+},
+
+{
+q:"Why should a lesson have clear objectives?",
+a:[
+"To give the teacher and learners a clear learning target",
+"To prevent assessment",
+"To avoid activities",
+"To eliminate feedback"
+],
+correct:0
+},
+
+{
+q:"What is a lead-in?",
+a:[
+"An activity that introduces or prepares learners for a lesson topic",
+"A final exam",
+"A certificate",
+"A homework grade"
+],
+correct:0
+},
+
+{
+q:"What is a controlled drill?",
+a:[
+"A structured practice activity focusing on accurate language production",
+"A completely free discussion",
+"An informal conversation",
+"A final interview"
+],
+correct:0
+},
+
+{
+q:"What is fluency?",
+a:[
+"The ability to communicate with reasonable speed and flow",
+"Perfect grammar in every sentence",
+"Perfect spelling",
+"Writing without punctuation"
+],
+correct:0
+},
+
+{
+q:"What is accuracy?",
+a:[
+"The correct use of language forms",
+"Speaking very quickly",
+"Speaking loudly",
+"Using difficult words only"
+],
+correct:0
+},
+
+{
+q:"Why should fluency and accuracy both be developed?",
+a:[
+"Learners need both effective communication and appropriate language use",
+"Only accuracy matters",
+"Only speed matters",
+"Neither matters"
+],
+correct:0
+},
+
+{
+q:"What is an English language function?",
+a:[
+"The communicative purpose of an expression, such as requesting or apologizing",
+"A grammar book",
+"A pronunciation sound",
+"A vocabulary test"
+],
+correct:0
+},
+
+{
+q:"Which is an example of a language function?",
+a:[
+"Making a request",
+"Memorizing a dictionary",
+"Reading silently",
+"Writing a certificate"
+],
+correct:0
+},
+
+{
+q:"What is functional language?",
+a:[
+"Language used to perform a particular communicative purpose",
+"Language without meaning",
+"Only grammar terminology",
+"Only academic vocabulary"
+],
+correct:0
+},
+
+{
+q:"What is a model dialogue?",
+a:[
+"An example conversation used to demonstrate language",
+"A final exam",
+"A teacher's contract",
+"A certificate verification"
+],
+correct:0
+},
+
+{
+q:"What is an instruction in teaching?",
+a:[
+"Information telling learners what they need to do",
+"A student's grade",
+"A certificate number",
+"A school advertisement"
+],
+correct:0
+},
+
+{
+q:"What makes classroom instructions effective?",
+a:[
+"Clear, concise language and appropriate checking",
+"Long and confusing explanations",
+"Using difficult vocabulary unnecessarily",
+"Never checking understanding"
+],
+correct:0
+},
+
+{
+q:"What is instruction checking?",
+a:[
+"Checking that learners understand what they need to do",
+"Checking their passports",
+"Checking certificates",
+"Checking classroom furniture"
+],
+correct:0
+},
+
+{
+q:"What is concept checking?",
+a:[
+"Checking whether learners understand the meaning of a language item",
+"Checking the textbook price",
+"Checking attendance",
+"Checking the teacher's computer"
+],
+correct:0
+},
+
+{
+q:"What is a concept checking question?",
+a:[
+"A question designed to check understanding of meaning",
+"A final examination",
+"A vocabulary translation list",
+"A certificate question"
+],
+correct:0
+},
+
+{
+q:"What is reflective teaching?",
+a:[
+"Thinking critically about teaching practice to improve future lessons",
+"Teaching without planning",
+"Repeating every lesson exactly",
+"Ignoring feedback"
+],
+correct:0
+},
+
+{
+q:"What is peer observation?",
+a:[
+"A teacher observing another teacher to learn and provide professional feedback",
+"A student examination",
+"A certificate check",
+"A language test"
+],
+correct:0
+},
+
+{
+q:"Why is continuing professional development important?",
+a:[
+"It helps teachers improve knowledge and teaching practice",
+"It replaces classroom experience",
+"It prevents learning",
+"It is only for new teachers"
+],
+correct:0
+},
+
+{
+q:"What is online teaching?",
+a:[
+"Teaching through digital platforms and online learning environments",
+"Teaching only through printed books",
+"Teaching without communication",
+"Teaching without learners"
+],
+correct:0
+},
+
+{
+q:"What is a virtual classroom?",
+a:[
+"An online environment where teachers and learners interact",
+"A physical classroom",
+"A certificate office",
+"A printed textbook"
+],
+correct:0
+},
+
+{
+q:"What is a breakout room?",
+a:[
+"A separate online space for small-group interaction",
+"A school office",
+"A grammar book",
+"A certificate room"
+],
+correct:0
+},
+
+{
+q:"What is digital literacy for teachers?",
+a:[
+"The ability to use digital tools effectively for teaching and learning",
+"Knowing only how to type",
+"Using no technology",
+"Printing certificates"
+],
+correct:0
+},
+
+{
+q:"What is blended learning?",
+a:[
+"Combining face-to-face and online learning",
+"Only classroom teaching",
+"Only online exams",
+"Only textbook learning"
+],
+correct:0
+},
+
+{
+q:"What is autonomous learning?",
+a:[
+"Learning in which students take increasing responsibility for their own learning",
+"Learning without any goals",
+"Teacher-controlled learning only",
+"Learning without feedback"
+],
+correct:0
+},
+
+{
+q:"What is an effective TEFL teacher likely to do?",
+a:[
+"Plan, monitor, support, assess and reflect on teaching",
+"Speak continuously",
+"Ignore learners' needs",
+"Use only translation"
+],
+correct:0
+},
+
+{
+q:"What is the main purpose of a TEFL course?",
+a:[
+"To develop knowledge and skills for teaching English effectively",
+"To teach only English vocabulary",
+"To replace all classroom experience",
+"To teach only examination techniques"
+],
+correct:0
+}
+
+];
+
+
+/* =========================================================
+   CREATE 100 QUESTIONS
+========================================================= */
+
+function loadTEFLExam(){
+
+    var container =
+        document.getElementById("questionsContainer");
+
+    if(!container) return;
+
+    var html = "";
+
+    for(var i=0;i<teflQuestions.length;i++){
+
+        var item = teflQuestions[i];
+
+        html +=
+        '<div class="question">' +
+
+        '<h3>Question ' +
+        (i+1) +
+        '</h3>' +
+
+        '<p>' +
+        escapeHTML(item.q) +
+        '</p>';
+
+        for(var j=0;j<item.a.length;j++){
+
+            html +=
+            '<label class="option">' +
+
+            '<input type="radio" ' +
+            'name="q' + i + '" ' +
+            'value="' + j + '">' +
+
+            escapeHTML(item.a[j]) +
+
+            '</label>';
+
+        }
+
+        html += '</div>';
+
+    }
+
+    container.innerHTML = html;
+
+}
+
+
+/* =========================================================
+   SUBMIT TEFL EXAM
+========================================================= */
+
+function submitTEFLExam(){
+
+    var score = 0;
+
+    var unanswered = 0;
+
+    for(var i=0;i<teflQuestions.length;i++){
+
+        var selected =
+            document.querySelector(
+                'input[name="q' + i + '"]:checked'
+            );
+
+        if(!selected){
+
+            unanswered++;
+
+        }else{
+
+            if(
+                Number(selected.value) ===
+                teflQuestions[i].correct
+            ){
+
+                score++;
+
+            }
+
+        }
+
+    }
+
+
+    var result =
+        document.getElementById("teflExamResult");
+
+
+    result.style.display = "block";
+
+
+    if(unanswered > 0){
+
+        result.innerHTML =
+
+        '<div class="fail-box">' +
+
+        '<h2>⚠️ EXAM NOT SUBMITTED</h2>' +
+
+        '<p>' +
+
+        'You have not answered ' +
+        unanswered +
+        ' question(s).' +
+
+        '</p>' +
+
+        '<p style="margin-top:10px;">' +
+
+        'Please answer all 100 questions before submitting.' +
+
+        '</p>' +
+
+        '</div>';
+
+        result.scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
+
+        return;
+
+    }
+
+
+    var percentage = score;
+
+
+    var progress =
+        '<div class="progress-wrap">' +
+        '<div class="progress-bar" style="width:' +
+        percentage +
+        '%;"></div>' +
+        '</div>';
+
+
+    if(score >= 70){
+
+        result.innerHTML =
+
+        '<div class="pass-box">' +
+
+        '<h2>🎉 CONGRATULATIONS!</h2>' +
+
+        '<div class="score-big">' +
+        score +
+        '/100' +
+        '</div>' +
+
+        '<p><strong>RESULT: PASS</strong></p>' +
+
+        '<p>' +
+        'You have achieved the required TEFL pass mark of 70/100.' +
+        '</p>' +
+
+        progress +
+
+        '<p style="margin-top:20px;">' +
+
+        '<strong>Certificate Pathway:</strong><br>' +
+
+        'You are eligible to continue to the TEFL certificate process.' +
+
+        '</p>' +
+
+        '<a href="#verify" ' +
+        'class="btn btn-gold" ' +
+        'style="margin-top:20px;">' +
+
+        'CERTIFICATE VERIFICATION' +
+
+        '</a>' +
+
+        '</div>';
+
+    }else{
+
+        result.innerHTML =
+
+        '<div class="fail-box">' +
+
+        '<h2>❌ TEFL EXAM: FAIL</h2>' +
+
+        '<div class="score-big">' +
+        score +
+        '/100' +
+        '</div>' +
+
+        '<p><strong>PASS MARK: 70/100</strong></p>' +
+
+        '<p>' +
+
+        'You need at least 70 correct answers to pass the TEFL examination.' +
+
+        '</p>' +
+
+        progress +
+
+        '<p style="margin-top:20px;">' +
+
+        'Please review the TEFL lessons and try again.' +
+
+        '</p>' +
+
+        '<a href="#tefl-lessons" ' +
+        'class="btn btn-gold" ' +
+        'style="margin-top:20px;">' +
+
+        'REVIEW TEFL LESSONS' +
+
+        '</a>' +
+
+        '</div>';
+
+    }
+
+
+    result.scrollIntoView({
+        behavior:"smooth",
+        block:"center"
+    });
 
 }
 
@@ -2445,21 +4027,23 @@ function displayVerificationResults(data){
 
     if(verify){
 
-        document
-            .getElementById("verifyInput")
-            .value =
-            verify;
+        var input =
+            document.getElementById("verifyInput");
 
+        if(input){
 
-        setVerifyType("id");
+            input.value = verify;
 
+            setVerifyType("id");
 
-        setTimeout(
-            function(){
-                verifyCertificate();
-            },
-            500
-        );
+            setTimeout(
+                function(){
+                    verifyCertificate();
+                },
+                500
+            );
+
+        }
 
     }
 
@@ -2483,138 +4067,6 @@ function escapeHTML(value){
         .replace(/"/g,"&quot;")
 
         .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================================================
-   TEFL FINAL EXAM
-========================================================= */
-
-function submitTEFLExam(){
-
-    var answers = {
-
-        q1:"a",
-        q2:"a",
-        q3:"b",
-        q4:"a",
-        q5:"a"
-
-    };
-
-
-    var score = 0;
-
-    var total = 5;
-
-
-    for(
-        var i = 1;
-        i <= total;
-        i++
-    ){
-
-        var selected =
-            document.querySelector(
-                'input[name="q' + i + '"]:checked'
-            );
-
-
-        if(!selected){
-
-            document.getElementById("teflExamResult").innerHTML =
-
-                '<div class="error">' +
-                '❌ Please answer all 5 questions before submitting the exam.' +
-                '</div>';
-
-            return;
-
-        }
-
-
-        if(
-            selected.value ===
-            answers["q" + i]
-        ){
-
-            score++;
-
-        }
-
-    }
-
-
-    var percentage =
-        Math.round(
-            (score / total) * 100
-        );
-
-
-    var result =
-        document.getElementById(
-            "teflExamResult"
-        );
-
-
-    if(percentage >= 70){
-
-        result.innerHTML =
-
-            '<div class="success">' +
-
-            '<strong>🎉 PASS</strong><br><br>' +
-
-            'Your score: ' +
-            score +
-            '/' +
-            total +
-            ' (' +
-            percentage +
-            '%)' +
-
-            '<br><br>' +
-
-            'Congratulations! You have passed the TEFL examination.' +
-
-            '<br><br>' +
-
-            '<a href="#verify" class="btn btn-gold">' +
-            'CERTIFICATE VERIFICATION' +
-            '</a>' +
-
-            '</div>';
-
-    }else{
-
-        result.innerHTML =
-
-            '<div class="error">' +
-
-            '<strong>❌ NOT PASSED</strong><br><br>' +
-
-            'Your score: ' +
-            score +
-            '/' +
-            total +
-            ' (' +
-            percentage +
-            '%)' +
-
-            '<br><br>' +
-
-            'A minimum score of 70% is required to pass.' +
-
-            '</div>';
-
-    }
-
-
-    result.scrollIntoView({
-        behavior:"smooth",
-        block:"center"
-    });
 
 }
 
@@ -2652,6 +4104,22 @@ function sendMessage(){
     );
 
 }
+
+
+/* =========================================================
+   INITIALIZE TEFL SYSTEM
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        loadTEFLLessons();
+
+        loadTEFLExam();
+
+    }
+);
 
 </script>
 
