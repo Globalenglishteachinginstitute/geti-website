@@ -16,10 +16,6 @@ content="Global English Teaching Institute - International English Education, TE
 
 <style>
 
-/* =========================================================
-   GLOBAL
-========================================================= */
-
 *{
     margin:0;
     padding:0;
@@ -531,29 +527,6 @@ img{
     box-shadow:0 15px 40px rgba(0,0,0,.2);
 }
 
-
-/* =========================================================
-   IMPORTANT:
-   RESULT IS NOW ABOVE THE VERIFICATION TITLE
-========================================================= */
-
-#verifyResult{
-    margin-bottom:30px;
-}
-
-#verifyResult .verify-card{
-    border:2px solid #b38a28;
-    border-radius:6px;
-    padding:25px;
-    background:#f9fbfd;
-    box-shadow:0 10px 30px rgba(0,0,0,.12);
-}
-
-#verifyResult .success{
-    margin-bottom:15px;
-}
-
-
 .verification-box h2{
     text-align:center;
     color:#0b2d5c;
@@ -615,6 +588,15 @@ img{
 .search-options button.active{
     background:#0b2d5c;
     color:#fff;
+}
+
+
+/* =========================================================
+   RESULT — ABOVE VERIFICATION TITLE
+========================================================= */
+
+#verifyResult{
+    margin-bottom:30px;
 }
 
 .verify-card{
@@ -915,9 +897,7 @@ img{
 <body>
 
 
-<!-- =========================================================
-     TOP BAR
-========================================================= -->
+<!-- TOP BAR -->
 
 <div class="topbar">
 
@@ -928,11 +908,8 @@ International English Education & Professional Training
 </div>
 
 <div class="topbar-right">
-
 <span>🌍 International</span>
-
 <span>🎓 GETI</span>
-
 </div>
 
 </div>
@@ -940,9 +917,7 @@ International English Education & Professional Training
 </div>
 
 
-<!-- =========================================================
-     NAVIGATION
-========================================================= -->
+<!-- NAVIGATION -->
 
 <nav class="navbar">
 
@@ -1022,9 +997,7 @@ VERIFY CERTIFICATE
 </nav>
 
 
-<!-- =========================================================
-     HERO
-========================================================= -->
+<!-- HERO -->
 
 <section class="hero" id="home">
 
@@ -1075,9 +1048,7 @@ VERIFY CERTIFICATE
 </section>
 
 
-<!-- =========================================================
-     STATS
-========================================================= -->
+<!-- STATS -->
 
 <section class="stats">
 
@@ -1108,9 +1079,7 @@ VERIFY CERTIFICATE
 </section>
 
 
-<!-- =========================================================
-     ABOUT
-========================================================= -->
+<!-- ABOUT -->
 
 <section class="section" id="about">
 
@@ -1174,9 +1143,7 @@ to advanced levels.
 </section>
 
 
-<!-- =========================================================
-     PROGRAMS
-========================================================= -->
+<!-- PROGRAMS -->
 
 <section class="section programs" id="programs">
 
@@ -1265,9 +1232,7 @@ your language proficiency.
 </section>
 
 
-<!-- =========================================================
-     CAMPUS
-========================================================= -->
+<!-- CAMPUS -->
 
 <section class="campus">
 
@@ -1300,9 +1265,7 @@ VERIFY YOUR CERTIFICATE
 </section>
 
 
-<!-- =========================================================
-     TEFL / TESOL
-========================================================= -->
+<!-- TEFL / TESOL -->
 
 <section class="section" id="tefl">
 
@@ -1722,9 +1685,6 @@ style="margin-top:25px;">
 
 <!-- =========================================================
      VERIFICATION
-     
-     IMPORTANT:
-     verifyResult is intentionally ABOVE the title.
 ========================================================= -->
 
 <section class="section verification" id="verify">
@@ -1735,20 +1695,16 @@ style="margin-top:25px;">
 
 
 <!-- =====================================================
-     RESULT IS HERE — ABOVE EVERYTHING ELSE
+     IMPORTANT:
+     RESULT IS NOW ABOVE THE VERIFICATION TITLE
 ===================================================== -->
 
 <div id="verifyResult"></div>
 
 
-<!-- =====================================================
-     TITLE
-===================================================== -->
-
 <h2>
 Certificate Verification
 </h2>
-
 
 <p class="verification-description">
 
@@ -1761,16 +1717,12 @@ You can also search using a single letter.
 </p>
 
 
-<!-- =====================================================
-     SEARCH
-===================================================== -->
-
 <div class="search-form">
 
 <input
 id="verifyInput"
 type="text"
-placeholder="GETI-CERT000045"
+placeholder="GETI-CERT000001"
 autocomplete="off">
 
 <button onclick="verifyCertificate()">
@@ -1779,10 +1731,6 @@ autocomplete="off">
 
 </div>
 
-
-<!-- =====================================================
-     SEARCH OPTIONS
-===================================================== -->
 
 <div class="search-options">
 
@@ -2033,7 +1981,6 @@ Learn • Teach • Grow • Succeed
 <li><a href="#home">Home</a></li>
 <li><a href="#about">About</a></li>
 <li><a href="#programs">Programs</a></li>
-<li><a href="#tefl">TEFL</a></li>
 <li><a href="#verify">Verify</a></li>
 
 </ul>
@@ -2071,10 +2018,6 @@ All rights reserved.
 
 </footer>
 
-
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
 
 <script>
 
@@ -2137,7 +2080,7 @@ function setVerifyType(type){
         document
             .getElementById("verifyInput")
             .placeholder =
-            "GETI-CERT000045";
+            "GETI-CERT000001";
 
     }
 
@@ -2221,9 +2164,7 @@ function verifyCertificate(){
             displayVerificationResults(data);
 
             try{
-
                 delete window[callbackName];
-
             }catch(e){}
 
         };
@@ -2262,7 +2203,7 @@ function verifyCertificate(){
 
 
 /* =========================================================
-   DISPLAY VERIFICATION RESULTS
+   DISPLAY RESULTS
 ========================================================= */
 
 function displayVerificationResults(data){
@@ -2384,19 +2325,6 @@ function displayVerificationResults(data){
     box.innerHTML =
         html;
 
-
-    /*
-       Scroll slightly upward so the verified result
-       is immediately visible.
-    */
-
-    document
-        .getElementById("verify")
-        .scrollIntoView({
-            behavior:"smooth",
-            block:"start"
-        });
-
 }
 
 
@@ -2429,9 +2357,7 @@ function displayVerificationResults(data){
 
         setTimeout(
             function(){
-
                 verifyCertificate();
-
             },
             500
         );
@@ -2484,28 +2410,17 @@ function submitTEFLExam(){
     var total = 5;
 
 
-    for(
-        var q in answers
-    ){
+    for(var q in answers){
 
         var selected =
             document.querySelector(
-                'input[name="' +
-                q +
-                '"]:checked'
+                'input[name="' + q + '"]:checked'
             );
 
 
-        if(selected){
+        if(selected && selected.value === answers[q]){
 
-            if(
-                selected.value ===
-                answers[q]
-            ){
-
-                score++;
-
-            }
+            score++;
 
         }
 
@@ -2513,15 +2428,11 @@ function submitTEFLExam(){
 
 
     var percentage =
-        Math.round(
-            (score / total) * 100
-        );
+        Math.round((score / total) * 100);
 
 
     var result =
-        document.getElementById(
-            "teflExamResult"
-        );
+        document.getElementById("teflExamResult");
 
 
     if(percentage >= 70){
@@ -2530,19 +2441,21 @@ function submitTEFLExam(){
 
             '<div class="success">' +
 
-            '<strong>🎉 PASS</strong><br><br>' +
+            '<h3>🎉 TEFL Examination Passed</h3>' +
 
-            'Score: ' +
-            score +
-            '/' +
-            total +
-            ' (' +
+            '<p>' +
+
+            'Score: <strong>' +
             percentage +
-            '%)' +
+            '%</strong>' +
 
-            '<br><br>' +
+            '</p>' +
 
-            'Congratulations! You passed the TEFL examination.' +
+            '<p>' +
+
+            'You may continue to registration.' +
+
+            '</p>' +
 
             '</div>';
 
@@ -2552,19 +2465,21 @@ function submitTEFLExam(){
 
             '<div class="error">' +
 
-            '<strong>❌ NOT PASSED</strong><br><br>' +
+            '<h3>TEFL Examination Not Passed</h3>' +
 
-            'Score: ' +
-            score +
-            '/' +
-            total +
-            ' (' +
+            '<p>' +
+
+            'Score: <strong>' +
             percentage +
-            '%)' +
+            '%</strong>' +
 
-            '<br><br>' +
+            '</p>' +
+
+            '<p>' +
 
             'A minimum score of 70% is required.' +
+
+            '</p>' +
 
             '</div>';
 
@@ -2580,43 +2495,21 @@ function submitTEFLExam(){
 function sendMessage(){
 
     var name =
-        document
-            .getElementById("contactName")
-            .value
-            .trim();
-
+        document.getElementById("contactName").value.trim();
 
     var email =
-        document
-            .getElementById("contactEmail")
-            .value
-            .trim();
-
+        document.getElementById("contactEmail").value.trim();
 
     var subject =
-        document
-            .getElementById("contactSubject")
-            .value
-            .trim();
-
+        document.getElementById("contactSubject").value.trim();
 
     var message =
-        document
-            .getElementById("contactMessage")
-            .value
-            .trim();
+        document.getElementById("contactMessage").value.trim();
 
 
-    if(
-        !name ||
-        !email ||
-        !subject ||
-        !message
-    ){
+    if(!name || !email || !subject || !message){
 
-        alert(
-            "Please complete all fields."
-        );
+        alert("Please complete all fields.");
 
         return;
 
