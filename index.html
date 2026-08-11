@@ -1,483 +1,275 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GETI - Certificate Verification</title>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>GETI Certificate Verification</title>
 
 <style>
+
 *{
   box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
 }
 
 body{
   margin:0;
   font-family:Arial,Helvetica,sans-serif;
-  background:#f4f7fb;
-  color:#222;
+  background:#f3f7fb;
+  color:#1f2937;
 }
 
-/* ================= HEADER ================= */
-
-header{
+.header{
   background:#0b2d5c;
   color:white;
-  padding:28px 20px;
+  padding:35px 20px;
   text-align:center;
 }
 
-.logo{
+.header h1{
+  margin:0;
   font-size:28px;
-  font-weight:800;
-  letter-spacing:.5px;
-}
-
-.tagline{
-  margin-top:8px;
-  font-size:15px;
-  opacity:.92;
-}
-
-/* ================= NAVIGATION ================= */
-
-nav{
-  background:white;
-  box-shadow:0 2px 10px rgba(0,0,0,.08);
-  position:sticky;
-  top:0;
-  z-index:1000;
-}
-
-.nav-container{
-  max-width:1100px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-wrap:wrap;
-}
-
-nav a{
-  color:#0b2d5c;
-  text-decoration:none;
   font-weight:700;
-  padding:16px 18px;
-  display:block;
 }
 
-nav a:hover{
-  background:#eef4fb;
-  color:#164b8f;
+.header p{
+  margin:10px 0 0;
+  font-size:15px;
 }
-
-/* ================= MAIN ================= */
 
 .container{
-  max-width:1050px;
-  margin:auto;
-  padding:40px 20px;
+  max-width:850px;
+  margin:40px auto;
+  padding:0 20px;
 }
 
-.hero{
+.card{
   background:white;
-  padding:55px 25px;
-  border-radius:15px;
-  text-align:center;
-  box-shadow:0 4px 18px rgba(0,0,0,.08);
-  margin-bottom:30px;
+  border-radius:16px;
+  padding:30px;
+  box-shadow:0 5px 25px rgba(0,0,0,.10);
 }
 
-.hero h1{
-  color:#0b2d5c;
-  font-size:38px;
-  margin:0 0 15px;
-}
-
-.hero p{
-  font-size:18px;
-  line-height:1.7;
-}
-
-.btn{
-  display:inline-block;
-  padding:13px 22px;
-  border-radius:7px;
-  text-decoration:none;
-  font-weight:bold;
-  margin:7px 4px;
-  cursor:pointer;
-  border:none;
-  font-size:15px;
-}
-
-.btn-primary{
-  background:#0b2d5c;
-  color:white;
-}
-
-.btn-primary:hover{
-  background:#164b8f;
-}
-
-.btn-secondary{
-  background:#e9eef5;
-  color:#0b2d5c;
-}
-
-/* ================= SECTIONS ================= */
-
-.section{
-  background:white;
-  margin-bottom:30px;
-  padding:35px 25px;
-  border-radius:15px;
-  box-shadow:0 3px 15px rgba(0,0,0,.07);
-}
-
-.section h2{
-  color:#0b2d5c;
-  text-align:center;
+h2{
   margin-top:0;
-}
-
-.section p{
-  line-height:1.7;
-}
-
-/* ================= PROGRAMS ================= */
-
-.program-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
-}
-
-.program{
-  border:1px solid #e0e6ef;
-  border-radius:12px;
-  padding:22px;
-  background:#fafcff;
-}
-
-.program h3{
-  color:#0b2d5c;
-  margin-top:0;
-}
-
-/* ================= VERIFICATION ================= */
-
-.verify-section{
-  background:linear-gradient(135deg,#ffffff,#f7faff);
-  border:1px solid #dce6f2;
-}
-
-.verify-title{
   text-align:center;
   color:#0b2d5c;
-  font-size:30px;
-  margin-bottom:8px;
 }
 
-.verify-description{
+.description{
   text-align:center;
   color:#555;
-  margin-bottom:25px;
   line-height:1.6;
+  margin-bottom:25px;
 }
 
 .search-box{
-  max-width:750px;
-  margin:auto;
+  background:#f8fafc;
+  border:1px solid #dbe3ec;
+  border-radius:12px;
+  padding:20px;
 }
 
-.search-label{
+label{
   display:block;
   font-weight:bold;
-  color:#0b2d5c;
   margin-bottom:8px;
+  color:#0b2d5c;
 }
 
-.search-row{
-  display:flex;
-  gap:10px;
-}
-
-.search-input{
-  flex:1;
-  padding:16px;
-  border:2px solid #cfd8e5;
-  border-radius:9px;
+input{
+  width:100%;
+  padding:15px;
+  border:1px solid #b8c2cc;
+  border-radius:8px;
   font-size:16px;
   outline:none;
 }
 
-.search-input:focus{
+input:focus{
   border-color:#0b2d5c;
   box-shadow:0 0 0 3px rgba(11,45,92,.10);
 }
 
-.search-button{
-  padding:16px 22px;
-  background:#0b2d5c;
-  color:white;
-  border:none;
-  border-radius:9px;
-  font-weight:bold;
-  cursor:pointer;
-  font-size:15px;
-}
-
-.search-button:hover{
-  background:#164b8f;
-}
-
-.clear-button{
-  margin-top:10px;
-  width:100%;
-  padding:12px;
-  border:1px solid #ccd5e1;
-  background:#f5f7fa;
-  color:#333;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-.clear-button:hover{
-  background:#e9eef5;
-}
-
-/* Search type */
-
-.search-options{
+.search-type{
   display:flex;
-  gap:18px;
-  justify-content:center;
-  margin:18px 0;
+  gap:10px;
+  margin-top:15px;
   flex-wrap:wrap;
 }
 
-.search-options label{
+.search-type button{
+  flex:1;
+  min-width:150px;
+  padding:12px;
+  border:1px solid #0b2d5c;
+  background:white;
+  color:#0b2d5c;
+  border-radius:7px;
   cursor:pointer;
-  color:#333;
+  font-weight:bold;
 }
 
-.search-options input{
-  margin-right:6px;
+.search-type button.active{
+  background:#0b2d5c;
+  color:white;
 }
 
-/* ================= STATUS ================= */
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:15px;
+}
+
+.btn{
+  flex:1;
+  padding:14px;
+  border:0;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:15px;
+  font-weight:bold;
+}
+
+.verify{
+  background:#0b2d5c;
+  color:white;
+}
+
+.verify:hover{
+  background:#164b8f;
+}
+
+.clear{
+  background:#e5e7eb;
+  color:#222;
+}
+
+.clear:hover{
+  background:#d1d5db;
+}
+
+#result{
+  margin-top:25px;
+  display:none;
+}
 
 .status{
-  max-width:750px;
-  margin:22px auto 0;
-  padding:16px;
-  border-radius:9px;
-  display:none;
-  line-height:1.5;
-}
-
-.status.loading{
-  display:block;
-  background:#eef5ff;
-  border:1px solid #b9d2f0;
-  color:#174a7e;
-}
-
-.status.error{
-  display:block;
-  background:#fff0f0;
-  border:1px solid #e4a5a5;
-  color:#a40000;
-}
-
-.status.info{
-  display:block;
-  background:#fff9e8;
-  border:1px solid #ead38a;
-  color:#765800;
-}
-
-/* ================= RESULTS ================= */
-
-.results{
-  max-width:900px;
-  margin:25px auto 0;
-}
-
-.result-count{
-  background:#eef5ff;
-  border-left:5px solid #0b2d5c;
-  padding:13px 16px;
+  padding:15px;
+  border-radius:10px;
   margin-bottom:15px;
   font-weight:bold;
+}
+
+.success{
+  background:#e8f7ed;
+  border:1px solid #35a853;
+  color:#176b32;
+}
+
+.error{
+  background:#fdeaea;
+  border:1px solid #d93025;
+  color:#a51d14;
+}
+
+.loading{
+  background:#eef4ff;
+  border:1px solid #9db8df;
+  color:#164b8f;
+}
+
+.results-title{
   color:#0b2d5c;
+  margin:20px 0 12px;
 }
 
 .certificate-card{
-  background:white;
-  border:1px solid #dce3ec;
+  border:1px solid #dbe3ec;
   border-radius:12px;
+  padding:20px;
   margin-bottom:15px;
-  overflow:hidden;
-  box-shadow:0 3px 12px rgba(0,0,0,.06);
+  background:#fff;
 }
 
-.verified-header{
-  background:#e8f7ed;
-  color:#18743a;
-  padding:14px 18px;
+.verified-title{
+  color:#188038;
+  font-size:18px;
   font-weight:bold;
-  font-size:17px;
+  margin-bottom:15px;
 }
 
-.certificate-table{
-  width:100%;
-  border-collapse:collapse;
+.info-row{
+  display:flex;
+  padding:10px 0;
+  border-bottom:1px solid #edf0f3;
 }
 
-.certificate-table td{
-  padding:13px 16px;
-  border-bottom:1px solid #edf0f4;
-  vertical-align:top;
+.info-row:last-child{
+  border-bottom:0;
 }
 
-.certificate-table td:first-child{
-  width:190px;
+.info-label{
+  width:170px;
   font-weight:bold;
   color:#0b2d5c;
-  background:#fafbfd;
 }
 
-.certificate-table tr:last-child td{
-  border-bottom:none;
+.info-value{
+  flex:1;
 }
 
 .no-results{
-  text-align:center;
-  padding:25px;
-  background:#fff0f0;
-  border:1px solid #e4b0b0;
-  color:#a00000;
-  border-radius:10px;
-}
-
-/* ================= WHY ================= */
-
-.why-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:15px;
-}
-
-.why{
-  text-align:center;
   padding:20px;
-  border:1px solid #e1e6ed;
+  background:#fff7e6;
+  border:1px solid #f2c46d;
   border-radius:10px;
-  background:#fafcff;
+  color:#7a5200;
 }
 
-.why strong{
-  display:block;
-  color:#0b2d5c;
-  font-size:18px;
-  margin-bottom:8px;
-}
-
-/* ================= FOOTER ================= */
-
-footer{
-  background:#0b2d5c;
-  color:white;
+.footer{
   text-align:center;
-  padding:35px 20px;
-  margin-top:30px;
+  margin:30px 0;
+  color:#777;
+  font-size:14px;
 }
 
-footer p{
-  margin:7px 0;
-}
+@media(max-width:600px){
 
-@media(max-width:650px){
-
-  .logo{
+  .header h1{
     font-size:21px;
   }
 
-  nav a{
-    padding:12px 9px;
-    font-size:13px;
+  .card{
+    padding:20px;
   }
 
-  .hero h1{
-    font-size:28px;
-  }
-
-  .search-row{
+  .actions{
     flex-direction:column;
   }
 
-  .search-button{
-    width:100%;
+  .info-row{
+    display:block;
   }
 
-  .certificate-table td:first-child{
-    width:130px;
+  .info-label{
+    width:auto;
+    margin-bottom:5px;
   }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
-
-<header>
-
-  <div class="logo">
-    GLOBAL ENGLISH TEACHING INSTITUTE
-  </div>
-
-  <div class="tagline">
-    International English Education & Professional Training
-  </div>
-
-</header>
-
-
-<!-- ================= MENU ================= -->
-
-<nav>
-
-  <div class="nav-container">
-
-    <a href="#home">HOME</a>
-    <a href="#about">ABOUT</a>
-    <a href="#programs">PROGRAMS</a>
-    <a href="#tefl">TEFL</a>
-    <a href="#tesol">TESOL</a>
-    <a href="#exams">EXAMS</a>
-    <a href="#verify">VERIFY</a>
-    <a href="#contact">CONTACT</a>
-
-  </div>
-
-</nav>
-
-
-<!-- ================= CONTENT ================= -->
-
-<div class="container">
-
-
-<!-- HOME -->
-
-<section class="hero" id="home">
+<div class="header">
 
   <h1>
     GLOBAL ENGLISH TEACHING INSTITUTE
@@ -487,432 +279,271 @@ footer p{
     International English Education & Professional Training
   </p>
 
-  <p>
-    Learn English. Build Skills. Earn Your Certificate.
-  </p>
+</div>
 
-  <a href="#programs" class="btn btn-primary">
-    START LEARNING
-  </a>
 
-  <a href="#verify" class="btn btn-secondary">
-    VERIFY CERTIFICATE
-  </a>
+<div class="container">
 
-</section>
+<div class="card">
 
+<h2>
+  Certificate Verification
+</h2>
 
-<!-- ABOUT -->
+<p class="description">
+  Verify the authenticity of a GETI certificate using the
+  certificate number, student's name, or nationality.
+  You can also search using a single letter.
+</p>
 
-<section class="section" id="about">
 
-  <h2>About GETI</h2>
+<div class="search-box">
 
-  <p>
-    Global English Teaching Institute (GETI) is an English education
-    and professional training platform dedicated to helping learners
-    and teachers develop practical English language and teaching skills.
-  </p>
+<label>
+  Search Certificate
+</label>
 
-</section>
+<input
+  id="searchInput"
+  type="text"
+  placeholder="Enter certificate ID, name, or nationality"
+  autocomplete="off"
+>
 
 
-<!-- PROGRAMS -->
+<div class="search-type">
 
-<section class="section" id="programs">
+<button
+  id="idBtn"
+  class="active"
+  onclick="setSearchType('id')">
 
-  <h2>Our Programs</h2>
+  Certificate ID
 
-  <div class="program-grid">
+</button>
 
-    <div class="program">
 
-      <h3>English Courses</h3>
+<button
+  id="nameBtn"
+  onclick="setSearchType('name')">
 
-      <p>
-        Improve your English from A1 to C2 through structured lessons,
-        practice and assessments.
-      </p>
+  Name
 
-    </div>
+</button>
 
 
-    <div class="program" id="tefl">
+<button
+  id="nationalityBtn"
+  onclick="setSearchType('nationality')">
 
-      <h3>TEFL Training</h3>
+  Nationality
 
-      <p>
-        Develop essential skills in English language teaching,
-        lesson planning and classroom management.
-      </p>
-
-    </div>
-
-
-    <div class="program" id="tesol">
-
-      <h3>TESOL Training</h3>
-
-      <p>
-        Learn modern approaches to teaching English to speakers
-        of other languages.
-      </p>
-
-    </div>
-
-
-    <div class="program" id="exams">
-
-      <h3>English Exams</h3>
-
-      <p>
-        Test your English knowledge and demonstrate your
-        language proficiency.
-      </p>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ================= VERIFY ================= -->
-
-<section class="section verify-section" id="verify">
-
-  <h2 class="verify-title">
-    Certificate Verification
-  </h2>
-
-  <p class="verify-description">
-
-    Verify the authenticity of a GETI certificate using the
-    certificate number, student's name, or nationality.
-
-    <br>
-
-    You can also search using a single letter.
-
-  </p>
-
-
-  <div class="search-box">
-
-    <label class="search-label">
-      Search Certificate
-    </label>
-
-
-    <div class="search-row">
-
-      <input
-        id="certificateSearch"
-        class="search-input"
-        type="text"
-        placeholder="e.g. GETI-CERT000045 or Haruto or r"
-        autocomplete="off"
-      >
-
-      <button
-        class="search-button"
-        onclick="searchCertificate()"
-      >
-        🔍 VERIFY
-      </button>
-
-    </div>
-
-
-    <div class="search-options">
-
-      <label>
-        <input
-          type="radio"
-          name="searchType"
-          value="id"
-          checked
-        >
-        Certificate ID
-      </label>
-
-
-      <label>
-        <input
-          type="radio"
-          name="searchType"
-          value="name"
-        >
-        Name
-      </label>
-
-
-      <label>
-        <input
-          type="radio"
-          name="searchType"
-          value="nationality"
-        >
-        Nationality
-      </label>
-
-    </div>
-
-
-    <button
-      class="clear-button"
-      onclick="clearSearch()"
-    >
-      🧹 CLEAR
-    </button>
-
-  </div>
-
-
-  <div id="status" class="status"></div>
-
-  <div id="results" class="results"></div>
-
-</section>
-
-
-<!-- ================= MISSION ================= -->
-
-<section class="section">
-
-  <h2>Our Mission</h2>
-
-  <p>
-    Our mission is to make quality English education and professional
-    training accessible to learners and teachers around the world.
-  </p>
-
-</section>
-
-
-<!-- ================= WHY GETI ================= -->
-
-<section class="section">
-
-  <h2>Why Choose GETI?</h2>
-
-  <div class="why-grid">
-
-    <div class="why">
-
-      <strong>✓ A1–C2</strong>
-
-      Complete English learning levels.
-
-    </div>
-
-
-    <div class="why">
-
-      <strong>✓ TEFL</strong>
-
-      Professional English teaching training.
-
-    </div>
-
-
-    <div class="why">
-
-      <strong>✓ Online Learning</strong>
-
-      Access learning resources online.
-
-    </div>
-
-
-    <div class="why">
-
-      <strong>✓ Verification</strong>
-
-      Online certificate verification system.
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ================= CONTACT ================= -->
-
-<section class="section" id="contact">
-
-  <h2>Contact GETI</h2>
-
-  <p>
-    <strong>
-      Global English Teaching Institute
-    </strong>
-  </p>
-
-  <p>
-    International English Education & Professional Training
-  </p>
-
-  <p>
-    Email:
-    <a href="mailto:globalenglish123@gmail.com">
-      globalenglish123@gmail.com
-    </a>
-  </p>
-
-</section>
-
+</button>
 
 </div>
 
 
-<!-- ================= FOOTER ================= -->
+<div class="actions">
 
-<footer>
+<button
+  class="btn verify"
+  onclick="searchCertificate()">
 
-  <p>
-    <strong>
-      GLOBAL ENGLISH TEACHING INSTITUTE
-    </strong>
-  </p>
+  🔍 VERIFY
 
-  <p>
-    Learn • Teach • Grow • Succeed
-  </p>
+</button>
 
-  <p>
-    © 2026 GETI. All rights reserved.
-  </p>
 
-</footer>
+<button
+  class="btn clear"
+  onclick="clearSearch()">
+
+  🧹 CLEAR
+
+</button>
+
+</div>
+
+</div>
+
+
+<div id="result"></div>
+
+</div>
+
+
+<div class="footer">
+
+GLOBAL ENGLISH TEACHING INSTITUTE<br>
+
+Learn • Teach • Grow • Succeed<br><br>
+
+© 2026 GETI. All rights reserved.
+
+</div>
+
+</div>
 
 
 <script>
 
-/* ==========================================================
-   GOOGLE APPS SCRIPT URL
-   ========================================================== */
+/*
+ * IMPORTANT:
+ * This is your Google Apps Script Web App URL.
+ */
 
-const API_URL =
+var API_URL =
 "https://script.google.com/macros/s/AKfycbzQ_YczGnSdh4GJZ73XTt8LfrUtdjJFAlUZGUx3Chhlk-0Es3rskQkun5LgrZYhkKRF/exec";
 
 
-/* ==========================================================
-   AUTOMATIC VERIFY FROM URL
+var searchType = "id";
 
-   Example:
 
-   https://globalenglishteachinginstitute.github.io/geti-website/?verify=GETI-CERT000045
+/*
+ * CHANGE SEARCH TYPE
+ */
 
-   or
+function setSearchType(type){
 
-   https://globalenglishteachinginstitute.github.io/geti-website/?id=GETI-CERT000045
-   ========================================================== */
+  searchType = type;
 
-window.addEventListener("DOMContentLoaded", function(){
 
-  const params =
-    new URLSearchParams(window.location.search);
+  document
+    .getElementById("idBtn")
+    .classList.remove("active");
 
-  const verifyId =
-    params.get("verify") ||
-    params.get("id");
+  document
+    .getElementById("nameBtn")
+    .classList.remove("active");
 
-  if(verifyId){
+  document
+    .getElementById("nationalityBtn")
+    .classList.remove("active");
 
-    document.getElementById(
-      "certificateSearch"
-    ).value = verifyId;
 
-    document.querySelector(
-      'input[name="searchType"][value="id"]'
-    ).checked = true;
+  if(type === "id"){
 
-    setTimeout(function(){
-
-      searchCertificate();
-
-    },300);
+    document
+      .getElementById("idBtn")
+      .classList.add("active");
 
   }
 
-});
+
+  if(type === "name"){
+
+    document
+      .getElementById("nameBtn")
+      .classList.add("active");
+
+  }
 
 
-/* ==========================================================
-   SEARCH CERTIFICATE
-   ========================================================== */
+  if(type === "nationality"){
+
+    document
+      .getElementById("nationalityBtn")
+      .classList.add("active");
+
+  }
+
+
+  var input =
+    document.getElementById("searchInput");
+
+
+  if(type === "id"){
+
+    input.placeholder =
+      "Example: GETI-CERT000045";
+
+  }
+
+
+  if(type === "name"){
+
+    input.placeholder =
+      "Example: Haruto or H";
+
+  }
+
+
+  if(type === "nationality"){
+
+    input.placeholder =
+      "Example: Japanese or J";
+
+  }
+
+}
+
+
+/*
+ * SEARCH
+ */
 
 function searchCertificate(){
 
-  const input =
+  var input =
     document.getElementById(
-      "certificateSearch"
-    );
-
-  const status =
-    document.getElementById(
-      "status"
-    );
-
-  const results =
-    document.getElementById(
-      "results"
+      "searchInput"
     );
 
 
-  const value =
+  var value =
     input.value.trim();
 
 
-  const type =
-    document.querySelector(
-      'input[name="searchType"]:checked'
-    ).value;
+  var result =
+    document.getElementById(
+      "result"
+    );
 
 
-  results.innerHTML = "";
-
+  /*
+   * IMPORTANT:
+   * Do NOT show "certificate number"
+   * when searching by name/nationality.
+   */
 
   if(!value){
 
-    status.className =
-      "status error";
+    result.style.display = "block";
 
-    status.innerHTML =
-      "❌ Please enter a certificate number, name, or nationality.";
+    result.innerHTML =
+      '<div class="status error">' +
+      '❌ Please enter a certificate ID, name, or nationality.' +
+      '</div>';
 
     return;
 
   }
 
 
-  status.className =
-    "status loading";
+  result.style.display = "block";
 
-  status.innerHTML =
-    "⏳ Searching certificate records...";
+
+  result.innerHTML =
+    '<div class="status loading">' +
+    '⏳ Searching certificate records...' +
+    '</div>';
 
 
   /*
-   * Apps Script receives:
-   *
-   * ?type=id&value=GETI-CERT000045
-   *
-   * ?type=name&value=Haruto
-   *
-   * ?type=nationality&value=Japanese
+   * Create API URL
    */
 
-
-  const url =
+  var url =
     API_URL +
     "?type=" +
-    encodeURIComponent(type) +
+    encodeURIComponent(searchType) +
     "&value=" +
     encodeURIComponent(value);
 
+
+  /*
+   * Call Google Apps Script
+   */
 
   fetch(url)
 
@@ -921,7 +552,7 @@ function searchCertificate(){
       if(!response.ok){
 
         throw new Error(
-          "Unable to connect to the verification server."
+          "Unable to connect to verification server."
         );
 
       }
@@ -930,256 +561,351 @@ function searchCertificate(){
 
     })
 
+
     .then(function(data){
 
-      status.className =
-        "status";
-
-      status.style.display =
-        "none";
-
-
-      if(!data){
-
-        showError(
-          "No response received from the verification server."
-        );
-
-        return;
-
-      }
-
-
-      if(!data.success){
-
-        showError(
-          data.message ||
-          "Certificate verification failed."
-        );
-
-        return;
-
-      }
-
-
-      const list =
-        data.results || [];
-
-
-      if(list.length === 0){
-
-        showNoResults();
-
-        return;
-
-      }
-
-
-      showResults(list);
+      displayResults(data);
 
     })
 
+
     .catch(function(error){
 
-      showError(
-        "Connection error: " +
-        error.message
-      );
+      result.innerHTML =
+        '<div class="status error">' +
+        '❌ Connection error: ' +
+        escapeHtml(error.message) +
+        '</div>';
 
     });
 
 }
 
 
-/* ==========================================================
-   SHOW RESULTS
-   ========================================================== */
+/*
+ * DISPLAY RESULTS
+ */
 
-function showResults(list){
+function displayResults(data){
 
-  const results =
+  var result =
     document.getElementById(
-      "results"
+      "result"
     );
 
 
-  let html = "";
+  if(!data){
+
+    result.innerHTML =
+      '<div class="status error">' +
+      '❌ No response from verification server.' +
+      '</div>';
+
+    return;
+
+  }
+
+
+  if(!data.success){
+
+    result.innerHTML =
+      '<div class="status error">' +
+      '❌ ' +
+      escapeHtml(
+        data.message ||
+        "Search failed."
+      ) +
+      '</div>';
+
+    return;
+
+  }
+
+
+  var records =
+    data.results || [];
+
+
+  if(records.length === 0){
+
+    result.innerHTML =
+      '<div class="no-results">' +
+      '❌ No certificate found matching your search.' +
+      '</div>';
+
+    return;
+
+  }
+
+
+  var html = "";
 
 
   html +=
-    '<div class="result-count">' +
-    "✅ " +
-    list.length +
-    " certificate record" +
-    (list.length === 1 ? "" : "s") +
-    " found." +
-    "</div>";
+    '<div class="status success">' +
+    '✅ Search completed — ' +
+    records.length +
+    ' certificate(s) found.' +
+    '</div>';
 
 
-  list.forEach(function(item){
+  html +=
+    '<h3 class="results-title">' +
+    'Certificate Results' +
+    '</h3>';
+
+
+  for(
+    var i = 0;
+    i < records.length;
+    i++
+  ){
+
+    var certificate =
+      records[i];
+
 
     html +=
-
-      '<div class="certificate-card">' +
-
-        '<div class="verified-header">' +
-          "✅ Certificate Verified" +
-        "</div>" +
-
-        '<table class="certificate-table">' +
-
-          "<tr>" +
-            "<td>Name</td>" +
-            "<td>" +
-              escapeHtml(item.name) +
-            "</td>" +
-          "</tr>" +
-
-          "<tr>" +
-            "<td>Nationality</td>" +
-            "<td>" +
-              escapeHtml(item.nationality) +
-            "</td>" +
-          "</tr>" +
-
-          "<tr>" +
-            "<td>Certificate</td>" +
-            "<td>" +
-              escapeHtml(item.certificate) +
-            "</td>" +
-          "</tr>" +
-
-          "<tr>" +
-            "<td>Certificate ID</td>" +
-            "<td><strong>" +
-              escapeHtml(item.id) +
-            "</strong></td>" +
-          "</tr>" +
-
-          "<tr>" +
-            "<td>Certificate Type</td>" +
-            "<td>" +
-              escapeHtml(item.type) +
-            "</td>" +
-          "</tr>" +
-
-        "</table>" +
-
-      "</div>";
-
-  });
+      '<div class="certificate-card">';
 
 
-  results.innerHTML =
-    html;
-
-}
-
-
-/* ==========================================================
-   NO RESULTS
-   ========================================================== */
-
-function showNoResults(){
-
-  const status =
-    document.getElementById(
-      "status"
-    );
-
-  status.className =
-    "status error";
-
-  status.style.display =
-    "block";
-
-  status.innerHTML =
-    "❌ No certificate records were found for your search.";
-
-}
+    html +=
+      '<div class="verified-title">' +
+      '✅ Certificate Verified' +
+      '</div>';
 
 
-/* ==========================================================
-   ERROR
-   ========================================================== */
+    html +=
+      '<div class="info-row">' +
 
-function showError(message){
+      '<div class="info-label">' +
+      'Name' +
+      '</div>' +
 
-  const status =
-    document.getElementById(
-      "status"
-    );
+      '<div class="info-value">' +
+      escapeHtml(
+        certificate.name
+      ) +
+      '</div>' +
 
-  status.className =
-    "status error";
+      '</div>';
 
-  status.style.display =
-    "block";
 
-  status.innerHTML =
-    "❌ " +
-    escapeHtml(message);
+    html +=
+      '<div class="info-row">' +
+
+      '<div class="info-label">' +
+      'Nationality' +
+      '</div>' +
+
+      '<div class="info-value">' +
+      escapeHtml(
+        certificate.nationality
+      ) +
+      '</div>' +
+
+      '</div>';
+
+
+    html +=
+      '<div class="info-row">' +
+
+      '<div class="info-label">' +
+      'Certificate' +
+      '</div>' +
+
+      '<div class="info-value">' +
+      escapeHtml(
+        certificate.certificate
+      ) +
+      '</div>' +
+
+      '</div>';
+
+
+    html +=
+      '<div class="info-row">' +
+
+      '<div class="info-label">' +
+      'Certificate ID' +
+      '</div>' +
+
+      '<div class="info-value">' +
+      escapeHtml(
+        certificate.id
+      ) +
+      '</div>' +
+
+      '</div>';
+
+
+    html +=
+      '<div class="info-row">' +
+
+      '<div class="info-label">' +
+      'Certificate Type' +
+      '</div>' +
+
+      '<div class="info-value">' +
+      escapeHtml(
+        certificate.type
+      ) +
+      '</div>' +
+
+      '</div>';
+
+
+    html +=
+      '</div>';
+
+  }
+
+
+  result.innerHTML = html;
 
 }
 
 
-/* ==========================================================
-   CLEAR
-   ========================================================== */
+/*
+ * CLEAR
+ */
 
 function clearSearch(){
 
-  document.getElementById(
-    "certificateSearch"
-  ).value = "";
+  document
+    .getElementById(
+      "searchInput"
+    )
+    .value = "";
 
-  document.getElementById(
-    "results"
-  ).innerHTML = "";
 
-  document.getElementById(
-    "status"
-  ).style.display = "none";
+  document
+    .getElementById(
+      "result"
+    )
+    .style.display = "none";
+
+
+  document
+    .getElementById(
+      "result"
+    )
+    .innerHTML = "";
+
+
+  setSearchType("id");
 
 }
 
 
-/* ==========================================================
-   ENTER KEY
-   ========================================================== */
+/*
+ * ENTER KEY
+ */
 
-document.getElementById(
-  "certificateSearch"
-).addEventListener(
-  "keydown",
-  function(event){
+document
+  .getElementById(
+    "searchInput"
+  )
+  .addEventListener(
+    "keydown",
+    function(event){
 
-    if(event.key === "Enter"){
+      if(
+        event.key === "Enter"
+      ){
 
-      searchCertificate();
+        searchCertificate();
+
+      }
 
     }
-
-  }
-);
+  );
 
 
-/* ==========================================================
-   SECURITY
-   ========================================================== */
+/*
+ * ESCAPE HTML
+ */
 
 function escapeHtml(value){
 
-  return String(value || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+  if(value === null ||
+     value === undefined){
+
+    return "";
+
+  }
+
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
+
+
+/*
+ * AUTOMATIC VERIFICATION
+ *
+ * Example:
+ *
+ * ?verify=GETI-CERT000045
+ */
+
+(function(){
+
+  var params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+
+  var verify =
+    params.get("verify");
+
+
+  if(verify){
+
+    document
+      .getElementById(
+        "searchInput"
+      )
+      .value = verify;
+
+
+    setSearchType("id");
+
+
+    searchCertificate();
+
+  }
+
+})();
 
 </script>
 
 </body>
 </html>
+```
