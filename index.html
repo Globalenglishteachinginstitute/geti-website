@@ -3,137 +3,150 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="GETI - Global English Teaching Institute | TEFL and TESOL Training">
+<meta name="description" content="GETI - Global English Teaching Institute">
 <title>GETI | Global English Teaching Institute</title>
 
 <style>
 *{
+  box-sizing:border-box;
   margin:0;
   padding:0;
-  box-sizing:border-box;
+}
+
+html{
   scroll-behavior:smooth;
 }
 
 body{
   font-family:Arial,Helvetica,sans-serif;
-  background:#f4f7fb;
+  background:#f5f7fb;
   color:#172033;
   line-height:1.6;
 }
 
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button,
+input,
+select{
+  font:inherit;
+}
+
 header{
-  background:linear-gradient(135deg,#061b45,#0b4ea2);
+  background:#071a38;
   color:white;
   position:sticky;
   top:0;
-  z-index:999;
-  box-shadow:0 4px 18px rgba(0,0,0,.2);
+  z-index:1000;
+  box-shadow:0 3px 15px rgba(0,0,0,.15);
 }
 
 .navbar{
   max-width:1250px;
   margin:auto;
-  padding:12px 20px;
+  min-height:75px;
+  padding:10px 20px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:15px;
+  gap:20px;
 }
 
 .brand{
   display:flex;
   align-items:center;
-  gap:10px;
-  font-weight:bold;
-  font-size:19px;
+  gap:12px;
+  font-weight:800;
+  font-size:20px;
 }
 
 .brand-logo{
   width:48px;
   height:48px;
   border-radius:50%;
-  background:white;
-  color:#0b4ea2;
+  background:linear-gradient(135deg,#00a6ff,#6c4cff);
   display:flex;
   align-items:center;
   justify-content:center;
   font-weight:900;
-  border:3px solid #f4c542;
+  border:2px solid white;
 }
 
-.menu{
+.nav-links{
   display:flex;
-  flex-wrap:wrap;
-  gap:7px;
-  justify-content:flex-end;
+  align-items:center;
+  gap:5px;
+  list-style:none;
 }
 
-.menu a{
-  color:white;
-  text-decoration:none;
-  padding:9px 11px;
+.nav-links a{
+  padding:10px 12px;
   border-radius:8px;
-  font-size:13px;
-  font-weight:bold;
+  font-size:14px;
+  font-weight:700;
 }
 
-.menu a:hover{
-  background:rgba(255,255,255,.18);
+.nav-links a:hover{
+  background:#12315f;
+}
+
+.menu-btn{
+  display:none;
+  background:none;
+  border:0;
+  color:white;
+  font-size:28px;
+  cursor:pointer;
 }
 
 .hero{
-  min-height:570px;
+  min-height:560px;
   display:flex;
   align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:60px 20px;
-  color:white;
   background:
-    linear-gradient(rgba(3,21,53,.82),rgba(5,52,113,.82)),
-    radial-gradient(circle at 20% 20%,#2c8cff,transparent 30%),
-    radial-gradient(circle at 80% 80%,#00b7a8,transparent 30%),
-    #071c42;
+    linear-gradient(rgba(7,26,56,.85),rgba(7,26,56,.88)),
+    radial-gradient(circle at 20% 20%,#2c77c9,transparent 35%),
+    radial-gradient(circle at 80% 70%,#6633aa,transparent 35%);
+  color:white;
 }
 
 .hero-content{
-  max-width:950px;
+  max-width:1150px;
+  margin:auto;
+  padding:70px 20px;
+  width:100%;
 }
 
 .hero h1{
-  font-size:clamp(38px,7vw,72px);
-  margin-bottom:12px;
-  letter-spacing:1px;
-}
-
-.hero h2{
-  color:#f4c542;
-  font-size:clamp(20px,3vw,32px);
+  font-size:clamp(38px,6vw,72px);
+  line-height:1.05;
+  max-width:850px;
   margin-bottom:20px;
 }
 
 .hero p{
-  max-width:760px;
-  margin:auto;
-  font-size:18px;
+  max-width:750px;
+  font-size:19px;
+  color:#dbe8ff;
+  margin-bottom:30px;
 }
 
 .buttons{
-  margin-top:30px;
   display:flex;
-  justify-content:center;
   flex-wrap:wrap;
   gap:12px;
 }
 
 .btn{
   display:inline-block;
-  padding:13px 21px;
-  border-radius:9px;
-  text-decoration:none;
-  font-weight:bold;
-  border:none;
+  border:0;
   cursor:pointer;
+  padding:13px 20px;
+  border-radius:9px;
+  font-weight:800;
   transition:.2s;
 }
 
@@ -141,14 +154,24 @@ header{
   transform:translateY(-2px);
 }
 
-.primary{
-  background:#f4c542;
-  color:#111;
+.btn-primary{
+  background:#00a6ff;
+  color:white;
 }
 
-.secondary{
+.btn-secondary{
   background:white;
-  color:#0b4ea2;
+  color:#071a38;
+}
+
+.btn-dark{
+  background:#071a38;
+  color:white;
+}
+
+.btn-success{
+  background:#159447;
+  color:white;
 }
 
 section{
@@ -166,314 +189,430 @@ section{
 }
 
 .section-title h2{
-  font-size:35px;
-  color:#0b4ea2;
+  font-size:36px;
+  color:#071a38;
   margin-bottom:8px;
 }
 
 .section-title p{
-  color:#667085;
+  color:#657089;
 }
 
 .cards{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  grid-template-columns:repeat(3,1fr);
   gap:20px;
 }
 
 .card{
   background:white;
-  border-radius:16px;
+  border-radius:15px;
   padding:25px;
-  box-shadow:0 7px 25px rgba(0,0,0,.08);
-  border:1px solid #e7ebf2;
-  transition:.25s;
-}
-
-.card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 12px 30px rgba(0,0,0,.12);
-}
-
-.card-icon{
-  width:65px;
-  height:65px;
-  border-radius:14px;
-  background:#e9f2ff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:32px;
-  margin-bottom:15px;
+  box-shadow:0 5px 22px rgba(15,35,70,.08);
+  border:1px solid #e7ebf3;
 }
 
 .card h3{
-  color:#0b4ea2;
-  margin-bottom:8px;
+  color:#071a38;
+  margin:10px 0;
 }
 
-.light{
-  background:#eef5ff;
+.card p{
+  color:#647087;
+}
+
+.icon-card{
+  min-height:190px;
+}
+
+.icon{
+  width:55px;
+  height:55px;
+  border-radius:13px;
+  background:#e9f5ff;
+  color:#0877c9;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:27px;
+}
+
+.about{
+  background:white;
 }
 
 .program-card{
-  text-align:center;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.program-card .card-icon{
-  margin:0 auto 15px;
+.program-card:hover{
+  transform:translateY(-5px);
 }
 
-.badge{
+.course-badge{
   display:inline-block;
-  background:#e8f7ef;
-  color:#087443;
+  background:#e8f5ff;
+  color:#0672bd;
   padding:5px 10px;
   border-radius:20px;
   font-size:12px;
   font-weight:bold;
-  margin-top:10px;
 }
 
-/* VERIFY */
-.verify-box{
-  max-width:760px;
-  margin:auto;
-  background:white;
-  padding:30px;
-  border-radius:18px;
-  box-shadow:0 8px 30px rgba(0,0,0,.1);
+.lesson-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
 }
 
-.verify-box input{
-  width:100%;
-  padding:15px;
-  border:2px solid #dce3ed;
-  border-radius:9px;
-  font-size:16px;
-  margin:12px 0;
-}
-
-.verify-btn{
-  width:100%;
-  background:#0b4ea2;
-  color:white;
-}
-
-.result{
-  margin-top:20px;
-  padding:20px;
-  border-radius:10px;
-  display:none;
-}
-
-.success{
-  background:#e8f7ef;
-  border:1px solid #80cfa3;
-  color:#075b31;
-}
-
-.error{
-  background:#fff0f0;
-  border:1px solid #efaaaa;
-  color:#a30000;
-}
-
-.result table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:15px;
-}
-
-.result td{
-  padding:9px;
-  border-bottom:1px solid #d9e5dc;
-}
-
-/* LESSONS */
 .lesson{
-  border-left:5px solid #0b4ea2;
+  background:white;
+  border:1px solid #e3e8f0;
+  border-radius:12px;
+  padding:18px;
+  box-shadow:0 3px 12px rgba(0,0,0,.04);
 }
 
 .lesson-number{
-  font-size:13px;
-  color:#0b4ea2;
+  display:inline-flex;
+  width:34px;
+  height:34px;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:#071a38;
+  color:white;
   font-weight:bold;
-  margin-bottom:5px;
 }
 
-/* EXAM */
-.exam-box{
-  max-width:900px;
+.lesson h4{
+  margin-top:12px;
+  color:#071a38;
+}
+
+.form-box{
+  max-width:750px;
   margin:auto;
   background:white;
   padding:30px;
-  border-radius:18px;
-  box-shadow:0 8px 30px rgba(0,0,0,.08);
+  border-radius:15px;
+  box-shadow:0 5px 25px rgba(0,0,0,.08);
 }
 
-.question{
+.form-group{
+  margin-bottom:16px;
+}
+
+.form-group label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:6px;
+}
+
+.form-group input,
+.form-group select{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccd4e0;
+  border-radius:8px;
+  outline:none;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+  border-color:#008ee8;
+}
+
+.exam-question{
+  background:white;
   padding:20px;
-  margin-bottom:18px;
-  background:#f8fafc;
+  margin-bottom:15px;
   border-radius:12px;
-  border:1px solid #e2e8f0;
+  border:1px solid #e0e5ed;
 }
 
-.question h4{
+.exam-question h4{
   margin-bottom:12px;
 }
 
 .option{
   display:block;
-  padding:8px;
-  cursor:pointer;
+  padding:7px 0;
 }
 
-.option:hover{
-  background:#eaf2ff;
-  border-radius:6px;
-}
-
-.exam-submit{
-  width:100%;
-  background:#0b4ea2;
-  color:white;
-  font-size:16px;
-}
-
-#examResult{
-  margin-top:20px;
+.result-box{
   display:none;
+  max-width:650px;
+  margin:25px auto 0;
   padding:25px;
-  border-radius:12px;
+  border-radius:14px;
   text-align:center;
-  font-size:18px;
-  font-weight:bold;
+  background:white;
+  border:2px solid #ddd;
 }
 
-/* PARTNERS */
-.partner-card{
+.pass{
+  border-color:#159447;
+  background:#edfff3;
+}
+
+.fail{
+  border-color:#d53a3a;
+  background:#fff1f1;
+}
+
+.verify-box{
+  max-width:700px;
+  margin:auto;
+  background:white;
+  padding:30px;
+  border-radius:15px;
+  box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.verify-result{
+  margin-top:20px;
+}
+
+.certificate{
+  max-width:850px;
+  margin:30px auto;
+  background:white;
+  border:10px solid #071a38;
+  padding:45px;
   text-align:center;
+  position:relative;
+  box-shadow:0 10px 35px rgba(0,0,0,.12);
 }
 
-.partner-logo{
-  width:100px;
-  height:100px;
-  margin:0 auto 18px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(135deg,#0b4ea2,#13a8a8);
-  color:white;
-  border:7px solid #e9f2ff;
-  box-shadow:0 5px 18px rgba(0,0,0,.12);
+.certificate-inner{
+  border:2px solid #c99a32;
+  padding:35px;
 }
 
-.partner-logo span{
-  font-size:25px;
-  font-weight:900;
+.certificate h2{
+  font-size:35px;
+  color:#071a38;
+  letter-spacing:2px;
 }
 
-.partner-name{
+.certificate .cert-name{
+  font-size:30px;
   font-weight:bold;
-  color:#0b4ea2;
+  margin:20px 0;
+  color:#111827;
 }
 
-/* CONTACT */
-.contact-grid{
+.certificate .cert-id{
+  font-weight:bold;
+  color:#075fa0;
+}
+
+.partners{
+  background:white;
+}
+
+.partner-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  grid-template-columns:repeat(4,1fr);
   gap:20px;
 }
 
-.contact-item{
-  background:white;
-  padding:25px;
-  border-radius:15px;
+.partner-card{
+  background:#fff;
+  border:1px solid #e0e5ec;
+  border-radius:16px;
+  padding:25px 18px;
   text-align:center;
+  transition:.2s;
 }
 
-/* FOOTER */
-footer{
-  background:#061b45;
+.partner-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.partner-logo{
+  width:90px;
+  height:90px;
+  margin:0 auto 15px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#071a38,#147dcc);
   color:white;
-  padding:40px 20px;
-  text-align:center;
-}
-
-.footer-links{
-  margin:20px 0;
   display:flex;
+  align-items:center;
   justify-content:center;
-  flex-wrap:wrap;
-  gap:15px;
+  font-size:26px;
+  font-weight:900;
+  border:5px solid #e8f2ff;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
 }
 
-.footer-links a{
+.partner-card h3{
+  font-size:17px;
+  margin-bottom:7px;
+}
+
+.partner-card p{
+  color:#69758a;
+  font-size:13px;
+}
+
+.stats{
+  background:#071a38;
   color:white;
-  text-decoration:none;
 }
 
-small{
-  color:#b9c7dc;
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+  text-align:center;
 }
 
-/* MOBILE */
-@media(max-width:800px){
-  .navbar{
+.stat h3{
+  font-size:38px;
+}
+
+.stat p{
+  color:#cbd8eb;
+}
+
+.faq-item{
+  background:white;
+  border-radius:10px;
+  margin-bottom:10px;
+  padding:18px 20px;
+  border:1px solid #e3e7ef;
+}
+
+.faq-item summary{
+  cursor:pointer;
+  font-weight:bold;
+}
+
+footer{
+  background:#050f21;
+  color:white;
+  padding:50px 20px 20px;
+}
+
+.footer-grid{
+  max-width:1150px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:30px;
+}
+
+.footer-grid h3{
+  margin-bottom:15px;
+}
+
+.footer-grid p,
+.footer-grid a{
+  color:#aebbd0;
+  display:block;
+  margin:7px 0;
+}
+
+.copyright{
+  max-width:1150px;
+  margin:35px auto 0;
+  padding-top:20px;
+  border-top:1px solid #26334a;
+  color:#8e9bb0;
+  font-size:13px;
+  text-align:center;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.notice{
+  padding:14px;
+  border-radius:8px;
+  background:#fff7df;
+  border:1px solid #ecd28b;
+  margin-bottom:20px;
+}
+
+@media(max-width:950px){
+  .cards{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .lesson-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .partner-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .footer-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:760px){
+  .menu-btn{
+    display:block;
+  }
+
+  .nav-links{
+    display:none;
+    position:absolute;
+    top:75px;
+    left:0;
+    right:0;
+    background:#071a38;
     flex-direction:column;
+    padding:15px;
   }
 
-  .menu{
-    justify-content:center;
+  .nav-links.active{
+    display:flex;
   }
 
-  .menu a{
-    font-size:12px;
-    padding:7px 8px;
+  .nav-links a{
+    width:100%;
+    text-align:center;
   }
 
-  .hero{
-    min-height:500px;
+  .cards,
+  .lesson-grid,
+  .partner-grid,
+  .stats-grid,
+  .footer-grid{
+    grid-template-columns:1fr;
   }
 
   section{
     padding:50px 15px;
   }
 
-  .section-title h2{
-    font-size:28px;
+  .hero{
+    min-height:500px;
   }
 
-  .verify-box,
-  .exam-box{
-    padding:20px;
-  }
-}
-
-@media(max-width:480px){
-  .brand{
-    font-size:16px;
+  .certificate{
+    padding:15px;
+    border-width:5px;
   }
 
-  .brand-logo{
-    width:42px;
-    height:42px;
+  .certificate-inner{
+    padding:20px 10px;
   }
 
-  .menu{
-    gap:3px;
+  .certificate h2{
+    font-size:25px;
   }
 
-  .menu a{
-    font-size:11px;
-    padding:6px;
-  }
-
-  .hero p{
-    font-size:16px;
+  .certificate .cert-name{
+    font-size:23px;
   }
 }
 </style>
@@ -481,1089 +620,1235 @@ small{
 
 <body>
 
-<!-- ================= HEADER ================= -->
 <header>
 <nav class="navbar">
 
-  <div class="brand">
-    <div class="brand-logo">G</div>
+  <a href="#home" class="brand">
+    <span class="brand-logo">G</span>
     <span>GETI</span>
-  </div>
+  </a>
 
-  <div class="menu">
-    <a href="#home">HOME</a>
-    <a href="#about">ABOUT</a>
-    <a href="#programs">PROGRAMS</a>
-    <a href="#tefl">TEFL</a>
-    <a href="#tesol">TESOL</a>
-    <a href="#exams">EXAMS</a>
-    <a href="#verify">VERIFY</a>
-    <a href="#partners">PARTNERS</a>
-    <a href="#contact">CONTACT</a>
-  </div>
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home">HOME</a></li>
+    <li><a href="#about">ABOUT</a></li>
+    <li><a href="#programs">PROGRAMS</a></li>
+    <li><a href="#tefl">TEFL</a></li>
+    <li><a href="#tesol">TESOL</a></li>
+    <li><a href="#exam">EXAMS</a></li>
+    <li><a href="#verify">VERIFY</a></li>
+    <li><a href="#partners">PARTNERS</a></li>
+    <li><a href="#contact">CONTACT</a></li>
+  </ul>
 
 </nav>
 </header>
 
 
-<!-- ================= HOME ================= -->
+<!-- HOME -->
 <section class="hero" id="home">
+  <div class="hero-content">
 
-<div class="hero-content">
+    <span class="course-badge">GLOBAL ENGLISH TEACHING INSTITUTE</span>
 
-  <h1>GETI</h1>
+    <h1>Professional English Teaching & International Certification</h1>
 
-  <h2>Global English Teaching Institute</h2>
+    <p>
+      Build your teaching skills through GETI TEFL and TESOL programs,
+      online lessons, professional exams and certificate verification.
+    </p>
 
-  <p>
-    International English teacher training programs in
-    TEFL and TESOL with lessons, examinations and
-    certificate verification.
-  </p>
+    <div class="buttons">
+      <a href="#programs" class="btn btn-primary">START LEARNING</a>
+      <a href="#exam" class="btn btn-secondary">TAKE AN EXAM</a>
+      <a href="#verify" class="btn btn-secondary">VERIFY CERTIFICATE</a>
+    </div>
 
-  <div class="buttons">
-    <a href="#programs" class="btn primary">START LEARNING</a>
-    <a href="#exams" class="btn secondary">TAKE AN EXAM</a>
-    <a href="#verify" class="btn secondary">VERIFY CERTIFICATE</a>
+  </div>
+</section>
+
+
+<!-- ABOUT -->
+<section class="about" id="about">
+<div class="container">
+
+<div class="section-title">
+  <h2>About GETI</h2>
+  <p>Global English Teaching Institute</p>
+</div>
+
+<div class="cards">
+
+  <div class="card icon-card">
+    <div class="icon">🎓</div>
+    <h3>Professional Training</h3>
+    <p>
+      GETI provides structured English teaching programs
+      designed for teachers and future English educators.
+    </p>
+  </div>
+
+  <div class="card icon-card">
+    <div class="icon">🌍</div>
+    <h3>International Learning</h3>
+    <p>
+      Study teaching methodology, classroom skills and
+      modern approaches to English language education.
+    </p>
+  </div>
+
+  <div class="card icon-card">
+    <div class="icon">📜</div>
+    <h3>Certificate Verification</h3>
+    <p>
+      Use the GETI certificate verification system to check
+      certificate information using a certificate ID.
+    </p>
   </div>
 
 </div>
-
+</div>
 </section>
 
 
-<!-- ================= ABOUT ================= -->
-<section id="about">
-
+<!-- PROGRAMS -->
+<section id="programs">
 <div class="container">
 
 <div class="section-title">
-<h2>About GETI</h2>
-<p>Global English Teaching Institute</p>
+  <h2>Our Programs</h2>
+  <p>Choose your professional English teaching program.</p>
 </div>
 
 <div class="cards">
 
-<div class="card">
-<div class="card-icon">🎓</div>
-<h3>Professional Training</h3>
-<p>
-GETI provides structured English teaching
-training programs designed for future and
-current English teachers.
-</p>
-</div>
+  <a href="#tefl" class="card program-card">
+    <div class="icon">📚</div>
+    <span class="course-badge">TEFL</span>
+    <h3>TEFL Certificate Program</h3>
+    <p>
+      Teaching English as a Foreign Language.
+      Learn methodology, lesson planning, grammar,
+      vocabulary, speaking, listening and assessment.
+    </p>
+  </a>
 
-<div class="card">
-<div class="card-icon">🌍</div>
-<h3>International Focus</h3>
-<p>
-Our programs focus on practical English
-teaching skills for different learning
-environments around the world.
-</p>
-</div>
+  <a href="#tesol" class="card program-card">
+    <div class="icon">🌐</div>
+    <span class="course-badge">TESOL</span>
+    <h3>TESOL Certificate Program</h3>
+    <p>
+      Teaching English to Speakers of Other Languages.
+      Develop professional teaching skills for multilingual classrooms.
+    </p>
+  </a>
 
-<div class="card">
-<div class="card-icon">📜</div>
-<h3>Certificate</h3>
-<p>
-Successful candidates can receive a GETI
-certificate after completing the required
-program and examination.
-</p>
-</div>
-
-</div>
+  <a href="#exam" class="card program-card">
+    <div class="icon">📝</div>
+    <span class="course-badge">EXAM</span>
+    <h3>Online Certification Exam</h3>
+    <p>
+      Take the GETI online exam and receive your result
+      automatically after submission.
+    </p>
+  </a>
 
 </div>
-
+</div>
 </section>
 
 
-<!-- ================= PROGRAMS ================= -->
-<section id="programs" class="light">
-
+<!-- TEFL -->
+<section id="tefl" class="about">
 <div class="container">
 
 <div class="section-title">
-<h2>Our Programs</h2>
-<p>Choose your English teaching certification program</p>
+  <h2>TEFL Program</h2>
+  <p>Teaching English as a Foreign Language</p>
 </div>
 
-<div class="cards">
-
-<div class="card program-card">
-
-<div class="card-icon">📘</div>
-
-<h3>TEFL</h3>
-
-<p>
-Teaching English as a Foreign Language.
-A practical teacher-training program.
-</p>
-
-<span class="badge">TEFL PROGRAM</span>
-
-<div class="buttons">
-<a href="#tefl" class="btn primary">VIEW LESSONS</a>
+<div class="notice">
+  <strong>TEFL Study Path:</strong>
+  Registration → Lessons → Exam → Result → Certificate
 </div>
 
-</div>
+<div class="lesson-grid">
 
-
-<div class="card program-card">
-
-<div class="card-icon">🌐</div>
-
-<h3>TESOL</h3>
-
-<p>
-Teaching English to Speakers of Other Languages.
-Develop professional English teaching skills.
-</p>
-
-<span class="badge">TESOL PROGRAM</span>
-
-<div class="buttons">
-<a href="#tesol" class="btn primary">VIEW LESSONS</a>
-</div>
+<div class="lesson"><span class="lesson-number">1</span><h4>Introduction to TEFL</h4></div>
+<div class="lesson"><span class="lesson-number">2</span><h4>Teaching Methodology</h4></div>
+<div class="lesson"><span class="lesson-number">3</span><h4>Lesson Planning</h4></div>
+<div class="lesson"><span class="lesson-number">4</span><h4>Classroom Management</h4></div>
+<div class="lesson"><span class="lesson-number">5</span><h4>Teaching Grammar</h4></div>
+<div class="lesson"><span class="lesson-number">6</span><h4>Teaching Vocabulary</h4></div>
+<div class="lesson"><span class="lesson-number">7</span><h4>Teaching Speaking</h4></div>
+<div class="lesson"><span class="lesson-number">8</span><h4>Teaching Listening</h4></div>
+<div class="lesson"><span class="lesson-number">9</span><h4>Teaching Reading</h4></div>
+<div class="lesson"><span class="lesson-number">10</span><h4>Teaching Writing</h4></div>
+<div class="lesson"><span class="lesson-number">11</span><h4>Assessment</h4></div>
+<div class="lesson"><span class="lesson-number">12</span><h4>Pronunciation</h4></div>
+<div class="lesson"><span class="lesson-number">13</span><h4>Online Teaching</h4></div>
+<div class="lesson"><span class="lesson-number">14</span><h4>Professional Development</h4></div>
 
 </div>
 
+<br>
 
-<div class="card program-card">
-
-<div class="card-icon">📝</div>
-
-<h3>Online Exams</h3>
-
-<p>
-Complete online assessment and receive
-your result immediately after submission.
-</p>
-
-<span class="badge">ONLINE TEST</span>
-
-<div class="buttons">
-<a href="#exams" class="btn primary">TAKE EXAM</a>
-</div>
+<a href="#tefl-registration" class="btn btn-primary">
+  TEFL REGISTRATION
+</a>
 
 </div>
-
-</div>
-
-</div>
-
 </section>
 
 
-<!-- ================= TEFL ================= -->
-<section id="tefl">
-
+<!-- TEFL REGISTRATION -->
+<section id="tefl-registration">
 <div class="container">
 
 <div class="section-title">
-<h2>TEFL Lessons</h2>
-<p>Teaching English as a Foreign Language</p>
+  <h2>TEFL Registration</h2>
+  <p>Register for the GETI TEFL program.</p>
 </div>
 
-<div class="cards">
+<div class="form-box">
 
-<div class="card lesson">
-<div class="lesson-number">LESSON 01</div>
-<h3>Introduction to TEFL</h3>
-<p>Introduction to English language teaching and the role of a TEFL teacher.</p>
+<div class="form-group">
+<label>Full Name</label>
+<input id="teflName" type="text" placeholder="Enter your full name">
 </div>
 
-<div class="card lesson">
-<div class="lesson-number">LESSON 02</div>
-<h3>Teaching Methodology</h3>
-<p>Different approaches and methods for teaching English effectively.</p>
+<div class="form-group">
+<label>Email</label>
+<input id="teflEmail" type="email" placeholder="Enter your email">
 </div>
 
-<div class="card lesson">
-<div class="lesson-number">LESSON 03</div>
-<h3>Lesson Planning</h3>
-<p>How to design clear, effective and learner-focused English lessons.</p>
+<div class="form-group">
+<label>Nationality</label>
+<input id="teflNationality" type="text" placeholder="Enter nationality">
 </div>
 
-<div class="card lesson">
-<div class="lesson-number">LESSON 04</div>
-<h3>Classroom Management</h3>
-<p>Techniques for creating an organized and productive classroom.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">LESSON 05</div>
-<h3>Teaching Grammar</h3>
-<p>Practical techniques for presenting and practicing English grammar.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">LESSON 06</div>
-<h3>Teaching Vocabulary</h3>
-<p>Strategies for introducing, practicing and reviewing vocabulary.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">LESSON 07</div>
-<h3>Teaching Speaking</h3>
-<p>Activities that develop fluency, accuracy and confidence.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">LESSON 08</div>
-<h3>Teaching Listening</h3>
-<p>Techniques for developing learners' listening comprehension.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">LESSON 09</div>
-<h3>Teaching Reading</h3>
-<p>Reading strategies, comprehension activities and text analysis.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">LESSON 10</div>
-<h3>Teaching Writing</h3>
-<p>Methods for teaching paragraph, essay and academic writing.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">LESSON 11</div>
-<h3>Assessment</h3>
-<p>Testing, evaluation, feedback and measuring learner progress.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">LESSON 12</div>
-<h3>Pronunciation</h3>
-<p>Teaching English sounds, stress, rhythm and intonation.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">LESSON 13</div>
-<h3>Online Teaching</h3>
-<p>Tools and strategies for effective online English teaching.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">LESSON 14</div>
-<h3>Professional Development</h3>
-<p>Building professional skills and developing as an English teacher.</p>
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================= TESOL ================= -->
-<section id="tesol" class="light">
-
-<div class="container">
-
-<div class="section-title">
-<h2>TESOL Lessons</h2>
-<p>Teaching English to Speakers of Other Languages</p>
-</div>
-
-<div class="cards">
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 01</div>
-<h3>Introduction to TESOL</h3>
-<p>Introduction to TESOL principles, learners and English language education.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 02</div>
-<h3>Second Language Acquisition</h3>
-<p>How learners acquire and develop a second or additional language.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 03</div>
-<h3>TESOL Methodology</h3>
-<p>Methods and approaches for teaching English to language learners.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 04</div>
-<h3>Learner-Centered Teaching</h3>
-<p>Creating lessons that focus on learner participation and needs.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 05</div>
-<h3>Classroom Management</h3>
-<p>Managing different classroom environments and learner behaviors.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 06</div>
-<h3>Teaching Grammar</h3>
-<p>Effective ways of explaining and practicing grammatical structures.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 07</div>
-<h3>Teaching Vocabulary</h3>
-<p>Vocabulary development through context, practice and communication.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 08</div>
-<h3>Teaching Speaking</h3>
-<p>Developing communication, fluency and interaction skills.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 09</div>
-<h3>Teaching Listening</h3>
-<p>Developing listening comprehension through authentic activities.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 10</div>
-<h3>Teaching Reading</h3>
-<p>Reading comprehension, strategies and critical reading skills.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 11</div>
-<h3>Teaching Writing</h3>
-<p>Developing written communication from basic to advanced levels.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 12</div>
-<h3>Pronunciation</h3>
-<p>Teaching sounds, word stress, sentence stress, rhythm and intonation.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 13</div>
-<h3>Multilingual Classrooms</h3>
-<p>Teaching learners who have different first languages and backgrounds.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 14</div>
-<h3>Cultural Awareness</h3>
-<p>Understanding culture and its role in international English education.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 15</div>
-<h3>Needs Analysis</h3>
-<p>Identifying learner goals, needs, strengths and learning requirements.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 16</div>
-<h3>Curriculum Development</h3>
-<p>Designing courses, learning objectives and teaching programs.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 17</div>
-<h3>Assessment & Testing</h3>
-<p>Creating assessments and evaluating language learning progress.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 18</div>
-<h3>Online TESOL Teaching</h3>
-<p>Using digital platforms and technology for online English teaching.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 19</div>
-<h3>Lesson Planning</h3>
-<p>Planning effective lessons with clear objectives and activities.</p>
-</div>
-
-<div class="card lesson">
-<div class="lesson-number">TESOL 20</div>
-<h3>Professional Development</h3>
-<p>Continuous development and professional growth for TESOL teachers.</p>
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================= EXAMS ================= -->
-<section id="exams">
-
-<div class="container">
-
-<div class="section-title">
-<h2>Online Exams</h2>
-<p>TEFL and TESOL assessment</p>
-</div>
-
-
-<div class="exam-box">
-
-<h3>TEFL Final Exam</h3>
-
-<p style="margin-bottom:20px;">
-Select the correct answer. The pass mark is 70%.
-</p>
-
-
-<form id="teflExam">
-
-
-<div class="question">
-<h4>1. What does TEFL stand for?</h4>
-
-<label class="option">
-<input type="radio" name="q1" value="a">
-Teaching English as a Foreign Language
-</label>
-
-<label class="option">
-<input type="radio" name="q1" value="b">
-Teaching Education for Language
-</label>
-
-<label class="option">
-<input type="radio" name="q1" value="c">
-Training English Foreign Learners
-</label>
-
-</div>
-
-
-<div class="question">
-<h4>2. What is an important part of lesson planning?</h4>
-
-<label class="option">
-<input type="radio" name="q2" value="a">
-Learning objectives
-</label>
-
-<label class="option">
-<input type="radio" name="q2" value="b">
-Ignoring learners
-</label>
-
-<label class="option">
-<input type="radio" name="q2" value="c">
-Avoiding activities
-</label>
-
-</div>
-
-
-<div class="question">
-<h4>3. Which skill involves understanding spoken English?</h4>
-
-<label class="option">
-<input type="radio" name="q3" value="a">
-Writing
-</label>
-
-<label class="option">
-<input type="radio" name="q3" value="b">
-Listening
-</label>
-
-<label class="option">
-<input type="radio" name="q3" value="c">
-Reading
-</label>
-
-</div>
-
-
-<div class="question">
-<h4>4. What is formative assessment?</h4>
-
-<label class="option">
-<input type="radio" name="q4" value="a">
-Assessment during learning
-</label>
-
-<label class="option">
-<input type="radio" name="q4" value="b">
-Only a final certificate
-</label>
-
-<label class="option">
-<input type="radio" name="q4" value="c">
-A classroom decoration
-</label>
-
-</div>
-
-
-<div class="question">
-<h4>5. Which activity can develop speaking fluency?</h4>
-
-<label class="option">
-<input type="radio" name="q5" value="a">
-Role play
-</label>
-
-<label class="option">
-<input type="radio" name="q5" value="b">
-Silent copying only
-</label>
-
-<label class="option">
-<input type="radio" name="q5" value="c">
-No communication
-</label>
-
-</div>
-
-
-<button class="btn exam-submit" type="submit">
-SUBMIT TEFL EXAM
+<button class="btn btn-primary" onclick="registerTEFL()">
+REGISTER FOR TEFL
 </button>
 
-</form>
+<p id="teflRegistrationMessage" style="margin-top:15px;font-weight:bold;"></p>
+
+</div>
+</div>
+</section>
 
 
-<div id="teflResult"></div>
+<!-- TESOL -->
+<section id="tesol">
+<div class="container">
+
+<div class="section-title">
+  <h2>TESOL Program</h2>
+  <p>Teaching English to Speakers of Other Languages</p>
+</div>
+
+<div class="notice">
+  <strong>TESOL Study Path:</strong>
+  Registration → Lessons → Exam → Result → Certificate
+</div>
+
+<div class="lesson-grid">
+
+<div class="lesson"><span class="lesson-number">1</span><h4>Introduction to TESOL</h4></div>
+<div class="lesson"><span class="lesson-number">2</span><h4>Second Language Acquisition</h4></div>
+<div class="lesson"><span class="lesson-number">3</span><h4>TESOL Teaching Methodology</h4></div>
+<div class="lesson"><span class="lesson-number">4</span><h4>Learner-Centered Teaching</h4></div>
+<div class="lesson"><span class="lesson-number">5</span><h4>Classroom Management</h4></div>
+<div class="lesson"><span class="lesson-number">6</span><h4>Teaching Grammar</h4></div>
+<div class="lesson"><span class="lesson-number">7</span><h4>Teaching Vocabulary</h4></div>
+<div class="lesson"><span class="lesson-number">8</span><h4>Teaching Speaking</h4></div>
+<div class="lesson"><span class="lesson-number">9</span><h4>Teaching Listening</h4></div>
+<div class="lesson"><span class="lesson-number">10</span><h4>Teaching Reading</h4></div>
+<div class="lesson"><span class="lesson-number">11</span><h4>Teaching Writing</h4></div>
+<div class="lesson"><span class="lesson-number">12</span><h4>Pronunciation</h4></div>
+<div class="lesson"><span class="lesson-number">13</span><h4>Multilingual Classrooms</h4></div>
+<div class="lesson"><span class="lesson-number">14</span><h4>Cultural Awareness</h4></div>
+<div class="lesson"><span class="lesson-number">15</span><h4>Needs Analysis</h4></div>
+<div class="lesson"><span class="lesson-number">16</span><h4>Curriculum Development</h4></div>
+<div class="lesson"><span class="lesson-number">17</span><h4>Assessment & Testing</h4></div>
+<div class="lesson"><span class="lesson-number">18</span><h4>Online TESOL Teaching</h4></div>
+<div class="lesson"><span class="lesson-number">19</span><h4>Lesson Planning</h4></div>
+<div class="lesson"><span class="lesson-number">20</span><h4>Professional Development</h4></div>
 
 </div>
 
+<br>
 
-<br><br>
-
-
-<div class="exam-box">
-
-<h3>TESOL Final Exam</h3>
-
-<p style="margin-bottom:20px;">
-Select the correct answer. The pass mark is 70%.
-</p>
-
-
-<form id="tesolExam">
-
-
-<div class="question">
-<h4>1. What does TESOL stand for?</h4>
-
-<label class="option">
-<input type="radio" name="t1" value="a">
-Teaching English to Speakers of Other Languages
-</label>
-
-<label class="option">
-<input type="radio" name="t1" value="b">
-Teaching English Students Online Lessons
-</label>
-
-<label class="option">
-<input type="radio" name="t1" value="c">
-Teacher Education School of Languages
-</label>
+<a href="#tesol-registration" class="btn btn-primary">
+TESOL REGISTRATION
+</a>
 
 </div>
+</section>
 
 
-<div class="question">
-<h4>2. What is Second Language Acquisition?</h4>
+<!-- TESOL REGISTRATION -->
+<section id="tesol-registration" class="about">
+<div class="container">
 
-<label class="option">
-<input type="radio" name="t2" value="a">
-The process of learning another language
-</label>
-
-<label class="option">
-<input type="radio" name="t2" value="b">
-A school timetable
-</label>
-
-<label class="option">
-<input type="radio" name="t2" value="c">
-A classroom rule
-</label>
-
+<div class="section-title">
+  <h2>TESOL Registration</h2>
+  <p>Register before taking the TESOL exam.</p>
 </div>
 
+<div class="form-box">
 
-<div class="question">
-<h4>3. What is learner-centered teaching?</h4>
-
-<label class="option">
-<input type="radio" name="t3" value="a">
-Teaching focused on learner participation and needs
-</label>
-
-<label class="option">
-<input type="radio" name="t3" value="b">
-Teacher speaks all the time
-</label>
-
-<label class="option">
-<input type="radio" name="t3" value="c">
-Students never participate
-</label>
-
+<div class="form-group">
+<label>Full Name</label>
+<input id="tesolName" type="text" placeholder="Enter your full name">
 </div>
 
-
-<div class="question">
-<h4>4. Why is cultural awareness important in TESOL?</h4>
-
-<label class="option">
-<input type="radio" name="t4" value="a">
-It helps teachers understand diverse learners
-</label>
-
-<label class="option">
-<input type="radio" name="t4" value="b">
-It removes communication
-</label>
-
-<label class="option">
-<input type="radio" name="t4" value="c">
-It replaces English
-</label>
-
+<div class="form-group">
+<label>Email</label>
+<input id="tesolEmail" type="email" placeholder="Enter your email">
 </div>
 
-
-<div class="question">
-<h4>5. What is needs analysis?</h4>
-
-<label class="option">
-<input type="radio" name="t5" value="a">
-Identifying learners' goals and needs
-</label>
-
-<label class="option">
-<input type="radio" name="t5" value="b">
-Choosing classroom furniture
-</label>
-
-<label class="option">
-<input type="radio" name="t5" value="c">
-Printing certificates
-</label>
-
+<div class="form-group">
+<label>Nationality</label>
+<input id="tesolNationality" type="text" placeholder="Enter nationality">
 </div>
 
+<button class="btn btn-primary" onclick="registerTESOL()">
+REGISTER FOR TESOL
+</button>
 
-<button class="btn exam-submit" type="submit">
+<p id="tesolRegistrationMessage" style="margin-top:15px;font-weight:bold;"></p>
+
+</div>
+</div>
+</section>
+
+
+<!-- STATS -->
+<section class="stats">
+<div class="container">
+
+<div class="stats-grid">
+
+<div class="stat">
+<h3>20+</h3>
+<p>TESOL Lessons</p>
+</div>
+
+<div class="stat">
+<h3>14+</h3>
+<p>TEFL Lessons</p>
+</div>
+
+<div class="stat">
+<h3>50</h3>
+<p>TESOL Exam Questions</p>
+</div>
+
+<div class="stat">
+<h3>70%</h3>
+<p>Passing Mark</p>
+</div>
+
+</div>
+</div>
+</section>
+
+
+<!-- EXAM -->
+<section id="exam">
+<div class="container">
+
+<div class="section-title">
+  <h2>Online TESOL Exam</h2>
+  <p>50 multiple-choice questions • Passing mark: 70%</p>
+</div>
+
+<div class="form-box">
+
+<div class="form-group">
+<label>Student Name</label>
+<input id="examName" type="text" placeholder="Enter your name">
+</div>
+
+<div id="questions"></div>
+
+<button class="btn btn-success" onclick="submitExam()">
 SUBMIT TESOL EXAM
 </button>
 
-</form>
-
-
-<div id="tesolResult"></div>
-
 </div>
 
-</div>
+<div id="resultBox" class="result-box"></div>
 
+</div>
 </section>
 
 
-<!-- ================= VERIFY ================= -->
-<section id="verify" class="light">
-
+<!-- CERTIFICATE -->
+<section id="certificate" class="about">
 <div class="container">
 
 <div class="section-title">
+<h2>Certificate</h2>
+<p>Certificate preview after successfully completing the exam.</p>
+</div>
 
-<h2>Certificate Verification</h2>
+<div id="certificateBox" class="certificate hidden">
+
+<div class="certificate-inner">
+
+<p>GLOBAL ENGLISH TEACHING INSTITUTE</p>
+
+<h2>CERTIFICATE OF COMPLETION</h2>
+
+<p style="margin-top:20px;">
+This certificate confirms the successful completion of the
+GETI TESOL Certificate Program.
+</p>
+
+<p class="cert-name" id="certStudentName">
+Student Name
+</p>
 
 <p>
-Verify the authenticity of a GETI certificate using the certificate number.
+TESOL — Teaching English to Speakers of Other Languages
+</p>
+
+<p style="margin-top:20px;">
+Certificate ID:
+<strong class="cert-id" id="certID"></strong>
+</p>
+
+<p style="margin-top:15px;">
+<strong>Program Result: PASS</strong>
+</p>
+
+<p style="margin-top:35px;">
+Academic Director &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+GETI Administration
 </p>
 
 </div>
+</div>
 
+</div>
+</section>
+
+
+<!-- VERIFY -->
+<section id="verify">
+<div class="container">
+
+<div class="section-title">
+<h2>Certificate Verification</h2>
+<p>Verify the authenticity of a GETI certificate.</p>
+</div>
 
 <div class="verify-box">
 
-<label for="certificate">
-Certificate Number
-</label>
-
+<div class="form-group">
+<label>Certificate ID</label>
 <input
-id="certificate"
-type="text"
-placeholder="GETI-CERT000001"
-autocomplete="off"
->
+  id="verifyID"
+  type="text"
+  placeholder="Example: GETI-CERT000001">
+</div>
 
-<button
-class="btn verify-btn"
-onclick="verifyCertificate()"
->
+<button class="btn btn-primary" onclick="verifyCertificate()">
 🔍 VERIFY CERTIFICATE
 </button>
 
-
-<div id="verifyResult" class="result"></div>
-
-</div>
+<div id="verifyResult" class="verify-result"></div>
 
 </div>
-
+</div>
 </section>
 
 
-<!-- ================= PARTNERS ================= -->
-<section id="partners">
-
+<!-- PARTNERS -->
+<section id="partners" class="partners">
 <div class="container">
 
 <div class="section-title">
-
-<h2>Certificate Partners</h2>
-
-<p>
-Academic and training partners represented with original fictional logos.
-</p>
-
+<h2>Academic Certificate Partners</h2>
+<p>Partner identities displayed on the GETI website.</p>
 </div>
 
+<div class="partner-grid">
+
+<!-- PARTNER 1 -->
+<div class="partner-card">
+<div class="partner-logo">GA</div>
+<h3>Global Academy</h3>
+<p>Academic Learning Partner</p>
+</div>
+
+<!-- PARTNER 2 -->
+<div class="partner-card">
+<div class="partner-logo">GE</div>
+<h3>Global English Academy</h3>
+<p>English Education Partner</p>
+</div>
+
+<!-- PARTNER 3 -->
+<div class="partner-card">
+<div class="partner-logo">IL</div>
+<h3>International Language Academy</h3>
+<p>Language Education Partner</p>
+</div>
+
+<!-- PARTNER 4 -->
+<div class="partner-card">
+<div class="partner-logo">WT</div>
+<h3>World Teacher Network</h3>
+<p>Teacher Development Partner</p>
+</div>
+
+<!-- PARTNER 5 -->
+<div class="partner-card">
+<div class="partner-logo">GT</div>
+<h3>Global Teacher Institute</h3>
+<p>Professional Training Partner</p>
+</div>
+
+<!-- PARTNER 6 -->
+<div class="partner-card">
+<div class="partner-logo">IE</div>
+<h3>International English Center</h3>
+<p>English Learning Partner</p>
+</div>
+
+<!-- PARTNER 7 -->
+<div class="partner-card">
+<div class="partner-logo">LE</div>
+<h3>Language Education Network</h3>
+<p>Academic Certificate Partner</p>
+</div>
+
+</div>
+</div>
+</section>
+
+
+<!-- FAQ -->
+<section id="faq">
+<div class="container">
+
+<div class="section-title">
+<h2>Frequently Asked Questions</h2>
+</div>
+
+<details class="faq-item">
+<summary>What is TEFL?</summary>
+<p>
+TEFL means Teaching English as a Foreign Language.
+</p>
+</details>
+
+<details class="faq-item">
+<summary>What is TESOL?</summary>
+<p>
+TESOL means Teaching English to Speakers of Other Languages.
+</p>
+</details>
+
+<details class="faq-item">
+<summary>How is the TESOL exam scored?</summary>
+<p>
+The exam contains 50 questions. A score of 70% or higher is required
+to pass this demo exam system.
+</p>
+</details>
+
+<details class="faq-item">
+<summary>Can I verify a GETI certificate?</summary>
+<p>
+Yes. Enter the certificate ID in the Certificate Verification section.
+</p>
+</details>
+
+</div>
+</section>
+
+
+<!-- CONTACT -->
+<section id="contact" class="about">
+<div class="container">
+
+<div class="section-title">
+<h2>Contact GETI</h2>
+<p>Global English Teaching Institute</p>
+</div>
 
 <div class="cards">
 
-
-<div class="card partner-card">
-
-<div class="partner-logo">
-<span>GA</span>
-</div>
-
-<h3 class="partner-name">
-GETI Academic Partner
-</h3>
-
-<p>
-Academic training and English teacher development.
-</p>
-
-</div>
-
-
-<div class="card partner-card">
-
-<div class="partner-logo">
-<span>GLA</span>
-</div>
-
-<h3 class="partner-name">
-Global Language Academy
-</h3>
-
-<p>
-Language learning and professional development.
-</p>
-
-</div>
-
-
-<div class="card partner-card">
-
-<div class="partner-logo">
-<span>IEL</span>
-</div>
-
-<h3 class="partner-name">
-International English Learning Center
-</h3>
-
-<p>
-English education and language skills development.
-</p>
-
-</div>
-
-
-<div class="card partner-card">
-
-<div class="partner-logo">
-<span>WTN</span>
-</div>
-
-<h3 class="partner-name">
-World TESOL Education Network
-</h3>
-
-<p>
-TESOL-focused teacher education and training.
-</p>
-
-</div>
-
-
-<div class="card partner-card">
-
-<div class="partner-logo">
-<span>GTD</span>
-</div>
-
-<h3 class="partner-name">
-Global Teacher Development Institute
-</h3>
-
-<p>
-Teacher development and professional training.
-</p>
-
-</div>
-
-
-<div class="card partner-card">
-
-<div class="partner-logo">
-<span>ISA</span>
-</div>
-
-<h3 class="partner-name">
-International Language Skills Academy
-</h3>
-
-<p>
-International language skills and education.
-</p>
-
-</div>
-
-
-<div class="card partner-card">
-
-<div class="partner-logo">
-<span>EEP</span>
-</div>
-
-<h3 class="partner-name">
-English Education Partners
-</h3>
-
-<p>
-English education and teacher training support.
-</p>
-
-</div>
-
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================= CONTACT ================= -->
-<section id="contact" class="light">
-
-<div class="container">
-
-<div class="section-title">
-
-<h2>Contact GETI</h2>
-
-<p>Global English Teaching Institute</p>
-
-</div>
-
-
-<div class="contact-grid">
-
-<div class="contact-item">
-
-<div class="card-icon" style="margin:auto auto 15px;">
-📧
-</div>
-
+<div class="card">
+<div class="icon">📧</div>
 <h3>Email</h3>
-
 <p>info@geti.example</p>
-
 </div>
 
-
-<div class="contact-item">
-
-<div class="card-icon" style="margin:auto auto 15px;">
-🌐
-</div>
-
+<div class="card">
+<div class="icon">🌐</div>
 <h3>Online Learning</h3>
-
-<p>TEFL & TESOL Programs</p>
-
+<p>Access GETI programs online.</p>
 </div>
 
-
-<div class="contact-item">
-
-<div class="card-icon" style="margin:auto auto 15px;">
-📜
-</div>
-
+<div class="card">
+<div class="icon">📜</div>
 <h3>Certificates</h3>
-
-<p>Online Certificate Verification</p>
-
+<p>Use the verification page to check certificate information.</p>
 </div>
 
 </div>
-
 </div>
-
 </section>
 
 
-<!-- ================= FOOTER ================= -->
+<!-- FOOTER -->
 <footer>
 
-<h2>GETI</h2>
+<div class="footer-grid">
 
+<div>
+<h3>GETI</h3>
 <p>
-Global English Teaching Institute
+Global English Teaching Institute provides English teaching
+education, TEFL and TESOL training resources.
 </p>
+</div>
 
-<div class="footer-links">
-<a href="#home">Home</a>
-<a href="#about">About</a>
+<div>
+<h3>Programs</h3>
 <a href="#tefl">TEFL</a>
 <a href="#tesol">TESOL</a>
-<a href="#exams">Exams</a>
-<a href="#verify">Verify</a>
+<a href="#exam">Exams</a>
+</div>
+
+<div>
+<h3>Certificates</h3>
+<a href="#verify">Verify Certificate</a>
+<a href="#certificate">Certificate</a>
 <a href="#partners">Partners</a>
+</div>
+
+<div>
+<h3>Website</h3>
+<a href="#about">About</a>
+<a href="#faq">FAQ</a>
 <a href="#contact">Contact</a>
 </div>
 
-<small>
-© 2026 GETI. All rights reserved.
-</small>
+</div>
+
+<div class="copyright">
+© 2026 Global English Teaching Institute (GETI). All rights reserved.
+</div>
 
 </footer>
 
 
 <script>
 
-/* ================= CERTIFICATE DATABASE ================= */
-
-const certificates = {
-
-"GETI-CERT000001":{
-  name:"James Anderson",
-  nationality:"American",
-  program:"TEFL",
-  certificate:"GETI-CERT000001",
-  title:"International English Teaching Certificate"
-},
-
-"GETI-CERT000002":{
-  name:"Maria Johnson",
-  nationality:"British",
-  program:"TESOL",
-  certificate:"GETI-CERT000002",
-  title:"International English Teaching Certificate"
-},
-
-"GETI-CERT000003":{
-  name:"Daniel Smith",
-  nationality:"Canadian",
-  program:"TEFL",
-  certificate:"GETI-CERT000003",
-  title:"International English Teaching Certificate"
+/* MOBILE MENU */
+function toggleMenu(){
+  document.getElementById("navLinks").classList.toggle("active");
 }
 
-};
+
+/* CLOSE MOBILE MENU AFTER CLICK */
+document.querySelectorAll(".nav-links a").forEach(function(link){
+  link.addEventListener("click",function(){
+    document.getElementById("navLinks").classList.remove("active");
+  });
+});
 
 
-/* ================= VERIFY CERTIFICATE ================= */
+/* TEFL REGISTRATION */
+function registerTEFL(){
 
-function verifyCertificate(){
+  const name = document.getElementById("teflName").value.trim();
+  const email = document.getElementById("teflEmail").value.trim();
+  const nationality = document.getElementById("teflNationality").value.trim();
 
-  const input =
-    document.getElementById("certificate")
-    .value
-    .trim()
-    .toUpperCase();
+  const message = document.getElementById("teflRegistrationMessage");
 
-  const result =
-    document.getElementById("verifyResult");
+  if(!name || !email || !nationality){
+    message.style.color="#c62828";
+    message.textContent="Please complete all registration fields.";
+    return;
+  }
 
-  result.style.display="block";
+  localStorage.setItem("teflStudentName",name);
 
-  if(input===""){
+  message.style.color="#159447";
+  message.textContent =
+    "TEFL registration completed successfully for " + name + ".";
+}
 
-    result.className="result error";
 
-    result.innerHTML=
-    "❌ Please enter a certificate number.";
+/* TESOL REGISTRATION */
+function registerTESOL(){
+
+  const name = document.getElementById("tesolName").value.trim();
+  const email = document.getElementById("tesolEmail").value.trim();
+  const nationality = document.getElementById("tesolNationality").value.trim();
+
+  const message = document.getElementById("tesolRegistrationMessage");
+
+  if(!name || !email || !nationality){
+    message.style.color="#c62828";
+    message.textContent="Please complete all registration fields.";
+    return;
+  }
+
+  localStorage.setItem("tesolStudentName",name);
+
+  document.getElementById("examName").value=name;
+
+  message.style.color="#159447";
+  message.textContent =
+    "TESOL registration completed successfully for " + name + ".";
+}
+
+
+/* TESOL QUESTIONS */
+
+const examQuestions = [
+
+{
+q:"What does TESOL stand for?",
+a:["Teaching English to Speakers of Other Languages","Teaching English School Online Learning","Teacher Education School of Languages","Teaching European Students Online"],
+c:0
+},
+
+{
+q:"What is learner-centered teaching?",
+a:["The teacher speaks all the time","Teaching focuses on learners' needs and participation","Students never work together","Only textbooks are used"],
+c:1
+},
+
+{
+q:"What is formative assessment?",
+a:["Assessment during learning","Only a final exam","A certificate","A school holiday"],
+c:0
+},
+
+{
+q:"What is a lesson plan?",
+a:["A teaching document describing lesson objectives and activities","A student passport","A certificate","A dictionary"],
+c:0
+},
+
+{
+q:"Which skill involves understanding spoken language?",
+a:["Reading","Writing","Listening","Grammar"],
+c:2
+},
+
+{
+q:"Which skill involves producing written language?",
+a:["Speaking","Writing","Listening","Pronunciation"],
+c:1
+},
+
+{
+q:"What is classroom management?",
+a:["Managing learning activities and classroom behavior","Writing certificates","Selling books","Translating documents"],
+c:0
+},
+
+{
+q:"What is second language acquisition?",
+a:["The process of learning another language","Learning mathematics","Teaching history","Writing a novel"],
+c:0
+},
+
+{
+q:"Why are learning objectives important?",
+a:["They provide direction for learning","They replace teachers","They remove practice","They make exams unnecessary"],
+c:0
+},
+
+{
+q:"What is communicative language teaching?",
+a:["A method emphasizing meaningful communication","A method using no speaking","Only translation","Only grammar exercises"],
+c:0
+},
+
+{
+q:"Which activity develops speaking skills?",
+a:["Role-play","Silent reading only","Copying a dictionary","Memorizing punctuation"],
+c:0
+},
+
+{
+q:"Which activity can develop listening?",
+a:["Listening to a dialogue","Copying vocabulary","Drawing a logo","Writing a certificate"],
+c:0
+},
+
+{
+q:"What is vocabulary?",
+a:["Words and expressions of a language","Only grammar","Only pronunciation","Only punctuation"],
+c:0
+},
+
+{
+q:"What is pronunciation?",
+a:["How sounds are produced and spoken","How books are printed","How certificates are designed","How students register"],
+c:0
+},
+
+{
+q:"What is needs analysis?",
+a:["Identifying learners' language needs","Giving certificates","Choosing school colors","Writing advertisements"],
+c:0
+},
+
+{
+q:"What is curriculum development?",
+a:["Planning and organizing an educational program","Creating a logo","Sending emails","Printing cards"],
+c:0
+},
+
+{
+q:"What is differentiated instruction?",
+a:["Adapting teaching to different learner needs","Teaching everyone exactly the same way","Avoiding activities","Removing assessment"],
+c:0
+},
+
+{
+q:"Why is feedback important?",
+a:["It helps learners understand strengths and areas for improvement","It replaces learning","It stops communication","It eliminates practice"],
+c:0
+},
+
+{
+q:"What is an authentic material?",
+a:["Language material created for real-life use","A fake certificate","A grammar rule","A classroom chair"],
+c:0
+},
+
+{
+q:"Which is an example of pair work?",
+a:["Two learners working together","One teacher working alone","A student reading silently","A school administrator working alone"],
+c:0
+},
+
+{
+q:"What does EFL mean?",
+a:["English as a Foreign Language","English for Local Families","English First Learning","English Foreign Literature"],
+c:0
+},
+
+{
+q:"What does ESL mean?",
+a:["English as a Second Language","English School Lesson","English Student Learning","English Speaking Literature"],
+c:0
+},
+
+{
+q:"What is an assessment rubric?",
+a:["A set of criteria used to evaluate performance","A dictionary","A certificate","A timetable"],
+c:0
+},
+
+{
+q:"What is summative assessment?",
+a:["Assessment usually conducted at the end of a learning period","A warm-up activity","A conversation game","A registration form"],
+c:0
+},
+
+{
+q:"What is a warm-up activity?",
+a:["A short activity that prepares learners for a lesson","A final certificate","An exam result","A school logo"],
+c:0
+},
+
+{
+q:"Why should teachers check understanding?",
+a:["To determine whether learners understand the material","To finish class faster","To avoid questions","To replace lesson planning"],
+c:0
+},
+
+{
+q:"What is scaffolding?",
+a:["Temporary support that helps learners complete tasks","Removing all support","Giving certificates","Avoiding instruction"],
+c:0
+},
+
+{
+q:"What is pair interaction useful for?",
+a:["Increasing opportunities to communicate","Stopping speaking","Avoiding participation","Replacing vocabulary"],
+c:0
+},
+
+{
+q:"What is classroom language?",
+a:["Language used by teachers and learners during classroom activities","Only academic writing","Only examination language","Only dictionary definitions"],
+c:0
+},
+
+{
+q:"What is a teaching objective?",
+a:["A specific learning outcome","A school logo","A certificate number","A student email"],
+c:0
+},
+
+{
+q:"Which is an example of receptive language skill?",
+a:["Listening","Speaking","Writing","Presenting"],
+c:0
+},
+
+{
+q:"Which is an example of productive language skill?",
+a:["Speaking","Listening","Reading","Understanding"],
+c:0
+},
+
+{
+q:"What is a multilingual classroom?",
+a:["A classroom where learners may have different language backgrounds","A classroom with no languages","A classroom only for teachers","A classroom without students"],
+c:0
+},
+
+{
+q:"Why is cultural awareness important in TESOL?",
+a:["It helps teachers understand learners from different backgrounds","It removes the need for communication","It replaces grammar","It prevents learning"],
+c:0
+},
+
+{
+q:"What is online teaching?",
+a:["Teaching through digital platforms and technologies","Teaching without learners","Only writing books","Printing certificates"],
+c:0
+},
+
+{
+q:"What is peer assessment?",
+a:["Learners evaluate each other's work","Only the teacher evaluates work","A computer gives certificates","A school administrator teaches"],
+c:0
+},
+
+{
+q:"What is self-assessment?",
+a:["Learners evaluate their own learning","A teacher evaluates another teacher","A school evaluates a certificate","A website verifies a domain"],
+c:0
+},
+
+{
+q:"Why should teachers use different activities?",
+a:["To provide varied opportunities for learning and practice","To make lessons longer only","To avoid objectives","To eliminate interaction"],
+c:0
+},
+
+{
+q:"What is classroom interaction?",
+a:["Communication between teacher and learners or among learners","Only writing","Only examination","Only registration"],
+c:0
+},
+
+{
+q:"What is task-based learning?",
+a:["Learning through meaningful tasks","Learning without activities","Only memorizing rules","Only taking tests"],
+c:0
+},
+
+{
+q:"What is a learning outcome?",
+a:["What learners are expected to know or do after learning","A teacher's salary","A school logo","A registration number"],
+c:0
+},
+
+{
+q:"Why should a lesson have a clear structure?",
+a:["It helps organize teaching and learning","It removes student participation","It makes assessment unnecessary","It replaces the teacher"],
+c:0
+},
+
+{
+q:"What is explicit grammar teaching?",
+a:["Directly explaining grammar rules and forms","Avoiding grammar completely","Only playing games","Only teaching pronunciation"],
+c:0
+},
+
+{
+q:"What is extensive reading?",
+a:["Reading a large amount of material for general understanding or enjoyment","Reading one word","Only reading grammar rules","Reading certificates"],
+c:0
+},
+
+{
+q:"What is intensive reading?",
+a:["Reading carefully for detailed understanding","Reading without understanding","Only speaking","Only listening"],
+c:0
+},
+
+{
+q:"What is teacher reflection?",
+a:["Thinking critically about teaching practice to improve it","Giving students certificates","Designing logos","Checking email"],
+c:0
+},
+
+{
+q:"What is professional development?",
+a:["Ongoing improvement of professional knowledge and skills","A one-time exam only","A certificate logo","A registration form"],
+c:0
+},
+
+{
+q:"What is inclusive teaching?",
+a:["Teaching that seeks to support and involve diverse learners","Teaching only advanced students","Ignoring differences","Avoiding participation"],
+c:0
+},
+
+{
+q:"What is motivation in language learning?",
+a:["The desire or willingness to learn","A certificate number","A school logo","A computer program"],
+c:0
+}
+
+];
+
+
+/* DISPLAY QUESTIONS */
+
+function loadQuestions(){
+
+  const container=document.getElementById("questions");
+
+  container.innerHTML="";
+
+  examQuestions.forEach(function(item,index){
+
+    const div=document.createElement("div");
+
+    div.className="exam-question";
+
+    let html="<h4>"+(index+1)+". "+item.q+"</h4>";
+
+    item.a.forEach(function(answer,answerIndex){
+
+      html+=`
+        <label class="option">
+          <input
+            type="radio"
+            name="question${index}"
+            value="${answerIndex}">
+          ${answer}
+        </label>
+      `;
+
+    });
+
+    div.innerHTML=html;
+
+    container.appendChild(div);
+
+  });
+
+}
+
+
+/* SUBMIT EXAM */
+
+function submitExam(){
+
+  const studentName=document.getElementById("examName").value.trim();
+
+  if(!studentName){
+
+    alert("Please enter your name before submitting the exam.");
+
+    document.getElementById("examName").focus();
 
     return;
   }
 
+  let score=0;
+  let unanswered=0;
 
-  const certificate=certificates[input];
+  examQuestions.forEach(function(item,index){
+
+    const selected=document.querySelector(
+      `input[name="question${index}"]:checked`
+    );
+
+    if(!selected){
+
+      unanswered++;
+
+    }else if(Number(selected.value)===item.c){
+
+      score++;
+
+    }
+
+  });
+
+  if(unanswered>0){
+
+    const proceed=confirm(
+      "You have "+unanswered+
+      " unanswered question(s). Submit anyway?"
+    );
+
+    if(!proceed){
+      return;
+    }
+
+  }
+
+  const percentage=Math.round(
+    (score/examQuestions.length)*100
+  );
+
+  const resultBox=document.getElementById("resultBox");
+
+  resultBox.style.display="block";
+
+  if(percentage>=70){
+
+    resultBox.className="result-box pass";
+
+    resultBox.innerHTML=`
+      <h2>🎉 PASS</h2>
+      <p style="font-size:20px;margin:10px 0;">
+        Congratulations, <strong>${escapeHTML(studentName)}</strong>!
+      </p>
+      <p>
+        Score: <strong>${score}/${examQuestions.length}</strong>
+      </p>
+      <p>
+        Percentage: <strong>${percentage}%</strong>
+      </p>
+      <p style="margin-top:10px;">
+        Passing mark: 70%
+      </p>
+      <br>
+      <button class="btn btn-success"
+        onclick="generateCertificate('${escapeHTML(studentName)}')">
+        VIEW CERTIFICATE
+      </button>
+    `;
+
+    localStorage.setItem("tesolPassed","true");
+    localStorage.setItem("tesolScore",percentage);
+
+  }else{
+
+    resultBox.className="result-box fail";
+
+    resultBox.innerHTML=`
+      <h2>❌ FAIL</h2>
+      <p style="font-size:20px;margin:10px 0;">
+        ${escapeHTML(studentName)}
+      </p>
+      <p>
+        Score: <strong>${score}/${examQuestions.length}</strong>
+      </p>
+      <p>
+        Percentage: <strong>${percentage}%</strong>
+      </p>
+      <p style="margin-top:10px;">
+        Passing mark: 70%
+      </p>
+      <p style="margin-top:10px;">
+        Please review the lessons and try again.
+      </p>
+    `;
+
+    localStorage.setItem("tesolPassed","false");
+
+  }
+
+  resultBox.scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
+
+}
 
 
-  if(certificate){
+/* CERTIFICATE */
 
-    result.className="result success";
+function generateCertificate(name){
+
+  const certificateBox=document.getElementById("certificateBox");
+
+  const cleanName=name || "Student";
+
+  const certificateID=
+    "GETI-TESOL-" +
+    new Date().getFullYear() +
+    "-" +
+    Math.floor(100000 + Math.random()*900000);
+
+  document.getElementById("certStudentName").textContent=cleanName;
+
+  document.getElementById("certID").textContent=certificateID;
+
+  certificateBox.classList.remove("hidden");
+
+  certificateBox.scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
+
+  localStorage.setItem("lastCertificateID",certificateID);
+  localStorage.setItem("lastCertificateName",cleanName);
+
+}
+
+
+/* CERTIFICATE VERIFICATION */
+
+function verifyCertificate(){
+
+  const id=document.getElementById("verifyID").value.trim();
+
+  const result=document.getElementById("verifyResult");
+
+  if(!id){
 
     result.innerHTML=`
+      <div class="notice">
+        ❌ Please enter a certificate number.
+      </div>
+    `;
 
-      <h3>✅ Certificate Verified</h3>
+    return;
+  }
 
-      <table>
+  const savedID=localStorage.getItem("lastCertificateID");
+  const savedName=localStorage.getItem("lastCertificateName");
 
-      <tr>
-      <td><strong>Certificate ID</strong></td>
-      <td>${certificate.certificate}</td>
-      </tr>
+  if(savedID && id.toUpperCase()===savedID.toUpperCase()){
 
-      <tr>
-      <td><strong>Name</strong></td>
-      <td>${certificate.name}</td>
-      </tr>
-
-      <tr>
-      <td><strong>Nationality</strong></td>
-      <td>${certificate.nationality}</td>
-      </tr>
-
-      <tr>
-      <td><strong>Program</strong></td>
-      <td>${certificate.program}</td>
-      </tr>
-
-      <tr>
-      <td><strong>Certificate</strong></td>
-      <td>${certificate.title}</td>
-      </tr>
-
-      </table>
-
+    result.innerHTML=`
+      <div class="result-box pass" style="display:block;">
+        <h3>✅ CERTIFICATE VERIFIED</h3>
+        <p><strong>Certificate ID:</strong> ${escapeHTML(savedID)}</p>
+        <p><strong>Name:</strong> ${escapeHTML(savedName)}</p>
+        <p><strong>Program:</strong> TESOL</p>
+        <p><strong>Status:</strong> VALID</p>
+      </div>
     `;
 
   }else{
 
-    result.className="result error";
-
     result.innerHTML=`
-    ❌ Certificate not found.<br>
-    Please check the certificate number.
+      <div class="result-box fail" style="display:block;">
+        <h3>❌ CERTIFICATE NOT FOUND</h3>
+        <p>
+          No certificate matching this ID was found
+          in this browser's demo verification database.
+        </p>
+      </div>
     `;
 
   }
@@ -1571,151 +1856,22 @@ function verifyCertificate(){
 }
 
 
-/* ================= TEFL EXAM ================= */
+/* ESCAPE HTML */
 
-document
-.getElementById("teflExam")
-.addEventListener("submit",function(e){
+function escapeHTML(value){
 
-  e.preventDefault();
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
-  const answers={
-    q1:"a",
-    q2:"a",
-    q3:"b",
-    q4:"a",
-    q5:"a"
-  };
-
-  let score=0;
-
-  for(const q in answers){
-
-    const selected=
-      document.querySelector(
-        `input[name="${q}"]:checked`
-      );
-
-    if(selected && selected.value===answers[q]){
-      score++;
-    }
-
-  }
-
-  const percentage=
-    Math.round((score/5)*100);
-
-  const result=
-    document.getElementById("teflResult");
-
-  result.style.display="block";
-
-  if(percentage>=70){
-
-    result.style.background="#e8f7ef";
-    result.style.color="#075b31";
-
-    result.innerHTML=`
-      🎉 TEFL EXAM PASSED!<br><br>
-      Score: ${percentage}%<br>
-      Result: PASS
-    `;
-
-  }else{
-
-    result.style.background="#fff0f0";
-    result.style.color="#a30000";
-
-    result.innerHTML=`
-      TEFL EXAM NOT PASSED<br><br>
-      Score: ${percentage}%<br>
-      Result: FAIL<br>
-      Pass mark: 70%
-    `;
-
-  }
-
-});
+}
 
 
-/* ================= TESOL EXAM ================= */
-
-document
-.getElementById("tesolExam")
-.addEventListener("submit",function(e){
-
-  e.preventDefault();
-
-  const answers={
-    t1:"a",
-    t2:"a",
-    t3:"a",
-    t4:"a",
-    t5:"a"
-  };
-
-  let score=0;
-
-  for(const q in answers){
-
-    const selected=
-      document.querySelector(
-        `input[name="${q}"]:checked`
-      );
-
-    if(selected && selected.value===answers[q]){
-      score++;
-    }
-
-  }
-
-  const percentage=
-    Math.round((score/5)*100);
-
-  const result=
-    document.getElementById("tesolResult");
-
-  result.style.display="block";
-
-  if(percentage>=70){
-
-    result.style.background="#e8f7ef";
-    result.style.color="#075b31";
-
-    result.innerHTML=`
-      🎉 TESOL EXAM PASSED!<br><br>
-      Score: ${percentage}%<br>
-      Result: PASS
-    `;
-
-  }else{
-
-    result.style.background="#fff0f0";
-    result.style.color="#a30000";
-
-    result.innerHTML=`
-      TESOL EXAM NOT PASSED<br><br>
-      Score: ${percentage}%<br>
-      Result: FAIL<br>
-      Pass mark: 70%
-    `;
-
-  }
-
-});
-
-
-/* ================= ENTER KEY FOR VERIFICATION ================= */
-
-document
-.getElementById("certificate")
-.addEventListener("keypress",function(event){
-
-  if(event.key==="Enter"){
-    verifyCertificate();
-  }
-
-});
+/* LOAD EXAM */
+loadQuestions();
 
 </script>
 
