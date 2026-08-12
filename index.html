@@ -4,1288 +4,1172 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GETI - Global English Teaching Institute</title>
+<title>GETI | Global English Teaching Institute</title>
+
+<meta name="description"
+content="Global English Teaching Institute - TEFL, TESOL, English Teaching and International Certification.">
 
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+
+/* =========================================================
+   GETI GLOBAL WEBSITE
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-body{
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f5f7fb;
-    color:#172033;
-    line-height:1.6;
+html {
+  scroll-behavior: smooth;
 }
 
-/* ================= HEADER ================= */
-
-header{
-    background:linear-gradient(135deg,#061a40,#0b4ea2);
-    color:white;
-    padding:18px 5%;
-    position:sticky;
-    top:0;
-    z-index:1000;
-    box-shadow:0 3px 15px rgba(0,0,0,.2);
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f8fc;
+  color: #17243a;
+  line-height: 1.6;
 }
 
-.header-inner{
-    max-width:1250px;
-    margin:auto;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:20px;
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
-.brand{
-    display:flex;
-    align-items:center;
-    gap:12px;
+button,
+input {
+  font-family: inherit;
 }
 
-.brand-logo{
-    width:52px;
-    height:52px;
-    border-radius:50%;
-    background:linear-gradient(135deg,#ffd700,#fff);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#063b80;
-    font-size:25px;
-    font-weight:bold;
-    border:3px solid white;
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+header {
+  background: #082b61;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  box-shadow: 0 4px 20px rgba(0,0,0,.15);
 }
 
-.brand h1{
-    font-size:20px;
+.navbar {
+  max-width: 1250px;
+  margin: auto;
+  min-height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
 }
 
-.brand small{
-    opacity:.85;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-nav{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
+.brand-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#1d73d5,#4da3ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.25);
 }
 
-nav a{
-    color:white;
-    text-decoration:none;
-    padding:9px 12px;
-    border-radius:8px;
-    font-size:14px;
-    font-weight:bold;
+.brand-text strong {
+  display: block;
+  font-size: 20px;
+  letter-spacing: 1px;
 }
 
-nav a:hover{
-    background:rgba(255,255,255,.15);
+.brand-text small {
+  opacity: .85;
 }
 
-/* ================= HERO ================= */
-
-.hero{
-    background:
-    linear-gradient(rgba(4,28,65,.86),rgba(4,28,65,.86)),
-    linear-gradient(135deg,#0a4da2,#001b44);
-    color:white;
-    padding:80px 20px;
-    text-align:center;
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  list-style: none;
 }
 
-.hero h2{
-    font-size:42px;
-    margin-bottom:15px;
+.nav-menu a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: .25s;
 }
 
-.hero p{
-    max-width:750px;
-    margin:auto;
-    font-size:18px;
-    opacity:.92;
+.nav-menu a:hover {
+  background: rgba(255,255,255,.15);
 }
 
-.hero-buttons{
-    margin-top:30px;
-    display:flex;
-    justify-content:center;
-    gap:15px;
-    flex-wrap:wrap;
+.menu-button {
+  display: none;
+  border: 0;
+  background: transparent;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
 }
 
-.btn{
-    display:inline-block;
-    border:none;
-    padding:13px 22px;
-    border-radius:8px;
-    cursor:pointer;
-    text-decoration:none;
-    font-weight:bold;
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero {
+  min-height: 620px;
+  display: flex;
+  align-items: center;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(5,35,80,.96),
+      rgba(11,80,155,.90)
+    );
+  color: white;
+  padding: 80px 20px;
 }
 
-.btn-primary{
-    background:#ffd700;
-    color:#09244d;
+.hero-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 50px;
+  align-items: center;
 }
 
-.btn-secondary{
-    background:white;
-    color:#09244d;
+.hero h1 {
+  font-size: clamp(38px,5vw,68px);
+  line-height: 1.05;
+  margin-bottom: 20px;
 }
 
-/* ================= SECTIONS ================= */
-
-section{
-    padding:65px 5%;
+.hero h1 span {
+  color: #6fc4ff;
 }
 
-.container{
-    max-width:1200px;
-    margin:auto;
+.hero p {
+  font-size: 19px;
+  max-width: 700px;
+  opacity: .92;
+  margin-bottom: 30px;
 }
 
-.section-title{
-    text-align:center;
-    margin-bottom:40px;
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.section-title h2{
-    font-size:32px;
-    color:#092d63;
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 9px;
+  border: 0;
+  cursor: pointer;
+  font-weight: 700;
+  transition: .25s;
 }
 
-.section-title p{
-    color:#687386;
+.btn-primary {
+  background: #fff;
+  color: #082b61;
 }
 
-/* ================= PARTNERS ================= */
-
-.partners{
-    background:white;
+.btn-primary:hover {
+  transform: translateY(-3px);
 }
 
-.partner-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
+.btn-secondary {
+  background: #1593ff;
+  color: white;
 }
 
-.partner-card{
-    background:#fff;
-    border:1px solid #e2e7ef;
-    border-radius:15px;
-    padding:25px 15px;
-    text-align:center;
-    box-shadow:0 6px 20px rgba(0,0,0,.06);
-    transition:.25s;
+.btn-secondary:hover {
+  background: #0879da;
+  transform: translateY(-3px);
 }
 
-.partner-card:hover{
-    transform:translateY(-5px);
-    box-shadow:0 12px 28px rgba(0,0,0,.1);
+.hero-card {
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  padding: 35px;
+  border-radius: 25px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 20px 50px rgba(0,0,0,.2);
 }
 
-.partner-logo{
-    width:90px;
-    height:90px;
-    margin:0 auto 15px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(135deg,#073b82,#1e88e5);
-    color:white;
-    font-size:25px;
-    font-weight:900;
-    border:5px solid #edf4ff;
+.hero-card-icon {
+  font-size: 65px;
+  margin-bottom: 15px;
 }
 
-.partner-card h3{
-    color:#123d75;
-    font-size:16px;
+.hero-card h2 {
+  margin-bottom: 10px;
 }
 
-.partner-card p{
-    color:#778398;
-    font-size:13px;
+/* =========================================================
+   GENERAL
+   ========================================================= */
+
+section {
+  padding: 80px 20px;
 }
 
-/* ================= REGISTRATION ================= */
-
-.registration{
-    background:#eef4fc;
+.container {
+  max-width: 1200px;
+  margin: auto;
 }
 
-.registration-box{
-    max-width:720px;
-    margin:auto;
-    background:white;
-    padding:35px;
-    border-radius:18px;
-    box-shadow:0 10px 35px rgba(0,0,0,.09);
+.section-title {
+  text-align: center;
+  margin-bottom: 45px;
 }
 
-.registration-box h2{
-    text-align:center;
-    color:#083875;
-    margin-bottom:8px;
+.section-title h2 {
+  font-size: 38px;
+  color: #082b61;
+  margin-bottom: 10px;
 }
 
-.registration-box .intro{
-    text-align:center;
-    color:#6b7688;
-    margin-bottom:25px;
+.section-title p {
+  color: #667085;
+  max-width: 750px;
+  margin: auto;
 }
 
-.form-group{
-    margin-bottom:18px;
+/* =========================================================
+   MENU CARDS
+   ========================================================= */
+
+.menu-section {
+  background: white;
 }
 
-.form-group label{
-    display:block;
-    font-weight:bold;
-    margin-bottom:7px;
-    color:#263a57;
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 20px;
 }
 
-.form-group input,
-.form-group select{
-    width:100%;
-    padding:13px 14px;
-    border:1px solid #ccd5e2;
-    border-radius:8px;
-    font-size:15px;
-    outline:none;
+.menu-card {
+  min-height: 180px;
+  border-radius: 18px;
+  padding: 25px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,.12);
+  transition: .3s;
 }
 
-.form-group input:focus,
-.form-group select:focus{
-    border-color:#1769d1;
-    box-shadow:0 0 0 3px rgba(23,105,209,.1);
+.menu-card:hover {
+  transform: translateY(-7px);
 }
 
-.register-btn{
-    width:100%;
-    background:#0b56a8;
-    color:white;
-    padding:14px;
-    border:none;
-    border-radius:8px;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
+.menu-card-icon {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  font-size: 48px;
+  opacity: .85;
 }
 
-.register-btn:hover{
-    background:#073d7a;
+.menu-card h3 {
+  font-size: 22px;
+  margin-bottom: 5px;
 }
 
-.register-btn:disabled{
-    background:#8ca6c5;
-    cursor:not-allowed;
+.menu-card p {
+  opacity: .9;
+  font-size: 14px;
 }
 
-/* ================= MESSAGES ================= */
-
-.message{
-    margin-top:20px;
-    padding:15px;
-    border-radius:9px;
-    display:none;
+.card-blue {
+  background: linear-gradient(135deg,#0a4c9c,#1593ff);
 }
 
-.message.success{
-    display:block;
-    background:#e8f8ed;
-    color:#14652b;
-    border:1px solid #a8dfb7;
+.card-green {
+  background: linear-gradient(135deg,#087443,#20b86b);
 }
 
-.message.error{
-    display:block;
-    background:#fff0f0;
-    color:#a52323;
-    border:1px solid #f0b5b5;
+.card-purple {
+  background: linear-gradient(135deg,#56249b,#9558df);
 }
 
-.certificate-id{
-    font-size:23px;
-    font-weight:bold;
-    color:#073d87;
-    margin:10px 0;
+.card-orange {
+  background: linear-gradient(135deg,#b95d09,#ef9b32);
 }
 
-/* ================= VERIFICATION ================= */
-
-.verify{
-    background:white;
+.card-red {
+  background: linear-gradient(135deg,#9b2630,#e0525d);
 }
 
-.verify-box{
-    max-width:700px;
-    margin:auto;
-    padding:35px;
-    border-radius:18px;
-    background:#f7faff;
-    border:1px solid #dce8f7;
+.card-teal {
+  background: linear-gradient(135deg,#006d73,#13aab2);
 }
 
-.verify-box input{
-    width:100%;
-    padding:14px;
-    border:1px solid #ccd5e2;
-    border-radius:8px;
-    margin-bottom:12px;
+.card-dark {
+  background: linear-gradient(135deg,#202a3a,#53657f);
 }
 
-.verify-btn{
-    width:100%;
-    padding:13px;
-    border:0;
-    border-radius:8px;
-    background:#073d87;
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
+.card-gold {
+  background: linear-gradient(135deg,#806000,#c49a27);
 }
 
-/* ================= FOOTER ================= */
+/* =========================================================
+   ABOUT
+   ========================================================= */
 
-footer{
-    background:#061a40;
-    color:white;
-    text-align:center;
-    padding:35px 20px;
+.about {
+  background: #f5f8fc;
 }
 
-footer p{
-    opacity:.8;
-    font-size:14px;
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 45px;
+  align-items: center;
 }
 
-/* ================= MOBILE ================= */
-
-@media(max-width:900px){
-
-    .partner-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .header-inner{
-        flex-direction:column;
-    }
-
-    nav{
-        justify-content:center;
-    }
-
-    .hero h2{
-        font-size:32px;
-    }
+.about-box {
+  background: white;
+  border-radius: 20px;
+  padding: 35px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.07);
 }
 
-@media(max-width:550px){
-
-    header{
-        padding:14px;
-    }
-
-    .brand h1{
-        font-size:16px;
-    }
-
-    .brand small{
-        font-size:11px;
-    }
-
-    nav{
-        display:grid;
-        grid-template-columns:repeat(2,1fr);
-        width:100%;
-    }
-
-    nav a{
-        text-align:center;
-        font-size:12px;
-    }
-
-    .hero{
-        padding:55px 18px;
-    }
-
-    .hero h2{
-        font-size:27px;
-    }
-
-    .hero p{
-        font-size:15px;
-    }
-
-    section{
-        padding:45px 15px;
-    }
-
-    .section-title h2{
-        font-size:26px;
-    }
-
-    .partner-grid{
-        grid-template-columns:1fr;
-    }
-
-    .registration-box,
-    .verify-box{
-        padding:22px 17px;
-    }
+.about-box h3 {
+  color: #082b61;
+  font-size: 27px;
+  margin-bottom: 15px;
 }
+
+.about-list {
+  list-style: none;
+  margin-top: 20px;
+}
+
+.about-list li {
+  padding: 9px 0;
+  border-bottom: 1px solid #edf0f5;
+}
+
+/* =========================================================
+   PROGRAMS
+   ========================================================= */
+
+.programs {
+  background: white;
+}
+
+.program-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 25px;
+}
+
+.program {
+  border: 1px solid #e5eaf1;
+  border-radius: 18px;
+  padding: 30px;
+  background: #fff;
+  transition: .3s;
+}
+
+.program:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0,0,0,.08);
+}
+
+.program-icon {
+  font-size: 45px;
+  margin-bottom: 15px;
+}
+
+.program h3 {
+  color: #082b61;
+  margin-bottom: 10px;
+}
+
+.program p {
+  color: #667085;
+}
+
+/* =========================================================
+   TEFL REGISTRATION
+   ========================================================= */
+
+.registration {
+  background:
+    linear-gradient(135deg,#eef5ff,#ffffff);
+}
+
+.registration-box {
+  max-width: 850px;
+  margin: auto;
+  background: white;
+  padding: 40px;
+  border-radius: 25px;
+  box-shadow: 0 15px 45px rgba(0,0,0,.09);
+}
+
+.registration-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.registration-header .icon {
+  font-size: 50px;
+}
+
+.registration-header h2 {
+  color: #082b61;
+  font-size: 34px;
+  margin: 10px 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group.full {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 7px;
+  color: #26364d;
+}
+
+.form-group input {
+  width: 100%;
+  height: 50px;
+  border: 1px solid #d5dce7;
+  border-radius: 9px;
+  padding: 0 15px;
+  font-size: 15px;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: #1689ed;
+  box-shadow: 0 0 0 3px rgba(22,137,237,.1);
+}
+
+.register-button {
+  width: 100%;
+  height: 52px;
+  background: #0879da;
+  color: white;
+  border: 0;
+  border-radius: 9px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .25s;
+}
+
+.register-button:hover {
+  background: #0566b8;
+}
+
+.register-button:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+.registration-result {
+  display: none;
+  margin-top: 25px;
+  padding: 22px;
+  border-radius: 12px;
+  background: #ecfdf3;
+  border: 1px solid #a7e8c0;
+  color: #126b3c;
+}
+
+.registration-error {
+  display: none;
+  margin-top: 25px;
+  padding: 18px;
+  border-radius: 12px;
+  background: #fff1f1;
+  border: 1px solid #ffcaca;
+  color: #a42626;
+}
+
+/* =========================================================
+   CERTIFICATE VERIFICATION
+   ========================================================= */
+
+.verification {
+  background: #082b61;
+  color: white;
+}
+
+.verification-box {
+  max-width: 850px;
+  margin: auto;
+  background: white;
+  color: #17243a;
+  border-radius: 25px;
+  padding: 40px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.2);
+}
+
+.verification-box h2 {
+  color: #082b61;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 32px;
+}
+
+.verification-box > p {
+  text-align: center;
+  color: #667085;
+  margin-bottom: 25px;
+}
+
+.verify-form {
+  display: flex;
+  gap: 10px;
+}
+
+.verify-form input {
+  flex: 1;
+  height: 52px;
+  border: 1px solid #d5dce7;
+  border-radius: 9px;
+  padding: 0 15px;
+  font-size: 16px;
+}
+
+.verify-form button {
+  min-width: 140px;
+  background: #0879da;
+  color: white;
+  border: 0;
+  border-radius: 9px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.verify-result {
+  margin-top: 25px;
+  display: none;
+}
+
+/* =========================================================
+   PARTNER SCHOOLS
+   ========================================================= */
+
+.geti-partners {
+  background: linear-gradient(135deg,#f7faff,#eef4ff);
+}
+
+.partners-container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.partners-heading {
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.partners-heading span {
+  font-size: 42px;
+}
+
+.partners-heading h2 {
+  margin: 10px 0;
+  font-size: 34px;
+  color: #102a56;
+}
+
+.partners-heading p {
+  max-width: 760px;
+  margin: auto;
+  color: #5d6778;
+}
+
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 24px;
+}
+
+.partner-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(0,0,0,.08);
+  border: 1px solid #e5ebf5;
+  transition: .3s;
+}
+
+.partner-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0,0,0,.13);
+}
+
+.partner-logo {
+  width: 105px;
+  height: 105px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 800;
+  box-shadow: 0 8px 20px rgba(0,0,0,.15);
+}
+
+.partner-logo strong {
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.logo-icon {
+  font-size: 28px;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.logo-1 {
+  background: linear-gradient(135deg,#123c78,#2878c8);
+}
+
+.logo-2 {
+  background: linear-gradient(135deg,#702963,#b44a92);
+}
+
+.logo-3 {
+  background: linear-gradient(135deg,#00695c,#26a69a);
+}
+
+.logo-4 {
+  background: linear-gradient(135deg,#8b4513,#d89035);
+}
+
+.logo-5 {
+  background: linear-gradient(135deg,#274e13,#6aa84f);
+}
+
+.logo-6 {
+  background: linear-gradient(135deg,#263238,#546e7a);
+}
+
+.logo-7 {
+  background: linear-gradient(135deg,#4a148c,#7e57c2);
+}
+
+.partner-card h3 {
+  color: #162d52;
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.partner-card p {
+  color: #737d8d;
+  font-size: 14px;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer {
+  background: #061c3d;
+  color: white;
+  padding: 55px 20px 25px;
+}
+
+.footer-grid {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 40px;
+}
+
+footer h3 {
+  margin-bottom: 15px;
+}
+
+footer p,
+footer li {
+  color: #c4cede;
+  font-size: 14px;
+}
+
+footer ul {
+  list-style: none;
+}
+
+footer li {
+  padding: 5px 0;
+}
+
+.copyright {
+  max-width: 1200px;
+  margin: 40px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,.15);
+  text-align: center;
+  color: #9facbd;
+  font-size: 13px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:1050px) {
+
+  .nav-menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 75px;
+    background: #082b61;
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  .nav-menu.active {
+    display: flex;
+  }
+
+  .nav-menu li {
+    width: 100%;
+  }
+
+  .nav-menu a {
+    text-align: center;
+  }
+
+  .menu-button {
+    display: block;
+  }
+
+  .hero-container {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .partners-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:700px) {
+
+  section {
+    padding: 60px 15px;
+  }
+
+  .hero {
+    padding: 60px 15px;
+  }
+
+  .hero-card {
+    padding: 25px;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .program-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .partners-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group.full {
+    grid-column: auto;
+  }
+
+  .registration-box,
+  .verification-box {
+    padding: 25px 18px;
+  }
+
+  .verify-form {
+    flex-direction: column;
+  }
+
+  .verify-form button {
+    min-height: 50px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media(max-width:400px) {
+
+  .brand-text strong {
+    font-size: 16px;
+  }
+
+  .brand-text small {
+    font-size: 10px;
+  }
+
+  .brand-logo {
+    width: 42px;
+    height: 42px;
+  }
+
+  .hero h1 {
+    font-size: 38px;
+  }
+
+  .registration-header h2,
+  .verification-box h2 {
+    font-size: 27px;
+  }
+
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
+<!-- =======================================================
+     HEADER
+     ======================================================= -->
 
 <header>
 
-<div class="header-inner">
+<nav class="navbar">
 
-<div class="brand">
+  <a href="#home" class="brand">
 
-<div class="brand-logo">
-G
-</div>
+    <div class="brand-logo">
+      🎓
+    </div>
 
-<div>
-<h1>GETI</h1>
-<small>Global English Teaching Institute</small>
-</div>
+    <div class="brand-text">
+      <strong>GETI</strong>
+      <small>Global English Teaching Institute</small>
+    </div>
 
-</div>
+  </a>
 
-<nav>
-<a href="#home">HOME</a>
-<a href="#about">ABOUT</a>
-<a href="#programs">PROGRAMS</a>
-<a href="#tefl">TEFL</a>
-<a href="#tesol">TESOL</a>
-<a href="#partners">PARTNERS</a>
-<a href="#registration">REGISTER</a>
-<a href="#verify">VERIFY</a>
-<a href="#contact">CONTACT</a>
+  <button
+    class="menu-button"
+    onclick="toggleMenu()"
+    aria-label="Open menu">
+    ☰
+  </button>
+
+  <ul class="nav-menu" id="navMenu">
+
+    <li><a href="#home">HOME</a></li>
+    <li><a href="#about">ABOUT</a></li>
+    <li><a href="#programs">PROGRAMS</a></li>
+    <li><a href="#tefl-registration">TEFL</a></li>
+    <li><a href="#partners">PARTNERS</a></li>
+    <li><a href="#verify">VERIFY</a></li>
+    <li><a href="#contact">CONTACT</a></li>
+
+  </ul>
+
 </nav>
 
-</div>
 </header>
 
 
-<!-- ================= HOME ================= -->
+<!-- =======================================================
+     HOME
+     ======================================================= -->
 
 <section class="hero" id="home">
 
-<h2>Global English Teaching Institute</h2>
+  <div class="hero-container">
 
-<p>
-Professional English language education, TEFL training,
-TESOL training and internationally oriented teacher development.
-</p>
+    <div>
 
-<div class="hero-buttons">
+      <h1>
+        Learn English.<br>
+        <span>Teach Globally.</span>
+      </h1>
 
-<a href="#registration" class="btn btn-primary">
-GET TEFL CERTIFICATE
-</a>
+      <p>
+        Welcome to the Global English Teaching Institute.
+        Develop your English teaching skills through professional
+        TEFL and TESOL training and internationally oriented
+        certificate programs.
+      </p>
 
-<a href="#verify" class="btn btn-secondary">
-VERIFY CERTIFICATE
-</a>
+      <div class="hero-buttons">
 
-</div>
+        <a href="#tefl-registration"
+           class="btn btn-primary">
+          🎓 GET TEFL CERTIFICATE
+        </a>
+
+        <a href="#verify"
+           class="btn btn-secondary">
+          🔍 VERIFY CERTIFICATE
+        </a>
+
+      </div>
+
+    </div>
+
+    <div class="hero-card">
+
+      <div class="hero-card-icon">🌍</div>
+
+      <h2>Global English Teaching</h2>
+
+      <p>
+        Professional English teaching development,
+        teacher training, assessment and certification.
+      </p>
+
+      <br>
+
+      <strong>
+        TEFL • TESOL • ENGLISH • TEACHER DEVELOPMENT
+      </strong>
+
+    </div>
+
+  </div>
 
 </section>
 
 
-<!-- ================= ABOUT ================= -->
+<!-- =======================================================
+     MENU CARDS
+     ======================================================= -->
 
-<section id="about">
+<section class="menu-section">
 
 <div class="container">
 
 <div class="section-title">
 
-<h2>About GETI</h2>
+  <h2>Explore GETI</h2>
 
-<p>
-Global English Teaching Institute
-</p>
-
-</div>
-
-<p style="max-width:900px;margin:auto;text-align:center;color:#596579">
-
-GETI provides English language learning and teacher-training
-programs designed to support learners, teachers and future
-English language professionals.
-
-</p>
+  <p>
+    Discover our academic programs, certification,
+    learning resources and verification services.
+  </p>
 
 </div>
 
-</section>
+<div class="menu-grid">
 
+  <a href="#about" class="menu-card card-blue">
+    <div class="menu-card-icon">🏫</div>
+    <h3>About GETI</h3>
+    <p>Learn about our institute.</p>
+  </a>
 
-<!-- ================= PROGRAMS ================= -->
+  <a href="#programs" class="menu-card card-green">
+    <div class="menu-card-icon">📚</div>
+    <h3>Programs</h3>
+    <p>Explore English programs.</p>
+  </a>
 
-<section id="programs" style="background:#f5f7fb">
+  <a href="#tefl-registration" class="menu-card card-purple">
+    <div class="menu-card-icon">🎓</div>
+    <h3>TEFL</h3>
+    <p>Register for TEFL certification.</p>
+  </a>
 
-<div class="container">
+  <a href="#tefl-registration" class="menu-card card-orange">
+    <div class="menu-card-icon">📝</div>
+    <h3>Examination</h3>
+    <p>Complete your certification process.</p>
+  </a>
 
-<div class="section-title">
-<h2>Our Programs</h2>
-<p>Professional English and teacher-training programs</p>
-</div>
+  <a href="#verify" class="menu-card card-red">
+    <div class="menu-card-icon">🔎</div>
+    <h3>Certificate Verification</h3>
+    <p>Verify a GETI certificate.</p>
+  </a>
 
-<div class="partner-grid">
+  <a href="#partners" class="menu-card card-teal">
+    <div class="menu-card-icon">🌍</div>
+    <h3>Partners</h3>
+    <p>Our academic partners.</p>
+  </a>
 
-<div class="partner-card">
-<div class="partner-logo">T</div>
-<h3>TEFL</h3>
-<p>Teaching English as a Foreign Language</p>
-</div>
+  <a href="#programs" class="menu-card card-dark">
+    <div class="menu-card-icon">💻</div>
+    <h3>Online Learning</h3>
+    <p>Learn from anywhere.</p>
+  </a>
 
-<div class="partner-card">
-<div class="partner-logo">T</div>
-<h3>TESOL</h3>
-<p>Teaching English to Speakers of Other Languages</p>
-</div>
-
-<div class="partner-card">
-<div class="partner-logo">E</div>
-<h3>English Programs</h3>
-<p>A1 to C2 English development</p>
-</div>
-
-<div class="partner-card">
-<div class="partner-logo">O</div>
-<h3>Online Learning</h3>
-<p>Flexible online English learning</p>
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================= TEFL ================= -->
-
-<section id="tefl">
-
-<div class="container">
-
-<div class="section-title">
-
-<h2>TEFL Certificate Program</h2>
-
-<p>
-Teacher training for English language educators
-</p>
+  <a href="#contact" class="menu-card card-gold">
+    <div class="menu-card-icon">📩</div>
+    <h3>Contact</h3>
+    <p>Contact GETI.</p>
+  </a>
 
 </div>
-
-<p style="max-width:850px;margin:auto;text-align:center">
-
-The GETI TEFL program introduces teaching methodology,
-lesson planning, classroom management, grammar, vocabulary,
-speaking, listening, reading, writing, assessment and
-professional development.
-
-</p>
 
 </div>
 
 </section>
 
 
-<!-- ================= TESOL ================= -->
+<!-- =======================================================
+     ABOUT
+     ======================================================= -->
 
-<section id="tesol" style="background:#f5f7fb">
+<section class="about" id="about">
 
 <div class="container">
 
 <div class="section-title">
 
-<h2>TESOL Program</h2>
+  <h2>About GETI</h2>
 
-<p>
-English teaching methodology and professional development
-</p>
+  <p>
+    Global English Teaching Institute is focused on
+    English language learning, teacher development and
+    professional certification.
+  </p>
 
 </div>
 
-<p style="max-width:850px;margin:auto;text-align:center">
+<div class="about-grid">
 
-The TESOL program covers second language acquisition,
-learner-centered teaching, multilingual classrooms,
-cultural awareness, curriculum development and assessment.
+  <div class="about-box">
 
-</p>
+    <h3>Our Mission</h3>
+
+    <p>
+      Our mission is to support learners and English
+      teachers with accessible learning opportunities,
+      practical teaching knowledge and professional
+      development.
+    </p>
+
+    <ul class="about-list">
+
+      <li>🌍 International learning environment</li>
+      <li>📚 English language development</li>
+      <li>🎓 Teacher training</li>
+      <li>📝 Professional assessment</li>
+      <li>🏆 Certificate programs</li>
+
+    </ul>
+
+  </div>
+
+  <div class="about-box">
+
+    <h3>Our Focus</h3>
+
+    <p>
+      GETI programs are designed to develop practical
+      English teaching knowledge and communication skills.
+    </p>
+
+    <br>
+
+    <p>
+      Our TEFL program includes teaching methodology,
+      lesson planning, classroom management, grammar,
+      vocabulary, speaking, listening, reading, writing,
+      assessment and professional development.
+    </p>
+
+  </div>
+
+</div>
 
 </div>
 
 </section>
 
 
-<!-- ================================================= -->
-<!--                 7 PARTNER SCHOOLS                 -->
-<!-- ================================================= -->
+<!-- =======================================================
+     PROGRAMS
+     ======================================================= -->
 
-<section class="partners" id="partners">
+<section class="programs" id="programs">
 
 <div class="container">
 
 <div class="section-title">
 
-<h2>Our Academic Partners</h2>
+  <h2>Our Programs</h2>
 
-<p>
-GETI works with academic and educational partners
-to support international English education.
-</p>
-
-</div>
-
-<div class="partner-grid">
-
-
-<!-- PARTNER 1 -->
-
-<div class="partner-card">
-
-<div class="partner-logo">
-GE
-</div>
-
-<h3>Global English Academy</h3>
-
-<p>Academic English Partner</p>
+  <p>
+    Professional and practical English learning
+    and teacher development programs.
+  </p>
 
 </div>
 
+<div class="program-grid">
 
-<!-- PARTNER 2 -->
+  <div class="program">
 
-<div class="partner-card">
+    <div class="program-icon">🎓</div>
 
-<div class="partner-logo">
-IE
-</div>
+    <h3>TEFL Certificate</h3>
 
-<h3>International English School</h3>
-
-<p>English Education Partner</p>
-
-</div>
-
-
-<!-- PARTNER 3 -->
-
-<div class="partner-card">
-
-<div class="partner-logo">
-LA
-</div>
-
-<h3>Language Academy International</h3>
-
-<p>Language Training Partner</p>
-
-</div>
-
-
-<!-- PARTNER 4 -->
-
-<div class="partner-card">
-
-<div class="partner-logo">
-EA
-</div>
-
-<h3>English Access Institute</h3>
-
-<p>Teacher Development Partner</p>
-
-</div>
-
-
-<!-- PARTNER 5 -->
-
-<div class="partner-card">
-
-<div class="partner-logo">
-WA
-</div>
-
-<h3>World Academic Center</h3>
-
-<p>Academic Development Partner</p>
-
-</div>
-
-
-<!-- PARTNER 6 -->
-
-<div class="partner-card">
-
-<div class="partner-logo">
-EL
-</div>
-
-<h3>English Learning Center</h3>
-
-<p>Language Learning Partner</p>
-
-</div>
-
-
-<!-- PARTNER 7 -->
-
-<div class="partner-card">
-
-<div class="partner-logo">
-IP
-</div>
-
-<h3>International Professional School</h3>
-
-<p>Professional Education Partner</p>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================================================= -->
-<!--             TEFL CERTIFICATE REGISTRATION         -->
-<!-- ================================================= -->
-
-<section class="registration" id="registration">
-
-<div class="container">
-
-<div class="registration-box">
-
-<h2>🎓 TEFL Certificate Registration</h2>
-
-<p class="intro">
-
-You have completed the TEFL examination.
-Complete your information to receive your certificate ID.
-
-</p>
-
-
-<form id="registrationForm">
-
-<div class="form-group">
-
-<label for="fullName">
-Full Name
-</label>
-
-<input
-type="text"
-id="fullName"
-name="fullName"
-placeholder="Enter your full name"
-required
->
-
-</div>
-
-
-<div class="form-group">
-
-<label for="nationality">
-Nationality
-</label>
-
-<input
-type="text"
-id="nationality"
-name="nationality"
-placeholder="Enter your nationality"
-required
->
-
-</div>
-
-
-<div class="form-group">
-
-<label for="email">
-Email
-</label>
-
-<input
-type="email"
-id="email"
-name="email"
-placeholder="Enter your email"
-required
->
-
-</div>
-
-
-<button
-type="submit"
-class="register-btn"
-id="registerButton"
->
-
-REGISTER & GET CERTIFICATE ID
-
-</button>
-
-</form>
-
-
-<div id="registrationMessage" class="message"></div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================= VERIFY ================= -->
-
-<section class="verify" id="verify">
-
-<div class="container">
-
-<div class="section-title">
-
-<h2>Certificate Verification</h2>
-
-<p>
-Verify the authenticity of a GETI certificate.
-</p>
-
-</div>
-
-<div class="verify-box">
-
-<input
-type="text"
-id="certificateSearch"
-placeholder="Enter certificate ID e.g. GETI-CERT000001"
->
-
-<button
-class="verify-btn"
-onclick="verifyCertificate()"
->
-🔍 VERIFY CERTIFICATE
-</button>
-
-<div
-id="verificationResult"
-class="message"
->
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================= CONTACT ================= -->
-
-<section id="contact" style="background:#f5f7fb">
-
-<div class="container">
-
-<div class="section-title">
-
-<h2>Contact GETI</h2>
-
-<p>
-Global English Teaching Institute
-</p>
-
-</div>
-
-<div style="text-align:center">
-
-<p>
-📧 Email: info@geti.example
-</p>
-
-<p>
-🌍 Global English Teaching Institute
-</p>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================= FOOTER ================= -->
-
-<footer>
-
-<h3>GETI</h3>
-
-<p>
-Global English Teaching Institute
-</p>
-
-<p>
-© 2026 GETI. All rights reserved.
-</p>
-
-</footer>
-
-
-<script>
-
-/* =====================================================
-   GOOGLE APPS SCRIPT URL
-   =====================================================
-
-   IMPORTANT:
-   Replace the URL below with YOUR deployed
-   Google Apps Script Web App URL.
-
-   Example:
-   https://script.google.com/macros/s/XXXXXXXXXXXX/exec
-===================================================== */
-
-const GOOGLE_SCRIPT_URL =
-"https://script.google.com/macros/s/PASTE_YOUR_SCRIPT_ID_HERE/exec";
-
-
-/* =====================================================
-   TEFL REGISTRATION
-===================================================== */
-
-document
-.getElementById("registrationForm")
-.addEventListener("submit", async function(event){
-
-    event.preventDefault();
-
-    const button =
-    document.getElementById("registerButton");
-
-    const message =
-    document.getElementById("registrationMessage");
-
-    const fullName =
-    document.getElementById("fullName").value.trim();
-
-    const nationality =
-    document.getElementById("nationality").value.trim();
-
-    const email =
-    document.getElementById("email").value.trim();
-
-
-    if(!fullName || !nationality || !email){
-
-        message.className="message error";
-
-        message.innerHTML =
-        "❌ Please complete all required fields.";
-
-        return;
-    }
-
-
-    button.disabled=true;
-
-    button.innerHTML =
-    "⏳ REGISTERING...";
-
-
-    message.className="message";
-
-    message.style.display="block";
-
-    message.innerHTML =
-    "Please wait while your certificate ID is being created...";
-
-
-    try{
-
-        /*
-        We use no-cors because Google Apps Script
-        can reject normal browser CORS requests.
-        */
-
-        const formData = new URLSearchParams();
-
-        formData.append(
-            "action",
-            "register"
-        );
-
-        formData.append(
-            "fullName",
-            fullName
-        );
-
-        formData.append(
-            "nationality",
-            nationality
-        );
-
-        formData.append(
-            "email",
-            email
-        );
-
-
-        await fetch(
-            GOOGLE_SCRIPT_URL,
-            {
-                method:"POST",
-                mode:"no-cors",
-                body:formData
-            }
-        );
-
-
-        /*
-        Because no-cors does not allow JavaScript
-        to read the response, create a local ID.
-        The Google Sheet will still receive the data.
-        */
-
-        const certificateID =
-        createCertificateID();
-
-
-        message.className =
-        "message success";
-
-
-        message.innerHTML = `
-
-        <strong>✅ Registration completed!</strong>
-
-        <div class="certificate-id">
-        ${certificateID}
-        </div>
-
-        <p>
-        Name: ${escapeHTML(fullName)}
-        </p>
-
-        <p>
-        Nationality: ${escapeHTML(nationality)}
-        </p>
-
-        <p>
-        Your certificate ID has been generated.
-        Please keep it for certificate verification.
-        </p>
-
-        `;
-
-
-        document
-        .getElementById("certificateSearch")
-        .value=certificateID;
-
-
-        document
-        .getElementById("registrationForm")
-        .reset();
-
-
-    }catch(error){
-
-        console.error(error);
-
-        message.className =
-        "message error";
-
-        message.innerHTML =
-        "❌ Unable to connect to the GETI registration server.<br><br>" +
-        "Please check your Google Apps Script deployment.";
-
-    }
-
-
-    button.disabled=false;
-
-    button.innerHTML =
-    "REGISTER & GET CERTIFICATE ID";
-
-});
-
-
-/* =====================================================
-   CERTIFICATE ID GENERATOR
-===================================================== */
-
-function createCertificateID(){
-
-    const random =
-    Math.floor(
-        100000 +
-        Math.random()*900000
-    );
-
-    return "GETI-CERT" + random;
-}
-
-
-/* =====================================================
-   HTML SECURITY
-===================================================== */
-
-function escapeHTML(text){
-
-    return text
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-/* =====================================================
-   CERTIFICATE VERIFICATION
-===================================================== */
-
-async function verifyCertificate(){
-
-    const id =
-    document
-    .getElementById("certificateSearch")
-    .value
-    .trim();
-
-
-    const result =
-    document
-    .getElementById("verificationResult");
-
-
-    if(!id){
-
-        result.className =
-        "message error";
-
-        result.style.display="block";
-
-        result.innerHTML =
-        "❌ Please enter a certificate number.";
-
-        return;
-    }
-
-
-    result.className="message";
-
-    result.style.display="block";
-
-    result.innerHTML =
-    "⏳ Checking certificate...";
-
-
-    try{
-
-        const response =
-        await fetch(
-            GOOGLE_SCRIPT_URL +
-            "?action=verify&certificateID=" +
-            encodeURIComponent(id)
-        );
-
-
-        const data =
-        await response.json();
-
-
-        if(data.success){
-
-            result.className =
-            "message success";
-
-            result.innerHTML = `
-
-            <strong>✅ CERTIFICATE VERIFIED</strong>
-
-            <br><br>
-
-            <b>Certificate ID:</b>
-            ${escapeHTML(data.certificateID || id)}
-
-            <br>
-
-            <b>Name:</b>
-            ${escapeHTML(data.name || "")}
-
-            <br>
-
-            <b>Nationality:</b>
-            ${escapeHTML(data.nationality || "")}
-
-            <br>
-
-            <b>Program:</b>
-            ${escapeHTML(data.program || "TEFL")}
-
-            `;
-
-        }else{
-
-            result.className =
-            "message error";
-
-            result.innerHTML =
-            "❌ Certificate not found.";
-
-        }
-
-    }catch(error){
-
-        console.error(error);
-
-        result.className =
-        "message error";
-
-        result.innerHTML =
-        "❌ Verification server unavailable.<br>" +
-        "Please check the Google Apps Script URL.";
-
-    }
-
-}
-
-</script>
-
-</body>
-</html>
+    <p>
+     
