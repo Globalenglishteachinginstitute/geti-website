@@ -1199,6 +1199,10 @@ button,input,textarea{
 
 /* CHAT WITH ADMINISTRATOR */
 .chat-launcher{position:fixed;right:22px;bottom:22px;z-index:2000;background:#0b2d5c;color:#fff;border:0;border-radius:24px;padding:10px 15px;font-size:12px;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,.22);cursor:pointer}.chat-launcher:hover{background:#b38a28}.chat-modal{display:none;position:fixed;inset:0;background:rgba(4,18,38,.55);z-index:2100;align-items:center;justify-content:center;padding:15px}.chat-modal.show{display:flex}.chat-window{width:min(980px,100%);height:min(760px,92vh);background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);display:flex;flex-direction:column}.chat-header{background:#0b2d5c;color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}.chat-close{background:transparent;border:0;color:#fff;font-size:24px;cursor:pointer}.chat-auth{padding:22px;overflow:auto}.chat-auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.chat-card{border:1px solid #dbe2ea;border-radius:8px;padding:20px;background:#f8fafc}.chat-card h3{color:#0b2d5c;margin-bottom:12px}.chat-card input{width:100%;padding:11px;margin-bottom:10px;border:1px solid #ccd4df;border-radius:5px}.chat-main{display:none;flex:1;min-height:0}.chat-main.show{display:flex}.chat-sidebar{width:250px;border-right:1px solid #dbe2ea;background:#f8fafc;overflow:auto}.chat-sidebar-title{padding:14px;font-weight:800;color:#0b2d5c;border-bottom:1px solid #dbe2ea}.chat-contact{padding:13px;border-bottom:1px solid #e3e8ef;cursor:pointer}.chat-contact:hover,.chat-contact.active{background:#eaf0f7}.chat-contact strong{display:block;color:#172033}.chat-contact small{color:#687386}.chat-content{flex:1;display:flex;flex-direction:column;min-width:0}.chat-toolbar{padding:10px 14px;border-bottom:1px solid #dbe2ea;display:flex;justify-content:space-between;align-items:center}.chat-messages{flex:1;overflow:auto;padding:18px;background:#f5f7fa}.chat-message{max-width:78%;margin:8px 0;padding:10px 12px;border-radius:10px;background:#fff;border:1px solid #dfe5ed}.chat-message.mine{margin-left:auto;background:#0b2d5c;color:#fff;border-color:#0b2d5c}.chat-message .meta{font-size:10px;opacity:.7;margin-top:5px}.chat-file{display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px;border-radius:6px;background:rgba(0,0,0,.05)}.chat-file button{border:0;background:#b38a28;color:#fff;padding:5px 8px;border-radius:4px;cursor:pointer}.chat-compose{padding:10px;border-top:1px solid #dbe2ea;background:#fff}.chat-compose textarea{width:100%;min-height:60px;padding:10px;border:1px solid #ccd4df;border-radius:5px;resize:vertical}.chat-compose-row{display:flex;gap:8px;margin-top:8px;align-items:center}.chat-compose-row input[type=file]{flex:1}.chat-compose-row button{border:0;background:#0b2d5c;color:#fff;padding:10px 16px;border-radius:5px;font-weight:bold;cursor:pointer}.chat-status{margin-top:8px;font-size:12px}.chat-admin-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.chat-admin-tabs button{border:1px solid #0b2d5c;background:#fff;color:#0b2d5c;padding:8px 13px;border-radius:5px;cursor:pointer;font-weight:bold}.chat-admin-tabs button.active{background:#0b2d5c;color:#fff}.chat-admin-view{display:none}.chat-admin-view.active{display:block}.chat-badge{display:inline-flex;min-width:18px;height:18px;padding:0 5px;align-items:center;justify-content:center;background:#b38a28;color:#fff;border-radius:10px;font-size:10px;margin-left:5px}@media(max-width:700px){.chat-auth-grid{grid-template-columns:1fr}.chat-sidebar{width:125px}.chat-window{height:96vh}.chat-launcher{right:12px;bottom:12px}.chat-message{max-width:90%}}
+
+/* GETI STUDENT GROUP */
+.geti-group-tabs{display:flex;gap:8px;flex-wrap:wrap;padding:10px;border-bottom:1px solid #dbe2ea;background:#fff}.geti-group-tabs button{border:1px solid #0b2d5c;background:#fff;color:#0b2d5c;padding:8px 13px;border-radius:5px;cursor:pointer;font-weight:bold}.geti-group-tabs button.active{background:#0b2d5c;color:#fff}.geti-group-view{display:none;flex:1;min-height:0}.geti-group-view.active{display:flex}.geti-group-members{width:220px;border-right:1px solid #dbe2ea;background:#f8fafc;overflow:auto}.geti-group-members .title{padding:14px;font-weight:800;color:#0b2d5c;border-bottom:1px solid #dbe2ea}.geti-group-member{padding:10px 13px;border-bottom:1px solid #e3e8ef;font-size:13px}.geti-group-member strong{display:block;color:#172033}.geti-group-member small{color:#687386}.geti-group-note{padding:10px 14px;font-size:12px;color:#687386;background:#fff;border-top:1px solid #dbe2ea}@media(max-width:700px){.geti-group-members{width:120px}}
+
 </style>
 </head>
 
@@ -1758,9 +1762,13 @@ and remove candidates from the local blacklist.
 <button id="adminTabPassed" onclick="showAdminTab('passed')">PASSED</button>
 </div>
 <div id="adminViewMessage" class="chat-admin-view active">
-<div class="chat-main show" style="height:560px;border:1px solid #dbe2ea;border-radius:8px;overflow:hidden">
+<div class="geti-group-tabs"><button id="adminChatModePrivate" class="active" onclick="showAdminChatMode('private')">PRIVATE MESSAGES</button><button id="adminChatModeGroup" onclick="showAdminChatMode('group')">STUDENT GROUP</button></div>
+<div id="adminPrivateChatView" class="chat-main show" style="height:560px;border:1px solid #dbe2ea;border-radius:8px;overflow:hidden">
 <aside class="chat-sidebar" id="adminConversationList"><div class="chat-sidebar-title">Messages</div></aside>
 <section class="chat-content"><div class="chat-toolbar"><strong id="adminChatTitle">Select a conversation</strong></div><div class="chat-messages" id="adminMessages"><div class="chat-status">No conversation selected.</div></div><div class="chat-compose"><textarea id="adminChatText" placeholder="Reply to the candidate..."></textarea><div class="chat-compose-row"><input id="adminChatFile" type="file" accept="image/*,.pdf"><button onclick="sendAdminChatMessage()">SEND</button></div></div></section>
+</div>
+<div id="adminGroupChatView" class="chat-main" style="height:560px;border:1px solid #dbe2ea;border-radius:8px;overflow:hidden">
+<aside class="geti-group-members" id="adminGroupMemberList"><div class="title">Students</div></aside><section class="chat-content"><div class="chat-toolbar"><strong>GETI Student Group</strong></div><div class="chat-messages" id="adminGroupMessages"></div><div class="geti-group-note">Administrator can participate in the student group.</div><div class="chat-compose"><textarea id="adminGroupText" placeholder="Write to the student group..."></textarea><div class="chat-compose-row"><input id="adminGroupFile" type="file" accept="image/*,.pdf"><button onclick="sendAdminGroupMessage()">SEND</button></div></div></section>
 </div></div>
 <div id="adminViewBlacklist" class="chat-admin-view"><div class="admin-info">Candidates who did not pass.</div><div id="adminBlacklistList"></div></div>
 <div id="adminViewPassed" class="chat-admin-view"><div class="admin-info">Candidates who passed.</div><div id="adminPassedList"></div></div>
@@ -3196,6 +3204,8 @@ function showQuestion(){
     let container=
         document.getElementById("optionsContainer");
 
+    updateExamTimer();
+
     for(let i=1;i<=4;i++){
 
         let button=
@@ -4082,6 +4092,75 @@ function adminCandidateHTML(records){if(!records.length)return '<div class="admi
 const GETI_originalAdminLogin=adminLogin;adminLogin=function(){GETI_originalAdminLogin();if(document.getElementById("adminPanel").style.display==="block"){renderAdminConversations();renderAdminCandidateLists()}};
 
 /* =========================================================
+   GETI STUDENT GROUP + ADMIN GROUP CHAT
+========================================================= */
+function showUserChatTab(tab){
+    document.getElementById("userChatTabAdmin").classList.toggle("active",tab==="admin");
+    document.getElementById("userChatTabGroup").classList.toggle("active",tab==="group");
+    document.getElementById("userChatViewAdmin").classList.toggle("active",tab==="admin");
+    document.getElementById("userChatViewGroup").classList.toggle("active",tab==="group");
+    if(tab==="group"){renderGroupMembers();renderGroupMessages();}
+}
+function showAdminChatMode(mode){
+    document.getElementById("adminChatModePrivate").classList.toggle("active",mode==="private");
+    document.getElementById("adminChatModeGroup").classList.toggle("active",mode==="group");
+    document.getElementById("adminPrivateChatView").classList.toggle("show",mode==="private");
+    document.getElementById("adminGroupChatView").classList.toggle("show",mode==="group");
+    if(mode==="group"){renderAdminGroupMembers();renderAdminGroupMessages();}
+}
+function groupMessages(){try{return JSON.parse(localStorage.getItem("GETI_GROUP_MESSAGES")||"[]")}catch(e){return []}}
+function saveGroupMessages(a){localStorage.setItem("GETI_GROUP_MESSAGES",JSON.stringify(a))}
+function renderGroupMembers(){
+    let box=document.getElementById("groupMemberList");if(!box)return;
+    let users=chatUsers();
+    box.innerHTML='<div class="title">GETI Students ('+users.length+')</div>'+(users.length?users.map(u=>'<div class="geti-group-member"><strong>'+escapeHTML(u.name)+'</strong><small>'+escapeHTML(u.email)+'</small></div>').join(""): '<div class="chat-status" style="padding:14px">No students yet.</div>');
+}
+function renderAdminGroupMembers(){
+    let box=document.getElementById("adminGroupMemberList");if(!box)return;
+    let users=chatUsers();
+    box.innerHTML='<div class="title">Students ('+users.length+')</div>'+(users.length?users.map(u=>'<div class="geti-group-member"><strong>'+escapeHTML(u.name)+'</strong><small>'+escapeHTML(u.email)+'</small></div>').join(""): '<div class="chat-status" style="padding:14px">No students yet.</div>');
+}
+function groupMessageHTML(m,mine){
+    let f=m.fileId?'<div class="chat-file">📎 '+escapeHTML(m.fileName)+' <button onclick="downloadChatFile(\''+m.fileId+'\',\''+escapeHTML(m.fileName).replace(/'/g,"\\'")+'\')">DOWNLOAD</button></div>':'';
+    return '<div class="chat-message '+(mine?'mine':'')+'"><strong>'+escapeHTML(m.senderName||"GETI")+'</strong><div>'+escapeHTML(m.text||"")+'</div>'+f+'<div class="meta">'+new Date(m.time).toLocaleString()+'</div></div>';
+}
+function renderGroupMessages(){
+    if(!chatCurrentUser)return;
+    let box=document.getElementById("groupMessages"),a=groupMessages();
+    box.innerHTML=a.length?"":'<div class="chat-status">No group messages yet.</div>';
+    a.forEach(m=>box.insertAdjacentHTML("beforeend",groupMessageHTML(m,m.senderId===chatCurrentUser.id)));
+    box.scrollTop=box.scrollHeight;
+}
+function renderAdminGroupMessages(){
+    let box=document.getElementById("adminGroupMessages");if(!box)return;
+    let a=groupMessages();
+    box.innerHTML=a.length?"":'<div class="chat-status">No group messages yet.</div>';
+    a.forEach(m=>box.insertAdjacentHTML("beforeend",groupMessageHTML(m,m.senderId==="ADMIN")));
+    box.scrollTop=box.scrollHeight;
+}
+async function sendGroupMessage(){
+    if(!chatCurrentUser)return;
+    let text=document.getElementById("groupChatText").value.trim(),file=document.getElementById("groupChatFile").files[0];
+    if(!text&&!file)return;
+    let fileId=null,fileName="",fileType="";
+    if(file){fileId=await saveChatFile(file);fileName=file.name;fileType=file.type}
+    let a=groupMessages();a.push({id:"GROUP-"+Date.now(),senderId:chatCurrentUser.id,senderName:chatCurrentUser.name,text,fileId,fileName,fileType,time:new Date().toISOString()});saveGroupMessages(a);
+    document.getElementById("groupChatText").value="";document.getElementById("groupChatFile").value="";renderGroupMessages();renderAdminGroupMessages();
+}
+async function sendAdminGroupMessage(){
+    let text=document.getElementById("adminGroupText").value.trim(),file=document.getElementById("adminGroupFile").files[0];
+    if(!text&&!file)return;
+    let fileId=null,fileName="",fileType="";
+    if(file){fileId=await saveChatFile(file);fileName=file.name;fileType=file.type}
+    let a=groupMessages();a.push({id:"GROUP-"+Date.now(),senderId:"ADMIN",senderName:"GETI Administrator",text,fileId,fileName,fileType,time:new Date().toISOString()});saveGroupMessages(a);
+    document.getElementById("adminGroupText").value="";document.getElementById("adminGroupFile").value="";renderAdminGroupMessages();renderGroupMessages();
+}
+const GETI_oldShowUserChat=showUserChat;
+showUserChat=function(){GETI_oldShowUserChat();renderGroupMembers();renderGroupMessages()};
+const GETI_oldAdminLogin2=adminLogin;
+adminLogin=function(){GETI_oldAdminLogin2();if(document.getElementById("adminPanel").style.display==="block"){renderAdminConversations();renderAdminCandidateLists();renderAdminGroupMembers();renderAdminGroupMessages()}};
+
+/* =========================================================
    AUTO CERTIFICATE VERIFICATION
 ========================================================= */
 
@@ -4148,8 +4227,439 @@ document
 <div class="chat-card"><h3>Login</h3><input id="chatLoginEmail" type="email" placeholder="Email"><input id="chatLoginPassword" type="password" placeholder="Password"><button class="btn btn-gold" onclick="chatLogin()">LOGIN</button><div id="chatLoginMsg" class="chat-status"></div></div>
 <div class="chat-card"><h3>Create Account</h3><input id="chatRegName" placeholder="Full name"><input id="chatRegEmail" type="email" placeholder="Email"><input id="chatRegPassword" type="password" placeholder="Password"><button class="btn btn-gold" onclick="chatCreateAccount()">CREATE ACCOUNT</button><div id="chatRegMsg" class="chat-status"></div></div>
 </div><p style="margin-top:15px;color:#687386;font-size:12px">Create an account to chat with GETI. This HTML-only version stores chat data in the browser; a shared backend is required for communication between different devices.</p></div>
-<div class="chat-main" id="chatUserMain"><aside class="chat-sidebar"><div class="chat-sidebar-title">Conversation</div><div class="chat-contact active"><strong>GETI Administrator</strong><small>Support</small></div></aside><section class="chat-content"><div class="chat-toolbar"><strong>GETI Administrator</strong><button class="btn" style="padding:7px 12px;background:#eef3f8;color:#0b2d5c" onclick="chatLogout()">LOGOUT</button></div><div class="chat-messages" id="chatUserMessages"></div><div class="chat-compose"><textarea id="chatUserText" placeholder="Write your message..."></textarea><div class="chat-compose-row"><input id="chatUserFile" type="file" accept="image/*,.pdf"><button onclick="sendUserChatMessage()">SEND</button></div></div></section></div>
+<div class="chat-main" id="chatUserMain" style="flex-direction:column"><div class="geti-group-tabs"><button id="userChatTabAdmin" class="active" onclick="showUserChatTab('admin')">ADMINISTRATOR</button><button id="userChatTabGroup" onclick="showUserChatTab('group')">GETI STUDENT GROUP</button><button class="btn" style="margin-left:auto;padding:7px 12px;background:#eef3f8;color:#0b2d5c" onclick="chatLogout()">LOGOUT</button></div><div class="geti-group-view active" id="userChatViewAdmin"><aside class="chat-sidebar"><div class="chat-sidebar-title">Conversation</div><div class="chat-contact active"><strong>GETI Administrator</strong><small>Private support</small></div></aside><section class="chat-content"><div class="chat-toolbar"><strong>GETI Administrator</strong></div><div class="chat-messages" id="chatUserMessages"></div><div class="chat-compose"><textarea id="chatUserText" placeholder="Write your message..."></textarea><div class="chat-compose-row"><input id="chatUserFile" type="file" accept="image/*,.pdf"><button onclick="sendUserChatMessage()">SEND</button></div></div></section></div><div class="geti-group-view" id="userChatViewGroup"><aside class="geti-group-members" id="groupMemberList"><div class="title">Students online</div></aside><section class="chat-content"><div class="chat-toolbar"><strong>GETI Student Group</strong></div><div class="chat-messages" id="groupMessages"></div><div class="geti-group-note">All students with a GETI chat account can participate in this group.</div><div class="chat-compose"><textarea id="groupChatText" placeholder="Write to the GETI student group..."></textarea><div class="chat-compose-row"><input id="groupChatFile" type="file" accept="image/*,.pdf"><button onclick="sendGroupMessage()">SEND</button></div></div></section></div></div>
 </div></div>
+
+
+<div id="getiChatLauncher" class="geti-chat-launcher">
+  <button onclick="openGetiChat()">💬 Chat with the Administrator</button>
+</div>
+
+<!-- GETI CHAT / STUDENT COMMUNITY SYSTEM -->
+<section id="geti-chat-system" class="geti-chat-system" aria-hidden="true">
+  <div class="geti-chat-modal">
+    <div class="geti-chat-header">
+      <div>
+        <strong>GETI Communication Center</strong>
+        <small>Administrator • Student Support • Student Group</small>
+      </div>
+      <button class="geti-close" onclick="closeGetiChat()">×</button>
+    </div>
+
+    <div id="getiAuthView" class="geti-auth-view">
+      <div class="geti-auth-tabs">
+        <button id="getiLoginTab" class="active" onclick="showGetiAuth('login')">Login</button>
+        <button id="getiCreateTab" onclick="showGetiAuth('create')">Create Account</button>
+      </div>
+
+      <div id="getiLoginForm" class="geti-auth-form">
+        <h3>Login</h3>
+        <input id="getiLoginEmail" type="email" placeholder="Email">
+        <input id="getiLoginPassword" type="password" placeholder="Password">
+        <button onclick="getiLogin()">LOGIN</button>
+        <p id="getiLoginMsg"></p>
+        <small>Administrator demo login: <b>admin@geti.local</b> / <b>GETI2026</b></small>
+      </div>
+
+      <div id="getiCreateForm" class="geti-auth-form" style="display:none">
+        <h3>Create Student Account</h3>
+        <input id="getiCreateName" type="text" placeholder="Full name">
+        <input id="getiCreateEmail" type="email" placeholder="Email">
+        <input id="getiCreatePassword" type="password" placeholder="Password">
+        <button onclick="getiCreateAccount()">CREATE ACCOUNT</button>
+        <p id="getiCreateMsg"></p>
+      </div>
+    </div>
+
+    <div id="getiAppView" style="display:none" class="geti-app-view">
+      <aside class="geti-chat-sidebar">
+        <div class="geti-user-card">
+          <div id="getiCurrentUser"></div>
+          <button onclick="getiLogout()">Logout</button>
+        </div>
+
+        <button class="geti-side-btn active" onclick="getiOpenTab('admin-chat', this)">💬 Messages</button>
+        <button class="geti-side-btn" onclick="getiOpenTab('group-chat', this)">👥 Student Group</button>
+
+        <div id="getiAdminOnlyMenu" style="display:none">
+          <div class="geti-side-title">ADMINISTRATION</div>
+          <button class="geti-side-btn" onclick="getiOpenTab('admin-panel', this)">🛠 Admin Panel</button>
+        </div>
+      </aside>
+
+      <main class="geti-chat-main">
+        <section id="getiAdminChat" class="geti-chat-tab">
+          <div class="geti-chat-title">
+            <div>
+              <h3 id="getiConversationTitle">Chat with the Administrator</h3>
+              <small id="getiConversationSub">Send questions, documents or photos.</small>
+            </div>
+          </div>
+
+          <div id="getiConversationList" class="geti-conversation-list"></div>
+          <div id="getiPrivateMessages" class="geti-message-list"></div>
+
+          <div class="geti-compose">
+            <label class="geti-file-label">📎
+              <input id="getiPrivateFile" type="file" accept="image/*,.pdf,application/pdf">
+            </label>
+            <input id="getiPrivateText" type="text" placeholder="Write a message..." onkeydown="if(event.key==='Enter') sendGetiPrivateMessage()">
+            <button onclick="sendGetiPrivateMessage()">SEND</button>
+          </div>
+          <small class="geti-help">PDF and image attachments can be downloaded by both sides.</small>
+        </section>
+
+        <section id="getiGroupChat" class="geti-chat-tab" style="display:none">
+          <div class="geti-chat-title">
+            <div>
+              <h3>GETI Student Group</h3>
+              <small>Students can practice English together. The GETI Practice Bot replies automatically.</small>
+            </div>
+          </div>
+          <div id="getiGroupMessages" class="geti-message-list"></div>
+          <div class="geti-compose">
+            <label class="geti-file-label">📎
+              <input id="getiGroupFile" type="file" accept="image/*,.pdf,application/pdf">
+            </label>
+            <input id="getiGroupText" type="text" placeholder="Write to the group..." onkeydown="if(event.key==='Enter') sendGetiGroupMessage()">
+            <button onclick="sendGetiGroupMessage()">SEND</button>
+          </div>
+        </section>
+
+        <section id="getiAdminPanel" class="geti-chat-tab" style="display:none">
+          <div class="geti-chat-title">
+            <h3>GETI Admin</h3>
+          </div>
+          <div class="geti-admin-menu">
+            <button class="active" onclick="getiAdminSection('message',this)">💬 Message</button>
+            <button onclick="getiAdminSection('blacklist',this)">🚫 Blacklist</button>
+            <button onclick="getiAdminSection('passed',this)">🎓 Passed</button>
+          </div>
+
+          <div id="getiAdminMessageSection" class="geti-admin-section">
+            <div id="getiAdminInbox"></div>
+          </div>
+          <div id="getiAdminBlacklistSection" class="geti-admin-section" style="display:none">
+            <div id="getiBlacklistList"></div>
+          </div>
+          <div id="getiAdminPassedSection" class="geti-admin-section" style="display:none">
+            <div id="getiPassedList"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</section>
+
+<style>
+.geti-chat-launcher{position:fixed;right:22px;bottom:22px;z-index:9998}
+.geti-chat-launcher button{border:0;background:#0b2d5c;color:#fff;padding:12px 16px;border-radius:24px;box-shadow:0 7px 25px rgba(0,0,0,.2);font-weight:700;cursor:pointer}
+.geti-chat-system{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10000;align-items:center;justify-content:center;padding:18px}
+.geti-chat-system.show{display:flex}
+.geti-chat-modal{width:min(1100px,100%);height:min(760px,94vh);background:#f5f7fa;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);display:flex;flex-direction:column}
+.geti-chat-header{background:#0b2d5c;color:#fff;padding:15px 20px;display:flex;justify-content:space-between;align-items:center}
+.geti-chat-header small{display:block;color:#dce5f2;margin-top:2px}
+.geti-close{background:transparent;border:0;color:#fff;font-size:30px;cursor:pointer}
+.geti-auth-view{padding:35px;max-width:520px;width:100%;margin:auto}
+.geti-auth-tabs{display:flex;gap:8px;margin-bottom:20px}
+.geti-auth-tabs button,.geti-admin-menu button{border:1px solid #ccd4df;background:#fff;padding:10px 16px;border-radius:6px;cursor:pointer;font-weight:700}
+.geti-auth-tabs button.active,.geti-admin-menu button.active{background:#0b2d5c;color:#fff}
+.geti-auth-form{background:#fff;padding:25px;border-radius:10px;box-shadow:0 5px 18px rgba(0,0,0,.08)}
+.geti-auth-form input{width:100%;padding:12px;margin:7px 0;border:1px solid #ccd4df;border-radius:5px}
+.geti-auth-form>button{width:100%;padding:12px;background:#b38a28;color:#fff;border:0;border-radius:5px;font-weight:700;cursor:pointer;margin-top:8px}
+.geti-auth-form p{min-height:20px;color:#a51e1e}
+.geti-app-view{display:flex;flex:1;min-height:0}
+.geti-chat-sidebar{width:230px;background:#fff;border-right:1px solid #dce2ea;padding:15px;overflow:auto}
+.geti-user-card{background:#f1f4f8;padding:12px;border-radius:8px;margin-bottom:14px}
+.geti-user-card button{margin-top:8px;border:0;background:#a51e1e;color:#fff;padding:7px 10px;border-radius:4px;cursor:pointer}
+.geti-side-btn{width:100%;text-align:left;border:0;background:transparent;padding:11px;border-radius:6px;cursor:pointer;margin:2px 0}
+.geti-side-btn.active,.geti-side-btn:hover{background:#eef3f8;color:#0b2d5c;font-weight:700}
+.geti-side-title{font-size:11px;font-weight:800;color:#788396;margin:18px 5px 5px}
+.geti-chat-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.geti-chat-tab{height:100%;min-height:0;display:flex;flex-direction:column}
+.geti-chat-title{padding:16px 20px;background:#fff;border-bottom:1px solid #dce2ea}
+.geti-chat-title h3{margin:0;color:#0b2d5c}
+.geti-chat-title small{color:#6c7788}
+.geti-conversation-list{display:flex;gap:8px;overflow:auto;padding:10px;background:#eef3f8}
+.geti-conversation-item{border:1px solid #d5dce6;background:#fff;padding:9px 12px;border-radius:20px;cursor:pointer;white-space:nowrap}
+.geti-conversation-item.active{background:#0b2d5c;color:#fff}
+.geti-message-list{flex:1;overflow:auto;padding:18px}
+.geti-msg{max-width:78%;margin:8px 0;padding:11px 13px;border-radius:10px;background:#fff;border:1px solid #dce2ea}
+.geti-msg.mine{margin-left:auto;background:#eaf1fb}
+.geti-msg .meta{font-size:11px;color:#6f7a8c;margin-bottom:4px}
+.geti-msg .file{display:block;margin-top:8px;padding:8px;background:#f4f6f9;border-radius:6px}
+.geti-msg .file a{color:#0b2d5c;font-weight:700}
+.geti-compose{display:flex;gap:8px;padding:12px;background:#fff;border-top:1px solid #dce2ea}
+.geti-compose input[type=text]{flex:1;min-width:0;padding:12px;border:1px solid #ccd4df;border-radius:6px}
+.geti-compose button{border:0;background:#0b2d5c;color:#fff;padding:0 17px;border-radius:6px;font-weight:700;cursor:pointer}
+.geti-file-label{display:flex;align-items:center;justify-content:center;width:42px;border:1px solid #ccd4df;border-radius:6px;cursor:pointer}
+.geti-file-label input{display:none}
+.geti-help{padding:0 14px 10px;background:#fff;color:#778295}
+.geti-admin-menu{padding:12px;display:flex;gap:8px;flex-wrap:wrap;background:#fff;border-bottom:1px solid #dce2ea}
+.geti-admin-section{padding:18px;overflow:auto}
+.geti-inbox-card{background:#fff;border:1px solid #dce2ea;border-radius:8px;padding:13px;margin-bottom:10px;cursor:pointer}
+.geti-inbox-card strong{color:#0b2d5c}
+.geti-mini-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.geti-mini-actions button{border:0;background:#0b2d5c;color:#fff;padding:7px 10px;border-radius:4px;cursor:pointer}
+.geti-mini-actions button.danger{background:#a51e1e}
+.geti-empty{padding:30px;text-align:center;color:#778295}
+.geti-badge{display:inline-block;padding:3px 7px;border-radius:12px;background:#eaf8ef;color:#176b32;font-size:11px;font-weight:700}
+@media(max-width:700px){
+  .geti-chat-modal{height:96vh}
+  .geti-chat-sidebar{width:165px}
+  .geti-chat-launcher{right:10px;bottom:10px}
+  .geti-chat-launcher button{font-size:12px}
+  .geti-msg{max-width:90%}
+}
+</style>
+
+<script>
+(function(){
+  const KEY='GETI_COMMUNITY_V1';
+  const ADMIN_EMAIL='admin@geti.local';
+  const ADMIN_PASSWORD='GETI2026';
+
+  function state(){
+    let s=JSON.parse(localStorage.getItem(KEY)||'null');
+    if(!s){
+      s={users:[],messages:[],group:[],blacklist:[],passed:[],session:null};
+      localStorage.setItem(KEY,JSON.stringify(s));
+    }
+    return s;
+  }
+  function save(s){localStorage.setItem(KEY,JSON.stringify(s));}
+
+  window.openGetiChat=function(){
+    document.getElementById('geti-chat-system').classList.add('show');
+    document.getElementById('geti-chat-system').setAttribute('aria-hidden','false');
+    renderAuthOrApp();
+  };
+  window.closeGetiChat=function(){
+    document.getElementById('geti-chat-system').classList.remove('show');
+    document.getElementById('geti-chat-system').setAttribute('aria-hidden','true');
+  };
+  window.showGetiAuth=function(type){
+    document.getElementById('getiLoginForm').style.display=type==='login'?'block':'none';
+    document.getElementById('getiCreateForm').style.display=type==='create'?'block':'none';
+    document.getElementById('getiLoginTab').classList.toggle('active',type==='login');
+    document.getElementById('getiCreateTab').classList.toggle('active',type==='create');
+  };
+
+  window.getiCreateAccount=function(){
+    const s=state();
+    const name=document.getElementById('getiCreateName').value.trim();
+    const email=document.getElementById('getiCreateEmail').value.trim().toLowerCase();
+    const password=document.getElementById('getiCreatePassword').value;
+    const msg=document.getElementById('getiCreateMsg');
+    if(!name||!email||!password){msg.textContent='Please complete all fields.';return;}
+    if(s.users.some(u=>u.email===email)||email===ADMIN_EMAIL){msg.textContent='This email is already registered.';return;}
+    s.users.push({id:'GETI-STU-'+String(s.users.length+1).padStart(6,'0'),name,email,password,role:'student'});
+    save(s);
+    msg.style.color='#176b32';msg.textContent='Account created. You can now log in.';
+    showGetiAuth('login');
+  };
+
+  window.getiLogin=function(){
+    const s=state();
+    const email=document.getElementById('getiLoginEmail').value.trim().toLowerCase();
+    const password=document.getElementById('getiLoginPassword').value;
+    const msg=document.getElementById('getiLoginMsg');
+    let u=null;
+    if(email===ADMIN_EMAIL && password===ADMIN_PASSWORD){
+      u={id:'GETI-ADMIN',name:'GETI Administrator',email:ADMIN_EMAIL,role:'admin'};
+    }else{
+      u=s.users.find(x=>x.email===email&&x.password===password);
+    }
+    if(!u){msg.textContent='Invalid email or password.';return;}
+    s.session=u.id;save(s);renderAuthOrApp();
+  };
+
+  window.getiLogout=function(){
+    const s=state();s.session=null;save(s);renderAuthOrApp();
+  };
+
+  function currentUser(){
+    const s=state();
+    if(s.session==='GETI-ADMIN') return {id:'GETI-ADMIN',name:'GETI Administrator',email:ADMIN_EMAIL,role:'admin'};
+    return s.users.find(u=>u.id===s.session)||null;
+  }
+
+  function renderAuthOrApp(){
+    const u=currentUser();
+    document.getElementById('getiAuthView').style.display=u?'none':'block';
+    document.getElementById('getiAppView').style.display=u?'flex':'none';
+    if(!u)return;
+    document.getElementById('getiCurrentUser').innerHTML='<strong>'+esc(u.name)+'</strong><br><small>'+esc(u.email)+'</small>';
+    document.getElementById('getiAdminOnlyMenu').style.display=u.role==='admin'?'block':'none';
+    getiOpenTab(u.role==='admin'?'admin-panel':'admin-chat');
+    renderConversations();
+    renderPrivate();
+    renderGroup();
+    renderAdminInbox();
+    renderBlacklist();
+    renderPassed();
+  }
+
+  window.getiOpenTab=function(tab,btn){
+    ['getiAdminChat','getiGroupChat','getiAdminPanel'].forEach(id=>document.getElementById(id).style.display='none');
+    const map={'admin-chat':'getiAdminChat','group-chat':'getiGroupChat','admin-panel':'getiAdminPanel'};
+    document.getElementById(map[tab]).style.display='flex';
+    document.querySelectorAll('.geti-side-btn').forEach(x=>x.classList.remove('active'));
+    if(btn)btn.classList.add('active');
+    renderConversations();renderPrivate();renderGroup();renderAdminInbox();renderBlacklist();renderPassed();
+  };
+
+  let activeStudentId=null;
+  function renderConversations(){
+    const u=currentUser(), box=document.getElementById('getiConversationList');
+    if(!u||u.role!=='admin'){box.style.display='none';return;}
+    box.style.display='flex';
+    const s=state();
+    const ids=[...new Set(s.messages.map(m=>m.from==='GETI-ADMIN'?m.to:m.from))];
+    if(!ids.length){box.innerHTML='<div class="geti-empty">No student messages yet.</div>';return;}
+    box.innerHTML=ids.map(id=>{
+      const st=s.users.find(x=>x.id===id); if(!st)return '';
+      return '<button class="geti-conversation-item '+(activeStudentId===id?'active':'')+'" onclick="selectGetiStudent(\''+id+'\')">'+esc(st.name)+'</button>';
+    }).join('');
+    if(!activeStudentId)activeStudentId=ids[0];
+  }
+  window.selectGetiStudent=function(id){activeStudentId=id;renderConversations();renderPrivate();};
+
+  function renderPrivate(){
+    const u=currentUser(); if(!u)return;
+    const target=u.role==='admin'?activeStudentId:'GETI-ADMIN';
+    const msgs=state().messages.filter(m=>
+      (m.from===u.id&&m.to===target)||(m.from===target&&m.to===u.id)
+    );
+    const box=document.getElementById('getiPrivateMessages');
+    if(!msgs.length){box.innerHTML='<div class="geti-empty">No messages yet. Start the conversation.</div>';return;}
+    box.innerHTML=msgs.map(m=>messageHTML(m,u.id)).join('');
+    box.scrollTop=box.scrollHeight;
+    if(u.role==='admin'&&target){
+      const st=state().users.find(x=>x.id===target);
+      document.getElementById('getiConversationTitle').textContent='Chat with '+(st?st.name:'Student');
+    }else{
+      document.getElementById('getiConversationTitle').textContent='Chat with the Administrator';
+    }
+  }
+
+  window.sendGetiPrivateMessage=function(){
+    const u=currentUser(); if(!u)return;
+    const text=document.getElementById('getiPrivateText').value.trim();
+    const file=document.getElementById('getiPrivateFile').files[0];
+    const target=u.role==='admin'?activeStudentId:'GETI-ADMIN';
+    if(!target||(!text&&!file))return;
+    const s=state();
+    const finish=(attachment)=>{
+      s.messages.push({id:'M'+Date.now(),from:u.id,to:target,text,attachment,time:new Date().toISOString()});
+      save(s);
+      document.getElementById('getiPrivateText').value='';
+      document.getElementById('getiPrivateFile').value='';
+      renderPrivate();renderAdminInbox();renderConversations();
+    };
+    if(file) readFile(file,finish); else finish(null);
+  };
+
+  function readFile(file,cb){
+    const r=new FileReader();
+    r.onload=()=>cb({name:file.name,type:file.type||'application/octet-stream',data:r.result});
+    r.readAsDataURL(file);
+  }
+
+  function messageHTML(m,myId){
+    const sender=state().users.find(x=>x.id===m.from)|| (m.from==='GETI-ADMIN'?{name:'GETI Administrator'}:{name:m.from});
+    let file='';
+    if(m.attachment){
+      file='<div class="file">📎 '+esc(m.attachment.name)+'<br><a href="'+m.attachment.data+'" download="'+escAttr(m.attachment.name)+'">Download</a></div>';
+    }
+    return '<div class="geti-msg '+(m.from===myId?'mine':'')+'"><div class="meta">'+esc(sender.name||'GETI')+' • '+new Date(m.time).toLocaleString()+'</div><div>'+esc(m.text||'')+'</div>'+file+'</div>';
+  }
+
+  function renderGroup(){
+    const u=currentUser(); if(!u)return;
+    const box=document.getElementById('getiGroupMessages'), s=state();
+    if(!s.group.length){box.innerHTML='<div class="geti-empty">Welcome to the GETI Student Group. Start an English practice conversation.</div>';return;}
+    box.innerHTML=s.group.map(m=>messageHTML(m,u.id)).join('');
+    box.scrollTop=box.scrollHeight;
+  }
+
+  window.sendGetiGroupMessage=function(){
+    const u=currentUser();if(!u)return;
+    const text=document.getElementById('getiGroupText').value.trim();
+    const file=document.getElementById('getiGroupFile').files[0];
+    if(!text&&!file)return;
+    const s=state();
+    const add=(attachment)=>{
+      s.group.push({id:'G'+Date.now(),from:u.id,to:'GROUP',text,attachment,time:new Date().toISOString()});
+      save(s);
+      document.getElementById('getiGroupText').value='';document.getElementById('getiGroupFile').value='';
+      renderGroup();
+      if(text) setTimeout(()=>practiceBot(text),700);
+    };
+    if(file)readFile(file,add);else add(null);
+  };
+
+  function practiceBot(text){
+    const lower=text.toLowerCase(), s=state();
+    let reply='Great practice! Try to answer in complete English sentences. What is your next idea?';
+    if(lower.includes('hello')||lower.includes('hi')) reply='Hello! 👋 Let’s practice English. Tell me three sentences about your day.';
+    else if(lower.includes('grammar')) reply='Grammar practice: make one sentence in the present simple and one in the past simple.';
+    else if(lower.includes('question')) reply='Practice question: What did you learn today, and why was it useful?';
+    else if(lower.includes('thank')) reply='You’re welcome! Keep practicing your English.';
+    s.group.push({id:'BOT'+Date.now(),from:'GETI-PRACTICE-BOT',to:'GROUP',text:'🤖 GETI Practice Bot: '+reply,attachment:null,time:new Date().toISOString()});
+    save(s);renderGroup();
+  }
+
+  function renderAdminInbox(){
+    const u=currentUser();if(!u||u.role!=='admin')return;
+    const box=document.getElementById('getiAdminInbox'),s=state();
+    const latest={};
+    s.messages.forEach(m=>{if(m.from!=='GETI-ADMIN')latest[m.from]=m;});
+    const ids=Object.keys(latest);
+    if(!ids.length){box.innerHTML='<div class="geti-empty">No student messages.</div>';return;}
+    box.innerHTML=ids.map(id=>{
+      const st=s.users.find(x=>x.id===id),m=latest[id];
+      return '<div class="geti-inbox-card" onclick="selectGetiStudent(\''+id+'\');getiOpenTab(\'admin-chat\')"><strong>'+esc(st?st.name:id)+'</strong><br><small>'+esc(m.text||m.attachment?.name||'Attachment')+'</small><div class="geti-mini-actions"><span class="geti-badge">Open chat</span></div></div>';
+    }).join('');
+  }
+
+  window.getiAdminSection=function(type,btn){
+    ['getiAdminMessageSection','getiAdminBlacklistSection','getiAdminPassedSection'].forEach(id=>document.getElementById(id).style.display='none');
+    document.querySelectorAll('.geti-admin-menu button').forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(type==='message'?'getiAdminMessageSection':type==='blacklist'?'getiAdminBlacklistSection':'getiAdminPassedSection').style.display='block';
+    renderAdminInbox();renderBlacklist();renderPassed();
+  };
+
+  function renderBlacklist(){
+    const u=currentUser();if(!u||u.role!=='admin')return;
+    const s=state(),box=document.getElementById('getiBlacklistList');
+    box.innerHTML=s.blacklist.length?s.blacklist.map(x=>'<div class="geti-inbox-card"><strong>'+esc(x.name)+'</strong><br><small>'+esc(x.email)+'</small><div class="geti-mini-actions"><button onclick="removeBlacklist(\''+x.id+'\')">Remove</button></div></div>').join(''):'<div class="geti-empty">Blacklist is empty.</div>';
+  }
+  window.addBlacklist=function(id){
+    const s=state(),u=s.users.find(x=>x.id===id);if(!u)return;
+    if(!s.blacklist.some(x=>x.id===id))s.blacklist.push({id:u.id,name:u.name,email:u.email});
+    save(s);renderBlacklist();
+  };
+  window.removeBlacklist=function(id){
+    const s=state();s.blacklist=s.blacklist.filter(x=>x.id!==id);save(s);renderBlacklist();
+  };
+  function renderPassed(){
+    const u=currentUser();if(!u||u.role!=='admin')return;
+    const s=state(),box=document.getElementById('getiPassedList');
+    box.innerHTML=s.passed.length?s.passed.map(x=>'<div class="geti-inbox-card"><strong>'+esc(x.name)+'</strong><br><small>'+esc(x.id)+' • '+esc(String(x.score||''))+'</small></div>').join(''):'<div class="geti-empty">No passed candidates recorded in this communication module.</div>';
+  }
+
+  function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+  function escAttr(v){return esc(v).replace(/`/g,'&#096;');}
+
+  // Make the launcher available on the page.
+  if(!document.getElementById('getiChatLauncher'))document.body.insertAdjacentHTML('beforeend',button_html);
+
+  // Refresh the UI when the same browser tab receives storage updates.
+  window.addEventListener('storage',()=>{if(currentUser()){renderConversations();renderPrivate();renderGroup();renderAdminInbox();renderBlacklist();renderPassed();}});
+})();
+</script>
 
 </body>
 </html>
