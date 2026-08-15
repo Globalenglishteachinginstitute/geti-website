@@ -1,3567 +1,4788 @@
-/************************************************************
- * GETI ENGLISH TEST SYSTEM
- * SINGLE FILE: Code.gs
- *
- * ADMIN CODE: global
- * BLACKLIST CODE: english
- *
- * Flow:
- * EXAM
- * -> REGISTRATION
- * -> VOCABULARY
- * -> RESULT
- * -> NEXT
- * -> GRAMMAR
- * -> RESULT
- * -> NEXT
- * -> READING
- * -> RESULT
- * -> NEXT
- * -> SPELLING
- * -> RESULT
- * -> NEXT
- * -> GENERAL KNOWLEDGE
- * -> RESULT
- * -> FINAL RESULT
- * -> BLACKLIST
- ************************************************************/
-
-const CONFIG = {
-  ADMIN_CODE: 'global',
-  BLACKLIST_CODE: 'english',
-  PASS_MARK: 70,
-
-  STUDENTS_SHEET: 'Students',
-  RESULTS_SHEET: 'Results',
-  ANSWERS_SHEET: 'Answers',
-  BLACKLIST_SHEET: 'Blacklist'
-};
-
-
-/* =========================================================
-   WEB APP
-   ========================================================= */
-
-function doGet() {
-  return HtmlService
-    .createHtmlOutput(getAppHtml_())
-    .setTitle('GETI English Test')
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-}
-
-
-/* =========================================================
-   MAIN HTML
-   ========================================================= */
-
-function getAppHtml_() {
-
-  return `<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GETI English Test</title>
+<title>GLOBAL ENGLISH TEACHING INSTITUTE</title>
+
+<meta name="description"
+content="Global English Teaching Institute - International English Education, TEFL, TESOL and Certificate Verification.">
 
 <style>
 
-* {
-  box-sizing: border-box;
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f4f6f9;
-  color: #172033;
+html{
+    scroll-behavior:smooth;
 }
 
-.container {
-  width: 94%;
-  max-width: 1000px;
-  margin: 30px auto;
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    color:#172033;
+    background:#f7f9fc;
+    line-height:1.6;
 }
 
-.card {
-  background: white;
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-  margin-bottom: 20px;
+a{
+    text-decoration:none;
+    color:inherit;
 }
 
-.header {
-  text-align: center;
-  padding: 25px;
-  background: #0b2d5c;
-  color: white;
-  border-radius: 16px 16px 0 0;
-}
-
-.header h1 {
-  margin: 0;
-  font-size: 30px;
-}
-
-.header p {
-  margin: 8px 0 0;
-  opacity: .9;
-}
-
-h2 {
-  margin-top: 0;
-}
-
-button {
-  border: none;
-  border-radius: 8px;
-  padding: 13px 22px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: bold;
-}
-
-.primary {
-  background: #0b2d5c;
-  color: white;
-}
-
-.primary:hover {
-  opacity: .9;
-}
-
-.gold {
-  background: #b38a28;
-  color: white;
-}
-
-.secondary {
-  background: #e8edf4;
-  color: #172033;
-}
-
-.danger {
-  background: #b42318;
-  color: white;
-}
-
-.success {
-  background: #16803c;
-  color: white;
-}
-
-button:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
-
+button,
 input,
-select {
-  width: 100%;
-  padding: 13px;
-  border: 1px solid #ccd3dd;
-  border-radius: 8px;
-  margin-top: 6px;
-  margin-bottom: 18px;
-  font-size: 15px;
+textarea{
+    font-family:inherit;
 }
 
-label {
-  font-weight: bold;
+.container{
+    width:92%;
+    max-width:1200px;
+    margin:auto;
 }
-
-.center {
-  text-align: center;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.exam-btn {
-  width: 100%;
-  max-width: 350px;
-  font-size: 20px;
-  padding: 18px;
-  margin: 10px;
-}
-
-.question {
-  padding: 20px;
-  border: 1px solid #e0e5eb;
-  border-radius: 12px;
-  margin-bottom: 18px;
-}
-
-.question-number {
-  font-weight: bold;
-  color: #0b2d5c;
-  margin-bottom: 10px;
-}
-
-.question-text {
-  font-size: 17px;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
-.option {
-  display: block;
-  padding: 12px;
-  margin: 8px 0;
-  background: #f7f9fc;
-  border: 1px solid #dde3eb;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.option:hover {
-  background: #eef3f9;
-}
-
-.option input {
-  width: auto;
-  margin: 0 8px 0 0;
-}
-
-.progress {
-  width: 100%;
-  height: 12px;
-  background: #e5e8ed;
-  border-radius: 20px;
-  overflow: hidden;
-  margin: 15px 0;
-}
-
-.progress-bar {
-  height: 100%;
-  background: #b38a28;
-  width: 0%;
-}
-
-.result-box {
-  text-align: center;
-  padding: 30px;
-  border-radius: 15px;
-  background: #f7f9fc;
-}
-
-.score {
-  font-size: 45px;
-  font-weight: bold;
-  color: #0b2d5c;
-}
-
-.status {
-  font-size: 26px;
-  font-weight: bold;
-  margin: 15px;
-}
-
-.passed {
-  color: #16803c;
-}
-
-.failed {
-  color: #b42318;
-}
-
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  font-size: 13px;
-}
-
-.admin-table th,
-.admin-table td {
-  border: 1px solid #d9dfe7;
-  padding: 9px;
-  text-align: left;
-}
-
-.admin-table th {
-  background: #0b2d5c;
-  color: white;
-}
-
-.admin-table tr:nth-child(even) {
-  background: #f7f9fc;
-}
-
-.small {
-  font-size: 13px;
-  color: #667085;
-}
-
-.alert {
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-
-.alert-error {
-  background: #fff0f0;
-  color: #a61b1b;
-}
-
-.alert-success {
-  background: #edf9f1;
-  color: #126b31;
-}
-
-.loading {
-  text-align: center;
-  padding: 30px;
-  font-weight: bold;
-}
-
-.admin-nav {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-
-.section-title {
-  text-align: center;
-  color: #0b2d5c;
-}
-
-@media(max-width:600px) {
-
-  .container {
-    width: 96%;
-    margin: 10px auto;
-  }
-
-  .card {
-    padding: 18px;
-  }
-
-  .header h1 {
-    font-size: 23px;
-  }
-
-  .admin-table {
-    font-size: 11px;
-  }
-
-  .admin-table th,
-  .admin-table td {
-    padding: 6px;
-  }
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-  <div class="header">
-    <h1>GETI English Test</h1>
-    <p>Global English Teaching Institute</p>
-  </div>
-
-  <div id="app"></div>
-
-</div>
-
-
-<script>
-
-/* =========================================================
-   CLIENT STATE
-   ========================================================= */
-
-let student = null;
-let allSections = [];
-let currentSectionIndex = 0;
-let currentQuestions = [];
-let sectionResults = [];
-let allAnswers = [];
-let finalResult = null;
 
 
 /* =========================================================
-   START
-   ========================================================= */
+   TOP BAR
+========================================================= */
 
-document.addEventListener('DOMContentLoaded', function() {
-  showHome();
-});
+.topbar{
+    background:#071d3a;
+    color:#fff;
+    padding:8px 0;
+    font-size:13px;
+}
+
+.topbar-content{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.topbar-right{
+    display:flex;
+    gap:18px;
+}
 
 
 /* =========================================================
-   HOME
-   ========================================================= */
+   NAVIGATION
+========================================================= */
 
-function showHome() {
+.navbar{
+    background:#fff;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    box-shadow:0 2px 12px rgba(0,0,0,.08);
+}
 
-  document.getElementById('app').innerHTML = \`
-    <div class="card center">
+.nav-content{
+    min-height:78px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+}
 
-      <h2>GETI English Test</h2>
+.logo{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
 
-      <p>
-        Test your English level from A1 to C2.
-      </p>
+.logo-mark{
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    background:#0b2d5c;
+    border:4px solid #d6ad45;
+    color:#d6ad45;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    font-weight:900;
+}
 
-      <br>
+.logo-text strong{
+    display:block;
+    color:#0b2d5c;
+    font-size:16px;
+    letter-spacing:.5px;
+}
 
-      <button class="primary exam-btn"
-              onclick="showRegistration()">
-        EXAM
-      </button>
+.logo-text span{
+    display:block;
+    color:#777;
+    font-size:11px;
+}
 
-      <br><br>
+.nav-menu{
+    display:flex;
+    align-items:center;
+    gap:22px;
+    list-style:none;
+}
 
-      <button class="secondary"
-              onclick="showAdminLogin()">
-        ADMIN BOX
-      </button>
+.nav-menu a{
+    color:#26344a;
+    font-weight:600;
+    font-size:14px;
+    transition:.25s;
+}
 
-    </div>
-  \`;
+.nav-menu a:hover{
+    color:#b38a28;
+}
+
+.nav-button{
+    background:#b38a28;
+    color:#fff !important;
+    padding:11px 18px;
+    border-radius:5px;
+}
+
+.menu-toggle{
+    display:none;
+    font-size:28px;
+    cursor:pointer;
+}
+
+
+/* =========================================================
+   TOP VERIFICATION
+========================================================= */
+
+.top-verification{
+    background:#0b2d5c;
+    padding:45px 0;
+}
+
+.top-verification .verification-box{
+    max-width:900px;
+    margin:auto;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    min-height:650px;
+    position:relative;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(4,22,47,.94) 0%,
+            rgba(4,22,47,.78) 48%,
+            rgba(4,22,47,.28) 100%
+        ),
+        url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1800&q=85")
+        center/cover no-repeat;
+
+    display:flex;
+    align-items:center;
+}
+
+.hero-content{
+    color:#fff;
+    max-width:720px;
+    padding:80px 0;
+}
+
+.hero-small{
+    color:#d6ad45;
+    font-size:14px;
+    font-weight:bold;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin-bottom:15px;
+}
+
+.hero h1{
+    font-size:56px;
+    line-height:1.08;
+    margin-bottom:20px;
+}
+
+.hero h1 span{
+    color:#d6ad45;
+}
+
+.hero-description{
+    font-size:19px;
+    max-width:650px;
+    color:#f1f4f8;
+    margin-bottom:30px;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    display:inline-block;
+    padding:14px 25px;
+    border-radius:5px;
+    font-weight:bold;
+    transition:.25s;
+    border:none;
+    cursor:pointer;
+}
+
+.btn-gold{
+    background:#b38a28;
+    color:#fff;
+}
+
+.btn-gold:hover{
+    background:#d0a63e;
+}
+
+.btn-white{
+    background:#fff;
+    color:#0b2d5c;
+}
+
+.btn-white:hover{
+    background:#eef2f7;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats{
+    background:#fff;
+    box-shadow:0 4px 20px rgba(0,0,0,.08);
+}
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+}
+
+.stat{
+    text-align:center;
+    padding:28px 15px;
+    border-right:1px solid #e5e8ee;
+}
+
+.stat:last-child{
+    border-right:none;
+}
+
+.stat strong{
+    display:block;
+    color:#0b2d5c;
+    font-size:28px;
+}
+
+.stat span{
+    color:#687386;
+    font-size:13px;
+}
+
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.section{
+    padding:90px 0;
+}
+
+.section-header{
+    text-align:center;
+    max-width:760px;
+    margin:0 auto 50px;
+}
+
+.section-label{
+    color:#b38a28;
+    font-size:13px;
+    font-weight:bold;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin-bottom:10px;
+}
+
+.section-header h2{
+    color:#0b2d5c;
+    font-size:38px;
+    margin-bottom:15px;
+}
+
+.section-header p{
+    color:#687386;
+}
+
+
+/* =========================================================
+   VERIFICATION
+========================================================= */
+
+.verification-box{
+    max-width:900px;
+    margin:auto;
+    background:#fff;
+    color:#222;
+    padding:40px;
+    border-radius:8px;
+    box-shadow:0 15px 40px rgba(0,0,0,.20);
+}
+
+.verification-box h2{
+    text-align:center;
+    color:#0b2d5c;
+    font-size:34px;
+    margin-bottom:10px;
+}
+
+.verification-description{
+    text-align:center;
+    color:#697386;
+    margin-bottom:30px;
+}
+
+.search-form{
+    display:grid;
+    grid-template-columns:1fr 160px;
+    gap:10px;
+}
+
+.search-form input{
+    width:100%;
+    padding:15px;
+    border:1px solid #ccd4df;
+    border-radius:5px;
+    font-size:16px;
+    outline:none;
+}
+
+.search-form input:focus{
+    border-color:#0b2d5c;
+}
+
+.search-form button{
+    background:#b38a28;
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.search-options{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    margin-top:18px;
+    flex-wrap:wrap;
+}
+
+.search-options button{
+    border:1px solid #0b2d5c;
+    background:#fff;
+    color:#0b2d5c;
+    padding:9px 18px;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+.search-options button.active{
+    background:#0b2d5c;
+    color:#fff;
+}
+
+#verifyResult{
+    margin-top:25px;
+}
+
+.verify-card{
+    border:1px solid #dbe2ea;
+    border-radius:6px;
+    padding:25px;
+    background:#f9fbfd;
+}
+
+.verified{
+    color:#16833b;
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.verify-row{
+    display:flex;
+    border-bottom:1px solid #e3e7ed;
+    padding:12px 0;
+}
+
+.verify-row:last-child{
+    border-bottom:none;
+}
+
+.verify-label{
+    width:180px;
+    font-weight:bold;
+    color:#0b2d5c;
+}
+
+.verify-value{
+    flex:1;
+}
+
+.error{
+    padding:15px;
+    background:#fdecec;
+    border:1px solid #e1a1a1;
+    color:#a51e1e;
+    border-radius:5px;
+}
+
+.success{
+    padding:15px;
+    background:#eaf8ef;
+    border:1px solid #a7dcb8;
+    color:#176b32;
+    border-radius:5px;
+}
+
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.about-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+    align-items:center;
+}
+
+.about-image{
+    position:relative;
+}
+
+.about-image img{
+    width:100%;
+    height:450px;
+    object-fit:cover;
+    border-radius:6px;
+}
+
+.about-badge{
+    position:absolute;
+    right:-20px;
+    bottom:25px;
+    background:#0b2d5c;
+    color:#fff;
+    padding:20px;
+    width:190px;
+    box-shadow:0 8px 25px rgba(0,0,0,.2);
+}
+
+.about-badge strong{
+    display:block;
+    color:#d6ad45;
+    font-size:26px;
+}
+
+.about-content h2{
+    color:#0b2d5c;
+    font-size:38px;
+    margin-bottom:20px;
+}
+
+.about-content p{
+    color:#5e697a;
+    margin-bottom:18px;
+}
+
+.check-list{
+    list-style:none;
+    margin-top:25px;
+}
+
+.check-list li{
+    margin-bottom:12px;
+    font-weight:600;
+}
+
+.check-list li::before{
+    content:"✓";
+    color:#b38a28;
+    font-weight:bold;
+    margin-right:10px;
+}
+
+
+/* =========================================================
+   PROGRAMS
+========================================================= */
+
+.programs{
+    background:#eef3f8;
+}
+
+.program-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px;
+}
+
+.program-card{
+    background:#fff;
+    padding:30px 25px;
+    border-radius:6px;
+    border-top:4px solid #0b2d5c;
+    box-shadow:0 5px 18px rgba(0,0,0,.06);
+    transition:.25s;
+}
+
+.program-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 12px 30px rgba(0,0,0,.12);
+}
+
+.program-icon{
+    width:58px;
+    height:58px;
+    background:#f3ead3;
+    color:#0b2d5c;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:25px;
+    margin-bottom:20px;
+}
+
+.program-card h3{
+    color:#0b2d5c;
+    margin-bottom:10px;
+}
+
+.program-card p{
+    color:#687386;
+    font-size:14px;
+}
+
+
+/* =========================================================
+   CAMPUS
+========================================================= */
+
+.campus{
+    position:relative;
+    min-height:480px;
+
+    background:
+        linear-gradient(
+            rgba(5,24,49,.82),
+            rgba(5,24,49,.82)
+        ),
+        url("https://images.unsplash.com/photo-1564981797816-1043664bf78d?auto=format&fit=crop&w=1800&q=85")
+        center/cover no-repeat;
+
+    display:flex;
+    align-items:center;
+    text-align:center;
+    color:#fff;
+}
+
+.campus-content{
+    max-width:800px;
+    margin:auto;
+}
+
+.campus-content h2{
+    font-size:42px;
+    margin-bottom:18px;
+}
+
+.campus-content p{
+    color:#e6ebf2;
+    margin-bottom:25px;
+}
+
+
+/* =========================================================
+   TEFL
+========================================================= */
+
+.tefl-section{
+    background:#fff;
+}
+
+.tefl-panel{
+    max-width:1000px;
+    margin:auto;
+    background:#f7f9fc;
+    border:1px solid #dce3eb;
+    border-radius:8px;
+    padding:30px;
+}
+
+.tefl-buttons{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-top:25px;
+}
+
+.tefl-hidden{
+    display:none;
+}
+
+.tefl-visible{
+    display:block;
+}
+
+
+/* =========================================================
+   LESSONS
+========================================================= */
+
+.lesson-list{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+    margin-top:25px;
+}
+
+.lesson-item{
+    background:#fff;
+    border:1px solid #dce3eb;
+    border-left:4px solid #b38a28;
+    border-radius:5px;
+    padding:18px;
+}
+
+.lesson-item h3{
+    color:#0b2d5c;
+    font-size:17px;
+    margin-bottom:5px;
+}
+
+.lesson-item p{
+    color:#687386;
+    font-size:14px;
+}
+
+.lesson-content{
+    background:#fff;
+    margin-top:25px;
+    padding:30px;
+    border-radius:7px;
+    border:1px solid #dce3eb;
+}
+
+.lesson-content h3{
+    color:#0b2d5c;
+    margin-bottom:12px;
+}
+
+.lesson-content p{
+    color:#5e697a;
+    margin-bottom:12px;
+}
+
+
+/* =========================================================
+   EXAM
+========================================================= */
+
+.exam-section{
+    background:#eef3f8;
+}
+
+.exam-box{
+    max-width:1000px;
+    margin:auto;
+    background:#fff;
+    padding:35px;
+    border-radius:8px;
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
+}
+
+.exam-question{
+    border:1px solid #dce3eb;
+    border-radius:6px;
+    padding:22px;
+    margin-bottom:18px;
+    background:#fafbfd;
+}
+
+.exam-question h3{
+    color:#0b2d5c;
+    margin-bottom:8px;
+}
+
+.exam-question p{
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+.exam-option{
+    display:block;
+    padding:8px;
+    cursor:pointer;
+}
+
+.exam-option:hover{
+    background:#eef3f8;
+}
+
+.exam-progress{
+    position:sticky;
+    top:78px;
+    z-index:100;
+    background:#0b2d5c;
+    color:#fff;
+    padding:12px;
+    border-radius:5px;
+    margin-bottom:25px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.exam-result{
+    margin-top:25px;
 }
 
 
 /* =========================================================
    REGISTRATION
-   ========================================================= */
+========================================================= */
 
-function showRegistration() {
+.registration-section{
+    background:#fff;
+}
 
-  document.getElementById('app').innerHTML = \`
+.registration-box{
+    max-width:700px;
+    margin:auto;
+    background:#f7f9fc;
+    padding:35px;
+    border:1px solid #dce3eb;
+    border-radius:8px;
+}
 
-    <div class="card">
+.registration-box h2{
+    color:#0b2d5c;
+    text-align:center;
+    margin-bottom:10px;
+}
 
-      <h2>Registration</h2>
+.registration-box p{
+    text-align:center;
+    color:#687386;
+    margin-bottom:25px;
+}
 
-      <div id="registrationMessage"></div>
+.form-group{
+    margin-bottom:16px;
+}
 
-      <label>Full Name</label>
-      <input id="fullName"
-             type="text"
-             placeholder="Enter your full name">
+.form-group label{
+    display:block;
+    color:#0b2d5c;
+    font-weight:bold;
+    margin-bottom:6px;
+}
 
-      <label>Nationality</label>
-      <input id="nationality"
-             type="text"
-             placeholder="Example: Malagasy">
+.form-group input{
+    width:100%;
+    padding:13px;
+    border:1px solid #ccd4df;
+    border-radius:5px;
+    outline:none;
+}
 
-      <label>Country</label>
-      <input id="country"
-             type="text"
-             placeholder="Example: Madagascar">
+.registration-success{
+    background:#eaf8ef;
+    border:1px solid #a7dcb8;
+    color:#176b32;
+    padding:20px;
+    border-radius:6px;
+    margin-top:20px;
+}
 
-      <label>Email</label>
-      <input id="email"
-             type="email"
-             placeholder="Optional">
-
-      <button class="primary"
-              onclick="registerStudent()">
-        SUBMIT REGISTRATION
-      </button>
-
-      <button class="secondary"
-              onclick="showHome()">
-        BACK
-      </button>
-
-    </div>
-  \`;
+.certificate-number{
+    display:block;
+    font-size:24px;
+    font-weight:bold;
+    color:#0b2d5c;
+    margin:10px 0;
 }
 
 
 /* =========================================================
-   REGISTER STUDENT
-   ========================================================= */
+   TRAINING
+========================================================= */
 
-function registerStudent() {
+.training-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:25px;
+}
 
-  const fullName =
-    document.getElementById('fullName').value.trim();
+.training-card{
+    background:#fff;
+    padding:35px;
+    border-left:5px solid #b38a28;
+    box-shadow:0 5px 20px rgba(0,0,0,.07);
+}
 
-  const nationality =
-    document.getElementById('nationality').value.trim();
+.training-card h3{
+    color:#0b2d5c;
+    font-size:24px;
+    margin-bottom:12px;
+}
 
-  const country =
-    document.getElementById('country').value.trim();
+.training-card p{
+    color:#687386;
+}
 
-  const email =
-    document.getElementById('email').value.trim();
+.training-card ul{
+    margin-top:18px;
+    padding-left:20px;
+}
 
-  if (!fullName) {
-    showMessage(
-      'registrationMessage',
-      'Please enter your full name.',
-      'error'
-    );
-    return;
-  }
-
-  const button = event.target;
-  button.disabled = true;
-  button.innerText = 'Checking...';
-
-  google.script.run
-    .withSuccessHandler(function(response) {
-
-      button.disabled = false;
-      button.innerText = 'SUBMIT REGISTRATION';
-
-      if (!response.success) {
-
-        showMessage(
-          'registrationMessage',
-          response.message,
-          'error'
-        );
-
-        return;
-      }
-
-      student = response.student;
-
-      sectionResults = [];
-      allAnswers = [];
-      currentSectionIndex = 0;
-
-      loadSections();
-
-    })
-    .withFailureHandler(function(error) {
-
-      button.disabled = false;
-      button.innerText = 'SUBMIT REGISTRATION';
-
-      showMessage(
-        'registrationMessage',
-        error.message || 'Registration error.',
-        'error'
-      );
-
-    })
-    .registerStudent(fullName, nationality, country, email);
+.training-card li{
+    margin-bottom:8px;
 }
 
 
 /* =========================================================
-   LOAD SECTIONS
-   ========================================================= */
+   CERTIFICATE PARTNERS - NEW
+========================================================= */
 
-function loadSections() {
+.certificate-partners{
+    background:#fff;
+}
 
-  google.script.run
-    .withSuccessHandler(function(response) {
+.partner-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px;
+    margin-top:45px;
+}
 
-      if (!response.success) {
+.partner-card{
+    background:#f8fafc;
+    border:1px solid #dfe5ed;
+    border-radius:12px;
+    min-height:235px;
+    padding:28px 18px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    transition:.3s ease;
+}
 
-        showMessage(
-          'registrationMessage',
-          response.message,
-          'error'
-        );
+.partner-card:hover{
+    transform:translateY(-7px);
+    box-shadow:0 12px 30px rgba(7,29,58,.14);
+    border-color:#b38a28;
+}
 
-        return;
-      }
+.partner-logo{
+    width:95px;
+    height:95px;
+    border-radius:50%;
+    background:#0b2d5c;
+    color:#d6ad45;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    font-weight:900;
+    letter-spacing:1px;
+    border:5px solid #d6ad45;
+    box-shadow:0 5px 15px rgba(0,0,0,.12);
+    margin-bottom:18px;
+    position:relative;
+}
 
-      allSections = response.sections || [];
+.partner-logo::after{
+    content:"";
+    position:absolute;
+    inset:7px;
+    border:1px solid rgba(214,173,69,.55);
+    border-radius:50%;
+}
 
-      if (allSections.length === 0) {
+.partner-card h3{
+    color:#0b2d5c;
+    font-size:16px;
+    margin-bottom:5px;
+}
 
-        alert('No questions found in the question table.');
-        return;
-      }
+.partner-card p{
+    color:#687386;
+    font-size:12px;
+    line-height:1.4;
+}
 
-      currentSectionIndex = 0;
+.partner-badge{
+    margin-top:9px;
+    font-size:10px;
+    color:#b38a28;
+    font-weight:bold;
+    letter-spacing:1px;
+    text-transform:uppercase;
+}
 
-      loadCurrentSection();
 
-    })
-    .withFailureHandler(function(error) {
+/* =========================================================
+   MISSION
+========================================================= */
 
-      alert(
-        error.message ||
-        'Could not load questions.'
-      );
+.mission-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:25px;
+}
 
-    })
-    .getSections();
+.mission-card{
+    background:#fff;
+    padding:35px;
+    text-align:center;
+    border-bottom:4px solid #b38a28;
+    box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+.mission-card h3{
+    color:#0b2d5c;
+    margin:15px 0 10px;
+}
+
+.mission-card p{
+    color:#687386;
+    font-size:14px;
+}
+
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+.contact{
+    background:#eef3f8;
+}
+
+.contact-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:50px;
+}
+
+.contact-info h2{
+    color:#0b2d5c;
+    font-size:34px;
+    margin-bottom:20px;
+}
+
+.contact-item{
+    margin:20px 0;
+}
+
+.contact-item strong{
+    display:block;
+    color:#0b2d5c;
+}
+
+.contact-item span{
+    color:#687386;
+}
+
+.contact-box{
+    background:#fff;
+    padding:35px;
+    box-shadow:0 5px 20px rgba(0,0,0,.06);
+}
+
+.contact-box input,
+.contact-box textarea{
+    width:100%;
+    padding:13px;
+    margin-bottom:12px;
+    border:1px solid #ccd4df;
+    border-radius:5px;
+}
+
+.contact-box textarea{
+    min-height:130px;
+    resize:vertical;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer{
+    background:#071d3a;
+    color:#fff;
+    padding:50px 0 20px;
+}
+
+.footer-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr;
+    gap:50px;
+}
+
+.footer h3{
+    margin-bottom:15px;
+    color:#d6ad45;
+}
+
+.footer p,
+.footer li{
+    color:#bdc7d5;
+    font-size:14px;
+}
+
+.footer ul{
+    list-style:none;
+}
+
+.footer li{
+    margin-bottom:8px;
+}
+
+.footer-bottom{
+    border-top:1px solid rgba(255,255,255,.12);
+    margin-top:40px;
+    padding-top:20px;
+    text-align:center;
+    color:#9daabc;
+    font-size:13px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:950px){
+
+    .nav-menu{
+        display:none;
+        position:absolute;
+        top:78px;
+        left:0;
+        right:0;
+        background:#fff;
+        padding:20px;
+        flex-direction:column;
+        box-shadow:0 8px 20px rgba(0,0,0,.1);
+    }
+
+    .nav-menu.show{
+        display:flex;
+    }
+
+    .menu-toggle{
+        display:block;
+    }
+
+    .program-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .stat{
+        border-bottom:1px solid #e5e8ee;
+    }
+
+    .partner-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:700px){
+
+    .topbar-content{
+        flex-direction:column;
+        text-align:center;
+        gap:4px;
+    }
+
+    .hero{
+        min-height:600px;
+    }
+
+    .hero h1{
+        font-size:38px;
+    }
+
+    .hero-description{
+        font-size:16px;
+    }
+
+    .about-grid,
+    .training-grid,
+    .contact-grid{
+        grid-template-columns:1fr;
+    }
+
+    .program-grid,
+    .mission-grid,
+    .lesson-list,
+    .partner-grid{
+        grid-template-columns:1fr;
+    }
+
+    .section{
+        padding:60px 0;
+    }
+
+    .section-header h2{
+        font-size:30px;
+    }
+
+    .search-form{
+        grid-template-columns:1fr;
+    }
+
+    .verification-box,
+    .exam-box,
+    .registration-box,
+    .tefl-panel{
+        padding:25px 18px;
+    }
+
+    .verify-row{
+        display:block;
+    }
+
+    .verify-label{
+        width:auto;
+        margin-bottom:5px;
+    }
+
+    .footer-grid{
+        grid-template-columns:1fr;
+        gap:30px;
+    }
+
+    .logo-mark{
+        width:48px;
+        height:48px;
+        font-size:15px;
+    }
+
+    .logo-text strong{
+        font-size:12px;
+    }
+
+    .logo-text span{
+        font-size:9px;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     TOP BAR
+===================================================== -->
+
+<div class="topbar">
+
+<div class="container topbar-content">
+
+<div>
+International English Education & Professional Training
+</div>
+
+<div class="topbar-right">
+<span>🌍 International</span>
+<span>🎓 GETI</span>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<nav class="navbar">
+
+<div class="container nav-content">
+
+<a href="#home" class="logo">
+
+<div class="logo-mark">
+GETI
+</div>
+
+<div class="logo-text">
+
+<strong>
+GLOBAL ENGLISH TEACHING INSTITUTE
+</strong>
+
+<span>
+International English Education & Professional Training
+</span>
+
+</div>
+
+</a>
+
+
+<div
+class="menu-toggle"
+onclick="toggleMenu()">
+
+☰
+
+</div>
+
+
+<ul class="nav-menu" id="navMenu">
+
+<li>
+<a href="#home">HOME</a>
+</li>
+
+<li>
+<a href="#about">ABOUT</a>
+</li>
+
+<li>
+<a href="#programs">PROGRAMS</a>
+</li>
+
+<li>
+<a href="#tefl">TEFL</a>
+</li>
+
+<li>
+<a href="#tesol">TESOL</a>
+</li>
+
+<li>
+<a href="#partners">PARTNERS</a>
+</li>
+
+<li>
+<a href="#verify">VERIFY</a>
+</li>
+
+<li>
+<a href="#contact">CONTACT</a>
+</li>
+
+<li>
+<a href="#verify" class="nav-button">
+VERIFY CERTIFICATE
+</a>
+</li>
+
+</ul>
+
+</div>
+
+</nav>
+
+
+<!-- =====================================================
+     CERTIFICATE VERIFICATION
+     FIRST MAIN SECTION
+===================================================== -->
+
+<section class="top-verification" id="verify">
+
+<div class="container">
+
+<div class="verification-box">
+
+<h2>
+Certificate Verification
+</h2>
+
+<p class="verification-description">
+
+Verify the authenticity of a GETI certificate using the
+certificate number, student's name, or nationality.
+
+</p>
+
+
+<div class="search-form">
+
+<input
+id="verifyInput"
+type="text"
+placeholder="GETI-CERT000001"
+autocomplete="off">
+
+<button onclick="verifyCertificate()">
+🔍 VERIFY
+</button>
+
+</div>
+
+
+<div class="search-options">
+
+<button
+id="verifyIdButton"
+class="active"
+onclick="setVerifyType('id')">
+
+Certificate ID
+
+</button>
+
+<button
+id="verifyNameButton"
+onclick="setVerifyType('name')">
+
+Name
+
+</button>
+
+<button
+id="verifyNationalityButton"
+onclick="setVerifyType('nationality')">
+
+Nationality
+
+</button>
+
+</div>
+
+
+<div id="verifyResult"></div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero" id="home">
+
+<div class="container">
+
+<div class="hero-content">
+
+<div class="hero-small">
+GLOBAL ENGLISH TEACHING INSTITUTE
+</div>
+
+<h1>
+
+Learn English.
+<br>
+
+<span>Build Skills.</span>
+<br>
+
+Earn Your Certificate.
+
+</h1>
+
+<p class="hero-description">
+
+Empowering learners, teachers and professionals
+through accessible international English education,
+TEFL and TESOL professional training.
+
+</p>
+
+<div class="hero-buttons">
+
+<a href="#programs" class="btn btn-gold">
+EXPLORE PROGRAMS
+</a>
+
+<a href="#verify" class="btn btn-white">
+VERIFY CERTIFICATE
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     STATS
+===================================================== -->
+
+<section class="stats">
+
+<div class="container stats-grid">
+
+<div class="stat">
+<strong>A1–C2</strong>
+<span>English Levels</span>
+</div>
+
+<div class="stat">
+<strong>TEFL</strong>
+<span>Teacher Training</span>
+</div>
+
+<div class="stat">
+<strong>TESOL</strong>
+<span>Professional Training</span>
+</div>
+
+<div class="stat">
+<strong>24/7</strong>
+<span>Online Access</span>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     ABOUT
+===================================================== -->
+
+<section class="section" id="about">
+
+<div class="container about-grid">
+
+<div class="about-image">
+
+<img
+src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=85"
+alt="International students learning together">
+
+<div class="about-badge">
+
+<strong>GETI</strong>
+
+International English Education
+
+</div>
+
+</div>
+
+
+<div class="about-content">
+
+<div class="section-label">
+ABOUT GETI
+</div>
+
+<h2>
+Building Skills for a Global Future
+</h2>
+
+<p>
+Global English Teaching Institute (GETI) is an
+English education and professional training platform
+dedicated to helping learners and teachers develop
+practical English language and teaching skills.
+</p>
+
+<p>
+Our approach combines structured learning,
+practical communication, professional development
+and assessment to support learners from beginner
+to advanced levels.
+</p>
+
+<ul class="check-list">
+
+<li>A1–C2 English learning</li>
+<li>Professional TEFL training</li>
+<li>Modern TESOL education</li>
+<li>Online learning resources</li>
+<li>Certificate verification</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     PROGRAMS
+===================================================== -->
+
+<section class="section programs" id="programs">
+
+<div class="container">
+
+<div class="section-header">
+
+<div class="section-label">
+ACADEMIC PROGRAMS
+</div>
+
+<h2>Our Programs</h2>
+
+<p>
+Explore structured English and professional
+training programs designed for learners,
+teachers and professionals.
+</p>
+
+</div>
+
+
+<div class="program-grid">
+
+
+<div class="program-card">
+
+<div class="program-icon">📚</div>
+
+<h3>English Courses</h3>
+
+<p>
+Improve your English from A1 to C2 through
+structured lessons, practice and assessments.
+</p>
+
+</div>
+
+
+<div class="program-card">
+
+<div class="program-icon">🎓</div>
+
+<h3>TEFL Training</h3>
+
+<p>
+Develop essential skills in English language
+teaching, lesson planning and classroom management.
+</p>
+
+</div>
+
+
+<div class="program-card">
+
+<div class="program-icon">🌍</div>
+
+<h3>TESOL Training</h3>
+
+<p>
+Learn modern approaches to teaching English
+to speakers of other languages.
+</p>
+
+</div>
+
+
+<div class="program-card">
+
+<div class="program-icon">📝</div>
+
+<h3>English Exams</h3>
+
+<p>
+Test your English knowledge and demonstrate
+your language proficiency.
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     CAMPUS
+===================================================== -->
+
+<section class="campus">
+
+<div class="container">
+
+<div class="campus-content">
+
+<div class="section-label">
+GLOBAL LEARNING COMMUNITY
+</div>
+
+<h2>
+Learn. Teach. Graduate. Grow.
+</h2>
+
+<p>
+Join a growing international learning community
+and develop the English skills needed for education,
+employment and global communication.
+</p>
+
+<a href="#tefl" class="btn btn-gold">
+START TEFL TRAINING
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     TEFL
+===================================================== -->
+
+<section class="section tefl-section" id="tefl">
+
+<div class="container">
+
+<div class="section-header">
+
+<div class="section-label">
+PROFESSIONAL DEVELOPMENT
+</div>
+
+<h2>TEFL Training</h2>
+
+<p>
+Access the TEFL lessons and final examination
+from inside the TEFL program.
+</p>
+
+</div>
+
+
+<div class="tefl-panel">
+
+<div class="training-card">
+
+<h3>🎓 TEFL Online Program</h3>
+
+<p>
+Study the TEFL lessons first, then take the
+100-question final examination.
+</p>
+
+<div class="tefl-buttons">
+
+<button
+class="btn btn-gold"
+onclick="showTEFLLessons()">
+
+📘 VIEW TEFL LESSONS
+
+</button>
+
+
+<button
+class="btn btn-gold"
+onclick="showTEFLExam()">
+
+📝 START 100-QUESTION EXAM
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     TEFL LESSONS
+===================================================== -->
+
+<div
+id="teflLessons"
+class="tefl-hidden">
+
+<div class="lesson-content">
+
+<h3>
+📘 TEFL Lessons
+</h3>
+
+<p>
+Complete your TEFL study by reviewing the lessons below.
+</p>
+
+<div
+id="lessonList"
+class="lesson-list">
+</div>
+
+<div id="lessonDisplay">
+
+<div class="lesson-content">
+
+<h3>
+Select a lesson
+</h3>
+
+<p>
+Click one of the lessons above to study its content.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     TEFL EXAM
+===================================================== -->
+
+<div
+id="teflExam"
+class="tefl-hidden">
+
+<div class="exam-box">
+
+<h2>
+TEFL Final Examination
+</h2>
+
+<p style="text-align:center;color:#687386;margin-bottom:25px;">
+
+100 Questions • Multiple Choice
+
+</p>
+
+<div class="exam-progress" id="examProgress">
+
+Question 1–100
+
+</div>
+
+<form id="teflExamForm">
+
+<div id="questionsContainer"></div>
+
+<button
+type="button"
+class="btn btn-gold"
+onclick="submitTEFLExam()">
+
+SUBMIT TEFL EXAM
+
+</button>
+
+</form>
+
+
+<div
+id="teflExamResult"
+class="exam-result">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     REGISTRATION
+===================================================== -->
+
+<div
+id="teflRegistration"
+class="tefl-hidden">
+
+<div class="registration-section">
+
+<div class="registration-box">
+
+<h2>
+🎓 TEFL Certificate Registration
+</h2>
+
+<p>
+You have completed the TEFL examination.
+Complete your information to receive your certificate ID.
+</p>
+
+
+<div class="form-group">
+
+<label>
+Full Name
+</label>
+
+<input
+type="text"
+id="studentFullName"
+placeholder="Enter your full name">
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+Nationality
+</label>
+
+<input
+type="text"
+id="studentNationality"
+placeholder="Enter your nationality">
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+Email
+</label>
+
+<input
+type="email"
+id="studentEmail"
+placeholder="Enter your email">
+
+</div>
+
+
+<button
+type="button"
+class="btn btn-gold"
+onclick="registerTEFLStudent()">
+
+REGISTER & GET CERTIFICATE ID
+
+</button>
+
+
+<div id="registrationResult"></div>
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     TESOL
+===================================================== -->
+
+<section class="section" id="tesol">
+
+<div class="container">
+
+<div class="section-header">
+
+<div class="section-label">
+PROFESSIONAL DEVELOPMENT
+</div>
+
+<h2>TESOL Training</h2>
+
+<p>
+Teaching English to Speakers of Other Languages.
+</p>
+
+</div>
+
+
+<div class="training-grid">
+
+<div class="training-card">
+
+<h3>🌍 TESOL Training</h3>
+
+<ul>
+
+<li>Second Language Acquisition</li>
+<li>Learner-Centered Teaching</li>
+<li>Multilingual Classrooms</li>
+<li>Cultural Awareness</li>
+<li>Needs Analysis</li>
+<li>Curriculum Development</li>
+<li>Assessment</li>
+<li>Professional Development</li>
+
+</ul>
+
+</div>
+
+
+<div class="training-card">
+
+<h3>🎓 Professional Skills</h3>
+
+<p>
+Develop modern English teaching knowledge
+for international learning environments.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     CERTIFICATE PARTNERS
+===================================================== -->
+
+<section class="section certificate-partners" id="partners">
+
+<div class="container">
+
+<div class="section-header">
+
+<div class="section-label">
+INTERNATIONAL PARTNERS
+</div>
+
+<h2>Certificate Partners</h2>
+
+<p>
+GETI Certificate Partners and professional education
+institutions supporting international learning and training.
+</p>
+
+</div>
+
+
+<div class="partner-grid">
+
+
+<!-- PARTNER 1 -->
+
+<div class="partner-card">
+
+<div class="partner-logo">
+GEA
+</div>
+
+<h3>
+Global English Academy
+</h3>
+
+<p>
+International English Education
+</p>
+
+<div class="partner-badge">
+Certificate Partner
+</div>
+
+</div>
+
+
+<!-- PARTNER 2 -->
+
+<div class="partner-card">
+
+<div class="partner-logo">
+ITE
+</div>
+
+<h3>
+International Teacher Education
+</h3>
+
+<p>
+Teacher Training & Development
+</p>
+
+<div class="partner-badge">
+Training Partner
+</div>
+
+</div>
+
+
+<!-- PARTNER 3 -->
+
+<div class="partner-card">
+
+<div class="partner-logo">
+GLC
+</div>
+
+<h3>
+Global Language Center
+</h3>
+
+<p>
+Language Learning & Assessment
+</p>
+
+<div class="partner-badge">
+Education Partner
+</div>
+
+</div>
+
+
+<!-- PARTNER 4 -->
+
+<div class="partner-card">
+
+<div class="partner-logo">
+ELI
+</div>
+
+<h3>
+English Learning Institute
+</h3>
+
+<p>
+English Language Development
+</p>
+
+<div class="partner-badge">
+Academic Partner
+</div>
+
+</div>
+
+
+<!-- PARTNER 5 -->
+
+<div class="partner-card">
+
+<div class="partner-logo">
+WTE
+</div>
+
+<h3>
+World Teaching Education
+</h3>
+
+<p>
+Professional Teaching Training
+</p>
+
+<div class="partner-badge">
+Professional Partner
+</div>
+
+</div>
+
+
+<!-- PARTNER 6 -->
+
+<div class="partner-card">
+
+<div class="partner-logo">
+IEC
+</div>
+
+<h3>
+International Education Center
+</h3>
+
+<p>
+International Education Services
+</p>
+
+<div class="partner-badge">
+Education Partner
+</div>
+
+</div>
+
+
+<!-- PARTNER 7 -->
+
+<div class="partner-card">
+
+<div class="partner-logo">
+GTC
+</div>
+
+<h3>
+Global Training Council
+</h3>
+
+<p>
+Professional Training & Certification
+</p>
+
+<div class="partner-badge">
+Certificate Partner
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     MISSION
+===================================================== -->
+
+<section class="section">
+
+<div class="container">
+
+<div class="section-header">
+
+<div class="section-label">
+OUR VALUES
+</div>
+
+<h2>Why Choose GETI?</h2>
+
+</div>
+
+
+<div class="mission-grid">
+
+
+<div class="mission-card">
+
+<div style="font-size:40px;">🌍</div>
+
+<h3>International</h3>
+
+<p>
+An English education platform designed
+for learners and teachers around the world.
+</p>
+
+</div>
+
+
+<div class="mission-card">
+
+<div style="font-size:40px;">🎓</div>
+
+<h3>Professional</h3>
+
+<p>
+Structured courses and professional
+teacher-training programs.
+</p>
+
+</div>
+
+
+<div class="mission-card">
+
+<div style="font-size:40px;">✓</div>
+
+<h3>Verification</h3>
+
+<p>
+Online certificate verification helps
+confirm GETI certificate information.
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     CONTACT
+===================================================== -->
+
+<section class="section contact" id="contact">
+
+<div class="container contact-grid">
+
+
+<div class="contact-info">
+
+<div class="section-label">
+CONTACT GETI
+</div>
+
+<h2>
+Global English Teaching Institute
+</h2>
+
+<p>
+International English Education &
+Professional Training
+</p>
+
+
+<div class="contact-item">
+
+<strong>📧 Email</strong>
+
+<span>
+globalenglish123@gmail.com
+</span>
+
+</div>
+
+
+<div class="contact-item">
+
+<strong>🌍 Institution</strong>
+
+<span>
+Global English Teaching Institute
+</span>
+
+</div>
+
+
+<div class="contact-item">
+
+<strong>🎓 Services</strong>
+
+<span>
+English • TEFL • TESOL • Exams • Certificates
+</span>
+
+</div>
+
+</div>
+
+
+<div class="contact-box">
+
+<h3>Send us a message</h3>
+
+<br>
+
+<input
+type="text"
+id="contactName"
+placeholder="Your Name">
+
+<input
+type="email"
+id="contactEmail"
+placeholder="Your Email">
+
+<input
+type="text"
+id="contactSubject"
+placeholder="Subject">
+
+<textarea
+id="contactMessage"
+placeholder="Your Message"></textarea>
+
+<button
+class="btn btn-gold"
+onclick="sendMessage()">
+
+SEND MESSAGE
+
+</button>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+<div class="container">
+
+<div class="footer-grid">
+
+
+<div>
+
+<h3>
+GLOBAL ENGLISH TEACHING INSTITUTE
+</h3>
+
+<p>
+International English Education &
+Professional Training.
+</p>
+
+<br>
+
+<p>
+Learn • Teach • Grow • Succeed
+</p>
+
+</div>
+
+
+<div>
+
+<h3>Quick Links</h3>
+
+<ul>
+
+<li><a href="#home">Home</a></li>
+<li><a href="#about">About</a></li>
+<li><a href="#programs">Programs</a></li>
+<li><a href="#tefl">TEFL</a></li>
+<li><a href="#partners">Partners</a></li>
+<li><a href="#verify">Verify</a></li>
+
+</ul>
+
+</div>
+
+
+<div>
+
+<h3>Programs</h3>
+
+<ul>
+
+<li>English A1–C2</li>
+<li>TEFL</li>
+<li>TESOL</li>
+<li>English Exams</li>
+<li>Certificate Verification</li>
+
+</ul>
+
+</div>
+
+
+</div>
+
+
+<div class="footer-bottom">
+
+© 2026 Global English Teaching Institute.
+All rights reserved.
+
+</div>
+
+</div>
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   GOOGLE APPS SCRIPT API
+========================================================= */
+
+var API_URL =
+"https://script.google.com/macros/s/AKfycbzQ_YczGnSdh4GJZ73XTt8LfrUtdjJFAlUZGUx3Chhlk-0Es3rskQkun5LgrZYhkKRF/exec";
+
+var verifyType = "id";
+var examScore = 0;
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+function toggleMenu(){
+
+    document
+        .getElementById("navMenu")
+        .classList
+        .toggle("show");
 
 }
 
 
 /* =========================================================
-   LOAD CURRENT SECTION
-   ========================================================= */
+   VERIFICATION TYPE
+========================================================= */
 
-function loadCurrentSection() {
+function setVerifyType(type){
 
-  if (
-    currentSectionIndex >= allSections.length
-  ) {
+    verifyType = type;
 
-    showFinalResult();
-    return;
-  }
+    document
+        .getElementById("verifyIdButton")
+        .classList
+        .remove("active");
 
-  const section =
-    allSections[currentSectionIndex];
+    document
+        .getElementById("verifyNameButton")
+        .classList
+        .remove("active");
 
-  document.getElementById('app').innerHTML = \`
+    document
+        .getElementById("verifyNationalityButton")
+        .classList
+        .remove("active");
 
-    <div class="card">
 
-      <div class="small center">
-        Student: <b>\${escapeHtml(student.fullName)}</b>
-      </div>
+    if(type === "id"){
 
-      <div class="progress">
-        <div
-          class="progress-bar"
-          style="width:\${(
-            currentSectionIndex /
-            allSections.length
-          ) * 100}%">
-        </div>
-      </div>
+        document
+            .getElementById("verifyIdButton")
+            .classList
+            .add("active");
 
-      <h2 class="section-title">
-        \${escapeHtml(section)}
-      </h2>
+        document
+            .getElementById("verifyInput")
+            .placeholder =
+            "GETI-CERT000001";
 
-      <div id="questionArea"
-           class="loading">
-        Loading questions...
-      </div>
+    }
 
-    </div>
-  \`;
 
-  google.script.run
-    .withSuccessHandler(function(response) {
+    if(type === "name"){
 
-      if (!response.success) {
+        document
+            .getElementById("verifyNameButton")
+            .classList
+            .add("active");
 
-        document.getElementById(
-          'questionArea'
-        ).innerHTML =
-          '<div class="alert alert-error">' +
-          escapeHtml(response.message) +
-          '</div>';
+        document
+            .getElementById("verifyInput")
+            .placeholder =
+            "Enter name or one letter";
+
+    }
+
+
+    if(type === "nationality"){
+
+        document
+            .getElementById("verifyNationalityButton")
+            .classList
+            .add("active");
+
+        document
+            .getElementById("verifyInput")
+            .placeholder =
+            "Enter nationality or one letter";
+
+    }
+
+}
+
+
+/* =========================================================
+   CERTIFICATE VERIFICATION
+========================================================= */
+
+function verifyCertificate(){
+
+    var value =
+        document
+            .getElementById("verifyInput")
+            .value
+            .trim();
+
+
+    var box =
+        document
+            .getElementById("verifyResult");
+
+
+    if(!value){
+
+        box.innerHTML =
+            '<div class="error">' +
+            '❌ Please enter a certificate ID, name, or nationality.' +
+            '</div>';
 
         return;
-      }
 
-      currentQuestions =
-        response.questions || [];
+    }
 
-      renderQuestions();
 
-    })
-    .withFailureHandler(function(error) {
-
-      document.getElementById(
-        'questionArea'
-      ).innerHTML =
-        '<div class="alert alert-error">' +
-        escapeHtml(
-          error.message ||
-          'Error loading questions.'
-        ) +
+    box.innerHTML =
+        '<div class="success">' +
+        '⏳ Checking GETI records...' +
         '</div>';
 
-    })
-    .getQuestionsBySection(section);
+
+    var callbackName =
+        "getiVerification_" +
+        Date.now();
+
+
+    window[callbackName] =
+        function(data){
+
+            displayVerificationResults(data);
+
+            try{
+                delete window[callbackName];
+            }catch(e){}
+
+        };
+
+
+    var script =
+        document.createElement("script");
+
+
+    script.src =
+        API_URL +
+        "?type=" +
+        encodeURIComponent(verifyType) +
+        "&value=" +
+        encodeURIComponent(value) +
+        "&callback=" +
+        encodeURIComponent(callbackName);
+
+
+    script.onerror =
+        function(){
+
+            box.innerHTML =
+                '<div class="error">' +
+                '❌ Unable to connect to GETI verification server.' +
+                '</div>';
+
+        };
+
+
+    document
+        .body
+        .appendChild(script);
+
 }
 
 
 /* =========================================================
-   RENDER QUESTIONS
-   ========================================================= */
+   DISPLAY VERIFICATION
+========================================================= */
 
-function renderQuestions() {
+function displayVerificationResults(data){
 
-  if (!currentQuestions.length) {
-
-    document.getElementById(
-      'questionArea'
-    ).innerHTML =
-      '<div class="alert alert-error">' +
-      'No questions found for this section.' +
-      '</div>';
-
-    return;
-  }
-
-  let html = '';
-
-  currentQuestions.forEach(function(q, index) {
-
-    html += \`
-
-      <div class="question">
-
-        <div class="question-number">
-          Question \${index + 1}
-        </div>
-
-        <div class="question-text">
-          \${escapeHtml(q.question)}
-        </div>
-
-        <label class="option">
-          <input type="radio"
-                 name="q_\${q.key}"
-                 value="A">
-          A. \${escapeHtml(q.optionA)}
-        </label>
-
-        <label class="option">
-          <input type="radio"
-                 name="q_\${q.key}"
-                 value="B">
-          B. \${escapeHtml(q.optionB)}
-        </label>
-
-        <label class="option">
-          <input type="radio"
-                 name="q_\${q.key}"
-                 value="C">
-          C. \${escapeHtml(q.optionC)}
-        </label>
-
-        <label class="option">
-          <input type="radio"
-                 name="q_\${q.key}"
-                 value="D">
-          D. \${escapeHtml(q.optionD)}
-        </label>
-
-      </div>
-    \`;
-  });
-
-  html += \`
-
-    <div class="center">
-
-      <button class="primary"
-              onclick="submitSection()">
-        SUBMIT \${escapeHtml(
-          allSections[currentSectionIndex]
-        )}
-      </button>
-
-    </div>
-  \`;
-
-  document.getElementById(
-    'questionArea'
-  ).innerHTML = html;
-}
+    var box =
+        document
+            .getElementById("verifyResult");
 
 
-/* =========================================================
-   SUBMIT SECTION
-   ========================================================= */
+    if(!data){
 
-function submitSection() {
+        box.innerHTML =
+            '<div class="error">' +
+            '❌ No response received.' +
+            '</div>';
 
-  const answers = [];
-
-  let unanswered = 0;
-
-  currentQuestions.forEach(function(q) {
-
-    const selected =
-      document.querySelector(
-        'input[name="q_' +
-        q.key +
-        '"]:checked'
-      );
-
-    if (!selected) {
-
-      unanswered++;
-
-      answers.push({
-        key: q.key,
-        questionId: q.questionId,
-        selectedAnswer: ''
-      });
-
-    } else {
-
-      answers.push({
-        key: q.key,
-        questionId: q.questionId,
-        selectedAnswer: selected.value
-      });
-
-    }
-
-  });
-
-  if (unanswered > 0) {
-
-    if (
-      !confirm(
-        'You have ' +
-        unanswered +
-        ' unanswered question(s). Continue?'
-      )
-    ) {
-      return;
-    }
-  }
-
-  const section =
-    allSections[currentSectionIndex];
-
-  google.script.run
-    .withSuccessHandler(function(response) {
-
-      if (!response.success) {
-
-        alert(response.message);
         return;
-      }
 
-      sectionResults.push(response.result);
+    }
 
-      response.result.answers.forEach(
-        function(answer) {
-          allAnswers.push(answer);
+
+    if(!data.success){
+
+        box.innerHTML =
+            '<div class="error">' +
+            '❌ ' +
+            escapeHTML(data.message) +
+            '</div>';
+
+        return;
+
+    }
+
+
+    var results =
+        data.results || [];
+
+
+    if(results.length === 0){
+
+        box.innerHTML =
+            '<div class="error">' +
+            '❌ No certificate found.' +
+            '</div>';
+
+        return;
+
+    }
+
+
+    var html =
+        '<div class="success">' +
+        '✅ ' +
+        results.length +
+        ' certificate(s) found.' +
+        '</div>';
+
+
+    for(
+        var i=0;
+        i<results.length;
+        i++
+    ){
+
+        var c =
+            results[i];
+
+
+        html +=
+
+            '<div class="verify-card" style="margin-top:18px;">' +
+
+            '<div class="verified">' +
+            '✓ Certificate Verified' +
+            '</div>' +
+
+            '<div class="verify-row">' +
+            '<div class="verify-label">Name</div>' +
+            '<div class="verify-value">' +
+            escapeHTML(c.name) +
+            '</div>' +
+            '</div>' +
+
+            '<div class="verify-row">' +
+            '<div class="verify-label">Nationality</div>' +
+            '<div class="verify-value">' +
+            escapeHTML(c.nationality) +
+            '</div>' +
+            '</div>' +
+
+            '<div class="verify-row">' +
+            '<div class="verify-label">Certificate</div>' +
+            '<div class="verify-value">' +
+            escapeHTML(c.certificate) +
+            '</div>' +
+            '</div>' +
+
+            '<div class="verify-row">' +
+            '<div class="verify-label">Certificate ID</div>' +
+            '<div class="verify-value">' +
+            '<strong>' +
+            escapeHTML(c.id) +
+            '</strong>' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="verify-row">' +
+            '<div class="verify-label">Certificate Type</div>' +
+            '<div class="verify-value">' +
+            escapeHTML(c.type) +
+            '</div>' +
+            '</div>' +
+
+            '</div>';
+
+    }
+
+
+    box.innerHTML =
+        html;
+
+}
+
+
+/* =========================================================
+   TEFL LESSONS
+========================================================= */
+
+var teflLessons = [
+
+{
+title:"Lesson 1 — Introduction to TEFL",
+text:"TEFL means Teaching English as a Foreign Language. This lesson introduces the role of the English teacher, learners, teaching environments and the purpose of TEFL."
+},
+
+{
+title:"Lesson 2 — Teaching Methodology",
+text:"Teaching methodology refers to the principles and techniques used to help learners acquire English effectively."
+},
+
+{
+title:"Lesson 3 — Lesson Planning",
+text:"A lesson plan organizes learning objectives, presentation, practice, activities, assessment and timing."
+},
+
+{
+title:"Lesson 4 — Classroom Management",
+text:"Classroom management includes organizing students, managing behavior, creating routines and maintaining a positive learning environment."
+},
+
+{
+title:"Lesson 5 — Teaching Grammar",
+text:"Grammar teaching helps learners understand how words and structures are organized to communicate meaning accurately."
+},
+
+{
+title:"Lesson 6 — Teaching Vocabulary",
+text:"Vocabulary instruction develops learners' knowledge of words, meanings, pronunciation, spelling and appropriate usage."
+},
+
+{
+title:"Lesson 7 — Teaching Speaking",
+text:"Speaking lessons should provide learners with opportunities to communicate, interact, practice fluency and develop confidence."
+},
+
+{
+title:"Lesson 8 — Teaching Listening",
+text:"Listening instruction helps learners understand spoken English, identify key information and recognize different accents and speech patterns."
+},
+
+{
+title:"Lesson 9 — Teaching Reading",
+text:"Reading instruction develops skills such as skimming, scanning, identifying main ideas and understanding details."
+},
+
+{
+title:"Lesson 10 — Teaching Writing",
+text:"Writing instruction helps learners organize ideas, construct sentences, develop paragraphs and produce clear written communication."
+},
+
+{
+title:"Lesson 11 — Assessment",
+text:"Assessment measures learners' knowledge and progress. It may include formative assessment, summative assessment, quizzes and performance tasks."
+},
+
+{
+title:"Lesson 12 — Pronunciation",
+text:"Pronunciation teaching focuses on sounds, stress, rhythm, intonation and intelligibility."
+},
+
+{
+title:"Lesson 13 — Online Teaching",
+text:"Online teaching uses digital platforms and resources to deliver lessons, activities, communication and assessment."
+},
+
+{
+title:"Lesson 14 — Professional Development",
+text:"Professional development helps teachers improve their knowledge, skills, reflective practice and teaching effectiveness."
+},
+
+{
+title:"Lesson 15 — Learner Motivation",
+text:"Motivated learners are more likely to participate actively and persist in learning. Teachers can support motivation through meaningful goals and engaging activities."
+},
+
+{
+title:"Lesson 16 — Learner Differences",
+text:"Learners differ in age, ability, experience, learning preferences, motivation and educational background."
+},
+
+{
+title:"Lesson 17 — Communicative Language Teaching",
+text:"Communicative Language Teaching emphasizes meaningful communication and real-life language use."
+},
+
+{
+title:"Lesson 18 — Task-Based Learning",
+text:"Task-based learning uses meaningful tasks as the central focus of classroom learning."
+},
+
+{
+title:"Lesson 19 — Error Correction",
+text:"Teachers should correct errors in ways that support learning without unnecessarily reducing learner confidence."
+},
+
+{
+title:"Lesson 20 — Teaching Resources",
+text:"Teachers can use textbooks, realia, visual materials, audio, video, digital tools and authentic materials to support learning."
+}
+
+];
+
+
+function showTEFLLessons(){
+
+    var lessons =
+        document.getElementById("teflLessons");
+
+    var exam =
+        document.getElementById("teflExam");
+
+    var registration =
+        document.getElementById("teflRegistration");
+
+
+    lessons.classList.remove("tefl-hidden");
+    lessons.classList.add("tefl-visible");
+
+    exam.classList.remove("tefl-visible");
+    exam.classList.add("tefl-hidden");
+
+    registration.classList.remove("tefl-visible");
+    registration.classList.add("tefl-hidden");
+
+
+    renderLessons();
+
+
+    lessons.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+
+}
+
+
+function renderLessons(){
+
+    var box =
+        document.getElementById("lessonList");
+
+
+    var html = "";
+
+
+    for(
+        var i=0;
+        i<teflLessons.length;
+        i++
+    ){
+
+        html +=
+
+        '<div class="lesson-item">' +
+
+        '<h3>' +
+        escapeHTML(teflLessons[i].title) +
+        '</h3>' +
+
+        '<p>' +
+        escapeHTML(teflLessons[i].text) +
+        '</p>' +
+
+        '</div>';
+
+    }
+
+
+    box.innerHTML = html;
+
+}
+
+
+/* =========================================================
+   TEFL EXAM
+========================================================= */
+
+var examQuestions = [
+
+{
+q:"What does TEFL stand for?",
+a:[
+"Teaching English as a Foreign Language",
+"Teaching Education for Foreign Learners",
+"Training English for Language",
+"Teaching Every Foreign Language"
+],
+c:0
+},
+
+{
+q:"What is the main purpose of a lesson plan?",
+a:[
+"To organize teaching and learning activities",
+"To replace the teacher",
+"To give students free time",
+"To avoid assessment"
+],
+c:0
+},
+
+{
+q:"Which skill involves understanding spoken English?",
+a:[
+"Writing",
+"Listening",
+"Reading",
+"Grammar"
+],
+c:1
+},
+
+{
+q:"Which activity mainly develops speaking?",
+a:[
+"Conversation practice",
+"Silent reading",
+"Copying",
+"Dictation only"
+],
+c:0
+},
+
+{
+q:"What is classroom management?",
+a:[
+"Managing the learning environment and behavior",
+"Writing certificates",
+"Learning vocabulary alone",
+"Translating books"
+],
+c:0
+},
+
+{
+q:"What does TESOL mean?",
+a:[
+"Teaching English to Speakers of Other Languages",
+"Teaching English Students Online Lessons",
+"Training English Speaking Online Learners",
+"Teaching Every Student Other Languages"
+],
+c:0
+},
+
+{
+q:"What is formative assessment?",
+a:[
+"Assessment during learning",
+"Only a final examination",
+"A certificate",
+"A textbook"
+],
+c:0
+},
+
+{
+q:"What is summative assessment?",
+a:[
+"Assessment at the end of a period of learning",
+"Informal classroom greeting",
+"Vocabulary practice",
+"Warm-up activity"
+],
+c:0
+},
+
+{
+q:"Which is a productive skill?",
+a:[
+"Speaking",
+"Listening",
+"Reading",
+"Understanding"
+],
+c:0
+},
+
+{
+q:"Which is a receptive skill?",
+a:[
+"Writing",
+"Speaking",
+"Listening",
+"Presenting"
+],
+c:2
+},
+
+{
+q:"What is vocabulary?",
+a:[
+"The words a person knows or uses",
+"Only grammar rules",
+"Only pronunciation",
+"Only punctuation"
+],
+c:0
+},
+
+{
+q:"What is grammar?",
+a:[
+"The system of rules and structures of a language",
+"A list of countries",
+"A speaking game",
+"A certificate"
+],
+c:0
+},
+
+{
+q:"What is pronunciation?",
+a:[
+"How words and sounds are produced",
+"How essays are graded",
+"How classrooms are arranged",
+"How certificates are printed"
+],
+c:0
+},
+
+{
+q:"What is learner-centered teaching?",
+a:[
+"Teaching that actively involves learners",
+"Teaching only from a textbook",
+"Teacher talks for the entire lesson",
+"No student participation"
+],
+c:0
+},
+
+{
+q:"What is an objective?",
+a:[
+"A clear statement of what learners should achieve",
+"A classroom decoration",
+"A student's nationality",
+"A certificate number"
+],
+c:0
+},
+
+{
+q:"What is a warm-up?",
+a:[
+"An introductory activity that prepares learners",
+"A final examination",
+"A certificate",
+"A grading system"
+],
+c:0
+},
+
+{
+q:"What is pair work?",
+a:[
+"Two learners working together",
+"One teacher working alone",
+"An entire school examination",
+"Reading silently"
+],
+c:0
+},
+
+{
+q:"What is group work?",
+a:[
+"Learners working together in a group",
+"Teacher preparation only",
+"Individual homework only",
+"A certificate ceremony"
+],
+c:0
+},
+
+{
+q:"What is feedback?",
+a:[
+"Information given to help improve performance",
+"A school uniform",
+"A certificate",
+"A classroom rule only"
+],
+c:0
+},
+
+{
+q:"Why are instructions important?",
+a:[
+"They explain what learners should do",
+"They replace assessment",
+"They remove communication",
+"They are only for teachers"
+],
+c:0
+},
+
+{
+q:"What is communicative language teaching?",
+a:[
+"An approach emphasizing meaningful communication",
+"An approach based only on translation",
+"An approach without speaking",
+"An approach without learners"
+],
+c:0
+},
+
+{
+q:"What is task-based learning?",
+a:[
+"Learning through meaningful tasks",
+"Learning without activities",
+"Learning only vocabulary lists",
+"Learning without communication"
+],
+c:0
+},
+
+{
+q:"What is skimming?",
+a:[
+"Reading quickly for general meaning",
+"Reading every word slowly",
+"Listening to a conversation",
+"Writing an essay"
+],
+c:0
+},
+
+{
+q:"What is scanning?",
+a:[
+"Reading to find specific information",
+"Reading for pronunciation only",
+"Speaking quickly",
+"Writing a paragraph"
+],
+c:0
+},
+
+{
+q:"What is fluency?",
+a:[
+"The ability to communicate smoothly",
+"Perfect spelling only",
+"Perfect grammar only",
+"Knowing one word"
+],
+c:0
+},
+
+{
+q:"What is accuracy?",
+a:[
+"Correctness in language use",
+"Speaking very quickly",
+"Speaking loudly",
+"Reading silently"
+],
+c:0
+},
+
+{
+q:"What is motivation?",
+a:[
+"The desire or reason to learn",
+"A grammar structure",
+"A certificate",
+"A classroom desk"
+],
+c:0
+},
+
+{
+q:"Why should teachers use examples?",
+a:[
+"Examples help learners understand concepts",
+"Examples eliminate practice",
+"Examples replace teaching",
+"Examples prevent communication"
+],
+c:0
+},
+
+{
+q:"What is authentic material?",
+a:[
+"Material originally created for real-world use",
+"Only teacher-created worksheets",
+"Only examination papers",
+"Only grammar books"
+],
+c:0
+},
+
+{
+q:"What is differentiation?",
+a:[
+"Adapting teaching to learner needs",
+"Teaching every learner identically",
+"Removing activities",
+"Removing assessment"
+],
+c:0
+},
+
+{
+q:"What is a rubric?",
+a:[
+"A scoring guide with criteria",
+"A textbook",
+"A classroom game",
+"A pronunciation chart"
+],
+c:0
+},
+
+{
+q:"What is peer assessment?",
+a:[
+"Learners assess each other's work",
+"Only teachers assess learners",
+"Parents assess teachers",
+"Schools assess certificates"
+],
+c:0
+},
+
+{
+q:"What is self-assessment?",
+a:[
+"Learners evaluate their own learning",
+"Teachers evaluate themselves only",
+"Schools issue certificates",
+"Students grade teachers"
+],
+c:0
+},
+
+{
+q:"What is scaffolding?",
+a:[
+"Temporary support that helps learners complete tasks",
+"Removing all support",
+"Giving only examinations",
+"Teaching without examples"
+],
+c:0
+},
+
+{
+q:"What is a teaching aid?",
+a:[
+"A resource that supports teaching and learning",
+"A certificate",
+"A student ID",
+"A school building"
+],
+c:0
+},
+
+{
+q:"What is elicitation?",
+a:[
+"Getting information or answers from learners",
+"Giving every answer immediately",
+"Ending a lesson",
+"Giving certificates"
+],
+c:0
+},
+
+{
+q:"What is drilling?",
+a:[
+"Controlled repetition for practice",
+"Free writing only",
+"Final assessment",
+"Reading silently"
+],
+c:0
+},
+
+{
+q:"What is a role-play?",
+a:[
+"Acting out a situation",
+"Silent reading",
+"Grammar translation",
+"Writing vocabulary"
+],
+c:0
+},
+
+{
+q:"What is a debate?",
+a:[
+"A structured discussion involving different viewpoints",
+"A vocabulary list",
+"A listening test only",
+"A pronunciation drill"
+],
+c:0
+},
+
+{
+q:"What is brainstorming?",
+a:[
+"Generating ideas",
+"Correcting every error",
+"Taking a final exam",
+"Reading a certificate"
+],
+c:0
+},
+
+{
+q:"What is a diagnostic test?",
+a:[
+"A test used to identify strengths and weaknesses",
+"A graduation certificate",
+"A classroom decoration",
+"A final award"
+],
+c:0
+},
+
+{
+q:"What is placement testing?",
+a:[
+"Testing learners to determine an appropriate level",
+"Testing teachers' salaries",
+"Testing certificates",
+"Testing classroom furniture"
+],
+c:0
+},
+
+{
+q:"What is reliability in assessment?",
+a:[
+"Consistency of assessment results",
+"Difficulty of vocabulary",
+"Length of a lesson",
+"Number of teachers"
+],
+c:0
+},
+
+{
+q:"What is validity?",
+a:[
+"The extent to which a test measures what it should measure",
+"How attractive a test looks",
+"How long a lesson is",
+"How many pages a book has"
+],
+c:0
+},
+
+{
+q:"What is an open-ended question?",
+a:[
+"A question allowing a developed response",
+"A question with only yes/no",
+"A multiple-choice question only",
+"A true/false question"
+],
+c:0
+},
+
+{
+q:"What is a closed question?",
+a:[
+"A question with a limited response",
+"A question requiring an essay",
+"A debate",
+"A presentation"
+],
+c:0
+},
+
+{
+q:"Why is pair work useful?",
+a:[
+"It increases opportunities for learner interaction",
+"It stops communication",
+"It removes practice",
+"It replaces the teacher"
+],
+c:0
+},
+
+{
+q:"Why is group work useful?",
+a:[
+"It encourages collaboration and communication",
+"It prevents participation",
+"It eliminates learning",
+"It replaces assessment"
+],
+c:0
+},
+
+{
+q:"What is a mixed-ability class?",
+a:[
+"A class with learners of different ability levels",
+"A class with only advanced learners",
+"A class with only beginners",
+"A class without learners"
+],
+c:0
+},
+
+{
+q:"What is classroom routine?",
+a:[
+"A regular pattern of classroom procedures",
+"A final exam",
+"A certificate",
+"A vocabulary list"
+],
+c:0
+},
+
+{
+q:"Why are clear instructions important?",
+a:[
+"They reduce confusion and support task completion",
+"They make lessons longer",
+"They prevent learning",
+"They replace practice"
+],
+c:0
+},
+
+{
+q:"What is teacher talk time?",
+a:[
+"The amount of time the teacher speaks",
+"The amount of time students write",
+"The number of lessons",
+"The length of a textbook"
+],
+c:0
+},
+
+{
+q:"What is student talk time?",
+a:[
+"The amount of time learners speak",
+"The time teachers prepare",
+"The time spent grading",
+"The time spent printing"
+],
+c:0
+},
+
+{
+q:"In communicative teaching, teachers should generally:",
+a:[
+"Create opportunities for meaningful communication",
+"Speak throughout the whole lesson",
+"Avoid interaction",
+"Use translation only"
+],
+c:0
+},
+
+{
+q:"What is an inductive approach to grammar?",
+a:[
+"Learners examine examples and discover the rule",
+"Teacher gives the rule first only",
+"No examples are used",
+"Grammar is not taught"
+],
+c:0
+},
+
+{
+q:"What is a deductive approach?",
+a:[
+"Teacher presents a rule before practice",
+"Learners discover everything without guidance",
+"No grammar is used",
+"Only speaking is allowed"
+],
+c:0
+},
+
+{
+q:"What is contextualization?",
+a:[
+"Teaching language within a meaningful situation",
+"Teaching isolated words only",
+"Removing examples",
+"Teaching without communication"
+],
+c:0
+},
+
+{
+q:"What is a pre-reading activity?",
+a:[
+"An activity preparing learners for a text",
+"A final exam",
+"Post-course assessment",
+"Certificate printing"
+],
+c:0
+},
+
+{
+q:"What is a while-reading activity?",
+a:[
+"An activity completed during reading",
+"An activity before class",
+"A certificate activity",
+"Teacher registration"
+],
+c:0
+},
+
+{
+q:"What is a post-reading activity?",
+a:[
+"An activity completed after reading",
+"An activity before reading",
+"A registration form",
+"A grammar rule"
+],
+c:0
+},
+
+{
+q:"What is listening for gist?",
+a:[
+"Listening for the general meaning",
+"Listening for every sound",
+"Reading a text",
+"Writing an essay"
+],
+c:0
+},
+
+{
+q:"What is listening for detail?",
+a:[
+"Listening for specific information",
+"Listening only for general meaning",
+"Reading",
+"Speaking"
+],
+c:0
+},
+
+{
+q:"What is extensive reading?",
+a:[
+"Reading longer texts mainly for general understanding or enjoyment",
+"Reading one sentence repeatedly",
+"Reading only grammar rules",
+"Reading only certificates"
+],
+c:0
+},
+
+{
+q:"What is intensive reading?",
+a:[
+"Close reading for detailed understanding",
+"Reading only for pleasure",
+"Speaking practice",
+"Listening practice"
+],
+c:0
+},
+
+{
+q:"What is process writing?",
+a:[
+"Writing through stages such as planning, drafting and revising",
+"Writing once without revision",
+"Copying a paragraph",
+"Memorizing vocabulary"
+],
+c:0
+},
+
+{
+q:"What is brainstorming before writing?",
+a:[
+"Generating and organizing ideas",
+"Correcting punctuation only",
+"Submitting the final essay",
+"Reading aloud"
+],
+c:0
+},
+
+{
+q:"What is coherence?",
+a:[
+"Logical connection and organization of ideas",
+"Correct spelling only",
+"Correct pronunciation",
+"Number of words"
+],
+c:0
+},
+
+{
+q:"What is cohesion?",
+a:[
+"Linguistic links that connect parts of a text",
+"Speaking speed",
+"Classroom size",
+"Lesson duration"
+],
+c:0
+},
+
+{
+q:"What is intonation?",
+a:[
+"Variation in pitch during speech",
+"Spelling",
+"Vocabulary size",
+"Writing speed"
+],
+c:0
+},
+
+{
+q:"What is word stress?",
+a:[
+"Emphasis placed on a syllable in a word",
+"Writing a word",
+"Translating a word",
+"Counting words"
+],
+c:0
+},
+
+{
+q:"What is sentence stress?",
+a:[
+"Emphasis on important words in a sentence",
+"Writing sentences",
+"Counting sentences",
+"Translating sentences"
+],
+c:0
+},
+
+{
+q:"What is connected speech?",
+a:[
+"The way sounds change or connect in natural speech",
+"Writing connected paragraphs",
+"Reading slowly",
+"Grammar testing"
+],
+c:0
+},
+
+{
+q:"What is an English learner's target language?",
+a:[
+"The language being learned",
+"The learner's first language only",
+"A certificate",
+"A textbook"
+],
+c:0
+},
+
+{
+q:"What is L1?",
+a:[
+"A learner's first language",
+"A learner's second language",
+"A teaching method",
+"A test"
+],
+c:0
+},
+
+{
+q:"What is L2?",
+a:[
+"A language learned after the first language",
+"The first language only",
+"A classroom",
+"A certificate"
+],
+c:0
+},
+
+{
+q:"What is language exposure?",
+a:[
+"Contact with the language",
+"A final exam",
+"A certificate",
+"A lesson plan only"
+],
+c:0
+},
+
+{
+q:"Why is repetition useful?",
+a:[
+"It can reinforce learning and memory",
+"It always prevents communication",
+"It replaces all teaching",
+"It removes vocabulary"
+],
+c:0
+},
+
+{
+q:"What is retrieval practice?",
+a:[
+"Trying to recall information from memory",
+"Copying information",
+"Reading without thinking",
+"Listening only"
+],
+c:0
+},
+
+{
+q:"What is spaced practice?",
+a:[
+"Practicing material over separated periods of time",
+"Studying everything once",
+"Skipping practice",
+"Taking only one exam"
+],
+c:0
+},
+
+{
+q:"What is learner autonomy?",
+a:[
+"The ability to take responsibility for one's learning",
+"Teacher control of everything",
+"No learning goals",
+"No homework"
+],
+c:0
+},
+
+{
+q:"What is reflective teaching?",
+a:[
+"Teachers think critically about their teaching and improve it",
+"Teachers never change methods",
+"Teachers only grade students",
+"Teachers avoid feedback"
+],
+c:0
+},
+
+{
+q:"Why should teachers monitor students?",
+a:[
+"To observe progress and provide support",
+"To punish students",
+"To avoid teaching",
+"To replace assessment"
+],
+c:0
+},
+
+{
+q:"What is correction timing?",
+a:[
+"Choosing an appropriate moment to correct errors",
+"Correcting every word immediately",
+"Never correcting errors",
+"Only correcting exams"
+],
+c:0
+},
+
+{
+q:"What is delayed correction?",
+a:[
+"Correcting errors after an activity",
+"Never correcting errors",
+"Correcting before speaking",
+"Correcting certificates"
+],
+c:0
+},
+
+{
+q:"What is an error?",
+a:[
+"A systematic problem in language use",
+"Always a sign of failure",
+"A certificate",
+"A teaching method"
+],
+c:0
+},
+
+{
+q:"What is a mistake?",
+a:[
+"A temporary slip that a learner may self-correct",
+"A permanent language problem",
+"A certificate",
+"A textbook"
+],
+c:0
+},
+
+{
+q:"What is a syllabus?",
+a:[
+"A plan of content and learning objectives for a course",
+"A certificate",
+"A classroom rule",
+"A single exercise"
+],
+c:0
+},
+
+{
+q:"What is curriculum?",
+a:[
+"The broader educational program and learning plan",
+"A single vocabulary item",
+"A classroom chair",
+"A final exam only"
+],
+c:0
+},
+
+{
+q:"What is needs analysis?",
+a:[
+"Identifying learners' needs and goals",
+"Counting students",
+"Printing certificates",
+"Writing a dictionary"
+],
+c:0
+},
+
+{
+q:"What is ESP?",
+a:[
+"English for Specific Purposes",
+"English Speaking Practice",
+"English Student Program",
+"English Standard Pronunciation"
+],
+c:0
+},
+
+{
+q:"What is EFL?",
+a:[
+"English as a Foreign Language",
+"English for Learning",
+"English First Language",
+"English Formal Lesson"
+],
+c:0
+},
+
+{
+q:"What is ESL?",
+a:[
+"English as a Second Language",
+"English Speaking Lesson",
+"English Student Language",
+"English Standard Learning"
+],
+c:0
+},
+
+{
+q:"What is an online learning platform?",
+a:[
+"A digital environment for teaching and learning",
+"A printed textbook",
+"A classroom desk",
+"A certificate"
+],
+c:0
+},
+
+{
+q:"What is synchronous online teaching?",
+a:[
+"Teaching where participants interact at the same time",
+"Teaching without communication",
+"Recorded lessons only",
+"Printed lessons only"
+],
+c:0
+},
+
+{
+q:"What is asynchronous learning?",
+a:[
+"Learning that does not require everyone to participate at the same time",
+"Only live teaching",
+"Only classroom teaching",
+"Only oral exams"
+],
+c:0
+},
+
+{
+q:"Why are visuals useful?",
+a:[
+"They can make meaning clearer and support understanding",
+"They always replace language",
+"They prevent speaking",
+"They replace teachers"
+],
+c:0
+},
+
+{
+q:"What is classroom interaction?",
+a:[
+"Communication between teachers and learners or among learners",
+"Only teacher preparation",
+"Only written exams",
+"Certificate verification"
+],
+c:0
+},
+
+{
+q:"What is rapport?",
+a:[
+"A positive relationship between teacher and learners",
+"A grammar rule",
+"A certificate",
+"A test"
+],
+c:0
+},
+
+{
+q:"What is inclusive teaching?",
+a:[
+"Teaching that aims to support participation and access for different learners",
+"Teaching only advanced students",
+"Teaching one learner",
+"Teaching without adaptation"
+],
+c:0
+},
+
+{
+q:"What is cultural awareness?",
+a:[
+"Understanding and respecting cultural differences",
+"Teaching only one culture",
+"A grammar exercise",
+"A certificate"
+],
+c:0
+},
+
+{
+q:"Why should teachers consider culture?",
+a:[
+"Culture can influence communication and learning",
+"Culture has no relationship to communication",
+"Culture replaces grammar",
+"Culture replaces assessment"
+],
+c:0
+},
+
+{
+q:"What is professional ethics?",
+a:[
+"Principles guiding responsible professional behavior",
+"A vocabulary list",
+"A classroom game",
+"A certificate number"
+],
+c:0
+},
+
+{
+q:"What is continuous professional development?",
+a:[
+"Ongoing improvement of professional knowledge and skills",
+"One examination only",
+"Stopping professional learning",
+"Only teaching beginners"
+],
+c:0
+},
+
+{
+q:"What is the role of a TEFL teacher?",
+a:[
+"To facilitate and support English learning",
+"To do all work for learners",
+"To prevent communication",
+"To avoid assessment"
+],
+c:0
+},
+
+{
+q:"What is learner engagement?",
+a:[
+"The degree to which learners actively participate in learning",
+"Teacher attendance only",
+"Certificate printing",
+"Classroom decoration"
+],
+c:0
+},
+
+{
+q:"What is differentiation by task?",
+a:[
+"Giving tasks suited to different learner needs or levels",
+"Giving identical tasks regardless of ability",
+"Removing tasks",
+"Giving no instructions"
+],
+c:0
+},
+
+{
+q:"What is a learning objective?",
+a:[
+"A specific outcome learners should achieve",
+"A certificate number",
+"A school address",
+"A teacher's salary"
+],
+c:0
+},
+
+{
+q:"What is assessment criteria?",
+a:[
+"Standards used to judge performance",
+"A lesson title",
+"A textbook",
+"A classroom rule"
+],
+c:0
+},
+
+{
+q:"What is constructive feedback?",
+a:[
+"Feedback that identifies strengths and gives useful ways to improve",
+"Feedback that only criticizes",
+"No feedback",
+"Feedback unrelated to learning"
+],
+c:0
+},
+
+{
+q:"What is effective teaching?",
+a:[
+"Teaching that supports meaningful learner progress",
+"Teaching without objectives",
+"Teaching without learners",
+"Teaching without practice"
+],
+c:0
+},
+
+{
+q:"What is the main goal of TEFL?",
+a:[
+"To help learners develop English language ability",
+"To issue passports",
+"To replace schools",
+"To teach only grammar"
+],
+c:0
+}
+
+];
+
+
+/* =========================================================
+   GENERATE EXAM
+========================================================= */
+
+function loadTEFLExam(){
+
+    var container =
+        document.getElementById("questionsContainer");
+
+    var html = "";
+
+
+    for(
+        var i=0;
+        i<examQuestions.length;
+        i++
+    ){
+
+        var q =
+            examQuestions[i];
+
+
+        html +=
+        '<div class="exam-question">' +
+
+        '<h3>Question ' +
+        (i+1) +
+        '</h3>' +
+
+        '<p>' +
+        escapeHTML(q.q) +
+        '</p>';
+
+
+        for(
+            var j=0;
+            j<q.a.length;
+            j++
+        ){
+
+            html +=
+
+            '<label class="exam-option">' +
+
+            '<input ' +
+
+            'type="radio" ' +
+
+            'name="q' +
+            i +
+            '" ' +
+
+            'value="' +
+            j +
+            '">' +
+
+            ' ' +
+
+            escapeHTML(q.a[j]) +
+
+            '</label>';
+
         }
-      );
 
-      showSectionResult(response.result);
-
-    })
-    .withFailureHandler(function(error) {
-
-      alert(
-        error.message ||
-        'Could not submit section.'
-      );
-
-    })
-    .submitSection(
-      student.studentId,
-      section,
-      answers
-    );
-}
-
-
-/* =========================================================
-   SECTION RESULT
-   ========================================================= */
-
-function showSectionResult(result) {
-
-  const isLast =
-    currentSectionIndex >=
-    allSections.length - 1;
-
-  document.getElementById('app').innerHTML = \`
-
-    <div class="card">
-
-      <div class="result-box">
-
-        <h2>
-          \${escapeHtml(result.section)}
-          Result
-        </h2>
-
-        <div class="score">
-          \${result.percentage}%
-        </div>
-
-        <p>
-          Score:
-          <b>\${result.score}</b>
-          /
-          <b>\${result.total}</b>
-        </p>
-
-        <p>
-          Correct:
-          <b>\${result.correct}</b>
-          |
-          Wrong:
-          <b>\${result.wrong}</b>
-        </p>
-
-        <br>
-
-        <button class="primary"
-                onclick="nextSection()">
-          \${isLast ? 'FINAL RESULT' : 'NEXT'}
-        </button>
-
-      </div>
-
-    </div>
-  \`;
-}
-
-
-/* =========================================================
-   NEXT SECTION
-   ========================================================= */
-
-function nextSection() {
-
-  currentSectionIndex++;
-
-  if (
-    currentSectionIndex >=
-    allSections.length
-  ) {
-
-    showFinalResult();
-    return;
-  }
-
-  loadCurrentSection();
-}
-
-
-/* =========================================================
-   FINAL RESULT
-   ========================================================= */
-
-function showFinalResult() {
-
-  document.getElementById('app').innerHTML = \`
-
-    <div class="card center">
-
-      <div class="loading">
-        Calculating final result...
-      </div>
-
-    </div>
-  \`;
-
-  google.script.run
-    .withSuccessHandler(function(response) {
-
-      if (!response.success) {
-
-        alert(response.message);
-        return;
-      }
-
-      finalResult = response;
-
-      renderFinalResult(response);
-
-    })
-    .withFailureHandler(function(error) {
-
-      alert(
-        error.message ||
-        'Could not calculate final result.'
-      );
-
-    })
-    .finishTest(
-      student.studentId,
-      allAnswers
-    );
-}
-
-
-/* =========================================================
-   RENDER FINAL RESULT
-   ========================================================= */
-
-function renderFinalResult(result) {
-
-  const passed =
-    result.status === 'PASSED';
-
-  let sectionRows = '';
-
-  result.sectionResults.forEach(
-    function(r) {
-
-      sectionRows += \`
-
-        <tr>
-          <td>\${escapeHtml(r.section)}</td>
-          <td>\${r.score}/\${r.total}</td>
-          <td>\${r.percentage}%</td>
-        </tr>
-
-      \`;
-    }
-  );
-
-  document.getElementById('app').innerHTML = \`
-
-    <div class="card">
-
-      <div class="result-box">
-
-        <h2>FINAL RESULT</h2>
-
-        <p>
-          Student:
-          <b>\${escapeHtml(result.fullName)}</b>
-        </p>
-
-        <p>
-          Student ID:
-          <b>\${escapeHtml(result.studentId)}</b>
-        </p>
-
-        <div class="score">
-          \${result.percentage}%
-        </div>
-
-        <p>
-          Total Score:
-          <b>\${result.score}</b>
-          /
-          <b>\${result.total}</b>
-        </p>
-
-        <div class="status \${passed ? 'passed' : 'failed'}">
-          \${result.status}
-        </div>
-
-        <p>
-          CEFR Level:
-          <b>\${escapeHtml(result.cefrLevel)}</b>
-        </p>
-
-        <hr>
-
-        <h3>Section Results</h3>
-
-        <table class="admin-table">
-
-          <thead>
-            <tr>
-              <th>Section</th>
-              <th>Score</th>
-              <th>Percentage</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            \${sectionRows}
-          </tbody>
-
-        </table>
-
-        <br>
-
-        <div class="alert alert-success">
-          Your test has been recorded.
-          You cannot retake the test unless an administrator
-          removes your name from the blacklist.
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="card center">
-
-      <button class="secondary"
-              onclick="showHome()">
-        HOME
-      </button>
-
-    </div>
-  \`;
-}
-
-
-/* =========================================================
-   ADMIN LOGIN
-   ========================================================= */
-
-function showAdminLogin() {
-
-  document.getElementById('app').innerHTML = \`
-
-    <div class="card">
-
-      <h2>Admin Box</h2>
-
-      <label>Admin Code</label>
-
-      <input
-        id="adminCode"
-        type="password"
-        placeholder="Enter admin code">
-
-      <button class="primary"
-              onclick="loginAdmin()">
-        LOGIN
-      </button>
-
-      <button class="secondary"
-              onclick="showHome()">
-        BACK
-      </button>
-
-      <div id="adminMessage"></div>
-
-    </div>
-  \`;
-}
-
-
-/* =========================================================
-   ADMIN LOGIN
-   ========================================================= */
-
-function loginAdmin() {
-
-  const code =
-    document.getElementById('adminCode').value;
-
-  google.script.run
-    .withSuccessHandler(function(response) {
-
-      if (!response.success) {
-
-        showMessage(
-          'adminMessage',
-          response.message,
-          'error'
-        );
-
-        return;
-      }
-
-      showAdminDashboard();
-
-    })
-    .checkAdminCode(code);
-}
-
-
-/* =========================================================
-   ADMIN DASHBOARD
-   ========================================================= */
-
-function showAdminDashboard() {
-
-  document.getElementById('app').innerHTML = \`
-
-    <div class="card">
-
-      <h2>GETI ADMIN BOX</h2>
-
-      <div class="admin-nav">
-
-        <button class="primary"
-                onclick="loadAdminResults()">
-          RESULTS
-        </button>
-
-        <button class="danger"
-                onclick="showBlacklistLogin()">
-          BLACK LIST
-        </button>
-
-        <button class="secondary"
-                onclick="showHome()">
-          HOME
-        </button>
-
-      </div>
-
-      <div id="adminContent">
-        <p>
-          Select RESULTS or BLACK LIST.
-        </p>
-      </div>
-
-    </div>
-  \`;
-
-  loadAdminResults();
-}
-
-
-/* =========================================================
-   ADMIN RESULTS
-   ========================================================= */
-
-function loadAdminResults() {
-
-  document.getElementById(
-    'adminContent'
-  ).innerHTML =
-    '<div class="loading">Loading results...</div>';
-
-  google.script.run
-    .withSuccessHandler(function(response) {
-
-      if (!response.success) {
-
-        document.getElementById(
-          'adminContent'
-        ).innerHTML =
-          '<div class="alert alert-error">' +
-          escapeHtml(response.message) +
-          '</div>';
-
-        return;
-      }
-
-      let html = '';
-
-      html += '<h3>Test Results</h3>';
-
-      if (!response.results.length) {
 
         html +=
-          '<p>No results found.</p>';
-
-      } else {
-
-        html += \`
-
-          <div style="overflow-x:auto">
-
-          <table class="admin-table">
-
-          <thead>
-            <tr>
-              <th>Result ID</th>
-              <th>Student ID</th>
-              <th>Name</th>
-              <th>Score</th>
-              <th>%</th>
-              <th>CEFR</th>
-              <th>Status</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-
-          <tbody>
-        \`;
-
-        response.results.forEach(
-          function(r) {
-
-            html += \`
-
-              <tr>
-
-                <td>\${escapeHtml(
-                  r.resultId || ''
-                )}</td>
-
-                <td>\${escapeHtml(
-                  r.studentId || ''
-                )}</td>
-
-                <td>\${escapeHtml(
-                  r.fullName || ''
-                )}</td>
-
-                <td>\${escapeHtml(
-                  r.score || ''
-                )}/\${escapeHtml(
-                  r.total || ''
-                )}</td>
-
-                <td>\${escapeHtml(
-                  r.percentage || ''
-                )}%</td>
-
-                <td>\${escapeHtml(
-                  r.cefrLevel || ''
-                )}</td>
-
-                <td>\${escapeHtml(
-                  r.status || ''
-                )}</td>
-
-                <td>\${escapeHtml(
-                  r.testDate || ''
-                )}</td>
-
-              </tr>
-
-            \`;
-          }
-        );
-
-        html += '</tbody></table></div>';
-      }
-
-      document.getElementById(
-        'adminContent'
-      ).innerHTML = html;
-
-    })
-    .withFailureHandler(function(error) {
-
-      document.getElementById(
-        'adminContent'
-      ).innerHTML =
-        '<div class="alert alert-error">' +
-        escapeHtml(
-          error.message ||
-          'Could not load results.'
-        ) +
         '</div>';
 
-    })
-    .getAdminResults();
+    }
+
+
+    container.innerHTML =
+        html;
+
+}
+
+
+function showTEFLExam(){
+
+    var lessons =
+        document.getElementById("teflLessons");
+
+    var exam =
+        document.getElementById("teflExam");
+
+    var registration =
+        document.getElementById("teflRegistration");
+
+
+    lessons.classList.remove("tefl-visible");
+    lessons.classList.add("tefl-hidden");
+
+    exam.classList.remove("tefl-hidden");
+    exam.classList.add("tefl-visible");
+
+    registration.classList.remove("tefl-visible");
+    registration.classList.add("tefl-hidden");
+
+
+    loadTEFLExam();
+
+
+    exam.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+
 }
 
 
 /* =========================================================
-   BLACKLIST LOGIN
-   ========================================================= */
+   SUBMIT TEFL EXAM
+========================================================= */
 
-function showBlacklistLogin() {
+function submitTEFLExam(){
 
-  document.getElementById(
-    'adminContent'
-  ).innerHTML = \`
+    var score = 0;
 
-    <div class="card">
-
-      <h3>Blacklist Security</h3>
-
-      <p class="small">
-        Enter the blacklist security code.
-      </p>
-
-      <input
-        id="blacklistCode"
-        type="password"
-        placeholder="Blacklist code">
-
-      <button class="danger"
-              onclick="loginBlacklist()">
-        OPEN BLACKLIST
-      </button>
-
-    </div>
-  \`;
-}
+    var unanswered = 0;
 
 
-/* =========================================================
-   BLACKLIST LOGIN
-   ========================================================= */
+    for(
+        var i=0;
+        i<examQuestions.length;
+        i++
+    ){
 
-function loginBlacklist() {
+        var selected =
+            document.querySelector(
+                'input[name="q' + i + '"]:checked'
+            );
 
-  const code =
-    document.getElementById(
-      'blacklistCode'
-    ).value;
 
-  google.script.run
-    .withSuccessHandler(function(response) {
+        if(!selected){
 
-      if (!response.success) {
+            unanswered++;
 
-        alert(response.message);
+            continue;
+
+        }
+
+
+        if(
+            Number(selected.value) ===
+            examQuestions[i].c
+        ){
+
+            score++;
+
+        }
+
+    }
+
+
+    if(unanswered > 0){
+
+        document
+            .getElementById("teflExamResult")
+            .innerHTML =
+
+            '<div class="error">' +
+
+            '❌ Please answer all ' +
+            examQuestions.length +
+            ' questions.' +
+
+            '<br><br>' +
+
+            'Unanswered questions: ' +
+            unanswered +
+
+            '</div>';
+
         return;
-      }
 
-      loadBlacklist();
-
-    })
-    .checkBlacklistCode(code);
-}
+    }
 
 
-/* =========================================================
-   LOAD BLACKLIST
-   ========================================================= */
+    examScore = score;
 
-function loadBlacklist() {
 
-  document.getElementById(
-    'adminContent'
-  ).innerHTML =
-    '<div class="loading">Loading blacklist...</div>';
-
-  google.script.run
-    .withSuccessHandler(function(response) {
-
-      if (!response.success) {
-
-        alert(response.message);
-        return;
-      }
-
-      let html = '';
-
-      html += '<h3>BLACK LIST</h3>';
-
-      html += \`
-
-        <p class="small">
-          Students in this list cannot take another test
-          until they are deleted from the blacklist.
-        </p>
-
-      \`;
-
-      if (!response.blacklist.length) {
-
-        html +=
-          '<div class="alert alert-success">' +
-          'Blacklist is empty.' +
-          '</div>';
-
-      } else {
-
-        html += \`
-
-          <div style="overflow-x:auto">
-
-          <table class="admin-table">
-
-          <thead>
-
-            <tr>
-              <th>Name</th>
-              <th>Student ID</th>
-              <th>Status</th>
-              <th>Score</th>
-              <th>Date</th>
-              <th>Action</th>
-            </tr>
-
-          </thead>
-
-          <tbody>
-        \`;
-
-        response.blacklist.forEach(
-          function(b) {
-
-            html += \`
-
-              <tr>
-
-                <td>\${escapeHtml(
-                  b.fullName || ''
-                )}</td>
-
-                <td>\${escapeHtml(
-                  b.studentId || ''
-                )}</td>
-
-                <td>\${escapeHtml(
-                  b.status || ''
-                )}</td>
-
-                <td>\${escapeHtml(
-                  b.percentage || ''
-                )}%</td>
-
-                <td>\${escapeHtml(
-                  b.testDate || ''
-                )}</td>
-
-                <td>
-
-                  <button
-                    class="danger"
-                    onclick="deleteBlacklist('\${escapeAttr(
-                      b.rowId
-                    )}')">
-                    DELETE
-                  </button>
-
-                </td>
-
-              </tr>
-
-            \`;
-          }
+    var percentage =
+        Math.round(
+            (score / examQuestions.length) * 100
         );
 
-        html += '</tbody></table></div>';
-      }
 
-      document.getElementById(
-        'adminContent'
-      ).innerHTML = html;
+    var resultBox =
+        document.getElementById("teflExamResult");
 
-    })
-    .withFailureHandler(function(error) {
 
-      alert(
-        error.message ||
-        'Could not load blacklist.'
-      );
+    if(percentage >= 70){
 
-    })
-    .getBlacklist();
+        resultBox.innerHTML =
+
+        '<div class="success">' +
+
+        '<strong>🎉 TEFL EXAM PASSED</strong>' +
+
+        '<br><br>' +
+
+        'Score: ' +
+        score +
+        '/' +
+        examQuestions.length +
+        ' (' +
+        percentage +
+        '%)' +
+
+        '<br><br>' +
+
+        'Congratulations! You may now complete your registration.' +
+
+        '</div>' +
+
+        '<br>' +
+
+        '<button ' +
+
+        'type="button" ' +
+
+        'class="btn btn-gold" ' +
+
+        'onclick="showRegistration()">' +
+
+        'CONTINUE TO REGISTRATION' +
+
+        '</button>';
+
+    }else{
+
+        resultBox.innerHTML =
+
+        '<div class="error">' +
+
+        '<strong>❌ TEFL EXAM NOT PASSED</strong>' +
+
+        '<br><br>' +
+
+        'Score: ' +
+        score +
+        '/' +
+        examQuestions.length +
+        ' (' +
+        percentage +
+        '%)' +
+
+        '<br><br>' +
+
+        'The minimum passing score is 70%.' +
+
+        '</div>';
+
+    }
+
 }
 
 
 /* =========================================================
-   DELETE BLACKLIST
-   ========================================================= */
+   SHOW REGISTRATION
+========================================================= */
 
-function deleteBlacklist(rowId) {
+function showRegistration(){
 
-  if (
-    !confirm(
-      'Delete this student from the blacklist?'
-    )
-  ) {
-    return;
-  }
+    var registration =
+        document.getElementById("teflRegistration");
 
-  google.script.run
-    .withSuccessHandler(function(response) {
 
-      if (!response.success) {
+    registration.classList.remove("tefl-hidden");
 
-        alert(response.message);
+    registration.classList.add("tefl-visible");
+
+
+    registration.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+
+}
+
+
+/* =========================================================
+   REGISTER TEFL STUDENT
+========================================================= */
+
+function registerTEFLStudent(){
+
+    var name =
+        document
+            .getElementById("studentFullName")
+            .value
+            .trim();
+
+
+    var nationality =
+        document
+            .getElementById("studentNationality")
+            .value
+            .trim();
+
+
+    var email =
+        document
+            .getElementById("studentEmail")
+            .value
+            .trim();
+
+
+    var result =
+        document
+            .getElementById("registrationResult");
+
+
+    if(!name || !nationality || !email){
+
+        result.innerHTML =
+
+        '<div class="error">' +
+
+        '❌ Please complete Full Name, Nationality and Email.' +
+
+        '</div>';
+
         return;
-      }
 
-      alert(
-        'Student deleted from blacklist. ' +
-        'The student can now take the test again.'
-      );
-
-      loadBlacklist();
-
-    })
-    .withFailureHandler(function(error) {
-
-      alert(
-        error.message ||
-        'Could not delete blacklist record.'
-      );
-
-    })
-    .deleteBlacklist(rowId);
-}
+    }
 
 
-/* =========================================================
-   MESSAGE
-   ========================================================= */
+    if(examScore < 70){
 
-function showMessage(id, message, type) {
+        result.innerHTML =
 
-  const el =
-    document.getElementById(id);
+        '<div class="error">' +
 
-  if (!el) return;
+        '❌ You must pass the TEFL examination first.' +
 
-  el.innerHTML =
-    '<div class="alert ' +
-    (
-      type === 'error'
-      ? 'alert-error'
-      : 'alert-success'
-    ) +
-    '">' +
-    escapeHtml(message) +
+        '</div>';
+
+        return;
+
+    }
+
+
+    result.innerHTML =
+
+    '<div class="success">' +
+
+    '⏳ Registering your information and requesting your GETI certificate ID...' +
+
     '</div>';
+
+
+    var callbackName =
+        "getiRegistration_" +
+        Date.now();
+
+
+    window[callbackName] =
+        function(data){
+
+            if(
+                data &&
+                data.success
+            ){
+
+                result.innerHTML =
+
+                '<div class="registration-success">' +
+
+                '<strong>🎉 Registration Successful</strong>' +
+
+                '<br><br>' +
+
+                'Full Name:<br>' +
+
+                '<strong>' +
+                escapeHTML(data.name || name) +
+                '</strong>' +
+
+                '<br><br>' +
+
+                'Nationality:<br>' +
+
+                '<strong>' +
+                escapeHTML(data.nationality || nationality) +
+                '</strong>' +
+
+                '<br><br>' +
+
+                'Certificate ID:' +
+
+                '<span class="certificate-number">' +
+
+                escapeHTML(
+                    data.certificate ||
+                    data.id ||
+                    "GETI-CERT-PENDING"
+                ) +
+
+                '</span>' +
+
+                '<br>' +
+
+                'Your registration has been submitted.' +
+
+                '</div>';
+
+            }else{
+
+                result.innerHTML =
+
+                '<div class="error">' +
+
+                '❌ ' +
+
+                escapeHTML(
+                    data &&
+                    data.message
+                    ?
+                    data.message
+                    :
+                    'Registration could not be completed.'
+                ) +
+
+                '</div>';
+
+            }
+
+
+            try{
+                delete window[callbackName];
+            }catch(e){}
+
+        };
+
+
+    var script =
+        document.createElement("script");
+
+
+    script.src =
+        API_URL +
+
+        "?action=registerTEFL" +
+
+        "&name=" +
+        encodeURIComponent(name) +
+
+        "&nationality=" +
+        encodeURIComponent(nationality) +
+
+        "&email=" +
+        encodeURIComponent(email) +
+
+        "&score=" +
+        encodeURIComponent(examScore) +
+
+        "&callback=" +
+        encodeURIComponent(callbackName);
+
+
+    script.onerror =
+        function(){
+
+            result.innerHTML =
+
+            '<div class="error">' +
+
+            '❌ Unable to connect to the GETI registration server.' +
+
+            '<br><br>' +
+
+            'Please check your Google Apps Script deployment.' +
+
+            '</div>';
+
+        };
+
+
+    document
+        .body
+        .appendChild(script);
+
 }
 
 
 /* =========================================================
-   SECURITY / HTML ESCAPE
-   ========================================================= */
+   ESCAPE HTML
+========================================================= */
 
-function escapeHtml(value) {
+function escapeHTML(value){
 
-  if (value === null ||
-      value === undefined) {
-    return '';
-  }
+    return String(value || "")
 
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+        .replace(/&/g,"&amp;")
+
+        .replace(/</g,"&lt;")
+
+        .replace(/>/g,"&gt;")
+
+        .replace(/"/g,"&quot;")
+
+        .replace(/'/g,"&#039;");
+
 }
 
 
-function escapeAttr(value) {
-  return escapeHtml(value)
-    .replace(/\\\\/g, '\\\\\\\\');
+/* =========================================================
+   CONTACT
+========================================================= */
+
+function sendMessage(){
+
+    var name =
+        document
+            .getElementById("contactName")
+            .value
+            .trim();
+
+
+    var email =
+        document
+            .getElementById("contactEmail")
+            .value
+            .trim();
+
+
+    var subject =
+        document
+            .getElementById("contactSubject")
+            .value
+            .trim();
+
+
+    var message =
+        document
+            .getElementById("contactMessage")
+            .value
+            .trim();
+
+
+    if(
+        !name ||
+        !email ||
+        !subject ||
+        !message
+    ){
+
+        alert(
+            "Please complete all fields."
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "Thank you for contacting Global English Teaching Institute."
+    );
+
 }
+
+
+/* =========================================================
+   AUTOMATIC VERIFICATION
+   Example:
+   ?verify=GETI-CERT000001
+========================================================= */
+
+(function(){
+
+    var params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    var verify =
+        params.get("verify");
+
+
+    if(verify){
+
+        document
+            .getElementById("verifyInput")
+            .value =
+            verify;
+
+
+        setVerifyType("id");
+
+
+        setTimeout(
+            function(){
+
+                verifyCertificate();
+
+            },
+            500
+        );
+
+    }
+
+})();
+
+
+/* =========================================================
+   CLOSE MOBILE MENU AFTER CLICK
+========================================================= */
+
+document
+    .querySelectorAll(".nav-menu a")
+    .forEach(
+        function(link){
+
+            link.addEventListener(
+                "click",
+                function(){
+
+                    document
+                        .getElementById("navMenu")
+                        .classList
+                        .remove("show");
+
+                }
+            );
+
+        }
+    );
 
 </script>
 
+
 </body>
-</html>`;
-}
-
-
-/* =========================================================
-   SPREADSHEET HELPERS
-   ========================================================= */
-
-function getSS_() {
-  return SpreadsheetApp.getActiveSpreadsheet();
-}
-
-
-/**
- * Find the question table automatically.
- *
- * It searches all sheets and all rows for:
- * Question_ID
- * Section
- * Level
- * Question
- * Option_A
- * Option_B
- * Option_C
- * Option_D
- * Correct_Answer
- */
-function findQuestionTable_() {
-
-  const ss = getSS_();
-  const sheets = ss.getSheets();
-
-  const required = [
-    'question_id',
-    'section',
-    'level',
-    'question',
-    'option_a',
-    'option_b',
-    'option_c',
-    'option_d',
-    'correct_answer'
-  ];
-
-  for (let s = 0; s < sheets.length; s++) {
-
-    const sheet = sheets[s];
-
-    const values =
-      sheet.getDataRange().getDisplayValues();
-
-    for (let r = 0; r < values.length; r++) {
-
-      const row = values[r].map(function(x) {
-        return String(x)
-          .trim()
-          .toLowerCase();
-      });
-
-      let found = true;
-
-      required.forEach(function(header) {
-
-        if (row.indexOf(header) === -1) {
-          found = false;
-        }
-
-      });
-
-      if (found) {
-
-        const index = {};
-
-        required.forEach(function(header) {
-
-          index[header] =
-            row.indexOf(header);
-
-        });
-
-        return {
-          sheet: sheet,
-          headerRow: r,
-          index: index,
-          values: values
-        };
-      }
-    }
-  }
-
-  return null;
-}
-
-
-/* =========================================================
-   QUESTIONS
-   ========================================================= */
-
-function getQuestions_() {
-
-  const table =
-    findQuestionTable_();
-
-  if (!table) {
-    throw new Error(
-      'Question table not found. Required headers: ' +
-      'Question_ID, Section, Level, Question, ' +
-      'Option_A, Option_B, Option_C, Option_D, Correct_Answer'
-    );
-  }
-
-  const values =
-    table.values;
-
-  const result = [];
-
-  for (
-    let r = table.headerRow + 1;
-    r < values.length;
-    r++
-  ) {
-
-    const row = values[r];
-
-    const questionId =
-      String(
-        row[table.index.question_id] || ''
-      ).trim();
-
-    const section =
-      String(
-        row[table.index.section] || ''
-      ).trim();
-
-    const level =
-      String(
-        row[table.index.level] || ''
-      ).trim();
-
-    const question =
-      String(
-        row[table.index.question] || ''
-      ).trim();
-
-    const optionA =
-      String(
-        row[table.index.option_a] || ''
-      ).trim();
-
-    const optionB =
-      String(
-        row[table.index.option_b] || ''
-      ).trim();
-
-    const optionC =
-      String(
-        row[table.index.option_c] || ''
-      ).trim();
-
-    const optionD =
-      String(
-        row[table.index.option_d] || ''
-      ).trim();
-
-    const correct =
-      String(
-        row[table.index.correct_answer] || ''
-      ).trim().toUpperCase();
-
-    /*
-     * Ignore completely empty rows.
-     */
-    if (!question && !questionId) {
-      continue;
-    }
-
-    /*
-     * Ignore instructional rows such as:
-     * A = Question_ID
-     * B = Section
-     */
-    if (
-      questionId.indexOf('=') !== -1 ||
-      section.indexOf('=') !== -1
-    ) {
-      continue;
-    }
-
-    /*
-     * Only accept valid MCQ rows.
-     */
-    if (
-      !question ||
-      !section ||
-      !optionA ||
-      !optionB ||
-      !optionC ||
-      !optionD ||
-      !['A', 'B', 'C', 'D'].includes(correct)
-    ) {
-      continue;
-    }
-
-    result.push({
-      key: String(r + 1),
-      rowNumber: r + 1,
-      questionId: questionId,
-      section: section,
-      level: level,
-      question: question,
-      optionA: optionA,
-      optionB: optionB,
-      optionC: optionC,
-      optionD: optionD,
-      correctAnswer: correct
-    });
-  }
-
-  return result;
-}
-
-
-/* =========================================================
-   SECTION ORDER
-   ========================================================= */
-
-function getSectionOrder_() {
-
-  const questions =
-    getQuestions_();
-
-  const existing = [];
-
-  questions.forEach(function(q) {
-
-    const section =
-      normalizeSection_(q.section);
-
-    if (
-      section &&
-      existing.indexOf(section) === -1
-    ) {
-      existing.push(section);
-    }
-
-  });
-
-  /*
-   * Desired order.
-   */
-  const preferred = [
-    'Vocabulary',
-    'Grammar',
-    'Reading',
-    'Spelling',
-    'General Knowledge'
-  ];
-
-  const ordered = [];
-
-  preferred.forEach(function(name) {
-
-    const found =
-      existing.find(function(x) {
-        return x.toLowerCase() ===
-               name.toLowerCase();
-      });
-
-    if (found) {
-      ordered.push(found);
-    }
-
-  });
-
-  /*
-   * Add any other sections after preferred sections.
-   */
-  existing.forEach(function(name) {
-
-    if (
-      ordered.findIndex(function(x) {
-        return x.toLowerCase() ===
-               name.toLowerCase();
-      }) === -1
-    ) {
-      ordered.push(name);
-    }
-
-  });
-
-  return ordered;
-}
-
-
-function normalizeSection_(section) {
-
-  return String(section || '')
-    .trim()
-    .replace(/\s+/g, ' ');
-}
-
-
-/* =========================================================
-   GET SECTIONS
-   ========================================================= */
-
-function getSections() {
-
-  try {
-
-    const sections =
-      getSectionOrder_();
-
-    return {
-      success: true,
-      sections: sections
-    };
-
-  } catch (err) {
-
-    return {
-      success: false,
-      message: err.message
-    };
-  }
-}
-
-
-/* =========================================================
-   GET QUESTIONS BY SECTION
-   ========================================================= */
-
-function getQuestionsBySection(section) {
-
-  try {
-
-    const all =
-      getQuestions_();
-
-    const wanted =
-      normalizeSection_(section)
-        .toLowerCase();
-
-    const questions =
-      all
-      .filter(function(q) {
-
-        return normalizeSection_(q.section)
-          .toLowerCase() === wanted;
-
-      })
-      .map(function(q) {
-
-        return {
-          key: q.key,
-          questionId: q.questionId,
-          level: q.level,
-          question: q.question,
-          optionA: q.optionA,
-          optionB: q.optionB,
-          optionC: q.optionC,
-          optionD: q.optionD
-        };
-
-      });
-
-    return {
-      success: true,
-      questions: questions
-    };
-
-  } catch (err) {
-
-    return {
-      success: false,
-      message: err.message
-    };
-  }
-}
-
-
-/* =========================================================
-   STUDENT REGISTRATION
-   ========================================================= */
-
-function registerStudent(
-  fullName,
-  nationality,
-  country,
-  email
-) {
-
-  try {
-
-    fullName =
-      String(fullName || '').trim();
-
-    nationality =
-      String(nationality || '').trim();
-
-    country =
-      String(country || '').trim();
-
-    email =
-      String(email || '').trim();
-
-    if (!fullName) {
-
-      return {
-        success: false,
-        message: 'Full name is required.'
-      };
-
-    }
-
-    /*
-     * BLACKLIST CHECK
-     * Name is the primary restriction.
-     */
-    if (isNameBlacklisted_(fullName)) {
-
-      return {
-        success: false,
-        message:
-          'This name is currently on the blacklist. ' +
-          'You cannot take the test again until an administrator ' +
-          'removes your name from the blacklist.'
-      };
-
-    }
-
-    const studentId =
-      createStudentId_();
-
-    const sheet =
-      getOrCreateStudentsSheet_();
-
-    appendByHeaders_(
-      sheet,
-      {
-        Student_ID: studentId,
-        Full_Name: fullName,
-        Certificate_ID: '',
-        Nationality: nationality,
-        Country: country,
-        Email: email,
-        Test_Date: formatDate_(new Date())
-      }
-    );
-
-    return {
-      success: true,
-      student: {
-        studentId: studentId,
-        fullName: fullName,
-        nationality: nationality,
-        country: country,
-        email: email
-      }
-    };
-
-  } catch (err) {
-
-    return {
-      success: false,
-      message: err.message
-    };
-  }
-}
-
-
-/* =========================================================
-   STUDENT ID
-   ========================================================= */
-
-function createStudentId_() {
-
-  const now =
-    new Date();
-
-  const tz =
-    Session.getScriptTimeZone() ||
-    'GMT+3';
-
-  const stamp =
-    Utilities.formatDate(
-      now,
-      tz,
-      'yyyyMMddHHmmss'
-    );
-
-  const random =
-    Math.floor(
-      1000 +
-      Math.random() * 9000
-    );
-
-  return 'STU-' +
-         stamp +
-         '-' +
-         random;
-}
-
-
-/* =========================================================
-   SUBMIT SECTION
-   ========================================================= */
-
-function submitSection(
-  studentId,
-  section,
-  answers
-) {
-
-  try {
-
-    const all =
-      getQuestions_();
-
-    const wanted =
-      normalizeSection_(section)
-        .toLowerCase();
-
-    const questions =
-      all.filter(function(q) {
-
-        return normalizeSection_(q.section)
-          .toLowerCase() === wanted;
-
-      });
-
-    if (!questions.length) {
-
-      return {
-        success: false,
-        message:
-          'No questions found for section: ' +
-          section
-      };
-
-    }
-
-    answers =
-      Array.isArray(answers)
-      ? answers
-      : [];
-
-    let correct = 0;
-
-    const answerRows = [];
-
-    questions.forEach(function(q) {
-
-      const submitted =
-        answers.find(function(a) {
-
-          return String(a.key) ===
-                 String(q.key);
-
-        });
-
-      const selected =
-        submitted
-        ? String(
-            submitted.selectedAnswer || ''
-          ).toUpperCase()
-        : '';
-
-      const isCorrect =
-        selected === q.correctAnswer;
-
-      if (isCorrect) {
-        correct++;
-      }
-
-      answerRows.push({
-        studentId: studentId,
-        questionId: q.questionId,
-        selectedAnswer: selected,
-        correctAnswer: q.correctAnswer,
-        isCorrect: isCorrect ? 'YES' : 'NO',
-        points: isCorrect ? 1 : 0,
-        section: q.section,
-        level: q.level
-      });
-
-    });
-
-    const total =
-      questions.length;
-
-    const percentage =
-      total > 0
-      ? round2_((correct / total) * 100)
-      : 0;
-
-    /*
-     * Save individual answers.
-     */
-    saveAnswers_(answerRows);
-
-    return {
-      success: true,
-
-      result: {
-        section: section,
-        score: correct,
-        total: total,
-        correct: correct,
-        wrong: total - correct,
-        percentage: percentage,
-        answers: answerRows
-      }
-    };
-
-  } catch (err) {
-
-    return {
-      success: false,
-      message: err.message
-    };
-  }
-}
-
-
-/* =========================================================
-   FINISH TEST
-   ========================================================= */
-
-function finishTest(
-  studentId,
-  allAnswers
-) {
-
-  try {
-
-    const lock =
-      LockService.getScriptLock();
-
-    lock.waitLock(15000);
-
-    try {
-
-      const student =
-        getStudentById_(studentId);
-
-      if (!student) {
-        throw new Error(
-          'Student registration not found.'
-        );
-      }
-
-      /*
-       * Prevent duplicate final submission.
-       */
-      if (
-        isNameBlacklisted_(
-          student.fullName
-        )
-      ) {
-
-        throw new Error(
-          'This student is already in the blacklist.'
-        );
-
-      }
-
-      const questions =
-        getQuestions_();
-
-      if (!questions.length) {
-
-        throw new Error(
-          'No questions found.'
-        );
-
-      }
-
-      allAnswers =
-        Array.isArray(allAnswers)
-        ? allAnswers
-        : [];
-
-      let total = 0;
-      let score = 0;
-
-      const sectionMap = {};
-
-      questions.forEach(function(q) {
-
-        total++;
-
-        const submitted =
-          allAnswers.find(function(a) {
-
-            return String(a.key) ===
-                   String(q.key);
-
-          });
-
-        const selected =
-          submitted
-          ? String(
-              submitted.selectedAnswer || ''
-            ).toUpperCase()
-          : '';
-
-        const isCorrect =
-          selected === q.correctAnswer;
-
-        if (isCorrect) {
-          score++;
-        }
-
-        const section =
-          q.section;
-
-        if (!sectionMap[section]) {
-
-          sectionMap[section] = {
-            section: section,
-            score: 0,
-            total: 0
-          };
-
-        }
-
-        sectionMap[section].total++;
-
-        if (isCorrect) {
-          sectionMap[section].score++;
-        }
-
-      });
-
-      const percentage =
-        total > 0
-        ? round2_((score / total) * 100)
-        : 0;
-
-      const status =
-        percentage >= CONFIG.PASS_MARK
-        ? 'PASSED'
-        : 'FAILED';
-
-      const cefrLevel =
-        getCEFRLevel_(percentage);
-
-      const sectionResults =
-        Object.keys(sectionMap)
-          .map(function(key) {
-
-            const r =
-              sectionMap[key];
-
-            return {
-              section: r.section,
-              score: r.score,
-              total: r.total,
-              percentage:
-                r.total > 0
-                ? round2_(
-                    (r.score / r.total) * 100
-                  )
-                : 0
-            };
-
-          });
-
-      const resultId =
-        createResultId_();
-
-      /*
-       * Save final result.
-       */
-      saveResult_({
-        resultId: resultId,
-        studentId: studentId,
-        fullName: student.fullName,
-        score: score,
-        total: total,
-        percentage: percentage,
-        cefrLevel: cefrLevel,
-        status: status,
-        testDate: formatDate_(new Date())
-      });
-
-      /*
-       * IMPORTANT:
-       * Every completed student is added to blacklist,
-       * whether PASSED or FAILED.
-       */
-      addToBlacklist_({
-        studentId: studentId,
-        fullName: student.fullName,
-        status: status,
-        score: score,
-        total: total,
-        percentage: percentage,
-        testDate: formatDate_(new Date())
-      });
-
-      return {
-        success: true,
-        resultId: resultId,
-        studentId: studentId,
-        fullName: student.fullName,
-        score: score,
-        total: total,
-        percentage: percentage,
-        cefrLevel: cefrLevel,
-        status: status,
-        passMark: CONFIG.PASS_MARK,
-        sectionResults: sectionResults
-      };
-
-    } finally {
-
-      lock.releaseLock();
-
-    }
-
-  } catch (err) {
-
-    return {
-      success: false,
-      message: err.message
-    };
-  }
-}
-
-
-/* =========================================================
-   CEFR
-   ========================================================= */
-
-function getCEFRLevel_(percentage) {
-
-  percentage =
-    Number(percentage) || 0;
-
-  if (percentage < 20) {
-    return 'A1';
-  }
-
-  if (percentage < 40) {
-    return 'A2';
-  }
-
-  if (percentage < 60) {
-    return 'B1';
-  }
-
-  if (percentage < 75) {
-    return 'B2';
-  }
-
-  if (percentage < 90) {
-    return 'C1';
-  }
-
-  return 'C2';
-}
-
-
-/* =========================================================
-   RESULT ID
-   ========================================================= */
-
-function createResultId_() {
-
-  const now =
-    new Date();
-
-  const tz =
-    Session.getScriptTimeZone() ||
-    'GMT+3';
-
-  const stamp =
-    Utilities.formatDate(
-      now,
-      tz,
-      'yyyyMMddHHmmss'
-    );
-
-  const random =
-    Math.floor(
-      1000 +
-      Math.random() * 9000
-    );
-
-  return 'RES-' +
-         stamp +
-         '-' +
-         random;
-}
-
-
-/* =========================================================
-   SHEET: STUDENTS
-   ========================================================= */
-
-function getOrCreateStudentsSheet_() {
-
-  const ss =
-    getSS_();
-
-  let sheet =
-    ss.getSheetByName(
-      CONFIG.STUDENTS_SHEET
-    );
-
-  if (!sheet) {
-
-    sheet =
-      ss.insertSheet(
-        CONFIG.STUDENTS_SHEET
-      );
-
-    sheet.appendRow([
-      'Student_ID',
-      'Full_Name',
-      'Certificate_ID',
-      'Nationality',
-      'Country',
-      'Email',
-      'Test_Date'
-    ]);
-
-  }
-
-  ensureHeaders_(
-    sheet,
-    [
-      'Student_ID',
-      'Full_Name',
-      'Certificate_ID',
-      'Nationality',
-      'Country',
-      'Email',
-      'Test_Date'
-    ]
-  );
-
-  return sheet;
-}
-
-
-/* =========================================================
-   SHEET: RESULTS
-   ========================================================= */
-
-function getOrCreateResultsSheet_() {
-
-  const ss =
-    getSS_();
-
-  let sheet =
-    ss.getSheetByName(
-      CONFIG.RESULTS_SHEET
-    );
-
-  if (!sheet) {
-
-    sheet =
-      ss.insertSheet(
-        CONFIG.RESULTS_SHEET
-      );
-
-    sheet.appendRow([
-      'Result_ID',
-      'Student_ID',
-      'Full_Name',
-      'Score',
-      'Total',
-      'Percentage',
-      'CEFR_Level',
-      'Status',
-      'Test_Date'
-    ]);
-
-  }
-
-  ensureHeaders_(
-    sheet,
-    [
-      'Result_ID',
-      'Student_ID',
-      'Full_Name',
-      'Score',
-      'Total',
-      'Percentage',
-      'CEFR_Level',
-      'Status',
-      'Test_Date'
-    ]
-  );
-
-  return sheet;
-}
-
-
-/* =========================================================
-   SHEET: ANSWERS
-   ========================================================= */
-
-function getOrCreateAnswersSheet_() {
-
-  const ss =
-    getSS_();
-
-  let sheet =
-    ss.getSheetByName(
-      CONFIG.ANSWERS_SHEET
-    );
-
-  if (!sheet) {
-
-    sheet =
-      ss.insertSheet(
-        CONFIG.ANSWERS_SHEET
-      );
-
-    sheet.appendRow([
-      'Answer_ID',
-      'Student_ID',
-      'Question_ID',
-      'Selected_Answer',
-      'Correct_Answer',
-      'Is_Correct',
-      'Points',
-      'Section',
-      'Level'
-    ]);
-
-  }
-
-  ensureHeaders_(
-    sheet,
-    [
-      'Answer_ID',
-      'Student_ID',
-      'Question_ID',
-      'Selected_Answer',
-      'Correct_Answer',
-      'Is_Correct',
-      'Points',
-      'Section',
-      'Level'
-    ]
-  );
-
-  return sheet;
-}
-
-
-/* =========================================================
-   SHEET: BLACKLIST
-   ========================================================= */
-
-function getOrCreateBlacklistSheet_() {
-
-  const ss =
-    getSS_();
-
-  let sheet =
-    ss.getSheetByName(
-      CONFIG.BLACKLIST_SHEET
-    );
-
-  if (!sheet) {
-
-    sheet =
-      ss.insertSheet(
-        CONFIG.BLACKLIST_SHEET
-      );
-
-    sheet.appendRow([
-      'Blacklist_ID',
-      'Student_ID',
-      'Full_Name',
-      'Status',
-      'Score',
-      'Total',
-      'Percentage',
-      'Test_Date'
-    ]);
-
-  }
-
-  ensureHeaders_(
-    sheet,
-    [
-      'Blacklist_ID',
-      'Student_ID',
-      'Full_Name',
-      'Status',
-      'Score',
-      'Total',
-      'Percentage',
-      'Test_Date'
-    ]
-  );
-
-  return sheet;
-}
-
-
-/* =========================================================
-   ENSURE HEADERS
-   ========================================================= */
-
-function ensureHeaders_(
-  sheet,
-  requiredHeaders
-) {
-
-  const lastColumn =
-    Math.max(
-      sheet.getLastColumn(),
-      requiredHeaders.length
-    );
-
-  let headers =
-    sheet
-      .getRange(
-        1,
-        1,
-        1,
-        lastColumn
-      )
-      .getDisplayValues()[0];
-
-  const normalized =
-    headers.map(function(h) {
-      return String(h)
-        .trim()
-        .toLowerCase();
-    });
-
-  /*
-   * If the first row does not contain the headers,
-   * create them only for our generated sheets.
-   */
-  const hasAny =
-    requiredHeaders.some(function(h) {
-
-      return normalized.indexOf(
-        h.toLowerCase()
-      ) !== -1;
-
-    });
-
-  if (!hasAny) {
-
-    sheet
-      .getRange(
-        1,
-        1,
-        1,
-        requiredHeaders.length
-      )
-      .setValues([
-        requiredHeaders
-      ]);
-
-  }
-}
-
-
-/* =========================================================
-   APPEND BY HEADERS
-   ========================================================= */
-
-function appendByHeaders_(
-  sheet,
-  data
-) {
-
-  const lastColumn =
-    Math.max(
-      sheet.getLastColumn(),
-      1
-    );
-
-  const headers =
-    sheet
-      .getRange(
-        1,
-        1,
-        1,
-        lastColumn
-      )
-      .getDisplayValues()[0];
-
-  const row =
-    new Array(headers.length)
-      .fill('');
-
-  headers.forEach(function(header, i) {
-
-    const key =
-      String(header)
-        .trim();
-
-    if (
-      Object.prototype.hasOwnProperty
-        .call(data, key)
-    ) {
-      row[i] =
-        data[key];
-    }
-
-  });
-
-  sheet.appendRow(row);
-}
-
-
-/* =========================================================
-   SAVE ANSWERS
-   ========================================================= */
-
-function saveAnswers_(answers) {
-
-  if (!answers.length) {
-    return;
-  }
-
-  const sheet =
-    getOrCreateAnswersSheet_();
-
-  answers.forEach(function(a) {
-
-    appendByHeaders_(
-      sheet,
-      {
-        Answer_ID:
-          'ANS-' +
-          Utilities.getUuid(),
-
-        Student_ID:
-          a.studentId,
-
-        Question_ID:
-          a.questionId,
-
-        Selected_Answer:
-          a.selectedAnswer,
-
-        Correct_Answer:
-          a.correctAnswer,
-
-        Is_Correct:
-          a.isCorrect,
-
-        Points:
-          a.points,
-
-        Section:
-          a.section,
-
-        Level:
-          a.level
-      }
-    );
-
-  });
-}
-
-
-/* =========================================================
-   SAVE RESULT
-   ========================================================= */
-
-function saveResult_(data) {
-
-  const sheet =
-    getOrCreateResultsSheet_();
-
-  appendByHeaders_(
-    sheet,
-    {
-      Result_ID:
-        data.resultId,
-
-      Student_ID:
-        data.studentId,
-
-      Full_Name:
-        data.fullName,
-
-      Score:
-        data.score,
-
-      Total:
-        data.total,
-
-      Percentage:
-        data.percentage,
-
-      CEFR_Level:
-        data.cefrLevel,
-
-      Status:
-        data.status,
-
-      Test_Date:
-        data.testDate
-    }
-  );
-}
-
-
-/* =========================================================
-   BLACKLIST ADD
-   ========================================================= */
-
-function addToBlacklist_(data) {
-
-  const sheet =
-    getOrCreateBlacklistSheet_();
-
-  appendByHeaders_(
-    sheet,
-    {
-      Blacklist_ID:
-        'BL-' +
-        Utilities.getUuid(),
-
-      Student_ID:
-        data.studentId,
-
-      Full_Name:
-        data.fullName,
-
-      Status:
-        data.status,
-
-      Score:
-        data.score,
-
-      Total:
-        data.total,
-
-      Percentage:
-        data.percentage,
-
-      Test_Date:
-        data.testDate
-    }
-  );
-}
-
-
-/* =========================================================
-   CHECK BLACKLIST
-   ========================================================= */
-
-function isNameBlacklisted_(fullName) {
-
-  const sheet =
-    getOrCreateBlacklistSheet_();
-
-  const data =
-    sheet
-      .getDataRange()
-      .getDisplayValues();
-
-  if (data.length < 2) {
-    return false;
-  }
-
-  const headers =
-    data[0];
-
-  const nameCol =
-    findHeaderIndex_(
-      headers,
-      'Full_Name'
-    );
-
-  if (nameCol === -1) {
-    return false;
-  }
-
-  const target =
-    normalizeName_(fullName);
-
-  for (
-    let r = 1;
-    r < data.length;
-    r++
-  ) {
-
-    const existing =
-      normalizeName_(
-        data[r][nameCol]
-      );
-
-    if (
-      existing &&
-      existing === target
-    ) {
-      return true;
-    }
-
-  }
-
-  return false;
-}
-
-
-/* =========================================================
-   NORMALIZE NAME
-   ========================================================= */
-
-function normalizeName_(name) {
-
-  return String(name || '')
-    .trim()
-    .replace(/\s+/g, ' ')
-    .toLowerCase();
-}
-
-
-/* =========================================================
-   GET STUDENT
-   ========================================================= */
-
-function getStudentById_(studentId) {
-
-  const sheet =
-    getOrCreateStudentsSheet_();
-
-  const data =
-    sheet
-      .getDataRange()
-      .getDisplayValues();
-
-  if (data.length < 2) {
-    return null;
-  }
-
-  const headers =
-    data[0];
-
-  const idCol =
-    findHeaderIndex_(
-      headers,
-      'Student_ID'
-    );
-
-  const nameCol =
-    findHeaderIndex_(
-      headers,
-      'Full_Name'
-    );
-
-  const nationalityCol =
-    findHeaderIndex_(
-      headers,
-      'Nationality'
-    );
-
-  const countryCol =
-    findHeaderIndex_(
-      headers,
-      'Country'
-    );
-
-  const emailCol =
-    findHeaderIndex_(
-      headers,
-      'Email'
-    );
-
-  for (
-    let r = 1;
-    r < data.length;
-    r++
-  ) {
-
-    if (
-      String(data[r][idCol])
-        .trim() ===
-      String(studentId)
-        .trim()
-    ) {
-
-      return {
-        studentId:
-          data[r][idCol],
-
-        fullName:
-          nameCol >= 0
-          ? data[r][nameCol]
-          : '',
-
-        nationality:
-          nationalityCol >= 0
-          ? data[r][nationalityCol]
-          : '',
-
-        country:
-          countryCol >= 0
-          ? data[r][countryCol]
-          : '',
-
-        email:
-          emailCol >= 0
-          ? data[r][emailCol]
-          : ''
-      };
-
-    }
-
-  }
-
-  return null;
-}
-
-
-/* =========================================================
-   ADMIN CODE
-   ========================================================= */
-
-function checkAdminCode(code) {
-
-  if (
-    String(code || '') ===
-    CONFIG.ADMIN_CODE
-  ) {
-
-    return {
-      success: true
-    };
-
-  }
-
-  return {
-    success: false,
-    message: 'Incorrect admin code.'
-  };
-}
-
-
-/* =========================================================
-   BLACKLIST CODE
-   ========================================================= */
-
-function checkBlacklistCode(code) {
-
-  if (
-    String(code || '') ===
-    CONFIG.BLACKLIST_CODE
-  ) {
-
-    return {
-      success: true
-    };
-
-  }
-
-  return {
-    success: false,
-    message: 'Incorrect blacklist code.'
-  };
-}
-
-
-/* =========================================================
-   ADMIN RESULTS
-   ========================================================= */
-
-function getAdminResults() {
-
-  try {
-
-    const sheet =
-      getOrCreateResultsSheet_();
-
-    const data =
-      sheet
-        .getDataRange()
-        .getDisplayValues();
-
-    if (data.length < 2) {
-
-      return {
-        success: true,
-        results: []
-      };
-
-    }
-
-    const headers =
-      data[0];
-
-    const result = [];
-
-    for (
-      let r = 1;
-      r < data.length;
-      r++
-    ) {
-
-      const row =
-        data[r];
-
-      if (
-        row.join('').trim() === ''
-      ) {
-        continue;
-      }
-
-      result.push({
-
-        resultId:
-          valueByHeader_(
-            headers,
-            row,
-            'Result_ID'
-          ),
-
-        studentId:
-          valueByHeader_(
-            headers,
-            row,
-            'Student_ID'
-          ),
-
-        fullName:
-          valueByHeader_(
-            headers,
-            row,
-            'Full_Name'
-          ),
-
-        score:
-          valueByHeader_(
-            headers,
-            row,
-            'Score'
-          ),
-
-        total:
-          valueByHeader_(
-            headers,
-            row,
-            'Total'
-          ),
-
-        percentage:
-          valueByHeader_(
-            headers,
-            row,
-            'Percentage'
-          ),
-
-        cefrLevel:
-          valueByHeader_(
-            headers,
-            row,
-            'CEFR_Level'
-          ),
-
-        status:
-          valueByHeader_(
-            headers,
-            row,
-            'Status'
-          ),
-
-        testDate:
-          valueByHeader_(
-            headers,
-            row,
-            'Test_Date'
-          )
-
-      });
-
-    }
-
-    /*
-     * Newest first.
-     */
-    result.reverse();
-
-    return {
-      success: true,
-      results: result
-    };
-
-  } catch (err) {
-
-    return {
-      success: false,
-      message: err.message
-    };
-  }
-}
-
-
-/* =========================================================
-   GET BLACKLIST
-   ========================================================= */
-
-function getBlacklist() {
-
-  try {
-
-    const sheet =
-      getOrCreateBlacklistSheet_();
-
-    const data =
-      sheet
-        .getDataRange()
-        .getDisplayValues();
-
-    if (data.length < 2) {
-
-      return {
-        success: true,
-        blacklist: []
-      };
-
-    }
-
-    const headers =
-      data[0];
-
-    const result = [];
-
-    for (
-      let r = 1;
-      r < data.length;
-      r++
-    ) {
-
-      const row =
-        data[r];
-
-      if (
-        row.join('').trim() === ''
-      ) {
-        continue;
-      }
-
-      result.push({
-
-        rowId: String(r + 1),
-
-        blacklistId:
-          valueByHeader_(
-            headers,
-            row,
-            'Blacklist_ID'
-          ),
-
-        studentId:
-          valueByHeader_(
-            headers,
-            row,
-            'Student_ID'
-          ),
-
-        fullName:
-          valueByHeader_(
-            headers,
-            row,
-            'Full_Name'
-          ),
-
-        status:
-          valueByHeader_(
-            headers,
-            row,
-            'Status'
-          ),
-
-        score:
-          valueByHeader_(
-            headers,
-            row,
-            'Score'
-          ),
-
-        total:
-          valueByHeader_(
-            headers,
-            row,
-            'Total'
-          ),
-
-        percentage:
-          valueByHeader_(
-            headers,
-            row,
-            'Percentage'
-          ),
-
-        testDate:
-          valueByHeader_(
-            headers,
-            row,
-            'Test_Date'
-          )
-
-      });
-
-    }
-
-    result.reverse();
-
-    return {
-      success: true,
-      blacklist: result
-    };
-
-  } catch (err) {
-
-    return {
-      success: false,
-      message: err.message
-    };
-  }
-}
-
-
-/* =========================================================
-   DELETE BLACKLIST
-   ========================================================= */
-
-function deleteBlacklist(rowId) {
-
-  try {
-
-    const sheet =
-      getOrCreateBlacklistSheet_();
-
-    const row =
-      Number(rowId);
-
-    if (
-      !row ||
-      row <= 1 ||
-      row > sheet.getLastRow()
-    ) {
-
-      return {
-        success: false,
-        message: 'Invalid blacklist row.'
-      };
-
-    }
-
-    sheet.deleteRow(row);
-
-    return {
-      success: true
-    };
-
-  } catch (err) {
-
-    return {
-      success: false,
-      message: err.message
-    };
-  }
-}
-
-
-/* =========================================================
-   HELPERS
-   ========================================================= */
-
-function findHeaderIndex_(
-  headers,
-  wanted
-) {
-
-  const target =
-    String(wanted)
-      .trim()
-      .toLowerCase();
-
-  for (
-    let i = 0;
-    i < headers.length;
-    i++
-  ) {
-
-    if (
-      String(headers[i])
-        .trim()
-        .toLowerCase() ===
-      target
-    ) {
-      return i;
-    }
-
-  }
-
-  return -1;
-}
-
-
-function valueByHeader_(
-  headers,
-  row,
-  header
-) {
-
-  const index =
-    findHeaderIndex_(
-      headers,
-      header
-    );
-
-  if (index === -1) {
-    return '';
-  }
-
-  return row[index] || '';
-}
-
-
-function formatDate_(date) {
-
-  const tz =
-    Session.getScriptTimeZone() ||
-    'GMT+3';
-
-  return Utilities.formatDate(
-    date,
-    tz,
-    'dd/MM/yyyy HH:mm:ss'
-  );
-}
-
-
-function round2_(number) {
-
-  return Math.round(
-    Number(number) * 100
-  ) / 100;
-}
+</html>
