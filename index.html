@@ -4340,7 +4340,7 @@ document
 
           <div id="getiAdminMessageSection" class="geti-admin-section">
             <h4>All Student Messages</h4>
-            <p class="geti-admin-note">Every message sent by every registered student is visible to the site administrator.</p>
+            <p class="geti-admin-note">All registered students are listed here. Every message from every student is visible to the administrator, with the student name and email, and each conversation can be opened and replied to.</p>
             <div id="getiAdminInbox"></div>
           </div>
 
@@ -4636,17 +4636,24 @@ document
   function renderAdminInbox(){
     const u=currentUser();if(!u||u.role!=='admin')return;
     const box=document.getElementById('getiAdminInbox'),s=state();
+    if(!s.users.length){box.innerHTML='<div class="geti-empty">No student accounts yet.</div>';return;}
     const incoming=s.messages.filter(m=>m.from!=='GETI-ADMIN');
-    if(!incoming.length){box.innerHTML='<div class="geti-empty">No student messages yet.</div>';return;}
-    const grouped={};
-    incoming.forEach(m=>{if(!grouped[m.from])grouped[m.from]=[];grouped[m.from].push(m);});
-    box.innerHTML=Object.keys(grouped).map(id=>{
-      const st=s.users.find(x=>x.id===id),msgs=grouped[id].sort((a,b)=>new Date(a.time)-new Date(b.time)),latest=msgs[msgs.length-1];
-      return '<div class="geti-inbox-card"><strong>'+esc(st?st.name:id)+'</strong> <span class="geti-badge">'+msgs.length+' message'+(msgs.length===1?'':'s')+'</span><br><small>'+esc(st?st.email:'')+'</small>'+
-        '<div style="margin-top:8px;color:#445064">'+esc(latest.text||latest.attachment?.name||'Attachment')+'</div>'+
-        '<div class="geti-mini-actions"><button onclick="selectGetiStudent(\''+id+'\');getiOpenTab(\'admin-chat\')">OPEN COMPLETE CHAT</button><button class="danger" onclick="addBlacklist(\''+id+'\')">BLACKLIST</button></div></div>';
+    box.innerHTML=s.users.map(st=>{
+      const msgs=incoming.filter(m=>m.from===st.id||m.to===st.id).sort((a,b)=>new Date(a.time)-new Date(b.time));
+      const latest=msgs[msgs.length-1];
+      const blocked=s.blacklist.some(x=>x.id===st.id);
+      const preview=latest?(latest.text||latest.attachment?.name||'Attachment'):'No messages yet';
+      return '<div class="geti-inbox-card"><strong>'+esc(st.name)+'</strong> <span class="geti-badge">'+msgs.length+' message'+(msgs.length===1?'':'s')+'</span> '+
+        (blocked?'<span class="geti-badge" style="background:#fdecec;color:#a51e1e">BLOCKED</span>':'')+
+        '<br><small>'+esc(st.email)+'</small>'+
+        '<div style="margin-top:8px;color:#445064">'+esc(preview)+'</div>'+
+        '<div class="geti-mini-actions"><button onclick="selectGetiStudent(\''+idSafe(st.id)+'\');getiOpenTab(\'admin-chat\')">OPEN COMPLETE CHAT</button>'+
+        (blocked?'<button onclick="removeBlacklist(\''+idSafe(st.id)+'\')">REMOVE BLOCKED</button>':'<button class="danger" onclick="addBlacklist(\''+idSafe(st.id)+'\')">BLACKLIST</button>')+
+        '</div></div>';
     }).join('');
   }
+
+  function idSafe(v){return String(v).replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
 
   function renderAccounts(){
     const u=currentUser();if(!u||u.role!=='admin')return;
@@ -4670,7 +4677,7 @@ document
     box.innerHTML='<table class="geti-data-table"><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Program</th><th>Score</th><th>Status</th><th>Date</th><th>Subjects</th></tr></thead><tbody>'+
       records.map(r=>{
         const subjects=(r.subjects||[]).map(x=>esc(x.subject)+' '+esc(x.percentage)+'% ('+esc(x.grade)+')').join('<br>');
-        return '<tr><td>'+esc(r.id)+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.email)+'</td><td>'+esc(r.program)+'</td><td><strong>'+esc(r.percentage)+'%</strong></td><td><span class="geti-badge">'+esc(r.status)+'</span></td><td>'+esc(r.date?new Date(r.date).toLocaleString():'')+'</td><td>'+subjects+'</td></tr>';
+        return '<tr><td>'+esc(r.id)+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.email)+'</td><td>'+esc(r.program)+'</td><td><strong>'+esc(r.percentage)+'%</strong></td><td><span class="geti-badge" style="'+(r.status==='PASSED'?'':'background:#fdecec;color:#a51e1e')+'">'+esc(r.status)+'</span></td><td>'+esc(r.date?new Date(r.date).toLocaleString():'')+'</td><td>'+subjects+'</td></tr>';
       }).join('')+'</tbody></table>';
   }
 
@@ -4687,7 +4694,7 @@ document
   function renderBlacklist(){
     const u=currentUser();if(!u||u.role!=='admin')return;
     const s=state(),box=document.getElementById('getiBlacklistList');
-    box.innerHTML=s.blacklist.length?s.blacklist.map(x=>'<div class="geti-inbox-card"><strong>'+esc(x.name)+'</strong><br><small>'+esc(x.email)+'</small><div class="geti-mini-actions"><button onclick="removeBlacklist(\''+x.id+'\')">Remove</button></div></div>').join(''):'<div class="geti-empty">Blacklist is empty.</div>';
+    box.innerHTML=s.blacklist.length?'<table class="geti-data-table"><thead><tr><th>Name</th><th>Email</th><th>Student ID</th><th>Action</th></tr></thead><tbody>'+s.blacklist.map(x=>'<tr><td>'+esc(x.name)+'</td><td>'+esc(x.email)+'</td><td>'+esc(x.id)+'</td><td><button onclick="removeBlacklist(\''+idSafe(x.id)+'\')">REMOVE BLOCKED</button></td></tr>').join('')+'</tbody></table>':'<div class="geti-empty">Blacklist is empty.</div>';
   }
   window.addBlacklist=function(id){
     const s=state(),u=s.users.find(x=>x.id===id);if(!u)return;
@@ -4700,9 +4707,12 @@ document
   function renderPassed(){
     const u=currentUser();if(!u||u.role!=='admin')return;
     const s=state(),box=document.getElementById('getiPassedList');
-    box.innerHTML=s.passed.length?s.passed.map(x=>'<div class="geti-inbox-card"><strong>'+esc(x.name)+'</strong><br><small>'+esc(x.id)+' • '+esc(String(x.score||''))+'</small></div>').join(''):'<div class="geti-empty">No passed candidates recorded in this communication module.</div>';
+    const examPassed=getAllExamRecords().filter(r=>r.status==='PASSED');
+    const merged=[...examPassed.map(r=>({id:r.id,name:r.name,email:r.email,score:r.percentage,program:r.program})),...s.passed];
+    const seen=new Set();
+    const list=merged.filter(x=>{const k=(x.email||x.id||x.name||'').toLowerCase();if(seen.has(k))return false;seen.add(k);return true;});
+    box.innerHTML=list.length?list.map(x=>'<div class="geti-inbox-card"><strong>'+esc(x.name)+'</strong><br><small>'+esc(x.email||'')+' • '+esc(x.program||'')+' • '+esc(String(x.score??''))+'%</small></div>').join(''):'<div class="geti-empty">No passed candidates.</div>';
   }
-
   function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
   function escAttr(v){return esc(v).replace(/`/g,'&#096;');}
 
@@ -4716,4 +4726,3 @@ document
 
 </body>
 </html>
-
