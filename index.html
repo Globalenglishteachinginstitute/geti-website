@@ -1,524 +1,1812 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GETI - Global English Teaching Institute</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+  <title>GETI | Global English Teaching Institute</title>
 
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#f4f7fb;
-  color:#222;
-}
+  <meta name="description"
+        content="Global English Teaching Institute - English, TEFL, TESOL and TEYL training, certificates, verification and TEFL examination.">
 
-header{
-  background:#0b2d5c;
-  color:white;
-  padding:15px 5%;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:20px;
-  position:sticky;
-  top:0;
-  z-index:1000;
-}
+  <meta name="theme-color" content="#0b2d5c">
 
-.logo{
-  font-size:22px;
-  font-weight:bold;
-}
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
 
-nav{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f7fb;
+      color: #1d2939;
+      line-height: 1.6;
+    }
 
-nav button{
-  border:none;
-  background:transparent;
-  color:white;
-  padding:9px 13px;
-  cursor:pointer;
-  border-radius:5px;
-}
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
 
-nav button:hover{
-  background:#b38a28;
-}
+    button,
+    input,
+    textarea,
+    select {
+      font-family: inherit;
+    }
 
-.hero{
-  min-height:420px;
-  background:linear-gradient(135deg,#0b2d5c,#174c8d);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:40px 20px;
-}
+    button {
+      cursor: pointer;
+    }
 
-.hero h1{
-  font-size:45px;
-  margin-bottom:15px;
-}
+    /* =========================
+       HEADER
+    ========================== */
 
-.hero p{
-  font-size:19px;
-  max-width:750px;
-  margin:auto;
-  line-height:1.6;
-}
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #0b2d5c;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+    }
 
-.container{
-  width:92%;
-  max-width:1100px;
-  margin:35px auto;
-}
+    .navbar {
+      max-width: 1200px;
+      margin: auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
 
-.card{
-  background:white;
-  border-radius:15px;
-  padding:30px;
-  margin-bottom:25px;
-  box-shadow:0 5px 20px rgba(0,0,0,.08);
-}
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-weight: bold;
+    }
 
-.section-title{
-  color:#0b2d5c;
-  margin-bottom:20px;
-}
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #b38a28;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border: 3px solid white;
+    }
 
-.btn{
-  background:#0b2d5c;
-  color:white;
-  border:none;
-  padding:12px 20px;
-  border-radius:7px;
-  cursor:pointer;
-  font-weight:bold;
-}
+    .logo-text {
+      line-height: 1.2;
+    }
 
-.btn:hover{
-  background:#b38a28;
-}
+    .logo-text strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: 1px;
+    }
 
-.btn-gold{
-  background:#b38a28;
-}
+    .logo-text span {
+      font-size: 11px;
+      opacity: 0.9;
+    }
 
-.form-group{
-  margin-bottom:18px;
-}
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
 
-label{
-  display:block;
-  margin-bottom:7px;
-  font-weight:bold;
-}
+    nav a {
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
 
-input{
-  width:100%;
-  padding:12px;
-  border:1px solid #ccc;
-  border-radius:7px;
-  font-size:15px;
-}
+    nav a:hover {
+      color: #e2bd62;
+    }
 
-.hidden{
-  display:none !important;
-}
+    .menu-btn {
+      display: none;
+      border: none;
+      background: transparent;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+    }
 
-.notice{
-  padding:15px;
-  background:#eef5ff;
-  border-left:5px solid #0b2d5c;
-  margin-bottom:20px;
-  border-radius:5px;
-}
+    /* =========================
+       HERO
+    ========================== */
 
-.error{
-  background:#ffecec;
-  border-left:5px solid #d33;
-  color:#a00;
-  padding:12px;
-  margin-bottom:15px;
-  border-radius:5px;
-}
+    .hero {
+      min-height: 650px;
+      background:
+        linear-gradient(rgba(5,27,55,0.82), rgba(5,27,55,0.82)),
+        url("https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1800&q=80")
+        center/cover no-repeat;
 
-.success{
-  background:#ecfff1;
-  border-left:5px solid #198754;
-  color:#146c35;
-  padding:15px;
-  margin-bottom:15px;
-  border-radius:5px;
-}
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      padding: 80px 20px;
+    }
 
-.verify-result{
-  margin-top:20px;
-}
+    .hero-content {
+      max-width: 850px;
+    }
 
-.result-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:15px;
-}
+    .hero-badge {
+      display: inline-block;
+      padding: 8px 18px;
+      border: 1px solid #d6ad4e;
+      border-radius: 30px;
+      color: #f0cf7a;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
 
-.result-table th,
-.result-table td{
-  border:1px solid #ddd;
-  padding:10px;
-  text-align:left;
-}
+    .hero h1 {
+      font-size: clamp(38px, 6vw, 70px);
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
 
-.result-table th{
-  background:#0b2d5c;
-  color:white;
-}
+    .hero h1 span {
+      color: #d6ad4e;
+    }
 
-.exam-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  margin-bottom:20px;
-  flex-wrap:wrap;
-}
+    .hero p {
+      max-width: 720px;
+      margin: 0 auto 35px;
+      font-size: 18px;
+      color: #edf2f7;
+    }
 
-.progress{
-  height:10px;
-  background:#ddd;
-  border-radius:20px;
-  overflow:hidden;
-  margin:15px 0 25px;
-}
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
 
-.progress-bar{
-  height:100%;
-  width:0%;
-  background:#b38a28;
-  transition:.3s;
-}
+    .btn {
+      display: inline-block;
+      padding: 14px 25px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: 0.3s;
+    }
 
-.question-box{
-  border:1px solid #ddd;
-  border-radius:12px;
-  padding:25px;
-  margin-top:20px;
-}
+    .btn-primary {
+      background: #b38a28;
+      color: white;
+    }
 
-.question-number{
-  color:#777;
-  margin-bottom:10px;
-}
+    .btn-primary:hover {
+      background: #956f1c;
+      transform: translateY(-2px);
+    }
 
-.question-text{
-  font-size:20px;
-  font-weight:bold;
-  line-height:1.5;
-  margin-bottom:22px;
-}
+    .btn-outline {
+      background: transparent;
+      border: 2px solid white;
+      color: white;
+    }
 
-.option{
-  display:block;
-  border:1px solid #ddd;
-  padding:14px;
-  margin:10px 0;
-  border-radius:8px;
-  cursor:pointer;
-  transition:.2s;
-}
+    .btn-outline:hover {
+      background: white;
+      color: #0b2d5c;
+    }
 
-.option:hover{
-  background:#f1f6ff;
-  border-color:#0b2d5c;
-}
+    .btn-secondary {
+      background: #0b2d5c;
+      color: white;
+    }
 
-.option input{
-  width:auto;
-  margin-right:10px;
-}
+    .btn-secondary:hover {
+      background: #17457f;
+    }
 
-.subject-result{
-  text-align:center;
-  padding:30px 10px;
-}
+    .btn-danger {
+      background: #d92d20;
+      color: white;
+    }
 
-.score-big{
-  font-size:50px;
-  color:#0b2d5c;
-  font-weight:bold;
-  margin:15px;
-}
+    /* =========================
+       GENERAL
+    ========================== */
 
-.final-result{
-  text-align:center;
-}
+    section {
+      padding: 80px 20px;
+    }
 
-.final-result h2{
-  font-size:32px;
-  margin-bottom:15px;
-}
+    .container {
+      max-width: 1150px;
+      margin: auto;
+    }
 
-.passed{
-  color:#198754;
-}
+    .section-title {
+      text-align: center;
+      margin-bottom: 45px;
+    }
 
-.failed{
-  color:#dc3545;
-}
+    .section-title small {
+      display: block;
+      color: #b38a28;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
 
-footer{
-  background:#0b2d5c;
-  color:white;
-  text-align:center;
-  padding:25px;
-  margin-top:50px;
-}
+    .section-title h2 {
+      font-size: 36px;
+      color: #0b2d5c;
+      margin-bottom: 10px;
+    }
 
-@media(max-width:700px){
-  header{
-    flex-direction:column;
-  }
+    .section-title p {
+      max-width: 700px;
+      margin: auto;
+      color: #667085;
+    }
 
-  nav{
-    justify-content:center;
-  }
+    /* =========================
+       STATS
+    ========================== */
 
-  .hero h1{
-    font-size:32px;
-  }
+    .stats {
+      margin-top: -50px;
+      position: relative;
+      z-index: 10;
+    }
 
-  .question-text{
-    font-size:18px;
-  }
+    .stats-grid {
+      max-width: 1050px;
+      margin: auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.12);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      overflow: hidden;
+    }
 
-  .card{
-    padding:20px;
-  }
-}
-</style>
+    .stat {
+      text-align: center;
+      padding: 30px 15px;
+      border-right: 1px solid #eaecf0;
+    }
+
+    .stat:last-child {
+      border-right: none;
+    }
+
+    .stat h3 {
+      color: #0b2d5c;
+      font-size: 30px;
+    }
+
+    .stat p {
+      color: #667085;
+      font-size: 14px;
+    }
+
+    /* =========================
+       ABOUT
+    ========================== */
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .about-image img {
+      width: 100%;
+      height: 430px;
+      object-fit: cover;
+      border-radius: 18px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+
+    .about-content h2 {
+      color: #0b2d5c;
+      font-size: 38px;
+      margin-bottom: 18px;
+    }
+
+    .about-content p {
+      color: #667085;
+      margin-bottom: 18px;
+    }
+
+    .check-list {
+      list-style: none;
+      margin-top: 20px;
+    }
+
+    .check-list li {
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .check-list li::before {
+      content: "✓";
+      display: inline-flex;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #e9f7ef;
+      color: #1b8a4b;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+    }
+
+    /* =========================
+       PROGRAMS
+    ========================== */
+
+    .programs {
+      background: #eef3f9;
+    }
+
+    .program-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+    }
+
+    .program-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      transition: 0.3s;
+    }
+
+    .program-card:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.13);
+    }
+
+    .program-image {
+      height: 210px;
+      overflow: hidden;
+    }
+
+    .program-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.4s;
+    }
+
+    .program-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .program-content {
+      padding: 25px;
+    }
+
+    .program-content h3 {
+      color: #0b2d5c;
+      font-size: 23px;
+      margin-bottom: 10px;
+    }
+
+    .program-content p {
+      color: #667085;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .program-tag {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: #f7f0df;
+      color: #8b681e;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* =========================
+       CERTIFICATES
+    ========================== */
+
+    .certificate-section {
+      background: white;
+    }
+
+    .certificate-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+    }
+
+    .certificate-card {
+      border: 1px solid #eaecf0;
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      background: #fff;
+      transition: 0.3s;
+    }
+
+    .certificate-card:hover {
+      border-color: #b38a28;
+      transform: translateY(-5px);
+    }
+
+    .certificate-icon {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      background: #f7f0df;
+      color: #b38a28;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 30px;
+    }
+
+    .certificate-card h3 {
+      color: #0b2d5c;
+      margin-bottom: 10px;
+    }
+
+    .certificate-card p {
+      color: #667085;
+      font-size: 14px;
+    }
+
+    /* =========================
+       VERIFY
+    ========================== */
+
+    .verify-section {
+      background:
+        linear-gradient(rgba(11,45,92,0.96), rgba(11,45,92,0.96)),
+        url("https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=1600&q=80")
+        center/cover;
+      color: white;
+    }
+
+    .verify-box {
+      max-width: 850px;
+      margin: auto;
+      background: white;
+      border-radius: 18px;
+      padding: 40px;
+      color: #1d2939;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+
+    .verify-box h2 {
+      color: #0b2d5c;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 32px;
+    }
+
+    .verify-box > p {
+      text-align: center;
+      color: #667085;
+      margin-bottom: 25px;
+    }
+
+    .search-form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+    }
+
+    .search-form input {
+      width: 100%;
+      padding: 15px 18px;
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .search-form input:focus {
+      border-color: #0b2d5c;
+      box-shadow: 0 0 0 3px rgba(11,45,92,0.1);
+    }
+
+    .verify-result {
+      margin-top: 25px;
+      display: none;
+    }
+
+    .result-success {
+      border: 1px solid #a6f4c5;
+      background: #ecfdf3;
+      padding: 25px;
+      border-radius: 12px;
+    }
+
+    .result-success h3 {
+      color: #027a48;
+      margin-bottom: 15px;
+    }
+
+    .result-error {
+      border: 1px solid #fecdca;
+      background: #fef3f2;
+      padding: 20px;
+      border-radius: 12px;
+      color: #b42318;
+    }
+
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    .result-table td {
+      border-bottom: 1px solid #d9f0df;
+      padding: 10px;
+    }
+
+    .result-table td:first-child {
+      font-weight: bold;
+      width: 35%;
+    }
+
+    /* =========================
+       TEFL EXAM
+    ========================== */
+
+    .tefl-section {
+      background:
+        linear-gradient(rgba(238,243,249,0.97), rgba(238,243,249,0.97)),
+        url("https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1600&q=80")
+        center/cover;
+    }
+
+    .tefl-intro {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 35px;
+      border-radius: 18px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.09);
+      text-align: center;
+    }
+
+    .tefl-intro h2 {
+      color: #0b2d5c;
+      font-size: 34px;
+      margin-bottom: 12px;
+    }
+
+    .tefl-intro p {
+      color: #667085;
+      margin-bottom: 20px;
+    }
+
+    .exam-info-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 25px 0;
+    }
+
+    .exam-info-card {
+      background: #f8fafc;
+      border: 1px solid #eaecf0;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .exam-info-card strong {
+      display: block;
+      color: #0b2d5c;
+      font-size: 20px;
+    }
+
+    .exam-info-card span {
+      color: #667085;
+      font-size: 12px;
+    }
+
+    .exam-registration {
+      max-width: 700px;
+      margin: 30px auto 0;
+      text-align: left;
+      display: none;
+    }
+
+    .exam-registration h3 {
+      color: #0b2d5c;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .exam-form-group {
+      margin-bottom: 16px;
+    }
+
+    .exam-form-group label {
+      display: block;
+      font-weight: bold;
+      color: #344054;
+      margin-bottom: 6px;
+    }
+
+    .exam-form-group input,
+    .exam-form-group select {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      outline: none;
+      background: white;
+    }
+
+    .exam-form-group input:focus,
+    .exam-form-group select:focus {
+      border-color: #0b2d5c;
+      box-shadow: 0 0 0 3px rgba(11,45,92,0.1);
+    }
+
+    .exam-area {
+      display: none;
+      max-width: 950px;
+      margin: 30px auto;
+    }
+
+    .exam-header {
+      background: #0b2d5c;
+      color: white;
+      padding: 22px 25px;
+      border-radius: 15px 15px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .exam-header h2 {
+      font-size: 23px;
+    }
+
+    .exam-header p {
+      font-size: 13px;
+      color: #dce7f5;
+    }
+
+    .exam-progress {
+      background: #b38a28;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .question-container {
+      background: white;
+      padding: 30px;
+      border-radius: 0 0 15px 15px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.09);
+    }
+
+    .question-card {
+      border: 1px solid #eaecf0;
+      padding: 22px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      background: #fff;
+    }
+
+    .question-number {
+      color: #b38a28;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .question-text {
+      color: #0b2d5c;
+      font-size: 17px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .answer-option {
+      display: block;
+      padding: 11px 14px;
+      margin-bottom: 8px;
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .answer-option:hover {
+      border-color: #b38a28;
+      background: #fffaf0;
+    }
+
+    .answer-option input {
+      margin-right: 8px;
+    }
+
+    .answer-option.selected {
+      border-color: #0b2d5c;
+      background: #eef4fb;
+    }
+
+    .exam-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+
+    .subject-result {
+      display: none;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+      padding: 35px;
+      text-align: center;
+      max-width: 650px;
+      margin: 30px auto;
+    }
+
+    .subject-result h2 {
+      color: #0b2d5c;
+      margin-bottom: 12px;
+    }
+
+    .score-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #f7f0df;
+      border: 8px solid #b38a28;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px auto;
+      font-size: 28px;
+      font-weight: bold;
+      color: #0b2d5c;
+    }
+
+    .subject-result p {
+      color: #667085;
+    }
+
+    .final-result {
+      display: none;
+      max-width: 900px;
+      margin: 30px auto;
+      background: white;
+      padding: 40px;
+      border-radius: 18px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      text-align: center;
+    }
+
+    .final-result h2 {
+      color: #0b2d5c;
+      font-size: 34px;
+      margin-bottom: 12px;
+    }
+
+    .final-score {
+      font-size: 55px;
+      font-weight: bold;
+      color: #b38a28;
+      margin: 15px 0;
+    }
+
+    .pass-message {
+      background: #ecfdf3;
+      border: 1px solid #a6f4c5;
+      color: #027a48;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+
+    .fail-message {
+      background: #fef3f2;
+      border: 1px solid #fecdca;
+      color: #b42318;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+
+    .subject-summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 25px;
+      text-align: left;
+    }
+
+    .subject-summary-table th,
+    .subject-summary-table td {
+      padding: 12px;
+      border-bottom: 1px solid #eaecf0;
+    }
+
+    .subject-summary-table th {
+      background: #0b2d5c;
+      color: white;
+    }
+
+    .subject-summary-table td:last-child {
+      font-weight: bold;
+    }
+
+    .exam-note {
+      margin-top: 15px;
+      font-size: 13px;
+      color: #667085;
+    }
+
+    /* =========================
+       WHY GETI
+    ========================== */
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .why-card {
+      padding: 30px 20px;
+      text-align: center;
+      background: #f8fafc;
+      border-radius: 15px;
+      border: 1px solid #eaecf0;
+    }
+
+    .why-icon {
+      font-size: 35px;
+      margin-bottom: 15px;
+    }
+
+    .why-card h3 {
+      color: #0b2d5c;
+      margin-bottom: 10px;
+    }
+
+    .why-card p {
+      color: #667085;
+      font-size: 14px;
+    }
+
+    /* =========================
+       RESOURCES
+    ========================== */
+
+    .resource-section {
+      background: #eef3f9;
+    }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+    }
+
+    .resource-card {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 7px 20px rgba(0,0,0,0.06);
+    }
+
+    .resource-card h3 {
+      color: #0b2d5c;
+      margin-bottom: 12px;
+    }
+
+    .resource-card p {
+      color: #667085;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    /* =========================
+       FAQ
+    ========================== */
+
+    .faq {
+      max-width: 850px;
+      margin: auto;
+    }
+
+    .faq-item {
+      background: white;
+      border: 1px solid #eaecf0;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 18px 20px;
+      background: white;
+      border: none;
+      text-align: left;
+      font-weight: bold;
+      font-size: 16px;
+      color: #0b2d5c;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 0 20px 20px;
+      color: #667085;
+      font-size: 14px;
+    }
+
+    .faq-item.active .faq-answer {
+      display: block;
+    }
+
+    .faq-item.active .faq-question span {
+      transform: rotate(45deg);
+    }
+
+    .faq-question span {
+      font-size: 25px;
+      transition: 0.3s;
+    }
+
+    /* =========================
+       CONTACT
+    ========================== */
+
+    .contact-section {
+      background: white;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .contact-info {
+      background: #0b2d5c;
+      color: white;
+      border-radius: 15px;
+      padding: 40px;
+    }
+
+    .contact-info h2 {
+      font-size: 32px;
+      margin-bottom: 15px;
+    }
+
+    .contact-info p {
+      color: #d0d9e7;
+      margin-bottom: 25px;
+    }
+
+    .contact-item {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .contact-item-icon {
+      font-size: 22px;
+    }
+
+    .contact-form {
+      padding: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      color: #344054;
+      margin-bottom: 7px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      outline: none;
+      resize: vertical;
+    }
+
+    .form-group textarea {
+      min-height: 140px;
+    }
+
+    /* =========================
+       FOOTER
+    ========================== */
+
+    footer {
+      background: #061d3d;
+      color: white;
+      padding: 50px 20px 20px;
+    }
+
+    .footer-grid {
+      max-width: 1150px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 35px;
+    }
+
+    .footer-col h3 {
+      margin-bottom: 18px;
+      color: #e1bc5f;
+    }
+
+    .footer-col p,
+    .footer-col a {
+      color: #b9c5d6;
+      font-size: 14px;
+    }
+
+    .footer-col a {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .footer-col a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      max-width: 1150px;
+      margin: 40px auto 0;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      text-align: center;
+      color: #9aa9bd;
+      font-size: 13px;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================== */
+
+    @media (max-width: 950px) {
+
+      nav {
+        display: none;
+        position: absolute;
+        top: 76px;
+        left: 0;
+        width: 100%;
+        background: #0b2d5c;
+        padding: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+      }
+
+      nav.active {
+        display: flex;
+      }
+
+      .menu-btn {
+        display: block;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat:nth-child(2) {
+        border-right: none;
+      }
+
+      .stat:nth-child(-n+2) {
+        border-bottom: 1px solid #eaecf0;
+      }
+
+      .program-grid,
+      .certificate-grid,
+      .resource-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .why-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .exam-info-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+
+      .hero {
+        min-height: 600px;
+      }
+
+      section {
+        padding: 60px 15px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .about-grid,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .about-image img {
+        height: 300px;
+      }
+
+      .program-grid,
+      .certificate-grid,
+      .resource-grid,
+      .why-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-form {
+        grid-template-columns: 1fr;
+      }
+
+      .verify-box {
+        padding: 25px 18px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .logo-text strong {
+        font-size: 15px;
+      }
+
+      .logo-text span {
+        font-size: 9px;
+      }
+
+      .exam-info-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .question-container,
+      .subject-result,
+      .final-result {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 450px) {
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stat {
+        border-right: none !important;
+        border-bottom: 1px solid #eaecf0;
+      }
+
+      .stat:last-child {
+        border-bottom: none;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+      }
+
+      .hero-buttons .btn {
+        width: 100%;
+      }
+
+      .exam-info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .exam-actions {
+        flex-direction: column;
+      }
+
+      .exam-actions .btn {
+        width: 100%;
+      }
+
+      .final-score {
+        font-size: 43px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo">GETI</div>
+  <div class="navbar">
 
-  <nav>
-    <button onclick="showPage('home')">HOME</button>
-    <button onclick="showPage('verification')">VERIFY CERTIFICATE</button>
-    <button onclick="showPage('tefl')">TEFL EXAM</button>
-  </nav>
+    <a href="#home" class="logo">
+      <div class="logo-icon">GETI</div>
+
+      <div class="logo-text">
+        <strong>GETI</strong>
+        <span>Global English Teaching Institute</span>
+      </div>
+    </a>
+
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <nav id="mainNav">
+      <a href="#home" onclick="closeMenu()">HOME</a>
+      <a href="#about" onclick="closeMenu()">ABOUT</a>
+      <a href="#programs" onclick="closeMenu()">PROGRAMS</a>
+      <a href="#tefl-exam" onclick="closeMenu()">TEFL EXAM</a>
+      <a href="#certificates" onclick="closeMenu()">CERTIFICATES</a>
+      <a href="#verify" onclick="closeMenu()">VERIFY</a>
+      <a href="#resources" onclick="closeMenu()">RESOURCES</a>
+      <a href="#faq" onclick="closeMenu()">FAQ</a>
+      <a href="#contact" onclick="closeMenu()">CONTACT</a>
+    </nav>
+
+  </div>
 </header>
 
-<!-- HOME -->
-<section id="home" class="page">
-  <div class="hero">
-    <div>
-      <h1>Global English Teaching Institute</h1>
-      <p>
-        Professional English Teaching, TEFL Training and Certificate Verification.
-      </p>
 
-      <br>
+<section class="hero" id="home">
 
-      <button class="btn btn-gold" onclick="showPage('tefl')">
+  <div class="hero-content">
+
+    <div class="hero-badge">
+      GLOBAL ENGLISH TEACHING INSTITUTE
+    </div>
+
+    <h1>
+      Learn. Teach. <span>Grow.</span>
+    </h1>
+
+    <p>
+      Welcome to GETI, a global learning platform dedicated to
+      English language development, teacher training and professional
+      certification.
+    </p>
+
+    <div class="hero-buttons">
+
+      <a href="#programs" class="btn btn-primary">
+        EXPLORE PROGRAMS
+      </a>
+
+      <a href="#verify" class="btn btn-outline">
+        VERIFY CERTIFICATE
+      </a>
+
+      <button
+        class="btn btn-primary"
+        onclick="openTEFLExam()">
         TEFL EXAM
       </button>
 
-      <button class="btn" onclick="showPage('verification')">
-        VERIFY CERTIFICATE
-      </button>
     </div>
+
   </div>
 
-  <div class="container">
-    <div class="card">
-      <h2 class="section-title">Welcome to GETI</h2>
-      <p>
-        The Global English Teaching Institute provides English teaching,
-        TEFL training and examination services.
-      </p>
-    </div>
-  </div>
 </section>
 
-<!-- CERTIFICATE VERIFICATION -->
-<section id="verification" class="page hidden">
-  <div class="container">
 
-    <div class="card">
-      <h2 class="section-title">Certificate Verification</h2>
+<div class="stats">
 
-      <div class="notice">
-        Enter a Certificate ID, student name, or nationality to verify a certificate.
-      </div>
+  <div class="stats-grid">
 
-      <div class="form-group">
-        <label>Certificate ID / Name / Nationality</label>
-        <input
-          id="verifyInput"
-          type="text"
-          placeholder="Example: GETI-CERT-000001"
-        >
-      </div>
+    <div class="stat">
+      <h3>GETI</h3>
+      <p>Global Institute</p>
+    </div>
 
-      <button class="btn" onclick="verifyCertificate()">
-        SEARCH
-      </button>
+    <div class="stat">
+      <h3>TEFL</h3>
+      <p>Teacher Training</p>
+    </div>
 
-      <div id="verifyMessage"></div>
-      <div id="verifyResult" class="verify-result"></div>
+    <div class="stat">
+      <h3>TESOL</h3>
+      <p>English Teaching</p>
+    </div>
+
+    <div class="stat">
+      <h3>TEYL</h3>
+      <p>Young Learners</p>
     </div>
 
   </div>
-</section>
 
-<!-- TEFL REGISTRATION -->
-<section id="tefl" class="page hidden">
+</div>
+
+
+<section id="about">
+
   <div class="container">
 
-    <div id="registrationBox" class="card">
-      <h2 class="section-title">TEFL Examination Registration</h2>
+    <div class="about-grid">
 
-      <div class="notice">
-        Complete your registration before starting the TEFL Examination.
+      <div class="about-image">
+
+        <img
+          src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1000&q=80"
+          alt="Students learning English">
+
       </div>
 
-      <div id="registrationError"></div>
+      <div class="about-content">
 
-      <div class="form-group">
-        <label>Full Name</label>
-        <input id="fullName" type="text" placeholder="Full Name">
-      </div>
+        <div class="section-title" style="text-align:left;margin-bottom:20px;">
 
-      <div class="form-group">
-        <label>Nationality</label>
-        <input id="nationality" type="text" placeholder="Nationality">
-      </div>
+          <small>ABOUT GETI</small>
 
-      <div class="form-group">
-        <label>Country</label>
-        <input id="country" type="text" placeholder="Country">
-      </div>
+          <h2>Building Global English Professionals</h2>
 
-      <div class="form-group">
-        <label>Email</label>
-        <input id="email" type="email" placeholder="Email address">
-      </div>
-
-      <button class="btn btn-gold" onclick="startTEFL()">
-        SUBMIT & START TEFL EXAM
-      </button>
-    </div>
-
-    <!-- EXAM -->
-    <div id="examBox" class="card hidden">
-
-      <div class="exam-header">
-        <div>
-          <h2 id="subjectTitle"></h2>
-          <p id="subjectCounter"></p>
         </div>
 
-        <strong id="totalProgressText"></strong>
+        <p>
+          Global English Teaching Institute (GETI) is an educational
+          platform focused on English language learning, teacher
+          development and professional training.
+        </p>
+
+        <p>
+          Our goal is to provide accessible and practical learning
+          opportunities for students, teachers and future English
+          professionals around the world.
+        </p>
+
+        <ul class="check-list">
+          <li>English language development</li>
+          <li>Professional teacher training</li>
+          <li>International-style certificates</li>
+          <li>Flexible learning resources</li>
+        </ul>
+
       </div>
 
-      <div class="progress">
-        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<section class="programs" id="programs">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <small>OUR PROGRAMS</small>
+
+      <h2>Professional Training Programs</h2>
+
+      <p>
+        Explore GETI's training programs designed for English
+        learners, teachers and future educators.
+      </p>
+
+    </div>
+
+    <div class="program-grid">
+
+      <div class="program-card">
+
+        <div class="program-image">
+          <img
+            src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=80"
+            alt="TEFL training">
+        </div>
+
+        <div class="program-content">
+
+          <span class="program-tag">TEACHER TRAINING</span>
+
+          <h3>TEFL</h3>
+
+          <p>
+            Teaching English as a Foreign Language training
+            designed for future and current English teachers.
+          </p>
+
+          <button class="btn btn-primary" onclick="openTEFLExam()">
+            TAKE TEFL EXAM
+          </button>
+
+        </div>
+
       </div>
 
-      <div id="questionContainer"></div>
 
-      <br>
+      <div class="program-card">
+
+        <div class="program-image">
+
+          <img
+            src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1000&q=80"
+            alt="TESOL training">
+
+        </div>
+
+        <div class="program-content">
+
+          <span class="program-tag">ENGLISH TEACHING</span>
+
+          <h3>TESOL</h3>
+
+          <p>
+            Training for people interested in teaching English
+            to speakers of other languages.
+          </p>
+
+          <a href="#contact" class="btn btn-primary">
+            LEARN MORE
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <div class="program-card">
+
+        <div class="program-image">
+
+          <img
+            src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1000&q=80"
+            alt="Young learners">
+
+        </div>
+
+        <div class="program-content">
+
+          <span class="program-tag">YOUNG LEARNERS</span>
+
+          <h3>TEYL</h3>
+
+          <p>
+            Teaching English to Young Learners training focused
+            on effective classroom techniques for children.
+          </p>
+
+          <a href="#contact" class="btn btn-primary">
+            LEARN MORE
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     TEFL EXAM
+====================================================== -->
+
+<section class="tefl-section" id="tefl-exam">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <small>GETI TEFL ASSESSMENT</small>
+
+      <h2>TEFL Examination</h2>
+
+      <p>
+        Complete all 10 TEFL subjects. Each subject contains
+        15 multiple-choice questions.
+      </p>
+
+    </div>
+
+
+    <div class="tefl-intro" id="teflIntro">
+
+      <h2>TEFL EXAM</h2>
+
+      <p>
+        The GETI TEFL examination contains 10 subjects and
+        150 questions in total.
+      </p>
+
+      <div class="exam-info-grid">
+
+        <div class="exam-info-card">
+          <strong>10</strong>
+          <span>Subjects</span>
+        </div>
+
+        <div class="exam-info-card">
+          <strong>150</strong>
+          <span>Total Questions</span>
+        </div>
+
+        <div class="exam-info-card">
+          <strong>15</strong>
+          <span>Questions / Subject</span>
+        </div>
+
+        <div class="exam-info-card">
+          <strong>70%</strong>
+          <span>Passing Mark</span>
+        </div>
+
+      </div>
+
+      <p>
+        You must complete every subject. After each subject,
+        your result will be displayed before you continue
+        to the next subject.
+      </p>
 
       <button
-        id="questionNextButton"
-        class="btn"
-        onclick="nextQuestion()"
-      >
-        NEXT QUESTION
+        class="btn btn-primary"
+        onclick="showExamRegistration()">
+        START TEFL EXAM
+      </button>
+
+
+      <div class="exam-registration" id="examRegistration">
+
+        <h3>TEFL EXAM REGISTRATION</h3>
+
+        <div class="exam-form-group">
+
+          <label for="examFullName">
+            Full Name
+          </label>
+
+          <input
+            type="text"
+            id="examFullName"
+            placeholder="Enter your full name">
+
+        </div>
+
+
+        <div class="exam-form-group">
+
+          <label for="examNationality">
+            Nationality
+          </label>
+
+          <input
+            type="text"
+            id="examNationality"
+            placeholder="Example: Malagasy">
+
+        </div>
+
+
+        <div class="exam-form-group">
+
+          <label for="examCountry">
+            Country
+          </label>
+
+          <input
+            type="text"
+            id="examCountry"
+            placeholder="Example: Madagascar">
+
+        </div>
+
+
+        <div class="exam-form-group">
+
+          <label for="examEmail">
+            Email
+          </label>
+
+          <input
+            type="email"
+            id="examEmail"
+            placeholder="Enter your email address">
+
+        </div>
+
+
+        <button
+          class="btn btn-primary"
+          onclick="startTEFLExam()">
+          SUBMIT & START EXAM
+        </button>
+
+        <p class="exam-note">
+          Please make sure your email address is correct.
+          If you pass the examination, GETI may use this email
+          for result or certificate communication.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- EXAM QUESTIONS -->
+
+    <div class="exam-area" id="examArea">
+
+      <div class="exam-header">
+
+        <div>
+
+          <h2 id="currentSubjectTitle">
+            TEFL Foundations & Principles
+          </h2>
+
+          <p id="currentSubjectSubtitle">
+            Answer all 15 questions.
+          </p>
+
+        </div>
+
+        <div class="exam-progress" id="examProgress">
+          Subject 1 / 10
+        </div>
+
+      </div>
+
+
+      <div class="question-container">
+
+        <div id="questionsContainer"></div>
+
+        <div class="exam-actions">
+
+          <button
+            class="btn btn-danger"
+            onclick="confirmExitExam()">
+            EXIT EXAM
+          </button>
+
+          <button
+            class="btn btn-primary"
+            id="submitSubjectButton"
+            onclick="submitSubject()">
+            SUBMIT SUBJECT
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- SUBJECT RESULT -->
+
+    <div class="subject-result" id="subjectResult">
+
+      <h2 id="subjectResultTitle">
+        Subject Result
+      </h2>
+
+      <div class="score-circle" id="subjectScoreCircle">
+        0%
+      </div>
+
+      <p id="subjectResultText">
+        Your subject result.
+      </p>
+
+      <button
+        class="btn btn-primary"
+        id="nextSubjectButton"
+        onclick="nextSubject()">
+        NEXT
       </button>
 
     </div>
 
-    <!-- SUBJECT RESULT -->
-    <div id="subjectResultBox" class="card hidden">
-      <div class="subject-result">
-
-        <h2 id="subjectResultTitle"></h2>
-
-        <div id="subjectScore" class="score-big"></div>
-
-        <p id="subjectResultMessage"></p>
-
-        <br>
-
-        <button class="btn btn-gold" onclick="nextSubject()">
-          NEXT
-        </button>
-
-      </div>
-    </div>
 
     <!-- FINAL RESULT -->
-    <div id="finalResultBox" class="card hidden">
 
-      <div class="final-result">
+    <div class="final-result" id="finalResult">
 
-        <h2>TEFL FINAL RESULT</h2>
+      <h2>TEFL FINAL RESULT</h2>
 
-        <p id="candidateFinalName"></p>
+      <p>
+        Global English Teaching Institute
+      </p>
 
-        <table class="result-table">
-          <tr>
-            <th>Information</th>
-            <th>Result</th>
-          </tr>
+      <div class="final-score" id="finalScore">
+        0%
+      </div>
 
-          <tr>
-            <td>Total Subjects</td>
-            <td>10</td>
-          </tr>
+      <h3 id="finalStatus">
+        RESULT
+      </h3>
 
-          <tr>
-            <td>Total Questions</td>
-            <td>150</td>
-          </tr>
+      <div id="finalMessage"></div>
 
-          <tr>
-            <td>Correct Answers</td>
-            <td id="finalCorrect"></td>
-          </tr>
+      <table class="subject-summary-table">
+
+        <thead>
 
           <tr>
-            <td>Percentage</td>
-            <td id="finalPercentage"></td>
+            <th>Subject</th>
+            <th>Score</th>
+            <th>Percentage</th>
           </tr>
 
-          <tr>
-            <td>Final Status</td>
-            <td id="finalStatus"></td>
-          </tr>
-        </table>
+        </thead>
 
-        <br>
+        <tbody id="subjectSummaryBody"></tbody>
 
-        <div id="finalMessage"></div>
+      </table>
 
-        <br>
+      <div style="margin-top:25px;">
 
-        <button class="btn" onclick="showPage('home')">
+        <button
+          class="btn btn-primary"
+          onclick="window.location.href='#home'">
           BACK TO HOME
         </button>
 
@@ -527,2358 +1815,3521 @@ footer{
     </div>
 
   </div>
+
 </section>
 
+
+<section class="certificate-section" id="certificates">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <small>CERTIFICATION</small>
+
+      <h2>GETI Certificates</h2>
+
+      <p>
+        Professional certificates can be verified through the
+        GETI Certificate Verification System.
+      </p>
+
+    </div>
+
+    <div class="certificate-grid">
+
+      <div class="certificate-card">
+
+        <div class="certificate-icon">
+          🎓
+        </div>
+
+        <h3>TEFL Certificate</h3>
+
+        <p>
+          Certificate for completion of a Teaching English as
+          a Foreign Language training program.
+        </p>
+
+      </div>
+
+
+      <div class="certificate-card">
+
+        <div class="certificate-icon">
+          📜
+        </div>
+
+        <h3>TESOL Certificate</h3>
+
+        <p>
+          Certificate for completion of a Teaching English to
+          Speakers of Other Languages training program.
+        </p>
+
+      </div>
+
+
+      <div class="certificate-card">
+
+        <div class="certificate-icon">
+          🏅
+        </div>
+
+        <h3>TEYL Certificate</h3>
+
+        <p>
+          Certificate for training related to teaching English
+          to young learners.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     CERTIFICATE VERIFICATION
+====================================================== -->
+
+<section class="verify-section" id="verify">
+
+  <div class="container">
+
+    <div class="verify-box">
+
+      <h2>Certificate Verification</h2>
+
+      <p>
+        Search for a GETI certificate using Certificate ID,
+        student name or nationality.
+      </p>
+
+
+      <div class="search-form">
+
+        <input
+          type="text"
+          id="certificateSearch"
+          placeholder="Enter Certificate ID, Name or Nationality">
+
+        <button
+          class="btn btn-primary"
+          onclick="verifyCertificate()">
+          SEARCH
+        </button>
+
+      </div>
+
+
+      <div id="verifyResult" class="verify-result"></div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section>
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <small>WHY GETI</small>
+
+      <h2>Why Choose GETI?</h2>
+
+      <p>
+        Our platform combines practical learning, professional
+        development and accessible digital resources.
+      </p>
+
+    </div>
+
+
+    <div class="why-grid">
+
+      <div class="why-card">
+
+        <div class="why-icon">🌍</div>
+
+        <h3>Global Learning</h3>
+
+        <p>
+          Learn English and develop professional skills
+          from anywhere.
+        </p>
+
+      </div>
+
+
+      <div class="why-card">
+
+        <div class="why-icon">🎓</div>
+
+        <h3>Professional</h3>
+
+        <p>
+          Training programs designed for professional
+          development.
+        </p>
+
+      </div>
+
+
+      <div class="why-card">
+
+        <div class="why-icon">📚</div>
+
+        <h3>Learning Resources</h3>
+
+        <p>
+          Access useful educational materials and
+          learning resources.
+        </p>
+
+      </div>
+
+
+      <div class="why-card">
+
+        <div class="why-icon">🔐</div>
+
+        <h3>Certificate Verification</h3>
+
+        <p>
+          Certificates can be checked through our
+          verification system.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section class="resource-section" id="resources">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <small>RESOURCES</small>
+
+      <h2>Learning Resources</h2>
+
+      <p>
+        Useful resources to support English learning and
+        professional development.
+      </p>
+
+    </div>
+
+
+    <div class="resource-grid">
+
+      <div class="resource-card">
+
+        <h3>📖 English Vocabulary</h3>
+
+        <p>
+          Build your English vocabulary with practical words,
+          expressions and examples.
+        </p>
+
+        <a href="#contact" class="btn btn-primary">
+          GET RESOURCE
+        </a>
+
+      </div>
+
+
+      <div class="resource-card">
+
+        <h3>📝 English Grammar</h3>
+
+        <p>
+          Improve grammar knowledge from beginner to
+          advanced levels.
+        </p>
+
+        <a href="#contact" class="btn btn-primary">
+          GET RESOURCE
+        </a>
+
+      </div>
+
+
+      <div class="resource-card">
+
+        <h3>👨‍🏫 Teaching Resources</h3>
+
+        <p>
+          Practical materials and ideas for English teachers
+          and educators.
+        </p>
+
+        <a href="#contact" class="btn btn-primary">
+          GET RESOURCE
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section id="faq">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <small>FAQ</small>
+
+      <h2>Frequently Asked Questions</h2>
+
+    </div>
+
+
+    <div class="faq">
+
+      <div class="faq-item">
+
+        <button class="faq-question">
+          What is GETI?
+          <span>+</span>
+        </button>
+
+        <div class="faq-answer">
+          GETI stands for Global English Teaching Institute,
+          an educational platform focused on English language
+          learning and teacher training.
+        </div>
+
+      </div>
+
+
+      <div class="faq-item">
+
+        <button class="faq-question">
+          What programs are available?
+          <span>+</span>
+        </button>
+
+        <div class="faq-answer">
+          GETI offers programs such as TEFL, TESOL and TEYL,
+          together with English learning resources.
+        </div>
+
+      </div>
+
+
+      <div class="faq-item">
+
+        <button class="faq-question">
+          How can I verify a certificate?
+          <span>+</span>
+        </button>
+
+        <div class="faq-answer">
+          Go to the Certificate Verification section and
+          enter the Certificate ID, student name or nationality.
+        </div>
+
+      </div>
+
+
+      <div class="faq-item">
+
+        <button class="faq-question">
+          Does GETI have a TEFL examination?
+          <span>+</span>
+        </button>
+
+        <div class="faq-answer">
+          Yes. The GETI TEFL examination contains 10 subjects
+          with 15 multiple-choice questions in each subject.
+          The passing mark is 70%.
+        </div>
+
+      </div>
+
+
+      <div class="faq-item">
+
+        <button class="faq-question">
+          How can I contact GETI?
+          <span>+</span>
+        </button>
+
+        <div class="faq-answer">
+          Use the Contact section below to send an enquiry
+          to GETI.
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section class="contact-section" id="contact">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <small>CONTACT GETI</small>
+
+      <h2>Get In Touch</h2>
+
+      <p>
+        Have a question about our programs or certificates?
+        Contact us.
+      </p>
+
+    </div>
+
+
+    <div class="contact-grid">
+
+      <div class="contact-info">
+
+        <h2>GETI</h2>
+
+        <p>
+          Global English Teaching Institute
+        </p>
+
+
+        <div class="contact-item">
+
+          <div class="contact-item-icon">📧</div>
+
+          <div>
+            <strong>Email</strong>
+            <p>
+              info@geti.example
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="contact-item">
+
+          <div class="contact-item-icon">🌍</div>
+
+          <div>
+            <strong>Location</strong>
+            <p>
+              Madagascar
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="contact-item">
+
+          <div class="contact-item-icon">🎓</div>
+
+          <div>
+            <strong>Services</strong>
+            <p>
+              English Training & Professional Development
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="contact-form">
+
+        <form onsubmit="sendMessage(event)">
+
+          <div class="form-group">
+
+            <label for="name">
+              Full Name
+            </label>
+
+            <input
+              type="text"
+              id="name"
+              placeholder="Your full name"
+              required>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="email">
+              Email
+            </label>
+
+            <input
+              type="email"
+              id="email"
+              placeholder="Your email"
+              required>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="message">
+              Message
+            </label>
+
+            <textarea
+              id="message"
+              placeholder="Write your message..."
+              required></textarea>
+
+          </div>
+
+
+          <button
+            type="submit"
+            class="btn btn-primary">
+            SEND MESSAGE
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
 <footer>
-  <p>© 2026 Global English Teaching Institute (GETI)</p>
+
+  <div class="footer-grid">
+
+    <div class="footer-col">
+
+      <h3>GETI</h3>
+
+      <p>
+        Global English Teaching Institute.
+        Empowering English learners and teachers
+        through accessible education and professional
+        development.
+      </p>
+
+    </div>
+
+
+    <div class="footer-col">
+
+      <h3>Quick Links</h3>
+
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#programs">Programs</a>
+      <a href="#tefl-exam">TEFL Exam</a>
+      <a href="#certificates">Certificates</a>
+
+    </div>
+
+
+    <div class="footer-col">
+
+      <h3>Services</h3>
+
+      <a href="#programs">TEFL</a>
+      <a href="#programs">TESOL</a>
+      <a href="#programs">TEYL</a>
+      <a href="#verify">Certificate Verification</a>
+
+    </div>
+
+
+    <div class="footer-col">
+
+      <h3>Support</h3>
+
+      <a href="#resources">Resources</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+
+    </div>
+
+  </div>
+
+
+  <div class="footer-bottom">
+
+    © <span id="year"></span>
+    Global English Teaching Institute (GETI).
+    All Rights Reserved.
+
+  </div>
+
 </footer>
+
 
 <script>
 
-/* =========================================================
-   CERTIFICATE VERIFICATION
-   ========================================================= */
+/* =====================================================
+   CONFIGURATION
+====================================================== */
 
 /*
-   Replace/add your real certificate records here.
-   The existing verification system can later be connected
-   to Google Apps Script / Google Sheets.
+   Apetraho eto ny URL an'ilay Google Apps Script Web App.
+
+   Ohatra:
+   const GOOGLE_APPS_SCRIPT_URL =
+   "https://script.google.com/macros/s/XXXXXXXXXXXX/exec";
+
+   Avelao foana aloha raha mbola tsy manana URL ianao.
+*/
+
+const GOOGLE_APPS_SCRIPT_URL = "";
+
+
+/* =====================================================
+   MOBILE MENU
+====================================================== */
+
+function toggleMenu() {
+
+  const nav = document.getElementById("mainNav");
+
+  nav.classList.toggle("active");
+
+}
+
+
+function closeMenu() {
+
+  const nav = document.getElementById("mainNav");
+
+  nav.classList.remove("active");
+
+}
+
+
+/* =====================================================
+   YEAR
+====================================================== */
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+
+/* =====================================================
+   FAQ
+====================================================== */
+
+const faqQuestions =
+  document.querySelectorAll(".faq-question");
+
+faqQuestions.forEach(function(button) {
+
+  button.addEventListener("click", function() {
+
+    const item = this.parentElement;
+
+    item.classList.toggle("active");
+
+  });
+
+});
+
+
+/* =====================================================
+   CERTIFICATE VERIFICATION
+====================================================== */
+
+/*
+   DEMO DATA.
+   Rehefa ampifandraisina amin'ny Google Apps Script
+   dia afaka soloina backend search izy ity.
 */
 
 const certificates = [
 
   {
-    id:"GETI-CERT-000001",
-    name:"MANANA NICOLAS",
-    nationality:"MALAGASY",
-    country:"MADAGASCAR",
-    program:"TEFL",
-    status:"VERIFIED"
+    id: "GETI-ENG-2026-000001",
+    name: "Rakotonantenaina Juldiano",
+    nationality: "Malagasy",
+    country: "Madagascar",
+    program: "English Language",
+    level: "B2",
+    status: "VALID",
+    date: "2026"
   },
 
   {
-    id:"GETI-CERT-000002",
-    name:"RAKOTONANTENAINA JULDIANO",
-    nationality:"MALAGASY",
-    country:"MADAGASCAR",
-    program:"TEFL",
-    status:"VERIFIED"
+    id: "GETI-TEFL-2026-000001",
+    name: "Sample Student",
+    nationality: "Malagasy",
+    country: "Madagascar",
+    program: "TEFL",
+    level: "Professional",
+    status: "VALID",
+    date: "2026"
+  },
+
+  {
+    id: "GETI-TESOL-2026-000001",
+    name: "Sample Teacher",
+    nationality: "Malagasy",
+    country: "Madagascar",
+    program: "TESOL",
+    level: "Professional",
+    status: "VALID",
+    date: "2026"
   }
 
 ];
 
-function verifyCertificate(){
 
-  const input =
-    document.getElementById("verifyInput")
-      .value
-      .trim()
-      .toLowerCase();
+function verifyCertificate() {
 
-  const message =
-    document.getElementById("verifyMessage");
+  const searchInput =
+    document.getElementById("certificateSearch");
 
-  const result =
+  const resultBox =
     document.getElementById("verifyResult");
 
-  message.innerHTML="";
-  result.innerHTML="";
+  const search =
+    searchInput.value.trim().toLowerCase();
 
-  if(!input){
 
-    message.innerHTML =
-      `<div class="error">
-        ❌ Please enter a certificate ID, name, or nationality.
-      </div>`;
+  if (!search) {
 
-    return;
-  }
+    resultBox.style.display = "block";
 
-  const found = certificates.filter(c =>
-    c.id.toLowerCase().includes(input) ||
-    c.name.toLowerCase().includes(input) ||
-    c.nationality.toLowerCase().includes(input)
-  );
-
-  if(found.length === 0){
-
-    result.innerHTML =
-      `<div class="error">
-        ❌ No certificate found.
-      </div>`;
-
-    return;
-  }
-
-  let html="";
-
-  found.forEach(c => {
-
-    html += `
-      <div class="success">
-        <strong>✓ Certificate Verified</strong>
+    resultBox.innerHTML = `
+      <div class="result-error">
+        ❌ Please enter a Certificate ID, name or nationality.
       </div>
+    `;
+
+    return;
+  }
+
+
+  const result =
+    certificates.find(function(certificate) {
+
+      return (
+
+        certificate.id.toLowerCase().includes(search) ||
+
+        certificate.name.toLowerCase().includes(search) ||
+
+        certificate.nationality.toLowerCase().includes(search) ||
+
+        certificate.country.toLowerCase().includes(search)
+
+      );
+
+    });
+
+
+  resultBox.style.display = "block";
+
+
+  if (!result) {
+
+    resultBox.innerHTML = `
+      <div class="result-error">
+
+        <strong>❌ Certificate Not Found</strong>
+
+        <p style="margin-top:8px;">
+          No certificate matching
+          <strong>${escapeHtml(searchInput.value)}</strong>
+          was found.
+        </p>
+
+      </div>
+    `;
+
+    return;
+  }
+
+
+  resultBox.innerHTML = `
+
+    <div class="result-success">
+
+      <h3>
+        ✅ Certificate Verified
+      </h3>
 
       <table class="result-table">
 
         <tr>
-          <th>Certificate ID</th>
-          <td>${c.id}</td>
+          <td>Certificate ID</td>
+          <td>${escapeHtml(result.id)}</td>
         </tr>
 
         <tr>
-          <th>Full Name</th>
-          <td>${c.name}</td>
+          <td>Full Name</td>
+          <td>${escapeHtml(result.name)}</td>
         </tr>
 
         <tr>
-          <th>Nationality</th>
-          <td>${c.nationality}</td>
+          <td>Nationality</td>
+          <td>${escapeHtml(result.nationality)}</td>
         </tr>
 
         <tr>
-          <th>Country</th>
-          <td>${c.country}</td>
+          <td>Country</td>
+          <td>${escapeHtml(result.country)}</td>
         </tr>
 
         <tr>
-          <th>Program</th>
-          <td>${c.program}</td>
+          <td>Program</td>
+          <td>${escapeHtml(result.program)}</td>
         </tr>
 
         <tr>
-          <th>Status</th>
-          <td>${c.status}</td>
+          <td>Level</td>
+          <td>${escapeHtml(result.level)}</td>
+        </tr>
+
+        <tr>
+          <td>Certificate Date</td>
+          <td>${escapeHtml(result.date)}</td>
+        </tr>
+
+        <tr>
+          <td>Status</td>
+          <td>
+            <strong style="color:#027a48;">
+              ${escapeHtml(result.status)}
+            </strong>
+          </td>
         </tr>
 
       </table>
 
-      <br>
-    `;
-  });
+    </div>
 
-  result.innerHTML=html;
+  `;
+
 }
 
 
-/* =========================================================
-   TEFL QUESTIONS
-   10 SUBJECTS × 15 QUESTIONS = 150 QUESTIONS
-   ========================================================= */
+document
+  .getElementById("certificateSearch")
+  .addEventListener("keydown", function(event) {
 
-const subjects = [
+    if (event.key === "Enter") {
 
-{
-  title:"TEFL Foundations & Principles",
-  questions:[
+      event.preventDefault();
+
+      verifyCertificate();
+
+    }
+
+  });
+
+
+/* =====================================================
+   TEFL SUBJECTS
+====================================================== */
+
+const teflSubjects = [
+
+  "TEFL Foundations & Principles",
+
+  "English Grammar",
+
+  "Teaching Methodologies",
+
+  "Lesson Planning",
+
+  "Classroom Management",
+
+  "Teaching Listening",
+
+  "Teaching Speaking",
+
+  "Teaching Reading",
+
+  "Teaching Writing",
+
+  "Assessment & Testing"
+
+];
+
+
+/* =====================================================
+   TEFL QUESTION BANK
+   10 SUBJECTS × 15 QUESTIONS
+====================================================== */
+
+const teflQuestions = [
+
+  /* ===================================================
+     1. TEFL FOUNDATIONS & PRINCIPLES
+  =================================================== */
+
+  [
 
     {
-      q:"What does TEFL stand for?",
-      options:[
+      q: "What does TEFL stand for?",
+      options: [
         "Teaching English for Learning",
         "Teaching English as a Foreign Language",
         "Training English for Language",
         "Teaching Education for Foreign Learners"
       ],
-      answer:1
+      answer: 1
     },
 
     {
-      q:"What is one main goal of TEFL?",
-      options:[
-        "To teach only grammar rules",
+      q: "What is one main goal of TEFL?",
+      options: [
+        "To teach mathematics",
         "To help learners communicate in English",
-        "To prevent students from speaking",
-        "To teach mathematics"
+        "To replace the learner's first language",
+        "To teach only literature"
       ],
-      answer:1
+      answer: 1
     },
 
     {
-      q:"What does learner-centered teaching focus on?",
-      options:[
-        "The teacher only",
-        "The textbook only",
-        "The needs and participation of learners",
-        "The school building"
+      q: "What does EFL mean?",
+      options: [
+        "English for Learning",
+        "English as a Foreign Language",
+        "English for Foreign Lessons",
+        "English First Language"
       ],
-      answer:2
+      answer: 1
     },
 
     {
-      q:"Which skill is considered a language skill?",
-      options:[
-        "Listening",
+      q: "A good TEFL teacher should primarily be:",
+      options: [
+        "Supportive and well prepared",
+        "Silent during every lesson",
+        "Focused only on grammar rules",
+        "Strict at all times"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Learner-centered teaching means:",
+      options: [
+        "The teacher does everything",
+        "Students actively participate in learning",
+        "Students never speak",
+        "Only textbooks are used"
+      ],
+      answer: 1
+    },
+
+    {
+      q: "Why is learner motivation important?",
+      options: [
+        "It can increase engagement and learning",
+        "It removes the need for teaching",
+        "It makes exams unnecessary",
+        "It prevents communication"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Which skill is part of the four main English skills?",
+      options: [
         "Drawing",
-        "Cooking",
-        "Driving"
+        "Listening",
+        "Swimming",
+        "Programming"
       ],
-      answer:0
+      answer: 1
     },
 
     {
-      q:"What is communicative competence?",
-      options:[
-        "The ability to communicate effectively",
+      q: "What is communicative competence?",
+      options: [
         "The ability to memorize dictionaries",
-        "The ability to write numbers",
-        "The ability to avoid communication"
+        "The ability to use language effectively in communication",
+        "The ability to write only grammar rules",
+        "The ability to translate every word"
       ],
-      answer:0
+      answer: 1
     },
 
     {
-      q:"What should a good TEFL teacher encourage?",
-      options:[
-        "Student participation",
-        "Silence all the time",
-        "Fear",
+      q: "Why should teachers consider learners' needs?",
+      options: [
+        "To make instruction more relevant",
+        "To avoid planning",
+        "To make lessons longer",
+        "To eliminate practice"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Which is an important principle of language learning?",
+      options: [
+        "Regular practice",
+        "Never speaking",
+        "Avoiding feedback",
+        "Memorizing without understanding"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "A teacher's feedback should generally be:",
+      options: [
+        "Useful and constructive",
+        "Always negative",
+        "Unrelated to the task",
+        "Given only once a year"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What is scaffolding?",
+      options: [
+        "Temporary support that helps learners complete a task",
+        "A type of examination",
+        "A classroom building",
+        "A vocabulary list"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Why is interaction important in language learning?",
+      options: [
+        "It gives learners opportunities to use language",
+        "It stops communication",
+        "It replaces all instruction",
+        "It prevents collaboration"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What should a TEFL teacher usually do before teaching a lesson?",
+      options: [
+        "Prepare objectives and activities",
+        "Avoid the topic",
+        "Give the final exam",
+        "Cancel practice"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "An effective language classroom should provide opportunities for:",
+      options: [
+        "Meaningful communication",
+        "Silence only",
+        "Teacher talking only",
         "Memorization only"
       ],
-      answer:0
-    },
-
-    {
-      q:"What is an important characteristic of effective teaching?",
-      options:[
-        "Clear objectives",
-        "No preparation",
-        "No feedback",
-        "No interaction"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Why are learning objectives important?",
-      options:[
-        "They guide the lesson",
-        "They make lessons longer",
-        "They replace students",
-        "They remove activities"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is a target language?",
-      options:[
-        "The language being learned",
-        "The student's first language",
-        "A computer language",
-        "A secret language"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What should teachers consider when planning instruction?",
-      options:[
-        "Learner needs",
-        "Only classroom color",
-        "Only teacher preferences",
-        "Nothing"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What does ESL commonly mean?",
-      options:[
-        "English as a Second Language",
-        "English School Lesson",
-        "English Speaking Level",
-        "English Study List"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Why is feedback important?",
-      options:[
-        "It helps learners improve",
-        "It discourages all learning",
-        "It replaces teaching",
-        "It makes tests impossible"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Which approach gives learners opportunities to use English?",
-      options:[
-        "Communicative approach",
-        "Silent approach only",
-        "Translation only",
-        "No-interaction approach"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What should a teacher do when learners make mistakes?",
-      options:[
-        "Use mistakes as opportunities for learning",
-        "Always punish learners",
-        "Stop the lesson",
-        "Ignore all learning"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is the role of a TEFL teacher?",
-      options:[
-        "Facilitator of learning",
-        "Only examiner",
-        "Only translator",
-        "Only speaker"
-      ],
-      answer:0
+      answer: 0
     }
 
-  ]
-},
+  ],
 
-{
-  title:"English Grammar",
-  questions:[
+
+  /* ===================================================
+     2. ENGLISH GRAMMAR
+  =================================================== */
+
+  [
 
     {
-      q:"Which sentence is correct?",
-      options:[
-        "She go to school.",
-        "She goes to school.",
-        "She going school.",
-        "She gone school."
+      q: "Which sentence is correct?",
+      options: [
+        "She work every day.",
+        "She works every day.",
+        "She working every day.",
+        "She worked every day now."
       ],
-      answer:1
+      answer: 1
     },
 
     {
-      q:"What is the past tense of 'go'?",
-      options:[
-        "Goed",
-        "Gone",
-        "Went",
-        "Going"
+      q: "Which tense is used for actions happening now?",
+      options: [
+        "Present simple",
+        "Present continuous",
+        "Past perfect",
+        "Future perfect"
       ],
-      answer:2
+      answer: 1
     },
 
     {
-      q:"Choose the correct article: ___ apple.",
-      options:[
-        "A",
-        "An",
-        "The a",
-        "No"
-      ],
-      answer:1
-    },
-
-    {
-      q:"Which is a modal verb?",
-      options:[
-        "Can",
-        "Walk",
-        "Beautiful",
-        "Table"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Choose the correct sentence.",
-      options:[
+      q: "Choose the correct sentence.",
+      options: [
         "They is happy.",
         "They are happy.",
         "They am happy.",
         "They be happy."
       ],
-      answer:1
+      answer: 1
     },
 
     {
-      q:"What is the comparative form of 'big'?",
-      options:[
-        "Biger",
-        "Biggest",
-        "Bigger",
-        "More big"
+      q: "What is the past form of 'go'?",
+      options: [
+        "Goed",
+        "Gone",
+        "Went",
+        "Going"
       ],
-      answer:2
+      answer: 2
     },
 
     {
-      q:"Which word is a pronoun?",
-      options:[
+      q: "Which article is correct: ___ apple?",
+      options: [
+        "A",
+        "An",
+        "The only",
+        "No article always"
+      ],
+      answer: 1
+    },
+
+    {
+      q: "Which word is a modal verb?",
+      options: [
+        "Can",
+        "House",
         "Quickly",
-        "Beautiful",
-        "They",
-        "House"
+        "Beautiful"
       ],
-      answer:2
+      answer: 0
     },
 
     {
-      q:"Choose the correct preposition: She is ___ the room.",
-      options:[
-        "in",
-        "on",
-        "at",
-        "to"
+      q: "Choose the correct comparative form.",
+      options: [
+        "More tall",
+        "Taller",
+        "Tallest than",
+        "Tallly"
       ],
-      answer:0
+      answer: 1
     },
 
     {
-      q:"Which tense describes an action happening now?",
-      options:[
-        "Present continuous",
-        "Past perfect",
-        "Simple past",
-        "Future perfect"
+      q: "Which sentence is in the past simple?",
+      options: [
+        "I eat breakfast.",
+        "I am eating breakfast.",
+        "I ate breakfast.",
+        "I have eaten breakfast."
       ],
-      answer:0
+      answer: 2
     },
 
     {
-      q:"Choose the correct form: I ___ English every day.",
-      options:[
-        "study",
-        "studies",
-        "studying",
-        "studied"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is the plural of 'child'?",
-      options:[
+      q: "What is the plural of 'child'?",
+      options: [
         "Childs",
         "Children",
         "Childes",
         "Childrens"
       ],
-      answer:1
+      answer: 1
     },
 
     {
-      q:"Choose the correct sentence.",
-      options:[
-        "He don't like coffee.",
-        "He doesn't like coffee.",
-        "He doesn't likes coffee.",
-        "He not like coffee."
+      q: "Choose the correct preposition: 'She is good ___ English.'",
+      options: [
+        "in",
+        "at",
+        "on",
+        "for"
       ],
-      answer:1
+      answer: 1
     },
 
     {
-      q:"Which word is an adjective?",
-      options:[
-        "Beautiful",
-        "Run",
+      q: "Which sentence uses the present perfect?",
+      options: [
+        "I have finished my work.",
+        "I finished my work yesterday.",
+        "I finish my work.",
+        "I am finishing my work."
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What is the subject in 'John teaches English'?",
+      options: [
+        "English",
+        "teaches",
+        "John",
+        "teaches English"
+      ],
+      answer: 2
+    },
+
+    {
+      q: "Which word is an adverb?",
+      options: [
         "Quickly",
-        "Teacher"
+        "Quick",
+        "Runner",
+        "Run"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is the past participle of 'write'?",
-      options:[
-        "Wrote",
-        "Writing",
-        "Written",
-        "Writes"
+      q: "Choose the correct conditional sentence.",
+      options: [
+        "If I study, I will improve.",
+        "If I studied, I improve yesterday.",
+        "If I study, I improved.",
+        "If I studying, I will improve."
       ],
-      answer:2
+      answer: 0
     },
 
     {
-      q:"Choose the correct question.",
-      options:[
-        "Where you live?",
-        "Where do you live?",
-        "Where you do live?",
-        "Where live you?"
+      q: "Which sentence is passive?",
+      options: [
+        "The teacher explains the lesson.",
+        "The lesson is explained by the teacher.",
+        "The teacher is explaining.",
+        "The teacher explained."
       ],
-      answer:1
+      answer: 1
     }
 
-  ]
-},
+  ],
 
-{
-  title:"Teaching Methodologies",
-  questions:[
 
-    {
-      q:"What does CLT stand for?",
-      options:[
-        "Communicative Language Teaching",
-        "Class Learning Test",
-        "Complete Language Training",
-        "Common Lesson Teaching"
-      ],
-      answer:0
-    },
+  /* ===================================================
+     3. TEACHING METHODOLOGIES
+  =================================================== */
+
+  [
 
     {
-      q:"What is the main focus of communicative teaching?",
-      options:[
-        "Communication",
+      q: "What is the communicative approach mainly focused on?",
+      options: [
+        "Meaningful communication",
         "Translation only",
-        "Memorization only",
-        "Silence"
+        "Memorizing grammar tables",
+        "Silent reading only"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is Task-Based Learning?",
-      options:[
-        "Learning through meaningful tasks",
-        "Learning without activities",
-        "Learning only vocabulary lists",
-        "Learning only through exams"
+      q: "What does TPR stand for?",
+      options: [
+        "Teacher Practice Reading",
+        "Total Physical Response",
+        "Teaching Pronunciation Rules",
+        "Total Practice Revision"
       ],
-      answer:0
+      answer: 1
     },
 
     {
-      q:"Which method emphasizes repetition and drills?",
-      options:[
-        "Audio-lingual method",
-        "Task-based learning",
-        "Project learning",
-        "Discovery learning"
+      q: "In task-based learning, students mainly learn through:",
+      options: [
+        "Completing meaningful tasks",
+        "Copying dictionaries",
+        "Avoiding communication",
+        "Listening to lectures only"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is Total Physical Response associated with?",
-      options:[
+      q: "The Grammar-Translation Method emphasizes:",
+      options: [
+        "Grammar and translation",
+        "Games only",
         "Physical movement",
-        "Essay writing only",
-        "Silent reading",
-        "Translation"
+        "Free conversation only"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"Which approach can use pair work?",
-      options:[
+      q: "Which approach gives learners more opportunities to communicate?",
+      options: [
         "Communicative Language Teaching",
-        "Lecture only",
-        "Silent teaching",
-        "Grammar dictionary method"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is cooperative learning?",
-      options:[
-        "Students work together",
-        "Students never interact",
-        "Teacher does everything",
-        "Students work without goals"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Why are varied teaching methods useful?",
-      options:[
-        "Learners have different needs",
-        "They eliminate learning",
-        "They avoid objectives",
-        "They remove communication"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is direct instruction?",
-      options:[
-        "Teacher explicitly explains and models",
-        "Students never receive explanations",
-        "Only games are used",
-        "No instruction is given"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is a learner-centered approach?",
-      options:[
-        "Learners actively participate",
-        "Teacher speaks for the entire lesson",
-        "Students remain passive",
-        "No activities are used"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Which activity is highly communicative?",
-      options:[
-        "Role-play",
-        "Copying words",
         "Silent memorization",
-        "Writing the alphabet"
+        "Translation only",
+        "Dictation only"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is scaffolding?",
-      options:[
-        "Temporary support for learners",
-        "A type of exam",
-        "A classroom building",
-        "A dictionary"
+      q: "Pair work is useful because it can:",
+      options: [
+        "Increase student interaction",
+        "Stop students speaking",
+        "Remove practice",
+        "Make students passive"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What can role-play develop?",
-      options:[
-        "Speaking and interaction",
-        "Only spelling",
-        "Only handwriting",
-        "Only translation"
+      q: "Role-play is especially useful for practicing:",
+      options: [
+        "Real-life communication",
+        "Spelling only",
+        "Silent reading",
+        "Handwriting"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"Why should teachers vary activities?",
-      options:[
-        "To maintain engagement",
-        "To confuse learners",
-        "To avoid learning",
-        "To make lessons impossible"
+      q: "A student-centered methodology encourages:",
+      options: [
+        "Active learner participation",
+        "Teacher-only speaking",
+        "No collaboration",
+        "No questions"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"Which method focuses heavily on translation?",
-      options:[
-        "Grammar-Translation Method",
-        "Task-Based Learning",
+      q: "Which activity is communicative?",
+      options: [
+        "Information-gap activity",
+        "Copying a word 100 times",
+        "Reading a dictionary silently",
+        "Writing the alphabet repeatedly"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What is differentiation?",
+      options: [
+        "Adapting teaching to different learner needs",
+        "Giving everyone exactly the same support",
+        "Avoiding assessment",
+        "Removing activities"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Which method can use physical movement to teach language?",
+      options: [
         "TPR",
-        "Communicative Language Teaching"
+        "Grammar Translation",
+        "Lecture Method",
+        "Silent Reading"
       ],
-      answer:0
+      answer: 0
+    },
+
+    {
+      q: "Why are authentic materials useful?",
+      options: [
+        "They expose learners to real-world language",
+        "They always simplify English",
+        "They eliminate practice",
+        "They prevent listening"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Which activity is suitable for collaborative learning?",
+      options: [
+        "Group problem solving",
+        "Individual silence only",
+        "Teacher dictation only",
+        "Copying answers"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "A good methodology should be selected according to:",
+      options: [
+        "Learners, objectives and context",
+        "Teacher preference only",
+        "Textbook length only",
+        "Classroom color"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What is the main advantage of using varied teaching methods?",
+      options: [
+        "They can address different learning needs",
+        "They make lessons impossible",
+        "They remove objectives",
+        "They stop participation"
+      ],
+      answer: 0
     }
 
-  ]
-},
+  ],
 
-{
-  title:"Lesson Planning",
-  questions:[
+
+  /* ===================================================
+     4. LESSON PLANNING
+  =================================================== */
+
+  [
 
     {
-      q:"What is the purpose of a lesson plan?",
-      options:[
-        "To organize teaching and learning",
-        "To replace the teacher",
-        "To prevent activities",
-        "To eliminate objectives"
+      q: "What is a lesson plan?",
+      options: [
+        "A plan for teaching a lesson",
+        "A student certificate",
+        "A dictionary",
+        "A classroom rule only"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What should a lesson objective describe?",
-      options:[
+      q: "A learning objective describes:",
+      options: [
         "What learners should achieve",
+        "What color the classroom is",
         "The teacher's salary",
-        "The classroom size",
-        "The school location"
+        "The school building"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"Which is usually part of a lesson plan?",
-      options:[
-        "Objectives",
-        "Teacher's passport",
-        "School electricity bill",
-        "Weather report only"
+      q: "Which is a measurable objective?",
+      options: [
+        "Students will understand English.",
+        "Students will identify five new vocabulary items.",
+        "Students will like English.",
+        "Students will enjoy the lesson."
       ],
-      answer:0
+      answer: 1
     },
 
     {
-      q:"What is a warm-up?",
-      options:[
-        "An activity that introduces or prepares learners",
-        "The final exam",
-        "A break",
+      q: "What usually comes first when planning a lesson?",
+      options: [
+        "Learning objectives",
+        "Final certificate",
+        "Student graduation",
         "Homework correction only"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What should teachers consider when choosing activities?",
-      options:[
-        "Learning objectives",
-        "Only classroom furniture",
-        "Only lesson length",
-        "Nothing"
+      q: "Why should lesson activities match objectives?",
+      options: [
+        "To ensure activities support the intended learning",
+        "To make lessons longer",
+        "To avoid teaching",
+        "To reduce participation"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is a lesson procedure?",
-      options:[
-        "The sequence of lesson activities",
-        "The student's address",
-        "The school timetable only",
-        "A certificate"
+      q: "What is a lesson warmer?",
+      options: [
+        "A short activity that introduces or energizes the lesson",
+        "A final examination",
+        "A grammar book",
+        "A classroom heater"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"Why is timing important in lesson planning?",
-      options:[
-        "It helps manage lesson stages",
-        "It prevents teaching",
-        "It eliminates objectives",
-        "It makes lessons shorter automatically"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is an assessment stage used for?",
-      options:[
-        "Checking learning",
-        "Decorating the classroom",
-        "Replacing the lesson",
-        "Avoiding feedback"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What should an effective objective be?",
-      options:[
-        "Clear and measurable",
-        "Very vague",
-        "Impossible",
-        "Unrelated"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is differentiation?",
-      options:[
-        "Adapting teaching to learner needs",
-        "Giving everyone no work",
-        "Removing objectives",
-        "Avoiding assessment"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What should a teacher prepare before class?",
-      options:[
-        "Materials and activities",
-        "Only attendance",
-        "Nothing",
-        "Only a certificate"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is a lead-in?",
-      options:[
-        "An introduction to the lesson topic",
-        "The final exam",
-        "Homework",
-        "A school report"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Why should lesson plans be flexible?",
-      options:[
-        "Learners and classroom situations can change",
-        "Objectives are unnecessary",
-        "Teachers should not prepare",
-        "Lessons should have no structure"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is controlled practice?",
-      options:[
-        "Practice with strong guidance",
-        "Free conversation only",
+      q: "What is controlled practice?",
+      options: [
+        "Practice with significant teacher guidance",
+        "Completely free conversation",
         "No practice",
-        "A final certificate"
+        "Final testing"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is freer practice?",
-      options:[
+      q: "What is freer practice?",
+      options: [
         "Learners use language with more independence",
         "Teacher gives every answer",
-        "Students only copy",
-        "Students do nothing"
+        "Students copy sentences only",
+        "Students remain silent"
       ],
-      answer:0
+      answer: 0
+    },
+
+    {
+      q: "Why should a teacher estimate lesson timing?",
+      options: [
+        "To manage the lesson effectively",
+        "To prevent learning",
+        "To remove objectives",
+        "To avoid activities"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What is a lesson procedure?",
+      options: [
+        "The sequence of activities in a lesson",
+        "A certificate number",
+        "A student ID",
+        "A school timetable only"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What should a teacher prepare as backup?",
+      options: [
+        "An alternative activity",
+        "A second certificate",
+        "A new school",
+        "A different profession"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Why is assessment useful in a lesson plan?",
+      options: [
+        "It helps check whether objectives were achieved",
+        "It replaces all teaching",
+        "It prevents feedback",
+        "It removes activities"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "A good lesson plan should be:",
+      options: [
+        "Clear and adaptable",
+        "Impossible to change",
+        "Unrelated to learners",
+        "Without objectives"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What is the purpose of a lesson lead-in?",
+      options: [
+        "To introduce the topic and activate interest",
+        "To finish the course",
+        "To give certificates",
+        "To mark final exams"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "At the end of a lesson, a teacher may use a review to:",
+      options: [
+        "Reinforce key learning",
+        "Start a new school year",
+        "Replace the teacher",
+        "Avoid assessment"
+      ],
+      answer: 0
     }
 
-  ]
-},
+  ],
 
-{
-  title:"Classroom Management",
-  questions:[
+
+  /* ===================================================
+     5. CLASSROOM MANAGEMENT
+  =================================================== */
+
+  [
 
     {
-      q:"What is classroom management?",
-      options:[
-        "Managing learning, behavior and classroom activities",
-        "Only cleaning the room",
-        "Only taking attendance",
-        "Only giving tests"
+      q: "What is classroom management?",
+      options: [
+        "Managing learners, activities, time and behavior",
+        "Teaching grammar only",
+        "Writing certificates",
+        "Managing school finances only"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"Why are classroom rules important?",
-      options:[
-        "They establish clear expectations",
-        "They prevent learning",
+      q: "Why are classroom rules important?",
+      options: [
+        "They create clear expectations",
+        "They prevent all communication",
         "They replace teaching",
-        "They eliminate communication"
+        "They remove responsibility"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What should classroom rules be?",
-      options:[
-        "Clear and consistent",
-        "Confusing",
-        "Different every minute",
-        "Secret"
+      q: "Effective classroom instructions should be:",
+      options: [
+        "Clear and concise",
+        "Very confusing",
+        "Unrelated to the task",
+        "Given only after the activity"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What can positive reinforcement do?",
-      options:[
-        "Encourage desired behavior",
-        "Stop all learning",
-        "Create confusion",
-        "Replace lessons"
+      q: "What is an effective way to check instructions?",
+      options: [
+        "Ask concept-checking questions",
+        "Repeat the same sentence louder",
+        "Ignore students",
+        "End the lesson"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"How should a teacher handle minor disruption?",
-      options:[
-        "Respond calmly and appropriately",
-        "Immediately shout",
-        "Cancel the class",
-        "Ignore every problem"
+      q: "Good classroom management helps maximize:",
+      options: [
+        "Learning time",
+        "Noise",
+        "Confusion",
+        "Teacher absence"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is effective classroom seating?",
-      options:[
-        "Seating that supports the activity",
-        "Always one fixed arrangement",
-        "No seating plan",
-        "Only teacher chooses randomly"
+      q: "What should a teacher do when students finish early?",
+      options: [
+        "Provide an extension activity",
+        "Always send them home",
+        "Stop the entire lesson",
+        "Ignore them"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"Why is teacher movement useful?",
-      options:[
-        "It allows monitoring and interaction",
-        "It prevents students from learning",
-        "It replaces instructions",
-        "It eliminates activities"
+      q: "Why is seating arrangement important?",
+      options: [
+        "It can support interaction and classroom control",
+        "It determines student intelligence",
+        "It replaces teaching",
+        "It removes objectives"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is monitoring?",
-      options:[
-        "Observing learners during activities",
-        "Giving certificates",
-        "Leaving the classroom",
+      q: "When correcting disruptive behavior, a teacher should generally be:",
+      options: [
+        "Calm and consistent",
+        "Aggressive",
+        "Unpredictable",
+        "Silent forever"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Positive reinforcement means:",
+      options: [
+        "Recognizing desirable behavior",
+        "Punishing every mistake",
+        "Ignoring success",
+        "Stopping participation"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Why should transitions be planned?",
+      options: [
+        "To move efficiently between activities",
+        "To increase confusion",
+        "To stop learning",
+        "To remove timing"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Which is an effective classroom routine?",
+      options: [
+        "A consistent procedure for starting lessons",
+        "Changing all rules every minute",
+        "Never giving instructions",
         "Ignoring students"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What should teachers do with instructions?",
-      options:[
-        "Give clear and concise instructions",
-        "Give confusing instructions",
-        "Never explain",
-        "Only write them after class"
+      q: "Teacher proximity can help:",
+      options: [
+        "Monitor and manage behavior",
+        "Replace assessment",
+        "Teach vocabulary automatically",
+        "End the lesson"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"Why check understanding of instructions?",
-      options:[
-        "To ensure learners know what to do",
-        "To make tasks longer",
-        "To avoid activities",
-        "To stop communication"
+      q: "A teacher should usually avoid:",
+      options: [
+        "Humiliating students",
+        "Giving clear instructions",
+        "Monitoring groups",
+        "Using positive feedback"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What can pair work help with?",
-      options:[
-        "Interaction and participation",
-        "Silence",
-        "Teacher workload only",
-        "Avoiding communication"
+      q: "What does monitoring mean?",
+      options: [
+        "Observing learners while they work",
+        "Leaving the classroom",
+        "Giving certificates",
+        "Avoiding student work"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is an inclusive classroom?",
-      options:[
-        "A classroom where learners can participate and feel respected",
-        "A classroom for one student",
-        "A classroom without rules",
-        "A classroom without activities"
+      q: "Good classroom management should create an environment that is:",
+      options: [
+        "Safe and supportive",
+        "Fearful",
+        "Confusing",
+        "Unpredictable"
       ],
-      answer:0
-    },
-
-    {
-      q:"How should teachers treat learners?",
-      options:[
-        "Fairly and respectfully",
-        "Unequally",
-        "With constant punishment",
-        "Without communication"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What can good classroom routines provide?",
-      options:[
-        "Predictability and efficiency",
-        "Confusion",
-        "Less learning",
-        "No structure"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is an important classroom management skill?",
-      options:[
-        "Clear communication",
-        "Ignoring students",
-        "Avoiding planning",
-        "Speaking without purpose"
-      ],
-      answer:0
+      answer: 0
     }
 
-  ]
-},
+  ],
 
-{
-  title:"Teaching Listening",
-  questions:[
 
-    {
-      q:"What is listening?",
-      options:[
-        "Understanding spoken language",
-        "Writing language",
-        "Reading silently",
-        "Drawing pictures"
-      ],
-      answer:0
-    },
+  /* ===================================================
+     6. TEACHING LISTENING
+  =================================================== */
+
+  [
 
     {
-      q:"What should a pre-listening activity do?",
-      options:[
-        "Prepare learners for the listening",
-        "Give the final answers",
-        "End the lesson",
-        "Replace listening"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is gist listening?",
-      options:[
-        "Listening for the general idea",
-        "Listening for every word",
-        "Reading the transcript",
-        "Writing an essay"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is listening for detail?",
-      options:[
-        "Listening for specific information",
-        "Ignoring information",
-        "Only guessing",
-        "Reading a dictionary"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Why can authentic audio be useful?",
-      options:[
-        "It exposes learners to natural language",
-        "It prevents listening",
-        "It eliminates vocabulary",
-        "It replaces speaking"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What should a teacher consider when selecting listening material?",
-      options:[
-        "Learner level and objectives",
-        "Only audio length",
-        "Only teacher preference",
-        "Nothing"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Which is a listening strategy?",
-      options:[
-        "Predicting",
-        "Copying",
-        "Drawing",
-        "Translating every word"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Why replay listening material?",
-      options:[
-        "To allow learners to notice more information",
-        "To waste time",
-        "To avoid understanding",
-        "To replace assessment"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is selective listening?",
-      options:[
-        "Listening for particular information",
-        "Listening without purpose",
-        "Ignoring speech",
-        "Reading only"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What can prediction activities develop?",
-      options:[
-        "Listening preparation and comprehension",
-        "Only handwriting",
-        "Only spelling",
-        "Only grammar"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is bottom-up processing?",
-      options:[
-        "Building understanding from sounds and words",
-        "Guessing only from context",
-        "Writing from memory",
-        "Speaking without listening"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is top-down processing?",
-      options:[
-        "Using context and prior knowledge",
-        "Listening to every sound only",
-        "Copying words",
-        "Reading grammar rules"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Which activity can check listening comprehension?",
-      options:[
-        "Multiple-choice questions",
-        "Drawing only",
-        "Silent reading only",
-        "Alphabet practice"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What should teachers avoid during listening lessons?",
-      options:[
-        "Overloading learners with too many tasks",
-        "Clear objectives",
-        "Pre-listening activities",
-        "Useful feedback"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is a post-listening activity?",
-      options:[
-        "An activity after listening to process or use information",
-        "An activity before class",
-        "A registration form",
-        "A certificate"
-      ],
-      answer:0
-    }
-
-  ]
-},
-
-{
-  title:"Teaching Speaking",
-  questions:[
-
-    {
-      q:"What is speaking?",
-      options:[
-        "Producing spoken language",
-        "Reading silently",
-        "Listening only",
-        "Writing only"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is fluency?",
-      options:[
-        "Ability to communicate smoothly",
-        "Perfect spelling",
-        "Perfect handwriting",
-        "Knowing every word"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is accuracy?",
-      options:[
-        "Correct use of language",
-        "Speaking very fast",
-        "Speaking loudly",
-        "Speaking without meaning"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Which activity encourages speaking?",
-      options:[
-        "Role-play",
-        "Silent copying",
-        "Dictionary memorization only",
-        "Silent reading"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is pair work?",
-      options:[
-        "Two learners working together",
-        "Teacher working alone",
-        "Whole school working together",
-        "No interaction"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Why use group discussions?",
-      options:[
-        "To increase interaction",
-        "To prevent speaking",
-        "To reduce participation",
-        "To avoid communication"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What should teachers do before a speaking task?",
-      options:[
-        "Provide useful language and clear instructions",
-        "Give no instructions",
-        "Stop learners",
-        "Give all answers"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is a speaking prompt?",
-      options:[
-        "Something that encourages learners to speak",
-        "A grammar book",
-        "A certificate",
-        "A listening device"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Why is wait time useful?",
-      options:[
-        "It gives learners time to formulate responses",
-        "It prevents speaking",
-        "It ends discussion",
-        "It replaces feedback"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is communicative speaking practice?",
-      options:[
-        "Using language to exchange meaning",
-        "Repeating without meaning",
-        "Copying sentences",
-        "Reading silently"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What can role-play develop?",
-      options:[
-        "Real-life communication skills",
-        "Only handwriting",
-        "Only spelling",
-        "Only translation"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Should every speaking error be corrected immediately?",
-      options:[
-        "Not always",
-        "Yes, always",
-        "Never correct anything",
-        "Only punish errors"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is pronunciation teaching?",
-      options:[
-        "Helping learners produce sounds and stress appropriately",
-        "Teaching handwriting",
-        "Teaching mathematics",
-        "Teaching reading only"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is an information-gap activity?",
-      options:[
-        "Learners have different information and communicate to complete a task",
-        "Everyone has exactly the same information",
-        "Learners work silently",
-        "Teacher gives all information"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What should a good speaking task have?",
-      options:[
-        "A meaningful communicative purpose",
-        "No purpose",
-        "Only memorization",
-        "No interaction"
-      ],
-      answer:0
-    }
-
-  ]
-},
-
-{
-  title:"Teaching Reading",
-  questions:[
-
-    {
-      q:"What is reading?",
-      options:[
-        "Understanding written language",
-        "Speaking only",
-        "Listening only",
+      q: "Which skill is being taught when students understand spoken English?",
+      options: [
+        "Listening",
+        "Writing",
+        "Reading",
         "Drawing"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is skimming?",
-      options:[
-        "Reading quickly for the general idea",
-        "Reading every word carefully",
-        "Copying the text",
-        "Translating every sentence"
+      q: "What is a pre-listening activity?",
+      options: [
+        "An activity that prepares learners for the listening",
+        "A final exam",
+        "A writing assessment",
+        "A certificate ceremony"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is scanning?",
-      options:[
-        "Looking for specific information",
-        "Reading for general meaning only",
-        "Writing an essay",
-        "Speaking"
+      q: "Why should learners have a reason for listening?",
+      options: [
+        "It gives them a clear purpose",
+        "It makes listening impossible",
+        "It removes attention",
+        "It replaces the audio"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is a pre-reading activity?",
-      options:[
-        "An activity preparing learners for the text",
-        "An activity after the exam",
-        "A certificate",
-        "A speaking test"
+      q: "Listening for gist means listening for:",
+      options: [
+        "The general meaning",
+        "Every single word",
+        "Grammar rules only",
+        "Spelling only"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"Why activate prior knowledge?",
-      options:[
-        "It helps learners connect with the text",
-        "It prevents comprehension",
-        "It replaces reading",
-        "It removes vocabulary"
+      q: "Listening for specific information means:",
+      options: [
+        "Listening for particular details",
+        "Ignoring all details",
+        "Listening without a task",
+        "Reading instead"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is intensive reading?",
-      options:[
-        "Careful reading for detailed understanding",
-        "Reading quickly only",
-        "Ignoring details",
-        "Reading without purpose"
+      q: "Which is a useful listening activity?",
+      options: [
+        "Completing information from an audio",
+        "Copying a dictionary",
+        "Drawing silently",
+        "Memorizing the alphabet"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is extensive reading?",
-      options:[
-        "Reading larger amounts for overall understanding or enjoyment",
-        "Reading one word",
-        "Reading only grammar rules",
-        "Reading only tests"
+      q: "Why can authentic audio be useful?",
+      options: [
+        "It exposes learners to natural language",
+        "It always has no difficulty",
+        "It eliminates practice",
+        "It teaches only spelling"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What can context clues help learners do?",
-      options:[
-        "Guess meaning of unfamiliar words",
-        "Avoid reading",
-        "Write certificates",
-        "Stop comprehension"
+      q: "What should a teacher consider when choosing listening material?",
+      options: [
+        "Learner level and lesson objectives",
+        "File size only",
+        "Teacher's favorite song only",
+        "Classroom color"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"Which is a reading strategy?",
-      options:[
-        "Predicting",
-        "Shouting",
-        "Singing",
-        "Drawing only"
+      q: "A while-listening task should:",
+      options: [
+        "Give learners something specific to do",
+        "Require no attention",
+        "Replace the lesson",
+        "Always test grammar"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is a comprehension question?",
-      options:[
-        "A question checking understanding of a text",
-        "A grammar rule",
-        "A certificate question",
-        "A registration question"
+      q: "A post-listening activity can:",
+      options: [
+        "Check understanding and extend the topic",
+        "Stop all discussion",
+        "Replace the audio permanently",
+        "Avoid feedback"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"Why choose texts appropriate to learner level?",
-      options:[
-        "To support successful learning",
-        "To make learners fail",
-        "To prevent reading",
-        "To eliminate objectives"
+      q: "Why might teachers play an audio more than once?",
+      options: [
+        "To support understanding and focus on different details",
+        "Because students should never learn",
+        "To waste time",
+        "To avoid activities"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What can headings help readers do?",
-      options:[
-        "Predict and organize information",
-        "Avoid the text",
-        "Replace vocabulary",
-        "Stop reading"
+      q: "What is bottom-up listening?",
+      options: [
+        "Processing sounds, words and grammatical forms",
+        "Understanding only the main idea",
+        "Guessing the speaker's age",
+        "Writing an essay"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is inference?",
-      options:[
-        "Understanding information that is not directly stated",
+      q: "What is top-down listening?",
+      options: [
+        "Using context and background knowledge",
+        "Listening to sounds only",
         "Copying words",
-        "Reading the title only",
+        "Spelling every word"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Which question checks gist?",
+      options: [
+        "What is the conversation mainly about?",
+        "What exact number did he say?",
+        "How many words were spoken?",
+        "What is the spelling of every word?"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Effective listening lessons usually include:",
+      options: [
+        "Preparation, listening tasks and follow-up",
+        "Only one difficult recording",
+        "No purpose",
+        "No checking"
+      ],
+      answer: 0
+    }
+
+  ],
+
+
+  /* ===================================================
+     7. TEACHING SPEAKING
+  =================================================== */
+
+  [
+
+    {
+      q: "Speaking is primarily a:",
+      options: [
+        "Productive language skill",
+        "Receptive skill",
+        "Reading skill",
+        "Writing-only skill"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Which activity is useful for speaking practice?",
+      options: [
+        "Role-play",
+        "Silent copying",
+        "Dictionary reading",
+        "Grammar translation only"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Pair work can help speaking because:",
+      options: [
+        "Students get more opportunities to speak",
+        "Students become silent",
+        "It removes interaction",
+        "It prevents practice"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Fluency refers mainly to:",
+      options: [
+        "The ability to communicate smoothly",
+        "Perfect spelling",
+        "Perfect handwriting",
+        "Memorizing vocabulary"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Accuracy refers mainly to:",
+      options: [
+        "Correct use of language",
+        "Speaking very quickly",
+        "Speaking loudly",
+        "Using gestures"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What is a discussion activity?",
+      options: [
+        "Learners exchange ideas about a topic",
+        "Learners copy a paragraph",
+        "Learners listen silently",
+        "Learners memorize spelling"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Why should teachers create a supportive speaking environment?",
+      options: [
+        "It can reduce fear of making mistakes",
+        "It prevents communication",
+        "It removes practice",
+        "It increases silence"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What is information-gap speaking?",
+      options: [
+        "Learners have different information and communicate to complete a task",
+        "Students copy the same text",
+        "Students read silently",
+        "Teachers give all answers"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Delayed correction means:",
+      options: [
+        "The teacher notes errors and discusses them after the activity",
+        "The teacher never corrects",
+        "The teacher interrupts every word",
+        "Students are never assessed"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Why can immediate correction sometimes be problematic during fluency practice?",
+      options: [
+        "It may interrupt communication",
+        "It improves every conversation",
+        "It removes all mistakes",
+        "It makes students speak more"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Which activity encourages spontaneous speaking?",
+      options: [
+        "Opinion discussion",
+        "Copying sentences",
+        "Silent reading",
+        "Writing definitions"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "A speaking prompt should generally be:",
+      options: [
+        "Clear and appropriate for the learner level",
+        "Impossible to understand",
+        "Unrelated to the objective",
+        "Always advanced"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Pronunciation practice can help learners:",
+      options: [
+        "Speak more clearly",
+        "Avoid listening",
+        "Stop communicating",
+        "Write faster"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What is a presentation?",
+      options: [
+        "A structured spoken talk to an audience",
+        "A silent worksheet",
+        "A vocabulary list",
+        "A grammar test only"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "The main purpose of communicative speaking activities is to:",
+      options: [
+        "Use language meaningfully",
+        "Memorize every rule",
+        "Avoid interaction",
+        "Copy sentences"
+      ],
+      answer: 0
+    }
+
+  ],
+
+
+  /* ===================================================
+     8. TEACHING READING
+  =================================================== */
+
+  [
+
+    {
+      q: "Reading is primarily a:",
+      options: [
+        "Receptive skill",
+        "Productive skill",
+        "Speaking skill",
+        "Physical skill"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Reading for gist means:",
+      options: [
+        "Understanding the general idea",
+        "Finding every grammar error",
+        "Reading every word aloud",
+        "Memorizing the text"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Scanning means:",
+      options: [
+        "Looking quickly for specific information",
+        "Reading slowly for literary style",
+        "Memorizing a text",
         "Translating every word"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What can post-reading activities do?",
-      options:[
-        "Help learners respond to or use information from the text",
-        "Prevent comprehension",
-        "Replace reading",
-        "Stop discussion"
+      q: "Skimming means:",
+      options: [
+        "Reading quickly to get the main idea",
+        "Searching for one exact number",
+        "Writing a summary first",
+        "Reading every word"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What should a teacher teach learners to do with unknown words?",
-      options:[
-        "Use context and other strategies before immediately using a dictionary",
-        "Stop reading every time",
-        "Ignore all meaning",
-        "Memorize the entire dictionary"
+      q: "A pre-reading activity can:",
+      options: [
+        "Activate background knowledge",
+        "Prevent understanding",
+        "Replace the text",
+        "End the lesson"
       ],
-      answer:0
+      answer: 0
+    },
+
+    {
+      q: "Which is a useful reading strategy?",
+      options: [
+        "Predicting content",
+        "Ignoring headings",
+        "Memorizing every sentence",
+        "Avoiding context"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Context can help learners:",
+      options: [
+        "Guess the meaning of unfamiliar words",
+        "Avoid reading",
+        "Stop understanding",
+        "Replace vocabulary practice"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "A comprehension question should be:",
+      options: [
+        "Related to the reading objective",
+        "Unrelated to the text",
+        "Impossible for the learners",
+        "Only about spelling"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Authentic reading materials include:",
+      options: [
+        "Real-world texts",
+        "Only teacher-created sentences",
+        "Only grammar tables",
+        "Only vocabulary lists"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Which activity can follow a reading?",
+      options: [
+        "Discussion about the text",
+        "Ignoring the text",
+        "Deleting the lesson",
+        "Avoiding comprehension"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What is intensive reading?",
+      options: [
+        "Close reading for detailed understanding",
+        "Reading only titles",
+        "Reading without attention",
+        "Scanning for one number"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What is extensive reading?",
+      options: [
+        "Reading larger amounts for general understanding and enjoyment",
+        "Reading one sentence repeatedly",
+        "Studying grammar only",
+        "Memorizing a dictionary"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Why should reading texts be appropriate to learner level?",
+      options: [
+        "To provide an achievable but useful challenge",
+        "To make every text impossible",
+        "To avoid learning",
+        "To remove vocabulary"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Which question checks specific information?",
+      options: [
+        "What time does the train leave?",
+        "What is the text mainly about?",
+        "What is the author's general purpose?",
+        "How does the text make you feel?"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Good reading instruction teaches learners:",
+      options: [
+        "Strategies for understanding texts",
+        "Only how to pronounce letters",
+        "Only translation",
+        "Only spelling"
+      ],
+      answer: 0
     }
 
-  ]
-},
+  ],
 
-{
-  title:"Teaching Writing",
-  questions:[
+
+  /* ===================================================
+     9. TEACHING WRITING
+  =================================================== */
+
+  [
 
     {
-      q:"What is writing?",
-      options:[
-        "Communicating ideas through written language",
-        "Speaking only",
-        "Listening only",
-        "Reading only"
+      q: "Writing is primarily a:",
+      options: [
+        "Productive skill",
+        "Receptive skill",
+        "Listening skill",
+        "Reading-only skill"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is brainstorming?",
-      options:[
-        "Generating ideas before writing",
-        "Correcting grammar only",
-        "Publishing a text",
-        "Taking an exam"
+      q: "What is the first stage of a writing process?",
+      options: [
+        "Planning",
+        "Publishing",
+        "Final grading",
+        "Memorizing"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is drafting?",
-      options:[
-        "Creating an initial version of a text",
-        "Deleting all writing",
-        "Taking attendance",
+      q: "Brainstorming helps students:",
+      options: [
+        "Generate ideas",
+        "Avoid ideas",
+        "Correct every grammar mistake",
+        "Publish immediately"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Drafting means:",
+      options: [
+        "Writing an initial version",
+        "Submitting the final version",
+        "Giving a certificate",
         "Reading silently"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is revising?",
-      options:[
+      q: "Revising involves:",
+      options: [
         "Improving content and organization",
-        "Only checking spelling",
-        "Ignoring the text",
-        "Printing a certificate"
+        "Only counting words",
+        "Avoiding changes",
+        "Deleting the whole course"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is editing?",
-      options:[
-        "Checking language accuracy and errors",
+      q: "Editing mainly focuses on:",
+      options: [
+        "Language accuracy and errors",
         "Generating ideas",
-        "Choosing a topic only",
-        "Speaking"
+        "Choosing a topic",
+        "Speaking fluently"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is a paragraph?",
-      options:[
-        "A group of related sentences",
-        "A single letter",
-        "A question only",
-        "A vocabulary list only"
+      q: "What is paragraph organization?",
+      options: [
+        "Arranging ideas logically",
+        "Writing random sentences",
+        "Using only difficult words",
+        "Avoiding topic sentences"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is a topic sentence?",
-      options:[
-        "A sentence that introduces the main idea",
-        "The final punctuation only",
-        "A title only",
-        "A random sentence"
+      q: "A topic sentence usually:",
+      options: [
+        "Introduces the main idea of a paragraph",
+        "Ends every essay",
+        "Lists every reference",
+        "Gives the final grade"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is coherence?",
-      options:[
-        "Logical organization and connection of ideas",
-        "Correct spelling only",
-        "Fast writing",
-        "Long sentences"
+      q: "Coherence refers to:",
+      options: [
+        "Logical connection and flow of ideas",
+        "Spelling only",
+        "Word length",
+        "Handwriting"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is cohesion?",
-      options:[
-        "Linguistic links connecting parts of a text",
-        "Writing very slowly",
-        "Speaking clearly",
-        "Reading quickly"
+      q: "Cohesion refers to:",
+      options: [
+        "Language devices that connect parts of a text",
+        "The topic only",
+        "Handwriting style",
+        "Speaking speed"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"Which is a useful pre-writing activity?",
-      options:[
-        "Mind mapping",
-        "Final grading",
-        "Certificate printing",
-        "Final exam"
+      q: "Peer review means:",
+      options: [
+        "Students give feedback on each other's writing",
+        "The teacher writes the essay",
+        "Students avoid feedback",
+        "Students take a listening test"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"Why give learners models of writing?",
-      options:[
-        "To show useful structure and language",
-        "To prevent original writing",
-        "To replace practice",
-        "To avoid learning"
+      q: "Why is feedback important in writing?",
+      options: [
+        "It helps learners improve their writing",
+        "It prevents revision",
+        "It removes learning",
+        "It replaces writing"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is peer feedback?",
-      options:[
-        "Learners give feedback on each other's work",
-        "Teacher gives no feedback",
-        "Students take a final exam",
-        "A dictionary exercise"
+      q: "A writing task should have:",
+      options: [
+        "A clear purpose and audience",
+        "No instructions",
+        "No topic",
+        "Only difficult vocabulary"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What should writing objectives focus on?",
-      options:[
-        "The writing skills learners should develop",
-        "Only handwriting speed",
-        "Only vocabulary size",
-        "Only exam scores"
+      q: "Which is a productive writing activity?",
+      options: [
+        "Writing an email",
+        "Listening to a dialogue",
+        "Reading a story",
+        "Watching a video"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is guided writing?",
-      options:[
-        "Writing with structured support",
-        "Writing without any instructions",
-        "Copying a dictionary",
-        "Speaking from memory"
+      q: "A good writing teacher should encourage:",
+      options: [
+        "Planning, drafting, revising and editing",
+        "Only final answers",
+        "No feedback",
+        "Copying texts"
       ],
-      answer:0
-    },
-
-    {
-      q:"Why is process writing useful?",
-      options:[
-        "It emphasizes planning, drafting, revising and editing",
-        "It requires only one draft",
-        "It avoids feedback",
-        "It prevents revision"
-      ],
-      answer:0
+      answer: 0
     }
 
-  ]
-},
+  ],
 
-{
-  title:"Assessment & Testing",
-  questions:[
+
+  /* ===================================================
+     10. ASSESSMENT & TESTING
+  =================================================== */
+
+  [
 
     {
-      q:"What is assessment?",
-      options:[
-        "Collecting information about learning",
+      q: "What is assessment?",
+      options: [
+        "The process of gathering information about learning",
         "Only giving certificates",
-        "Only teaching grammar",
-        "Only attendance"
+        "Teaching without checking",
+        "A classroom decoration"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is formative assessment?",
-      options:[
-        "Assessment during learning to support improvement",
-        "Only the final exam",
+      q: "What is formative assessment?",
+      options: [
+        "Assessment used during learning to provide feedback",
+        "Only a final exam",
         "A certificate",
-        "A registration form"
+        "A school timetable"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is summative assessment?",
-      options:[
-        "Assessment used to evaluate learning at the end of a period",
-        "A warm-up",
-        "A speaking activity",
-        "A lesson introduction"
+      q: "What is summative assessment?",
+      options: [
+        "Assessment usually given at the end of a course or unit",
+        "A warm-up activity",
+        "A classroom rule",
+        "A speaking game"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is a diagnostic test?",
-      options:[
-        "A test used to identify strengths and weaknesses",
-        "A final certificate",
-        "A lesson plan",
-        "A vocabulary game"
+      q: "A valid test measures:",
+      options: [
+        "What it is intended to measure",
+        "Whatever is easiest",
+        "Only handwriting",
+        "Only vocabulary"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is validity?",
-      options:[
-        "The extent to which a test measures what it intends to measure",
-        "How attractive a test looks",
-        "How long a test is",
-        "How expensive a test is"
+      q: "Reliability means:",
+      options: [
+        "Results are reasonably consistent",
+        "The test is always difficult",
+        "Students like the test",
+        "The test has many pages"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is reliability?",
-      options:[
-        "Consistency of measurement",
-        "Difficulty only",
-        "Length only",
-        "Appearance only"
+      q: "A multiple-choice question normally contains:",
+      options: [
+        "A question and answer options",
+        "Only a paragraph",
+        "Only an essay",
+        "Only a picture"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is a multiple-choice question?",
-      options:[
-        "A question with several answer options",
-        "A question with no options",
-        "An essay only",
-        "A speaking activity"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is a rubric?",
-      options:[
+      q: "What is a rubric?",
+      options: [
         "A scoring guide with criteria",
-        "A textbook",
-        "A certificate",
-        "A lesson plan"
-      ],
-      answer:0
-    },
-
-    {
-      q:"Why use clear assessment criteria?",
-      options:[
-        "To make scoring more transparent",
-        "To confuse students",
-        "To prevent feedback",
-        "To eliminate objectives"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is feedback in assessment?",
-      options:[
-        "Information that helps learners improve",
-        "A punishment",
-        "A certificate",
-        "A registration process"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is an objective test?",
-      options:[
-        "A test with answers that can be scored consistently",
-        "A test with no criteria",
-        "A conversation only",
-        "A lesson plan"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is a criterion-referenced test?",
-      options:[
-        "A test judged against defined standards",
-        "A test compared only with classmates",
-        "A random test",
-        "A test without objectives"
-      ],
-      answer:0
-    },
-
-    {
-      q:"What is a norm-referenced test?",
-      options:[
-        "A test interpreting performance compared with a group",
-        "A test with no score",
+        "A grammar book",
         "A lesson plan",
         "A certificate"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"Why should tests match learning objectives?",
-      options:[
-        "To ensure appropriate assessment",
-        "To make tests longer",
-        "To avoid learning",
-        "To confuse learners"
+      q: "Why should assessment criteria be clear?",
+      options: [
+        "Learners understand how their work is judged",
+        "It makes grading random",
+        "It prevents feedback",
+        "It removes objectives"
       ],
-      answer:0
+      answer: 0
     },
 
     {
-      q:"What is a passing score?",
-      options:[
+      q: "Diagnostic assessment is used to:",
+      options: [
+        "Identify strengths and weaknesses before or early in learning",
+        "Give final certificates only",
+        "Replace teaching",
+        "Punish learners"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "Which is an example of formative assessment?",
+      options: [
+        "A short quiz during a unit",
+        "A final graduation exam only",
+        "A certificate ceremony",
+        "A school registration form"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What is feedback?",
+      options: [
+        "Information that helps learners improve",
+        "A final certificate",
+        "A classroom decoration",
+        "A textbook"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "A fair assessment should:",
+      options: [
+        "Give learners an appropriate opportunity to demonstrate learning",
+        "Be unrelated to instruction",
+        "Use unclear criteria",
+        "Change rules randomly"
+      ],
+      answer: 0
+    },
+
+    {
+      q: "What does a passing mark represent?",
+      options: [
         "The minimum score required to pass",
-        "The highest possible score",
-        "The student's name",
-        "The test duration"
+        "The maximum possible score",
+        "The number of questions",
+        "The lesson duration"
       ],
-      answer:0
+      answer: 0
+    },
+
+    {
+      q: "If a test has 15 questions and a learner gets 12 correct, what is the percentage?",
+      options: [
+        "60%",
+        "70%",
+        "80%",
+        "90%"
+      ],
+      answer: 2
+    },
+
+    {
+      q: "If the passing mark is 70%, which result passes?",
+      options: [
+        "65%",
+        "69%",
+        "70%",
+        "50%"
+      ],
+      answer: 2
     }
 
   ]
-}
 
 ];
 
 
-/* =========================================================
+/* =====================================================
    EXAM STATE
-   ========================================================= */
+====================================================== */
 
-let candidate = {
-  name:"",
-  nationality:"",
-  country:"",
-  email:""
-};
-
-let currentSubject = 0;
-let currentQuestion = 0;
-
-let subjectCorrect = 0;
-
-let totalCorrect = 0;
+let currentSubjectIndex = 0;
 
 let subjectScores = [];
 
+let examStudent = {
 
-/* =========================================================
-   START TEFL
-   ========================================================= */
+  fullName: "",
+  nationality: "",
+  country: "",
+  email: ""
 
-function startTEFL(){
+};
 
-  const name =
-    document.getElementById("fullName").value.trim();
+let examSubmitted = false;
+
+
+/* =====================================================
+   OPEN TEFL EXAM
+====================================================== */
+
+function openTEFLExam() {
+
+  document
+    .getElementById("tefl-exam")
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+
+}
+
+
+/* =====================================================
+   SHOW REGISTRATION
+====================================================== */
+
+function showExamRegistration() {
+
+  const registration =
+    document.getElementById("examRegistration");
+
+  registration.style.display = "block";
+
+  registration.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
+}
+
+
+/* =====================================================
+   START TEFL EXAM
+====================================================== */
+
+function startTEFLExam() {
+
+  const fullName =
+    document.getElementById("examFullName").value.trim();
 
   const nationality =
-    document.getElementById("nationality").value.trim();
+    document.getElementById("examNationality").value.trim();
 
   const country =
-    document.getElementById("country").value.trim();
+    document.getElementById("examCountry").value.trim();
 
   const email =
-    document.getElementById("email").value.trim();
+    document.getElementById("examEmail").value.trim();
 
-  const error =
-    document.getElementById("registrationError");
 
-  error.innerHTML="";
+  if (!fullName ||
+      !nationality ||
+      !country ||
+      !email) {
 
-  if(!name || !nationality || !country || !email){
-
-    error.innerHTML =
-      `<div class="error">
-        ❌ Please complete all registration fields.
-      </div>`;
+    alert(
+      "Please complete all registration fields."
+    );
 
     return;
   }
 
-  if(!email.includes("@")){
 
-    error.innerHTML =
-      `<div class="error">
-        ❌ Please enter a valid email address.
-      </div>`;
+  if (!validateEmail(email)) {
+
+    alert(
+      "Please enter a valid email address."
+    );
 
     return;
   }
 
-  candidate = {
-    name:name,
-    nationality:nationality,
-    country:country,
-    email:email
+
+  examStudent = {
+
+    fullName: fullName,
+
+    nationality: nationality,
+
+    country: country,
+
+    email: email
+
   };
 
-  currentSubject=0;
-  currentQuestion=0;
-  totalCorrect=0;
-  subjectScores=[];
 
-  document.getElementById("registrationBox")
-    .classList.add("hidden");
+  currentSubjectIndex = 0;
 
-  document.getElementById("finalResultBox")
-    .classList.add("hidden");
+  subjectScores = [];
 
-  document.getElementById("subjectResultBox")
-    .classList.add("hidden");
+  examSubmitted = false;
 
-  document.getElementById("examBox")
-    .classList.remove("hidden");
+
+  document
+    .getElementById("teflIntro")
+    .style.display = "none";
+
+
+  document
+    .getElementById("examArea")
+    .style.display = "block";
+
+
+  document
+    .getElementById("subjectResult")
+    .style.display = "none";
+
+
+  document
+    .getElementById("finalResult")
+    .style.display = "none";
+
 
   loadSubject();
+
+
+  document
+    .getElementById("examArea")
+    .scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
 }
 
 
-/* =========================================================
+/* =====================================================
    LOAD SUBJECT
-   ========================================================= */
+====================================================== */
 
-function loadSubject(){
+function loadSubject() {
 
-  currentQuestion=0;
-  subjectCorrect=0;
+  const subjectName =
+    teflSubjects[currentSubjectIndex];
 
-  document.getElementById("examBox")
-    .classList.remove("hidden");
-
-  document.getElementById("subjectResultBox")
-    .classList.add("hidden");
-
-  const subject =
-    subjects[currentSubject];
-
-  document.getElementById("subjectTitle")
-    .textContent=subject.title;
-
-  renderQuestion();
-}
+  const questions =
+    teflQuestions[currentSubjectIndex];
 
 
-/* =========================================================
-   RENDER QUESTION
-   ========================================================= */
+  document
+    .getElementById("currentSubjectTitle")
+    .textContent = subjectName;
 
-function renderQuestion(){
 
-  const subject =
-    subjects[currentSubject];
+  document
+    .getElementById("currentSubjectSubtitle")
+    .textContent =
+      "Answer all 15 questions before submitting.";
 
-  const question =
-    subject.questions[currentQuestion];
+
+  document
+    .getElementById("examProgress")
+    .textContent =
+      "Subject " +
+      (currentSubjectIndex + 1) +
+      " / " +
+      teflSubjects.length;
+
 
   const container =
-    document.getElementById("questionContainer");
+    document.getElementById("questionsContainer");
 
-  const questionNumber =
-    currentQuestion + 1;
 
-  const totalQuestions =
-    subject.questions.length;
+  container.innerHTML = "";
 
-  document.getElementById("subjectCounter")
-    .textContent =
-    `Question ${questionNumber} of ${totalQuestions}`;
 
-  const totalDone =
-    currentSubject * 15 + currentQuestion;
+  questions.forEach(function(question, index) {
 
-  const totalPercent =
-    (totalDone / 150) * 100;
+    const questionCard =
+      document.createElement("div");
 
-  document.getElementById("progressBar")
-    .style.width =
-    `${totalPercent}%`;
+    questionCard.className =
+      "question-card";
 
-  document.getElementById("totalProgressText")
-    .textContent =
-    `${totalDone} / 150`;
 
-  let html = `
+    let optionsHTML = "";
 
-    <div class="question-box">
+
+    question.options.forEach(function(option, optionIndex) {
+
+      optionsHTML += `
+
+        <label
+          class="answer-option"
+          onclick="selectAnswer(this)">
+
+          <input
+            type="radio"
+            name="question_${index}"
+            value="${optionIndex}">
+
+          ${String.fromCharCode(65 + optionIndex)}.
+          ${escapeHtml(option)}
+
+        </label>
+
+      `;
+
+    });
+
+
+    questionCard.innerHTML = `
 
       <div class="question-number">
-        Question ${questionNumber}
+        Question ${index + 1} of 15
       </div>
 
       <div class="question-text">
-        ${question.q}
+        ${escapeHtml(question.q)}
       </div>
 
-  `;
-
-  question.options.forEach((option,index)=>{
-
-    html += `
-
-      <label class="option">
-
-        <input
-          type="radio"
-          name="answer"
-          value="${index}"
-        >
-
-        <strong>${String.fromCharCode(65+index)}.</strong>
-        ${option}
-
-      </label>
+      <div>
+        ${optionsHTML}
+      </div>
 
     `;
 
+
+    container.appendChild(questionCard);
+
   });
 
-  html += `</div>`;
 
-  container.innerHTML=html;
+  document
+    .getElementById("submitSubjectButton")
+    .disabled = false;
 
-  const nextButton =
-    document.getElementById("questionNextButton");
 
-  if(currentQuestion === totalQuestions - 1){
-
-    nextButton.textContent =
+  document
+    .getElementById("submitSubjectButton")
+    .textContent =
       "SUBMIT SUBJECT";
 
-  }else{
-
-    nextButton.textContent =
-      "NEXT QUESTION";
-
-  }
-
 }
 
 
-/* =========================================================
-   NEXT QUESTION
-   ========================================================= */
+/* =====================================================
+   SELECT ANSWER
+====================================================== */
 
-function nextQuestion(){
+function selectAnswer(element) {
 
-  const selected =
-    document.querySelector(
-      'input[name="answer"]:checked'
-    );
+  const parent =
+    element.parentElement;
 
-  if(!selected){
-
-    alert("Please select an answer.");
-
-    return;
-  }
-
-  const answer =
-    Number(selected.value);
-
-  const correct =
-    subjects[currentSubject]
-      .questions[currentQuestion]
-      .answer;
-
-  if(answer === correct){
-
-    subjectCorrect++;
-
-  }
-
-  if(
-    currentQuestion <
-    subjects[currentSubject].questions.length - 1
-  ){
-
-    currentQuestion++;
-
-    renderQuestion();
-
-  }else{
-
-    finishSubject();
-
-  }
-
-}
+  const options =
+    parent.querySelectorAll(".answer-option");
 
 
-/* =========================================================
-   FINISH SUBJECT
-   ========================================================= */
+  options.forEach(function(option) {
 
-function finishSubject(){
+    option.classList.remove("selected");
 
-  totalCorrect += subjectCorrect;
-
-  const total =
-    subjects[currentSubject].questions.length;
-
-  const percentage =
-    Math.round((subjectCorrect / total) * 100);
-
-  subjectScores.push({
-    subject:subjects[currentSubject].title,
-    correct:subjectCorrect,
-    total:total,
-    percentage:percentage
   });
 
-  document.getElementById("examBox")
-    .classList.add("hidden");
 
-  document.getElementById("subjectResultBox")
-    .classList.remove("hidden");
+  element.classList.add("selected");
 
-  document.getElementById("subjectResultTitle")
-    .textContent =
-    subjects[currentSubject].title;
+}
 
-  document.getElementById("subjectScore")
-    .textContent =
-    `${subjectCorrect} / ${total} — ${percentage}%`;
 
-  document.getElementById("subjectResultMessage")
-    .textContent =
-    percentage >= 70
-      ? "Good work! You can continue to the next subject."
-      : "You can continue to the next subject. Your final result is based on all 150 questions.";
+/* =====================================================
+   SUBMIT SUBJECT
+====================================================== */
 
-  const nextButton =
-    document.querySelector(
-      "#subjectResultBox button"
+function submitSubject() {
+
+  const questions =
+    teflQuestions[currentSubjectIndex];
+
+
+  let unanswered = 0;
+
+  let score = 0;
+
+
+  questions.forEach(function(question, index) {
+
+    const selected =
+      document.querySelector(
+        `input[name="question_${index}"]:checked`
+      );
+
+
+    if (!selected) {
+
+      unanswered++;
+
+      return;
+
+    }
+
+
+    const answer =
+      parseInt(selected.value, 10);
+
+
+    if (answer === question.answer) {
+
+      score++;
+
+    }
+
+  });
+
+
+  if (unanswered > 0) {
+
+    alert(
+      "Please answer all 15 questions before submitting.\n\n" +
+      "Unanswered questions: " +
+      unanswered
     );
 
-  if(currentSubject === subjects.length - 1){
-
-    nextButton.textContent =
-      "VIEW FINAL RESULT";
-
-  }else{
-
-    nextButton.textContent =
-      "NEXT";
+    return;
 
   }
 
-}
-
-
-/* =========================================================
-   NEXT SUBJECT
-   ========================================================= */
-
-function nextSubject(){
-
-  if(currentSubject < subjects.length - 1){
-
-    currentSubject++;
-
-    loadSubject();
-
-  }else{
-
-    showFinalResult();
-
-  }
-
-}
-
-
-/* =========================================================
-   FINAL RESULT
-   ========================================================= */
-
-function showFinalResult(){
-
-  document.getElementById("examBox")
-    .classList.add("hidden");
-
-  document.getElementById("subjectResultBox")
-    .classList.add("hidden");
-
-  document.getElementById("finalResultBox")
-    .classList.remove("hidden");
-
-  const totalQuestions=150;
 
   const percentage =
     Math.round(
-      (totalCorrect / totalQuestions) * 100
+      (score / questions.length) * 100
     );
 
-  const passed =
-    percentage >= 70;
 
-  document.getElementById("candidateFinalName")
-    .innerHTML =
-    `<strong>Candidate:</strong> ${candidate.name}<br>
-     <strong>Email:</strong> ${candidate.email}`;
+  subjectScores[currentSubjectIndex] = {
 
-  document.getElementById("finalCorrect")
-    .textContent =
-    `${totalCorrect} / ${totalQuestions}`;
+    subject: teflSubjects[currentSubjectIndex],
 
-  document.getElementById("finalPercentage")
-    .textContent =
-    `${percentage}%`;
+    correct: score,
 
-  const status =
-    document.getElementById("finalStatus");
+    total: questions.length,
 
-  status.textContent =
-    passed ? "PASSED" : "FAILED";
+    percentage: percentage
 
-  status.className =
-    passed ? "passed" : "failed";
-
-  const finalMessage =
-    document.getElementById("finalMessage");
-
-  if(passed){
-
-    finalMessage.innerHTML =
-      `
-      <div class="success">
-
-        <h3>🎉 Congratulations!</h3>
-
-        <p>
-          You have successfully passed the
-          GETI TEFL Examination.
-        </p>
-
-        <p style="margin-top:10px;">
-          Please check your email regularly for
-          further information about your result
-          and certificate.
-        </p>
-
-      </div>
-      `;
-
-  }else{
-
-    finalMessage.innerHTML =
-      `
-      <div class="error">
-
-        <h3>TEFL Examination Result</h3>
-
-        <p>
-          Unfortunately, you did not reach the
-          required passing score of 70%.
-        </p>
-
-        <p style="margin-top:10px;">
-          Please review your lessons and improve
-          your English teaching knowledge.
-        </p>
-
-      </div>
-      `;
-
-  }
-
-  /* Save result locally */
-  const resultData={
-    candidate:candidate,
-    totalQuestions:totalQuestions,
-    correctAnswers:totalCorrect,
-    percentage:percentage,
-    status:passed ? "PASSED" : "FAILED",
-    subjectResults:subjectScores,
-    date:new Date().toISOString()
   };
 
-  localStorage.setItem(
-    "GETI_TEFL_LAST_RESULT",
-    JSON.stringify(resultData)
+
+  document
+    .getElementById("examArea")
+    .style.display = "none";
+
+
+  showSubjectResult(
+    score,
+    questions.length,
+    percentage
   );
 
 }
 
 
-/* =========================================================
-   PAGE NAVIGATION
-   ========================================================= */
+/* =====================================================
+   SUBJECT RESULT
+====================================================== */
 
-function showPage(page){
+function showSubjectResult(
+  score,
+  total,
+  percentage
+) {
 
-  document
-    .querySelectorAll(".page")
-    .forEach(p=>{
-      p.classList.add("hidden");
-    });
+  const resultBox =
+    document.getElementById("subjectResult");
 
-  document
-    .getElementById(page)
-    .classList.remove("hidden");
 
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
+  const title =
+    document.getElementById("subjectResultTitle");
+
+
+  const circle =
+    document.getElementById("subjectScoreCircle");
+
+
+  const text =
+    document.getElementById("subjectResultText");
+
+
+  const nextButton =
+    document.getElementById("nextSubjectButton");
+
+
+  title.textContent =
+    teflSubjects[currentSubjectIndex] +
+    " — RESULT";
+
+
+  circle.textContent =
+    percentage + "%";
+
+
+  text.innerHTML =
+
+    "You scored <strong>" +
+    score +
+    " / " +
+    total +
+    "</strong> correct answers.";
+
+
+  if (percentage >= 70) {
+
+    text.innerHTML +=
+      "<br><br>Subject status: <strong style='color:#027a48;'>PASSED</strong>";
+
+  } else {
+
+    text.innerHTML +=
+      "<br><br>Subject status: <strong style='color:#b42318;'>BELOW 70%</strong>";
+
+  }
+
+
+  if (
+    currentSubjectIndex <
+    teflSubjects.length - 1
+  ) {
+
+    nextButton.style.display =
+      "inline-block";
+
+    nextButton.textContent =
+      "NEXT SUBJECT →";
+
+  } else {
+
+    nextButton.style.display =
+      "inline-block";
+
+    nextButton.textContent =
+      "VIEW FINAL RESULT";
+
+  }
+
+
+  resultBox.style.display =
+    "block";
+
+
+  resultBox.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
   });
 
 }
 
 
-/* =========================================================
-   INITIAL PAGE
-   ========================================================= */
+/* =====================================================
+   NEXT SUBJECT
+====================================================== */
 
-showPage("home");
+function nextSubject() {
+
+  if (
+    currentSubjectIndex <
+    teflSubjects.length - 1
+  ) {
+
+    currentSubjectIndex++;
+
+    document
+      .getElementById("subjectResult")
+      .style.display = "none";
+
+
+    document
+      .getElementById("examArea")
+      .style.display = "block";
+
+
+    loadSubject();
+
+
+    document
+      .getElementById("examArea")
+      .scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    return;
+
+  }
+
+
+  showFinalResult();
+
+}
+
+
+/* =====================================================
+   FINAL RESULT
+====================================================== */
+
+function showFinalResult() {
+
+  let totalCorrect = 0;
+
+  let totalQuestions = 0;
+
+
+  subjectScores.forEach(function(result) {
+
+    totalCorrect += result.correct;
+
+    totalQuestions += result.total;
+
+  });
+
+
+  const finalPercentage =
+    Math.round(
+      (totalCorrect / totalQuestions) * 100
+    );
+
+
+  const passed =
+    finalPercentage >= 70;
+
+
+  document
+    .getElementById("examArea")
+    .style.display = "none";
+
+
+  document
+    .getElementById("subjectResult")
+    .style.display = "none";
+
+
+  const finalBox =
+    document.getElementById("finalResult");
+
+
+  document
+    .getElementById("finalScore")
+    .textContent =
+      finalPercentage + "%";
+
+
+  document
+    .getElementById("finalStatus")
+    .textContent =
+      passed
+        ? "PASSED"
+        : "FAILED";
+
+
+  const message =
+    document.getElementById("finalMessage");
+
+
+  if (passed) {
+
+    message.innerHTML = `
+
+      <div class="pass-message">
+
+        <strong>🎉 Congratulations! You PASSED the GETI TEFL Examination.</strong>
+
+        <p style="margin-top:10px;">
+
+          Your final score is
+          <strong>${finalPercentage}%</strong>.
+
+          Please check your email regularly for
+          information concerning your result,
+          certificate or next steps.
+
+        </p>
+
+      </div>
+
+    `;
+
+  } else {
+
+    message.innerHTML = `
+
+      <div class="fail-message">
+
+        <strong>Unfortunately, you did not reach the passing mark.</strong>
+
+        <p style="margin-top:10px;">
+
+          Your final score is
+          <strong>${finalPercentage}%</strong>.
+
+          The required passing mark is
+          <strong>70%</strong>.
+
+        </p>
+
+      </div>
+
+    `;
+
+  }
+
+
+  const tbody =
+    document.getElementById("subjectSummaryBody");
+
+
+  tbody.innerHTML = "";
+
+
+  subjectScores.forEach(function(result) {
+
+    const row =
+      document.createElement("tr");
+
+
+    row.innerHTML = `
+
+      <td>
+        ${escapeHtml(result.subject)}
+      </td>
+
+      <td>
+        ${result.correct} / ${result.total}
+      </td>
+
+      <td>
+        ${result.percentage}%
+      </td>
+
+    `;
+
+
+    tbody.appendChild(row);
+
+  });
+
+
+  finalBox.style.display =
+    "block";
+
+
+  finalBox.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+
+  /*
+     Alefa any amin'ny Google Apps Script
+     raha misy URL napetraka.
+  */
+
+  saveExamResultToGoogleSheets({
+
+    fullName: examStudent.fullName,
+
+    nationality: examStudent.nationality,
+
+    country: examStudent.country,
+
+    email: examStudent.email,
+
+    totalCorrect: totalCorrect,
+
+    totalQuestions: totalQuestions,
+
+    percentage: finalPercentage,
+
+    status: passed
+      ? "PASSED"
+      : "FAILED",
+
+    subjects: subjectScores
+
+  });
+
+}
+
+
+/* =====================================================
+   SAVE RESULT TO GOOGLE SHEETS
+====================================================== */
+
+function saveExamResultToGoogleSheets(data) {
+
+  if (!GOOGLE_APPS_SCRIPT_URL) {
+
+    console.log(
+      "Google Apps Script URL not configured."
+    );
+
+    return;
+
+  }
+
+
+  const payload = {
+
+    action: "saveTEFLResult",
+
+    fullName: data.fullName,
+
+    nationality: data.nationality,
+
+    country: data.country,
+
+    email: data.email,
+
+    totalCorrect: data.totalCorrect,
+
+    totalQuestions: data.totalQuestions,
+
+    percentage: data.percentage,
+
+    status: data.status,
+
+    subjects: data.subjects
+
+  };
+
+
+  fetch(
+    GOOGLE_APPS_SCRIPT_URL,
+    {
+
+      method: "POST",
+
+      mode: "no-cors",
+
+      headers: {
+
+        "Content-Type":
+          "text/plain;charset=utf-8"
+
+      },
+
+      body: JSON.stringify(payload)
+
+    }
+
+  )
+  .then(function() {
+
+    console.log(
+      "TEFL result submitted."
+    );
+
+  })
+  .catch(function(error) {
+
+    console.error(
+      "Unable to save TEFL result:",
+      error
+    );
+
+  });
+
+}
+
+
+/* =====================================================
+   EXIT EXAM
+====================================================== */
+
+function confirmExitExam() {
+
+  const confirmed =
+    confirm(
+      "Are you sure you want to exit the TEFL examination?\n\n" +
+      "Your current progress may be lost."
+    );
+
+
+  if (!confirmed) {
+
+    return;
+
+  }
+
+
+  currentSubjectIndex = 0;
+
+  subjectScores = [];
+
+  examSubmitted = false;
+
+
+  document
+    .getElementById("examArea")
+    .style.display = "none";
+
+
+  document
+    .getElementById("subjectResult")
+    .style.display = "none";
+
+
+  document
+    .getElementById("finalResult")
+    .style.display = "none";
+
+
+  document
+    .getElementById("teflIntro")
+    .style.display = "block";
+
+
+  document
+    .getElementById("examRegistration")
+    .style.display = "none";
+
+
+  document
+    .getElementById("tefl-exam")
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+
+}
+
+
+/* =====================================================
+   EMAIL VALIDATION
+====================================================== */
+
+function validateEmail(email) {
+
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+}
+
+
+/* =====================================================
+   HTML ESCAPE
+====================================================== */
+
+function escapeHtml(value) {
+
+  return String(value)
+
+    .replace(/&/g, "&amp;")
+
+    .replace(/</g, "&lt;")
+
+    .replace(/>/g, "&gt;")
+
+    .replace(/"/g, "&quot;")
+
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* =====================================================
+   CONTACT FORM
+====================================================== */
+
+function sendMessage(event) {
+
+  event.preventDefault();
+
+  const name =
+    document.getElementById("name").value;
+
+
+  alert(
+    "Thank you, " +
+    name +
+    "! Your message has been received."
+  );
+
+
+  event.target.reset();
+
+}
 
 </script>
 
