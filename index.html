@@ -1197,6 +1197,87 @@ button,input,textarea{
 
 }
 
+
+/* =========================================================
+   GETI CHAT WITH ADMINISTRATOR
+========================================================= */
+.chat-fab{
+    position:fixed;
+    right:22px;
+    bottom:22px;
+    z-index:2000;
+    background:#b38a28;
+    color:#fff;
+    border:none;
+    border-radius:999px;
+    padding:12px 16px;
+    font-weight:800;
+    box-shadow:0 8px 25px rgba(0,0,0,.22);
+    cursor:pointer;
+}
+.chat-fab:hover{background:#956f1f}
+.chat-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:2100;
+    background:rgba(3,15,31,.62);
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+}
+.chat-modal.show{display:flex}
+.chat-window{
+    width:min(980px,100%);
+    height:min(760px,94vh);
+    background:#fff;
+    border-radius:14px;
+    overflow:hidden;
+    display:grid;
+    grid-template-columns:300px 1fr;
+    box-shadow:0 20px 60px rgba(0,0,0,.28);
+}
+.chat-sidebar{background:#f5f7fb;border-right:1px solid #dde4ed;padding:20px;overflow:auto}
+.chat-sidebar h3{color:#0b2d5c;margin-bottom:8px}
+.chat-muted{color:#687386;font-size:13px}
+.chat-account-box{margin-top:16px;background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:15px}
+.chat-account-box input,.chat-login-box input,.chat-compose input,.chat-compose textarea{
+    width:100%;padding:11px;border:1px solid #ccd4df;border-radius:6px;margin-bottom:9px;font:inherit;
+}
+.chat-account-box button,.chat-login-box button{width:100%;border:0;border-radius:6px;padding:11px;font-weight:700;cursor:pointer;background:#0b2d5c;color:#fff;margin-top:4px}
+.chat-account-box button.secondary,.chat-login-box button.secondary{background:#b38a28}
+.chat-main{display:flex;flex-direction:column;min-width:0}
+.chat-header{padding:15px 18px;background:#0b2d5c;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.chat-header strong{font-size:16px}
+.chat-close{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:6px;padding:7px 10px;cursor:pointer}
+.chat-messages{flex:1;overflow:auto;padding:18px;background:#f8fafc}
+.chat-empty{text-align:center;color:#687386;padding:45px 20px}
+.chat-message{max-width:78%;padding:11px 13px;border-radius:12px;margin:8px 0;box-shadow:0 1px 3px rgba(0,0,0,.05);white-space:pre-wrap;word-break:break-word}
+.chat-message.user{margin-left:auto;background:#0b2d5c;color:#fff;border-bottom-right-radius:3px}
+.chat-message.admin{margin-right:auto;background:#fff;border:1px solid #dde4ed;border-bottom-left-radius:3px;color:#172033}
+.chat-message small{display:block;margin-top:6px;opacity:.72;font-size:10px}
+.chat-attachment{display:inline-flex;align-items:center;gap:7px;margin-top:8px;padding:8px 10px;border-radius:7px;background:rgba(255,255,255,.12);text-decoration:none;color:inherit;font-size:12px}
+.chat-message.admin .chat-attachment{background:#eef3f8}
+.chat-compose{padding:12px;border-top:1px solid #dde4ed;background:#fff}
+.chat-compose-row{display:grid;grid-template-columns:1fr auto;gap:8px}
+.chat-compose textarea{resize:none;min-height:48px;margin:0}
+.chat-send{background:#0b2d5c;color:#fff;border:0;border-radius:6px;padding:0 18px;font-weight:800;cursor:pointer}
+.chat-file-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;font-size:12px;color:#687386}
+.chat-file-row input{width:auto;margin:0}
+.chat-admin-list{margin-top:15px}
+.chat-user-item{display:block;width:100%;text-align:left;border:1px solid #dde4ed;background:#fff;border-radius:8px;padding:10px;margin-bottom:8px;cursor:pointer}
+.chat-user-item strong{display:block;color:#0b2d5c}
+.chat-user-item span{font-size:11px;color:#687386}
+.chat-badge{display:inline-flex;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:#a51e1e;color:#fff;align-items:center;justify-content:center;font-size:11px;margin-left:5px}
+.chat-login-box{max-width:500px;margin:auto;padding:28px}
+.chat-error{color:#a51e1e;font-size:12px;margin-top:4px}
+@media(max-width:700px){
+    .chat-window{grid-template-columns:1fr;height:96vh}
+    .chat-sidebar{display:none}
+    .chat-message{max-width:88%}
+    .chat-fab{right:12px;bottom:12px}
+}
+
 </style>
 </head>
 
@@ -4092,7 +4173,213 @@ document
 
 });
 
+
+/* =========================================================
+   GETI CHAT SYSTEM
+   Static/local mode: accounts and conversations are stored in
+   this browser's localStorage. For multi-device real-time chat,
+   connect these functions to a server/database API.
+========================================================= */
+const GETI_CHAT_USERS_KEY='GETI_CHAT_USERS';
+const GETI_CHAT_MSGS_KEY='GETI_CHAT_MESSAGES';
+const GETI_CHAT_SESSION_KEY='GETI_CHAT_SESSION';
+let getiChatCurrentUser=null;
+let getiChatSelectedUser=null;
+
+function getiChatLoad(key,fallback){
+    try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback));}
+    catch(e){return fallback;}
+}
+function getiChatSave(key,value){localStorage.setItem(key,JSON.stringify(value));}
+function getiChatEsc(v){return escapeHTML(v==null?'':v);}
+function getiChatFormatTime(ts){return new Date(ts).toLocaleString();}
+function getiChatCurrent(){
+    let s=localStorage.getItem(GETI_CHAT_SESSION_KEY);
+    if(!s)return null;
+    let users=getiChatLoad(GETI_CHAT_USERS_KEY,[]);
+    return users.find(u=>u.email===s)||null;
+}
+function openGETIChat(){
+    document.getElementById('getiChatModal').classList.add('show');
+    getiChatCurrentUser=getiChatCurrent();
+    renderGETIChat();
+}
+function closeGETIChat(){document.getElementById('getiChatModal').classList.remove('show');}
+function renderGETIChat(){
+    getiChatCurrentUser=getiChatCurrent();
+    let ua=document.getElementById('chatUserArea');
+    let aa=document.getElementById('chatAdminArea');
+    if(!getiChatCurrentUser){
+        ua.innerHTML=`<div class="chat-login-box" style="padding:0"><h4 style="color:#0b2d5c;margin-bottom:10px">Sign in</h4><input id="chatLoginEmail" type="email" placeholder="Email"><input id="chatLoginPassword" type="password" placeholder="Password"><button onclick="getiChatLogin()">LOGIN</button><button class="secondary" onclick="getiChatShowCreate()">CREATE ACCOUNT</button><div id="chatAuthMessage" class="chat-error"></div></div>`;
+        aa.innerHTML='';
+        document.getElementById('chatMessages').innerHTML='<div class="chat-empty">Create an account or log in to start chatting with the administrator.</div>';
+        document.getElementById('chatCompose').innerHTML='';
+        return;
+    }
+    ua.innerHTML=`<strong style="color:#0b2d5c">${getiChatEsc(getiChatCurrentUser.name)}</strong><div class="chat-muted">${getiChatEsc(getiChatCurrentUser.email)}</div><button style="margin-top:12px;width:100%;padding:9px;border:0;border-radius:6px;background:#a51e1e;color:#fff;font-weight:700;cursor:pointer" onclick="getiChatLogout()">LOG OUT</button>`;
+    aa.innerHTML='';
+    getiChatSelectedUser=getiChatCurrentUser.email;
+    document.getElementById('chatHeaderTitle').textContent='GETI Administrator';
+    document.getElementById('chatHeaderSub').textContent='Send a message to GETI support';
+    renderGETIChatMessages();
+    renderGETIChatCompose();
+}
+function getiChatShowCreate(){
+    document.getElementById('chatUserArea').innerHTML=`<h4 style="color:#0b2d5c;margin-bottom:10px">Create account</h4><input id="chatCreateName" placeholder="Full name"><input id="chatCreateEmail" type="email" placeholder="Email"><input id="chatCreatePassword" type="password" placeholder="Create password"><input id="chatCreatePassword2" type="password" placeholder="Confirm password"><button onclick="getiChatCreateAccount()">CREATE ACCOUNT</button><button class="secondary" onclick="renderGETIChat()">BACK TO LOGIN</button><div id="chatAuthMessage" class="chat-error"></div>`;
+}
+function getiChatCreateAccount(){
+    let name=document.getElementById('chatCreateName').value.trim();
+    let email=document.getElementById('chatCreateEmail').value.trim().toLowerCase();
+    let pass=document.getElementById('chatCreatePassword').value;
+    let pass2=document.getElementById('chatCreatePassword2').value;
+    let msg=document.getElementById('chatAuthMessage');
+    if(!name||!email||!pass){msg.textContent='Please complete all fields.';return;}
+    if(pass!==pass2){msg.textContent='Passwords do not match.';return;}
+    let users=getiChatLoad(GETI_CHAT_USERS_KEY,[]);
+    if(users.some(u=>u.email===email)){msg.textContent='An account with this email already exists.';return;}
+    users.push({name,email,password:pass,createdAt:Date.now()});
+    getiChatSave(GETI_CHAT_USERS_KEY,users);
+    localStorage.setItem(GETI_CHAT_SESSION_KEY,email);
+    getiChatCurrentUser=getiChatCurrent();
+    renderGETIChat();
+}
+function getiChatLogin(){
+    let email=document.getElementById('chatLoginEmail').value.trim().toLowerCase();
+    let pass=document.getElementById('chatLoginPassword').value;
+    let users=getiChatLoad(GETI_CHAT_USERS_KEY,[]);
+    let user=users.find(u=>u.email===email&&u.password===pass);
+    if(!user){document.getElementById('chatAuthMessage').textContent='Incorrect email or password.';return;}
+    localStorage.setItem(GETI_CHAT_SESSION_KEY,email);
+    getiChatCurrentUser=user;
+    renderGETIChat();
+}
+function getiChatLogout(){localStorage.removeItem(GETI_CHAT_SESSION_KEY);getiChatCurrentUser=null;renderGETIChat();}
+function getiChatConversationMessages(email){
+    return getiChatLoad(GETI_CHAT_MSGS_KEY,[]).filter(m=>m.userEmail===email);
+}
+function renderGETIChatMessages(){
+    let box=document.getElementById('chatMessages');
+    let email=getiChatCurrentUser?getiChatCurrentUser.email:null;
+    let messages=email?getiChatConversationMessages(email):[];
+    if(!messages.length){box.innerHTML='<div class="chat-empty">No messages yet. Send a message to the administrator.</div>';return;}
+    box.innerHTML=messages.map(m=>{
+        let attachment=m.fileData?`<a class="chat-attachment" href="${m.fileData}" download="${getiChatEsc(m.fileName)}">📎 ${getiChatEsc(m.fileName)}</a>`:'';
+        return `<div class="chat-message ${m.sender==='admin'?'admin':'user'}"><div>${getiChatEsc(m.text)}</div>${attachment}<small>${m.sender==='admin'?'Administrator':'You'} • ${getiChatFormatTime(m.time)}</small></div>`;
+    }).join('');
+    box.scrollTop=box.scrollHeight;
+}
+function renderGETIChatCompose(){
+    document.getElementById('chatCompose').innerHTML=`<div class="chat-compose-row"><textarea id="chatMessageInput" placeholder="Write your message..."></textarea><button class="chat-send" onclick="getiChatSend('user')">SEND</button></div><div class="chat-file-row"><label>📎 Attach PDF/photo <input id="chatFileInput" type="file" accept="application/pdf,image/*"></label><span id="chatFileName">No file selected</span></div>`;
+    document.getElementById('chatFileInput').addEventListener('change',function(){document.getElementById('chatFileName').textContent=this.files[0]?this.files[0].name:'No file selected';});
+}
+function getiChatSend(sender){
+    let text=document.getElementById('chatMessageInput').value.trim();
+    let fileInput=document.getElementById('chatFileInput');
+    let file=fileInput.files[0];
+    if(!text&&!file)return;
+    if(file && file.size>5*1024*1024){alert('Please choose a PDF/photo smaller than 5 MB.');return;}
+    let finish=(data)=>{
+        let msgs=getiChatLoad(GETI_CHAT_MSGS_KEY,[]);
+        msgs.push({id:'MSG-'+Date.now(),userEmail:getiChatCurrentUser.email,sender,text:text||'',fileName:file?file.name:'',fileData:data||'',fileType:file?file.type:'',time:Date.now(),read:false});
+        getiChatSave(GETI_CHAT_MSGS_KEY,msgs);
+        document.getElementById('chatMessageInput').value='';fileInput.value='';document.getElementById('chatFileName').textContent='No file selected';
+        renderGETIChatMessages();
+    };
+    if(file){let r=new FileReader();r.onload=()=>finish(r.result);r.readAsDataURL(file);}else finish('');
+}
+
+/* ADMIN CHAT */
+function renderAdminChat(){
+    let area=document.getElementById('chatAdminArea');
+    if(!area)return;
+    let users=getiChatLoad(GETI_CHAT_USERS_KEY,[]);
+    let msgs=getiChatLoad(GETI_CHAT_MSGS_KEY,[]);
+    if(!users.length){area.innerHTML='<div class="chat-muted">No chat accounts yet.</div>';return;}
+    area.innerHTML='<h4 style="color:#0b2d5c;margin-bottom:10px">Messages</h4>'+users.map(u=>{
+        let unread=msgs.filter(m=>m.userEmail===u.email&&m.sender==='user'&&!m.read).length;
+        let last=msgs.filter(m=>m.userEmail===u.email).sort((a,b)=>b.time-a.time)[0];
+        return `<button class="chat-user-item" onclick="adminOpenChat('${encodeURIComponent(u.email)}')"><strong>${getiChatEsc(u.name)}${unread?`<span class="chat-badge">${unread}</span>`:''}</strong><span>${getiChatEsc(last?last.text:'No messages yet')}</span></button>`;
+    }).join('');
+}
+function adminOpenChat(encodedEmail){
+    let email=decodeURIComponent(encodedEmail);
+    let users=getiChatLoad(GETI_CHAT_USERS_KEY,[]);
+    let u=users.find(x=>x.email===email);if(!u)return;
+    getiChatSelectedUser=email;
+    document.getElementById('chatHeaderTitle').textContent='Chat with '+u.name;
+    document.getElementById('chatHeaderSub').textContent=u.email;
+    let msgs=getiChatLoad(GETI_CHAT_MSGS_KEY,[]);
+    msgs.forEach(m=>{if(m.userEmail===email&&m.sender==='user')m.read=true;});
+    getiChatSave(GETI_CHAT_MSGS_KEY,msgs);
+    renderAdminMessages(email);
+    document.getElementById('chatCompose').innerHTML=`<div class="chat-compose-row"><textarea id="chatMessageInput" placeholder="Reply to ${getiChatEsc(u.name)}..."></textarea><button class="chat-send" onclick="adminSendChat()">SEND</button></div><div class="chat-file-row"><label>📎 Attach PDF/photo <input id="chatFileInput" type="file" accept="application/pdf,image/*"></label><span id="chatFileName">No file selected</span></div>`;
+    document.getElementById('chatFileInput').addEventListener('change',function(){document.getElementById('chatFileName').textContent=this.files[0]?this.files[0].name:'No file selected';});
+    renderAdminChat();
+}
+function renderAdminMessages(email){
+    let box=document.getElementById('chatMessages');
+    let messages=getiChatConversationMessages(email);
+    if(!messages.length){box.innerHTML='<div class="chat-empty">No messages yet.</div>';return;}
+    box.innerHTML=messages.map(m=>{
+        let attachment=m.fileData?`<a class="chat-attachment" href="${m.fileData}" download="${getiChatEsc(m.fileName)}">📎 ${getiChatEsc(m.fileName)}</a>`:'';
+        return `<div class="chat-message ${m.sender==='admin'?'admin':'user'}"><div>${getiChatEsc(m.text)}</div>${attachment}<small>${m.sender==='admin'?'Administrator':'Candidate'} • ${getiChatFormatTime(m.time)}</small></div>`;
+    }).join('');box.scrollTop=box.scrollHeight;
+}
+function adminSendChat(){
+    if(!getiChatSelectedUser)return;
+    let text=document.getElementById('chatMessageInput').value.trim();
+    let input=document.getElementById('chatFileInput');let file=input.files[0];
+    if(!text&&!file)return;
+    if(file&&file.size>5*1024*1024){alert('Please choose a PDF/photo smaller than 5 MB.');return;}
+    let finish=(data)=>{let msgs=getiChatLoad(GETI_CHAT_MSGS_KEY,[]);msgs.push({id:'MSG-'+Date.now(),userEmail:getiChatSelectedUser,sender:'admin',text:text||'',fileName:file?file.name:'',fileData:data||'',fileType:file?file.type:'',time:Date.now(),read:false});getiChatSave(GETI_CHAT_MSGS_KEY,msgs);document.getElementById('chatMessageInput').value='';input.value='';document.getElementById('chatFileName').textContent='No file selected';renderAdminMessages(getiChatSelectedUser);renderAdminChat();};
+    if(file){let r=new FileReader();r.onload=()=>finish(r.result);r.readAsDataURL(file);}else finish('');
+}
+
+/* Add a CHAT button to the admin panel and make admin chat accessible after login. */
+(function(){
+    let panel=document.getElementById('adminPanel');
+    if(panel){
+        let b=document.createElement('button');b.className='btn btn-gold';b.style.marginTop='12px';b.innerHTML='💬 OPEN CHAT INBOX <span id="adminChatCount" class="chat-badge">0</span>';b.onclick=function(){openGETIChat();setTimeout(function(){getiChatCurrentUser=null;document.getElementById('chatUserArea').innerHTML='<div class="chat-account-box"><strong style="color:#0b2d5c">Administrator Inbox</strong><p class="chat-muted" style="margin-top:5px">Select a candidate below to reply.</p></div>';renderAdminChat();},50);};panel.insertBefore(b,panel.firstChild);
+    }
+})();
+
+/* Extend admin login to refresh the chat inbox. */
+const _originalAdminLogin=adminLogin;
+adminLogin=function(){
+    _originalAdminLogin();
+    if(document.getElementById('adminPanel').style.display==='block'){
+        setTimeout(function(){updateAdminChatCount();},50);
+    }
+};
+function updateAdminChatCount(){
+    let msgs=getiChatLoad(GETI_CHAT_MSGS_KEY,[]);let n=msgs.filter(m=>m.sender==='user'&&!m.read).length;let b=document.getElementById('adminChatCount');if(b)b.textContent=n;
+}
+setInterval(updateAdminChatCount,3000);
+
 </script>
+
+
+<!-- GETI CHAT WITH ADMINISTRATOR -->
+<button class="chat-fab" onclick="openGETIChat()">💬 Chat with the Administrator</button>
+
+<div class="chat-modal" id="getiChatModal" onclick="if(event.target===this)closeGETIChat()">
+  <div class="chat-window">
+    <aside class="chat-sidebar">
+      <h3>GETI Support</h3>
+      <p class="chat-muted">Chat with the administrator and exchange messages, photos and PDF documents.</p>
+      <div id="chatUserArea" class="chat-account-box"></div>
+      <div id="chatAdminArea" class="chat-admin-list"></div>
+    </aside>
+    <section class="chat-main">
+      <div class="chat-header">
+        <div><strong id="chatHeaderTitle">GETI Administrator</strong><div id="chatHeaderSub" style="font-size:11px;opacity:.8">Online support</div></div>
+        <button class="chat-close" onclick="closeGETIChat()">✕</button>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-compose" id="chatCompose"></div>
+    </section>
+  </div>
+</div>
 
 </body>
 </html>
