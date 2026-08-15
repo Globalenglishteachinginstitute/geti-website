@@ -890,6 +890,20 @@ button,input,textarea{
     margin:20px 0;
 }
 
+.exam-timer{
+    background:#071d3a;
+    color:#fff;
+    padding:10px 16px;
+    border-radius:6px;
+    font-weight:900;
+    font-size:18px;
+    text-align:center;
+    margin:0 0 18px;
+}
+.exam-timer.warning{
+    background:#a51e1e;
+}
+
 /* =========================================================
    EXAM COPY PROTECTION - ADDED
 ========================================================= */
@@ -2450,7 +2464,10 @@ let examState={
     questionIndex:0,
     answers:[],
     subjectScores:[],
-    started:false
+    started:false,
+    timeRemaining:3600,
+    timerInterval:null,
+    timeExpired:false
 };
 
 /* =========================================================
@@ -2928,6 +2945,9 @@ function submitRegistration(){
     };
 
     examState.started=true;
+    examState.timeRemaining=3600;
+    examState.timeExpired=false;
+    startExamTimer();
 
     examState.answers=
         Array.from(
@@ -2985,6 +3005,91 @@ function createCandidateID(program){
 
 }
 
+function startExamTimer(){
+
+    clearInterval(examState.timerInterval);
+
+    examState.timeRemaining=3600;
+    updateExamTimer();
+
+    examState.timerInterval=setInterval(function(){
+
+        if(!examState.started){
+            clearInterval(examState.timerInterval);
+            return;
+        }
+
+        examState.timeRemaining--;
+        updateExamTimer();
+
+        if(examState.timeRemaining<=0){
+            clearInterval(examState.timerInterval);
+            examTimeExpired();
+        }
+
+    },1000);
+}
+
+function updateExamTimer(){
+
+    let timer=document.getElementById("examTimer");
+    if(!timer)return;
+
+    let minutes=Math.floor(examState.timeRemaining/60);
+    let seconds=examState.timeRemaining%60;
+
+    timer.textContent=
+        "TIME REMAINING: "+
+        String(minutes).padStart(2,"0")+":"+
+        String(seconds).padStart(2,"0");
+
+    timer.classList.toggle("warning",examState.timeRemaining<=300);
+}
+
+function examTimeExpired(){
+
+    if(!examState.started || examState.timeExpired)return;
+
+    examState.timeExpired=true;
+    examState.started=false;
+    clearInterval(examState.timerInterval);
+
+    // Automatically grade every subject. Unanswered questions count as wrong.
+    calculateAllSubjectScores();
+    showFinalResult(true);
+}
+
+function calculateAllSubjectScores(){
+
+    let subjects=examState.program==="TEFL" ? TEFL_SUBJECTS : TESOL_SUBJECTS;
+    let data=examState.program==="TEFL" ? TEFL_DATA : TESOL_DATA;
+
+    examState.subjectScores=[];
+
+    subjects.forEach(function(subject,subjectIndex){
+
+        let questions=data[subject];
+        let score=0;
+
+        for(let i=0;i<15;i++){
+            if(examState.answers[subjectIndex] &&
+               examState.answers[subjectIndex][i]===questions[i][5]){
+                score++;
+            }
+        }
+
+        let percentage=Math.round((score/15)*100);
+
+        examState.subjectScores.push({
+            subject:subject,
+            score:score,
+            total:15,
+            percentage:percentage,
+            grade:calculateGrade(percentage)
+        });
+    });
+}
+
 /* =========================================================
    SHOW QUESTION
 ========================================================= */
@@ -3020,6 +3125,8 @@ function showQuestion(){
     panel.classList.add("exam-protected");
 
     panel.innerHTML=
+
+    '<div id="examTimer" class="exam-timer">TIME REMAINING: 60:00</div>'+
 
     '<div class="exam-progress">'+
 
@@ -3350,7 +3457,9 @@ function continueExam(){
    FINAL RESULT
 ========================================================= */
 
-function showFinalResult(){
+function showFinalResult(timeExpired){
+
+    clearInterval(examState.timerInterval);
 
     /* DISABLE COPY PROTECTION AFTER EXAM */
 
@@ -3447,6 +3556,8 @@ function showFinalResult(){
         '%'+
         '</div>'+
 
+        (timeExpired ? '<div class="exam-fail-message"><strong>TIME EXPIRED.</strong> The 1-hour examination period has ended. The examination was submitted automatically.</div>' : '')+
+
         '<h2 class="pass">PASSED</h2>'+
 
         '<div class="exam-message">'+
@@ -3489,6 +3600,8 @@ function showFinalResult(){
         percentage+
         '%'+
         '</div>'+
+
+        (timeExpired ? '<div class="exam-fail-message"><strong>TIME EXPIRED.</strong> The 1-hour examination period has ended. Unanswered questions were counted as incorrect and the examination was submitted automatically.</div>' : '')+
 
         '<h2 class="fail">FAILED</h2>'+
 
@@ -3985,3 +4098,7 @@ document
 </html>
 
 
+tsy ovany ity cody it fa ampina fotsiny ampio misy minitra eo aminy exam 1h de temps fotsiny  raha tapitra dia miverina ny exame rah ohatra mbola tsy vita
+
+
+code rehetra omeo efa izy jiaby mitambatra
