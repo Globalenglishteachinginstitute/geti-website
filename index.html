@@ -9,7 +9,316 @@
 <meta name="description"
 content="Global English Teaching Institute - International English Education, TESOL and Certificate Verification.">
 
-<style>
+<sty/* =========================================================
+   TEFL EXAM SYSTEM
+========================================================= */
+
+.tefl-exam-button{
+    display:inline-block;
+    margin-top:10px;
+    padding:9px 15px;
+    border:none;
+    border-radius:5px;
+    background:#0b2d5c;
+    color:#fff;
+    font-size:12px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.tefl-exam-button:hover{
+    background:#b38a28;
+}
+
+.exam-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    background:rgba(0,0,0,.72);
+    overflow-y:auto;
+    padding:30px 15px;
+}
+
+.exam-modal.show{
+    display:block;
+}
+
+.exam-container{
+    max-width:950px;
+    margin:auto;
+    background:#fff;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+
+.exam-header{
+    background:#0b2d5c;
+    color:#fff;
+    padding:25px;
+    text-align:center;
+}
+
+.exam-header h2{
+    margin-bottom:5px;
+}
+
+.exam-header p{
+    color:#dce5f2;
+    font-size:14px;
+}
+
+.exam-body{
+    padding:30px;
+}
+
+.exam-registration{
+    max-width:650px;
+    margin:auto;
+}
+
+.exam-registration h3{
+    color:#0b2d5c;
+    margin-bottom:20px;
+}
+
+.exam-input{
+    width:100%;
+    padding:13px;
+    border:1px solid #ccd4df;
+    border-radius:5px;
+    margin-bottom:13px;
+    font-size:15px;
+    outline:none;
+}
+
+.exam-input:focus{
+    border-color:#0b2d5c;
+}
+
+.exam-button-row{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:25px;
+    flex-wrap:wrap;
+}
+
+.exam-btn{
+    border:none;
+    border-radius:5px;
+    padding:12px 22px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.exam-btn-primary{
+    background:#b38a28;
+    color:#fff;
+}
+
+.exam-btn-primary:hover{
+    background:#d0a63e;
+}
+
+.exam-btn-secondary{
+    background:#0b2d5c;
+    color:#fff;
+}
+
+.exam-btn-danger{
+    background:#a51e1e;
+    color:#fff;
+}
+
+.exam-progress{
+    margin-bottom:25px;
+}
+
+.exam-progress-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    font-size:14px;
+    font-weight:bold;
+    color:#0b2d5c;
+    margin-bottom:8px;
+}
+
+.progress-bar{
+    height:10px;
+    background:#e6ebf1;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    width:0%;
+    background:#b38a28;
+    transition:.3s;
+}
+
+.exam-question{
+    background:#f8fafc;
+    border:1px solid #dce3eb;
+    border-radius:8px;
+    padding:25px;
+    margin-bottom:20px;
+}
+
+.exam-question-number{
+    color:#b38a28;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.exam-question h3{
+    color:#0b2d5c;
+    font-size:19px;
+    line-height:1.5;
+}
+
+.exam-options{
+    margin-top:20px;
+    display:grid;
+    gap:10px;
+}
+
+.exam-option{
+    display:block;
+    padding:15px;
+    background:#fff;
+    border:1px solid #ccd4df;
+    border-radius:6px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.exam-option:hover{
+    border-color:#b38a28;
+    background:#fffaf0;
+}
+
+.exam-option input{
+    margin-right:10px;
+}
+
+.exam-option.selected{
+    border-color:#0b2d5c;
+    background:#eef3f8;
+}
+
+.subject-result{
+    text-align:center;
+    padding:35px 20px;
+    border-radius:8px;
+    background:#f8fafc;
+    border:1px solid #dce3eb;
+}
+
+.subject-score{
+    font-size:45px;
+    font-weight:900;
+    color:#0b2d5c;
+    margin:10px 0;
+}
+
+.result-passed{
+    color:#16833b;
+    font-size:22px;
+    font-weight:bold;
+}
+
+.result-failed{
+    color:#a51e1e;
+    font-size:22px;
+    font-weight:bold;
+}
+
+.final-result{
+    text-align:center;
+    padding:40px 20px;
+}
+
+.final-percentage{
+    font-size:65px;
+    font-weight:900;
+    color:#0b2d5c;
+}
+
+.final-message{
+    margin:20px auto;
+    max-width:650px;
+    padding:20px;
+    border-radius:8px;
+}
+
+.final-message.passed{
+    background:#eaf8ef;
+    border:1px solid #a7dcb8;
+    color:#176b32;
+}
+
+.final-message.failed{
+    background:#fdecec;
+    border:1px solid #e1a1a1;
+    color:#a51e1e;
+}
+
+.exam-summary{
+    margin-top:30px;
+    border-collapse:collapse;
+    width:100%;
+}
+
+.exam-summary th,
+.exam-summary td{
+    border:1px solid #dce3eb;
+    padding:10px;
+    text-align:center;
+}
+
+.exam-summary th{
+    background:#0b2d5c;
+    color:#fff;
+}
+
+.exam-summary td{
+    background:#fff;
+}
+
+.exam-close{
+    position:absolute;
+    right:25px;
+    top:15px;
+    color:#fff;
+    font-size:30px;
+    cursor:pointer;
+}
+
+@media(max-width:700px){
+
+    .exam-body{
+        padding:18px;
+    }
+
+    .exam-header{
+        padding:20px 15px;
+    }
+
+    .exam-question{
+        padding:18px;
+    }
+
+    .final-percentage{
+        font-size:48px;
+    }
+
+}le>
 
 /* =========================================================
    GLOBAL
