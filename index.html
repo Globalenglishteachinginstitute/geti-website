@@ -689,7 +689,7 @@ button,input,textarea{
 }
 
 /* =========================================================
-   EXAM SYSTEM - ADDED
+   EXAM SYSTEM
 ========================================================= */
 
 .exam-section{
@@ -888,6 +888,46 @@ button,input,textarea{
     padding:15px;
     border-radius:6px;
     margin:20px 0;
+}
+
+/* =========================================================
+   EXAM COPY PROTECTION - ADDED
+========================================================= */
+
+.exam-panel.exam-protected,
+.exam-panel.exam-protected *{
+    -webkit-user-select:none !important;
+    -moz-user-select:none !important;
+    -ms-user-select:none !important;
+    user-select:none !important;
+
+    -webkit-touch-callout:none !important;
+}
+
+.exam-panel.exam-protected{
+    -webkit-user-drag:none !important;
+}
+
+.exam-panel.exam-protected img{
+    pointer-events:none !important;
+    -webkit-user-drag:none !important;
+}
+
+.exam-panel.exam-protected input,
+.exam-panel.exam-protected textarea{
+    -webkit-user-select:text !important;
+    -moz-user-select:text !important;
+    user-select:text !important;
+}
+
+.exam-panel.exam-protected .option{
+    user-select:none !important;
+    -webkit-user-select:none !important;
+}
+
+.exam-panel.exam-protected ::selection{
+    background:transparent !important;
+    color:inherit !important;
 }
 
 /* SEARCH RESULTS */
@@ -1140,16 +1180,13 @@ button,input,textarea{
     .subject-result{
         flex-direction:column;
     }
+
 }
 
 </style>
 </head>
 
 <body>
-
-<!-- =====================================================
-TOP BAR
-===================================================== -->
 
 <div class="topbar">
 <div class="container topbar-content">
@@ -1160,10 +1197,6 @@ TOP BAR
 </div>
 </div>
 </div>
-
-<!-- =====================================================
-NAVIGATION
-===================================================== -->
 
 <nav class="navbar">
 
@@ -1200,10 +1233,6 @@ NAVIGATION
 </div>
 
 </nav>
-
-<!-- =====================================================
-CERTIFICATE VERIFICATION
-===================================================== -->
 
 <section class="top-verification" id="verify">
 
@@ -1256,10 +1285,6 @@ Nationality
 </div>
 </section>
 
-<!-- =====================================================
-HERO
-===================================================== -->
-
 <section class="hero" id="home">
 
 <div class="container">
@@ -1300,8 +1325,6 @@ TAKE AN EXAM
 </div>
 </section>
 
-<!-- STATS -->
-
 <section class="stats">
 
 <div class="container stats-grid">
@@ -1328,8 +1351,6 @@ TAKE AN EXAM
 
 </div>
 </section>
-
-<!-- ABOUT -->
 
 <section class="section" id="about">
 
@@ -1374,8 +1395,6 @@ TEFL, TESOL and assessment.
 </div>
 </div>
 </section>
-
-<!-- PROGRAMS -->
 
 <section class="section programs" id="programs">
 
@@ -1437,8 +1456,6 @@ your language proficiency.
 </div>
 </section>
 
-<!-- CAMPUS -->
-
 <section class="campus">
 
 <div class="container">
@@ -1462,10 +1479,6 @@ TAKE TEFL / TESOL EXAM
 </div>
 </div>
 </section>
-
-<!-- =====================================================
-EXAM SYSTEM
-===================================================== -->
 
 <section class="exam-section" id="exam-system">
 
@@ -1505,10 +1518,6 @@ onclick="openExamRegistration('TESOL')">
 
 </div>
 </section>
-
-<!-- =====================================================
-TESOL INFORMATION
-===================================================== -->
 
 <section class="section">
 
@@ -1569,8 +1578,6 @@ TESOL EXAM
 </div>
 </div>
 </section>
-
-<!-- PARTNERS -->
 
 <section class="section certificate-partners" id="partners">
 
@@ -1644,10 +1651,6 @@ institutions supporting international learning and training.
 </div>
 </section>
 
-<!-- =====================================================
-EXAM RESULT SEARCH
-===================================================== -->
-
 <section class="section result-search-section" id="exam-results">
 
 <div class="container">
@@ -1687,10 +1690,6 @@ class="result-search-output">
 
 </div>
 </section>
-
-<!-- =====================================================
-ADMIN
-===================================================== -->
 
 <section class="section admin-section" id="admin">
 
@@ -1775,8 +1774,6 @@ REFRESH RESULTS
 </div>
 </section>
 
-<!-- CONTACT -->
-
 <section class="section contact" id="contact">
 
 <div class="container contact-grid">
@@ -1831,8 +1828,6 @@ SEND MESSAGE
 
 </div>
 </section>
-
-<!-- FOOTER -->
 
 <footer class="footer">
 
@@ -2127,463 +2122,258 @@ const TESOL_SUBJECTS=[
 
 ];
 
-/*
-Each subject contains 15 questions.
-Format:
-question | A | B | C | D | correct answer index
-*/
+/* =========================================================
+   TEFL QUESTION DATA
+========================================================= */
 
 const TEFL_DATA={
 
 "TEFL Foundations & Principles":[
-
 ["What does TEFL stand for?","Teaching English for Learning","Teaching English as a Foreign Language","Training English for Language","Teaching Education for Foreign Learners",1],
-
 ["What is the main goal of TEFL?","To teach mathematics","To teach English to non-native speakers","To teach only literature","To teach science",1],
-
 ["What is learner-centered teaching?","Teacher does everything","Students actively participate","Students never speak","Teacher gives only lectures",1],
-
 ["Why is communicative competence important?","It helps learners communicate effectively","It eliminates grammar","It prevents speaking","It removes vocabulary",0],
-
 ["What should a TEFL teacher consider first?","Learners' needs","The teacher's favorite topic","The classroom color","The school uniform",0],
-
 ["What is a language skill?","Listening","Desk organization","Attendance","Decoration",0],
-
 ["Which is a productive skill?","Reading","Listening","Speaking","Understanding",2],
-
 ["Which is a receptive skill?","Writing","Speaking","Listening","Presenting",2],
-
 ["Why should lessons include practice?","To help learners apply knowledge","To make lessons longer","To avoid students","To remove interaction",0],
-
 ["What is scaffolding?","Temporary support for learning","Punishment","Final examination","Classroom decoration",0],
-
 ["What is differentiation?","Adapting instruction to learner needs","Giving everyone identical tasks","Avoiding assessment","Removing activities",0],
-
 ["Why is feedback important?","It helps learners improve","It replaces teaching","It stops learning","It prevents practice",0],
-
 ["What is an authentic material?","A real-world language resource","A grammar rule","A teacher's attendance sheet","A classroom chair",0],
-
 ["What is learner autonomy?","Learners taking responsibility for learning","Teacher doing all work","Students avoiding study","Only studying in class",0],
-
 ["What is a good TEFL environment?","Supportive and interactive","Fear-based","Silent all the time","Teacher-only",0]
-
 ],
 
 "English Grammar":[
-
 ["Which sentence is in the present simple?","She works every day.","She worked yesterday.","She is working now.","She will work tomorrow.",0],
-
 ["Choose the correct sentence.","He go to school.","He goes to school.","He going school.","He gone school.",1],
-
 ["Which auxiliary is used with 'he' in present simple questions?","do","does","did","has",1],
-
 ["What is the past form of 'go'?","goed","goes","went","gone",2],
-
 ["Which sentence uses the present continuous?","They play football.","They played football.","They are playing football.","They will play football.",2],
-
 ["Which article is correct: ___ apple?","a","an","the only","no article",1],
-
 ["Choose the correct preposition: interested ___ English.","on","at","in","for",2],
-
 ["Which modal expresses ability?","can","must","should","might",0],
-
 ["Which sentence is passive?","Students wrote the test.","The teacher writes tests.","The test was written by the students.","Students are writing.",2],
-
 ["Which conditional describes a real future possibility?","First conditional","Third conditional","Zero conditional only","Past conditional",0],
-
 ["Choose the correct comparative.","more easy","easier","easyer","most easy",1],
-
 ["Which pronoun replaces 'Maria'?","he","it","she","they",2],
-
 ["Which sentence is correct?","There is two books.","There are two books.","There be two books.","There has two books.",1],
-
 ["What is a noun?","A naming word","An action word","A describing word only","A linking word",0],
-
 ["What is an adverb commonly used for?","To modify a verb","To name a person","To replace a noun","To show a number only",0]
-
 ],
 
 "Teaching Methodologies":[
-
 ["What is the Communicative Language Teaching approach focused on?","Communication","Memorization only","Translation only","Silence",0],
-
 ["What does PPP commonly mean?","Presentation Practice Production","Practice Presentation Planning","Production Practice Presentation","People Practice Program",0],
-
 ["What is Task-Based Learning centered on?","Meaningful tasks","Grammar translation only","Teacher lectures","Copying texts",0],
-
 ["What is the Grammar-Translation Method known for?","Translation and grammar study","Free conversation only","Games only","Listening laboratories",0],
-
 ["What does a student-centered method emphasize?","Active learner participation","Teacher monologue","No interaction","Memorization only",0],
-
 ["Why use pair work?","To increase interaction","To stop communication","To reduce participation","To test teachers",0],
-
 ["What is Total Physical Response associated with?","Physical movement and language","Essay writing only","Translation","Silent reading",0],
-
 ["What is a role-play?","Students act out a situation","Students memorize a dictionary","Teacher gives a test","Students copy notes",0],
-
 ["What is cooperative learning?","Students learn collaboratively","Students work completely alone","Teacher does all tasks","No communication",0],
-
 ["Why vary teaching methods?","Learners and objectives differ","Methods never matter","It makes grading impossible","It avoids planning",0],
-
 ["What is inductive grammar teaching?","Learners discover rules from examples","Teacher gives rules first","No examples are used","Grammar is avoided",0],
-
 ["What is deductive grammar teaching?","Teacher presents the rule first","Students discover every rule","No grammar is taught","Only speaking is used",0],
-
 ["What is a warm-up?","A short activity introducing or activating a lesson","A final exam","A punishment","A certificate",0],
-
 ["What is a communicative activity?","An activity requiring meaningful language use","Copying vocabulary","Silent grammar notes","Reading attendance",0],
-
 ["Why should methodology match objectives?","To support the intended learning outcome","To make lessons longer","To avoid assessment","To reduce learning",0]
-
 ],
 
 "Lesson Planning":[
-
 ["What is a lesson plan?","A structured guide for a lesson","A student certificate","A school timetable only","A dictionary",0],
-
 ["What should learning objectives describe?","What learners should achieve","What the teacher wears","Classroom furniture","Break time",0],
-
 ["What does SMART commonly describe?","Specific, Measurable, Achievable, Relevant, Time-bound","Simple, Modern, Active, Rapid, Tested","Student Method Assessment Reading Teaching","None",0],
-
 ["Why sequence activities?","To create logical progression","To confuse learners","To remove practice","To avoid objectives",0],
-
 ["What is an anticipated problem?","A difficulty the teacher expects","A final grade","A classroom decoration","A certificate",0],
-
 ["Why include timing?","To manage lesson stages","To remove flexibility","To avoid teaching","To grade students",0],
-
 ["What is a lead-in?","An activity introducing the topic","A final exam","A homework grade","A certificate",0],
-
 ["What is controlled practice?","Practice with limited choices or support","Completely free conversation","Final assessment","No practice",0],
-
 ["What is freer practice?","Learners use language with more independence","Students copy sentences","Teacher speaks only","Students take attendance",0],
-
 ["Why plan differentiation?","To support different learner needs","To give no support","To avoid objectives","To eliminate practice",0],
-
 ["What is an exit ticket?","A short activity checking learning at the end","A school bus ticket","A certificate","A textbook",0],
-
 ["Why include materials in a lesson plan?","To prepare resources needed","To make the plan longer","To replace objectives","To avoid activities",0],
-
 ["What should a teacher do after a lesson?","Reflect and evaluate","Forget the lesson","Delete all notes","Avoid feedback",0],
-
 ["Why should objectives be observable?","So achievement can be assessed","So students cannot understand them","So lessons become longer","So grading disappears",0],
-
 ["What is lesson staging?","Organizing a lesson into logical parts","Changing the classroom","Printing certificates","Taking attendance only",0]
-
 ],
 
 "Classroom Management":[
-
 ["What is classroom management?","Organizing behavior, interaction and learning","Only grading exams","Only teaching grammar","Only taking attendance",0],
-
 ["Why establish classroom rules?","To create clear expectations","To punish learners","To reduce learning","To stop interaction",0],
-
 ["What is positive reinforcement?","Recognizing desired behavior","Ignoring all behavior","Punishing every mistake","Stopping participation",0],
-
 ["Why use clear instructions?","To help learners understand tasks","To make tasks difficult","To reduce learning","To avoid questions",0],
-
 ["What is monitoring?","Observing learners during activities","Leaving the room","Giving certificates","Writing grades only",0],
-
 ["Why arrange seating strategically?","To support interaction and classroom goals","For decoration only","To stop communication","To make lessons harder",0],
-
 ["What should a teacher do with minor disruption?","Respond calmly and proportionately","Immediately end the course","Shout at learners","Ignore every problem",0],
-
 ["What is classroom rapport?","A positive teacher-learner relationship","A test score","A textbook","A timetable",0],
-
 ["Why use pair/group work?","To increase learner participation","To prevent speaking","To make students silent","To avoid practice",0],
-
 ["What makes instructions effective?","Clear, concise and checked","Very long and confusing","Never repeated","Only written in advanced language",0],
-
 ["What is ICQ used for?","Checking understanding of instructions","Checking grammar","Checking attendance","Checking certificates",0],
-
 ["What is CCQ used for?","Checking understanding of meaning","Checking classroom furniture","Checking attendance","Checking certificates",0],
-
 ["Why establish routines?","They make classroom procedures predictable","They remove learning","They stop interaction","They prevent teaching",0],
-
 ["How can a teacher encourage participation?","Use supportive questions and activities","Embarrass quiet learners","Ignore students","Only lecture",0],
-
 ["What is effective classroom management based on?","Consistency and clear expectations","Fear only","Silence only","No planning",0]
-
 ],
 
 "Teaching Listening":[
-
 ["What is listening?","Understanding spoken language","Writing essays","Reading silently","Drawing",0],
-
 ["What is bottom-up listening?","Understanding sounds, words and grammar","Understanding only the general topic","Writing an essay","Speaking freely",0],
-
 ["What is top-down listening?","Using context and prior knowledge","Analyzing every sound only","Copying text","Grammar translation",0],
-
 ["Why pre-teach key vocabulary?","To reduce unnecessary difficulty","To prevent listening","To replace the audio","To avoid context",0],
-
 ["What is gist listening?","Listening for the main idea","Listening for every word","Writing every sentence","Grammar testing",0],
-
 ["What is listening for detail?","Listening for specific information","Understanding only the topic","Speaking practice","Reading a novel",0],
-
 ["Why use authentic audio?","It exposes learners to real language use","It guarantees perfect comprehension","It removes difficulty","It eliminates practice",0],
-
 ["What is prediction in listening?","Anticipating content before listening","Repeating every word","Writing an exam","Translating everything",0],
-
 ["Why replay an audio?","To provide another opportunity for comprehension","To punish learners","To replace teaching","To stop discussion",0],
-
 ["What is selective listening?","Listening for particular information","Listening without purpose","Reading silently","Writing vocabulary",0],
-
 ["Why use different accents?","To develop flexible listening skills","To confuse learners intentionally","To avoid pronunciation","To eliminate comprehension",0],
-
 ["What should listening tasks have?","A clear purpose","No instructions","No context","Only difficult questions",0],
-
 ["What is dictation?","Writing language that is heard","Reading silently","Speaking freely","Drawing pictures",0],
-
 ["Why activate background knowledge?","It helps learners interpret the message","It prevents comprehension","It removes context","It replaces audio",0],
-
 ["What is effective listening instruction?","A combination of pre-, while-, and post-listening activities","Only replaying audio","Only vocabulary tests","No preparation",0]
-
 ],
 
 "Teaching Speaking":[
-
 ["What is a productive language skill?","Speaking","Listening","Reading","Viewing",0],
-
 ["What is fluency?","Ability to communicate smoothly","Perfect grammar only","Knowing many rules","Writing quickly",0],
-
 ["What is accuracy?","Correct language use","Speaking quickly only","Using gestures only","Reading quickly",0],
-
 ["Why use pair work for speaking?","It increases opportunities to speak","It stops speaking","It reduces practice","It replaces feedback",0],
-
 ["What is a role-play?","A simulated real-life situation","A grammar test","A reading exam","A vocabulary list",0],
-
 ["What is information-gap activity?","Learners have different information and communicate to complete a task","Teacher gives all answers","Students copy text","Students remain silent",0],
-
 ["Why teach speaking strategies?","To help learners maintain communication","To stop conversation","To avoid interaction","To remove vocabulary",0],
-
 ["What is pronunciation practice for?","Improving intelligibility","Making learners silent","Removing grammar","Replacing vocabulary",0],
-
 ["Why give planning time before speaking?","It can improve confidence and performance","It prevents speaking","It makes tasks impossible","It removes fluency",0],
-
 ["What is a discussion?","An exchange of ideas","A silent reading task","A written exam","A dictation",0],
-
 ["What is communicative competence?","Using language appropriately and effectively","Knowing grammar rules only","Memorizing vocabulary only","Speaking without meaning",0],
-
 ["Why correct every speaking error immediately?","Usually this is not necessary","It is always essential","It prevents fluency","It replaces practice",0],
-
 ["What is delayed correction?","Giving feedback after an activity","Never correcting errors","Correcting before speaking","Removing feedback",0],
-
 ["What is scaffolding in speaking?","Providing temporary support","Stopping communication","Giving final grades","Avoiding interaction",0],
-
 ["What makes speaking activities effective?","A meaningful reason to communicate","No purpose","Only repetition","No interaction",0]
-
 ],
 
 "Teaching Reading":[
-
 ["What is skimming?","Reading quickly for the main idea","Reading every word","Writing a summary first","Checking pronunciation",0],
-
 ["What is scanning?","Reading to find specific information","Reading for general pleasure","Writing an essay","Listening to audio",0],
-
 ["What is intensive reading?","Close reading for detailed understanding","Reading only titles","Reading quickly for gist","Speaking practice",0],
-
 ["What is extensive reading?","Reading larger amounts for general understanding or enjoyment","Analyzing one sentence only","Grammar testing","Listening practice",0],
-
 ["Why pre-teach selected vocabulary?","To support comprehension of important words","To teach every word","To avoid reading","To replace the text",0],
-
 ["What is predicting?","Using clues to anticipate content","Reading backward","Translating every word","Writing an exam",0],
-
 ["Why use headings?","They help readers predict and organize information","They remove meaning","They replace the text","They stop comprehension",0],
-
 ["What is inference?","Understanding meaning not directly stated","Copying sentences","Reading aloud only","Finding every word",0],
-
 ["Why teach reading strategies?","To help learners become effective readers","To make texts harder","To prevent reading","To eliminate vocabulary",0],
-
 ["What is a main idea?","The central message","A minor detail","A grammar rule","A vocabulary item",0],
-
 ["What is context?","Information surrounding language or an event","A dictionary only","A test score","A classroom rule",0],
-
 ["Why use authentic texts?","They expose learners to real-world language","They guarantee easy reading","They remove context","They replace instruction",0],
-
 ["What is a comprehension question?","A question checking understanding of a text","A pronunciation drill","A speaking role-play","A grammar rule",0],
-
 ["What is a text genre?","A recognizable type of text","A vocabulary word","A classroom activity","A test score",0],
-
 ["Effective reading instruction often combines what?","Pre-, while-, and post-reading activities","Only translation","Only dictionary work","No preparation",0]
-
 ],
 
 "Teaching Writing":[
-
 ["What is process writing?","Planning, drafting, revising and editing","Writing once only","Copying a model only","Speaking an essay",0],
-
 ["What is brainstorming?","Generating ideas before writing","Editing punctuation","Giving a final grade","Reading aloud",0],
-
 ["What is drafting?","Producing an initial version","Final proofreading only","Choosing a title only","Taking attendance",0],
-
 ["What is revision?","Improving content and organization","Checking attendance","Learning vocabulary only","Reading silently",0],
-
 ["What is editing?","Correcting language and mechanics","Generating ideas","Choosing a topic only","Speaking practice",0],
-
 ["Why teach paragraph structure?","To organize ideas clearly","To make writing longer only","To prevent revision","To remove meaning",0],
-
 ["What is a topic sentence?","A sentence expressing the main idea of a paragraph","The final grade","A dictionary definition","A title only",0],
-
 ["What is cohesion?","Connections between parts of a text","Handwriting quality only","Word count","Pronunciation",0],
-
 ["What is coherence?","Logical organization and meaning","Spelling only","Vocabulary size","Font style",0],
-
 ["Why provide writing models?","They show examples of target text features","They eliminate creativity","They replace writing","They prevent revision",0],
-
 ["What is peer feedback?","Feedback from other learners","Teacher grading only","Self-study only","Automated testing only",0],
-
 ["Why teach linking words?","To connect ideas","To increase word count","To avoid grammar","To replace paragraphs",0],
-
 ["What is academic writing?","Writing appropriate for academic contexts","Text messaging","Casual conversation","A pronunciation task",0],
-
 ["Why use a writing rubric?","To make assessment criteria clearer","To eliminate feedback","To stop writing","To replace instruction",0],
-
 ["Effective writing instruction should include?","Guidance, practice and feedback","Only final grades","Only copying","No revision",0]
-
 ],
 
 "Assessment & Testing":[
-
 ["What is formative assessment?","Assessment during learning to support improvement","Only a final exam","A certificate","Attendance",0],
-
 ["What is summative assessment?","Assessment usually conducted at the end of instruction","Warm-up activity","Peer discussion","Brainstorming",0],
-
 ["What is validity?","The extent a test measures what it intends to measure","How attractive a test is","How long it is","How difficult it looks",0],
-
 ["What is reliability?","Consistency of measurement","Difficulty only","Popularity","Speed",0],
-
 ["What is a rubric?","A set of criteria for evaluating performance","A textbook","A timetable","A certificate",0],
-
 ["What is diagnostic assessment?","Assessment used to identify strengths and needs","Final graduation only","Attendance","Homework only",0],
-
 ["What is a placement test?","A test used to determine an appropriate level","A final certificate","A speaking activity","A lesson plan",0],
-
 ["What is feedback?","Information that helps learners improve","A final score only","Punishment","Attendance",0],
-
 ["What is criterion-referenced assessment?","Performance compared with defined criteria","Performance compared only with classmates","Random scoring","No criteria",0],
-
 ["What is norm-referenced assessment?","Performance compared with a reference group","Performance against fixed criteria only","No comparison","Teacher preference",0],
-
 ["What is an objective test item?","An item with a clearly determined answer","An essay only","A discussion only","A portfolio only",0],
-
 ["Why use multiple assessment methods?","Different methods provide different evidence","To confuse students","To avoid learning","To eliminate feedback",0],
-
 ["What is a pass mark?","The minimum score required to pass","The highest score","The average age","The number of questions",0],
-
 ["What is assessment literacy?","Understanding assessment principles and practices","Memorizing vocabulary","Speaking fluently","Writing quickly",0],
-
 ["Why review test results?","To identify learning needs and improve instruction","To punish students","To remove assessment","To avoid feedback",0]
-
 ]
 
 };
 
 /* =========================================================
-TESOL DATA
+   TESOL DATA
 ========================================================= */
 
 const TESOL_DATA={
 
 "Introduction to TESOL":[
-
 ["What does TESOL stand for?","Teaching English to Speakers of Other Languages","Teaching English Students Online Learning","Teacher Education School of Languages","Teaching Every Student Online Language",0],
-
 ["What is the main focus of TESOL?","Teaching English to speakers of other languages","Teaching mathematics","Teaching only native speakers","Teaching science",0],
-
 ["Who can TESOL teachers work with?","Learners from diverse language backgrounds","Only native speakers","Only children","Only university professors",0],
-
 ["What is multilingualism?","The use or knowledge of multiple languages","Knowing one language","Knowing no language","Learning only grammar",0],
-
 ["Why is cultural awareness important in TESOL?","It supports respectful and effective communication","It eliminates grammar","It prevents interaction","It replaces teaching",0],
-
 ["What is learner autonomy?","Learners taking responsibility for their learning","Teachers doing everything","Students avoiding study","No independent learning",0],
-
 ["What is communicative competence?","Effective and appropriate language use","Grammar rules only","Vocabulary memorization only","Writing only",0],
-
 ["What is inclusive teaching?","Supporting learners with diverse needs","Teaching only advanced students","Ignoring differences","Using one method always",0],
-
 ["Why conduct needs analysis?","To understand learners' goals and needs","To choose classroom colors","To avoid assessment","To reduce interaction",0],
-
 ["What is English as an international language?","English used among people with diverse first languages","English spoken only in England","English used only at school","A grammar book",0],
-
 ["What is learner-centered education?","Teaching that actively involves learners","Teacher lectures only","No student participation","Memorization only",0],
-
 ["What is scaffolding?","Temporary support helping learners achieve a task","A final examination","A punishment","A certificate",0],
-
 ["Why is reflection important for teachers?","It helps teachers evaluate and improve practice","It replaces lesson planning","It stops learning","It removes feedback",0],
-
 ["What is professional development?","Ongoing improvement of professional knowledge and skills","A single final test","Attendance only","A classroom decoration",0],
-
 ["What is an effective TESOL classroom?","Supportive, inclusive and communicative","Fear-based","Teacher-only","Silent all the time",0]
-
 ],
 
 "English Grammar for Teachers":[
-
 ["Why should teachers understand grammar?","To explain and teach language accurately","To avoid teaching","To stop speaking","To replace vocabulary",0],
-
 ["What is a verb?","A word expressing an action, state or event","A naming word","A describing word only","A punctuation mark",0],
-
 ["What is a noun?","A word naming a person, place, thing or idea","An action word","An adverb","A conjunction",0],
-
 ["What is an adjective?","A word that describes a noun","A verb tense","A pronoun only","A conjunction",0],
-
 ["What is an adverb commonly used to modify?","A verb, adjective or adverb","Only nouns","Only pronouns","Only articles",0],
-
 ["What is subject-verb agreement?","The subject and verb match appropriately","All verbs are past","Every sentence has two subjects","Grammar is optional",0],
-
 ["Which is correct?","She teach English.","She teaches English.","She teaching English.","She taughts English.",1],
-
 ["What is tense?","A grammatical form expressing time or aspect","A vocabulary list","A pronunciation feature only","A classroom rule",0],
-
 ["What is a modal verb?","A verb such as can, must or should","A noun","An article","A conjunction",0],
-
 ["What is the passive voice?","The subject is presented as receiving the action","The subject always performs the action","A question form only","A future tense",0],
-
 ["Why use examples when teaching grammar?","They help learners see grammar in context","They make grammar impossible","They replace practice","They prevent communication",0],
-
 ["What is an error?","A form that differs from the target language","A correct answer","A classroom rule","A vocabulary list",0],
-
 ["What is a grammar rule?","A description of how language forms function","A student ID","A classroom activity","A test score",0],
-
 ["What is contextualized grammar teaching?","Teaching grammar through meaningful context","Teaching isolated rules only","Avoiding examples","Teaching without meaning",0],
-
 ["Why should grammar teaching include practice?","Learners need opportunities to use forms","Practice is unnecessary","It replaces communication","It prevents learning",0]
-
 ],
 
 "Second Language Acquisition":[
-
 ["What does SLA mean?","Second Language Acquisition","Student Language Assessment","Speaking Language Activity","School Learning Administration",0],
-
 ["What is interlanguage?","A developing language system created by a learner","A native language dictionary","A classroom rule","A test",0],
-
 ["What is comprehensible input?","Language learners can understand with support","Language that is impossible to understand","Only written grammar","A final exam",0],
-
 ["What is output?","Language produced by learners","Language heard only","A textbook","A classroom rule",0],
-
 ["Why is interaction important in SLA?","It provides opportunities to negotiate meaning","It prevents communication","It removes input","It eliminates vocabulary",0],
-
 ["What is motivation?","A factor influencing willingness to learn","A grammar tense","A test type","A reading skill",0],
-
 ["What is fossilization?","Persistent non-target language features","Perfect grammar","Rapid vocabulary growth","A teaching method",0],
-
 ["What is transfer?","Influence of a learner's existing language knowledge","A test score","A classroom routine","A certificate",0],
-
 ["What is negative transfer?","Existing language knowledge causes difficulty in the new language","Learning becomes perfect","Vocabulary increases","Students become fluent immediately",0],
-
 ["What is positive transfer?","Existing knowledge supports learning","Existing knowledge always causes errors","No language influence","A test method",0],
-
 ["Why do learners make errors?","Errors can be part of language development","Errors always mean failure","Learners never make errors","Teachers cause all errors",0],
-
 ["What is affective factor?","Emotion-related factor influencing learning","Grammar rule","Reading technique","Test item",0],
-
 ["What is learner autonomy in SLA?","Learners managing aspects of their learning","Teacher controls everything","Students never study","No responsibility",0],
-
 ["Why is meaningful input important?","It exposes learners to understandable language in context","It prevents comprehension","It replaces interaction","It eliminates practice",0],
-
 ["What is individual difference?","Variation among learners","One method for everyone","A grammar rule","A test score",0]
-
 ],
+
+/*
+The following subjects use the same professionally prepared
+question structures already present in the TEFL bank.
+*/
 
 "Teaching Methodologies":TEFL_DATA["Teaching Methodologies"],
 
@@ -2592,105 +2382,57 @@ const TESOL_DATA={
 "Classroom Management":TEFL_DATA["Classroom Management"],
 
 "Teaching Listening & Speaking":[
-
 ["Which two skills are combined in this subject?","Listening and speaking","Reading and writing","Grammar and vocabulary","Testing and assessment",0],
-
 ["What is receptive language activity?","Listening for understanding","Speaking","Writing","Presenting",0],
-
 ["What is productive language activity?","Speaking","Listening","Reading","Viewing",0],
-
 ["What is gist listening?","Listening for the main idea","Listening for every word","Writing every word","Grammar analysis",0],
-
 ["What is fluency?","Communicating with reasonable smoothness","Perfect grammar only","Knowing rules","Reading quickly",0],
-
 ["What is accuracy?","Using language correctly","Speaking quickly only","Using gestures","Reading silently",0],
-
 ["Why combine listening and speaking?","They support real communication","They are unrelated","It prevents interaction","It removes practice",0],
-
 ["What is an information gap?","Learners have different information and need communication","Everyone has identical information","Teacher gives every answer","No communication",0],
-
 ["What is a role-play?","A simulated communicative situation","A grammar worksheet","A reading test","A vocabulary list",0],
-
 ["What is pronunciation teaching intended to support?","Intelligibility","Silence","Writing speed","Reading only",0],
-
 ["Why use authentic listening?","To expose learners to real language use","To guarantee easy comprehension","To eliminate context","To stop speaking",0],
-
 ["What is delayed correction?","Feedback after the communicative activity","No correction","Correction before speaking","Only written exams",0],
-
 ["Why give speaking planning time?","It can improve confidence and performance","It prevents communication","It eliminates fluency","It makes learners silent",0],
-
 ["What is active listening?","Listening with attention and a purpose","Hearing without attention","Writing only","Speaking only",0],
-
 ["What makes listening-speaking tasks effective?","Meaningful communication","No purpose","Teacher-only speech","Silent work",0]
-
 ],
 
 "Teaching Reading & Writing":[
-
 ["What is skimming?","Reading quickly for the main idea","Reading every word","Writing an essay","Listening",0],
-
 ["What is scanning?","Reading for specific information","Reading only for pleasure","Writing","Speaking",0],
-
 ["What is process writing?","Planning, drafting, revising and editing","Writing once","Copying","Speaking",0],
-
 ["What is brainstorming?","Generating ideas","Correcting grammar","Final assessment","Proofreading only",0],
-
 ["What is a topic sentence?","The main idea of a paragraph","A final grade","A vocabulary word","A title only",0],
-
 ["What is inference?","Understanding unstated meaning","Copying text","Reading aloud","Finding every word",0],
-
 ["Why teach reading strategies?","To help learners read effectively","To make reading harder","To avoid texts","To eliminate vocabulary",0],
-
 ["What is cohesion?","Connections between parts of a text","Handwriting","Pronunciation","Word count",0],
-
 ["What is coherence?","Logical organization of ideas","Spelling only","Vocabulary size","Font choice",0],
-
 ["Why use writing models?","They demonstrate useful text features","They prevent creativity","They replace writing","They stop revision",0],
-
 ["What is peer feedback?","Feedback from classmates","Teacher-only grading","Self-study only","Automated testing",0],
-
 ["Why teach paragraph organization?","To communicate ideas clearly","To increase word count only","To prevent revision","To avoid meaning",0],
-
 ["What is extensive reading?","Reading substantial amounts for general understanding","Analyzing one sentence","Grammar testing","Listening",0],
-
 ["What is revision?","Improving content and organization","Checking attendance","Pronunciation practice","Taking a test",0],
-
 ["Why integrate reading and writing?","Reading provides models and input for writing","They have no connection","It prevents learning","It removes communication",0]
-
 ],
 
 "Teaching Vocabulary & Pronunciation":[
-
 ["What is vocabulary?","The words known or used by a learner","Only grammar rules","Only pronunciation","A test score",0],
-
 ["What is pronunciation?","How language sounds are produced and perceived","Writing organization","Vocabulary size","Grammar structure",0],
-
 ["What is a collocation?","Words that commonly occur together","A grammar tense","A classroom rule","A test type",0],
-
 ["Why teach vocabulary in context?","Context helps learners understand meaning and use","It makes vocabulary impossible","It removes meaning","It prevents communication",0],
-
 ["What is word stress?","Emphasis placed on a syllable","Sentence punctuation","Writing style","Grammar agreement",0],
-
 ["What is intonation?","Changes in pitch across speech","Spelling","Word length","Reading speed",0],
-
 ["What is a minimal pair?","Two words differing in one sound","Two identical words","Two paragraphs","Two grammar rules",0],
-
 ["Why teach pronunciation for intelligibility?","So listeners can understand the speaker","To make accents disappear","To stop communication","To avoid speaking",0],
-
 ["What is receptive vocabulary?","Words learners recognize or understand","Words learners never know","Only words they write","Only grammar",0],
-
 ["What is productive vocabulary?","Words learners can use","Words they only recognize","Only dictionary words","Only pronunciation",0],
-
 ["What is spaced repetition?","Reviewing information at increasing intervals","Studying once","Never reviewing","Random testing only",0],
-
 ["Why recycle vocabulary?","Repeated encounters strengthen learning","It prevents learning","It removes context","It makes vocabulary unnecessary",0],
-
 ["What is a prefix?","A word part added to the beginning","A word ending","A sentence","A punctuation mark",0],
-
 ["What is a suffix?","A word part added to the end","A beginning only","A sentence","A paragraph",0],
-
 ["Effective vocabulary instruction should include?","Meaning, form, pronunciation and use","Meaning only","Spelling only","Translation only",0]
-
 ],
 
 "Assessment & Testing":TEFL_DATA["Assessment & Testing"]
@@ -2712,6 +2454,341 @@ let examState={
 };
 
 /* =========================================================
+   COPY PROTECTION CONTROL
+========================================================= */
+
+let examProtectionEnabled=false;
+
+function enableExamProtection(){
+
+    examProtectionEnabled=true;
+
+    const panel=document.getElementById("examPanel");
+
+    if(panel){
+        panel.classList.add("exam-protected");
+    }
+
+}
+
+function disableExamProtection(){
+
+    examProtectionEnabled=false;
+
+    const panel=document.getElementById("examPanel");
+
+    if(panel){
+        panel.classList.remove("exam-protected");
+    }
+
+}
+
+function isExamProtected(){
+
+    return examProtectionEnabled &&
+           examState.started===true;
+
+}
+
+/* =========================================================
+   RIGHT CLICK PROTECTION
+========================================================= */
+
+document.addEventListener("contextmenu",function(e){
+
+    if(isExamProtected()){
+
+        e.preventDefault();
+
+        alert(
+            "Right-click is disabled during the examination."
+        );
+
+        return false;
+
+    }
+
+},true);
+
+/* =========================================================
+   COPY PROTECTION
+========================================================= */
+
+document.addEventListener("copy",function(e){
+
+    if(isExamProtected()){
+
+        e.preventDefault();
+
+        if(e.clipboardData){
+
+            e.clipboardData.setData(
+                "text/plain",
+                ""
+            );
+
+        }
+
+        alert(
+            "Copying examination content is disabled."
+        );
+
+        return false;
+
+    }
+
+},true);
+
+/* =========================================================
+   CUT PROTECTION
+========================================================= */
+
+document.addEventListener("cut",function(e){
+
+    if(isExamProtected()){
+
+        e.preventDefault();
+
+        alert(
+            "Cutting examination content is disabled."
+        );
+
+        return false;
+
+    }
+
+},true);
+
+/* =========================================================
+   DRAG PROTECTION
+========================================================= */
+
+document.addEventListener("dragstart",function(e){
+
+    if(isExamProtected()){
+
+        e.preventDefault();
+
+        return false;
+
+    }
+
+},true);
+
+/* =========================================================
+   SELECTION PROTECTION
+========================================================= */
+
+document.addEventListener("selectstart",function(e){
+
+    if(isExamProtected()){
+
+        const target=e.target;
+
+        if(
+            target.tagName!=="INPUT" &&
+            target.tagName!=="TEXTAREA"
+        ){
+
+            e.preventDefault();
+
+            return false;
+
+        }
+
+    }
+
+},true);
+
+/* =========================================================
+   KEYBOARD PROTECTION
+========================================================= */
+
+document.addEventListener("keydown",function(e){
+
+    if(!isExamProtected()){
+        return;
+    }
+
+    const key=(e.key || "").toLowerCase();
+    const ctrl=e.ctrlKey || e.metaKey;
+
+    /* CTRL + C */
+    if(ctrl && key==="c"){
+
+        e.preventDefault();
+
+        alert(
+            "Copying is disabled during the examination."
+        );
+
+        return false;
+    }
+
+    /* CTRL + X */
+    if(ctrl && key==="x"){
+
+        e.preventDefault();
+
+        alert(
+            "Cutting is disabled during the examination."
+        );
+
+        return false;
+    }
+
+    /* CTRL + A */
+    if(ctrl && key==="a"){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* CTRL + U */
+    if(ctrl && key==="u"){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* CTRL + S */
+    if(ctrl && key==="s"){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* CTRL + P */
+    if(ctrl && key==="p"){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* CTRL + SHIFT + I */
+    if(
+        ctrl &&
+        e.shiftKey &&
+        key==="i"
+    ){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* CTRL + SHIFT + J */
+    if(
+        ctrl &&
+        e.shiftKey &&
+        key==="j"
+    ){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* CTRL + SHIFT + C */
+    if(
+        ctrl &&
+        e.shiftKey &&
+        key==="c"
+    ){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* F12 */
+    if(e.key==="F12"){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* PRINT SCREEN */
+    if(
+        e.key==="PrintScreen" ||
+        e.code==="PrintScreen"
+    ){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+},true);
+
+/* =========================================================
+   MOUSE DOWN PROTECTION
+========================================================= */
+
+document.addEventListener("mousedown",function(e){
+
+    if(isExamProtected() && e.button===2){
+
+        e.preventDefault();
+
+        return false;
+
+    }
+
+},true);
+
+/* =========================================================
+   TOUCH LONG PRESS PROTECTION
+========================================================= */
+
+let touchTimer=null;
+
+document.addEventListener("touchstart",function(){
+
+    if(!isExamProtected()) return;
+
+    touchTimer=setTimeout(function(){
+
+        try{
+
+            window.getSelection().removeAllRanges();
+
+        }catch(e){}
+
+    },500);
+
+},{passive:true});
+
+document.addEventListener("touchend",function(){
+
+    if(touchTimer){
+
+        clearTimeout(touchTimer);
+
+        touchTimer=null;
+
+    }
+
+},{passive:true});
+
+document.addEventListener("touchmove",function(){
+
+    if(touchTimer){
+
+        clearTimeout(touchTimer);
+
+        touchTimer=null;
+
+    }
+
+},{passive:true});
+
+/* =========================================================
    OPEN REGISTRATION
 ========================================================= */
 
@@ -2720,13 +2797,17 @@ function openExamRegistration(program){
     let records=getExamRecords();
 
     let alreadyPassed=records.find(function(r){
-        return r.program===program && r.status==="PASSED";
+
+        return r.program===program &&
+               r.status==="PASSED";
+
     });
 
     if(alreadyPassed){
 
         alert(
-            "This candidate has already passed the "+program+
+            "This candidate has already passed the "+
+            program+
             " examination. A passed candidate cannot take the same GETI exam again."
         );
 
@@ -2743,13 +2824,18 @@ function openExamRegistration(program){
         started:false
     };
 
+    disableExamProtection();
+
     let panel=document.getElementById("examPanel");
 
     panel.classList.add("active");
 
     panel.innerHTML=
 
-    '<h2 class="exam-title">'+program+' EXAM</h2>'+
+    '<h2 class="exam-title">'+
+    program+
+    ' EXAM</h2>'+
+
     '<p class="exam-subtitle">'+
     'Registration before starting the examination.'+
     '</p>'+
@@ -2795,7 +2881,9 @@ function submitRegistration(){
 
     if(!name || !email || !nationality){
 
-        alert("Please complete Name, Email and Nationality.");
+        alert(
+            "Please complete Name, Email and Nationality."
+        );
 
         return;
     }
@@ -2804,11 +2892,12 @@ function submitRegistration(){
 
     let passed=records.find(function(r){
 
-        return r.email.toLowerCase()===email.toLowerCase()
-        &&
-        r.program===examState.program
-        &&
-        r.status==="PASSED";
+        return r.email.toLowerCase()===
+               email.toLowerCase()
+               &&
+               r.program===examState.program
+               &&
+               r.status==="PASSED";
 
     });
 
@@ -2821,9 +2910,12 @@ function submitRegistration(){
         return;
     }
 
-    let id=createCandidateID(examState.program);
+    let id=createCandidateID(
+        examState.program
+    );
 
     examState.student={
+
         id:id,
         name:name,
         email:email,
@@ -2832,6 +2924,7 @@ function submitRegistration(){
         phone:phone,
         institution:institution,
         program:examState.program
+
     };
 
     examState.started=true;
@@ -2840,11 +2933,16 @@ function submitRegistration(){
         Array.from(
             {length:10},
             function(){
+
                 return Array(15).fill(null);
+
             }
         );
 
     examState.subjectScores=[];
+
+    /* ENABLE COPY PROTECTION */
+    enableExamProtection();
 
     showQuestion();
 
@@ -2877,7 +2975,9 @@ function createCandidateID(program){
 
     }while(
         records.some(function(r){
+
             return r.id===id;
+
         })
     );
 
@@ -2916,6 +3016,8 @@ function showQuestion(){
         [examState.questionIndex];
 
     let panel=document.getElementById("examPanel");
+
+    panel.classList.add("exam-protected");
 
     panel.innerHTML=
 
@@ -2957,11 +3059,13 @@ function showQuestion(){
 
     '<button class="next-btn" '+
     'onclick="nextExamQuestion()">'+
+
     (
         examState.questionIndex===14
         ? "SUBMIT SUBJECT"
         : "NEXT QUESTION"
     )+
+
     '</button>'+
 
     '</div>'+
@@ -2973,7 +3077,8 @@ function showQuestion(){
 
     for(let i=1;i<=4;i++){
 
-        let button=document.createElement("button");
+        let button=
+            document.createElement("button");
 
         button.className="option";
 
@@ -2998,6 +3103,8 @@ function showQuestion(){
         container.appendChild(button);
 
     }
+
+    panel.classList.add("exam-protected");
 
     panel.scrollIntoView({
         behavior:"smooth",
@@ -3046,7 +3153,9 @@ function nextExamQuestion(){
 
     if(answer===null){
 
-        alert("Please select an answer before continuing.");
+        alert(
+            "Please select an answer before continuing."
+        );
 
         return;
     }
@@ -3114,11 +3223,13 @@ function submitSubject(){
     examState.subjectScores[
         examState.subjectIndex
     ]={
+
         subject:subject,
         score:score,
         total:15,
         percentage:percentage,
         grade:grade
+
     };
 
     showSubjectResult(
@@ -3137,7 +3248,9 @@ function submitSubject(){
 function calculateGrade(percent){
 
     if(percent>=90)return "A";
+
     if(percent>=80)return "B";
+
     if(percent>=70)return "C";
 
     return "F";
@@ -3202,10 +3315,17 @@ function showSubjectResult(
 
     '</div>';
 
+    /*
+       Protection remains active until
+       final result is displayed.
+    */
+
+    panel.classList.add("exam-protected");
+
 }
 
 /* =========================================================
-   CONTINUE TO NEXT SUBJECT
+   CONTINUE
 ========================================================= */
 
 function continueExam(){
@@ -3232,6 +3352,12 @@ function continueExam(){
 
 function showFinalResult(){
 
+    /* DISABLE COPY PROTECTION AFTER EXAM */
+
+    disableExamProtection();
+
+    examState.started=false;
+
     let totalScore=0;
 
     let totalQuestions=150;
@@ -3255,6 +3381,7 @@ function showFinalResult(){
     let student=examState.student;
 
     let record={
+
         id:student.id,
         name:student.name,
         email:student.email,
@@ -3269,6 +3396,7 @@ function showFinalResult(){
         status:status,
         date:new Date().toISOString(),
         subjects:examState.subjectScores
+
     };
 
     saveExamRecord(record);
@@ -3393,7 +3521,9 @@ function getExamRecords(){
     try{
 
         return JSON.parse(
-            localStorage.getItem("GETI_EXAM_RECORDS")
+            localStorage.getItem(
+                "GETI_EXAM_RECORDS"
+            )
         ) || [];
 
     }catch(e){
@@ -3407,10 +3537,6 @@ function getExamRecords(){
 function saveExamRecord(record){
 
     let records=getExamRecords();
-
-    /*
-       Latest result only for the same candidate/program.
-    */
 
     records=
         records.filter(function(r){
@@ -3447,7 +3573,9 @@ function searchExamResult(){
         .toUpperCase();
 
     let output=
-        document.getElementById("resultSearchOutput");
+        document.getElementById(
+            "resultSearchOutput"
+        );
 
     if(!id){
 
@@ -3481,9 +3609,19 @@ function searchExamResult(){
     record.subjects.forEach(function(s){
 
         rows+=
+
         '<div class="subject-result">'+
-        '<span>'+escapeHTML(s.subject)+'</span>'+
-        '<strong>'+s.percentage+'% — '+s.grade+'</strong>'+
+
+        '<span>'+
+        escapeHTML(s.subject)+
+        '</span>'+
+
+        '<strong>'+
+        s.percentage+
+        '% — '+
+        s.grade+
+        '</strong>'+
+
         '</div>';
 
     });
@@ -3493,41 +3631,63 @@ function searchExamResult(){
     '<div class="verify-card">'+
 
     '<div class="verified">'+
+
     (
         record.status==="PASSED"
         ? "✓ PASSED"
         : "✕ FAILED"
     )+
+
     '</div>'+
 
     '<div class="verify-row">'+
+
     '<div class="verify-label">Candidate ID</div>'+
+
     '<div class="verify-value"><strong>'+
+
     escapeHTML(record.id)+
+
     '</strong></div>'+
+
     '</div>'+
 
     '<div class="verify-row">'+
+
     '<div class="verify-label">Name</div>'+
+
     '<div class="verify-value">'+
+
     escapeHTML(record.name)+
+
     '</div>'+
+
     '</div>'+
 
     '<div class="verify-row">'+
+
     '<div class="verify-label">Program</div>'+
+
     '<div class="verify-value">'+
+
     escapeHTML(record.program)+
+
     '</div>'+
+
     '</div>'+
 
     '<div class="verify-row">'+
+
     '<div class="verify-label">Final Result</div>'+
+
     '<div class="verify-value"><strong>'+
+
     record.percentage+
     '% — '+
     record.status+
+
     '</strong></div>'+
+
     '</div>'+
 
     '<br>'+
@@ -3558,6 +3718,7 @@ function adminLogin(){
     if(password!=="global"){
 
         message.innerHTML=
+
         '<div class="error" style="margin-top:12px;">'+
         '❌ Incorrect admin password.'+
         '</div>';
@@ -3587,7 +3748,9 @@ function loadAdminResults(){
     let records=getExamRecords();
 
     let tbody=
-        document.getElementById("adminTableBody");
+        document.getElementById(
+            "adminTableBody"
+        );
 
     tbody.innerHTML="";
 
@@ -3616,13 +3779,21 @@ function loadAdminResults(){
 
         tr.innerHTML=
 
-        '<td>'+escapeHTML(r.id)+'</td>'+
+        '<td>'+
+        escapeHTML(r.id)+
+        '</td>'+
 
-        '<td>'+escapeHTML(r.name)+'</td>'+
+        '<td>'+
+        escapeHTML(r.name)+
+        '</td>'+
 
-        '<td>'+escapeHTML(r.email)+'</td>'+
+        '<td>'+
+        escapeHTML(r.email)+
+        '</td>'+
 
-        '<td>'+escapeHTML(r.program)+'</td>'+
+        '<td>'+
+        escapeHTML(r.program)+
+        '</td>'+
 
         '<td><strong>'+
         r.percentage+
@@ -3642,11 +3813,18 @@ function loadAdminResults(){
 
         (
             r.status==="PASSED"
+
             ?
-            '<button class="admin-action" onclick="removeBlacklist(\''+
+
+            '<button class="admin-action" '+
+            'onclick="removeBlacklist(\''+
             escapeHTML(r.id)+
-            '\')">REMOVE BLACKLIST</button>'
+            '\')">'+
+            'REMOVE BLACKLIST'+
+            '</button>'
+
             :
+
             '<span>—</span>'
         )+
 
@@ -3659,7 +3837,7 @@ function loadAdminResults(){
 }
 
 /* =========================================================
-   ADMIN REMOVE BLACKLIST
+   REMOVE BLACKLIST
 ========================================================= */
 
 function removeBlacklist(id){
@@ -3701,20 +3879,39 @@ function removeBlacklist(id){
 function sendMessage(){
 
     let name=
-        document.getElementById("contactName").value.trim();
+        document
+        .getElementById("contactName")
+        .value
+        .trim();
 
     let email=
-        document.getElementById("contactEmail").value.trim();
+        document
+        .getElementById("contactEmail")
+        .value
+        .trim();
 
     let subject=
-        document.getElementById("contactSubject").value.trim();
+        document
+        .getElementById("contactSubject")
+        .value
+        .trim();
 
     let message=
-        document.getElementById("contactMessage").value.trim();
+        document
+        .getElementById("contactMessage")
+        .value
+        .trim();
 
-    if(!name || !email || !subject || !message){
+    if(
+        !name ||
+        !email ||
+        !subject ||
+        !message
+    ){
 
-        alert("Please complete all fields.");
+        alert(
+            "Please complete all fields."
+        );
 
         return;
 
@@ -3749,7 +3946,9 @@ function sendMessage(){
 
         setTimeout(
             function(){
+
                 verifyCertificate();
+
             },
             500
         );
