@@ -1,2118 +1,3567 @@
-<!DOCTYPE html>
-<html lang="en">
+/************************************************************
+ * GETI ENGLISH TEST SYSTEM
+ * SINGLE FILE: Code.gs
+ *
+ * ADMIN CODE: global
+ * BLACKLIST CODE: english
+ *
+ * Flow:
+ * EXAM
+ * -> REGISTRATION
+ * -> VOCABULARY
+ * -> RESULT
+ * -> NEXT
+ * -> GRAMMAR
+ * -> RESULT
+ * -> NEXT
+ * -> READING
+ * -> RESULT
+ * -> NEXT
+ * -> SPELLING
+ * -> RESULT
+ * -> NEXT
+ * -> GENERAL KNOWLEDGE
+ * -> RESULT
+ * -> FINAL RESULT
+ * -> BLACKLIST
+ ************************************************************/
+
+const CONFIG = {
+  ADMIN_CODE: 'global',
+  BLACKLIST_CODE: 'english',
+  PASS_MARK: 70,
+
+  STUDENTS_SHEET: 'Students',
+  RESULTS_SHEET: 'Results',
+  ANSWERS_SHEET: 'Answers',
+  BLACKLIST_SHEET: 'Blacklist'
+};
+
+
+/* =========================================================
+   WEB APP
+   ========================================================= */
+
+function doGet() {
+  return HtmlService
+    .createHtmlOutput(getAppHtml_())
+    .setTitle('GETI English Test')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+
+/* =========================================================
+   MAIN HTML
+   ========================================================= */
+
+function getAppHtml_() {
+
+  return `<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>GETI | Global English Teaching Institute</title>
-
-  <meta name="description"
-        content="Global English Teaching Institute - English, TEFL, TESOL and TEYL training, certificates and verification.">
-
-  <meta name="theme-color" content="#0b2d5c">
-
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f5f7fb;
-      color: #1d2939;
-      line-height: 1.6;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    button,
-    input,
-    textarea {
-      font-family: inherit;
-    }
-
-    /* =========================
-       HEADER
-    ========================== */
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: #0b2d5c;
-      box-shadow: 0 3px 15px rgba(0,0,0,0.15);
-    }
-
-    .navbar {
-      max-width: 1200px;
-      margin: auto;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: white;
-      font-weight: bold;
-    }
-
-    .logo-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #b38a28;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      border: 3px solid white;
-    }
-
-    .logo-text {
-      line-height: 1.2;
-    }
-
-    .logo-text strong {
-      display: block;
-      font-size: 18px;
-      letter-spacing: 1px;
-    }
-
-    .logo-text span {
-      font-size: 11px;
-      opacity: 0.9;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    nav a {
-      color: white;
-      font-size: 14px;
-      font-weight: 600;
-      transition: 0.3s;
-    }
-
-    nav a:hover {
-      color: #e2bd62;
-    }
-
-    .menu-btn {
-      display: none;
-      border: none;
-      background: transparent;
-      color: white;
-      font-size: 28px;
-      cursor: pointer;
-    }
-
-    /* =========================
-       HERO
-    ========================== */
-
-    .hero {
-      min-height: 650px;
-      background:
-        linear-gradient(rgba(5,27,55,0.82), rgba(5,27,55,0.82)),
-        url("https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1800&q=80")
-        center/cover no-repeat;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: white;
-      padding: 80px 20px;
-    }
-
-    .hero-content {
-      max-width: 850px;
-    }
-
-    .hero-badge {
-      display: inline-block;
-      padding: 8px 18px;
-      border: 1px solid #d6ad4e;
-      border-radius: 30px;
-      color: #f0cf7a;
-      font-size: 13px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    .hero h1 {
-      font-size: clamp(38px, 6vw, 70px);
-      line-height: 1.05;
-      margin-bottom: 20px;
-    }
-
-    .hero h1 span {
-      color: #d6ad4e;
-    }
-
-    .hero p {
-      max-width: 720px;
-      margin: 0 auto 35px;
-      font-size: 18px;
-      color: #edf2f7;
-    }
-
-    .hero-buttons {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 14px 25px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      border: none;
-      transition: 0.3s;
-    }
-
-    .btn-primary {
-      background: #b38a28;
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #956f1c;
-      transform: translateY(-2px);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 2px solid white;
-      color: white;
-    }
-
-    .btn-outline:hover {
-      background: white;
-      color: #0b2d5c;
-    }
-
-    /* =========================
-       GENERAL
-    ========================== */
-
-    section {
-      padding: 80px 20px;
-    }
-
-    .container {
-      max-width: 1150px;
-      margin: auto;
-    }
-
-    .section-title {
-      text-align: center;
-      margin-bottom: 45px;
-    }
-
-    .section-title small {
-      display: block;
-      color: #b38a28;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 8px;
-    }
-
-    .section-title h2 {
-      font-size: 36px;
-      color: #0b2d5c;
-      margin-bottom: 10px;
-    }
-
-    .section-title p {
-      max-width: 700px;
-      margin: auto;
-      color: #667085;
-    }
-
-    /* =========================
-       STATS
-    ========================== */
-
-    .stats {
-      margin-top: -50px;
-      position: relative;
-      z-index: 10;
-    }
-
-    .stats-grid {
-      max-width: 1050px;
-      margin: auto;
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 10px 35px rgba(0,0,0,0.12);
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      overflow: hidden;
-    }
-
-    .stat {
-      text-align: center;
-      padding: 30px 15px;
-      border-right: 1px solid #eaecf0;
-    }
-
-    .stat:last-child {
-      border-right: none;
-    }
-
-    .stat h3 {
-      color: #0b2d5c;
-      font-size: 30px;
-    }
-
-    .stat p {
-      color: #667085;
-      font-size: 14px;
-    }
-
-    /* =========================
-       ABOUT
-    ========================== */
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 50px;
-      align-items: center;
-    }
-
-    .about-image img {
-      width: 100%;
-      height: 430px;
-      object-fit: cover;
-      border-radius: 18px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-    }
-
-    .about-content h2 {
-      color: #0b2d5c;
-      font-size: 38px;
-      margin-bottom: 18px;
-    }
-
-    .about-content p {
-      color: #667085;
-      margin-bottom: 18px;
-    }
-
-    .check-list {
-      list-style: none;
-      margin-top: 20px;
-    }
-
-    .check-list li {
-      margin-bottom: 12px;
-      font-weight: 600;
-    }
-
-    .check-list li::before {
-      content: "✓";
-      display: inline-flex;
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      background: #e9f7ef;
-      color: #1b8a4b;
-      align-items: center;
-      justify-content: center;
-      margin-right: 10px;
-    }
-
-    /* =========================
-       PROGRAMS
-    ========================== */
-
-    .programs {
-      background: #eef3f9;
-    }
-
-    .program-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 25px;
-    }
-
-    .program-card {
-      background: white;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-      transition: 0.3s;
-    }
-
-    .program-card:hover {
-      transform: translateY(-7px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.13);
-    }
-
-    .program-image {
-      height: 210px;
-      overflow: hidden;
-    }
-
-    .program-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: 0.4s;
-    }
-
-    .program-card:hover img {
-      transform: scale(1.05);
-    }
-
-    .program-content {
-      padding: 25px;
-    }
-
-    .program-content h3 {
-      color: #0b2d5c;
-      font-size: 23px;
-      margin-bottom: 10px;
-    }
-
-    .program-content p {
-      color: #667085;
-      font-size: 14px;
-      margin-bottom: 15px;
-    }
-
-    .program-tag {
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 20px;
-      background: #f7f0df;
-      color: #8b681e;
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    /* =========================
-       CERTIFICATES
-    ========================== */
-
-    .certificate-section {
-      background: white;
-    }
-
-    .certificate-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 25px;
-    }
-
-    .certificate-card {
-      border: 1px solid #eaecf0;
-      border-radius: 15px;
-      padding: 30px;
-      text-align: center;
-      background: #fff;
-      transition: 0.3s;
-    }
-
-    .certificate-card:hover {
-      border-color: #b38a28;
-      transform: translateY(-5px);
-    }
-
-    .certificate-icon {
-      width: 75px;
-      height: 75px;
-      border-radius: 50%;
-      background: #f7f0df;
-      color: #b38a28;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
-      font-size: 30px;
-    }
-
-    .certificate-card h3 {
-      color: #0b2d5c;
-      margin-bottom: 10px;
-    }
-
-    .certificate-card p {
-      color: #667085;
-      font-size: 14px;
-    }
-
-    /* =========================
-       VERIFY
-    ========================== */
-
-    .verify-section {
-      background:
-        linear-gradient(rgba(11,45,92,0.96), rgba(11,45,92,0.96)),
-        url("https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=1600&q=80")
-        center/cover;
-      color: white;
-    }
-
-    .verify-box {
-      max-width: 850px;
-      margin: auto;
-      background: white;
-      border-radius: 18px;
-      padding: 40px;
-      color: #1d2939;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-    }
-
-    .verify-box h2 {
-      color: #0b2d5c;
-      text-align: center;
-      margin-bottom: 10px;
-      font-size: 32px;
-    }
-
-    .verify-box > p {
-      text-align: center;
-      color: #667085;
-      margin-bottom: 25px;
-    }
-
-    .search-form {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-    }
-
-    .search-form input {
-      width: 100%;
-      padding: 15px 18px;
-      border: 1px solid #d0d5dd;
-      border-radius: 8px;
-      outline: none;
-      font-size: 16px;
-    }
-
-    .search-form input:focus {
-      border-color: #0b2d5c;
-      box-shadow: 0 0 0 3px rgba(11,45,92,0.1);
-    }
-
-    .verify-result {
-      margin-top: 25px;
-      display: none;
-    }
-
-    .result-success {
-      border: 1px solid #a6f4c5;
-      background: #ecfdf3;
-      padding: 25px;
-      border-radius: 12px;
-    }
-
-    .result-success h3 {
-      color: #027a48;
-      margin-bottom: 15px;
-    }
-
-    .result-error {
-      border: 1px solid #fecdca;
-      background: #fef3f2;
-      padding: 20px;
-      border-radius: 12px;
-      color: #b42318;
-    }
-
-    .result-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-
-    .result-table td {
-      border-bottom: 1px solid #d9f0df;
-      padding: 10px;
-    }
-
-    .result-table td:first-child {
-      font-weight: bold;
-      width: 35%;
-    }
-
-    /* =========================
-       WHY GETI
-    ========================== */
-
-    .why-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
-
-    .why-card {
-      padding: 30px 20px;
-      text-align: center;
-      background: #f8fafc;
-      border-radius: 15px;
-      border: 1px solid #eaecf0;
-    }
-
-    .why-icon {
-      font-size: 35px;
-      margin-bottom: 15px;
-    }
-
-    .why-card h3 {
-      color: #0b2d5c;
-      margin-bottom: 10px;
-    }
-
-    .why-card p {
-      color: #667085;
-      font-size: 14px;
-    }
-
-    /* =========================
-       RESOURCES
-    ========================== */
-
-    .resource-section {
-      background: #eef3f9;
-    }
-
-    .resource-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 25px;
-    }
-
-    .resource-card {
-      background: white;
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 7px 20px rgba(0,0,0,0.06);
-    }
-
-    .resource-card h3 {
-      color: #0b2d5c;
-      margin-bottom: 12px;
-    }
-
-    .resource-card p {
-      color: #667085;
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
-
-    /* =========================
-       FAQ
-    ========================== */
-
-    .faq {
-      max-width: 850px;
-      margin: auto;
-    }
-
-    .faq-item {
-      background: white;
-      border: 1px solid #eaecf0;
-      border-radius: 10px;
-      margin-bottom: 12px;
-      overflow: hidden;
-    }
-
-    .faq-question {
-      width: 100%;
-      padding: 18px 20px;
-      background: white;
-      border: none;
-      text-align: left;
-      font-weight: bold;
-      font-size: 16px;
-      color: #0b2d5c;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .faq-answer {
-      display: none;
-      padding: 0 20px 20px;
-      color: #667085;
-      font-size: 14px;
-    }
-
-    .faq-item.active .faq-answer {
-      display: block;
-    }
-
-    .faq-item.active .faq-question span {
-      transform: rotate(45deg);
-    }
-
-    .faq-question span {
-      font-size: 25px;
-      transition: 0.3s;
-    }
-
-    /* =========================
-       CONTACT
-    ========================== */
-
-    .contact-section {
-      background: white;
-    }
-
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-    }
-
-    .contact-info {
-      background: #0b2d5c;
-      color: white;
-      border-radius: 15px;
-      padding: 40px;
-    }
-
-    .contact-info h2 {
-      font-size: 32px;
-      margin-bottom: 15px;
-    }
-
-    .contact-info p {
-      color: #d0d9e7;
-      margin-bottom: 25px;
-    }
-
-    .contact-item {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .contact-item-icon {
-      font-size: 22px;
-    }
-
-    .contact-form {
-      padding: 10px;
-    }
-
-    .form-group {
-      margin-bottom: 18px;
-    }
-
-    .form-group label {
-      display: block;
-      font-weight: bold;
-      color: #344054;
-      margin-bottom: 7px;
-    }
-
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #d0d5dd;
-      border-radius: 8px;
-      outline: none;
-      resize: vertical;
-    }
-
-    .form-group textarea {
-      min-height: 140px;
-    }
-
-    /* =========================
-       FOOTER
-    ========================== */
-
-    footer {
-      background: #061d3d;
-      color: white;
-      padding: 50px 20px 20px;
-    }
-
-    .footer-grid {
-      max-width: 1150px;
-      margin: auto;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 35px;
-    }
-
-    .footer-col h3 {
-      margin-bottom: 18px;
-      color: #e1bc5f;
-    }
-
-    .footer-col p,
-    .footer-col a {
-      color: #b9c5d6;
-      font-size: 14px;
-    }
-
-    .footer-col a {
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .footer-col a:hover {
-      color: white;
-    }
-
-    .footer-bottom {
-      max-width: 1150px;
-      margin: 40px auto 0;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255,255,255,0.12);
-      text-align: center;
-      color: #9aa9bd;
-      font-size: 13px;
-    }
-
-    /* =========================
-       RESPONSIVE
-    ========================== */
-
-    @media (max-width: 950px) {
-
-      nav {
-        display: none;
-        position: absolute;
-        top: 76px;
-        left: 0;
-        width: 100%;
-        background: #0b2d5c;
-        padding: 20px;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 18px;
-      }
-
-      nav.active {
-        display: flex;
-      }
-
-      .menu-btn {
-        display: block;
-      }
-
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .stat:nth-child(2) {
-        border-right: none;
-      }
-
-      .stat:nth-child(-n+2) {
-        border-bottom: 1px solid #eaecf0;
-      }
-
-      .program-grid,
-      .certificate-grid,
-      .resource-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .why-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .footer-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 700px) {
-
-      .hero {
-        min-height: 600px;
-      }
-
-      section {
-        padding: 60px 15px;
-      }
-
-      .hero p {
-        font-size: 16px;
-      }
-
-      .about-grid,
-      .contact-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .about-image img {
-        height: 300px;
-      }
-
-      .program-grid,
-      .certificate-grid,
-      .resource-grid,
-      .why-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .search-form {
-        grid-template-columns: 1fr;
-      }
-
-      .verify-box {
-        padding: 25px 18px;
-      }
-
-      .stats-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .footer-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .logo-text strong {
-        font-size: 15px;
-      }
-
-      .logo-text span {
-        font-size: 9px;
-      }
-    }
-
-    @media (max-width: 450px) {
-
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .stat {
-        border-right: none !important;
-        border-bottom: 1px solid #eaecf0;
-      }
-
-      .stat:last-child {
-        border-bottom: none;
-      }
-
-      .hero-buttons {
-        flex-direction: column;
-      }
-
-      .hero-buttons .btn {
-        width: 100%;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GETI English Test</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f6f9;
+  color: #172033;
+}
+
+.container {
+  width: 94%;
+  max-width: 1000px;
+  margin: 30px auto;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+}
+
+.header {
+  text-align: center;
+  padding: 25px;
+  background: #0b2d5c;
+  color: white;
+  border-radius: 16px 16px 0 0;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.header p {
+  margin: 8px 0 0;
+  opacity: .9;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 13px 22px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.primary {
+  background: #0b2d5c;
+  color: white;
+}
+
+.primary:hover {
+  opacity: .9;
+}
+
+.gold {
+  background: #b38a28;
+  color: white;
+}
+
+.secondary {
+  background: #e8edf4;
+  color: #172033;
+}
+
+.danger {
+  background: #b42318;
+  color: white;
+}
+
+.success {
+  background: #16803c;
+  color: white;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #ccd3dd;
+  border-radius: 8px;
+  margin-top: 6px;
+  margin-bottom: 18px;
+  font-size: 15px;
+}
+
+label {
+  font-weight: bold;
+}
+
+.center {
+  text-align: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.exam-btn {
+  width: 100%;
+  max-width: 350px;
+  font-size: 20px;
+  padding: 18px;
+  margin: 10px;
+}
+
+.question {
+  padding: 20px;
+  border: 1px solid #e0e5eb;
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+.question-number {
+  font-weight: bold;
+  color: #0b2d5c;
+  margin-bottom: 10px;
+}
+
+.question-text {
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.option {
+  display: block;
+  padding: 12px;
+  margin: 8px 0;
+  background: #f7f9fc;
+  border: 1px solid #dde3eb;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.option:hover {
+  background: #eef3f9;
+}
+
+.option input {
+  width: auto;
+  margin: 0 8px 0 0;
+}
+
+.progress {
+  width: 100%;
+  height: 12px;
+  background: #e5e8ed;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 15px 0;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #b38a28;
+  width: 0%;
+}
+
+.result-box {
+  text-align: center;
+  padding: 30px;
+  border-radius: 15px;
+  background: #f7f9fc;
+}
+
+.score {
+  font-size: 45px;
+  font-weight: bold;
+  color: #0b2d5c;
+}
+
+.status {
+  font-size: 26px;
+  font-weight: bold;
+  margin: 15px;
+}
+
+.passed {
+  color: #16803c;
+}
+
+.failed {
+  color: #b42318;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 13px;
+}
+
+.admin-table th,
+.admin-table td {
+  border: 1px solid #d9dfe7;
+  padding: 9px;
+  text-align: left;
+}
+
+.admin-table th {
+  background: #0b2d5c;
+  color: white;
+}
+
+.admin-table tr:nth-child(even) {
+  background: #f7f9fc;
+}
+
+.small {
+  font-size: 13px;
+  color: #667085;
+}
+
+.alert {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.alert-error {
+  background: #fff0f0;
+  color: #a61b1b;
+}
+
+.alert-success {
+  background: #edf9f1;
+  color: #126b31;
+}
+
+.loading {
+  text-align: center;
+  padding: 30px;
+  font-weight: bold;
+}
+
+.admin-nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  text-align: center;
+  color: #0b2d5c;
+}
+
+@media(max-width:600px) {
+
+  .container {
+    width: 96%;
+    margin: 10px auto;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .header h1 {
+    font-size: 23px;
+  }
+
+  .admin-table {
+    font-size: 11px;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 6px;
+  }
+}
+
+</style>
 </head>
 
 <body>
 
-  <!-- =========================
-       HEADER
-  ========================== -->
+<div class="container">
 
-  <header>
-    <div class="navbar">
-
-      <a href="#home" class="logo">
-        <div class="logo-icon">GETI</div>
-
-        <div class="logo-text">
-          <strong>GETI</strong>
-          <span>Global English Teaching Institute</span>
-        </div>
-      </a>
-
-      <button class="menu-btn" onclick="toggleMenu()">☰</button>
-
-      <nav id="mainNav">
-        <a href="#home" onclick="closeMenu()">HOME</a>
-        <a href="#about" onclick="closeMenu()">ABOUT</a>
-        <a href="#programs" onclick="closeMenu()">PROGRAMS</a>
-        <a href="#certificates" onclick="closeMenu()">CERTIFICATES</a>
-        <a href="#verify" onclick="closeMenu()">VERIFY</a>
-        <a href="#resources" onclick="closeMenu()">RESOURCES</a>
-        <a href="#faq" onclick="closeMenu()">FAQ</a>
-        <a href="#contact" onclick="closeMenu()">CONTACT</a>
-      </nav>
-
-    </div>
-  </header>
-
-
-  <!-- =========================
-       HERO
-  ========================== -->
-
-  <section class="hero" id="home">
-
-    <div class="hero-content">
-
-      <div class="hero-badge">
-        GLOBAL ENGLISH TEACHING INSTITUTE
-      </div>
-
-      <h1>
-        Learn. Teach. <span>Grow.</span>
-      </h1>
-
-      <p>
-        Welcome to GETI, a global learning platform dedicated to
-        English language development, teacher training and professional
-        certification.
-      </p>
-
-      <div class="hero-buttons">
-        <a href="#programs" class="btn btn-primary">
-          EXPLORE PROGRAMS
-        </a>
-
-        <a href="#verify" class="btn btn-outline">
-          VERIFY CERTIFICATE
-        </a>
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       STATS
-  ========================== -->
-
-  <div class="stats">
-
-    <div class="stats-grid">
-
-      <div class="stat">
-        <h3>GETI</h3>
-        <p>Global Institute</p>
-      </div>
-
-      <div class="stat">
-        <h3>TEFL</h3>
-        <p>Teacher Training</p>
-      </div>
-
-      <div class="stat">
-        <h3>TESOL</h3>
-        <p>English Teaching</p>
-      </div>
-
-      <div class="stat">
-        <h3>TEYL</h3>
-        <p>Young Learners</p>
-      </div>
-
-    </div>
-
+  <div class="header">
+    <h1>GETI English Test</h1>
+    <p>Global English Teaching Institute</p>
   </div>
 
+  <div id="app"></div>
 
-  <!-- =========================
-       ABOUT
-  ========================== -->
+</div>
 
-  <section id="about">
 
-    <div class="container">
+<script>
 
-      <div class="about-grid">
+/* =========================================================
+   CLIENT STATE
+   ========================================================= */
 
-        <div class="about-image">
+let student = null;
+let allSections = [];
+let currentSectionIndex = 0;
+let currentQuestions = [];
+let sectionResults = [];
+let allAnswers = [];
+let finalResult = null;
 
-          <img
-            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1000&q=80"
-            alt="Students learning English">
 
+/* =========================================================
+   START
+   ========================================================= */
+
+document.addEventListener('DOMContentLoaded', function() {
+  showHome();
+});
+
+
+/* =========================================================
+   HOME
+   ========================================================= */
+
+function showHome() {
+
+  document.getElementById('app').innerHTML = \`
+    <div class="card center">
+
+      <h2>GETI English Test</h2>
+
+      <p>
+        Test your English level from A1 to C2.
+      </p>
+
+      <br>
+
+      <button class="primary exam-btn"
+              onclick="showRegistration()">
+        EXAM
+      </button>
+
+      <br><br>
+
+      <button class="secondary"
+              onclick="showAdminLogin()">
+        ADMIN BOX
+      </button>
+
+    </div>
+  \`;
+}
+
+
+/* =========================================================
+   REGISTRATION
+   ========================================================= */
+
+function showRegistration() {
+
+  document.getElementById('app').innerHTML = \`
+
+    <div class="card">
+
+      <h2>Registration</h2>
+
+      <div id="registrationMessage"></div>
+
+      <label>Full Name</label>
+      <input id="fullName"
+             type="text"
+             placeholder="Enter your full name">
+
+      <label>Nationality</label>
+      <input id="nationality"
+             type="text"
+             placeholder="Example: Malagasy">
+
+      <label>Country</label>
+      <input id="country"
+             type="text"
+             placeholder="Example: Madagascar">
+
+      <label>Email</label>
+      <input id="email"
+             type="email"
+             placeholder="Optional">
+
+      <button class="primary"
+              onclick="registerStudent()">
+        SUBMIT REGISTRATION
+      </button>
+
+      <button class="secondary"
+              onclick="showHome()">
+        BACK
+      </button>
+
+    </div>
+  \`;
+}
+
+
+/* =========================================================
+   REGISTER STUDENT
+   ========================================================= */
+
+function registerStudent() {
+
+  const fullName =
+    document.getElementById('fullName').value.trim();
+
+  const nationality =
+    document.getElementById('nationality').value.trim();
+
+  const country =
+    document.getElementById('country').value.trim();
+
+  const email =
+    document.getElementById('email').value.trim();
+
+  if (!fullName) {
+    showMessage(
+      'registrationMessage',
+      'Please enter your full name.',
+      'error'
+    );
+    return;
+  }
+
+  const button = event.target;
+  button.disabled = true;
+  button.innerText = 'Checking...';
+
+  google.script.run
+    .withSuccessHandler(function(response) {
+
+      button.disabled = false;
+      button.innerText = 'SUBMIT REGISTRATION';
+
+      if (!response.success) {
+
+        showMessage(
+          'registrationMessage',
+          response.message,
+          'error'
+        );
+
+        return;
+      }
+
+      student = response.student;
+
+      sectionResults = [];
+      allAnswers = [];
+      currentSectionIndex = 0;
+
+      loadSections();
+
+    })
+    .withFailureHandler(function(error) {
+
+      button.disabled = false;
+      button.innerText = 'SUBMIT REGISTRATION';
+
+      showMessage(
+        'registrationMessage',
+        error.message || 'Registration error.',
+        'error'
+      );
+
+    })
+    .registerStudent(fullName, nationality, country, email);
+}
+
+
+/* =========================================================
+   LOAD SECTIONS
+   ========================================================= */
+
+function loadSections() {
+
+  google.script.run
+    .withSuccessHandler(function(response) {
+
+      if (!response.success) {
+
+        showMessage(
+          'registrationMessage',
+          response.message,
+          'error'
+        );
+
+        return;
+      }
+
+      allSections = response.sections || [];
+
+      if (allSections.length === 0) {
+
+        alert('No questions found in the question table.');
+        return;
+      }
+
+      currentSectionIndex = 0;
+
+      loadCurrentSection();
+
+    })
+    .withFailureHandler(function(error) {
+
+      alert(
+        error.message ||
+        'Could not load questions.'
+      );
+
+    })
+    .getSections();
+
+}
+
+
+/* =========================================================
+   LOAD CURRENT SECTION
+   ========================================================= */
+
+function loadCurrentSection() {
+
+  if (
+    currentSectionIndex >= allSections.length
+  ) {
+
+    showFinalResult();
+    return;
+  }
+
+  const section =
+    allSections[currentSectionIndex];
+
+  document.getElementById('app').innerHTML = \`
+
+    <div class="card">
+
+      <div class="small center">
+        Student: <b>\${escapeHtml(student.fullName)}</b>
+      </div>
+
+      <div class="progress">
+        <div
+          class="progress-bar"
+          style="width:\${(
+            currentSectionIndex /
+            allSections.length
+          ) * 100}%">
         </div>
+      </div>
 
-        <div class="about-content">
+      <h2 class="section-title">
+        \${escapeHtml(section)}
+      </h2>
 
-          <div class="section-title" style="text-align:left;margin-bottom:20px;">
-            <small>ABOUT GETI</small>
-            <h2>Building Global English Professionals</h2>
-          </div>
-
-          <p>
-            Global English Teaching Institute (GETI) is an educational
-            platform focused on English language learning, teacher
-            development and professional training.
-          </p>
-
-          <p>
-            Our goal is to provide accessible and practical learning
-            opportunities for students, teachers and future English
-            professionals around the world.
-          </p>
-
-          <ul class="check-list">
-            <li>English language development</li>
-            <li>Professional teacher training</li>
-            <li>International-style certificates</li>
-            <li>Flexible learning resources</li>
-          </ul>
-
-        </div>
-
+      <div id="questionArea"
+           class="loading">
+        Loading questions...
       </div>
 
     </div>
+  \`;
 
-  </section>
+  google.script.run
+    .withSuccessHandler(function(response) {
+
+      if (!response.success) {
+
+        document.getElementById(
+          'questionArea'
+        ).innerHTML =
+          '<div class="alert alert-error">' +
+          escapeHtml(response.message) +
+          '</div>';
+
+        return;
+      }
+
+      currentQuestions =
+        response.questions || [];
+
+      renderQuestions();
+
+    })
+    .withFailureHandler(function(error) {
+
+      document.getElementById(
+        'questionArea'
+      ).innerHTML =
+        '<div class="alert alert-error">' +
+        escapeHtml(
+          error.message ||
+          'Error loading questions.'
+        ) +
+        '</div>';
+
+    })
+    .getQuestionsBySection(section);
+}
 
 
-  <!-- =========================
-       PROGRAMS
-  ========================== -->
+/* =========================================================
+   RENDER QUESTIONS
+   ========================================================= */
 
-  <section class="programs" id="programs">
+function renderQuestions() {
 
-    <div class="container">
+  if (!currentQuestions.length) {
 
-      <div class="section-title">
+    document.getElementById(
+      'questionArea'
+    ).innerHTML =
+      '<div class="alert alert-error">' +
+      'No questions found for this section.' +
+      '</div>';
 
-        <small>OUR PROGRAMS</small>
+    return;
+  }
 
-        <h2>Professional Training Programs</h2>
+  let html = '';
 
-        <p>
-          Explore GETI's training programs designed for English
-          learners, teachers and future educators.
-        </p>
+  currentQuestions.forEach(function(q, index) {
+
+    html += \`
+
+      <div class="question">
+
+        <div class="question-number">
+          Question \${index + 1}
+        </div>
+
+        <div class="question-text">
+          \${escapeHtml(q.question)}
+        </div>
+
+        <label class="option">
+          <input type="radio"
+                 name="q_\${q.key}"
+                 value="A">
+          A. \${escapeHtml(q.optionA)}
+        </label>
+
+        <label class="option">
+          <input type="radio"
+                 name="q_\${q.key}"
+                 value="B">
+          B. \${escapeHtml(q.optionB)}
+        </label>
+
+        <label class="option">
+          <input type="radio"
+                 name="q_\${q.key}"
+                 value="C">
+          C. \${escapeHtml(q.optionC)}
+        </label>
+
+        <label class="option">
+          <input type="radio"
+                 name="q_\${q.key}"
+                 value="D">
+          D. \${escapeHtml(q.optionD)}
+        </label>
 
       </div>
+    \`;
+  });
 
+  html += \`
 
-      <div class="program-grid">
+    <div class="center">
 
-        <!-- TEFL -->
-
-        <div class="program-card">
-
-          <div class="program-image">
-
-            <img
-              src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=80"
-              alt="TEFL training">
-
-          </div>
-
-          <div class="program-content">
-
-            <span class="program-tag">TEACHER TRAINING</span>
-
-            <h3>TEFL</h3>
-
-            <p>
-              Teaching English as a Foreign Language training
-              designed for future and current English teachers.
-            </p>
-
-            <a href="#contact" class="btn btn-primary">
-              LEARN MORE
-            </a>
-
-          </div>
-
-        </div>
-
-
-        <!-- TESOL -->
-
-        <div class="program-card">
-
-          <div class="program-image">
-
-            <img
-              src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1000&q=80"
-              alt="TESOL training">
-
-          </div>
-
-          <div class="program-content">
-
-            <span class="program-tag">ENGLISH TEACHING</span>
-
-            <h3>TESOL</h3>
-
-            <p>
-              Training for people interested in teaching English
-              to speakers of other languages.
-            </p>
-
-            <a href="#contact" class="btn btn-primary">
-              LEARN MORE
-            </a>
-
-          </div>
-
-        </div>
-
-
-        <!-- TEYL -->
-
-        <div class="program-card">
-
-          <div class="program-image">
-
-            <img
-              src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1000&q=80"
-              alt="Young learners">
-
-          </div>
-
-          <div class="program-content">
-
-            <span class="program-tag">YOUNG LEARNERS</span>
-
-            <h3>TEYL</h3>
-
-            <p>
-              Teaching English to Young Learners training focused
-              on effective classroom techniques for children.
-            </p>
-
-            <a href="#contact" class="btn btn-primary">
-              LEARN MORE
-            </a>
-
-          </div>
-
-        </div>
-
-      </div>
+      <button class="primary"
+              onclick="submitSection()">
+        SUBMIT \${escapeHtml(
+          allSections[currentSectionIndex]
+        )}
+      </button>
 
     </div>
+  \`;
 
-  </section>
+  document.getElementById(
+    'questionArea'
+  ).innerHTML = html;
+}
 
 
-  <!-- =========================
-       CERTIFICATES
-  ========================== -->
+/* =========================================================
+   SUBMIT SECTION
+   ========================================================= */
 
-  <section class="certificate-section" id="certificates">
+function submitSection() {
 
-    <div class="container">
+  const answers = [];
 
-      <div class="section-title">
+  let unanswered = 0;
 
-        <small>CERTIFICATION</small>
+  currentQuestions.forEach(function(q) {
 
-        <h2>GETI Certificates</h2>
+    const selected =
+      document.querySelector(
+        'input[name="q_' +
+        q.key +
+        '"]:checked'
+      );
 
-        <p>
-          Professional certificates can be verified through the
-          GETI Certificate Verification System.
-        </p>
+    if (!selected) {
 
-      </div>
+      unanswered++;
 
-
-      <div class="certificate-grid">
-
-        <div class="certificate-card">
-
-          <div class="certificate-icon">
-            🎓
-          </div>
-
-          <h3>TEFL Certificate</h3>
-
-          <p>
-            Certificate for completion of a Teaching English as
-            a Foreign Language training program.
-          </p>
-
-        </div>
-
-
-        <div class="certificate-card">
-
-          <div class="certificate-icon">
-            📜
-          </div>
-
-          <h3>TESOL Certificate</h3>
-
-          <p>
-            Certificate for completion of a Teaching English to
-            Speakers of Other Languages training program.
-          </p>
-
-        </div>
-
-
-        <div class="certificate-card">
-
-          <div class="certificate-icon">
-            🏅
-          </div>
-
-          <h3>TEYL Certificate</h3>
-
-          <p>
-            Certificate for training related to teaching English
-            to young learners.
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       VERIFY CERTIFICATE
-  ========================== -->
-
-  <section class="verify-section" id="verify">
-
-    <div class="container">
-
-      <div class="verify-box">
-
-        <h2>Certificate Verification</h2>
-
-        <p>
-          Search for a GETI certificate using Certificate ID,
-          student name or nationality.
-        </p>
-
-
-        <div class="search-form">
-
-          <input
-            type="text"
-            id="certificateSearch"
-            placeholder="Enter Certificate ID, Name or Nationality">
-
-          <button
-            class="btn btn-primary"
-            onclick="verifyCertificate()">
-            SEARCH
-          </button>
-
-        </div>
-
-
-        <div id="verifyResult" class="verify-result"></div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       WHY GETI
-  ========================== -->
-
-  <section>
-
-    <div class="container">
-
-      <div class="section-title">
-
-        <small>WHY GETI</small>
-
-        <h2>Why Choose GETI?</h2>
-
-        <p>
-          Our platform combines practical learning, professional
-          development and accessible digital resources.
-        </p>
-
-      </div>
-
-
-      <div class="why-grid">
-
-        <div class="why-card">
-
-          <div class="why-icon">🌍</div>
-
-          <h3>Global Learning</h3>
-
-          <p>
-            Learn English and develop professional skills
-            from anywhere.
-          </p>
-
-        </div>
-
-
-        <div class="why-card">
-
-          <div class="why-icon">🎓</div>
-
-          <h3>Professional</h3>
-
-          <p>
-            Training programs designed for professional
-            development.
-          </p>
-
-        </div>
-
-
-        <div class="why-card">
-
-          <div class="why-icon">📚</div>
-
-          <h3>Learning Resources</h3>
-
-          <p>
-            Access useful educational materials and
-            learning resources.
-          </p>
-
-        </div>
-
-
-        <div class="why-card">
-
-          <div class="why-icon">🔐</div>
-
-          <h3>Certificate Verification</h3>
-
-          <p>
-            Certificates can be checked through our
-            verification system.
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       RESOURCES
-  ========================== -->
-
-  <section class="resource-section" id="resources">
-
-    <div class="container">
-
-      <div class="section-title">
-
-        <small>RESOURCES</small>
-
-        <h2>Learning Resources</h2>
-
-        <p>
-          Useful resources to support English learning and
-          professional development.
-        </p>
-
-      </div>
-
-
-      <div class="resource-grid">
-
-        <div class="resource-card">
-
-          <h3>📖 English Vocabulary</h3>
-
-          <p>
-            Build your English vocabulary with practical words,
-            expressions and examples.
-          </p>
-
-          <a href="#contact" class="btn btn-primary">
-            GET RESOURCE
-          </a>
-
-        </div>
-
-
-        <div class="resource-card">
-
-          <h3>📝 English Grammar</h3>
-
-          <p>
-            Improve grammar knowledge from beginner to
-            advanced levels.
-          </p>
-
-          <a href="#contact" class="btn btn-primary">
-            GET RESOURCE
-          </a>
-
-        </div>
-
-
-        <div class="resource-card">
-
-          <h3>👨‍🏫 Teaching Resources</h3>
-
-          <p>
-            Practical materials and ideas for English teachers
-            and educators.
-          </p>
-
-          <a href="#contact" class="btn btn-primary">
-            GET RESOURCE
-          </a>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       FAQ
-  ========================== -->
-
-  <section id="faq">
-
-    <div class="container">
-
-      <div class="section-title">
-
-        <small>FAQ</small>
-
-        <h2>Frequently Asked Questions</h2>
-
-      </div>
-
-
-      <div class="faq">
-
-        <div class="faq-item">
-
-          <button class="faq-question">
-            What is GETI?
-            <span>+</span>
-          </button>
-
-          <div class="faq-answer">
-            GETI stands for Global English Teaching Institute,
-            an educational platform focused on English language
-            learning and teacher training.
-          </div>
-
-        </div>
-
-
-        <div class="faq-item">
-
-          <button class="faq-question">
-            What programs are available?
-            <span>+</span>
-          </button>
-
-          <div class="faq-answer">
-            GETI offers programs such as TEFL, TESOL and TEYL,
-            together with English learning resources.
-          </div>
-
-        </div>
-
-
-        <div class="faq-item">
-
-          <button class="faq-question">
-            How can I verify a certificate?
-            <span>+</span>
-          </button>
-
-          <div class="faq-answer">
-            Go to the Certificate Verification section and
-            enter the Certificate ID, student name or nationality.
-          </div>
-
-        </div>
-
-
-        <div class="faq-item">
-
-          <button class="faq-question">
-            Does this website contain an English test?
-            <span>+</span>
-          </button>
-
-          <div class="faq-answer">
-            No. This version of the GETI website does not contain
-            an English examination or test system.
-          </div>
-
-        </div>
-
-
-        <div class="faq-item">
-
-          <button class="faq-question">
-            How can I contact GETI?
-            <span>+</span>
-          </button>
-
-          <div class="faq-answer">
-            Use the Contact section below to send an enquiry
-            to GETI.
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       CONTACT
-  ========================== -->
-
-  <section class="contact-section" id="contact">
-
-    <div class="container">
-
-      <div class="section-title">
-
-        <small>CONTACT GETI</small>
-
-        <h2>Get In Touch</h2>
-
-        <p>
-          Have a question about our programs or certificates?
-          Contact us.
-        </p>
-
-      </div>
-
-
-      <div class="contact-grid">
-
-        <div class="contact-info">
-
-          <h2>GETI</h2>
-
-          <p>
-            Global English Teaching Institute
-          </p>
-
-
-          <div class="contact-item">
-
-            <div class="contact-item-icon">📧</div>
-
-            <div>
-              <strong>Email</strong>
-              <p>
-                info@geti.example
-              </p>
-            </div>
-
-          </div>
-
-
-          <div class="contact-item">
-
-            <div class="contact-item-icon">🌍</div>
-
-            <div>
-              <strong>Location</strong>
-              <p>
-                Madagascar
-              </p>
-            </div>
-
-          </div>
-
-
-          <div class="contact-item">
-
-            <div class="contact-item-icon">🎓</div>
-
-            <div>
-              <strong>Services</strong>
-              <p>
-                English Training & Professional Development
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="contact-form">
-
-          <form onsubmit="sendMessage(event)">
-
-            <div class="form-group">
-
-              <label for="name">
-                Full Name
-              </label>
-
-              <input
-                type="text"
-                id="name"
-                placeholder="Your full name"
-                required>
-
-            </div>
-
-
-            <div class="form-group">
-
-              <label for="email">
-                Email
-              </label>
-
-              <input
-                type="email"
-                id="email"
-                placeholder="Your email"
-                required>
-
-            </div>
-
-
-            <div class="form-group">
-
-              <label for="message">
-                Message
-              </label>
-
-              <textarea
-                id="message"
-                placeholder="Write your message..."
-                required></textarea>
-
-            </div>
-
-
-            <button
-              type="submit"
-              class="btn btn-primary">
-              SEND MESSAGE
-            </button>
-
-          </form>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       FOOTER
-  ========================== -->
-
-  <footer>
-
-    <div class="footer-grid">
-
-      <div class="footer-col">
-
-        <h3>GETI</h3>
-
-        <p>
-          Global English Teaching Institute.
-          Empowering English learners and teachers
-          through accessible education and professional
-          development.
-        </p>
-
-      </div>
-
-
-      <div class="footer-col">
-
-        <h3>Quick Links</h3>
-
-        <a href="#home">Home</a>
-        <a href="#about">About</a>
-        <a href="#programs">Programs</a>
-        <a href="#certificates">Certificates</a>
-
-      </div>
-
-
-      <div class="footer-col">
-
-        <h3>Services</h3>
-
-        <a href="#programs">TEFL</a>
-        <a href="#programs">TESOL</a>
-        <a href="#programs">TEYL</a>
-        <a href="#verify">Certificate Verification</a>
-
-      </div>
-
-
-      <div class="footer-col">
-
-        <h3>Support</h3>
-
-        <a href="#resources">Resources</a>
-        <a href="#faq">FAQ</a>
-        <a href="#contact">Contact</a>
-
-      </div>
-
-    </div>
-
-
-    <div class="footer-bottom">
-
-      © <span id="year"></span>
-      Global English Teaching Institute (GETI).
-      All Rights Reserved.
-
-    </div>
-
-  </footer>
-
-
-  <!-- =========================
-       JAVASCRIPT
-  ========================== -->
-
-  <script>
-
-    /* =========================
-       MOBILE MENU
-    ========================== */
-
-    function toggleMenu() {
-
-      const nav = document.getElementById("mainNav");
-
-      nav.classList.toggle("active");
-
-    }
-
-
-    function closeMenu() {
-
-      const nav = document.getElementById("mainNav");
-
-      nav.classList.remove("active");
-
-    }
-
-
-    /* =========================
-       YEAR
-    ========================== */
-
-    document.getElementById("year").textContent =
-      new Date().getFullYear();
-
-
-    /* =========================
-       FAQ
-    ========================== */
-
-    const faqQuestions =
-      document.querySelectorAll(".faq-question");
-
-    faqQuestions.forEach(function(button) {
-
-      button.addEventListener("click", function() {
-
-        const item =
-          this.parentElement;
-
-        item.classList.toggle("active");
-
+      answers.push({
+        key: q.key,
+        questionId: q.questionId,
+        selectedAnswer: ''
       });
 
-    });
+    } else {
 
-
-    /* =========================
-       CERTIFICATE VERIFICATION
-       
-       DEMO DATA
-       
-       IMPORTANT:
-       Replace this data with your
-       Google Apps Script / Google
-       Sheets verification system
-       when connecting the real database.
-    ========================== */
-
-    const certificates = [
-
-      {
-        id: "GETI-ENG-2026-000001",
-        name: "Rakotonantenaina Juldiano",
-        nationality: "Malagasy",
-        country: "Madagascar",
-        program: "English Language",
-        level: "B2",
-        status: "VALID",
-        date: "2026"
-      },
-
-      {
-        id: "GETI-TEFL-2026-000001",
-        name: "Sample Student",
-        nationality: "Malagasy",
-        country: "Madagascar",
-        program: "TEFL",
-        level: "Professional",
-        status: "VALID",
-        date: "2026"
-      },
-
-      {
-        id: "GETI-TESOL-2026-000001",
-        name: "Sample Teacher",
-        nationality: "Malagasy",
-        country: "Madagascar",
-        program: "TESOL",
-        level: "Professional",
-        status: "VALID",
-        date: "2026"
-      }
-
-    ];
-
-
-    function verifyCertificate() {
-
-      const searchInput =
-        document
-        .getElementById("certificateSearch");
-
-      const resultBox =
-        document
-        .getElementById("verifyResult");
-
-      const search =
-        searchInput.value.trim().toLowerCase();
-
-
-      if (!search) {
-
-        resultBox.style.display = "block";
-
-        resultBox.innerHTML = `
-          <div class="result-error">
-            ❌ Please enter a Certificate ID, name or nationality.
-          </div>
-        `;
-
-        return;
-      }
-
-
-      const result =
-        certificates.find(function(certificate) {
-
-          return (
-
-            certificate.id.toLowerCase().includes(search) ||
-
-            certificate.name.toLowerCase().includes(search) ||
-
-            certificate.nationality.toLowerCase().includes(search) ||
-
-            certificate.country.toLowerCase().includes(search)
-
-          );
-
-        });
-
-
-      resultBox.style.display = "block";
-
-
-      if (!result) {
-
-        resultBox.innerHTML = `
-          <div class="result-error">
-
-            <strong>❌ Certificate Not Found</strong>
-
-            <p style="margin-top:8px;">
-              No certificate matching
-              <strong>${escapeHtml(searchInput.value)}</strong>
-              was found.
-            </p>
-
-          </div>
-        `;
-
-        return;
-      }
-
-
-      resultBox.innerHTML = `
-
-        <div class="result-success">
-
-          <h3>
-            ✅ Certificate Verified
-          </h3>
-
-          <table class="result-table">
-
-            <tr>
-              <td>Certificate ID</td>
-              <td>${escapeHtml(result.id)}</td>
-            </tr>
-
-            <tr>
-              <td>Full Name</td>
-              <td>${escapeHtml(result.name)}</td>
-            </tr>
-
-            <tr>
-              <td>Nationality</td>
-              <td>${escapeHtml(result.nationality)}</td>
-            </tr>
-
-            <tr>
-              <td>Country</td>
-              <td>${escapeHtml(result.country)}</td>
-            </tr>
-
-            <tr>
-              <td>Program</td>
-              <td>${escapeHtml(result.program)}</td>
-            </tr>
-
-            <tr>
-              <td>Level</td>
-              <td>${escapeHtml(result.level)}</td>
-            </tr>
-
-            <tr>
-              <td>Certificate Date</td>
-              <td>${escapeHtml(result.date)}</td>
-            </tr>
-
-            <tr>
-              <td>Status</td>
-              <td>
-                <strong style="color:#027a48;">
-                  ${escapeHtml(result.status)}
-                </strong>
-              </td>
-            </tr>
-
-          </table>
-
-        </div>
-
-      `;
+      answers.push({
+        key: q.key,
+        questionId: q.questionId,
+        selectedAnswer: selected.value
+      });
 
     }
 
+  });
 
-    /* =========================
-       ENTER KEY SEARCH
-    ========================== */
+  if (unanswered > 0) {
 
-    document
-      .getElementById("certificateSearch")
-      .addEventListener("keydown", function(event) {
+    if (
+      !confirm(
+        'You have ' +
+        unanswered +
+        ' unanswered question(s). Continue?'
+      )
+    ) {
+      return;
+    }
+  }
 
-        if (event.key === "Enter") {
+  const section =
+    allSections[currentSectionIndex];
 
-          event.preventDefault();
+  google.script.run
+    .withSuccessHandler(function(response) {
 
-          verifyCertificate();
+      if (!response.success) {
 
+        alert(response.message);
+        return;
+      }
+
+      sectionResults.push(response.result);
+
+      response.result.answers.forEach(
+        function(answer) {
+          allAnswers.push(answer);
+        }
+      );
+
+      showSectionResult(response.result);
+
+    })
+    .withFailureHandler(function(error) {
+
+      alert(
+        error.message ||
+        'Could not submit section.'
+      );
+
+    })
+    .submitSection(
+      student.studentId,
+      section,
+      answers
+    );
+}
+
+
+/* =========================================================
+   SECTION RESULT
+   ========================================================= */
+
+function showSectionResult(result) {
+
+  const isLast =
+    currentSectionIndex >=
+    allSections.length - 1;
+
+  document.getElementById('app').innerHTML = \`
+
+    <div class="card">
+
+      <div class="result-box">
+
+        <h2>
+          \${escapeHtml(result.section)}
+          Result
+        </h2>
+
+        <div class="score">
+          \${result.percentage}%
+        </div>
+
+        <p>
+          Score:
+          <b>\${result.score}</b>
+          /
+          <b>\${result.total}</b>
+        </p>
+
+        <p>
+          Correct:
+          <b>\${result.correct}</b>
+          |
+          Wrong:
+          <b>\${result.wrong}</b>
+        </p>
+
+        <br>
+
+        <button class="primary"
+                onclick="nextSection()">
+          \${isLast ? 'FINAL RESULT' : 'NEXT'}
+        </button>
+
+      </div>
+
+    </div>
+  \`;
+}
+
+
+/* =========================================================
+   NEXT SECTION
+   ========================================================= */
+
+function nextSection() {
+
+  currentSectionIndex++;
+
+  if (
+    currentSectionIndex >=
+    allSections.length
+  ) {
+
+    showFinalResult();
+    return;
+  }
+
+  loadCurrentSection();
+}
+
+
+/* =========================================================
+   FINAL RESULT
+   ========================================================= */
+
+function showFinalResult() {
+
+  document.getElementById('app').innerHTML = \`
+
+    <div class="card center">
+
+      <div class="loading">
+        Calculating final result...
+      </div>
+
+    </div>
+  \`;
+
+  google.script.run
+    .withSuccessHandler(function(response) {
+
+      if (!response.success) {
+
+        alert(response.message);
+        return;
+      }
+
+      finalResult = response;
+
+      renderFinalResult(response);
+
+    })
+    .withFailureHandler(function(error) {
+
+      alert(
+        error.message ||
+        'Could not calculate final result.'
+      );
+
+    })
+    .finishTest(
+      student.studentId,
+      allAnswers
+    );
+}
+
+
+/* =========================================================
+   RENDER FINAL RESULT
+   ========================================================= */
+
+function renderFinalResult(result) {
+
+  const passed =
+    result.status === 'PASSED';
+
+  let sectionRows = '';
+
+  result.sectionResults.forEach(
+    function(r) {
+
+      sectionRows += \`
+
+        <tr>
+          <td>\${escapeHtml(r.section)}</td>
+          <td>\${r.score}/\${r.total}</td>
+          <td>\${r.percentage}%</td>
+        </tr>
+
+      \`;
+    }
+  );
+
+  document.getElementById('app').innerHTML = \`
+
+    <div class="card">
+
+      <div class="result-box">
+
+        <h2>FINAL RESULT</h2>
+
+        <p>
+          Student:
+          <b>\${escapeHtml(result.fullName)}</b>
+        </p>
+
+        <p>
+          Student ID:
+          <b>\${escapeHtml(result.studentId)}</b>
+        </p>
+
+        <div class="score">
+          \${result.percentage}%
+        </div>
+
+        <p>
+          Total Score:
+          <b>\${result.score}</b>
+          /
+          <b>\${result.total}</b>
+        </p>
+
+        <div class="status \${passed ? 'passed' : 'failed'}">
+          \${result.status}
+        </div>
+
+        <p>
+          CEFR Level:
+          <b>\${escapeHtml(result.cefrLevel)}</b>
+        </p>
+
+        <hr>
+
+        <h3>Section Results</h3>
+
+        <table class="admin-table">
+
+          <thead>
+            <tr>
+              <th>Section</th>
+              <th>Score</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            \${sectionRows}
+          </tbody>
+
+        </table>
+
+        <br>
+
+        <div class="alert alert-success">
+          Your test has been recorded.
+          You cannot retake the test unless an administrator
+          removes your name from the blacklist.
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="card center">
+
+      <button class="secondary"
+              onclick="showHome()">
+        HOME
+      </button>
+
+    </div>
+  \`;
+}
+
+
+/* =========================================================
+   ADMIN LOGIN
+   ========================================================= */
+
+function showAdminLogin() {
+
+  document.getElementById('app').innerHTML = \`
+
+    <div class="card">
+
+      <h2>Admin Box</h2>
+
+      <label>Admin Code</label>
+
+      <input
+        id="adminCode"
+        type="password"
+        placeholder="Enter admin code">
+
+      <button class="primary"
+              onclick="loginAdmin()">
+        LOGIN
+      </button>
+
+      <button class="secondary"
+              onclick="showHome()">
+        BACK
+      </button>
+
+      <div id="adminMessage"></div>
+
+    </div>
+  \`;
+}
+
+
+/* =========================================================
+   ADMIN LOGIN
+   ========================================================= */
+
+function loginAdmin() {
+
+  const code =
+    document.getElementById('adminCode').value;
+
+  google.script.run
+    .withSuccessHandler(function(response) {
+
+      if (!response.success) {
+
+        showMessage(
+          'adminMessage',
+          response.message,
+          'error'
+        );
+
+        return;
+      }
+
+      showAdminDashboard();
+
+    })
+    .checkAdminCode(code);
+}
+
+
+/* =========================================================
+   ADMIN DASHBOARD
+   ========================================================= */
+
+function showAdminDashboard() {
+
+  document.getElementById('app').innerHTML = \`
+
+    <div class="card">
+
+      <h2>GETI ADMIN BOX</h2>
+
+      <div class="admin-nav">
+
+        <button class="primary"
+                onclick="loadAdminResults()">
+          RESULTS
+        </button>
+
+        <button class="danger"
+                onclick="showBlacklistLogin()">
+          BLACK LIST
+        </button>
+
+        <button class="secondary"
+                onclick="showHome()">
+          HOME
+        </button>
+
+      </div>
+
+      <div id="adminContent">
+        <p>
+          Select RESULTS or BLACK LIST.
+        </p>
+      </div>
+
+    </div>
+  \`;
+
+  loadAdminResults();
+}
+
+
+/* =========================================================
+   ADMIN RESULTS
+   ========================================================= */
+
+function loadAdminResults() {
+
+  document.getElementById(
+    'adminContent'
+  ).innerHTML =
+    '<div class="loading">Loading results...</div>';
+
+  google.script.run
+    .withSuccessHandler(function(response) {
+
+      if (!response.success) {
+
+        document.getElementById(
+          'adminContent'
+        ).innerHTML =
+          '<div class="alert alert-error">' +
+          escapeHtml(response.message) +
+          '</div>';
+
+        return;
+      }
+
+      let html = '';
+
+      html += '<h3>Test Results</h3>';
+
+      if (!response.results.length) {
+
+        html +=
+          '<p>No results found.</p>';
+
+      } else {
+
+        html += \`
+
+          <div style="overflow-x:auto">
+
+          <table class="admin-table">
+
+          <thead>
+            <tr>
+              <th>Result ID</th>
+              <th>Student ID</th>
+              <th>Name</th>
+              <th>Score</th>
+              <th>%</th>
+              <th>CEFR</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+
+          <tbody>
+        \`;
+
+        response.results.forEach(
+          function(r) {
+
+            html += \`
+
+              <tr>
+
+                <td>\${escapeHtml(
+                  r.resultId || ''
+                )}</td>
+
+                <td>\${escapeHtml(
+                  r.studentId || ''
+                )}</td>
+
+                <td>\${escapeHtml(
+                  r.fullName || ''
+                )}</td>
+
+                <td>\${escapeHtml(
+                  r.score || ''
+                )}/\${escapeHtml(
+                  r.total || ''
+                )}</td>
+
+                <td>\${escapeHtml(
+                  r.percentage || ''
+                )}%</td>
+
+                <td>\${escapeHtml(
+                  r.cefrLevel || ''
+                )}</td>
+
+                <td>\${escapeHtml(
+                  r.status || ''
+                )}</td>
+
+                <td>\${escapeHtml(
+                  r.testDate || ''
+                )}</td>
+
+              </tr>
+
+            \`;
+          }
+        );
+
+        html += '</tbody></table></div>';
+      }
+
+      document.getElementById(
+        'adminContent'
+      ).innerHTML = html;
+
+    })
+    .withFailureHandler(function(error) {
+
+      document.getElementById(
+        'adminContent'
+      ).innerHTML =
+        '<div class="alert alert-error">' +
+        escapeHtml(
+          error.message ||
+          'Could not load results.'
+        ) +
+        '</div>';
+
+    })
+    .getAdminResults();
+}
+
+
+/* =========================================================
+   BLACKLIST LOGIN
+   ========================================================= */
+
+function showBlacklistLogin() {
+
+  document.getElementById(
+    'adminContent'
+  ).innerHTML = \`
+
+    <div class="card">
+
+      <h3>Blacklist Security</h3>
+
+      <p class="small">
+        Enter the blacklist security code.
+      </p>
+
+      <input
+        id="blacklistCode"
+        type="password"
+        placeholder="Blacklist code">
+
+      <button class="danger"
+              onclick="loginBlacklist()">
+        OPEN BLACKLIST
+      </button>
+
+    </div>
+  \`;
+}
+
+
+/* =========================================================
+   BLACKLIST LOGIN
+   ========================================================= */
+
+function loginBlacklist() {
+
+  const code =
+    document.getElementById(
+      'blacklistCode'
+    ).value;
+
+  google.script.run
+    .withSuccessHandler(function(response) {
+
+      if (!response.success) {
+
+        alert(response.message);
+        return;
+      }
+
+      loadBlacklist();
+
+    })
+    .checkBlacklistCode(code);
+}
+
+
+/* =========================================================
+   LOAD BLACKLIST
+   ========================================================= */
+
+function loadBlacklist() {
+
+  document.getElementById(
+    'adminContent'
+  ).innerHTML =
+    '<div class="loading">Loading blacklist...</div>';
+
+  google.script.run
+    .withSuccessHandler(function(response) {
+
+      if (!response.success) {
+
+        alert(response.message);
+        return;
+      }
+
+      let html = '';
+
+      html += '<h3>BLACK LIST</h3>';
+
+      html += \`
+
+        <p class="small">
+          Students in this list cannot take another test
+          until they are deleted from the blacklist.
+        </p>
+
+      \`;
+
+      if (!response.blacklist.length) {
+
+        html +=
+          '<div class="alert alert-success">' +
+          'Blacklist is empty.' +
+          '</div>';
+
+      } else {
+
+        html += \`
+
+          <div style="overflow-x:auto">
+
+          <table class="admin-table">
+
+          <thead>
+
+            <tr>
+              <th>Name</th>
+              <th>Student ID</th>
+              <th>Status</th>
+              <th>Score</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+        \`;
+
+        response.blacklist.forEach(
+          function(b) {
+
+            html += \`
+
+              <tr>
+
+                <td>\${escapeHtml(
+                  b.fullName || ''
+                )}</td>
+
+                <td>\${escapeHtml(
+                  b.studentId || ''
+                )}</td>
+
+                <td>\${escapeHtml(
+                  b.status || ''
+                )}</td>
+
+                <td>\${escapeHtml(
+                  b.percentage || ''
+                )}%</td>
+
+                <td>\${escapeHtml(
+                  b.testDate || ''
+                )}</td>
+
+                <td>
+
+                  <button
+                    class="danger"
+                    onclick="deleteBlacklist('\${escapeAttr(
+                      b.rowId
+                    )}')">
+                    DELETE
+                  </button>
+
+                </td>
+
+              </tr>
+
+            \`;
+          }
+        );
+
+        html += '</tbody></table></div>';
+      }
+
+      document.getElementById(
+        'adminContent'
+      ).innerHTML = html;
+
+    })
+    .withFailureHandler(function(error) {
+
+      alert(
+        error.message ||
+        'Could not load blacklist.'
+      );
+
+    })
+    .getBlacklist();
+}
+
+
+/* =========================================================
+   DELETE BLACKLIST
+   ========================================================= */
+
+function deleteBlacklist(rowId) {
+
+  if (
+    !confirm(
+      'Delete this student from the blacklist?'
+    )
+  ) {
+    return;
+  }
+
+  google.script.run
+    .withSuccessHandler(function(response) {
+
+      if (!response.success) {
+
+        alert(response.message);
+        return;
+      }
+
+      alert(
+        'Student deleted from blacklist. ' +
+        'The student can now take the test again.'
+      );
+
+      loadBlacklist();
+
+    })
+    .withFailureHandler(function(error) {
+
+      alert(
+        error.message ||
+        'Could not delete blacklist record.'
+      );
+
+    })
+    .deleteBlacklist(rowId);
+}
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+function showMessage(id, message, type) {
+
+  const el =
+    document.getElementById(id);
+
+  if (!el) return;
+
+  el.innerHTML =
+    '<div class="alert ' +
+    (
+      type === 'error'
+      ? 'alert-error'
+      : 'alert-success'
+    ) +
+    '">' +
+    escapeHtml(message) +
+    '</div>';
+}
+
+
+/* =========================================================
+   SECURITY / HTML ESCAPE
+   ========================================================= */
+
+function escapeHtml(value) {
+
+  if (value === null ||
+      value === undefined) {
+    return '';
+  }
+
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+
+function escapeAttr(value) {
+  return escapeHtml(value)
+    .replace(/\\\\/g, '\\\\\\\\');
+}
+
+</script>
+
+</body>
+</html>`;
+}
+
+
+/* =========================================================
+   SPREADSHEET HELPERS
+   ========================================================= */
+
+function getSS_() {
+  return SpreadsheetApp.getActiveSpreadsheet();
+}
+
+
+/**
+ * Find the question table automatically.
+ *
+ * It searches all sheets and all rows for:
+ * Question_ID
+ * Section
+ * Level
+ * Question
+ * Option_A
+ * Option_B
+ * Option_C
+ * Option_D
+ * Correct_Answer
+ */
+function findQuestionTable_() {
+
+  const ss = getSS_();
+  const sheets = ss.getSheets();
+
+  const required = [
+    'question_id',
+    'section',
+    'level',
+    'question',
+    'option_a',
+    'option_b',
+    'option_c',
+    'option_d',
+    'correct_answer'
+  ];
+
+  for (let s = 0; s < sheets.length; s++) {
+
+    const sheet = sheets[s];
+
+    const values =
+      sheet.getDataRange().getDisplayValues();
+
+    for (let r = 0; r < values.length; r++) {
+
+      const row = values[r].map(function(x) {
+        return String(x)
+          .trim()
+          .toLowerCase();
+      });
+
+      let found = true;
+
+      required.forEach(function(header) {
+
+        if (row.indexOf(header) === -1) {
+          found = false;
         }
 
       });
 
+      if (found) {
 
-    /* =========================
-       SECURITY / HTML ESCAPE
-    ========================== */
+        const index = {};
 
-    function escapeHtml(value) {
+        required.forEach(function(header) {
 
-      return String(value)
+          index[header] =
+            row.indexOf(header);
 
-        .replace(/&/g, "&amp;")
+        });
 
-        .replace(/</g, "&lt;")
+        return {
+          sheet: sheet,
+          headerRow: r,
+          index: index,
+          values: values
+        };
+      }
+    }
+  }
 
-        .replace(/>/g, "&gt;")
+  return null;
+}
 
-        .replace(/"/g, "&quot;")
 
-        .replace(/'/g, "&#039;");
+/* =========================================================
+   QUESTIONS
+   ========================================================= */
+
+function getQuestions_() {
+
+  const table =
+    findQuestionTable_();
+
+  if (!table) {
+    throw new Error(
+      'Question table not found. Required headers: ' +
+      'Question_ID, Section, Level, Question, ' +
+      'Option_A, Option_B, Option_C, Option_D, Correct_Answer'
+    );
+  }
+
+  const values =
+    table.values;
+
+  const result = [];
+
+  for (
+    let r = table.headerRow + 1;
+    r < values.length;
+    r++
+  ) {
+
+    const row = values[r];
+
+    const questionId =
+      String(
+        row[table.index.question_id] || ''
+      ).trim();
+
+    const section =
+      String(
+        row[table.index.section] || ''
+      ).trim();
+
+    const level =
+      String(
+        row[table.index.level] || ''
+      ).trim();
+
+    const question =
+      String(
+        row[table.index.question] || ''
+      ).trim();
+
+    const optionA =
+      String(
+        row[table.index.option_a] || ''
+      ).trim();
+
+    const optionB =
+      String(
+        row[table.index.option_b] || ''
+      ).trim();
+
+    const optionC =
+      String(
+        row[table.index.option_c] || ''
+      ).trim();
+
+    const optionD =
+      String(
+        row[table.index.option_d] || ''
+      ).trim();
+
+    const correct =
+      String(
+        row[table.index.correct_answer] || ''
+      ).trim().toUpperCase();
+
+    /*
+     * Ignore completely empty rows.
+     */
+    if (!question && !questionId) {
+      continue;
+    }
+
+    /*
+     * Ignore instructional rows such as:
+     * A = Question_ID
+     * B = Section
+     */
+    if (
+      questionId.indexOf('=') !== -1 ||
+      section.indexOf('=') !== -1
+    ) {
+      continue;
+    }
+
+    /*
+     * Only accept valid MCQ rows.
+     */
+    if (
+      !question ||
+      !section ||
+      !optionA ||
+      !optionB ||
+      !optionC ||
+      !optionD ||
+      !['A', 'B', 'C', 'D'].includes(correct)
+    ) {
+      continue;
+    }
+
+    result.push({
+      key: String(r + 1),
+      rowNumber: r + 1,
+      questionId: questionId,
+      section: section,
+      level: level,
+      question: question,
+      optionA: optionA,
+      optionB: optionB,
+      optionC: optionC,
+      optionD: optionD,
+      correctAnswer: correct
+    });
+  }
+
+  return result;
+}
+
+
+/* =========================================================
+   SECTION ORDER
+   ========================================================= */
+
+function getSectionOrder_() {
+
+  const questions =
+    getQuestions_();
+
+  const existing = [];
+
+  questions.forEach(function(q) {
+
+    const section =
+      normalizeSection_(q.section);
+
+    if (
+      section &&
+      existing.indexOf(section) === -1
+    ) {
+      existing.push(section);
+    }
+
+  });
+
+  /*
+   * Desired order.
+   */
+  const preferred = [
+    'Vocabulary',
+    'Grammar',
+    'Reading',
+    'Spelling',
+    'General Knowledge'
+  ];
+
+  const ordered = [];
+
+  preferred.forEach(function(name) {
+
+    const found =
+      existing.find(function(x) {
+        return x.toLowerCase() ===
+               name.toLowerCase();
+      });
+
+    if (found) {
+      ordered.push(found);
+    }
+
+  });
+
+  /*
+   * Add any other sections after preferred sections.
+   */
+  existing.forEach(function(name) {
+
+    if (
+      ordered.findIndex(function(x) {
+        return x.toLowerCase() ===
+               name.toLowerCase();
+      }) === -1
+    ) {
+      ordered.push(name);
+    }
+
+  });
+
+  return ordered;
+}
+
+
+function normalizeSection_(section) {
+
+  return String(section || '')
+    .trim()
+    .replace(/\s+/g, ' ');
+}
+
+
+/* =========================================================
+   GET SECTIONS
+   ========================================================= */
+
+function getSections() {
+
+  try {
+
+    const sections =
+      getSectionOrder_();
+
+    return {
+      success: true,
+      sections: sections
+    };
+
+  } catch (err) {
+
+    return {
+      success: false,
+      message: err.message
+    };
+  }
+}
+
+
+/* =========================================================
+   GET QUESTIONS BY SECTION
+   ========================================================= */
+
+function getQuestionsBySection(section) {
+
+  try {
+
+    const all =
+      getQuestions_();
+
+    const wanted =
+      normalizeSection_(section)
+        .toLowerCase();
+
+    const questions =
+      all
+      .filter(function(q) {
+
+        return normalizeSection_(q.section)
+          .toLowerCase() === wanted;
+
+      })
+      .map(function(q) {
+
+        return {
+          key: q.key,
+          questionId: q.questionId,
+          level: q.level,
+          question: q.question,
+          optionA: q.optionA,
+          optionB: q.optionB,
+          optionC: q.optionC,
+          optionD: q.optionD
+        };
+
+      });
+
+    return {
+      success: true,
+      questions: questions
+    };
+
+  } catch (err) {
+
+    return {
+      success: false,
+      message: err.message
+    };
+  }
+}
+
+
+/* =========================================================
+   STUDENT REGISTRATION
+   ========================================================= */
+
+function registerStudent(
+  fullName,
+  nationality,
+  country,
+  email
+) {
+
+  try {
+
+    fullName =
+      String(fullName || '').trim();
+
+    nationality =
+      String(nationality || '').trim();
+
+    country =
+      String(country || '').trim();
+
+    email =
+      String(email || '').trim();
+
+    if (!fullName) {
+
+      return {
+        success: false,
+        message: 'Full name is required.'
+      };
 
     }
 
+    /*
+     * BLACKLIST CHECK
+     * Name is the primary restriction.
+     */
+    if (isNameBlacklisted_(fullName)) {
 
-    /* =========================
-       CONTACT FORM
-    ========================== */
+      return {
+        success: false,
+        message:
+          'This name is currently on the blacklist. ' +
+          'You cannot take the test again until an administrator ' +
+          'removes your name from the blacklist.'
+      };
 
-    function sendMessage(event) {
+    }
 
-      event.preventDefault();
+    const studentId =
+      createStudentId_();
 
-      const name =
-        document.getElementById("name").value;
+    const sheet =
+      getOrCreateStudentsSheet_();
 
-      alert(
-        "Thank you, " +
-        name +
-        "! Your message has been received."
+    appendByHeaders_(
+      sheet,
+      {
+        Student_ID: studentId,
+        Full_Name: fullName,
+        Certificate_ID: '',
+        Nationality: nationality,
+        Country: country,
+        Email: email,
+        Test_Date: formatDate_(new Date())
+      }
+    );
+
+    return {
+      success: true,
+      student: {
+        studentId: studentId,
+        fullName: fullName,
+        nationality: nationality,
+        country: country,
+        email: email
+      }
+    };
+
+  } catch (err) {
+
+    return {
+      success: false,
+      message: err.message
+    };
+  }
+}
+
+
+/* =========================================================
+   STUDENT ID
+   ========================================================= */
+
+function createStudentId_() {
+
+  const now =
+    new Date();
+
+  const tz =
+    Session.getScriptTimeZone() ||
+    'GMT+3';
+
+  const stamp =
+    Utilities.formatDate(
+      now,
+      tz,
+      'yyyyMMddHHmmss'
+    );
+
+  const random =
+    Math.floor(
+      1000 +
+      Math.random() * 9000
+    );
+
+  return 'STU-' +
+         stamp +
+         '-' +
+         random;
+}
+
+
+/* =========================================================
+   SUBMIT SECTION
+   ========================================================= */
+
+function submitSection(
+  studentId,
+  section,
+  answers
+) {
+
+  try {
+
+    const all =
+      getQuestions_();
+
+    const wanted =
+      normalizeSection_(section)
+        .toLowerCase();
+
+    const questions =
+      all.filter(function(q) {
+
+        return normalizeSection_(q.section)
+          .toLowerCase() === wanted;
+
+      });
+
+    if (!questions.length) {
+
+      return {
+        success: false,
+        message:
+          'No questions found for section: ' +
+          section
+      };
+
+    }
+
+    answers =
+      Array.isArray(answers)
+      ? answers
+      : [];
+
+    let correct = 0;
+
+    const answerRows = [];
+
+    questions.forEach(function(q) {
+
+      const submitted =
+        answers.find(function(a) {
+
+          return String(a.key) ===
+                 String(q.key);
+
+        });
+
+      const selected =
+        submitted
+        ? String(
+            submitted.selectedAnswer || ''
+          ).toUpperCase()
+        : '';
+
+      const isCorrect =
+        selected === q.correctAnswer;
+
+      if (isCorrect) {
+        correct++;
+      }
+
+      answerRows.push({
+        studentId: studentId,
+        questionId: q.questionId,
+        selectedAnswer: selected,
+        correctAnswer: q.correctAnswer,
+        isCorrect: isCorrect ? 'YES' : 'NO',
+        points: isCorrect ? 1 : 0,
+        section: q.section,
+        level: q.level
+      });
+
+    });
+
+    const total =
+      questions.length;
+
+    const percentage =
+      total > 0
+      ? round2_((correct / total) * 100)
+      : 0;
+
+    /*
+     * Save individual answers.
+     */
+    saveAnswers_(answerRows);
+
+    return {
+      success: true,
+
+      result: {
+        section: section,
+        score: correct,
+        total: total,
+        correct: correct,
+        wrong: total - correct,
+        percentage: percentage,
+        answers: answerRows
+      }
+    };
+
+  } catch (err) {
+
+    return {
+      success: false,
+      message: err.message
+    };
+  }
+}
+
+
+/* =========================================================
+   FINISH TEST
+   ========================================================= */
+
+function finishTest(
+  studentId,
+  allAnswers
+) {
+
+  try {
+
+    const lock =
+      LockService.getScriptLock();
+
+    lock.waitLock(15000);
+
+    try {
+
+      const student =
+        getStudentById_(studentId);
+
+      if (!student) {
+        throw new Error(
+          'Student registration not found.'
+        );
+      }
+
+      /*
+       * Prevent duplicate final submission.
+       */
+      if (
+        isNameBlacklisted_(
+          student.fullName
+        )
+      ) {
+
+        throw new Error(
+          'This student is already in the blacklist.'
+        );
+
+      }
+
+      const questions =
+        getQuestions_();
+
+      if (!questions.length) {
+
+        throw new Error(
+          'No questions found.'
+        );
+
+      }
+
+      allAnswers =
+        Array.isArray(allAnswers)
+        ? allAnswers
+        : [];
+
+      let total = 0;
+      let score = 0;
+
+      const sectionMap = {};
+
+      questions.forEach(function(q) {
+
+        total++;
+
+        const submitted =
+          allAnswers.find(function(a) {
+
+            return String(a.key) ===
+                   String(q.key);
+
+          });
+
+        const selected =
+          submitted
+          ? String(
+              submitted.selectedAnswer || ''
+            ).toUpperCase()
+          : '';
+
+        const isCorrect =
+          selected === q.correctAnswer;
+
+        if (isCorrect) {
+          score++;
+        }
+
+        const section =
+          q.section;
+
+        if (!sectionMap[section]) {
+
+          sectionMap[section] = {
+            section: section,
+            score: 0,
+            total: 0
+          };
+
+        }
+
+        sectionMap[section].total++;
+
+        if (isCorrect) {
+          sectionMap[section].score++;
+        }
+
+      });
+
+      const percentage =
+        total > 0
+        ? round2_((score / total) * 100)
+        : 0;
+
+      const status =
+        percentage >= CONFIG.PASS_MARK
+        ? 'PASSED'
+        : 'FAILED';
+
+      const cefrLevel =
+        getCEFRLevel_(percentage);
+
+      const sectionResults =
+        Object.keys(sectionMap)
+          .map(function(key) {
+
+            const r =
+              sectionMap[key];
+
+            return {
+              section: r.section,
+              score: r.score,
+              total: r.total,
+              percentage:
+                r.total > 0
+                ? round2_(
+                    (r.score / r.total) * 100
+                  )
+                : 0
+            };
+
+          });
+
+      const resultId =
+        createResultId_();
+
+      /*
+       * Save final result.
+       */
+      saveResult_({
+        resultId: resultId,
+        studentId: studentId,
+        fullName: student.fullName,
+        score: score,
+        total: total,
+        percentage: percentage,
+        cefrLevel: cefrLevel,
+        status: status,
+        testDate: formatDate_(new Date())
+      });
+
+      /*
+       * IMPORTANT:
+       * Every completed student is added to blacklist,
+       * whether PASSED or FAILED.
+       */
+      addToBlacklist_({
+        studentId: studentId,
+        fullName: student.fullName,
+        status: status,
+        score: score,
+        total: total,
+        percentage: percentage,
+        testDate: formatDate_(new Date())
+      });
+
+      return {
+        success: true,
+        resultId: resultId,
+        studentId: studentId,
+        fullName: student.fullName,
+        score: score,
+        total: total,
+        percentage: percentage,
+        cefrLevel: cefrLevel,
+        status: status,
+        passMark: CONFIG.PASS_MARK,
+        sectionResults: sectionResults
+      };
+
+    } finally {
+
+      lock.releaseLock();
+
+    }
+
+  } catch (err) {
+
+    return {
+      success: false,
+      message: err.message
+    };
+  }
+}
+
+
+/* =========================================================
+   CEFR
+   ========================================================= */
+
+function getCEFRLevel_(percentage) {
+
+  percentage =
+    Number(percentage) || 0;
+
+  if (percentage < 20) {
+    return 'A1';
+  }
+
+  if (percentage < 40) {
+    return 'A2';
+  }
+
+  if (percentage < 60) {
+    return 'B1';
+  }
+
+  if (percentage < 75) {
+    return 'B2';
+  }
+
+  if (percentage < 90) {
+    return 'C1';
+  }
+
+  return 'C2';
+}
+
+
+/* =========================================================
+   RESULT ID
+   ========================================================= */
+
+function createResultId_() {
+
+  const now =
+    new Date();
+
+  const tz =
+    Session.getScriptTimeZone() ||
+    'GMT+3';
+
+  const stamp =
+    Utilities.formatDate(
+      now,
+      tz,
+      'yyyyMMddHHmmss'
+    );
+
+  const random =
+    Math.floor(
+      1000 +
+      Math.random() * 9000
+    );
+
+  return 'RES-' +
+         stamp +
+         '-' +
+         random;
+}
+
+
+/* =========================================================
+   SHEET: STUDENTS
+   ========================================================= */
+
+function getOrCreateStudentsSheet_() {
+
+  const ss =
+    getSS_();
+
+  let sheet =
+    ss.getSheetByName(
+      CONFIG.STUDENTS_SHEET
+    );
+
+  if (!sheet) {
+
+    sheet =
+      ss.insertSheet(
+        CONFIG.STUDENTS_SHEET
       );
 
-      event.target.reset();
+    sheet.appendRow([
+      'Student_ID',
+      'Full_Name',
+      'Certificate_ID',
+      'Nationality',
+      'Country',
+      'Email',
+      'Test_Date'
+    ]);
+
+  }
+
+  ensureHeaders_(
+    sheet,
+    [
+      'Student_ID',
+      'Full_Name',
+      'Certificate_ID',
+      'Nationality',
+      'Country',
+      'Email',
+      'Test_Date'
+    ]
+  );
+
+  return sheet;
+}
+
+
+/* =========================================================
+   SHEET: RESULTS
+   ========================================================= */
+
+function getOrCreateResultsSheet_() {
+
+  const ss =
+    getSS_();
+
+  let sheet =
+    ss.getSheetByName(
+      CONFIG.RESULTS_SHEET
+    );
+
+  if (!sheet) {
+
+    sheet =
+      ss.insertSheet(
+        CONFIG.RESULTS_SHEET
+      );
+
+    sheet.appendRow([
+      'Result_ID',
+      'Student_ID',
+      'Full_Name',
+      'Score',
+      'Total',
+      'Percentage',
+      'CEFR_Level',
+      'Status',
+      'Test_Date'
+    ]);
+
+  }
+
+  ensureHeaders_(
+    sheet,
+    [
+      'Result_ID',
+      'Student_ID',
+      'Full_Name',
+      'Score',
+      'Total',
+      'Percentage',
+      'CEFR_Level',
+      'Status',
+      'Test_Date'
+    ]
+  );
+
+  return sheet;
+}
+
+
+/* =========================================================
+   SHEET: ANSWERS
+   ========================================================= */
+
+function getOrCreateAnswersSheet_() {
+
+  const ss =
+    getSS_();
+
+  let sheet =
+    ss.getSheetByName(
+      CONFIG.ANSWERS_SHEET
+    );
+
+  if (!sheet) {
+
+    sheet =
+      ss.insertSheet(
+        CONFIG.ANSWERS_SHEET
+      );
+
+    sheet.appendRow([
+      'Answer_ID',
+      'Student_ID',
+      'Question_ID',
+      'Selected_Answer',
+      'Correct_Answer',
+      'Is_Correct',
+      'Points',
+      'Section',
+      'Level'
+    ]);
+
+  }
+
+  ensureHeaders_(
+    sheet,
+    [
+      'Answer_ID',
+      'Student_ID',
+      'Question_ID',
+      'Selected_Answer',
+      'Correct_Answer',
+      'Is_Correct',
+      'Points',
+      'Section',
+      'Level'
+    ]
+  );
+
+  return sheet;
+}
+
+
+/* =========================================================
+   SHEET: BLACKLIST
+   ========================================================= */
+
+function getOrCreateBlacklistSheet_() {
+
+  const ss =
+    getSS_();
+
+  let sheet =
+    ss.getSheetByName(
+      CONFIG.BLACKLIST_SHEET
+    );
+
+  if (!sheet) {
+
+    sheet =
+      ss.insertSheet(
+        CONFIG.BLACKLIST_SHEET
+      );
+
+    sheet.appendRow([
+      'Blacklist_ID',
+      'Student_ID',
+      'Full_Name',
+      'Status',
+      'Score',
+      'Total',
+      'Percentage',
+      'Test_Date'
+    ]);
+
+  }
+
+  ensureHeaders_(
+    sheet,
+    [
+      'Blacklist_ID',
+      'Student_ID',
+      'Full_Name',
+      'Status',
+      'Score',
+      'Total',
+      'Percentage',
+      'Test_Date'
+    ]
+  );
+
+  return sheet;
+}
+
+
+/* =========================================================
+   ENSURE HEADERS
+   ========================================================= */
+
+function ensureHeaders_(
+  sheet,
+  requiredHeaders
+) {
+
+  const lastColumn =
+    Math.max(
+      sheet.getLastColumn(),
+      requiredHeaders.length
+    );
+
+  let headers =
+    sheet
+      .getRange(
+        1,
+        1,
+        1,
+        lastColumn
+      )
+      .getDisplayValues()[0];
+
+  const normalized =
+    headers.map(function(h) {
+      return String(h)
+        .trim()
+        .toLowerCase();
+    });
+
+  /*
+   * If the first row does not contain the headers,
+   * create them only for our generated sheets.
+   */
+  const hasAny =
+    requiredHeaders.some(function(h) {
+
+      return normalized.indexOf(
+        h.toLowerCase()
+      ) !== -1;
+
+    });
+
+  if (!hasAny) {
+
+    sheet
+      .getRange(
+        1,
+        1,
+        1,
+        requiredHeaders.length
+      )
+      .setValues([
+        requiredHeaders
+      ]);
+
+  }
+}
+
+
+/* =========================================================
+   APPEND BY HEADERS
+   ========================================================= */
+
+function appendByHeaders_(
+  sheet,
+  data
+) {
+
+  const lastColumn =
+    Math.max(
+      sheet.getLastColumn(),
+      1
+    );
+
+  const headers =
+    sheet
+      .getRange(
+        1,
+        1,
+        1,
+        lastColumn
+      )
+      .getDisplayValues()[0];
+
+  const row =
+    new Array(headers.length)
+      .fill('');
+
+  headers.forEach(function(header, i) {
+
+    const key =
+      String(header)
+        .trim();
+
+    if (
+      Object.prototype.hasOwnProperty
+        .call(data, key)
+    ) {
+      row[i] =
+        data[key];
+    }
+
+  });
+
+  sheet.appendRow(row);
+}
+
+
+/* =========================================================
+   SAVE ANSWERS
+   ========================================================= */
+
+function saveAnswers_(answers) {
+
+  if (!answers.length) {
+    return;
+  }
+
+  const sheet =
+    getOrCreateAnswersSheet_();
+
+  answers.forEach(function(a) {
+
+    appendByHeaders_(
+      sheet,
+      {
+        Answer_ID:
+          'ANS-' +
+          Utilities.getUuid(),
+
+        Student_ID:
+          a.studentId,
+
+        Question_ID:
+          a.questionId,
+
+        Selected_Answer:
+          a.selectedAnswer,
+
+        Correct_Answer:
+          a.correctAnswer,
+
+        Is_Correct:
+          a.isCorrect,
+
+        Points:
+          a.points,
+
+        Section:
+          a.section,
+
+        Level:
+          a.level
+      }
+    );
+
+  });
+}
+
+
+/* =========================================================
+   SAVE RESULT
+   ========================================================= */
+
+function saveResult_(data) {
+
+  const sheet =
+    getOrCreateResultsSheet_();
+
+  appendByHeaders_(
+    sheet,
+    {
+      Result_ID:
+        data.resultId,
+
+      Student_ID:
+        data.studentId,
+
+      Full_Name:
+        data.fullName,
+
+      Score:
+        data.score,
+
+      Total:
+        data.total,
+
+      Percentage:
+        data.percentage,
+
+      CEFR_Level:
+        data.cefrLevel,
+
+      Status:
+        data.status,
+
+      Test_Date:
+        data.testDate
+    }
+  );
+}
+
+
+/* =========================================================
+   BLACKLIST ADD
+   ========================================================= */
+
+function addToBlacklist_(data) {
+
+  const sheet =
+    getOrCreateBlacklistSheet_();
+
+  appendByHeaders_(
+    sheet,
+    {
+      Blacklist_ID:
+        'BL-' +
+        Utilities.getUuid(),
+
+      Student_ID:
+        data.studentId,
+
+      Full_Name:
+        data.fullName,
+
+      Status:
+        data.status,
+
+      Score:
+        data.score,
+
+      Total:
+        data.total,
+
+      Percentage:
+        data.percentage,
+
+      Test_Date:
+        data.testDate
+    }
+  );
+}
+
+
+/* =========================================================
+   CHECK BLACKLIST
+   ========================================================= */
+
+function isNameBlacklisted_(fullName) {
+
+  const sheet =
+    getOrCreateBlacklistSheet_();
+
+  const data =
+    sheet
+      .getDataRange()
+      .getDisplayValues();
+
+  if (data.length < 2) {
+    return false;
+  }
+
+  const headers =
+    data[0];
+
+  const nameCol =
+    findHeaderIndex_(
+      headers,
+      'Full_Name'
+    );
+
+  if (nameCol === -1) {
+    return false;
+  }
+
+  const target =
+    normalizeName_(fullName);
+
+  for (
+    let r = 1;
+    r < data.length;
+    r++
+  ) {
+
+    const existing =
+      normalizeName_(
+        data[r][nameCol]
+      );
+
+    if (
+      existing &&
+      existing === target
+    ) {
+      return true;
+    }
+
+  }
+
+  return false;
+}
+
+
+/* =========================================================
+   NORMALIZE NAME
+   ========================================================= */
+
+function normalizeName_(name) {
+
+  return String(name || '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .toLowerCase();
+}
+
+
+/* =========================================================
+   GET STUDENT
+   ========================================================= */
+
+function getStudentById_(studentId) {
+
+  const sheet =
+    getOrCreateStudentsSheet_();
+
+  const data =
+    sheet
+      .getDataRange()
+      .getDisplayValues();
+
+  if (data.length < 2) {
+    return null;
+  }
+
+  const headers =
+    data[0];
+
+  const idCol =
+    findHeaderIndex_(
+      headers,
+      'Student_ID'
+    );
+
+  const nameCol =
+    findHeaderIndex_(
+      headers,
+      'Full_Name'
+    );
+
+  const nationalityCol =
+    findHeaderIndex_(
+      headers,
+      'Nationality'
+    );
+
+  const countryCol =
+    findHeaderIndex_(
+      headers,
+      'Country'
+    );
+
+  const emailCol =
+    findHeaderIndex_(
+      headers,
+      'Email'
+    );
+
+  for (
+    let r = 1;
+    r < data.length;
+    r++
+  ) {
+
+    if (
+      String(data[r][idCol])
+        .trim() ===
+      String(studentId)
+        .trim()
+    ) {
+
+      return {
+        studentId:
+          data[r][idCol],
+
+        fullName:
+          nameCol >= 0
+          ? data[r][nameCol]
+          : '',
+
+        nationality:
+          nationalityCol >= 0
+          ? data[r][nationalityCol]
+          : '',
+
+        country:
+          countryCol >= 0
+          ? data[r][countryCol]
+          : '',
+
+        email:
+          emailCol >= 0
+          ? data[r][emailCol]
+          : ''
+      };
 
     }
 
-  </script>
+  }
 
-</body>
-</html>
+  return null;
+}
+
+
+/* =========================================================
+   ADMIN CODE
+   ========================================================= */
+
+function checkAdminCode(code) {
+
+  if (
+    String(code || '') ===
+    CONFIG.ADMIN_CODE
+  ) {
+
+    return {
+      success: true
+    };
+
+  }
+
+  return {
+    success: false,
+    message: 'Incorrect admin code.'
+  };
+}
+
+
+/* =========================================================
+   BLACKLIST CODE
+   ========================================================= */
+
+function checkBlacklistCode(code) {
+
+  if (
+    String(code || '') ===
+    CONFIG.BLACKLIST_CODE
+  ) {
+
+    return {
+      success: true
+    };
+
+  }
+
+  return {
+    success: false,
+    message: 'Incorrect blacklist code.'
+  };
+}
+
+
+/* =========================================================
+   ADMIN RESULTS
+   ========================================================= */
+
+function getAdminResults() {
+
+  try {
+
+    const sheet =
+      getOrCreateResultsSheet_();
+
+    const data =
+      sheet
+        .getDataRange()
+        .getDisplayValues();
+
+    if (data.length < 2) {
+
+      return {
+        success: true,
+        results: []
+      };
+
+    }
+
+    const headers =
+      data[0];
+
+    const result = [];
+
+    for (
+      let r = 1;
+      r < data.length;
+      r++
+    ) {
+
+      const row =
+        data[r];
+
+      if (
+        row.join('').trim() === ''
+      ) {
+        continue;
+      }
+
+      result.push({
+
+        resultId:
+          valueByHeader_(
+            headers,
+            row,
+            'Result_ID'
+          ),
+
+        studentId:
+          valueByHeader_(
+            headers,
+            row,
+            'Student_ID'
+          ),
+
+        fullName:
+          valueByHeader_(
+            headers,
+            row,
+            'Full_Name'
+          ),
+
+        score:
+          valueByHeader_(
+            headers,
+            row,
+            'Score'
+          ),
+
+        total:
+          valueByHeader_(
+            headers,
+            row,
+            'Total'
+          ),
+
+        percentage:
+          valueByHeader_(
+            headers,
+            row,
+            'Percentage'
+          ),
+
+        cefrLevel:
+          valueByHeader_(
+            headers,
+            row,
+            'CEFR_Level'
+          ),
+
+        status:
+          valueByHeader_(
+            headers,
+            row,
+            'Status'
+          ),
+
+        testDate:
+          valueByHeader_(
+            headers,
+            row,
+            'Test_Date'
+          )
+
+      });
+
+    }
+
+    /*
+     * Newest first.
+     */
+    result.reverse();
+
+    return {
+      success: true,
+      results: result
+    };
+
+  } catch (err) {
+
+    return {
+      success: false,
+      message: err.message
+    };
+  }
+}
+
+
+/* =========================================================
+   GET BLACKLIST
+   ========================================================= */
+
+function getBlacklist() {
+
+  try {
+
+    const sheet =
+      getOrCreateBlacklistSheet_();
+
+    const data =
+      sheet
+        .getDataRange()
+        .getDisplayValues();
+
+    if (data.length < 2) {
+
+      return {
+        success: true,
+        blacklist: []
+      };
+
+    }
+
+    const headers =
+      data[0];
+
+    const result = [];
+
+    for (
+      let r = 1;
+      r < data.length;
+      r++
+    ) {
+
+      const row =
+        data[r];
+
+      if (
+        row.join('').trim() === ''
+      ) {
+        continue;
+      }
+
+      result.push({
+
+        rowId: String(r + 1),
+
+        blacklistId:
+          valueByHeader_(
+            headers,
+            row,
+            'Blacklist_ID'
+          ),
+
+        studentId:
+          valueByHeader_(
+            headers,
+            row,
+            'Student_ID'
+          ),
+
+        fullName:
+          valueByHeader_(
+            headers,
+            row,
+            'Full_Name'
+          ),
+
+        status:
+          valueByHeader_(
+            headers,
+            row,
+            'Status'
+          ),
+
+        score:
+          valueByHeader_(
+            headers,
+            row,
+            'Score'
+          ),
+
+        total:
+          valueByHeader_(
+            headers,
+            row,
+            'Total'
+          ),
+
+        percentage:
+          valueByHeader_(
+            headers,
+            row,
+            'Percentage'
+          ),
+
+        testDate:
+          valueByHeader_(
+            headers,
+            row,
+            'Test_Date'
+          )
+
+      });
+
+    }
+
+    result.reverse();
+
+    return {
+      success: true,
+      blacklist: result
+    };
+
+  } catch (err) {
+
+    return {
+      success: false,
+      message: err.message
+    };
+  }
+}
+
+
+/* =========================================================
+   DELETE BLACKLIST
+   ========================================================= */
+
+function deleteBlacklist(rowId) {
+
+  try {
+
+    const sheet =
+      getOrCreateBlacklistSheet_();
+
+    const row =
+      Number(rowId);
+
+    if (
+      !row ||
+      row <= 1 ||
+      row > sheet.getLastRow()
+    ) {
+
+      return {
+        success: false,
+        message: 'Invalid blacklist row.'
+      };
+
+    }
+
+    sheet.deleteRow(row);
+
+    return {
+      success: true
+    };
+
+  } catch (err) {
+
+    return {
+      success: false,
+      message: err.message
+    };
+  }
+}
+
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function findHeaderIndex_(
+  headers,
+  wanted
+) {
+
+  const target =
+    String(wanted)
+      .trim()
+      .toLowerCase();
+
+  for (
+    let i = 0;
+    i < headers.length;
+    i++
+  ) {
+
+    if (
+      String(headers[i])
+        .trim()
+        .toLowerCase() ===
+      target
+    ) {
+      return i;
+    }
+
+  }
+
+  return -1;
+}
+
+
+function valueByHeader_(
+  headers,
+  row,
+  header
+) {
+
+  const index =
+    findHeaderIndex_(
+      headers,
+      header
+    );
+
+  if (index === -1) {
+    return '';
+  }
+
+  return row[index] || '';
+}
+
+
+function formatDate_(date) {
+
+  const tz =
+    Session.getScriptTimeZone() ||
+    'GMT+3';
+
+  return Utilities.formatDate(
+    date,
+    tz,
+    'dd/MM/yyyy HH:mm:ss'
+  );
+}
+
+
+function round2_(number) {
+
+  return Math.round(
+    Number(number) * 100
+  ) / 100;
+}
