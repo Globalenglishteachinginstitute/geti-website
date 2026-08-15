@@ -1758,8 +1758,8 @@ and remove candidates from the local blacklist.
 
 <div class="chat-admin-tabs">
 <button id="adminTabMessage" class="active" onclick="showAdminTab('message')">MESSAGE <span id="adminUnreadBadge" class="chat-badge">0</span></button>
-<button id="adminTabBlacklist" onclick="showAdminTab('blacklist')">BLACKLIST</button>
-<button id="adminTabPassed" onclick="showAdminTab('passed')">PASSED</button>
+<button id="adminTabBlacklist" onclick="showAdminTab('blacklist')">BLACKLIST <span id="adminBlacklistBadge" class="chat-badge">0</span></button>
+<button id="adminTabPassed" onclick="showAdminTab('passed')">PASSED <span id="adminPassedBadge" class="chat-badge">0</span></button>
 </div>
 <div id="adminViewMessage" class="chat-admin-view active">
 <div class="geti-group-tabs"><button id="adminChatModePrivate" class="active" onclick="showAdminChatMode('private')">PRIVATE MESSAGES</button><button id="adminChatModeGroup" onclick="showAdminChatMode('group')">STUDENT GROUP</button></div>
@@ -1770,8 +1770,8 @@ and remove candidates from the local blacklist.
 <div id="adminGroupChatView" class="chat-main" style="height:560px;border:1px solid #dbe2ea;border-radius:8px;overflow:hidden">
 <aside class="geti-group-members" id="adminGroupMemberList"><div class="title">Students</div></aside><section class="chat-content"><div class="chat-toolbar"><strong>GETI Student Group</strong></div><div class="chat-messages" id="adminGroupMessages"></div><div class="geti-group-note">Administrator can participate in the student group.</div><div class="chat-compose"><textarea id="adminGroupText" placeholder="Write to the student group..."></textarea><div class="chat-compose-row"><input id="adminGroupFile" type="file" accept="image/*,.pdf"><button onclick="sendAdminGroupMessage()">SEND</button></div></div></section>
 </div></div>
-<div id="adminViewBlacklist" class="chat-admin-view"><div class="admin-info">Candidates who did not pass.</div><div id="adminBlacklistList"></div></div>
-<div id="adminViewPassed" class="chat-admin-view"><div class="admin-info">Candidates who passed.</div><div id="adminPassedList"></div></div>
+<div id="adminViewBlacklist" class="chat-admin-view"><div class="admin-info"><strong>Blocked accounts</strong><br>Every blocked account appears here. <strong>REMOVE BLOCK</strong> unblocks the account without deleting its examination result.</div><div id="adminBlacklistList"></div></div>
+<div id="adminViewPassed" class="chat-admin-view"><div class="admin-info"><strong>All passed candidates</strong><br>Every passed examination result appears here.</div><div id="adminPassedList"></div></div>
 <button
 class="btn btn-gold"
 onclick="loadAdminResults()">
@@ -3881,132 +3881,85 @@ function adminLogin(){
 ========================================================= */
 
 function loadAdminResults(){
-
     let records=getExamRecords();
-
-    let tbody=
-        document.getElementById(
-            "adminTableBody"
-        );
-
+    let blocked=getBlockedAccounts();
+    let tbody=document.getElementById("adminTableBody");
+    if(!tbody)return;
     tbody.innerHTML="";
 
     if(records.length===0){
-
-        tbody.innerHTML=
-        '<tr><td colspan="8">No examination records.</td></tr>';
-
+        tbody.innerHTML='<tr><td colspan="8">No examination records.</td></tr>';
         return;
-
     }
 
     records.forEach(function(r){
-
         let grades="";
+        (r.subjects||[]).forEach(function(s){ grades+=escapeHTML(s.grade)+" "; });
 
-        r.subjects.forEach(function(s){
-
-            grades+=
-            escapeHTML(s.grade)+
-            " ";
-
+        let blockedNow=blocked.some(function(x){
+            return String(x.email||"").toLowerCase()===String(r.email||"").toLowerCase();
         });
 
+        let action=blockedNow
+            ? '<button class="admin-action" onclick="removeBlacklist(\''+escapeHTML(r.email||"").replace(/'/g,"\\'")+'\')">REMOVE BLOCK</button>'
+            : '<button class="admin-action" onclick="blockCandidate(\''+escapeHTML(r.email||"").replace(/'/g,"\\'")+'\',\''+escapeHTML(r.name||"").replace(/'/g,"\\'")+'\')">BLOCK</button>';
+
         let tr=document.createElement("tr");
-
         tr.innerHTML=
-
-        '<td>'+
-        escapeHTML(r.id)+
-        '</td>'+
-
-        '<td>'+
-        escapeHTML(r.name)+
-        '</td>'+
-
-        '<td>'+
-        escapeHTML(r.email)+
-        '</td>'+
-
-        '<td>'+
-        escapeHTML(r.program)+
-        '</td>'+
-
-        '<td><strong>'+
-        r.percentage+
-        '%</strong></td>'+
-
-        '<td class="'+
-        (r.status==="PASSED"?"pass":"fail")+
-        '">'+
-        r.status+
-        '</td>'+
-
-        '<td>'+
-        grades+
-        '</td>'+
-
-        '<td>'+
-
-        (
-            r.status==="PASSED"
-
-            ?
-
-            '<button class="admin-action" '+
-            'onclick="removeBlacklist(\''+
-            escapeHTML(r.id)+
-            '\')">'+
-            'REMOVE BLACKLIST'+
-            '</button>'
-
-            :
-
-            '<span>—</span>'
-        )+
-
-        '</td>';
-
+            '<td>'+escapeHTML(r.id||"")+'</td>'+
+            '<td>'+escapeHTML(r.name||"")+'</td>'+
+            '<td>'+escapeHTML(r.email||"")+'</td>'+
+            '<td>'+escapeHTML(r.program||"")+'</td>'+
+            '<td><strong>'+String(r.percentage||0)+'%</strong></td>'+
+            '<td class="'+(r.status==="PASSED"?"pass":"fail")+'">'+escapeHTML(r.status||"")+'</td>'+
+            '<td>'+grades+'</td>'+
+            '<td>'+action+'</td>';
         tbody.appendChild(tr);
-
     });
-
 }
 
 /* =========================================================
    REMOVE BLACKLIST
 ========================================================= */
 
-function removeBlacklist(id){
+const GETI_BLOCKLIST_KEY="GETI_BLOCKED_ACCOUNTS";
 
-    if(!confirm(
-        "Remove this candidate from the passed/blacklist records?"
-    )){
-
-        return;
-
+function getBlockedAccounts(){
+    try{return JSON.parse(localStorage.getItem(GETI_BLOCKLIST_KEY)||"[]")}
+    catch(e){return []}
+}
+function saveBlockedAccounts(list){
+    localStorage.setItem(GETI_BLOCKLIST_KEY,JSON.stringify(list));
+}
+function isEmailBlocked(email){
+    return getBlockedAccounts().some(function(b){
+        return String(b.email||"").toLowerCase()===String(email||"").toLowerCase();
+    });
+}
+function blockCandidate(email,name){
+    email=String(email||"").trim().toLowerCase();
+    if(!email)return;
+    let list=getBlockedAccounts();
+    if(list.some(function(b){return String(b.email||"").toLowerCase()===email;})){
+        alert("This account is already blocked."); return;
     }
-
-    let records=getExamRecords();
-
-    records=
-        records.filter(function(r){
-
-            return r.id!==id;
-
-        });
-
-    localStorage.setItem(
-        "GETI_EXAM_RECORDS",
-        JSON.stringify(records)
-    );
-
+    list.push({email:email,name:name||"",blockedAt:new Date().toISOString()});
+    saveBlockedAccounts(list);
     loadAdminResults();
-
-    alert(
-        "Candidate removed from the local blacklist."
-    );
-
+    renderAdminCandidateLists();
+    renderAdminConversations();
+    alert(email+" has been blocked.");
+}
+function removeBlacklist(email){
+    email=String(email||"").trim().toLowerCase();
+    if(!confirm("Remove block from "+email+"?"))return;
+    saveBlockedAccounts(getBlockedAccounts().filter(function(b){
+        return String(b.email||"").toLowerCase()!==email;
+    }));
+    loadAdminResults();
+    renderAdminCandidateLists();
+    renderAdminConversations();
+    alert(email+" is no longer blocked.");
 }
 
 /* =========================================================
@@ -4079,27 +4032,46 @@ function ensureChatDB(){return new Promise((resolve,reject)=>{let r=indexedDB.op
 async function saveChatFile(file){let db=await ensureChatDB(),id="FILE-"+Date.now()+"-"+Math.random().toString(36).slice(2);return new Promise((resolve,reject)=>{let tx=db.transaction("files","readwrite");tx.objectStore("files").put(file,id);tx.oncomplete=()=>resolve(id);tx.onerror=()=>reject(tx.error)})}
 async function getChatFile(id){let db=await ensureChatDB();return new Promise((resolve,reject)=>{let r=db.transaction("files").objectStore("files").get(id);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
 async function downloadChatFile(id,name){try{let f=await getChatFile(id);if(!f)return alert("File is not available in this browser.");let url=URL.createObjectURL(f),a=document.createElement("a");a.href=url;a.download=name||f.name||"GETI-file";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}catch(e){alert("Unable to download this file.")}}
-async function sendUserChatMessage(){if(!chatCurrentUser)return;let text=document.getElementById("chatUserText").value.trim(),file=document.getElementById("chatUserFile").files[0];if(!text&&!file)return;let fileId=null,fileName="",fileType="";if(file){fileId=await saveChatFile(file);fileName=file.name;fileType=file.type}let m={id:"MSG-"+Date.now(),userId:chatCurrentUser.id,userName:chatCurrentUser.name,userEmail:chatCurrentUser.email,sender:"user",text,fileId,fileName,fileType,time:new Date().toISOString(),readByAdmin:false};let a=chatMessages();a.push(m);saveChatMessages(a);document.getElementById("chatUserText").value="";document.getElementById("chatUserFile").value="";renderUserMessages();renderAdminConversations()}
+async function sendUserChatMessage(){if(!chatCurrentUser)return;if(isEmailBlocked(chatCurrentUser.email)){alert("Your account is blocked. Please contact the Administrator.");return;}let text=document.getElementById("chatUserText").value.trim(),file=document.getElementById("chatUserFile").files[0];if(!text&&!file)return;let fileId=null,fileName="",fileType="";if(file){fileId=await saveChatFile(file);fileName=file.name;fileType=file.type}let m={id:"MSG-"+Date.now(),userId:chatCurrentUser.id,userName:chatCurrentUser.name,userEmail:chatCurrentUser.email,sender:"user",text,fileId,fileName,fileType,time:new Date().toISOString(),readByAdmin:false};let a=chatMessages();a.push(m);saveChatMessages(a);document.getElementById("chatUserText").value="";document.getElementById("chatUserFile").value="";renderUserMessages();renderAdminConversations()}
 function chatMessageHTML(m,mine){let f=m.fileId?'<div class="chat-file">📎 '+escapeHTML(m.fileName)+' <button onclick="downloadChatFile(\''+m.fileId+'\',\''+escapeHTML(m.fileName).replace(/'/g,"\\'")+'\')">DOWNLOAD</button></div>':'';return '<div class="chat-message '+(mine?'mine':'')+'"><div>'+escapeHTML(m.text||"")+'</div>'+f+'<div class="meta">'+(m.sender==="admin"?"Administrator":"You")+" • "+new Date(m.time).toLocaleString()+"</div></div>"}
 function renderUserMessages(){if(!chatCurrentUser)return;let box=document.getElementById("chatUserMessages"),a=chatMessages().filter(m=>m.userId===chatCurrentUser.id);box.innerHTML=a.length?"":'<div class="chat-status">No messages yet. Send a message to the administrator.</div>';a.forEach(m=>box.insertAdjacentHTML("beforeend",chatMessageHTML(m,m.sender==="user")));box.scrollTop=box.scrollHeight}
 function showAdminTab(tab){["message","blacklist","passed"].forEach(x=>{let n=x.charAt(0).toUpperCase()+x.slice(1);document.getElementById("adminView"+n).classList.toggle("active",x===tab);document.getElementById("adminTab"+n).classList.toggle("active",x===tab)});if(tab==="message")renderAdminConversations();else renderAdminCandidateLists()}
-function renderAdminConversations(){let box=document.getElementById("adminConversationList");if(!box)return;let users=chatUsers(),msgs=chatMessages(),html='<div class="chat-sidebar-title">Messages</div>';users.forEach(u=>{let unread=msgs.filter(m=>m.userId===u.id&&m.sender==="user"&&!m.readByAdmin).length;html+='<div class="chat-contact '+(adminChatUser===u.id?'active':'')+'" onclick="selectAdminChat(\''+u.id+'\')"><strong>'+escapeHTML(u.name)+'</strong><small>'+escapeHTML(u.email)+(unread?' <span class="chat-badge">'+unread+'</span>':'')+'</small></div>'});box.innerHTML=html+(users.length?"":'<div class="chat-status" style="padding:14px">No accounts yet.</div>');let unread=msgs.filter(m=>m.sender==="user"&&!m.readByAdmin).length;document.getElementById("adminUnreadBadge").textContent=unread}
+function renderAdminConversations(){let box=document.getElementById("adminConversationList");if(!box)return;let users=chatUsers(),msgs=chatMessages(),html='<div class="chat-sidebar-title">All Messages ('+users.length+')</div>';users.forEach(u=>{let unread=msgs.filter(m=>m.userId===u.id&&m.sender==="user"&&!m.readByAdmin).length;let blocked=isEmailBlocked(u.email);html+='<div class="chat-contact '+(adminChatUser===u.id?'active':'')+'" onclick="selectAdminChat(\''+u.id+'\')"><strong>'+escapeHTML(u.name)+(blocked?' <span class="chat-badge">BLOCKED</span>':'')+'</strong><small>'+escapeHTML(u.email)+(unread?' <span class="chat-badge">'+unread+'</span>':'')+'</small></div>'});box.innerHTML=html+(users.length?"":'<div class="chat-status" style="padding:14px">No accounts yet.</div>');let unread=msgs.filter(m=>m.sender==="user"&&!m.readByAdmin).length;document.getElementById("adminUnreadBadge").textContent=unread}
 function selectAdminChat(id){adminChatUser=id;let a=chatMessages();a.forEach(m=>{if(m.userId===id&&m.sender==="user")m.readByAdmin=true});saveChatMessages(a);let u=chatUsers().find(x=>x.id===id);document.getElementById("adminChatTitle").textContent=u?u.name+" — "+u.email:"Conversation";renderAdminConversations();renderAdminMessages()}
 function renderAdminMessages(){let box=document.getElementById("adminMessages");if(!adminChatUser){box.innerHTML='<div class="chat-status">Select a conversation.</div>';return}let a=chatMessages().filter(m=>m.userId===adminChatUser);box.innerHTML=a.length?"":'<div class="chat-status">No messages.</div>';a.forEach(m=>box.insertAdjacentHTML("beforeend",chatMessageHTML(m,m.sender==="admin")));box.scrollTop=box.scrollHeight}
 async function sendAdminChatMessage(){if(!adminChatUser)return alert("Select a conversation first.");let text=document.getElementById("adminChatText").value.trim(),file=document.getElementById("adminChatFile").files[0];if(!text&&!file)return;let u=chatUsers().find(x=>x.id===adminChatUser),fileId=null,fileName="",fileType="";if(file){fileId=await saveChatFile(file);fileName=file.name;fileType=file.type}let m={id:"MSG-"+Date.now(),userId:adminChatUser,userName:u?u.name:"",userEmail:u?u.email:"",sender:"admin",text,fileId,fileName,fileType,time:new Date().toISOString(),readByUser:false};let a=chatMessages();a.push(m);saveChatMessages(a);document.getElementById("adminChatText").value="";document.getElementById("adminChatFile").value="";renderAdminMessages();renderUserMessages()}
-function renderAdminCandidateLists(){let records=getExamRecords(),black=records.filter(r=>r.status!=="PASSED"),passed=records.filter(r=>r.status==="PASSED");document.getElementById("adminBlacklistList").innerHTML=adminCandidateHTML(black);document.getElementById("adminPassedList").innerHTML=adminCandidateHTML(passed)}
-function adminCandidateHTML(records){if(!records.length)return '<div class="admin-info">No records.</div>';return '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Program</th><th>Final %</th><th>Status</th></tr></thead><tbody>'+records.map(r=>'<tr><td>'+escapeHTML(r.id)+'</td><td>'+escapeHTML(r.name)+'</td><td>'+escapeHTML(r.email)+'</td><td>'+escapeHTML(r.program)+'</td><td><strong>'+r.percentage+'%</strong></td><td class="'+(r.status==="PASSED"?"pass":"fail")+'">'+r.status+'</td></tr>').join("")+'</tbody></table></div>'}
-const GETI_originalAdminLogin=adminLogin;adminLogin=function(){GETI_originalAdminLogin();if(document.getElementById("adminPanel").style.display==="block"){renderAdminConversations();renderAdminCandidateLists()}};
+function renderAdminCandidateLists(){
+    let records=getExamRecords();
+    let blocked=getBlockedAccounts();
+    let passed=records.filter(function(r){return r.status==="PASSED";});
 
-/* =========================================================
-   GETI STUDENT GROUP + ADMIN GROUP CHAT
-========================================================= */
-function showUserChatTab(tab){
-    document.getElementById("userChatTabAdmin").classList.toggle("active",tab==="admin");
-    document.getElementById("userChatTabGroup").classList.toggle("active",tab==="group");
-    document.getElementById("userChatViewAdmin").classList.toggle("active",tab==="admin");
-    document.getElementById("userChatViewGroup").classList.toggle("active",tab==="group");
-    if(tab==="group"){renderGroupMembers();renderGroupMessages();}
+    let blacklistBox=document.getElementById("adminBlacklistList");
+    let passedBox=document.getElementById("adminPassedList");
+
+    if(blacklistBox){
+        blacklistBox.innerHTML=blocked.length
+        ? '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Blocked At</th><th>Action</th></tr></thead><tbody>'+
+          blocked.map(function(b){
+            return '<tr><td>'+escapeHTML(b.name||"")+'</td><td>'+escapeHTML(b.email||"")+'</td><td>'+escapeHTML(b.blockedAt?new Date(b.blockedAt).toLocaleString():"")+'</td><td><button class="admin-action" onclick="removeBlacklist(\''+escapeHTML(b.email||"").replace(/'/g,"\\'")+'\')">REMOVE BLOCK</button></td></tr>';
+          }).join("")+
+          '</tbody></table></div>'
+        : '<div class="admin-info">No blocked accounts.</div>';
+    }
+
+    if(passedBox)passedBox.innerHTML=adminCandidateHTML(passed);
+
+    let bb=document.getElementById("adminBlacklistBadge");
+    let pb=document.getElementById("adminPassedBadge");
+    if(bb)bb.textContent=blocked.length;
+    if(pb)pb.textContent=passed.length;
+}
+function adminCandidateHTML(records){
+    if(!records.length)return '<div class="admin-info">No records.</div>';
+    return '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Program</th><th>Final %</th><th>Status</th></tr></thead><tbody>'+
+    records.map(function(r){
+        return '<tr><td>'+escapeHTML(r.id||"")+'</td><td>'+escapeHTML(r.name||"")+'</td><td>'+escapeHTML(r.email||"")+'</td><td>'+escapeHTML(r.program||"")+'</td><td><strong>'+String(r.percentage||0)+'%</strong></td><td class="'+(r.status==="PASSED"?"pass":"fail")+'">'+escapeHTML(r.status||"")+'</td></tr>';
+    }).join("")+
+    '</tbody></table></div>';
 }
 function showAdminChatMode(mode){
     document.getElementById("adminChatModePrivate").classList.toggle("active",mode==="private");
@@ -4113,12 +4085,12 @@ function saveGroupMessages(a){localStorage.setItem("GETI_GROUP_MESSAGES",JSON.st
 function renderGroupMembers(){
     let box=document.getElementById("groupMemberList");if(!box)return;
     let users=chatUsers();
-    box.innerHTML='<div class="title">GETI Students ('+users.length+')</div>'+(users.length?users.map(u=>'<div class="geti-group-member"><strong>'+escapeHTML(u.name)+'</strong><small>'+escapeHTML(u.email)+'</small></div>').join(""): '<div class="chat-status" style="padding:14px">No students yet.</div>');
+    box.innerHTML='<div class="title">GETI Students ('+users.length+')</div>'+(users.length?users.map(u=>'<div class="geti-group-member"><strong>'+escapeHTML(u.name)+(blocked?' <span class="chat-badge">BLOCKED</span>':'')+'</strong><small>'+escapeHTML(u.email)+'</small></div>').join(""): '<div class="chat-status" style="padding:14px">No students yet.</div>');
 }
 function renderAdminGroupMembers(){
     let box=document.getElementById("adminGroupMemberList");if(!box)return;
     let users=chatUsers();
-    box.innerHTML='<div class="title">Students ('+users.length+')</div>'+(users.length?users.map(u=>'<div class="geti-group-member"><strong>'+escapeHTML(u.name)+'</strong><small>'+escapeHTML(u.email)+'</small></div>').join(""): '<div class="chat-status" style="padding:14px">No students yet.</div>');
+    box.innerHTML='<div class="title">Students ('+users.length+')</div>'+(users.length?users.map(u=>'<div class="geti-group-member"><strong>'+escapeHTML(u.name)+(blocked?' <span class="chat-badge">BLOCKED</span>':'')+'</strong><small>'+escapeHTML(u.email)+'</small></div>').join(""): '<div class="chat-status" style="padding:14px">No students yet.</div>');
 }
 function groupMessageHTML(m,mine){
     let f=m.fileId?'<div class="chat-file">📎 '+escapeHTML(m.fileName)+' <button onclick="downloadChatFile(\''+m.fileId+'\',\''+escapeHTML(m.fileName).replace(/'/g,"\\'")+'\')">DOWNLOAD</button></div>':'';
@@ -4340,7 +4312,7 @@ document
 
           <div id="getiAdminMessageSection" class="geti-admin-section">
             <h4>All Student Messages</h4>
-            <p class="geti-admin-note">All registered students are listed here. Every message from every student is visible to the administrator, with the student name and email, and each conversation can be opened and replied to.</p>
+            <p class="geti-admin-note">Every message sent by every registered student is visible to the site administrator.</p>
             <div id="getiAdminInbox"></div>
           </div>
 
@@ -4636,24 +4608,17 @@ document
   function renderAdminInbox(){
     const u=currentUser();if(!u||u.role!=='admin')return;
     const box=document.getElementById('getiAdminInbox'),s=state();
-    if(!s.users.length){box.innerHTML='<div class="geti-empty">No student accounts yet.</div>';return;}
     const incoming=s.messages.filter(m=>m.from!=='GETI-ADMIN');
-    box.innerHTML=s.users.map(st=>{
-      const msgs=incoming.filter(m=>m.from===st.id||m.to===st.id).sort((a,b)=>new Date(a.time)-new Date(b.time));
-      const latest=msgs[msgs.length-1];
-      const blocked=s.blacklist.some(x=>x.id===st.id);
-      const preview=latest?(latest.text||latest.attachment?.name||'Attachment'):'No messages yet';
-      return '<div class="geti-inbox-card"><strong>'+esc(st.name)+'</strong> <span class="geti-badge">'+msgs.length+' message'+(msgs.length===1?'':'s')+'</span> '+
-        (blocked?'<span class="geti-badge" style="background:#fdecec;color:#a51e1e">BLOCKED</span>':'')+
-        '<br><small>'+esc(st.email)+'</small>'+
-        '<div style="margin-top:8px;color:#445064">'+esc(preview)+'</div>'+
-        '<div class="geti-mini-actions"><button onclick="selectGetiStudent(\''+idSafe(st.id)+'\');getiOpenTab(\'admin-chat\')">OPEN COMPLETE CHAT</button>'+
-        (blocked?'<button onclick="removeBlacklist(\''+idSafe(st.id)+'\')">REMOVE BLOCKED</button>':'<button class="danger" onclick="addBlacklist(\''+idSafe(st.id)+'\')">BLACKLIST</button>')+
-        '</div></div>';
+    if(!incoming.length){box.innerHTML='<div class="geti-empty">No student messages yet.</div>';return;}
+    const grouped={};
+    incoming.forEach(m=>{if(!grouped[m.from])grouped[m.from]=[];grouped[m.from].push(m);});
+    box.innerHTML=Object.keys(grouped).map(id=>{
+      const st=s.users.find(x=>x.id===id),msgs=grouped[id].sort((a,b)=>new Date(a.time)-new Date(b.time)),latest=msgs[msgs.length-1];
+      return '<div class="geti-inbox-card"><strong>'+esc(st?st.name:id)+'</strong> <span class="geti-badge">'+msgs.length+' message'+(msgs.length===1?'':'s')+'</span><br><small>'+esc(st?st.email:'')+'</small>'+
+        '<div style="margin-top:8px;color:#445064">'+esc(latest.text||latest.attachment?.name||'Attachment')+'</div>'+
+        '<div class="geti-mini-actions"><button onclick="selectGetiStudent(\''+id+'\');getiOpenTab(\'admin-chat\')">OPEN COMPLETE CHAT</button><button class="danger" onclick="addBlacklist(\''+id+'\')">BLACKLIST</button></div></div>';
     }).join('');
   }
-
-  function idSafe(v){return String(v).replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
 
   function renderAccounts(){
     const u=currentUser();if(!u||u.role!=='admin')return;
@@ -4677,7 +4642,7 @@ document
     box.innerHTML='<table class="geti-data-table"><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Program</th><th>Score</th><th>Status</th><th>Date</th><th>Subjects</th></tr></thead><tbody>'+
       records.map(r=>{
         const subjects=(r.subjects||[]).map(x=>esc(x.subject)+' '+esc(x.percentage)+'% ('+esc(x.grade)+')').join('<br>');
-        return '<tr><td>'+esc(r.id)+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.email)+'</td><td>'+esc(r.program)+'</td><td><strong>'+esc(r.percentage)+'%</strong></td><td><span class="geti-badge" style="'+(r.status==='PASSED'?'':'background:#fdecec;color:#a51e1e')+'">'+esc(r.status)+'</span></td><td>'+esc(r.date?new Date(r.date).toLocaleString():'')+'</td><td>'+subjects+'</td></tr>';
+        return '<tr><td>'+esc(r.id)+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.email)+'</td><td>'+esc(r.program)+'</td><td><strong>'+esc(r.percentage)+'%</strong></td><td><span class="geti-badge">'+esc(r.status)+'</span></td><td>'+esc(r.date?new Date(r.date).toLocaleString():'')+'</td><td>'+subjects+'</td></tr>';
       }).join('')+'</tbody></table>';
   }
 
@@ -4694,7 +4659,7 @@ document
   function renderBlacklist(){
     const u=currentUser();if(!u||u.role!=='admin')return;
     const s=state(),box=document.getElementById('getiBlacklistList');
-    box.innerHTML=s.blacklist.length?'<table class="geti-data-table"><thead><tr><th>Name</th><th>Email</th><th>Student ID</th><th>Action</th></tr></thead><tbody>'+s.blacklist.map(x=>'<tr><td>'+esc(x.name)+'</td><td>'+esc(x.email)+'</td><td>'+esc(x.id)+'</td><td><button onclick="removeBlacklist(\''+idSafe(x.id)+'\')">REMOVE BLOCKED</button></td></tr>').join('')+'</tbody></table>':'<div class="geti-empty">Blacklist is empty.</div>';
+    box.innerHTML=s.blacklist.length?s.blacklist.map(x=>'<div class="geti-inbox-card"><strong>'+esc(x.name)+'</strong><br><small>'+esc(x.email)+'</small><div class="geti-mini-actions"><button onclick="removeBlacklist(\''+x.id+'\')">Remove</button></div></div>').join(''):'<div class="geti-empty">Blacklist is empty.</div>';
   }
   window.addBlacklist=function(id){
     const s=state(),u=s.users.find(x=>x.id===id);if(!u)return;
@@ -4707,12 +4672,9 @@ document
   function renderPassed(){
     const u=currentUser();if(!u||u.role!=='admin')return;
     const s=state(),box=document.getElementById('getiPassedList');
-    const examPassed=getAllExamRecords().filter(r=>r.status==='PASSED');
-    const merged=[...examPassed.map(r=>({id:r.id,name:r.name,email:r.email,score:r.percentage,program:r.program})),...s.passed];
-    const seen=new Set();
-    const list=merged.filter(x=>{const k=(x.email||x.id||x.name||'').toLowerCase();if(seen.has(k))return false;seen.add(k);return true;});
-    box.innerHTML=list.length?list.map(x=>'<div class="geti-inbox-card"><strong>'+esc(x.name)+'</strong><br><small>'+esc(x.email||'')+' • '+esc(x.program||'')+' • '+esc(String(x.score??''))+'%</small></div>').join(''):'<div class="geti-empty">No passed candidates.</div>';
+    box.innerHTML=s.passed.length?s.passed.map(x=>'<div class="geti-inbox-card"><strong>'+esc(x.name)+'</strong><br><small>'+esc(x.id)+' • '+esc(String(x.score||''))+'</small></div>').join(''):'<div class="geti-empty">No passed candidates recorded in this communication module.</div>';
   }
+
   function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
   function escAttr(v){return esc(v).replace(/`/g,'&#096;');}
 
