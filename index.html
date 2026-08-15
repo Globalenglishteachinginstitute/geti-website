@@ -3588,7 +3588,7 @@ function showFinalResult(timeExpired){
 
         'Congratulations! You have successfully passed the '+
         student.program+
-        ' examination. Please click the button below to Chat with Administrator.Create your account and follow the instructions to receive your Certificate and Transcript. Please remember to check your account every day and regularly for updates until your Certificate PDF and Transcript are available.'+
+        ' examination. Please check your email regularly for further information regarding your result and certificate.'+
 
         '</div>'+
 
@@ -4332,13 +4332,28 @@ document
           </div>
           <div class="geti-admin-menu">
             <button class="active" onclick="getiAdminSection('message',this)">💬 Message</button>
+            <button onclick="getiAdminSection('accounts',this)">👤 Accounts</button>
+            <button onclick="getiAdminSection('results',this)">📊 Results</button>
             <button onclick="getiAdminSection('blacklist',this)">🚫 Blacklist</button>
             <button onclick="getiAdminSection('passed',this)">🎓 Passed</button>
           </div>
 
           <div id="getiAdminMessageSection" class="geti-admin-section">
+            <h4>All Student Messages</h4>
+            <p class="geti-admin-note">Every message sent by every registered student is visible to the site administrator.</p>
             <div id="getiAdminInbox"></div>
           </div>
+
+          <div id="getiAdminAccountsSection" class="geti-admin-section" style="display:none">
+            <h4>All GETI Student Accounts</h4>
+            <div id="getiAccountsList"></div>
+          </div>
+
+          <div id="getiAdminResultsSection" class="geti-admin-section" style="display:none">
+            <h4>All Examination Results</h4>
+            <div id="getiResultsList"></div>
+          </div>
+
           <div id="getiAdminBlacklistSection" class="geti-admin-section" style="display:none">
             <div id="getiBlacklistList"></div>
           </div>
@@ -4397,6 +4412,14 @@ document
 .geti-help{padding:0 14px 10px;background:#fff;color:#778295}
 .geti-admin-menu{padding:12px;display:flex;gap:8px;flex-wrap:wrap;background:#fff;border-bottom:1px solid #dce2ea}
 .geti-admin-section{padding:18px;overflow:auto}
+.geti-admin-section h4{margin:0 0 8px;color:#0b2d5c}
+.geti-admin-note{color:#667386;font-size:13px}
+.geti-data-table{width:100%;border-collapse:collapse;background:#fff;font-size:13px}
+.geti-data-table th,.geti-data-table td{border:1px solid #dce2ea;padding:9px;text-align:left;vertical-align:top}
+.geti-data-table th{background:#eef3f8;color:#0b2d5c}
+.geti-admin-actions{display:flex;gap:6px;flex-wrap:wrap}
+.geti-admin-actions button{border:0;background:#0b2d5c;color:#fff;padding:6px 9px;border-radius:4px;cursor:pointer}
+
 .geti-inbox-card{background:#fff;border:1px solid #dce2ea;border-radius:8px;padding:13px;margin-bottom:10px;cursor:pointer}
 .geti-inbox-card strong{color:#0b2d5c}
 .geti-mini-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
@@ -4506,7 +4529,7 @@ document
     document.getElementById(map[tab]).style.display='flex';
     document.querySelectorAll('.geti-side-btn').forEach(x=>x.classList.remove('active'));
     if(btn)btn.classList.add('active');
-    renderConversations();renderPrivate();renderGroup();renderAdminInbox();renderBlacklist();renderPassed();
+    renderConversations();renderPrivate();renderGroup();renderAdminInbox();renderAccounts();renderAllResults();renderBlacklist();renderPassed();
   };
 
   let activeStudentId=null;
@@ -4613,22 +4636,52 @@ document
   function renderAdminInbox(){
     const u=currentUser();if(!u||u.role!=='admin')return;
     const box=document.getElementById('getiAdminInbox'),s=state();
-    const latest={};
-    s.messages.forEach(m=>{if(m.from!=='GETI-ADMIN')latest[m.from]=m;});
-    const ids=Object.keys(latest);
-    if(!ids.length){box.innerHTML='<div class="geti-empty">No student messages.</div>';return;}
-    box.innerHTML=ids.map(id=>{
-      const st=s.users.find(x=>x.id===id),m=latest[id];
-      return '<div class="geti-inbox-card" onclick="selectGetiStudent(\''+id+'\');getiOpenTab(\'admin-chat\')"><strong>'+esc(st?st.name:id)+'</strong><br><small>'+esc(m.text||m.attachment?.name||'Attachment')+'</small><div class="geti-mini-actions"><span class="geti-badge">Open chat</span></div></div>';
+    const incoming=s.messages.filter(m=>m.from!=='GETI-ADMIN');
+    if(!incoming.length){box.innerHTML='<div class="geti-empty">No student messages yet.</div>';return;}
+    const grouped={};
+    incoming.forEach(m=>{if(!grouped[m.from])grouped[m.from]=[];grouped[m.from].push(m);});
+    box.innerHTML=Object.keys(grouped).map(id=>{
+      const st=s.users.find(x=>x.id===id),msgs=grouped[id].sort((a,b)=>new Date(a.time)-new Date(b.time)),latest=msgs[msgs.length-1];
+      return '<div class="geti-inbox-card"><strong>'+esc(st?st.name:id)+'</strong> <span class="geti-badge">'+msgs.length+' message'+(msgs.length===1?'':'s')+'</span><br><small>'+esc(st?st.email:'')+'</small>'+
+        '<div style="margin-top:8px;color:#445064">'+esc(latest.text||latest.attachment?.name||'Attachment')+'</div>'+
+        '<div class="geti-mini-actions"><button onclick="selectGetiStudent(\''+id+'\');getiOpenTab(\'admin-chat\')">OPEN COMPLETE CHAT</button><button class="danger" onclick="addBlacklist(\''+id+'\')">BLACKLIST</button></div></div>';
     }).join('');
   }
 
+  function renderAccounts(){
+    const u=currentUser();if(!u||u.role!=='admin')return;
+    const box=document.getElementById('getiAccountsList'),s=state();
+    if(!s.users.length){box.innerHTML='<div class="geti-empty">No student accounts.</div>';return;}
+    box.innerHTML='<table class="geti-data-table"><thead><tr><th>Student ID</th><th>Name</th><th>Email</th><th>Messages</th><th>Actions</th></tr></thead><tbody>'+
+      s.users.map(st=>{
+        const count=s.messages.filter(m=>m.from===st.id||m.to===st.id).length;
+        return '<tr><td>'+esc(st.id)+'</td><td>'+esc(st.name)+'</td><td>'+esc(st.email)+'</td><td>'+count+'</td><td><div class="geti-admin-actions"><button onclick="selectGetiStudent(\''+st.id+'\');getiOpenTab(\'admin-chat\')">CHAT</button><button onclick="addBlacklist(\''+st.id+'\')">BLACKLIST</button></div></td></tr>';
+      }).join('')+'</tbody></table>';
+  }
+
+  function getAllExamRecords(){
+    try{return JSON.parse(localStorage.getItem('GETI_EXAM_RECORDS')||'[]')||[];}catch(e){return [];}
+  }
+
+  function renderAllResults(){
+    const u=currentUser();if(!u||u.role!=='admin')return;
+    const box=document.getElementById('getiResultsList'),records=getAllExamRecords();
+    if(!records.length){box.innerHTML='<div class="geti-empty">No examination results have been recorded yet.</div>';return;}
+    box.innerHTML='<table class="geti-data-table"><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Program</th><th>Score</th><th>Status</th><th>Date</th><th>Subjects</th></tr></thead><tbody>'+
+      records.map(r=>{
+        const subjects=(r.subjects||[]).map(x=>esc(x.subject)+' '+esc(x.percentage)+'% ('+esc(x.grade)+')').join('<br>');
+        return '<tr><td>'+esc(r.id)+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.email)+'</td><td>'+esc(r.program)+'</td><td><strong>'+esc(r.percentage)+'%</strong></td><td><span class="geti-badge">'+esc(r.status)+'</span></td><td>'+esc(r.date?new Date(r.date).toLocaleString():'')+'</td><td>'+subjects+'</td></tr>';
+      }).join('')+'</tbody></table>';
+  }
+
   window.getiAdminSection=function(type,btn){
-    ['getiAdminMessageSection','getiAdminBlacklistSection','getiAdminPassedSection'].forEach(id=>document.getElementById(id).style.display='none');
+    ['getiAdminMessageSection','getiAdminAccountsSection','getiAdminResultsSection','getiAdminBlacklistSection','getiAdminPassedSection']
+      .forEach(id=>document.getElementById(id).style.display='none');
     document.querySelectorAll('.geti-admin-menu button').forEach(x=>x.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(type==='message'?'getiAdminMessageSection':type==='blacklist'?'getiAdminBlacklistSection':'getiAdminPassedSection').style.display='block';
-    renderAdminInbox();renderBlacklist();renderPassed();
+    if(btn)btn.classList.add('active');
+    const map={message:'getiAdminMessageSection',accounts:'getiAdminAccountsSection',results:'getiAdminResultsSection',blacklist:'getiAdminBlacklistSection',passed:'getiAdminPassedSection'};
+    document.getElementById(map[type]).style.display='block';
+    renderAdminInbox();renderAccounts();renderAllResults();renderBlacklist();renderPassed();
   };
 
   function renderBlacklist(){
@@ -4657,12 +4710,10 @@ document
   if(!document.getElementById('getiChatLauncher'))document.body.insertAdjacentHTML('beforeend',button_html);
 
   // Refresh the UI when the same browser tab receives storage updates.
-  window.addEventListener('storage',()=>{if(currentUser()){renderConversations();renderPrivate();renderGroup();renderAdminInbox();renderBlacklist();renderPassed();}});
+  window.addEventListener('storage',()=>{if(currentUser()){renderConversations();renderPrivate();renderGroup();renderAdminInbox();renderAccounts();renderAllResults();renderBlacklist();renderPassed();}});
 })();
 </script>
 
 </body>
 </html>
-
-
 
