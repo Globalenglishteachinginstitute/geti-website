@@ -1,7524 +1,2118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GLOBAL ENGLISH TEACHING INSTITUTE | GETI</title>
+  <title>GETI | Global English Teaching Institute</title>
 
-<meta name="description"
-content="Global English Teaching Institute - English A1-C2, TEFL, TESOL, TEYL, examinations, professional training and certificate verification.">
+  <meta name="description"
+        content="Global English Teaching Institute - English, TEFL, TESOL and TEYL training, certificates and verification.">
 
-<meta name="theme-color" content="#0b2d5c">
+  <meta name="theme-color" content="#0b2d5c">
 
-<style>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
 
-/* =========================================================
-   RESET
-========================================================= */
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f7fb;
+      color: #1d2939;
+      line-height: 1.6;
+    }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
 
-html{
-    scroll-behavior:smooth;
-}
+    button,
+    input,
+    textarea {
+      font-family: inherit;
+    }
 
-body{
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-    color:#172033;
-    background:#f7f9fc;
-    line-height:1.6;
-}
+    /* =========================
+       HEADER
+    ========================== */
 
-body.exam-active{
-    user-select:none;
-    -webkit-user-select:none;
-}
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #0b2d5c;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+    }
 
-img{
-    max-width:100%;
-    display:block;
-}
+    .navbar {
+      max-width: 1200px;
+      margin: auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
 
-a{
-    text-decoration:none;
-    color:inherit;
-}
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-weight: bold;
+    }
 
-button,
-input,
-textarea,
-select{
-    font:inherit;
-}
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #b38a28;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border: 3px solid white;
+    }
 
-button{
-    cursor:pointer;
-}
+    .logo-text {
+      line-height: 1.2;
+    }
 
-.container{
-    width:92%;
-    max-width:1240px;
-    margin:auto;
-}
+    .logo-text strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: 1px;
+    }
 
-.hidden{
-    display:none !important;
-}
+    .logo-text span {
+      font-size: 11px;
+      opacity: 0.9;
+    }
 
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
 
-/* =========================================================
-   TOP BAR
-========================================================= */
+    nav a {
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
 
-.topbar{
-    background:#071d3a;
-    color:#fff;
-    font-size:13px;
-    padding:8px 0;
-}
+    nav a:hover {
+      color: #e2bd62;
+    }
 
-.topbar-content{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:20px;
-}
+    .menu-btn {
+      display: none;
+      border: none;
+      background: transparent;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+    }
 
-.topbar-right{
-    display:flex;
-    gap:20px;
-    flex-wrap:wrap;
-}
+    /* =========================
+       HERO
+    ========================== */
 
-
-/* =========================================================
-   NAVBAR
-========================================================= */
-
-.navbar{
-    position:sticky;
-    top:0;
-    z-index:1000;
-    background:#fff;
-    box-shadow:0 2px 14px rgba(0,0,0,.08);
-}
-
-.nav-content{
-    min-height:78px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:20px;
-}
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    min-width:250px;
-}
-
-.logo-mark{
-    width:54px;
-    height:54px;
-    border-radius:50%;
-    background:#0b2d5c;
-    border:4px solid #d6ad45;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#d6ad45;
-    font-size:14px;
-    font-weight:900;
-}
-
-.logo-text strong{
-    display:block;
-    color:#0b2d5c;
-    font-size:15px;
-    letter-spacing:.3px;
-}
-
-.logo-text span{
-    display:block;
-    color:#777;
-    font-size:10px;
-}
-
-.nav-menu{
-    list-style:none;
-    display:flex;
-    align-items:center;
-    gap:17px;
-}
-
-.nav-menu a{
-    color:#26344a;
-    font-size:13px;
-    font-weight:700;
-    transition:.25s;
-}
-
-.nav-menu a:hover{
-    color:#b38a28;
-}
-
-.nav-button{
-    background:#b38a28;
-    color:#fff !important;
-    padding:10px 15px;
-    border-radius:5px;
-}
-
-.admin-button{
-    background:#0b2d5c;
-    color:#fff !important;
-    padding:10px 15px;
-    border-radius:5px;
-}
-
-.menu-toggle{
-    display:none;
-    font-size:28px;
-    color:#0b2d5c;
-}
-
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-.btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    padding:13px 22px;
-    border:0;
-    border-radius:5px;
-    font-weight:800;
-    transition:.25s;
-}
-
-.btn-gold{
-    background:#b38a28;
-    color:#fff;
-}
-
-.btn-gold:hover{
-    background:#d0a63e;
-    transform:translateY(-1px);
-}
-
-.btn-blue{
-    background:#0b2d5c;
-    color:#fff;
-}
-
-.btn-blue:hover{
-    background:#123e78;
-}
-
-.btn-white{
-    background:#fff;
-    color:#0b2d5c;
-}
-
-.btn-light{
-    background:#eef3f8;
-    color:#0b2d5c;
-}
-
-.btn-danger{
-    background:#a51e1e;
-    color:#fff;
-}
-
-.btn-success{
-    background:#16833b;
-    color:#fff;
-}
-
-
-/* =========================================================
-   HERO
-========================================================= */
-
-.hero{
-    min-height:650px;
-    display:flex;
-    align-items:center;
-    position:relative;
-
-    background:
-        linear-gradient(
-            90deg,
-            rgba(4,22,47,.95),
-            rgba(4,22,47,.75),
-            rgba(4,22,47,.25)
-        ),
-        url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1800&q=85")
+    .hero {
+      min-height: 650px;
+      background:
+        linear-gradient(rgba(5,27,55,0.82), rgba(5,27,55,0.82)),
+        url("https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1800&q=80")
         center/cover no-repeat;
-}
 
-.hero-content{
-    max-width:760px;
-    color:#fff;
-    padding:90px 0;
-}
-
-.hero-small{
-    color:#d6ad45;
-    font-size:14px;
-    font-weight:900;
-    letter-spacing:2px;
-    margin-bottom:15px;
-}
-
-.hero h1{
-    font-size:58px;
-    line-height:1.05;
-    margin-bottom:22px;
-}
-
-.hero h1 span{
-    color:#d6ad45;
-}
-
-.hero-description{
-    max-width:680px;
-    color:#eef3f8;
-    font-size:19px;
-    margin-bottom:30px;
-}
-
-.hero-buttons{
-    display:flex;
-    gap:12px;
-    flex-wrap:wrap;
-}
-
-
-/* =========================================================
-   STATS
-========================================================= */
-
-.stats{
-    background:#fff;
-    box-shadow:0 5px 22px rgba(0,0,0,.08);
-}
-
-.stats-grid{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-}
-
-.stat{
-    text-align:center;
-    padding:25px 10px;
-    border-right:1px solid #e5e8ee;
-}
-
-.stat:last-child{
-    border-right:0;
-}
-
-.stat strong{
-    display:block;
-    color:#0b2d5c;
-    font-size:25px;
-}
-
-.stat span{
-    color:#687386;
-    font-size:12px;
-}
-
-
-/* =========================================================
-   SECTION
-========================================================= */
-
-.section{
-    padding:85px 0;
-}
-
-.section-header{
-    max-width:780px;
-    margin:0 auto 45px;
-    text-align:center;
-}
-
-.section-label{
-    color:#b38a28;
-    font-size:12px;
-    font-weight:900;
-    letter-spacing:2px;
-    text-transform:uppercase;
-    margin-bottom:8px;
-}
-
-.section-header h2{
-    color:#0b2d5c;
-    font-size:38px;
-    line-height:1.2;
-    margin-bottom:14px;
-}
-
-.section-header p{
-    color:#687386;
-}
-
-
-/* =========================================================
-   VERIFICATION
-========================================================= */
-
-.verification-section{
-    background:#0b2d5c;
-}
-
-.verification-box{
-    max-width:950px;
-    margin:auto;
-    background:#fff;
-    border-radius:10px;
-    padding:40px;
-    box-shadow:0 18px 45px rgba(0,0,0,.25);
-}
-
-.verification-box h2{
-    text-align:center;
-    color:#0b2d5c;
-    font-size:34px;
-    margin-bottom:8px;
-}
-
-.verification-description{
-    color:#687386;
-    text-align:center;
-    margin-bottom:25px;
-}
-
-.search-form{
-    display:grid;
-    grid-template-columns:1fr 160px;
-    gap:10px;
-}
-
-.search-form input{
-    width:100%;
-    padding:15px;
-    border:1px solid #ccd4df;
-    border-radius:5px;
-    outline:none;
-}
-
-.search-form input:focus{
-    border-color:#0b2d5c;
-}
-
-.search-form button{
-    border:0;
-    border-radius:5px;
-    background:#b38a28;
-    color:#fff;
-    font-weight:800;
-}
-
-.search-options{
-    display:flex;
-    justify-content:center;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-top:18px;
-}
-
-.search-options button{
-    background:#fff;
-    color:#0b2d5c;
-    border:1px solid #0b2d5c;
-    padding:8px 15px;
-    border-radius:20px;
-}
-
-.search-options button.active{
-    background:#0b2d5c;
-    color:#fff;
-}
-
-#verifyResult{
-    margin-top:25px;
-}
-
-.verify-card{
-    background:#f9fbfd;
-    border:1px solid #dbe2ea;
-    border-radius:8px;
-    padding:25px;
-    margin-top:18px;
-}
-
-.verified{
-    color:#16833b;
-    font-size:18px;
-    font-weight:900;
-    margin-bottom:12px;
-}
-
-.verify-row{
-    display:flex;
-    border-bottom:1px solid #e2e7ed;
-    padding:11px 0;
-}
-
-.verify-row:last-child{
-    border-bottom:0;
-}
-
-.verify-label{
-    width:180px;
-    color:#0b2d5c;
-    font-weight:800;
-}
-
-.verify-value{
-    flex:1;
-}
-
-.success{
-    background:#eaf8ef;
-    border:1px solid #a7dcb8;
-    color:#176b32;
-    padding:15px;
-    border-radius:6px;
-}
-
-.error{
-    background:#fdecec;
-    border:1px solid #e1a1a1;
-    color:#a51e1e;
-    padding:15px;
-    border-radius:6px;
-}
-
-.warning{
-    background:#fff7df;
-    border:1px solid #e6cc75;
-    color:#725800;
-    padding:15px;
-    border-radius:6px;
-}
-
-
-/* =========================================================
-   ABOUT
-========================================================= */
-
-.about-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:60px;
-    align-items:center;
-}
-
-.about-image{
-    position:relative;
-}
-
-.about-image img{
-    width:100%;
-    height:450px;
-    object-fit:cover;
-    border-radius:8px;
-}
-
-.about-badge{
-    position:absolute;
-    right:-18px;
-    bottom:25px;
-    background:#0b2d5c;
-    color:#fff;
-    padding:20px;
-    width:190px;
-    box-shadow:0 10px 25px rgba(0,0,0,.2);
-}
-
-.about-badge strong{
-    display:block;
-    color:#d6ad45;
-    font-size:27px;
-}
-
-.about-content h2{
-    color:#0b2d5c;
-    font-size:38px;
-    margin-bottom:18px;
-}
-
-.about-content p{
-    color:#5e697a;
-    margin-bottom:16px;
-}
-
-.check-list{
-    list-style:none;
-    margin-top:20px;
-}
-
-.check-list li{
-    margin-bottom:10px;
-    font-weight:700;
-}
-
-.check-list li::before{
-    content:"✓";
-    color:#b38a28;
-    margin-right:10px;
-}
-
-
-/* =========================================================
-   PROGRAMS
-========================================================= */
-
-.programs{
-    background:#eef3f8;
-}
-
-.program-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:22px;
-}
-
-.program-card{
-    background:#fff;
-    padding:30px 24px;
-    border-top:4px solid #0b2d5c;
-    border-radius:7px;
-    box-shadow:0 5px 18px rgba(0,0,0,.06);
-    transition:.25s;
-}
-
-.program-card:hover{
-    transform:translateY(-5px);
-    box-shadow:0 12px 30px rgba(0,0,0,.12);
-}
-
-.program-icon{
-    width:58px;
-    height:58px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#f3ead3;
-    color:#0b2d5c;
-    border-radius:50%;
-    font-size:25px;
-    margin-bottom:18px;
-}
-
-.program-card h3{
-    color:#0b2d5c;
-    margin-bottom:8px;
-}
-
-.program-card p{
-    color:#687386;
-    font-size:14px;
-}
-
-
-/* =========================================================
-   CAMPUS
-========================================================= */
-
-.campus{
-    min-height:450px;
-    display:flex;
-    align-items:center;
-    text-align:center;
-    color:#fff;
-
-    background:
-        linear-gradient(
-            rgba(5,24,49,.84),
-            rgba(5,24,49,.84)
-        ),
-        url("https://images.unsplash.com/photo-1564981797816-1043664bf78d?auto=format&fit=crop&w=1800&q=85")
-        center/cover no-repeat;
-}
-
-.campus-content{
-    max-width:820px;
-    margin:auto;
-}
-
-.campus-content h2{
-    font-size:42px;
-    margin-bottom:15px;
-}
-
-.campus-content p{
-    color:#e6ebf2;
-    margin-bottom:25px;
-}
-
-
-/* =========================================================
-   ONLINE LEARNING
-========================================================= */
-
-.learning-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:22px;
-}
-
-.learning-card{
-    background:#fff;
-    border:1px solid #dce3eb;
-    border-radius:8px;
-    padding:28px;
-    box-shadow:0 5px 18px rgba(0,0,0,.05);
-}
-
-.learning-card h3{
-    color:#0b2d5c;
-    margin-bottom:10px;
-}
-
-.learning-card p{
-    color:#687386;
-    font-size:14px;
-    margin-bottom:18px;
-}
-
-
-/* =========================================================
-   TEFL / TESOL / TEYL
-========================================================= */
-
-.training-section{
-    background:#fff;
-}
-
-.training-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:25px;
-}
-
-.training-card{
-    background:#f8fafc;
-    border:1px solid #dce3eb;
-    border-left:5px solid #b38a28;
-    padding:30px;
-    border-radius:7px;
-}
-
-.training-card h3{
-    color:#0b2d5c;
-    margin-bottom:12px;
-    font-size:23px;
-}
-
-.training-card p,
-.training-card li{
-    color:#687386;
-}
-
-.training-card ul{
-    padding-left:20px;
-}
-
-.training-card li{
-    margin-bottom:7px;
-}
-
-
-/* =========================================================
-   LESSONS
-========================================================= */
-
-.lesson-list{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:13px;
-    margin-top:25px;
-}
-
-.lesson-item{
-    background:#fff;
-    border:1px solid #dce3eb;
-    border-left:4px solid #b38a28;
-    border-radius:5px;
-    padding:17px;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.lesson-item:hover{
-    transform:translateY(-2px);
-    box-shadow:0 5px 18px rgba(0,0,0,.08);
-}
-
-.lesson-item h3{
-    color:#0b2d5c;
-    font-size:16px;
-    margin-bottom:5px;
-}
-
-.lesson-item p{
-    color:#687386;
-    font-size:13px;
-}
-
-.lesson-display{
-    margin-top:22px;
-    background:#fff;
-    border:1px solid #dce3eb;
-    padding:28px;
-    border-radius:7px;
-}
-
-.lesson-display h3{
-    color:#0b2d5c;
-    margin-bottom:10px;
-}
-
-
-/* =========================================================
-   EXAM
-========================================================= */
-
-.exam-section{
-    background:#eef3f8;
-}
-
-.exam-box{
-    max-width:1050px;
-    margin:auto;
-    background:#fff;
-    padding:35px;
-    border-radius:8px;
-    box-shadow:0 8px 30px rgba(0,0,0,.08);
-}
-
-.exam-header{
-    text-align:center;
-    margin-bottom:25px;
-}
-
-.exam-header h2{
-    color:#0b2d5c;
-}
-
-.exam-timer{
-    position:sticky;
-    top:78px;
-    z-index:90;
-    background:#0b2d5c;
-    color:#fff;
-    padding:13px;
-    border-radius:6px;
-    text-align:center;
-    font-size:19px;
-    font-weight:900;
-    margin-bottom:22px;
-}
-
-.exam-timer.danger{
-    background:#a51e1e;
-}
-
-.exam-question{
-    background:#fafbfd;
-    border:1px solid #dce3eb;
-    border-radius:6px;
-    padding:22px;
-    margin-bottom:16px;
-}
-
-.exam-question h3{
-    color:#0b2d5c;
-    font-size:17px;
-    margin-bottom:8px;
-}
-
-.exam-question p{
-    font-weight:800;
-    margin-bottom:12px;
-}
-
-.exam-option{
-    display:block;
-    padding:8px;
-    border-radius:4px;
-}
-
-.exam-option:hover{
-    background:#eef3f8;
-}
-
-.exam-actions{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-top:25px;
-}
-
-.exam-result{
-    margin-top:25px;
-}
-
-
-/* =========================================================
-   REGISTRATION
-========================================================= */
-
-.registration-box{
-    max-width:720px;
-    margin:auto;
-    background:#fff;
-    border:1px solid #dce3eb;
-    border-radius:8px;
-    padding:35px;
-    box-shadow:0 5px 20px rgba(0,0,0,.06);
-}
-
-.form-group{
-    margin-bottom:15px;
-}
-
-.form-group label{
-    display:block;
-    color:#0b2d5c;
-    font-weight:800;
-    margin-bottom:6px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea{
-    width:100%;
-    padding:13px;
-    border:1px solid #ccd4df;
-    border-radius:5px;
-    outline:none;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus{
-    border-color:#0b2d5c;
-}
-
-
-/* =========================================================
-   STUDENT PORTAL
-========================================================= */
-
-.portal{
-    background:#eef3f8;
-}
-
-.portal-box{
-    max-width:1050px;
-    margin:auto;
-    background:#fff;
-    padding:35px;
-    border-radius:8px;
-    box-shadow:0 8px 30px rgba(0,0,0,.08);
-}
-
-.portal-login{
-    max-width:500px;
-    margin:auto;
-}
-
-.portal-dashboard{
-    margin-top:25px;
-}
-
-.portal-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:15px;
-}
-
-.portal-stat{
-    background:#f7f9fc;
-    border:1px solid #dce3eb;
-    border-radius:6px;
-    padding:20px;
-    text-align:center;
-}
-
-.portal-stat strong{
-    display:block;
-    font-size:24px;
-    color:#0b2d5c;
-}
-
-.portal-stat span{
-    color:#687386;
-    font-size:12px;
-}
-
-.portal-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:25px;
-}
-
-.portal-table th,
-.portal-table td{
-    border:1px solid #dce3eb;
-    padding:11px;
-    text-align:left;
-    font-size:13px;
-}
-
-.portal-table th{
-    background:#0b2d5c;
-    color:#fff;
-}
-
-
-/* =========================================================
-   CERTIFICATE
-========================================================= */
-
-.certificate-card{
-    max-width:850px;
-    margin:25px auto;
-    background:#fff;
-    border:8px double #b38a28;
-    padding:50px 35px;
-    text-align:center;
-    box-shadow:0 12px 30px rgba(0,0,0,.1);
-}
-
-.certificate-card .certificate-title{
-    color:#0b2d5c;
-    font-size:32px;
-    font-weight:900;
-}
-
-.certificate-name{
-    color:#b38a28;
-    font-size:32px;
-    font-weight:900;
-    margin:20px 0;
-}
-
-.certificate-id{
-    color:#0b2d5c;
-    font-weight:900;
-    font-size:17px;
-}
-
-
-/* =========================================================
-   PARTNERS
-========================================================= */
-
-.partner-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
-}
-
-.partner-card{
-    min-height:220px;
-    background:#f8fafc;
-    border:1px solid #dfe5ed;
-    border-radius:10px;
-    padding:25px 18px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    transition:.25s;
-}
-
-.partner-card:hover{
-    transform:translateY(-5px);
-    box-shadow:0 10px 25px rgba(0,0,0,.1);
-    border-color:#b38a28;
-}
-
-.partner-logo{
-    width:88px;
-    height:88px;
-    border-radius:50%;
-    background:#0b2d5c;
-    color:#d6ad45;
-    border:4px solid #d6ad45;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:22px;
-    font-weight:900;
-    margin-bottom:15px;
-}
-
-.partner-card h3{
-    color:#0b2d5c;
-    font-size:15px;
-}
-
-.partner-card p{
-    color:#687386;
-    font-size:12px;
-}
-
-
-/* =========================================================
-   RESOURCES
-========================================================= */
-
-.resources{
-    background:#eef3f8;
-}
-
-.resource-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
-}
-
-.resource-card{
-    background:#fff;
-    padding:25px;
-    border-radius:7px;
-    border:1px solid #dce3eb;
-}
-
-.resource-card h3{
-    color:#0b2d5c;
-    margin-bottom:8px;
-}
-
-.resource-card p{
-    color:#687386;
-    font-size:14px;
-}
-
-
-/* =========================================================
-   FAQ
-========================================================= */
-
-.faq-list{
-    max-width:900px;
-    margin:auto;
-}
-
-.faq-item{
-    background:#fff;
-    border:1px solid #dce3eb;
-    border-radius:6px;
-    margin-bottom:10px;
-    overflow:hidden;
-}
-
-.faq-question{
-    width:100%;
-    background:#fff;
-    border:0;
-    padding:18px;
-    text-align:left;
-    font-weight:800;
-    color:#0b2d5c;
-    display:flex;
-    justify-content:space-between;
-}
-
-.faq-answer{
-    display:none;
-    padding:0 18px 18px;
-    color:#687386;
-}
-
-.faq-item.open .faq-answer{
-    display:block;
-}
-
-
-/* =========================================================
-   CONTACT
-========================================================= */
-
-.contact{
-    background:#eef3f8;
-}
-
-.contact-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:50px;
-}
-
-.contact-info h2{
-    color:#0b2d5c;
-    font-size:34px;
-    margin-bottom:15px;
-}
-
-.contact-info p{
-    color:#687386;
-}
-
-.contact-item{
-    margin:18px 0;
-}
-
-.contact-item strong{
-    display:block;
-    color:#0b2d5c;
-}
-
-.contact-item span{
-    color:#687386;
-}
-
-.contact-box{
-    background:#fff;
-    padding:30px;
-    border-radius:7px;
-    box-shadow:0 5px 20px rgba(0,0,0,.06);
-}
-
-.contact-box input,
-.contact-box textarea{
-    width:100%;
-    padding:13px;
-    margin-bottom:12px;
-    border:1px solid #ccd4df;
-    border-radius:5px;
-}
-
-.contact-box textarea{
-    min-height:140px;
-    resize:vertical;
-}
-
-
-/* =========================================================
-   ADMIN
-========================================================= */
-
-.admin-section{
-    background:#071d3a;
-}
-
-.admin-box{
-    max-width:1100px;
-    margin:auto;
-    background:#fff;
-    padding:35px;
-    border-radius:8px;
-}
-
-.admin-dashboard-grid{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:12px;
-    margin:25px 0;
-}
-
-.admin-stat{
-    background:#f7f9fc;
-    border:1px solid #dce3eb;
-    padding:18px;
-    text-align:center;
-    border-radius:6px;
-}
-
-.admin-stat strong{
-    display:block;
-    color:#0b2d5c;
-    font-size:23px;
-}
-
-.admin-stat span{
-    color:#687386;
-    font-size:11px;
-}
-
-.admin-actions{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-}
-
-.admin-table-wrap{
-    overflow-x:auto;
-    margin-top:25px;
-}
-
-.admin-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-.admin-table th,
-.admin-table td{
-    border:1px solid #dce3eb;
-    padding:9px;
-    font-size:12px;
-    text-align:left;
-}
-
-.admin-table th{
-    background:#0b2d5c;
-    color:#fff;
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-.footer{
-    background:#071d3a;
-    color:#fff;
-    padding:50px 0 20px;
-}
-
-.footer-grid{
-    display:grid;
-    grid-template-columns:2fr 1fr 1fr;
-    gap:50px;
-}
-
-.footer h3{
-    color:#d6ad45;
-    margin-bottom:14px;
-}
-
-.footer p,
-.footer li{
-    color:#bdc7d5;
-    font-size:14px;
-}
-
-.footer ul{
-    list-style:none;
-}
-
-.footer li{
-    margin-bottom:8px;
-}
-
-.footer li a:hover{
-    color:#d6ad45;
-}
-
-.footer-bottom{
-    border-top:1px solid rgba(255,255,255,.12);
-    margin-top:40px;
-    padding-top:20px;
-    text-align:center;
-    color:#9daabc;
-    font-size:12px;
-}
-
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-.modal{
-    display:none;
-    position:fixed;
-    inset:0;
-    z-index:5000;
-    background:rgba(0,0,0,.7);
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-}
-
-.modal.show{
-    display:flex;
-}
-
-.modal-box{
-    width:100%;
-    max-width:650px;
-    max-height:90vh;
-    overflow:auto;
-    background:#fff;
-    border-radius:8px;
-    padding:30px;
-    position:relative;
-}
-
-.modal-close{
-    position:absolute;
-    top:10px;
-    right:15px;
-    border:0;
-    background:none;
-    font-size:25px;
-    color:#555;
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    z-index:9999;
-    min-width:260px;
-    max-width:380px;
-    padding:15px 18px;
-    border-radius:6px;
-    color:#fff;
-    background:#0b2d5c;
-    box-shadow:0 8px 25px rgba(0,0,0,.2);
-    display:none;
-}
-
-.toast.show{
-    display:block;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:1100px){
-
-    .nav-menu{
-        gap:10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      padding: 80px 20px;
     }
 
-    .nav-menu a{
-        font-size:11px;
+    .hero-content {
+      max-width: 850px;
     }
 
-    .program-grid{
-        grid-template-columns:repeat(2,1fr);
+    .hero-badge {
+      display: inline-block;
+      padding: 8px 18px;
+      border: 1px solid #d6ad4e;
+      border-radius: 30px;
+      color: #f0cf7a;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 20px;
     }
 
-    .partner-grid{
-        grid-template-columns:repeat(2,1fr);
+    .hero h1 {
+      font-size: clamp(38px, 6vw, 70px);
+      line-height: 1.05;
+      margin-bottom: 20px;
     }
 
-    .resource-grid{
-        grid-template-columns:repeat(2,1fr);
+    .hero h1 span {
+      color: #d6ad4e;
     }
 
-    .admin-dashboard-grid{
-        grid-template-columns:repeat(3,1fr);
+    .hero p {
+      max-width: 720px;
+      margin: 0 auto 35px;
+      font-size: 18px;
+      color: #edf2f7;
     }
 
-}
-
-@media(max-width:900px){
-
-    .nav-menu{
-        display:none;
-        position:absolute;
-        left:0;
-        right:0;
-        top:78px;
-        background:#fff;
-        padding:20px;
-        flex-direction:column;
-        align-items:stretch;
-        box-shadow:0 10px 25px rgba(0,0,0,.12);
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
-    .nav-menu.show{
-        display:flex;
+    .btn {
+      display: inline-block;
+      padding: 14px 25px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: 0.3s;
     }
 
-    .nav-menu a{
-        display:block;
-        padding:8px;
-        font-size:13px;
+    .btn-primary {
+      background: #b38a28;
+      color: white;
     }
 
-    .menu-toggle{
-        display:block;
+    .btn-primary:hover {
+      background: #956f1c;
+      transform: translateY(-2px);
     }
 
-    .stats-grid{
-        grid-template-columns:repeat(3,1fr);
+    .btn-outline {
+      background: transparent;
+      border: 2px solid white;
+      color: white;
     }
 
-    .training-grid,
-    .learning-grid{
-        grid-template-columns:1fr;
+    .btn-outline:hover {
+      background: white;
+      color: #0b2d5c;
     }
 
-    .portal-grid{
-        grid-template-columns:repeat(2,1fr);
+    /* =========================
+       GENERAL
+    ========================== */
+
+    section {
+      padding: 80px 20px;
     }
 
-}
-
-@media(max-width:700px){
-
-    .container{
-        width:94%;
+    .container {
+      max-width: 1150px;
+      margin: auto;
     }
 
-    .topbar-content{
-        flex-direction:column;
-        text-align:center;
-        gap:5px;
+    .section-title {
+      text-align: center;
+      margin-bottom: 45px;
     }
 
-    .hero{
-        min-height:600px;
+    .section-title small {
+      display: block;
+      color: #b38a28;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
     }
 
-    .hero h1{
-        font-size:39px;
+    .section-title h2 {
+      font-size: 36px;
+      color: #0b2d5c;
+      margin-bottom: 10px;
     }
 
-    .hero-description{
-        font-size:16px;
+    .section-title p {
+      max-width: 700px;
+      margin: auto;
+      color: #667085;
     }
 
-    .section{
-        padding:60px 0;
+    /* =========================
+       STATS
+    ========================== */
+
+    .stats {
+      margin-top: -50px;
+      position: relative;
+      z-index: 10;
     }
 
-    .section-header h2{
-        font-size:30px;
+    .stats-grid {
+      max-width: 1050px;
+      margin: auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.12);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      overflow: hidden;
     }
 
-    .about-grid,
-    .contact-grid{
-        grid-template-columns:1fr;
+    .stat {
+      text-align: center;
+      padding: 30px 15px;
+      border-right: 1px solid #eaecf0;
     }
 
-    .about-image img{
-        height:330px;
+    .stat:last-child {
+      border-right: none;
     }
 
-    .program-grid,
-    .partner-grid,
-    .resource-grid,
-    .lesson-list{
-        grid-template-columns:1fr;
+    .stat h3 {
+      color: #0b2d5c;
+      font-size: 30px;
     }
 
-    .stats-grid{
-        grid-template-columns:repeat(2,1fr);
+    .stat p {
+      color: #667085;
+      font-size: 14px;
     }
 
-    .stat{
-        border-bottom:1px solid #e5e8ee;
+    /* =========================
+       ABOUT
+    ========================== */
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
     }
 
-    .search-form{
-        grid-template-columns:1fr;
+    .about-image img {
+      width: 100%;
+      height: 430px;
+      object-fit: cover;
+      border-radius: 18px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
     }
 
-    .verification-box,
-    .exam-box,
-    .registration-box,
-    .portal-box,
-    .admin-box{
-        padding:22px 17px;
+    .about-content h2 {
+      color: #0b2d5c;
+      font-size: 38px;
+      margin-bottom: 18px;
     }
 
-    .verify-row{
-        display:block;
+    .about-content p {
+      color: #667085;
+      margin-bottom: 18px;
     }
 
-    .verify-label{
-        width:auto;
-        margin-bottom:4px;
+    .check-list {
+      list-style: none;
+      margin-top: 20px;
     }
 
-    .portal-grid{
-        grid-template-columns:1fr 1fr;
+    .check-list li {
+      margin-bottom: 12px;
+      font-weight: 600;
     }
 
-    .admin-dashboard-grid{
-        grid-template-columns:repeat(2,1fr);
+    .check-list li::before {
+      content: "✓";
+      display: inline-flex;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #e9f7ef;
+      color: #1b8a4b;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
     }
 
-    .footer-grid{
-        grid-template-columns:1fr;
-        gap:30px;
+    /* =========================
+       PROGRAMS
+    ========================== */
+
+    .programs {
+      background: #eef3f9;
     }
 
-    .logo{
-        min-width:0;
+    .program-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
     }
 
-    .logo-mark{
-        width:45px;
-        height:45px;
-        font-size:12px;
+    .program-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      transition: 0.3s;
     }
 
-    .logo-text strong{
-        font-size:11px;
+    .program-card:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.13);
     }
 
-    .logo-text span{
-        font-size:8px;
+    .program-image {
+      height: 210px;
+      overflow: hidden;
     }
 
-    .certificate-card{
-        padding:35px 15px;
+    .program-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.4s;
     }
 
-    .certificate-name{
-        font-size:25px;
+    .program-card:hover img {
+      transform: scale(1.05);
     }
 
-}
-
-
-/* =========================================================
-   PRINT
-========================================================= */
-
-@media print{
-
-    .navbar,
-    .topbar,
-    .footer,
-    .hero,
-    .stats,
-    .btn,
-    .search-options{
-        display:none !important;
+    .program-content {
+      padding: 25px;
     }
 
-    body{
-        background:#fff;
+    .program-content h3 {
+      color: #0b2d5c;
+      font-size: 23px;
+      margin-bottom: 10px;
     }
 
-    .certificate-card{
-        box-shadow:none;
+    .program-content p {
+      color: #667085;
+      font-size: 14px;
+      margin-bottom: 15px;
     }
 
-}
+    .program-tag {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: #f7f0df;
+      color: #8b681e;
+      font-size: 12px;
+      font-weight: bold;
+    }
 
-</style>
+    /* =========================
+       CERTIFICATES
+    ========================== */
+
+    .certificate-section {
+      background: white;
+    }
+
+    .certificate-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+    }
+
+    .certificate-card {
+      border: 1px solid #eaecf0;
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      background: #fff;
+      transition: 0.3s;
+    }
+
+    .certificate-card:hover {
+      border-color: #b38a28;
+      transform: translateY(-5px);
+    }
+
+    .certificate-icon {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      background: #f7f0df;
+      color: #b38a28;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 30px;
+    }
+
+    .certificate-card h3 {
+      color: #0b2d5c;
+      margin-bottom: 10px;
+    }
+
+    .certificate-card p {
+      color: #667085;
+      font-size: 14px;
+    }
+
+    /* =========================
+       VERIFY
+    ========================== */
+
+    .verify-section {
+      background:
+        linear-gradient(rgba(11,45,92,0.96), rgba(11,45,92,0.96)),
+        url("https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=1600&q=80")
+        center/cover;
+      color: white;
+    }
+
+    .verify-box {
+      max-width: 850px;
+      margin: auto;
+      background: white;
+      border-radius: 18px;
+      padding: 40px;
+      color: #1d2939;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+
+    .verify-box h2 {
+      color: #0b2d5c;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 32px;
+    }
+
+    .verify-box > p {
+      text-align: center;
+      color: #667085;
+      margin-bottom: 25px;
+    }
+
+    .search-form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+    }
+
+    .search-form input {
+      width: 100%;
+      padding: 15px 18px;
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .search-form input:focus {
+      border-color: #0b2d5c;
+      box-shadow: 0 0 0 3px rgba(11,45,92,0.1);
+    }
+
+    .verify-result {
+      margin-top: 25px;
+      display: none;
+    }
+
+    .result-success {
+      border: 1px solid #a6f4c5;
+      background: #ecfdf3;
+      padding: 25px;
+      border-radius: 12px;
+    }
+
+    .result-success h3 {
+      color: #027a48;
+      margin-bottom: 15px;
+    }
+
+    .result-error {
+      border: 1px solid #fecdca;
+      background: #fef3f2;
+      padding: 20px;
+      border-radius: 12px;
+      color: #b42318;
+    }
+
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    .result-table td {
+      border-bottom: 1px solid #d9f0df;
+      padding: 10px;
+    }
+
+    .result-table td:first-child {
+      font-weight: bold;
+      width: 35%;
+    }
+
+    /* =========================
+       WHY GETI
+    ========================== */
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .why-card {
+      padding: 30px 20px;
+      text-align: center;
+      background: #f8fafc;
+      border-radius: 15px;
+      border: 1px solid #eaecf0;
+    }
+
+    .why-icon {
+      font-size: 35px;
+      margin-bottom: 15px;
+    }
+
+    .why-card h3 {
+      color: #0b2d5c;
+      margin-bottom: 10px;
+    }
+
+    .why-card p {
+      color: #667085;
+      font-size: 14px;
+    }
+
+    /* =========================
+       RESOURCES
+    ========================== */
+
+    .resource-section {
+      background: #eef3f9;
+    }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+    }
+
+    .resource-card {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 7px 20px rgba(0,0,0,0.06);
+    }
+
+    .resource-card h3 {
+      color: #0b2d5c;
+      margin-bottom: 12px;
+    }
+
+    .resource-card p {
+      color: #667085;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    /* =========================
+       FAQ
+    ========================== */
+
+    .faq {
+      max-width: 850px;
+      margin: auto;
+    }
+
+    .faq-item {
+      background: white;
+      border: 1px solid #eaecf0;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 18px 20px;
+      background: white;
+      border: none;
+      text-align: left;
+      font-weight: bold;
+      font-size: 16px;
+      color: #0b2d5c;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 0 20px 20px;
+      color: #667085;
+      font-size: 14px;
+    }
+
+    .faq-item.active .faq-answer {
+      display: block;
+    }
+
+    .faq-item.active .faq-question span {
+      transform: rotate(45deg);
+    }
+
+    .faq-question span {
+      font-size: 25px;
+      transition: 0.3s;
+    }
+
+    /* =========================
+       CONTACT
+    ========================== */
+
+    .contact-section {
+      background: white;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .contact-info {
+      background: #0b2d5c;
+      color: white;
+      border-radius: 15px;
+      padding: 40px;
+    }
+
+    .contact-info h2 {
+      font-size: 32px;
+      margin-bottom: 15px;
+    }
+
+    .contact-info p {
+      color: #d0d9e7;
+      margin-bottom: 25px;
+    }
+
+    .contact-item {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .contact-item-icon {
+      font-size: 22px;
+    }
+
+    .contact-form {
+      padding: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      color: #344054;
+      margin-bottom: 7px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      outline: none;
+      resize: vertical;
+    }
+
+    .form-group textarea {
+      min-height: 140px;
+    }
+
+    /* =========================
+       FOOTER
+    ========================== */
+
+    footer {
+      background: #061d3d;
+      color: white;
+      padding: 50px 20px 20px;
+    }
+
+    .footer-grid {
+      max-width: 1150px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 35px;
+    }
+
+    .footer-col h3 {
+      margin-bottom: 18px;
+      color: #e1bc5f;
+    }
+
+    .footer-col p,
+    .footer-col a {
+      color: #b9c5d6;
+      font-size: 14px;
+    }
+
+    .footer-col a {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .footer-col a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      max-width: 1150px;
+      margin: 40px auto 0;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      text-align: center;
+      color: #9aa9bd;
+      font-size: 13px;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================== */
+
+    @media (max-width: 950px) {
+
+      nav {
+        display: none;
+        position: absolute;
+        top: 76px;
+        left: 0;
+        width: 100%;
+        background: #0b2d5c;
+        padding: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+      }
+
+      nav.active {
+        display: flex;
+      }
+
+      .menu-btn {
+        display: block;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat:nth-child(2) {
+        border-right: none;
+      }
+
+      .stat:nth-child(-n+2) {
+        border-bottom: 1px solid #eaecf0;
+      }
+
+      .program-grid,
+      .certificate-grid,
+      .resource-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .why-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+
+      .hero {
+        min-height: 600px;
+      }
+
+      section {
+        padding: 60px 15px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .about-grid,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .about-image img {
+        height: 300px;
+      }
+
+      .program-grid,
+      .certificate-grid,
+      .resource-grid,
+      .why-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-form {
+        grid-template-columns: 1fr;
+      }
+
+      .verify-box {
+        padding: 25px 18px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .logo-text strong {
+        font-size: 15px;
+      }
+
+      .logo-text span {
+        font-size: 9px;
+      }
+    }
+
+    @media (max-width: 450px) {
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stat {
+        border-right: none !important;
+        border-bottom: 1px solid #eaecf0;
+      }
+
+      .stat:last-child {
+        border-bottom: none;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+      }
+
+      .hero-buttons .btn {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
+  <!-- =========================
+       HEADER
+  ========================== -->
 
-<!-- =========================================================
-     TOP BAR
-========================================================= -->
+  <header>
+    <div class="navbar">
 
-<div class="topbar">
+      <a href="#home" class="logo">
+        <div class="logo-icon">GETI</div>
 
-<div class="container topbar-content">
+        <div class="logo-text">
+          <strong>GETI</strong>
+          <span>Global English Teaching Institute</span>
+        </div>
+      </a>
 
-<div>
-International English Education & Professional Training
-</div>
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-<div class="topbar-right">
-<span>🌍 International</span>
-<span>🎓 GETI</span>
-<span>✓ Certificate Verification</span>
-</div>
+      <nav id="mainNav">
+        <a href="#home" onclick="closeMenu()">HOME</a>
+        <a href="#about" onclick="closeMenu()">ABOUT</a>
+        <a href="#programs" onclick="closeMenu()">PROGRAMS</a>
+        <a href="#certificates" onclick="closeMenu()">CERTIFICATES</a>
+        <a href="#verify" onclick="closeMenu()">VERIFY</a>
+        <a href="#resources" onclick="closeMenu()">RESOURCES</a>
+        <a href="#faq" onclick="closeMenu()">FAQ</a>
+        <a href="#contact" onclick="closeMenu()">CONTACT</a>
+      </nav>
 
-</div>
+    </div>
+  </header>
 
-</div>
 
+  <!-- =========================
+       HERO
+  ========================== -->
 
-<!-- =========================================================
-     NAVIGATION
-========================================================= -->
+  <section class="hero" id="home">
 
-<nav class="navbar">
+    <div class="hero-content">
 
-<div class="container nav-content">
+      <div class="hero-badge">
+        GLOBAL ENGLISH TEACHING INSTITUTE
+      </div>
 
-<a href="#home" class="logo">
+      <h1>
+        Learn. Teach. <span>Grow.</span>
+      </h1>
 
-<div class="logo-mark">
-GETI
-</div>
+      <p>
+        Welcome to GETI, a global learning platform dedicated to
+        English language development, teacher training and professional
+        certification.
+      </p>
 
-<div class="logo-text">
+      <div class="hero-buttons">
+        <a href="#programs" class="btn btn-primary">
+          EXPLORE PROGRAMS
+        </a>
 
-<strong>
-GLOBAL ENGLISH TEACHING INSTITUTE
-</strong>
+        <a href="#verify" class="btn btn-outline">
+          VERIFY CERTIFICATE
+        </a>
+      </div>
 
-<span>
-International English Education & Professional Training
-</span>
+    </div>
 
-</div>
+  </section>
 
-</a>
 
+  <!-- =========================
+       STATS
+  ========================== -->
 
-<div
-class="menu-toggle"
-onclick="toggleMenu()">
+  <div class="stats">
 
-☰
+    <div class="stats-grid">
 
-</div>
+      <div class="stat">
+        <h3>GETI</h3>
+        <p>Global Institute</p>
+      </div>
 
+      <div class="stat">
+        <h3>TEFL</h3>
+        <p>Teacher Training</p>
+      </div>
 
-<ul class="nav-menu" id="navMenu">
+      <div class="stat">
+        <h3>TESOL</h3>
+        <p>English Teaching</p>
+      </div>
 
-<li><a href="#home">HOME</a></li>
+      <div class="stat">
+        <h3>TEYL</h3>
+        <p>Young Learners</p>
+      </div>
 
-<li><a href="#about">ABOUT</a></li>
+    </div>
 
-<li><a href="#programs">PROGRAMS</a></li>
+  </div>
 
-<li><a href="#learning">ONLINE LEARNING</a></li>
 
-<li><a href="#tefl">TEFL</a></li>
+  <!-- =========================
+       ABOUT
+  ========================== -->
 
-<li><a href="#tesol">TESOL</a></li>
+  <section id="about">
 
-<li><a href="#teyl">TEYL</a></li>
+    <div class="container">
 
-<li><a href="#exams">EXAMS</a></li>
+      <div class="about-grid">
 
-<li><a href="#certificates">CERTIFICATES</a></li>
+        <div class="about-image">
 
-<li><a href="#verify">VERIFY</a></li>
+          <img
+            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1000&q=80"
+            alt="Students learning English">
 
-<li><a href="#contact">CONTACT</a></li>
+        </div>
 
-<li>
-<a href="#portal" class="nav-button">
-STUDENT PORTAL
-</a>
-</li>
+        <div class="about-content">
 
-<li>
-<a href="#admin" class="admin-button">
-ADMIN
-</a>
-</li>
+          <div class="section-title" style="text-align:left;margin-bottom:20px;">
+            <small>ABOUT GETI</small>
+            <h2>Building Global English Professionals</h2>
+          </div>
 
-</ul>
+          <p>
+            Global English Teaching Institute (GETI) is an educational
+            platform focused on English language learning, teacher
+            development and professional training.
+          </p>
 
-</div>
+          <p>
+            Our goal is to provide accessible and practical learning
+            opportunities for students, teachers and future English
+            professionals around the world.
+          </p>
 
-</nav>
+          <ul class="check-list">
+            <li>English language development</li>
+            <li>Professional teacher training</li>
+            <li>International-style certificates</li>
+            <li>Flexible learning resources</li>
+          </ul>
 
+        </div>
 
-<!-- =========================================================
-     HERO
-========================================================= -->
+      </div>
 
-<section class="hero" id="home">
+    </div>
 
-<div class="container">
+  </section>
 
-<div class="hero-content">
 
-<div class="hero-small">
-GLOBAL ENGLISH TEACHING INSTITUTE
-</div>
+  <!-- =========================
+       PROGRAMS
+  ========================== -->
 
-<h1>
-Learn English.
-<br>
-<span>Build Skills.</span>
-<br>
-Earn Your Certificate.
-</h1>
+  <section class="programs" id="programs">
 
-<p class="hero-description">
+    <div class="container">
 
-Empowering learners, teachers and professionals
-through accessible English education, professional
-teacher training, examinations and certificate services.
+      <div class="section-title">
 
-</p>
+        <small>OUR PROGRAMS</small>
 
-<div class="hero-buttons">
+        <h2>Professional Training Programs</h2>
 
-<a href="#programs" class="btn btn-gold">
-📚 EXPLORE PROGRAMS
-</a>
+        <p>
+          Explore GETI's training programs designed for English
+          learners, teachers and future educators.
+        </p>
 
-<a href="#exams" class="btn btn-white">
-📝 TAKE AN EXAM
-</a>
+      </div>
 
-<a href="#verify" class="btn btn-light">
-✓ VERIFY CERTIFICATE
-</a>
 
-</div>
+      <div class="program-grid">
 
-</div>
+        <!-- TEFL -->
 
-</div>
+        <div class="program-card">
 
-</section>
+          <div class="program-image">
 
+            <img
+              src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=80"
+              alt="TEFL training">
 
-<!-- =========================================================
-     STATS
-========================================================= -->
+          </div>
 
-<section class="stats">
+          <div class="program-content">
 
-<div class="container stats-grid">
+            <span class="program-tag">TEACHER TRAINING</span>
 
-<div class="stat">
-<strong>A1–C2</strong>
-<span>English Levels</span>
-</div>
+            <h3>TEFL</h3>
 
-<div class="stat">
-<strong>TEFL</strong>
-<span>Teacher Training</span>
-</div>
+            <p>
+              Teaching English as a Foreign Language training
+              designed for future and current English teachers.
+            </p>
 
-<div class="stat">
-<strong>TESOL</strong>
-<span>Professional Training</span>
-</div>
+            <a href="#contact" class="btn btn-primary">
+              LEARN MORE
+            </a>
 
-<div class="stat">
-<strong>TEYL</strong>
-<span>Young Learners</span>
-</div>
+          </div>
 
-<div class="stat">
-<strong>24/7</strong>
-<span>Online Access</span>
-</div>
+        </div>
 
-</div>
 
-</section>
+        <!-- TESOL -->
 
+        <div class="program-card">
 
-<!-- =========================================================
-     VERIFICATION
-========================================================= -->
+          <div class="program-image">
 
-<section class="section verification-section" id="verify">
+            <img
+              src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1000&q=80"
+              alt="TESOL training">
 
-<div class="container">
+          </div>
 
-<div class="verification-box">
+          <div class="program-content">
 
-<h2>
-Certificate Verification
-</h2>
+            <span class="program-tag">ENGLISH TEACHING</span>
 
-<p class="verification-description">
+            <h3>TESOL</h3>
 
-Verify a GETI certificate by Certificate ID,
-student name, nationality or Result ID.
+            <p>
+              Training for people interested in teaching English
+              to speakers of other languages.
+            </p>
 
-</p>
+            <a href="#contact" class="btn btn-primary">
+              LEARN MORE
+            </a>
 
+          </div>
 
-<div class="search-form">
+        </div>
 
-<input
-id="verifyInput"
-type="text"
-placeholder="GETI-CERT-2026-000001"
-autocomplete="off">
 
-<button
-type="button"
-onclick="verifyCertificate()">
+        <!-- TEYL -->
 
-🔍 VERIFY
+        <div class="program-card">
 
-</button>
+          <div class="program-image">
 
-</div>
+            <img
+              src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1000&q=80"
+              alt="Young learners">
 
+          </div>
 
-<div class="search-options">
+          <div class="program-content">
 
-<button
-id="verifyIdButton"
-class="active"
-onclick="setVerifyType('id')">
-Certificate ID
-</button>
+            <span class="program-tag">YOUNG LEARNERS</span>
 
-<button
-id="verifyNameButton"
-onclick="setVerifyType('name')">
-Name
-</button>
+            <h3>TEYL</h3>
 
-<button
-id="verifyNationalityButton"
-onclick="setVerifyType('nationality')">
-Nationality
-</button>
+            <p>
+              Teaching English to Young Learners training focused
+              on effective classroom techniques for children.
+            </p>
 
-<button
-id="verifyResultButton"
-onclick="setVerifyType('result')">
-Result ID
-</button>
+            <a href="#contact" class="btn btn-primary">
+              LEARN MORE
+            </a>
 
-</div>
+          </div>
 
+        </div>
 
-<div id="verifyResult"></div>
+      </div>
 
-</div>
+    </div>
 
-</div>
+  </section>
 
-</section>
 
+  <!-- =========================
+       CERTIFICATES
+  ========================== -->
 
-<!-- =========================================================
-     ABOUT
-========================================================= -->
+  <section class="certificate-section" id="certificates">
 
-<section class="section" id="about">
+    <div class="container">
 
-<div class="container about-grid">
+      <div class="section-title">
 
-<div class="about-image">
+        <small>CERTIFICATION</small>
 
-<img
-src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=85"
-alt="Students learning English">
+        <h2>GETI Certificates</h2>
 
-<div class="about-badge">
+        <p>
+          Professional certificates can be verified through the
+          GETI Certificate Verification System.
+        </p>
 
-<strong>GETI</strong>
+      </div>
 
-International English Education
 
-</div>
+      <div class="certificate-grid">
 
-</div>
+        <div class="certificate-card">
 
+          <div class="certificate-icon">
+            🎓
+          </div>
 
-<div class="about-content">
+          <h3>TEFL Certificate</h3>
 
-<div class="section-label">
-ABOUT GETI
-</div>
+          <p>
+            Certificate for completion of a Teaching English as
+            a Foreign Language training program.
+          </p>
 
-<h2>
-Building Skills for a Global Future
-</h2>
+        </div>
 
-<p>
-Global English Teaching Institute (GETI) is an
-English education and professional training platform
-designed to support learners, teachers and professionals.
-</p>
 
-<p>
-Our programs combine structured lessons, practical
-communication, professional development, assessment
-and certificate services.
-</p>
+        <div class="certificate-card">
 
-<ul class="check-list">
+          <div class="certificate-icon">
+            📜
+          </div>
 
-<li>English A1–C2</li>
-<li>TEFL professional training</li>
-<li>TESOL training</li>
-<li>TEYL training</li>
-<li>Online examinations</li>
-<li>Certificate verification</li>
+          <h3>TESOL Certificate</h3>
 
-</ul>
+          <p>
+            Certificate for completion of a Teaching English to
+            Speakers of Other Languages training program.
+          </p>
 
-</div>
+        </div>
 
-</div>
 
-</section>
+        <div class="certificate-card">
 
+          <div class="certificate-icon">
+            🏅
+          </div>
 
-<!-- =========================================================
-     PROGRAMS
-========================================================= -->
+          <h3>TEYL Certificate</h3>
 
-<section class="section programs" id="programs">
+          <p>
+            Certificate for training related to teaching English
+            to young learners.
+          </p>
 
-<div class="container">
+        </div>
 
-<div class="section-header">
+      </div>
 
-<div class="section-label">
-ACADEMIC PROGRAMS
-</div>
+    </div>
 
-<h2>
-Our Programs
-</h2>
+  </section>
 
-<p>
-Structured programs for English learners,
-teachers and professionals.
-</p>
 
-</div>
+  <!-- =========================
+       VERIFY CERTIFICATE
+  ========================== -->
 
+  <section class="verify-section" id="verify">
 
-<div class="program-grid">
+    <div class="container">
 
+      <div class="verify-box">
 
-<div class="program-card">
+        <h2>Certificate Verification</h2>
 
-<div class="program-icon">📚</div>
+        <p>
+          Search for a GETI certificate using Certificate ID,
+          student name or nationality.
+        </p>
 
-<h3>
-English A1–C2
-</h3>
 
-<p>
-Progress from beginner to advanced English
-through structured learning and assessment.
-</p>
+        <div class="search-form">
 
-<br>
+          <input
+            type="text"
+            id="certificateSearch"
+            placeholder="Enter Certificate ID, Name or Nationality">
 
-<a href="#learning" class="btn btn-blue">
-VIEW PROGRAM
-</a>
+          <button
+            class="btn btn-primary"
+            onclick="verifyCertificate()">
+            SEARCH
+          </button>
 
-</div>
+        </div>
 
 
-<div class="program-card">
+        <div id="verifyResult" class="verify-result"></div>
 
-<div class="program-icon">🎓</div>
+      </div>
 
-<h3>
-TEFL
-</h3>
+    </div>
 
-<p>
-Develop practical English teaching skills,
-lesson planning and classroom management.
-</p>
+  </section>
 
-<br>
 
-<a href="#tefl" class="btn btn-blue">
-VIEW TEFL
-</a>
+  <!-- =========================
+       WHY GETI
+  ========================== -->
 
-</div>
+  <section>
 
+    <div class="container">
 
-<div class="program-card">
+      <div class="section-title">
 
-<div class="program-icon">🌍</div>
+        <small>WHY GETI</small>
 
-<h3>
-TESOL
-</h3>
+        <h2>Why Choose GETI?</h2>
 
-<p>
-Study modern approaches to teaching English
-to speakers of other languages.
-</p>
+        <p>
+          Our platform combines practical learning, professional
+          development and accessible digital resources.
+        </p>
 
-<br>
+      </div>
 
-<a href="#tesol" class="btn btn-blue">
-VIEW TESOL
-</a>
 
-</div>
+      <div class="why-grid">
 
+        <div class="why-card">
 
-<div class="program-card">
+          <div class="why-icon">🌍</div>
 
-<div class="program-icon">👧</div>
+          <h3>Global Learning</h3>
 
-<h3>
-TEYL
-</h3>
+          <p>
+            Learn English and develop professional skills
+            from anywhere.
+          </p>
 
-<p>
-Learn practical approaches for teaching English
-to young learners.
-</p>
+        </div>
 
-<br>
 
-<a href="#teyl" class="btn btn-blue">
-VIEW TEYL
-</a>
+        <div class="why-card">
 
-</div>
+          <div class="why-icon">🎓</div>
 
+          <h3>Professional</h3>
 
-</div>
+          <p>
+            Training programs designed for professional
+            development.
+          </p>
 
-</div>
+        </div>
 
-</section>
 
+        <div class="why-card">
 
-<!-- =========================================================
-     GLOBAL CAMPUS
-========================================================= -->
+          <div class="why-icon">📚</div>
 
-<section class="campus">
+          <h3>Learning Resources</h3>
 
-<div class="container">
+          <p>
+            Access useful educational materials and
+            learning resources.
+          </p>
 
-<div class="campus-content">
+        </div>
 
-<div class="section-label">
-GLOBAL LEARNING COMMUNITY
-</div>
 
-<h2>
-Learn. Teach. Graduate. Grow.
-</h2>
+        <div class="why-card">
 
-<p>
-Develop the English and professional skills
-needed for education, employment and international communication.
-</p>
+          <div class="why-icon">🔐</div>
 
-<a href="#learning" class="btn btn-gold">
-START LEARNING
-</a>
+          <h3>Certificate Verification</h3>
 
-</div>
+          <p>
+            Certificates can be checked through our
+            verification system.
+          </p>
 
-</div>
+        </div>
 
-</section>
+      </div>
 
+    </div>
 
-<!-- =========================================================
-     ONLINE LEARNING
-========================================================= -->
+  </section>
 
-<section class="section" id="learning">
 
-<div class="container">
+  <!-- =========================
+       RESOURCES
+  ========================== -->
 
-<div class="section-header">
+  <section class="resource-section" id="resources">
 
-<div class="section-label">
-ONLINE LEARNING
-</div>
+    <div class="container">
 
-<h2>
-Learn Online With GETI
-</h2>
+      <div class="section-title">
 
-<p>
-Access structured lessons, examinations,
-results and certificates from one platform.
-</p>
+        <small>RESOURCES</small>
 
-</div>
+        <h2>Learning Resources</h2>
 
+        <p>
+          Useful resources to support English learning and
+          professional development.
+        </p>
 
-<div class="learning-grid">
+      </div>
 
 
-<div class="learning-card">
+      <div class="resource-grid">
 
-<h3>
-📚 English A1–C2
-</h3>
+        <div class="resource-card">
 
-<p>
-English learning from beginner to advanced levels.
-</p>
+          <h3>📖 English Vocabulary</h3>
 
-<a href="#registration" class="btn btn-gold">
-REGISTER
-</a>
+          <p>
+            Build your English vocabulary with practical words,
+            expressions and examples.
+          </p>
 
-</div>
+          <a href="#contact" class="btn btn-primary">
+            GET RESOURCE
+          </a>
 
+        </div>
 
-<div class="learning-card">
 
-<h3>
-🎓 Professional Training
-</h3>
+        <div class="resource-card">
 
-<p>
-TEFL, TESOL and TEYL teacher training programs.
-</p>
+          <h3>📝 English Grammar</h3>
 
-<a href="#tefl" class="btn btn-gold">
-START TRAINING
-</a>
+          <p>
+            Improve grammar knowledge from beginner to
+            advanced levels.
+          </p>
 
-</div>
+          <a href="#contact" class="btn btn-primary">
+            GET RESOURCE
+          </a>
 
+        </div>
 
-<div class="learning-card">
 
-<h3>
-📝 Online Exams
-</h3>
+        <div class="resource-card">
 
-<p>
-Take GETI examinations and receive automatic results.
-</p>
+          <h3>👨‍🏫 Teaching Resources</h3>
 
-<a href="#exams" class="btn btn-gold">
-TAKE EXAM
-</a>
+          <p>
+            Practical materials and ideas for English teachers
+            and educators.
+          </p>
 
-</div>
+          <a href="#contact" class="btn btn-primary">
+            GET RESOURCE
+          </a>
 
+        </div>
 
-</div>
+      </div>
 
-</div>
+    </div>
 
-</section>
+  </section>
 
 
-<!-- =========================================================
-     TEFL
-========================================================= -->
+  <!-- =========================
+       FAQ
+  ========================== -->
 
-<section class="section training-section" id="tefl">
+  <section id="faq">
 
-<div class="container">
+    <div class="container">
 
-<div class="section-header">
+      <div class="section-title">
 
-<div class="section-label">
-PROFESSIONAL DEVELOPMENT
-</div>
+        <small>FAQ</small>
 
-<h2>
-TEFL Training
-</h2>
+        <h2>Frequently Asked Questions</h2>
 
-<p>
-Teaching English as a Foreign Language.
-</p>
+      </div>
 
-</div>
 
+      <div class="faq">
 
-<div class="training-grid">
+        <div class="faq-item">
 
+          <button class="faq-question">
+            What is GETI?
+            <span>+</span>
+          </button>
 
-<div class="training-card">
+          <div class="faq-answer">
+            GETI stands for Global English Teaching Institute,
+            an educational platform focused on English language
+            learning and teacher training.
+          </div>
 
-<h3>
-🎓 TEFL Program
-</h3>
+        </div>
 
-<p>
-Complete the lessons before taking the final examination.
-</p>
 
-<ul>
-<li>Teaching Methodology</li>
-<li>Lesson Planning</li>
-<li>Classroom Management</li>
-<li>Grammar Teaching</li>
-<li>Vocabulary Teaching</li>
-<li>Speaking & Listening</li>
-<li>Reading & Writing</li>
-<li>Assessment</li>
-</ul>
+        <div class="faq-item">
 
-<br>
+          <button class="faq-question">
+            What programs are available?
+            <span>+</span>
+          </button>
 
-<button
-class="btn btn-gold"
-onclick="showTEFLLessons()">
+          <div class="faq-answer">
+            GETI offers programs such as TEFL, TESOL and TEYL,
+            together with English learning resources.
+          </div>
 
-📘 VIEW LESSONS
+        </div>
 
-</button>
 
-</div>
+        <div class="faq-item">
 
+          <button class="faq-question">
+            How can I verify a certificate?
+            <span>+</span>
+          </button>
 
-<div class="training-card">
+          <div class="faq-answer">
+            Go to the Certificate Verification section and
+            enter the Certificate ID, student name or nationality.
+          </div>
 
-<h3>
-📝 TEFL Final Exam
-</h3>
+        </div>
 
-<p>
-100-question multiple-choice examination.
-</p>
 
-<ul>
-<li>Automatic scoring</li>
-<li>PASS mark: 70%</li>
-<li>Result ID</li>
-<li>Certificate eligibility</li>
-<li>Certificate verification</li>
-</ul>
+        <div class="faq-item">
 
-<br>
+          <button class="faq-question">
+            Does this website contain an English test?
+            <span>+</span>
+          </button>
 
-<button
-class="btn btn-blue"
-onclick="showTEFLExam()">
+          <div class="faq-answer">
+            No. This version of the GETI website does not contain
+            an English examination or test system.
+          </div>
 
-START TEFL EXAM
+        </div>
 
-</button>
 
-</div>
+        <div class="faq-item">
 
+          <button class="faq-question">
+            How can I contact GETI?
+            <span>+</span>
+          </button>
 
-<div class="training-card">
+          <div class="faq-answer">
+            Use the Contact section below to send an enquiry
+            to GETI.
+          </div>
 
-<h3>
-🏆 TEFL Certificate
-</h3>
+        </div>
 
-<p>
-Students who pass the examination can continue
-to certificate registration.
-</p>
+      </div>
 
-<ul>
-<li>Certificate ID</li>
-<li>Issue date</li>
-<li>Student name</li>
-<li>Program</li>
-<li>QR verification</li>
-</ul>
+    </div>
 
-<br>
+  </section>
 
-<a href="#certificates" class="btn btn-light">
-CERTIFICATE INFO
-</a>
 
-</div>
+  <!-- =========================
+       CONTACT
+  ========================== -->
 
+  <section class="contact-section" id="contact">
 
-</div>
+    <div class="container">
 
+      <div class="section-title">
 
-<div
-id="teflLessons"
-class="hidden"
-style="margin-top:35px;">
+        <small>CONTACT GETI</small>
 
-<div class="exam-box">
+        <h2>Get In Touch</h2>
 
-<h2 style="color:#0b2d5c;">
-📘 TEFL Lessons
-</h2>
+        <p>
+          Have a question about our programs or certificates?
+          Contact us.
+        </p>
 
-<p style="color:#687386;margin-top:8px;">
-Select a lesson to study.
-</p>
+      </div>
 
-<div
-id="lessonList"
-class="lesson-list">
-</div>
 
-<div
-id="lessonDisplay"
-class="lesson-display">
+      <div class="contact-grid">
 
-<h3>
-Select a lesson
-</h3>
+        <div class="contact-info">
 
-<p>
-Choose a lesson above to view its content.
-</p>
+          <h2>GETI</h2>
 
-</div>
+          <p>
+            Global English Teaching Institute
+          </p>
 
-</div>
 
-</div>
+          <div class="contact-item">
 
+            <div class="contact-item-icon">📧</div>
 
-<div
-id="teflExam"
-class="hidden"
-style="margin-top:35px;">
+            <div>
+              <strong>Email</strong>
+              <p>
+                info@geti.example
+              </p>
+            </div>
 
-<div class="exam-box">
+          </div>
 
-<div class="exam-header">
 
-<h2>
-TEFL Final Examination
-</h2>
+          <div class="contact-item">
 
-<p>
-100 Questions • Multiple Choice • Passing Score 70%
-</p>
+            <div class="contact-item-icon">🌍</div>
 
-</div>
+            <div>
+              <strong>Location</strong>
+              <p>
+                Madagascar
+              </p>
+            </div>
 
-<div
-id="examTimer"
-class="exam-timer">
+          </div>
 
-⏱ Time Remaining:
-<span id="timerDisplay">
-02:00:00
-</span>
 
-</div>
+          <div class="contact-item">
 
-<div
-id="examWarning"
-class="warning hidden">
-</div>
+            <div class="contact-item-icon">🎓</div>
 
-<form id="teflExamForm">
+            <div>
+              <strong>Services</strong>
+              <p>
+                English Training & Professional Development
+              </p>
+            </div>
 
-<div id="questionsContainer"></div>
+          </div>
 
-<div class="exam-actions">
+        </div>
 
-<button
-type="button"
-class="btn btn-gold"
-onclick="submitTEFLExam(false)">
 
-SUBMIT EXAM
+        <div class="contact-form">
 
-</button>
+          <form onsubmit="sendMessage(event)">
 
-<button
-type="button"
-class="btn btn-light"
-onclick="confirmExitExam()">
+            <div class="form-group">
 
-EXIT EXAM
+              <label for="name">
+                Full Name
+              </label>
 
-</button>
+              <input
+                type="text"
+                id="name"
+                placeholder="Your full name"
+                required>
 
-</div>
+            </div>
 
-</form>
 
-<div
-id="teflExamResult"
-class="exam-result">
-</div>
+            <div class="form-group">
 
-</div>
+              <label for="email">
+                Email
+              </label>
 
-</div>
+              <input
+                type="email"
+                id="email"
+                placeholder="Your email"
+                required>
 
+            </div>
 
-<div
-id="teflRegistration"
-class="hidden"
-style="margin-top:35px;">
 
-<div class="registration-box">
+            <div class="form-group">
 
-<h2 style="color:#0b2d5c;">
-🎓 TEFL Certificate Registration
-</h2>
+              <label for="message">
+                Message
+              </label>
 
-<p style="color:#687386;text-align:center;margin-bottom:25px;">
-Complete your information after passing the examination.
-</p>
+              <textarea
+                id="message"
+                placeholder="Write your message..."
+                required></textarea>
 
+            </div>
 
-<div class="form-group">
 
-<label>Full Name</label>
+            <button
+              type="submit"
+              class="btn btn-primary">
+              SEND MESSAGE
+            </button>
 
-<input
-id="studentFullName"
-type="text"
-placeholder="Enter your full name">
+          </form>
 
-</div>
+        </div>
 
+      </div>
 
-<div class="form-group">
+    </div>
 
-<label>Nationality</label>
+  </section>
 
-<input
-id="studentNationality"
-type="text"
-placeholder="Enter your nationality">
 
-</div>
+  <!-- =========================
+       FOOTER
+  ========================== -->
 
+  <footer>
 
-<div class="form-group">
+    <div class="footer-grid">
 
-<label>Country</label>
+      <div class="footer-col">
 
-<input
-id="studentCountry"
-type="text"
-placeholder="Enter your country">
+        <h3>GETI</h3>
 
-</div>
+        <p>
+          Global English Teaching Institute.
+          Empowering English learners and teachers
+          through accessible education and professional
+          development.
+        </p>
 
+      </div>
 
-<div class="form-group">
 
-<label>Email</label>
+      <div class="footer-col">
 
-<input
-id="studentEmail"
-type="email"
-placeholder="Enter your email">
+        <h3>Quick Links</h3>
 
-</div>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#programs">Programs</a>
+        <a href="#certificates">Certificates</a>
 
+      </div>
 
-<button
-type="button"
-class="btn btn-gold"
-onclick="registerTEFLStudent()">
 
-REGISTER & REQUEST CERTIFICATE
+      <div class="footer-col">
 
-</button>
+        <h3>Services</h3>
 
+        <a href="#programs">TEFL</a>
+        <a href="#programs">TESOL</a>
+        <a href="#programs">TEYL</a>
+        <a href="#verify">Certificate Verification</a>
 
-<div id="registrationResult" style="margin-top:20px;"></div>
+      </div>
 
-</div>
 
-</div>
+      <div class="footer-col">
 
-</div>
+        <h3>Support</h3>
 
-</section>
+        <a href="#resources">Resources</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
 
+      </div>
 
-<!-- =========================================================
-     TESOL
-========================================================= -->
+    </div>
 
-<section class="section" id="tesol">
 
-<div class="container">
+    <div class="footer-bottom">
 
-<div class="section-header">
+      © <span id="year"></span>
+      Global English Teaching Institute (GETI).
+      All Rights Reserved.
 
-<div class="section-label">
-TESOL
-</div>
+    </div>
 
-<h2>
-TESOL Training
-</h2>
+  </footer>
 
-<p>
-Teaching English to Speakers of Other Languages.
-</p>
 
-</div>
+  <!-- =========================
+       JAVASCRIPT
+  ========================== -->
 
+  <script>
 
-<div class="training-grid">
+    /* =========================
+       MOBILE MENU
+    ========================== */
 
+    function toggleMenu() {
 
-<div class="training-card">
+      const nav = document.getElementById("mainNav");
 
-<h3>
-🌍 TESOL Modules
-</h3>
+      nav.classList.toggle("active");
 
-<ul>
-<li>Second Language Acquisition</li>
-<li>Learner-Centered Teaching</li>
-<li>Multilingual Classrooms</li>
-<li>Cultural Awareness</li>
-<li>Needs Analysis</li>
-<li>Curriculum Development</li>
-<li>Assessment</li>
-<li>Professional Development</li>
-</ul>
+    }
 
-</div>
 
+    function closeMenu() {
 
-<div class="training-card">
+      const nav = document.getElementById("mainNav");
 
-<h3>
-📝 TESOL Examination
-</h3>
+      nav.classList.remove("active");
 
-<p>
-A final examination can assess knowledge
-of TESOL methodology and professional teaching.
-</p>
+    }
 
-<br>
 
-<button
-class="btn btn-blue"
-onclick="openProgramMessage('TESOL')">
+    /* =========================
+       YEAR
+    ========================== */
 
-START TESOL
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
 
-</button>
 
-</div>
+    /* =========================
+       FAQ
+    ========================== */
 
+    const faqQuestions =
+      document.querySelectorAll(".faq-question");
 
-<div class="training-card">
+    faqQuestions.forEach(function(button) {
 
-<h3>
-🏆 TESOL Certificate
-</h3>
+      button.addEventListener("click", function() {
 
-<p>
-Successful candidates may receive a GETI TESOL
-certificate with a unique verification ID.
-</p>
+        const item =
+          this.parentElement;
 
-</div>
+        item.classList.toggle("active");
 
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================================
-     TEYL
-========================================================= -->
-
-<section class="section programs" id="teyl">
-
-<div class="container">
-
-<div class="section-header">
-
-<div class="section-label">
-TEYL
-</div>
-
-<h2>
-Teaching English to Young Learners
-</h2>
-
-<p>
-Practical training for teachers working with young English learners.
-</p>
-
-</div>
-
-
-<div class="training-grid">
-
-
-<div class="training-card">
-
-<h3>
-👧 Young Learners
-</h3>
-
-<ul>
-<li>Child Development</li>
-<li>Young Learner Psychology</li>
-<li>Games and Activities</li>
-<li>Songs and Chants</li>
-<li>Storytelling</li>
-</ul>
-
-</div>
-
-
-<div class="training-card">
-
-<h3>
-🎨 Classroom Practice
-</h3>
-
-<ul>
-<li>Phonics</li>
-<li>Vocabulary Activities</li>
-<li>Speaking Activities</li>
-<li>Visual Learning</li>
-<li>Classroom Management</li>
-</ul>
-
-</div>
-
-
-<div class="training-card">
-
-<h3>
-🏆 TEYL Assessment
-</h3>
-
-<p>
-Complete the training and assessment to qualify
-for GETI TEYL certification where applicable.
-</p>
-
-<br>
-
-<button
-class="btn btn-gold"
-onclick="openProgramMessage('TEYL')">
-
-LEARN MORE
-
-</button>
-
-</div>
-
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================================
-     EXAMS
-========================================================= -->
-
-<section class="section exam-section" id="exams">
-
-<div class="container">
-
-<div class="section-header">
-
-<div class="section-label">
-ONLINE EXAMINATIONS
-</div>
-
-<h2>
-GETI Examinations
-</h2>
-
-<p>
-Choose an examination and follow the registration process.
-</p>
-
-</div>
-
-
-<div class="program-grid">
-
-
-<div class="program-card">
-
-<div class="program-icon">
-📝
-</div>
-
-<h3>
-English Placement Test
-</h3>
-
-<p>
-Determine your approximate English level from A1 to C2.
-</p>
-
-<br>
-
-<button
-class="btn btn-gold"
-onclick="openEnglishExam()">
-
-TAKE ENGLISH TEST
-
-</button>
-
-</div>
-
-
-<div class="program-card">
-
-<div class="program-icon">
-🎓
-</div>
-
-<h3>
-TEFL Final Exam
-</h3>
-
-<p>
-100-question professional teacher-training examination.
-</p>
-
-<br>
-
-<button
-class="btn btn-gold"
-onclick="showTEFLExam()">
-
-TAKE TEFL EXAM
-
-</button>
-
-</div>
-
-
-<div class="program-card">
-
-<div class="program-icon">
-🌍
-</div>
-
-<h3>
-TESOL Exam
-</h3>
-
-<p>
-Assessment of TESOL teaching knowledge.
-</p>
-
-<br>
-
-<button
-class="btn btn-blue"
-onclick="openProgramMessage('TESOL EXAM')">
-
-TESOL EXAM
-
-</button>
-
-</div>
-
-
-<div class="program-card">
-
-<div class="program-icon">
-👧
-</div>
-
-<h3>
-TEYL Exam
-</h3>
-
-<p>
-Assessment for Teaching English to Young Learners.
-</p>
-
-<br>
-
-<button
-class="btn btn-blue"
-onclick="openProgramMessage('TEYL EXAM')">
-
-TEYL EXAM
-
-</button>
-
-</div>
-
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================================
-     ENGLISH EXAM REGISTRATION
-========================================================= -->
-
-<section
-class="section hidden"
-id="englishExamSection">
-
-<div class="container">
-
-<div class="section-header">
-
-<div class="section-label">
-ENGLISH EXAMINATION
-</div>
-
-<h2>
-English Test Registration
-</h2>
-
-<p>
-Complete your information before starting the test.
-</p>
-
-</div>
-
-
-<div class="registration-box">
-
-<div class="form-group">
-<label>Full Name</label>
-<input
-id="englishName"
-type="text"
-placeholder="Full name">
-</div>
-
-<div class="form-group">
-<label>Nationality</label>
-<input
-id="englishNationality"
-type="text"
-placeholder="Nationality">
-</div>
-
-<div class="form-group">
-<label>Country</label>
-<input
-id="englishCountry"
-type="text"
-placeholder="Country">
-</div>
-
-<div class="form-group">
-<label>Email</label>
-<input
-id="englishEmail"
-type="email"
-placeholder="Email">
-</div>
-
-<button
-class="btn btn-gold"
-onclick="startEnglishExam()">
-
-START ENGLISH TEST
-
-</button>
-
-<div id="englishRegistrationResult"></div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================================
-     STUDENT PORTAL
-========================================================= -->
-
-<section class="section portal" id="portal">
-
-<div class="container">
-
-<div class="section-header">
-
-<div class="section-label">
-STUDENT PORTAL
-</div>
-
-<h2>
-Student Portal
-</h2>
-
-<p>
-Access your student profile, results, programs and certificates.
-</p>
-
-</div>
-
-
-<div class="portal-box">
-
-<div class="portal-login">
-
-<div class="form-group">
-
-<label>
-Student ID / Email
-</label>
-
-<input
-id="portalLoginInput"
-type="text"
-placeholder="GETI-STU-2026-000001">
-
-</div>
-
-<button
-class="btn btn-gold"
-onclick="studentPortalLogin()">
-
-LOGIN TO PORTAL
-
-</button>
-
-<div
-id="portalLoginResult"
-style="margin-top:15px;">
-</div>
-
-</div>
-
-
-<div
-id="portalDashboard"
-class="portal-dashboard hidden">
-
-<h2 style="color:#0b2d5c;">
-Welcome,
-<span id="portalStudentName">
-Student
-</span>
-</h2>
-
-<div class="portal-grid">
-
-<div class="portal-stat">
-<strong id="portalPrograms">
-0
-</strong>
-<span>Programs</span>
-</div>
-
-<div class="portal-stat">
-<strong id="portalExams">
-0
-</strong>
-<span>Exams</span>
-</div>
-
-<div class="portal-stat">
-<strong id="portalPassed">
-0
-</strong>
-<span>Passed</span>
-</div>
-
-<div class="portal-stat">
-<strong id="portalCertificates">
-0
-</strong>
-<span>Certificates</span>
-</div>
-
-</div>
-
-
-<div
-id="portalContent">
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================================
-     CERTIFICATES
-========================================================= -->
-
-<section class="section" id="certificates">
-
-<div class="container">
-
-<div class="section-header">
-
-<div class="section-label">
-CERTIFICATES
-</div>
-
-<h2>
-GETI Certificates
-</h2>
-
-<p>
-Each certificate can have a unique certificate ID
-and online verification record.
-</p>
-
-</div>
-
-
-<div class="learning-grid">
-
-
-<div class="learning-card">
-
-<h3>
-🎓 TEFL Certificate
-</h3>
-
-<p>
-Issued after successful completion of the applicable
-TEFL examination and registration requirements.
-</p>
-
-</div>
-
-
-<div class="learning-card">
-
-<h3>
-🌍 TESOL Certificate
-</h3>
-
-<p>
-Professional TESOL training certificate with
-verification information.
-</p>
-
-</div>
-
-
-<div class="learning-card">
-
-<h3>
-📚 English Certificate
-</h3>
-
-<p>
-English assessment certificates can include
-level, score, result ID and certificate ID.
-</p>
-
-</div>
-
-
-</div>
-
-
-<div
-id="certificateDisplay">
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================================
-     PARTNERS
-========================================================= -->
-
-<section class="section" id="partners">
-
-<div class="container">
-
-<div class="section-header">
-
-<div class="section-label">
-INTERNATIONAL PARTNERS
-</div>
-
-<h2>
-Certificate & Education Partners
-</h2>
-
-<p>
-Education and professional training organizations displayed
-as GETI partner entries.
-</p>
-
-</div>
-
-
-<div class="partner-grid">
-
-
-<div class="partner-card">
-<div class="partner-logo">GEA</div>
-<h3>Global English Academy</h3>
-<p>International English Education</p>
-</div>
-
-
-<div class="partner-card">
-<div class="partner-logo">ITE</div>
-<h3>International Teacher Education</h3>
-<p>Teacher Training & Development</p>
-</div>
-
-
-<div class="partner-card">
-<div class="partner-logo">GLC</div>
-<h3>Global Language Center</h3>
-<p>Language Learning & Assessment</p>
-</div>
-
-
-<div class="partner-card">
-<div class="partner-logo">ELI</div>
-<h3>English Learning Institute</h3>
-<p>English Language Development</p>
-</div>
-
-
-<div class="partner-card">
-<div class="partner-logo">WTE</div>
-<h3>World Teaching Education</h3>
-<p>Professional Teaching Training</p>
-</div>
-
-
-<div class="partner-card">
-<div class="partner-logo">IEC</div>
-<h3>International Education Center</h3>
-<p>International Education Services</p>
-</div>
-
-
-<div class="partner-card">
-<div class="partner-logo">GTC</div>
-<h3>Global Training Council</h3>
-<p>Professional Training & Certification</p>
-</div>
-
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================================
-     RESOURCES
-========================================================= -->
-
-<section class="section resources" id="resources">
-
-<div class="container">
-
-<div class="section-header">
-
-<div class="section-label">
-LEARNING RESOURCES
-</div>
-
-<h2>
-English Resources
-</h2>
-
-<p>
-Learning materials for students and teachers.
-</p>
-
-</div>
-
-
-<div class="resource-grid">
-
-<div class="resource-card">
-<h3>📖 Grammar</h3>
-<p>Grammar topics from beginner to advanced levels.</p>
-</div>
-
-<div class="resource-card">
-<h3>🧠 Vocabulary</h3>
-<p>Vocabulary development and practical word usage.</p>
-</div>
-
-<div class="resource-card">
-<h3>🗣 Speaking</h3>
-<p>Conversation and communication practice.</p>
-</div>
-
-<div class="resource-card">
-<h3>✍️ Writing</h3>
-<p>Writing practice for academic and professional English.</p>
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================================
-     WHY GETI
-========================================================= -->
-
-<section class="section">
-
-<div class="container">
-
-<div class="section-header">
-
-<div class="section-label">
-OUR VALUES
-</div>
-
-<h2>
-Why Choose GETI?
-</h2>
-
-</div>
-
-
-<div class="learning-grid">
-
-
-<div class="learning-card">
-<h3>🌍 International</h3>
-<p>
-A platform designed to support learners and teachers
-from different countries.
-</p>
-</div>
-
-
-<div class="learning-card">
-<h3>🎓 Professional</h3>
-<p>
-Structured education and professional development programs.
-</p>
-</div>
-
-
-<div class="learning-card">
-<h3>✓ Verification</h3>
-<p>
-Certificate information can be checked through
-the GETI verification system.
-</p>
-</div>
-
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================================
-     FAQ
-========================================================= -->
-
-<section class="section" id="faq">
-
-<div class="container">
-
-<div class="section-header">
-
-<div class="section-label">
-FAQ
-</div>
-
-<h2>
-Frequently Asked Questions
-</h2>
-
-</div>
-
-
-<div class="faq-list">
-
-
-<div class="faq-item">
-
-<button
-class="faq-question"
-onclick="toggleFAQ(this)">
-
-What is GETI?
-
-<span>+</span>
-
-</button>
-
-<div class="faq-answer">
-
-GETI stands for Global English Teaching Institute.
-It provides English education and professional training services.
-
-</div>
-
-</div>
-
-
-<div class="faq-item">
-
-<button
-class="faq-question"
-onclick="toggleFAQ(this)">
-
-What English levels are available?
-
-<span>+</span>
-
-</button>
-
-<div class="faq-answer">
-
-GETI can organize English learning from A1 through C2.
-
-</div>
-
-</div>
-
-
-<div class="faq-item">
-
-<button
-class="faq-question"
-onclick="toggleFAQ(this)">
-
-What is TEFL?
-
-<span>+</span>
-
-</button>
-
-<div class="faq-answer">
-
-TEFL means Teaching English as a Foreign Language.
-
-</div>
-
-</div>
-
-
-<div class="faq-item">
-
-<button
-class="faq-question"
-onclick="toggleFAQ(this)">
-
-How can I verify a certificate?
-
-<span>+</span>
-
-</button>
-
-<div class="faq-answer">
-
-Use the Certificate Verification section and enter
-the certificate ID, name, nationality or result ID.
-
-</div>
-
-</div>
-
-
-<div class="faq-item">
-
-<button
-class="faq-question"
-onclick="toggleFAQ(this)">
-
-What happens if I pass the TEFL exam?
-
-<span>+</span>
-
-</button>
-
-<div class="faq-answer">
-
-After a successful result, the registration process
-can be used to submit student information for certificate processing.
-
-</div>
-
-</div>
-
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================================
-     CONTACT
-========================================================= -->
-
-<section class="section contact" id="contact">
-
-<div class="container contact-grid">
-
-
-<div class="contact-info">
-
-<div class="section-label">
-CONTACT GETI
-</div>
-
-<h2>
-Global English Teaching Institute
-</h2>
-
-<p>
-International English Education & Professional Training.
-</p>
-
-
-<div class="contact-item">
-
-<strong>📧 Email</strong>
-
-<span>
-globalenglish123@gmail.com
-</span>
-
-</div>
-
-
-<div class="contact-item">
-
-<strong>🎓 Services</strong>
-
-<span>
-English • TEFL • TESOL • TEYL • Exams • Certificates
-</span>
-
-</div>
-
-
-<div class="contact-item">
-
-<strong>🌍 Verification</strong>
-
-<span>
-Online certificate verification service
-</span>
-
-</div>
-
-</div>
-
-
-<div class="contact-box">
-
-<h3 style="color:#0b2d5c;">
-Send us a message
-</h3>
-
-<br>
-
-<input
-id="contactName"
-type="text"
-placeholder="Your Name">
-
-<input
-id="contactEmail"
-type="email"
-placeholder="Your Email">
-
-<input
-id="contactSubject"
-type="text"
-placeholder="Subject">
-
-<textarea
-id="contactMessage"
-placeholder="Your Message"></textarea>
-
-<button
-class="btn btn-gold"
-onclick="sendMessage()">
-
-SEND MESSAGE
-
-</button>
-
-<div
-id="contactResult"
-style="margin-top:15px;">
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================================
-     ADMIN
-========================================================= -->
-
-<section class="section admin-section" id="admin">
-
-<div class="container">
-
-<div class="admin-box">
-
-<div class="section-header">
-
-<div class="section-label">
-ADMINISTRATION
-</div>
-
-<h2>
-GETI Admin
-</h2>
-
-<p>
-Authorized administrators only.
-</p>
-
-</div>
-
-
-<div
-id="adminLogin">
-
-<div class="registration-box">
-
-<div class="form-group">
-
-<label>
-Admin Username
-</label>
-
-<input
-id="adminUsername"
-type="text"
-placeholder="Username">
-
-</div>
-
-
-<div class="form-group">
-
-<label>
-Admin Password
-</label>
-
-<input
-id="adminPassword"
-type="password"
-placeholder="Password">
-
-</div>
-
-
-<button
-class="btn btn-blue"
-onclick="adminLogin()">
-
-ADMIN LOGIN
-
-</button>
-
-
-<div
-id="adminLoginResult"
-style="margin-top:15px;">
-</div>
-
-</div>
-
-</div>
-
-
-<div
-id="adminDashboard"
-class="hidden">
-
-<h2 style="color:#0b2d5c;">
-GETI Dashboard
-</h2>
-
-
-<div class="admin-dashboard-grid">
-
-<div class="admin-stat">
-<strong id="adminStudents">0</strong>
-<span>Students</span>
-</div>
-
-<div class="admin-stat">
-<strong id="adminExams">0</strong>
-<span>Exams</span>
-</div>
-
-<div class="admin-stat">
-<strong id="adminPassed">0</strong>
-<span>Passed</span>
-</div>
-
-<div class="admin-stat">
-<strong id="adminFailed">0</strong>
-<span>Failed</span>
-</div>
-
-<div class="admin-stat">
-<strong id="adminCertificates">0</strong>
-<span>Certificates</span>
-</div>
-
-</div>
-
-
-<div class="admin-actions">
-
-<button
-class="btn btn-gold"
-onclick="adminSearch('student')">
-
-SEARCH STUDENTS
-
-</button>
-
-<button
-class="btn btn-blue"
-onclick="adminSearch('result')">
-
-SEARCH RESULTS
-
-</button>
-
-<button
-class="btn btn-light"
-onclick="adminSearch('certificate')">
-
-SEARCH CERTIFICATES
-
-</button>
-
-<button
-class="btn btn-danger"
-onclick="adminSearch('blacklist')">
-
-BLACKLIST
-
-</button>
-
-</div>
-
-
-<div
-id="adminResults"
-style="margin-top:25px;">
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================================
-     FOOTER
-========================================================= -->
-
-<footer class="footer">
-
-<div class="container">
-
-<div class="footer-grid">
-
-
-<div>
-
-<h3>
-GLOBAL ENGLISH TEACHING INSTITUTE
-</h3>
-
-<p>
-International English Education & Professional Training.
-</p>
-
-<br>
-
-<p>
-Learn • Teach • Grow • Succeed
-</p>
-
-</div>
-
-
-<div>
-
-<h3>
-Quick Links
-</h3>
-
-<ul>
-
-<li><a href="#home">Home</a></li>
-<li><a href="#about">About</a></li>
-<li><a href="#programs">Programs</a></li>
-<li><a href="#learning">Online Learning</a></li>
-<li><a href="#tefl">TEFL</a></li>
-<li><a href="#tesol">TESOL</a></li>
-<li><a href="#verify">Verify</a></li>
-
-</ul>
-
-</div>
-
-
-<div>
-
-<h3>
-Programs
-</h3>
-
-<ul>
-
-<li>English A1–C2</li>
-<li>TEFL</li>
-<li>TESOL</li>
-<li>TEYL</li>
-<li>English Exams</li>
-<li>Certificates</li>
-
-</ul>
-
-</div>
-
-
-</div>
-
-
-<div class="footer-bottom">
-
-© 2026 Global English Teaching Institute.
-All rights reserved.
-
-</div>
-
-</div>
-
-</footer>
-
-
-<!-- =========================================================
-     TOAST
-========================================================= -->
-
-<div
-id="toast"
-class="toast">
-</div>
-
-
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
-
-<script>
-
-/* =========================================================
-   GOOGLE APPS SCRIPT API
-========================================================= */
-
-var API_URL =
-"https://script.google.com/macros/s/AKfycbzQ_YczGnSdh4GJZ73XTt8LfrUtdjJFAlUZGUx3Chhlk-0Es3rskQkun5LgrZYhkKRF/exec";
-
-
-/* =========================================================
-   GLOBAL VARIABLES
-========================================================= */
-
-var verifyType = "id";
-
-var examScore = 0;
-
-var examSubmitted = false;
-
-var examTimerInterval = null;
-
-var examSeconds = 7200;
-
-var examStarted = false;
-
-var tabViolationCount = 0;
-
-var maxTabViolations = 3;
-
-var adminSession = false;
-
-
-/* =========================================================
-   MOBILE MENU
-========================================================= */
-
-function toggleMenu(){
-
-    var menu =
-        document.getElementById("navMenu");
-
-    menu.classList.toggle("show");
-
-}
-
-
-/* =========================================================
-   CLOSE MENU
-========================================================= */
-
-document
-    .querySelectorAll(".nav-menu a")
-    .forEach(function(link){
-
-        link.addEventListener(
-            "click",
-            function(){
-
-                document
-                    .getElementById("navMenu")
-                    .classList
-                    .remove("show");
-
-            }
-        );
+      });
 
     });
 
 
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
+    /* =========================
+       CERTIFICATE VERIFICATION
+       
+       DEMO DATA
+       
+       IMPORTANT:
+       Replace this data with your
+       Google Apps Script / Google
+       Sheets verification system
+       when connecting the real database.
+    ========================== */
 
-function escapeHTML(value){
+    const certificates = [
 
-    return String(value || "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+      {
+        id: "GETI-ENG-2026-000001",
+        name: "Rakotonantenaina Juldiano",
+        nationality: "Malagasy",
+        country: "Madagascar",
+        program: "English Language",
+        level: "B2",
+        status: "VALID",
+        date: "2026"
+      },
 
-}
+      {
+        id: "GETI-TEFL-2026-000001",
+        name: "Sample Student",
+        nationality: "Malagasy",
+        country: "Madagascar",
+        program: "TEFL",
+        level: "Professional",
+        status: "VALID",
+        date: "2026"
+      },
 
+      {
+        id: "GETI-TESOL-2026-000001",
+        name: "Sample Teacher",
+        nationality: "Malagasy",
+        country: "Madagascar",
+        program: "TESOL",
+        level: "Professional",
+        status: "VALID",
+        date: "2026"
+      }
 
-/* =========================================================
-   TOAST
-========================================================= */
-
-function showToast(message){
-
-    var toast =
-        document.getElementById("toast");
-
-    toast.textContent =
-        message;
-
-    toast.classList.add("show");
-
-    setTimeout(
-        function(){
-            toast.classList.remove("show");
-        },
-        3500
-    );
-
-}
-
-
-/* =========================================================
-   VERIFICATION TYPE
-========================================================= */
-
-function setVerifyType(type){
-
-    verifyType = type;
-
-    var buttons = [
-        "verifyIdButton",
-        "verifyNameButton",
-        "verifyNationalityButton",
-        "verifyResultButton"
     ];
 
-    buttons.forEach(function(id){
 
-        var el =
-            document.getElementById(id);
+    function verifyCertificate() {
 
-        if(el){
-            el.classList.remove("active");
-        }
-
-    });
-
-
-    var activeMap = {
-        id:"verifyIdButton",
-        name:"verifyNameButton",
-        nationality:"verifyNationalityButton",
-        result:"verifyResultButton"
-    };
-
-
-    if(
-        document.getElementById(activeMap[type])
-    ){
-
+      const searchInput =
         document
-            .getElementById(activeMap[type])
-            .classList
-            .add("active");
+        .getElementById("certificateSearch");
 
-    }
-
-
-    var input =
-        document.getElementById("verifyInput");
-
-
-    if(type === "id"){
-        input.placeholder =
-            "GETI-CERT-2026-000001";
-    }
-
-    if(type === "name"){
-        input.placeholder =
-            "Enter student name";
-    }
-
-    if(type === "nationality"){
-        input.placeholder =
-            "Enter nationality";
-    }
-
-    if(type === "result"){
-        input.placeholder =
-            "GETI-RES-2026-000001";
-    }
-
-}
-
-
-/* =========================================================
-   GENERIC JSONP REQUEST
-========================================================= */
-
-function jsonpRequest(url, callback){
-
-    var callbackName =
-        "getiCallback_" +
-        Date.now() +
-        "_" +
-        Math.floor(Math.random()*100000);
-
-
-    window[callbackName] =
-        function(data){
-
-            try{
-                callback(data);
-            }finally{
-
-                try{
-                    delete window[callbackName];
-                }catch(e){}
-
-                if(script.parentNode){
-                    script.parentNode.removeChild(script);
-                }
-
-            }
-
-        };
-
-
-    var script =
-        document.createElement("script");
-
-
-    script.src =
-        url +
-        (url.indexOf("?") >= 0 ? "&" : "?") +
-        "callback=" +
-        encodeURIComponent(callbackName);
-
-
-    script.onerror =
-        function(){
-
-            callback({
-                success:false,
-                message:"Unable to connect to GETI server."
-            });
-
-            try{
-                delete window[callbackName];
-            }catch(e){}
-
-            if(script.parentNode){
-                script.parentNode.removeChild(script);
-            }
-
-        };
-
-
-    document.body.appendChild(script);
-
-}
-
-
-/* =========================================================
-   CERTIFICATE VERIFICATION
-========================================================= */
-
-function verifyCertificate(){
-
-    var value =
+      const resultBox =
         document
-            .getElementById("verifyInput")
-            .value
-            .trim();
+        .getElementById("verifyResult");
+
+      const search =
+        searchInput.value.trim().toLowerCase();
 
 
-    var result =
-        document
-            .getElementById("verifyResult");
+      if (!search) {
 
+        resultBox.style.display = "block";
 
-    if(!value){
-
-        result.innerHTML =
-            '<div class="error">' +
-            '❌ Please enter a search value.' +
-            '</div>';
-
-        return;
-
-    }
-
-
-    result.innerHTML =
-        '<div class="success">' +
-        '⏳ Searching GETI records...' +
-        '</div>';
-
-
-    var url =
-        API_URL +
-        "?type=" +
-        encodeURIComponent(verifyType) +
-        "&value=" +
-        encodeURIComponent(value);
-
-
-    jsonpRequest(
-        url,
-        function(data){
-
-            displayVerificationResults(data);
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   DISPLAY VERIFICATION
-========================================================= */
-
-function displayVerificationResults(data){
-
-    var result =
-        document.getElementById("verifyResult");
-
-
-    if(!data){
-
-        result.innerHTML =
-            '<div class="error">' +
-            '❌ No response received.' +
-            '</div>';
+        resultBox.innerHTML = `
+          <div class="result-error">
+            ❌ Please enter a Certificate ID, name or nationality.
+          </div>
+        `;
 
         return;
+      }
 
-    }
 
+      const result =
+        certificates.find(function(certificate) {
 
-    if(!data.success){
+          return (
 
-        result.innerHTML =
-            '<div class="error">' +
-            '❌ ' +
-            escapeHTML(
-                data.message ||
-                "Certificate not found."
-            ) +
-            '</div>';
+            certificate.id.toLowerCase().includes(search) ||
 
-        return;
+            certificate.name.toLowerCase().includes(search) ||
 
-    }
+            certificate.nationality.toLowerCase().includes(search) ||
 
+            certificate.country.toLowerCase().includes(search)
 
-    var results =
-        data.results || [];
-
-
-    if(!results.length){
-
-        result.innerHTML =
-            '<div class="error">' +
-            '❌ No matching record found.' +
-            '</div>';
-
-        return;
-
-    }
-
-
-    var html =
-        '<div class="success">' +
-        '✓ ' +
-        results.length +
-        ' matching record(s) found.' +
-        '</div>';
-
-
-    results.forEach(function(c){
-
-        html +=
-            '<div class="verify-card">' +
-
-            '<div class="verified">' +
-            '✓ CERTIFICATE VERIFIED' +
-            '</div>' +
-
-            verifyRow("Name",c.name) +
-
-            verifyRow("Nationality",c.nationality) +
-
-            verifyRow("Country",c.country) +
-
-            verifyRow("Program",c.program || c.type) +
-
-            verifyRow("Certificate ID",c.id || c.certificate) +
-
-            verifyRow("Result ID",c.resultId) +
-
-            verifyRow("Score",c.score) +
-
-            verifyRow("Level",c.level) +
-
-            verifyRow("Issue Date",c.issueDate || c.date) +
-
-            verifyRow(
-                "Status",
-                c.status || "VALID"
-            ) +
-
-            '</div>';
-
-    });
-
-
-    result.innerHTML =
-        html;
-
-}
-
-
-/* =========================================================
-   VERIFY ROW
-========================================================= */
-
-function verifyRow(label,value){
-
-    return (
-
-        '<div class="verify-row">' +
-
-        '<div class="verify-label">' +
-        escapeHTML(label) +
-        '</div>' +
-
-        '<div class="verify-value">' +
-        escapeHTML(
-            value || "—"
-        ) +
-        '</div>' +
-
-        '</div>'
-
-    );
-
-}
-
-
-/* =========================================================
-   TEFL LESSONS
-========================================================= */
-
-var teflLessons = [
-
-{
-title:"Lesson 1 — Introduction to TEFL",
-text:"TEFL means Teaching English as a Foreign Language. This module introduces the role of the English teacher, learners, teaching environments and the purpose of TEFL."
-},
-
-{
-title:"Lesson 2 — Teaching Methodology",
-text:"Teaching methodology refers to the principles, approaches and classroom techniques used to support English language learning."
-},
-
-{
-title:"Lesson 3 — Lesson Planning",
-text:"A lesson plan organizes objectives, materials, presentation, practice, production, assessment and timing."
-},
-
-{
-title:"Lesson 4 — Classroom Management",
-text:"Classroom management includes routines, organization, learner behavior, interaction and creation of a positive learning environment."
-},
-
-{
-title:"Lesson 5 — Teaching Grammar",
-text:"Grammar teaching helps learners understand language structures and use them accurately in meaningful communication."
-},
-
-{
-title:"Lesson 6 — Teaching Vocabulary",
-text:"Vocabulary instruction develops knowledge of meaning, pronunciation, spelling, collocation and appropriate use."
-},
-
-{
-title:"Lesson 7 — Teaching Speaking",
-text:"Speaking activities should provide opportunities for interaction, fluency, accuracy, confidence and meaningful communication."
-},
-
-{
-title:"Lesson 8 — Teaching Listening",
-text:"Listening lessons help learners understand spoken English, identify main ideas, recognize details and process natural speech."
-},
-
-{
-title:"Lesson 9 — Teaching Reading",
-text:"Reading instruction develops skimming, scanning, prediction, main-idea identification and detailed comprehension."
-},
-
-{
-title:"Lesson 10 — Teaching Writing",
-text:"Writing instruction develops planning, organization, sentence construction, paragraphs, coherence and revision."
-},
-
-{
-title:"Lesson 11 — Assessment",
-text:"Assessment can be formative or summative and can include quizzes, projects, tests, performance tasks and observation."
-},
-
-{
-title:"Lesson 12 — Pronunciation",
-text:"Pronunciation teaching includes individual sounds, stress, rhythm, intonation and intelligibility."
-},
-
-{
-title:"Lesson 13 — Online Teaching",
-text:"Online English teaching uses digital platforms, video, interactive activities, communication tools and online assessment."
-},
-
-{
-title:"Lesson 14 — Professional Development",
-text:"Professional development supports continuous improvement through reflection, training, research, collaboration and practice."
-},
-
-{
-title:"Lesson 15 — Learner Motivation",
-text:"Teachers can support motivation through meaningful goals, relevant activities, encouragement, autonomy and constructive feedback."
-},
-
-{
-title:"Lesson 16 — Learner Differences",
-text:"Learners differ in age, experience, proficiency, goals, motivation, educational background and learning needs."
-},
-
-{
-title:"Lesson 17 — Communicative Language Teaching",
-text:"Communicative Language Teaching emphasizes meaningful communication and real-world language use."
-},
-
-{
-title:"Lesson 18 — Task-Based Learning",
-text:"Task-Based Learning uses meaningful tasks as a central part of classroom language learning."
-},
-
-{
-title:"Lesson 19 — Error Correction",
-text:"Effective correction supports learning while protecting learner confidence and encouraging self-correction."
-},
-
-{
-title:"Lesson 20 — Teaching Resources",
-text:"Teachers can use textbooks, realia, visuals, audio, video, authentic materials and digital resources."
-}
-
-];
-
-
-function showTEFLLessons(){
-
-    var box =
-        document.getElementById("teflLessons");
-
-
-    box.classList.remove("hidden");
-
-    renderLessons();
-
-    box.scrollIntoView({
-        behavior:"smooth",
-        block:"start"
-    });
-
-}
-
-
-function renderLessons(){
-
-    var list =
-        document.getElementById("lessonList");
-
-
-    var html = "";
-
-
-    teflLessons.forEach(function(lesson,index){
-
-        html +=
-
-            '<div ' +
-            'class="lesson-item" ' +
-            'onclick="openLesson(' +
-            index +
-            ')">' +
-
-            '<h3>' +
-            escapeHTML(lesson.title) +
-            '</h3>' +
-
-            '<p>' +
-            escapeHTML(lesson.text.substring(0,100)) +
-            '...</p>' +
-
-            '</div>';
-
-    });
-
-
-    list.innerHTML =
-        html;
-
-}
-
-
-function openLesson(index){
-
-    var lesson =
-        teflLessons[index];
-
-
-    var display =
-        document.getElementById("lessonDisplay");
-
-
-    display.innerHTML =
-
-        '<h3>' +
-        escapeHTML(lesson.title) +
-        '</h3>' +
-
-        '<p>' +
-        escapeHTML(lesson.text) +
-        '</p>';
-
-}
-
-
-/* =========================================================
-   TEFL QUESTIONS
-========================================================= */
-
-var examQuestions = [
-
-{
-q:"What does TEFL stand for?",
-a:[
-"Teaching English as a Foreign Language",
-"Teaching Education for Foreign Learners",
-"Training English for Language",
-"Teaching Every Foreign Language"
-],
-c:0
-},
-
-{
-q:"What is the main purpose of a lesson plan?",
-a:[
-"To organize teaching and learning activities",
-"To replace the teacher",
-"To give students free time",
-"To avoid assessment"
-],
-c:0
-},
-
-{
-q:"Which skill involves understanding spoken English?",
-a:[
-"Writing",
-"Listening",
-"Reading",
-"Grammar"
-],
-c:1
-},
-
-{
-q:"Which activity mainly develops speaking?",
-a:[
-"Conversation practice",
-"Silent reading",
-"Copying",
-"Dictation only"
-],
-c:0
-},
-
-{
-q:"What is classroom management?",
-a:[
-"Managing the learning environment and behavior",
-"Writing certificates",
-"Learning vocabulary alone",
-"Translating books"
-],
-c:0
-},
-
-{
-q:"What does TESOL mean?",
-a:[
-"Teaching English to Speakers of Other Languages",
-"Teaching English Students Online Lessons",
-"Training English Speaking Online Learners",
-"Teaching Every Student Other Languages"
-],
-c:0
-},
-
-{
-q:"What is formative assessment?",
-a:[
-"Assessment during learning",
-"Only a final examination",
-"A certificate",
-"A textbook"
-],
-c:0
-},
-
-{
-q:"What is summative assessment?",
-a:[
-"Assessment at the end of a period of learning",
-"Informal classroom greeting",
-"Vocabulary practice",
-"Warm-up activity"
-],
-c:0
-},
-
-{
-q:"Which is a productive skill?",
-a:[
-"Speaking",
-"Listening",
-"Reading",
-"Understanding"
-],
-c:0
-},
-
-{
-q:"Which is a receptive skill?",
-a:[
-"Writing",
-"Speaking",
-"Listening",
-"Presenting"
-],
-c:2
-},
-
-{
-q:"What is vocabulary?",
-a:[
-"The words a person knows or uses",
-"Only grammar rules",
-"Only pronunciation",
-"Only punctuation"
-],
-c:0
-},
-
-{
-q:"What is grammar?",
-a:[
-"The system of rules and structures of a language",
-"A list of countries",
-"A speaking game",
-"A certificate"
-],
-c:0
-},
-
-{
-q:"What is pronunciation?",
-a:[
-"How words and sounds are produced",
-"How essays are graded",
-"How classrooms are arranged",
-"How certificates are printed"
-],
-c:0
-},
-
-{
-q:"What is learner-centered teaching?",
-a:[
-"Teaching that actively involves learners",
-"Teaching only from a textbook",
-"Teacher talks for the entire lesson",
-"No student participation"
-],
-c:0
-},
-
-{
-q:"What is an objective?",
-a:[
-"A clear statement of what learners should achieve",
-"A classroom decoration",
-"A student's nationality",
-"A certificate number"
-],
-c:0
-},
-
-{
-q:"What is a warm-up?",
-a:[
-"An introductory activity that prepares learners",
-"A final examination",
-"A certificate",
-"A grading system"
-],
-c:0
-},
-
-{
-q:"What is pair work?",
-a:[
-"Two learners working together",
-"One teacher working alone",
-"An entire school examination",
-"Reading silently"
-],
-c:0
-},
-
-{
-q:"What is group work?",
-a:[
-"Learners working together in a group",
-"Teacher preparation only",
-"Individual homework only",
-"A certificate ceremony"
-],
-c:0
-},
-
-{
-q:"What is feedback?",
-a:[
-"Information given to help improve performance",
-"A school uniform",
-"A certificate",
-"A classroom rule only"
-],
-c:0
-},
-
-{
-q:"Why are instructions important?",
-a:[
-"They explain what learners should do",
-"They replace assessment",
-"They remove communication",
-"They are only for teachers"
-],
-c:0
-},
-
-{
-q:"What is communicative language teaching?",
-a:[
-"An approach emphasizing meaningful communication",
-"An approach based only on translation",
-"An approach without speaking",
-"An approach without learners"
-],
-c:0
-},
-
-{
-q:"What is task-based learning?",
-a:[
-"Learning through meaningful tasks",
-"Learning without activities",
-"Learning only vocabulary lists",
-"Learning without communication"
-],
-c:0
-},
-
-{
-q:"What is skimming?",
-a:[
-"Reading quickly for general meaning",
-"Reading every word slowly",
-"Listening to a conversation",
-"Writing an essay"
-],
-c:0
-},
-
-{
-q:"What is scanning?",
-a:[
-"Reading to find specific information",
-"Reading for pronunciation only",
-"Speaking quickly",
-"Writing a paragraph"
-],
-c:0
-},
-
-{
-q:"What is fluency?",
-a:[
-"The ability to communicate smoothly",
-"Perfect spelling only",
-"Perfect grammar only",
-"Knowing one word"
-],
-c:0
-},
-
-{
-q:"What is accuracy?",
-a:[
-"Correctness in language use",
-"Speaking very quickly",
-"Speaking loudly",
-"Reading silently"
-],
-c:0
-},
-
-{
-q:"What is motivation?",
-a:[
-"The desire or reason to learn",
-"A grammar structure",
-"A certificate",
-"A classroom desk"
-],
-c:0
-},
-
-{
-q:"Why should teachers use examples?",
-a:[
-"Examples help learners understand concepts",
-"Examples eliminate practice",
-"Examples replace teaching",
-"Examples prevent communication"
-],
-c:0
-},
-
-{
-q:"What is authentic material?",
-a:[
-"Material originally created for real-world use",
-"Only teacher-created worksheets",
-"Only examination papers",
-"Only grammar books"
-],
-c:0
-},
-
-{
-q:"What is differentiation?",
-a:[
-"Adapting teaching to learner needs",
-"Teaching every learner identically",
-"Removing activities",
-"Removing assessment"
-],
-c:0
-},
-
-{
-q:"What is a rubric?",
-a:[
-"A scoring guide with criteria",
-"A textbook",
-"A classroom game",
-"A pronunciation chart"
-],
-c:0
-},
-
-{
-q:"What is peer assessment?",
-a:[
-"Learners assess each other's work",
-"Only teachers assess learners",
-"Parents assess teachers",
-"Schools assess certificates"
-],
-c:0
-},
-
-{
-q:"What is self-assessment?",
-a:[
-"Learners evaluate their own learning",
-"Teachers evaluate themselves only",
-"Schools issue certificates",
-"Students grade teachers"
-],
-c:0
-},
-
-{
-q:"What is scaffolding?",
-a:[
-"Temporary support that helps learners complete tasks",
-"Removing all support",
-"Giving only examinations",
-"Teaching without examples"
-],
-c:0
-},
-
-{
-q:"What is a teaching aid?",
-a:[
-"A resource that supports teaching and learning",
-"A certificate",
-"A student ID",
-"A school building"
-],
-c:0
-},
-
-{
-q:"What is elicitation?",
-a:[
-"Getting information or answers from learners",
-"Giving every answer immediately",
-"Ending a lesson",
-"Giving certificates"
-],
-c:0
-},
-
-{
-q:"What is drilling?",
-a:[
-"Controlled repetition for practice",
-"Free writing only",
-"Final assessment",
-"Reading silently"
-],
-c:0
-},
-
-{
-q:"What is a role-play?",
-a:[
-"Acting out a situation",
-"Silent reading",
-"Grammar translation",
-"Writing vocabulary"
-],
-c:0
-},
-
-{
-q:"What is a debate?",
-a:[
-"A structured discussion involving different viewpoints",
-"A vocabulary list",
-"A listening test only",
-"A pronunciation drill"
-],
-c:0
-},
-
-{
-q:"What is brainstorming?",
-a:[
-"Generating ideas",
-"Correcting every error",
-"Taking a final exam",
-"Reading a certificate"
-],
-c:0
-},
-
-{
-q:"What is a diagnostic test?",
-a:[
-"A test used to identify strengths and weaknesses",
-"A graduation certificate",
-"A classroom decoration",
-"A final award"
-],
-c:0
-},
-
-{
-q:"What is placement testing?",
-a:[
-"Testing learners to determine an appropriate level",
-"Testing teachers' salaries",
-"Testing certificates",
-"Testing classroom furniture"
-],
-c:0
-},
-
-{
-q:"What is reliability in assessment?",
-a:[
-"Consistency of assessment results",
-"Difficulty of vocabulary",
-"Length of a lesson",
-"Number of teachers"
-],
-c:0
-},
-
-{
-q:"What is validity?",
-a:[
-"The extent to which a test measures what it should measure",
-"How attractive a test looks",
-"How long a lesson is",
-"How many pages a book has"
-],
-c:0
-},
-
-{
-q:"What is an open-ended question?",
-a:[
-"A question allowing a developed response",
-"A question with only yes/no",
-"A multiple-choice question only",
-"A true/false question"
-],
-c:0
-},
-
-{
-q:"What is a closed question?",
-a:[
-"A question with a limited response",
-"A question requiring an essay",
-"A debate",
-"A presentation"
-],
-c:0
-},
-
-{
-q:"Why is pair work useful?",
-a:[
-"It increases opportunities for learner interaction",
-"It stops communication",
-"It removes practice",
-"It replaces the teacher"
-],
-c:0
-},
-
-{
-q:"Why is group work useful?",
-a:[
-"It encourages collaboration and communication",
-"It prevents participation",
-"It eliminates learning",
-"It replaces assessment"
-],
-c:0
-},
-
-{
-q:"What is a mixed-ability class?",
-a:[
-"A class with learners of different ability levels",
-"A class with only advanced learners",
-"A class with only beginners",
-"A class without learners"
-],
-c:0
-},
-
-{
-q:"What is classroom routine?",
-a:[
-"A regular pattern of classroom procedures",
-"A final exam",
-"A certificate",
-"A vocabulary list"
-],
-c:0
-},
-
-{
-q:"Why are clear instructions important?",
-a:[
-"They reduce confusion and support task completion",
-"They make lessons longer",
-"They prevent learning",
-"They replace practice"
-],
-c:0
-},
-
-{
-q:"What is teacher talk time?",
-a:[
-"The amount of time the teacher speaks",
-"The amount of time students write",
-"The number of lessons",
-"The length of a textbook"
-],
-c:0
-},
-
-{
-q:"What is student talk time?",
-a:[
-"The amount of time learners speak",
-"The time teachers prepare",
-"The time spent grading",
-"The time spent printing"
-],
-c:0
-},
-
-{
-q:"In communicative teaching, teachers should generally:",
-a:[
-"Create opportunities for meaningful communication",
-"Speak throughout the whole lesson",
-"Avoid interaction",
-"Use translation only"
-],
-c:0
-},
-
-{
-q:"What is an inductive approach to grammar?",
-a:[
-"Learners examine examples and discover the rule",
-"Teacher gives the rule first only",
-"No examples are used",
-"Grammar is not taught"
-],
-c:0
-},
-
-{
-q:"What is a deductive approach?",
-a:[
-"Teacher presents a rule before practice",
-"Learners discover everything without guidance",
-"No grammar is used",
-"Only speaking is allowed"
-],
-c:0
-},
-
-{
-q:"What is contextualization?",
-a:[
-"Teaching language within a meaningful situation",
-"Teaching isolated words only",
-"Removing examples",
-"Teaching without communication"
-],
-c:0
-},
-
-{
-q:"What is a pre-reading activity?",
-a:[
-"An activity preparing learners for a text",
-"A final exam",
-"Post-course assessment",
-"Certificate printing"
-],
-c:0
-},
-
-{
-q:"What is a while-reading activity?",
-a:[
-"An activity completed during reading",
-"An activity before class",
-"A certificate activity",
-"Teacher registration"
-],
-c:0
-},
-
-{
-q:"What is a post-reading activity?",
-a:[
-"An activity completed after reading",
-"An activity before reading",
-"A registration form",
-"A grammar rule"
-],
-c:0
-},
-
-{
-q:"What is listening for gist?",
-a:[
-"Listening for the general meaning",
-"Listening for every sound",
-"Reading a text",
-"Writing an essay"
-],
-c:0
-},
-
-{
-q:"What is listening for detail?",
-a:[
-"Listening for specific information",
-"Listening only for general meaning",
-"Reading",
-"Speaking"
-],
-c:0
-},
-
-{
-q:"What is extensive reading?",
-a:[
-"Reading longer texts mainly for general understanding or enjoyment",
-"Reading one sentence repeatedly",
-"Reading only grammar rules",
-"Reading only certificates"
-],
-c:0
-},
-
-{
-q:"What is intensive reading?",
-a:[
-"Close reading for detailed understanding",
-"Reading only for pleasure",
-"Speaking practice",
-"Listening practice"
-],
-c:0
-},
-
-{
-q:"What is process writing?",
-a:[
-"Writing through stages such as planning, drafting and revising",
-"Writing once without revision",
-"Copying a paragraph",
-"Memorizing vocabulary"
-],
-c:0
-},
-
-{
-q:"What is coherence?",
-a:[
-"Logical connection and organization of ideas",
-"Correct spelling only",
-"Correct pronunciation",
-"Number of words"
-],
-c:0
-},
-
-{
-q:"What is cohesion?",
-a:[
-"Linguistic links that connect parts of a text",
-"Speaking speed",
-"Classroom size",
-"Lesson duration"
-],
-c:0
-},
-
-{
-q:"What is intonation?",
-a:[
-"Variation in pitch during speech",
-"Spelling",
-"Vocabulary size",
-"Writing speed"
-],
-c:0
-},
-
-{
-q:"What is word stress?",
-a:[
-"Emphasis placed on a syllable in a word",
-"Writing a word",
-"Translating a word",
-"Counting words"
-],
-c:0
-},
-
-{
-q:"What is sentence stress?",
-a:[
-"Emphasis on important words in a sentence",
-"Writing sentences",
-"Counting sentences",
-"Translating sentences"
-],
-c:0
-},
-
-{
-q:"What is connected speech?",
-a:[
-"The way sounds change or connect in natural speech",
-"Writing connected paragraphs",
-"Reading slowly",
-"Grammar testing"
-],
-c:0
-},
-
-{
-q:"What is L1?",
-a:[
-"A learner's first language",
-"A learner's second language",
-"A teaching method",
-"A test"
-],
-c:0
-},
-
-{
-q:"What is L2?",
-a:[
-"A language learned after the first language",
-"The first language only",
-"A classroom",
-"A certificate"
-],
-c:0
-},
-
-{
-q:"What is language exposure?",
-a:[
-"Contact with the language",
-"A final exam",
-"A certificate",
-"A lesson plan only"
-],
-c:0
-},
-
-{
-q:"Why is repetition useful?",
-a:[
-"It can reinforce learning and memory",
-"It always prevents communication",
-"It replaces all teaching",
-"It removes vocabulary"
-],
-c:0
-},
-
-{
-q:"What is retrieval practice?",
-a:[
-"Trying to recall information from memory",
-"Copying information",
-"Reading without thinking",
-"Listening only"
-],
-c:0
-},
-
-{
-q:"What is spaced practice?",
-a:[
-"Practicing material over separated periods of time",
-"Studying everything once",
-"Skipping practice",
-"Taking only one exam"
-],
-c:0
-},
-
-{
-q:"What is learner autonomy?",
-a:[
-"The ability to take responsibility for one's learning",
-"Teacher control of everything",
-"No learning goals",
-"No homework"
-],
-c:0
-},
-
-{
-q:"What is reflective teaching?",
-a:[
-"Teachers think critically about their teaching and improve it",
-"Teachers never change methods",
-"Teachers only grade students",
-"Teachers avoid feedback"
-],
-c:0
-},
-
-{
-q:"Why should teachers monitor students?",
-a:[
-"To observe progress and provide support",
-"To punish students",
-"To avoid teaching",
-"To replace assessment"
-],
-c:0
-},
-
-{
-q:"What is delayed correction?",
-a:[
-"Correcting errors after an activity",
-"Never correcting errors",
-"Correcting before speaking",
-"Correcting certificates"
-],
-c:0
-},
-
-{
-q:"What is an error?",
-a:[
-"A systematic problem in language use",
-"Always a sign of failure",
-"A certificate",
-"A teaching method"
-],
-c:0
-},
-
-{
-q:"What is a mistake?",
-a:[
-"A temporary slip that a learner may self-correct",
-"A permanent language problem",
-"A certificate",
-"A textbook"
-],
-c:0
-},
-
-{
-q:"What is a syllabus?",
-a:[
-"A plan of content and learning objectives for a course",
-"A certificate",
-"A classroom rule",
-"A single exercise"
-],
-c:0
-},
-
-{
-q:"What is curriculum?",
-a:[
-"The broader educational program and learning plan",
-"A single vocabulary item",
-"A classroom chair",
-"A final exam only"
-],
-c:0
-},
-
-{
-q:"What is needs analysis?",
-a:[
-"Identifying learners' needs and goals",
-"Counting students",
-"Printing certificates",
-"Writing a dictionary"
-],
-c:0
-},
-
-{
-q:"What is ESP?",
-a:[
-"English for Specific Purposes",
-"English Speaking Practice",
-"English Student Program",
-"English Standard Pronunciation"
-],
-c:0
-},
-
-{
-q:"What is EFL?",
-a:[
-"English as a Foreign Language",
-"English for Learning",
-"English First Language",
-"English Formal Lesson"
-],
-c:0
-},
-
-{
-q:"What is ESL?",
-a:[
-"English as a Second Language",
-"English Speaking Lesson",
-"English Student Language",
-"English Standard Learning"
-],
-c:0
-},
-
-{
-q:"What is synchronous online teaching?",
-a:[
-"Teaching where participants interact at the same time",
-"Teaching without communication",
-"Recorded lessons only",
-"Printed lessons only"
-],
-c:0
-},
-
-{
-q:"What is asynchronous learning?",
-a:[
-"Learning that does not require everyone to participate at the same time",
-"Only live teaching",
-"Only classroom teaching",
-"Only oral exams"
-],
-c:0
-},
-
-{
-q:"Why are visuals useful?",
-a:[
-"They can make meaning clearer and support understanding",
-"They always replace language",
-"They prevent speaking",
-"They replace teachers"
-],
-c:0
-},
-
-{
-q:"What is classroom interaction?",
-a:[
-"Communication between teachers and learners or among learners",
-"Only teacher preparation",
-"Only written exams",
-"Certificate verification"
-],
-c:0
-},
-
-{
-q:"What is rapport?",
-a:[
-"A positive relationship between teacher and learners",
-"A grammar rule",
-"A certificate",
-"A test"
-],
-c:0
-},
-
-{
-q:"What is inclusive teaching?",
-a:[
-"Teaching that aims to support participation and access for different learners",
-"Teaching only advanced students",
-"Teaching one learner",
-"Teaching without adaptation"
-],
-c:0
-},
-
-{
-q:"What is cultural awareness?",
-a:[
-"Understanding and respecting cultural differences",
-"Teaching only one culture",
-"A grammar exercise",
-"A certificate"
-],
-c:0
-},
-
-{
-q:"What is professional ethics?",
-a:[
-"Principles guiding responsible professional behavior",
-"A vocabulary list",
-"A classroom game",
-"A certificate number"
-],
-c:0
-},
-
-{
-q:"What is continuous professional development?",
-a:[
-"Ongoing improvement of professional knowledge and skills",
-"One examination only",
-"Stopping professional learning",
-"Only teaching beginners"
-],
-c:0
-},
-
-{
-q:"What is learner engagement?",
-a:[
-"The degree to which learners actively participate in learning",
-"Teacher attendance only",
-"Certificate printing",
-"Classroom decoration"
-],
-c:0
-},
-
-{
-q:"What is a learning objective?",
-a:[
-"A specific outcome learners should achieve",
-"A certificate number",
-"A school address",
-"A teacher's salary"
-],
-c:0
-},
-
-{
-q:"What is assessment criteria?",
-a:[
-"Standards used to judge performance",
-"A lesson title",
-"A textbook",
-"A classroom rule"
-],
-c:0
-},
-
-{
-q:"What is constructive feedback?",
-a:[
-"Feedback that identifies strengths and gives useful ways to improve",
-"Feedback that only criticizes",
-"No feedback",
-"Feedback unrelated to learning"
-],
-c:0
-},
-
-{
-q:"What is effective teaching?",
-a:[
-"Teaching that supports meaningful learner progress",
-"Teaching without objectives",
-"Teaching without learners",
-"Teaching without practice"
-],
-c:0
-},
-
-{
-q:"What is the main goal of TEFL?",
-a:[
-"To help learners develop English language ability",
-"To issue passports",
-"To replace schools",
-"To teach only grammar"
-],
-c:0
-}
-
-];
-
-
-/* =========================================================
-   MAKE EXACTLY 100 QUESTIONS
-========================================================= */
-
-function getExamQuestions(){
-
-    var questions =
-        examQuestions.slice();
-
-
-    while(
-        questions.length < 100
-    ){
-
-        questions.push({
-            q:"Which practice supports effective English learning?",
-            a:[
-                "Meaningful practice and feedback",
-                "Avoiding practice",
-                "Never reviewing material",
-                "Ignoring learner needs"
-            ],
-            c:0
-        });
-
-    }
-
-
-    return questions.slice(0,100);
-
-}
-
-
-/* =========================================================
-   SHOW TEFL EXAM
-========================================================= */
-
-function showTEFLExam(){
-
-    var exam =
-        document.getElementById("teflExam");
-
-
-    document
-        .getElementById("teflLessons")
-        .classList
-        .add("hidden");
-
-
-    document
-        .getElementById("teflRegistration")
-        .classList
-        .add("hidden");
-
-
-    exam.classList.remove("hidden");
-
-
-    loadTEFLExam();
-
-
-    startExamTimer();
-
-
-    document.body.classList.add("exam-active");
-
-
-    examStarted = true;
-
-    examSubmitted = false;
-
-
-    exam.scrollIntoView({
-        behavior:"smooth",
-        block:"start"
-    });
-
-}
-
-
-/* =========================================================
-   LOAD EXAM
-========================================================= */
-
-function loadTEFLExam(){
-
-    var questions =
-        getExamQuestions();
-
-
-    var container =
-        document.getElementById("questionsContainer");
-
-
-    var html = "";
-
-
-    questions.forEach(function(q,index){
-
-        html +=
-
-            '<div class="exam-question">' +
-
-            '<h3>Question ' +
-            (index+1) +
-            ' / 100</h3>' +
-
-            '<p>' +
-            escapeHTML(q.q) +
-            '</p>';
-
-
-        q.a.forEach(function(answer,j){
-
-            html +=
-
-                '<label class="exam-option">' +
-
-                '<input ' +
-                'type="radio" ' +
-                'name="q' +
-                index +
-                '" ' +
-                'value="' +
-                j +
-                '">' +
-
-                ' ' +
-
-                escapeHTML(answer) +
-
-                '</label>';
+          );
 
         });
 
 
-        html +=
-            '</div>';
-
-    });
+      resultBox.style.display = "block";
 
 
-    container.innerHTML =
-        html;
+      if (!result) {
 
-}
+        resultBox.innerHTML = `
+          <div class="result-error">
 
+            <strong>❌ Certificate Not Found</strong>
 
-/* =========================================================
-   EXAM TIMER
-========================================================= */
+            <p style="margin-top:8px;">
+              No certificate matching
+              <strong>${escapeHtml(searchInput.value)}</strong>
+              was found.
+            </p>
 
-function startExamTimer(){
+          </div>
+        `;
 
-    clearInterval(
-        examTimerInterval
-    );
-
-
-    examSeconds = 7200;
-
-
-    updateTimerDisplay();
+        return;
+      }
 
 
-    examTimerInterval =
-        setInterval(
-            function(){
+      resultBox.innerHTML = `
 
-                if(
-                    examSubmitted
-                ){
+        <div class="result-success">
 
-                    clearInterval(
-                        examTimerInterval
-                    );
+          <h3>
+            ✅ Certificate Verified
+          </h3>
 
-                    return;
+          <table class="result-table">
 
-                }
+            <tr>
+              <td>Certificate ID</td>
+              <td>${escapeHtml(result.id)}</td>
+            </tr>
 
+            <tr>
+              <td>Full Name</td>
+              <td>${escapeHtml(result.name)}</td>
+            </tr>
 
-                examSeconds--;
+            <tr>
+              <td>Nationality</td>
+              <td>${escapeHtml(result.nationality)}</td>
+            </tr>
 
+            <tr>
+              <td>Country</td>
+              <td>${escapeHtml(result.country)}</td>
+            </tr>
 
-                updateTimerDisplay();
+            <tr>
+              <td>Program</td>
+              <td>${escapeHtml(result.program)}</td>
+            </tr>
 
+            <tr>
+              <td>Level</td>
+              <td>${escapeHtml(result.level)}</td>
+            </tr>
 
-                if(
-                    examSeconds <= 300
-                ){
+            <tr>
+              <td>Certificate Date</td>
+              <td>${escapeHtml(result.date)}</td>
+            </tr>
 
-                    document
-                        .getElementById("examTimer")
-                        .classList
-                        .add("danger");
+            <tr>
+              <td>Status</td>
+              <td>
+                <strong style="color:#027a48;">
+                  ${escapeHtml(result.status)}
+                </strong>
+              </td>
+            </tr>
 
-                }
+          </table>
 
+        </div>
 
-                if(
-                    examSeconds <= 0
-                ){
+      `;
 
-                    clearInterval(
-                        examTimerInterval
-                    );
-
-                    submitTEFLExam(true);
-
-                }
-
-            },
-            1000
-        );
-
-}
-
-
-/* =========================================================
-   TIMER DISPLAY
-========================================================= */
-
-function updateTimerDisplay(){
-
-    var h =
-        Math.floor(
-            examSeconds / 3600
-        );
+    }
 
 
-    var m =
-        Math.floor(
-            (examSeconds % 3600) / 60
-        );
-
-
-    var s =
-        examSeconds % 60;
-
+    /* =========================
+       ENTER KEY SEARCH
+    ========================== */
 
     document
-        .getElementById("timerDisplay")
-        .textContent =
+      .getElementById("certificateSearch")
+      .addEventListener("keydown", function(event) {
 
-        String(h).padStart(2,"0") +
-        ":" +
-        String(m).padStart(2,"0") +
-        ":" +
-        String(s).padStart(2,"0");
+        if (event.key === "Enter") {
 
-}
+          event.preventDefault();
 
-
-/* =========================================================
-   SUBMIT EXAM
-========================================================= */
-
-function submitTEFLExam(autoSubmit){
-
-    if(examSubmitted){
-        return;
-    }
-
-
-    var questions =
-        getExamQuestions();
-
-
-    var score = 0;
-
-    var unanswered = 0;
-
-
-    questions.forEach(function(q,index){
-
-        var selected =
-            document.querySelector(
-                'input[name="q' +
-                index +
-                '"]:checked'
-            );
-
-
-        if(!selected){
-
-            unanswered++;
-
-            return;
+          verifyCertificate();
 
         }
 
-
-        if(
-            Number(selected.value) === q.c
-        ){
-
-            score++;
-
-        }
-
-    });
+      });
 
 
-    if(
-        !autoSubmit &&
-        unanswered > 0
-    ){
+    /* =========================
+       SECURITY / HTML ESCAPE
+    ========================== */
 
-        document
-            .getElementById("teflExamResult")
-            .innerHTML =
+    function escapeHtml(value) {
 
-            '<div class="error">' +
+      return String(value)
 
-            '❌ Please answer all questions before submitting.' +
+        .replace(/&/g, "&amp;")
 
-            '<br><br>' +
+        .replace(/</g, "&lt;")
 
-            'Unanswered: ' +
-            unanswered +
+        .replace(/>/g, "&gt;")
 
-            '</div>';
+        .replace(/"/g, "&quot;")
 
-        return;
+        .replace(/'/g, "&#039;");
 
     }
 
 
-    examSubmitted = true;
+    /* =========================
+       CONTACT FORM
+    ========================== */
 
-    examStarted = false;
+    function sendMessage(event) {
 
+      event.preventDefault();
 
-    clearInterval(
-        examTimerInterval
-    );
+      const name =
+        document.getElementById("name").value;
 
+      alert(
+        "Thank you, " +
+        name +
+        "! Your message has been received."
+      );
 
-    document.body.classList.remove("exam-active");
-
-
-    examScore = score;
-
-
-    var percentage =
-        Math.round(
-            (score / questions.length) * 100
-        );
-
-
-    var resultBox =
-        document.getElementById("teflExamResult");
-
-
-    if(percentage >= 70){
-
-        resultBox.innerHTML =
-
-            '<div class="success">' +
-
-            '<strong>🎉 TEFL EXAM PASSED</strong>' +
-
-            '<br><br>' +
-
-            'Score: ' +
-            score +
-            '/100' +
-
-            '<br>' +
-
-            'Percentage: ' +
-            percentage +
-            '%' +
-
-            '<br>' +
-
-            'Status: PASS' +
-
-            '</div>' +
-
-            '<br>' +
-
-            '<button ' +
-            'type="button" ' +
-            'class="btn btn-gold" ' +
-            'onclick="showTEFLRegistration()">' +
-
-            'CONTINUE TO CERTIFICATE REGISTRATION' +
-
-            '</button>';
-
-    }else{
-
-        resultBox.innerHTML =
-
-            '<div class="error">' +
-
-            '<strong>❌ TEFL EXAM FAILED</strong>' +
-
-            '<br><br>' +
-
-            'Score: ' +
-            score +
-            '/100' +
-
-            '<br>' +
-
-            'Percentage: ' +
-            percentage +
-            '%' +
-
-            '<br>' +
-
-            'Minimum passing score: 70%' +
-
-            '<br><br>' +
-
-            (
-                autoSubmit
-                ?
-                'The examination was automatically submitted because the time expired.'
-                :
-                'You did not reach the minimum passing score.'
-            ) +
-
-            '</div>';
+      event.target.reset();
 
     }
 
-
-    document
-        .getElementById("teflExam")
-        .scrollIntoView({
-            behavior:"smooth",
-            block:"start"
-        });
-
-}
-
-
-/* =========================================================
-   REGISTRATION AFTER PASS
-========================================================= */
-
-function showTEFLRegistration(){
-
-    if(
-        examScore < 70
-    ){
-
-        showToast(
-            "You must pass the exam first."
-        );
-
-        return;
-
-    }
-
-
-    var box =
-        document.getElementById("teflRegistration");
-
-
-    box.classList.remove("hidden");
-
-
-    box.scrollIntoView({
-        behavior:"smooth",
-        block:"start"
-    });
-
-}
-
-
-/* =========================================================
-   REGISTER TEFL STUDENT
-========================================================= */
-
-function registerTEFLStudent(){
-
-    var name =
-        document
-            .getElementById("studentFullName")
-            .value
-            .trim();
-
-
-    var nationality =
-        document
-            .getElementById("studentNationality")
-            .value
-            .trim();
-
-
-    var country =
-        document
-            .getElementById("studentCountry")
-            .value
-            .trim();
-
-
-    var email =
-        document
-            .getElementById("studentEmail")
-            .value
-            .trim();
-
-
-    var result =
-        document
-            .getElementById("registrationResult");
-
-
-    if(
-        !name ||
-        !nationality ||
-        !country ||
-        !email
-    ){
-
-        result.innerHTML =
-            '<div class="error">' +
-            '❌ Please complete all required fields.' +
-            '</div>';
-
-        return;
-
-    }
-
-
-    if(
-        examScore < 70
-    ){
-
-        result.innerHTML =
-            '<div class="error">' +
-            '❌ You must pass the TEFL examination first.' +
-            '</div>';
-
-        return;
-
-    }
-
-
-    result.innerHTML =
-        '<div class="success">' +
-        '⏳ Registering your information...' +
-        '</div>';
-
-
-    var url =
-        API_URL +
-
-        "?action=registerTEFL" +
-
-        "&name=" +
-        encodeURIComponent(name) +
-
-        "&nationality=" +
-        encodeURIComponent(nationality) +
-
-        "&country=" +
-        encodeURIComponent(country) +
-
-        "&email=" +
-        encodeURIComponent(email) +
-
-        "&score=" +
-        encodeURIComponent(examScore);
-
-
-    jsonpRequest(
-        url,
-        function(data){
-
-            if(
-                data &&
-                data.success
-            ){
-
-                result.innerHTML =
-
-                    '<div class="success">' +
-
-                    '<strong>🎉 Registration Successful</strong>' +
-
-                    '<br><br>' +
-
-                    'Student ID:<br>' +
-
-                    '<strong>' +
-                    escapeHTML(
-                        data.studentId ||
-                        data.studentID ||
-                        "GETI-STU-PENDING"
-                    ) +
-                    '</strong>' +
-
-                    '<br><br>' +
-
-                    'Certificate ID:<br>' +
-
-                    '<strong>' +
-                    escapeHTML(
-                        data.certificateId ||
-                        data.certificate ||
-                        "GETI-CERT-PENDING"
-                    ) +
-                    '</strong>' +
-
-                    '<br><br>' +
-
-                    'Result ID:<br>' +
-
-                    '<strong>' +
-                    escapeHTML(
-                        data.resultId ||
-                        "GETI-RES-PENDING"
-                    ) +
-                    '</strong>' +
-
-                    '</div>';
-
-            }else{
-
-                result.innerHTML =
-
-                    '<div class="error">' +
-
-                    '❌ ' +
-
-                    escapeHTML(
-                        data &&
-                        data.message
-                        ?
-                        data.message
-                        :
-                        "Registration failed."
-                    ) +
-
-                    '</div>';
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   ENGLISH EXAM
-========================================================= */
-
-function openEnglishExam(){
-
-    var section =
-        document.getElementById(
-            "englishExamSection"
-        );
-
-
-    section.classList.remove("hidden");
-
-
-    section.scrollIntoView({
-        behavior:"smooth",
-        block:"start"
-    });
-
-}
-
-
-function startEnglishExam(){
-
-    var name =
-        document
-            .getElementById("englishName")
-            .value
-            .trim();
-
-
-    var nationality =
-        document
-            .getElementById("englishNationality")
-            .value
-            .trim();
-
-
-    var country =
-        document
-            .getElementById("englishCountry")
-            .value
-            .trim();
-
-
-    var email =
-        document
-            .getElementById("englishEmail")
-            .value
-            .trim();
-
-
-    var result =
-        document
-            .getElementById(
-                "englishRegistrationResult"
-            );
-
-
-    if(
-        !name ||
-        !nationality ||
-        !country ||
-        !email
-    ){
-
-        result.innerHTML =
-            '<div class="error">' +
-            '❌ Please complete all fields.' +
-            '</div>';
-
-        return;
-
-    }
-
-
-    result.innerHTML =
-        '<div class="success">' +
-        '⏳ Preparing your English examination...' +
-        '</div>';
-
-
-    var url =
-        API_URL +
-
-        "?action=startEnglishExam" +
-
-        "&name=" +
-        encodeURIComponent(name) +
-
-        "&nationality=" +
-        encodeURIComponent(nationality) +
-
-        "&country=" +
-        encodeURIComponent(country) +
-
-        "&email=" +
-        encodeURIComponent(email);
-
-
-    jsonpRequest(
-        url,
-        function(data){
-
-            if(
-                data &&
-                data.success
-            ){
-
-                result.innerHTML =
-                    '<div class="success">' +
-                    '✓ Registration completed.' +
-                    '<br><br>' +
-                    'Exam ID: ' +
-                    escapeHTML(
-                        data.examId ||
-                        "GETI-EXAM-PENDING"
-                    ) +
-                    '<br><br>' +
-                    '<strong>The English examination module is ready.</strong>' +
-                    '</div>';
-
-            }else{
-
-                result.innerHTML =
-                    '<div class="error">' +
-                    '❌ ' +
-                    escapeHTML(
-                        data &&
-                        data.message
-                        ?
-                        data.message
-                        :
-                        "Unable to start English examination."
-                    ) +
-                    '</div>';
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   STUDENT PORTAL
-========================================================= */
-
-function studentPortalLogin(){
-
-    var login =
-        document
-            .getElementById("portalLoginInput")
-            .value
-            .trim();
-
-
-    var result =
-        document
-            .getElementById("portalLoginResult");
-
-
-    if(!login){
-
-        result.innerHTML =
-            '<div class="error">' +
-            '❌ Enter your Student ID or email.' +
-            '</div>';
-
-        return;
-
-    }
-
-
-    result.innerHTML =
-        '<div class="success">' +
-        '⏳ Loading student information...' +
-        '</div>';
-
-
-    var url =
-        API_URL +
-
-        "?action=studentPortal" +
-
-        "&student=" +
-        encodeURIComponent(login);
-
-
-    jsonpRequest(
-        url,
-        function(data){
-
-            if(
-                data &&
-                data.success
-            ){
-
-                displayPortal(
-                    data
-                );
-
-                result.innerHTML =
-                    '<div class="success">' +
-                    '✓ Student account loaded.' +
-                    '</div>';
-
-            }else{
-
-                result.innerHTML =
-                    '<div class="error">' +
-                    '❌ ' +
-                    escapeHTML(
-                        data &&
-                        data.message
-                        ?
-                        data.message
-                        :
-                        "Student not found."
-                    ) +
-                    '</div>';
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   DISPLAY PORTAL
-========================================================= */
-
-function displayPortal(data){
-
-    var dashboard =
-        document.getElementById(
-            "portalDashboard"
-        );
-
-
-    dashboard.classList.remove("hidden");
-
-
-    var student =
-        data.student || data;
-
-
-    document
-        .getElementById("portalStudentName")
-        .textContent =
-        student.name ||
-        student.fullName ||
-        "Student";
-
-
-    document
-        .getElementById("portalPrograms")
-        .textContent =
-        data.programCount ||
-        (data.programs || []).length ||
-        0;
-
-
-    document
-        .getElementById("portalExams")
-        .textContent =
-        data.examCount ||
-        (data.results || []).length ||
-        0;
-
-
-    document
-        .getElementById("portalPassed")
-        .textContent =
-        data.passedCount ||
-        0;
-
-
-    document
-        .getElementById("portalCertificates")
-        .textContent =
-        data.certificateCount ||
-        (data.certificates || []).length ||
-        0;
-
-
-    var content =
-        document.getElementById(
-            "portalContent"
-        );
-
-
-    var html = "";
-
-
-    if(
-        data.results &&
-        data.results.length
-    ){
-
-        html +=
-            '<h3 style="color:#0b2d5c;margin-top:30px;">Exam Results</h3>' +
-
-            '<div style="overflow-x:auto;">' +
-
-            '<table class="portal-table">' +
-
-            '<tr>' +
-            '<th>Result ID</th>' +
-            '<th>Program</th>' +
-            '<th>Score</th>' +
-            '<th>Status</th>' +
-            '</tr>';
-
-
-        data.results.forEach(function(r){
-
-            html +=
-                '<tr>' +
-
-                '<td>' +
-                escapeHTML(r.resultId) +
-                '</td>' +
-
-                '<td>' +
-                escapeHTML(r.program) +
-                '</td>' +
-
-                '<td>' +
-                escapeHTML(r.score) +
-                '</td>' +
-
-                '<td>' +
-                escapeHTML(r.status) +
-                '</td>' +
-
-                '</tr>';
-
-        });
-
-
-        html +=
-            '</table>' +
-            '</div>';
-
-    }
-
-
-    if(
-        data.certificates &&
-        data.certificates.length
-    ){
-
-        html +=
-            '<h3 style="color:#0b2d5c;margin-top:30px;">Certificates</h3>' +
-
-            '<div style="overflow-x:auto;">' +
-
-            '<table class="portal-table">' +
-
-            '<tr>' +
-            '<th>Certificate ID</th>' +
-            '<th>Program</th>' +
-            '<th>Status</th>' +
-            '</tr>';
-
-
-        data.certificates.forEach(function(c){
-
-            html +=
-                '<tr>' +
-
-                '<td>' +
-                escapeHTML(
-                    c.certificateId ||
-                    c.id
-                ) +
-                '</td>' +
-
-                '<td>' +
-                escapeHTML(c.program) +
-                '</td>' +
-
-                '<td>' +
-                escapeHTML(
-                    c.status ||
-                    "VALID"
-                ) +
-                '</td>' +
-
-                '</tr>';
-
-        });
-
-
-        html +=
-            '</table>' +
-            '</div>';
-
-    }
-
-
-    if(!html){
-
-        html =
-            '<div class="warning" style="margin-top:25px;">' +
-            'No additional portal records are available.' +
-            '</div>';
-
-    }
-
-
-    content.innerHTML =
-        html;
-
-}
-
-
-/* =========================================================
-   PROGRAM MESSAGE
-========================================================= */
-
-function openProgramMessage(program){
-
-    alert(
-        program +
-        " module is connected to the GETI platform. " +
-        "The final examination and registration can be enabled through the Google Apps Script backend."
-    );
-
-}
-
-
-/* =========================================================
-   FAQ
-========================================================= */
-
-function toggleFAQ(button){
-
-    var item =
-        button.parentElement;
-
-
-    item.classList.toggle("open");
-
-
-    var span =
-        button.querySelector("span");
-
-
-    span.textContent =
-        item.classList.contains("open")
-        ? "−"
-        : "+";
-
-}
-
-
-/* =========================================================
-   CONTACT
-========================================================= */
-
-function sendMessage(){
-
-    var name =
-        document
-            .getElementById("contactName")
-            .value
-            .trim();
-
-
-    var email =
-        document
-            .getElementById("contactEmail")
-            .value
-            .trim();
-
-
-    var subject =
-        document
-            .getElementById("contactSubject")
-            .value
-            .trim();
-
-
-    var message =
-        document
-            .getElementById("contactMessage")
-            .value
-            .trim();
-
-
-    var result =
-        document.getElementById(
-            "contactResult"
-        );
-
-
-    if(
-        !name ||
-        !email ||
-        !subject ||
-        !message
-    ){
-
-        result.innerHTML =
-            '<div class="error">' +
-            '❌ Please complete all fields.' +
-            '</div>';
-
-        return;
-
-    }
-
-
-    result.innerHTML =
-        '<div class="success">' +
-        '⏳ Sending message...' +
-        '</div>';
-
-
-    var url =
-        API_URL +
-
-        "?action=contact" +
-
-        "&name=" +
-        encodeURIComponent(name) +
-
-        "&email=" +
-        encodeURIComponent(email) +
-
-        "&subject=" +
-        encodeURIComponent(subject) +
-
-        "&message=" +
-        encodeURIComponent(message);
-
-
-    jsonpRequest(
-        url,
-        function(data){
-
-            if(
-                data &&
-                data.success
-            ){
-
-                result.innerHTML =
-                    '<div class="success">' +
-                    '✓ Your message has been sent successfully.' +
-                    '</div>';
-
-            }else{
-
-                result.innerHTML =
-                    '<div class="error">' +
-                    '❌ ' +
-                    escapeHTML(
-                        data &&
-                        data.message
-                        ?
-                        data.message
-                        :
-                        "Unable to send message."
-                    ) +
-                    '</div>';
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   ADMIN LOGIN
-========================================================= */
-
-function adminLogin(){
-
-    var username =
-        document
-            .getElementById("adminUsername")
-            .value
-            .trim();
-
-
-    var password =
-        document
-            .getElementById("adminPassword")
-            .value;
-
-
-    var result =
-        document
-            .getElementById("adminLoginResult");
-
-
-    if(
-        !username ||
-        !password
-    ){
-
-        result.innerHTML =
-            '<div class="error">' +
-            '❌ Enter username and password.' +
-            '</div>';
-
-        return;
-
-    }
-
-
-    result.innerHTML =
-        '<div class="success">' +
-        '⏳ Authenticating...' +
-        '</div>';
-
-
-    var url =
-        API_URL +
-
-        "?action=adminLogin" +
-
-        "&username=" +
-        encodeURIComponent(username) +
-
-        "&password=" +
-        encodeURIComponent(password);
-
-
-    jsonpRequest(
-        url,
-        function(data){
-
-            if(
-                data &&
-                data.success
-            ){
-
-                adminSession = true;
-
-
-                document
-                    .getElementById(
-                        "adminLogin"
-                    )
-                    .classList
-                    .add("hidden");
-
-
-                document
-                    .getElementById(
-                        "adminDashboard"
-                    )
-                    .classList
-                    .remove("hidden");
-
-
-                loadAdminDashboard(
-                    data
-                );
-
-            }else{
-
-                result.innerHTML =
-                    '<div class="error">' +
-                    '❌ Invalid admin credentials.' +
-                    '</div>';
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   ADMIN DASHBOARD
-========================================================= */
-
-function loadAdminDashboard(data){
-
-    document
-        .getElementById("adminStudents")
-        .textContent =
-        data.students ||
-        data.totalStudents ||
-        0;
-
-
-    document
-        .getElementById("adminExams")
-        .textContent =
-        data.exams ||
-        data.totalExams ||
-        0;
-
-
-    document
-        .getElementById("adminPassed")
-        .textContent =
-        data.passed ||
-        0;
-
-
-    document
-        .getElementById("adminFailed")
-        .textContent =
-        data.failed ||
-        0;
-
-
-    document
-        .getElementById("adminCertificates")
-        .textContent =
-        data.certificates ||
-        0;
-
-}
-
-
-/* =========================================================
-   ADMIN SEARCH
-========================================================= */
-
-function adminSearch(type){
-
-    if(!adminSession){
-
-        showToast(
-            "Please login as administrator first."
-        );
-
-        return;
-
-    }
-
-
-    var value =
-        prompt(
-            "Enter search value:"
-        );
-
-
-    if(!value){
-
-        return;
-
-    }
-
-
-    var url =
-        API_URL +
-
-        "?action=adminSearch" +
-
-        "&searchType=" +
-        encodeURIComponent(type) +
-
-        "&value=" +
-        encodeURIComponent(value);
-
-
-    var result =
-        document.getElementById(
-            "adminResults"
-        );
-
-
-    result.innerHTML =
-        '<div class="success">' +
-        '⏳ Searching...' +
-        '</div>';
-
-
-    jsonpRequest(
-        url,
-        function(data){
-
-            if(
-                data &&
-                data.success
-            ){
-
-                displayAdminResults(
-                    data.results || []
-                );
-
-            }else{
-
-                result.innerHTML =
-                    '<div class="error">' +
-                    '❌ ' +
-                    escapeHTML(
-                        data &&
-                        data.message
-                        ?
-                        data.message
-                        :
-                        "No records found."
-                    ) +
-                    '</div>';
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   DISPLAY ADMIN RESULTS
-========================================================= */
-
-function displayAdminResults(results){
-
-    var box =
-        document.getElementById(
-            "adminResults"
-        );
-
-
-    if(!results.length){
-
-        box.innerHTML =
-            '<div class="warning">' +
-            'No records found.' +
-            '</div>';
-
-        return;
-
-    }
-
-
-    var html =
-        '<div class="admin-table-wrap">' +
-
-        '<table class="admin-table">' +
-
-        '<tr>' +
-
-        '<th>Name</th>' +
-        '<th>ID</th>' +
-        '<th>Program</th>' +
-        '<th>Score</th>' +
-        '<th>Status</th>' +
-
-        '</tr>';
-
-
-    results.forEach(function(r){
-
-        html +=
-            '<tr>' +
-
-            '<td>' +
-            escapeHTML(
-                r.name ||
-                r.fullName
-            ) +
-            '</td>' +
-
-            '<td>' +
-            escapeHTML(
-                r.id ||
-                r.studentId ||
-                r.certificateId ||
-                r.resultId
-            ) +
-            '</td>' +
-
-            '<td>' +
-            escapeHTML(
-                r.program ||
-                r.type
-            ) +
-            '</td>' +
-
-            '<td>' +
-            escapeHTML(
-                r.score
-            ) +
-            '</td>' +
-
-            '<td>' +
-            escapeHTML(
-                r.status
-            ) +
-            '</td>' +
-
-            '</tr>';
-
-    });
-
-
-    html +=
-        '</table>' +
-        '</div>';
-
-
-    box.innerHTML =
-        html;
-
-}
-
-
-/* =========================================================
-   EXIT EXAM
-========================================================= */
-
-function confirmExitExam(){
-
-    if(!examStarted){
-
-        document
-            .getElementById("teflExam")
-            .classList
-            .add("hidden");
-
-        return;
-
-    }
-
-
-    var confirmExit =
-        confirm(
-            "Are you sure you want to exit the examination? Your current answers may be lost."
-        );
-
-
-    if(confirmExit){
-
-        clearInterval(
-            examTimerInterval
-        );
-
-        examStarted = false;
-
-        examSubmitted = true;
-
-        document.body.classList.remove(
-            "exam-active"
-        );
-
-
-        document
-            .getElementById("teflExam")
-            .classList
-            .add("hidden");
-
-    }
-
-}
-
-
-/* =========================================================
-   ANTI-COPY
-========================================================= */
-
-document.addEventListener(
-    "contextmenu",
-    function(event){
-
-        if(
-            document.body.classList.contains(
-                "exam-active"
-            )
-        ){
-
-            event.preventDefault();
-
-        }
-
-    }
-);
-
-
-document.addEventListener(
-    "copy",
-    function(event){
-
-        if(
-            document.body.classList.contains(
-                "exam-active"
-            )
-        ){
-
-            event.preventDefault();
-
-        }
-
-    }
-);
-
-
-document.addEventListener(
-    "cut",
-    function(event){
-
-        if(
-            document.body.classList.contains(
-                "exam-active"
-            )
-        ){
-
-            event.preventDefault();
-
-        }
-
-    }
-);
-
-
-document.addEventListener(
-    "dragstart",
-    function(event){
-
-        if(
-            document.body.classList.contains(
-                "exam-active"
-            )
-        ){
-
-            event.preventDefault();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   TAB SWITCH DETECTION
-========================================================= */
-
-document.addEventListener(
-    "visibilitychange",
-    function(){
-
-        if(
-            document.hidden &&
-            examStarted &&
-            !examSubmitted
-        ){
-
-            tabViolationCount++;
-
-
-            var warning =
-                document.getElementById(
-                    "examWarning"
-                );
-
-
-            warning.classList.remove(
-                "hidden"
-            );
-
-
-            warning.innerHTML =
-                '⚠️ Examination warning: ' +
-                'Leaving the examination window was detected. ' +
-                'Violation ' +
-                tabViolationCount +
-                ' of ' +
-                maxTabViolations +
-                '.';
-
-
-            if(
-                tabViolationCount >=
-                maxTabViolations
-            ){
-
-                warning.innerHTML +=
-                    '<br><br><strong>' +
-                    'The maximum number of violations has been reached. ' +
-                    'The examination will be submitted automatically.' +
-                    '</strong>';
-
-
-                setTimeout(
-                    function(){
-
-                        submitTEFLExam(true);
-
-                    },
-                    1200
-                );
-
-            }
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   FULLSCREEN HELPER
-========================================================= */
-
-function requestExamFullscreen(){
-
-    var element =
-        document.documentElement;
-
-
-    if(
-        element.requestFullscreen
-    ){
-
-        element
-            .requestFullscreen()
-            .catch(function(){});
-
-    }
-
-}
-
-
-/* =========================================================
-   URL AUTO VERIFICATION
-========================================================= */
-
-(function(){
-
-    var params =
-        new URLSearchParams(
-            window.location.search
-        );
-
-
-    var verify =
-        params.get("verify");
-
-
-    if(verify){
-
-        var input =
-            document.getElementById(
-                "verifyInput"
-            );
-
-
-        if(input){
-
-            input.value =
-                verify;
-
-            setVerifyType("id");
-
-
-            setTimeout(
-                function(){
-
-                    verifyCertificate();
-
-                },
-                700
-            );
-
-        }
-
-    }
-
-})();
-
-
-/* =========================================================
-   KEYBOARD PROTECTION DURING EXAM
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    function(event){
-
-        if(
-            !document.body.classList.contains(
-                "exam-active"
-            )
-        ){
-
-            return;
-
-        }
-
-
-        if(
-            (event.ctrlKey &&
-             ["c","x","a","u","s"].includes(
-                 event.key.toLowerCase()
-             )) ||
-            event.key === "F12"
-        ){
-
-            event.preventDefault();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   BEFORE UNLOAD DURING EXAM
-========================================================= */
-
-window.addEventListener(
-    "beforeunload",
-    function(event){
-
-        if(
-            examStarted &&
-            !examSubmitted
-        ){
-
-            event.preventDefault();
-
-            event.returnValue =
-                "Your examination is currently in progress.";
-
-        }
-
-    }
-);
-
-</script>
+  </script>
 
 </body>
 </html>
