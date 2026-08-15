@@ -776,6 +776,29 @@ button,input,textarea{
     color:#0b2d5c;
 }
 
+/* 60-MINUTE EXAM TIMER */
+.exam-timer-box{
+    position:sticky;
+    top:90px;
+    z-index:50;
+    display:flex;
+    justify-content:center;
+    margin:0 auto 18px;
+}
+.exam-timer{
+    background:#0b2d5c;
+    color:#fff;
+    padding:9px 18px;
+    border-radius:999px;
+    font-weight:900;
+    font-size:18px;
+    box-shadow:0 5px 18px rgba(0,0,0,.18);
+    letter-spacing:.5px;
+}
+.exam-timer.warning{background:#b38a28;}
+.exam-timer.danger{background:#a51e1e;animation:timerPulse 1s infinite;}
+@keyframes timerPulse{50%{transform:scale(1.04);}}
+
 .question-text{
     font-size:20px;
     font-weight:bold;
@@ -2005,6 +2028,103 @@ var API_URL =
 var verifyType="id";
 
 /* =========================================================
+   EXAM TIMER — 60 MINUTES TOTAL
+   When time reaches 00:00, the unfinished exam is stopped
+   and all unanswered questions are counted as incorrect.
+========================================================= */
+var GETI_EXAM_DURATION=60*60;
+var getiExamTimerInterval=null;
+var getiExamSecondsLeft=GETI_EXAM_DURATION;
+var getiExamTimeExpired=false;
+
+function startGETIExamTimer(){
+    stopGETIExamTimer();
+    getiExamSecondsLeft=GETI_EXAM_DURATION;
+    getiExamTimeExpired=false;
+    renderGETIExamTimer();
+    getiExamTimerInterval=setInterval(function(){
+        if(!examState || !examState.started){
+            stopGETIExamTimer();
+            return;
+        }
+        getiExamSecondsLeft--;
+        renderGETIExamTimer();
+        if(getiExamSecondsLeft<=0){
+            getiExamSecondsLeft=0;
+            stopGETIExamTimer();
+            timeExpiredSubmitExam();
+        }
+    },1000);
+}
+
+function stopGETIExamTimer(){
+    if(getiExamTimerInterval){
+        clearInterval(getiExamTimerInterval);
+        getiExamTimerInterval=null;
+    }
+}
+
+function renderGETIExamTimer(){
+    var box=document.getElementById("getiExamTimer");
+    if(!box)return;
+    var min=Math.floor(getiExamSecondsLeft/60);
+    var sec=getiExamSecondsLeft%60;
+    box.textContent="TIME REMAINING: "+String(min).padStart(2,"0")+":"+String(sec).padStart(2,"0");
+    box.classList.remove("warning","danger");
+    if(getiExamSecondsLeft<=300) box.classList.add("danger");
+    else if(getiExamSecondsLeft<=600) box.classList.add("warning");
+}
+
+function createGETIExamTimer(){
+    var old=document.getElementById("getiExamTimerBox");
+    if(old)old.remove();
+    var box=document.createElement("div");
+    box.id="getiExamTimerBox";
+    box.className="exam-timer-box";
+    box.innerHTML='<div id="getiExamTimer" class="exam-timer">TIME REMAINING: 60:00</div>';
+    var panel=document.getElementById("examPanel");
+    panel.parentNode.insertBefore(box,panel);
+    renderGETIExamTimer();
+}
+
+function removeGETIExamTimer(){
+    stopGETIExamTimer();
+    var box=document.getElementById("getiExamTimerBox");
+    if(box)box.remove();
+}
+
+function timeExpiredSubmitExam(){
+    if(!examState || !examState.started || getiExamTimeExpired)return;
+    getiExamTimeExpired=true;
+
+    var subjects=examState.program==="TEFL" ? TEFL_SUBJECTS : TESOL_SUBJECTS;
+    var data=examState.program==="TEFL" ? TEFL_DATA : TESOL_DATA;
+    examState.subjectScores=[];
+
+    /* Grade every subject. Unanswered questions remain null and are wrong. */
+    subjects.forEach(function(subject,si){
+        var questions=data[subject];
+        var score=0;
+        for(var qi=0;qi<15;qi++){
+            if(examState.answers[si] && examState.answers[si][qi]===questions[qi][5])score++;
+        }
+        var percentage=Math.round((score/15)*100);
+        examState.subjectScores.push({
+            subject:subject,
+            score:score,
+            total:15,
+            percentage:percentage,
+            grade:calculateGrade(percentage)
+        });
+    });
+
+    alert("Time is over. Your examination has been stopped and submitted automatically. Unanswered questions are counted as incorrect.");
+    removeGETIExamTimer();
+    showFinalResult();
+}
+
+
+/* =========================================================
    MOBILE MENU
 ========================================================= */
 
@@ -2892,6 +3012,7 @@ document.addEventListener("touchmove",function(){
 
 function openExamRegistration(program){
 
+    removeGETIExamTimer();
     let records=getExamRecords();
 
     let alreadyPassed=records.find(function(r){
@@ -3045,6 +3166,8 @@ function submitRegistration(){
     /* ENABLE COPY PROTECTION */
     enableExamProtection();
 
+    createGETIExamTimer();
+    startGETIExamTimer();
     showQuestion();
 
 }
@@ -3547,6 +3670,7 @@ function showFinalResult(timeExpired){
     disableExamProtection();
 
     examState.started=false;
+    removeGETIExamTimer();
 
     let totalScore=0;
 
