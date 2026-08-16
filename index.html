@@ -1,23 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const SUPABASE_URL = "https://nfprquwwysgkymgwtuio.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_XzgF66p4RfQbyDZUWksPoA_G8_tYwLo";
-
-const { createClient } = supabase;
-
-const db = createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
-</script>
 
 <title>GLOBAL ENGLISH TEACHING INSTITUTE</title>
 
@@ -791,6 +776,10 @@ button,input,textarea{
     color:#0b2d5c;
 }
 
+.exam-timer{display:inline-block;background:#0b2d5c;color:#fff;padding:8px 14px;border-radius:6px;font-size:18px;font-weight:900;letter-spacing:.5px;}
+.exam-timer.warning{background:#b38a28;}
+.exam-timer.expired{background:#a51e1e;}
+
 .question-text{
     font-size:20px;
     font-weight:bold;
@@ -905,20 +894,6 @@ button,input,textarea{
     margin:20px 0;
 }
 
-.exam-timer{
-    background:#071d3a;
-    color:#fff;
-    padding:10px 16px;
-    border-radius:6px;
-    font-weight:900;
-    font-size:18px;
-    text-align:center;
-    margin:0 0 18px;
-}
-.exam-timer.warning{
-    background:#a51e1e;
-}
-
 /* =========================================================
    EXAM COPY PROTECTION - ADDED
 ========================================================= */
@@ -997,77 +972,6 @@ button,input,textarea{
 
 .result-search-output{
     margin-top:20px;
-}
-
-/* ADMIN */
-
-.admin-section{
-    background:#eef3f8;
-}
-
-.admin-login,
-.admin-panel{
-    max-width:1000px;
-    margin:auto;
-    background:#fff;
-    padding:30px;
-    border-radius:8px;
-    box-shadow:0 8px 25px rgba(0,0,0,.08);
-}
-
-.admin-login{
-    max-width:500px;
-}
-
-.admin-login input{
-    width:100%;
-    padding:13px;
-    border:1px solid #ccd4df;
-    margin-bottom:12px;
-    border-radius:5px;
-}
-
-.admin-panel{
-    display:none;
-}
-
-.admin-table-wrap{
-    overflow-x:auto;
-}
-
-.admin-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
-}
-
-.admin-table th,
-.admin-table td{
-    border:1px solid #dbe2ea;
-    padding:10px;
-    text-align:left;
-    font-size:13px;
-}
-
-.admin-table th{
-    background:#0b2d5c;
-    color:white;
-}
-
-.admin-action{
-    background:#a51e1e;
-    color:white;
-    border:none;
-    padding:7px 10px;
-    border-radius:4px;
-    cursor:pointer;
-}
-
-.admin-info{
-    background:#f8fafc;
-    padding:15px;
-    border-left:4px solid #b38a28;
-    margin-bottom:20px;
 }
 
 /* FOOTER */
@@ -1212,12 +1116,19 @@ button,input,textarea{
 
 }
 
-/* CHAT WITH ADMINISTRATOR */
-.chat-launcher{position:fixed;right:22px;bottom:22px;z-index:2000;background:#0b2d5c;color:#fff;border:0;border-radius:24px;padding:10px 15px;font-size:12px;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,.22);cursor:pointer}.chat-launcher:hover{background:#b38a28}.chat-modal{display:none;position:fixed;inset:0;background:rgba(4,18,38,.55);z-index:2100;align-items:center;justify-content:center;padding:15px}.chat-modal.show{display:flex}.chat-window{width:min(980px,100%);height:min(760px,92vh);background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);display:flex;flex-direction:column}.chat-header{background:#0b2d5c;color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}.chat-close{background:transparent;border:0;color:#fff;font-size:24px;cursor:pointer}.chat-auth{padding:22px;overflow:auto}.chat-auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.chat-card{border:1px solid #dbe2ea;border-radius:8px;padding:20px;background:#f8fafc}.chat-card h3{color:#0b2d5c;margin-bottom:12px}.chat-card input{width:100%;padding:11px;margin-bottom:10px;border:1px solid #ccd4df;border-radius:5px}.chat-main{display:none;flex:1;min-height:0}.chat-main.show{display:flex}.chat-sidebar{width:250px;border-right:1px solid #dbe2ea;background:#f8fafc;overflow:auto}.chat-sidebar-title{padding:14px;font-weight:800;color:#0b2d5c;border-bottom:1px solid #dbe2ea}.chat-contact{padding:13px;border-bottom:1px solid #e3e8ef;cursor:pointer}.chat-contact:hover,.chat-contact.active{background:#eaf0f7}.chat-contact strong{display:block;color:#172033}.chat-contact small{color:#687386}.chat-content{flex:1;display:flex;flex-direction:column;min-width:0}.chat-toolbar{padding:10px 14px;border-bottom:1px solid #dbe2ea;display:flex;justify-content:space-between;align-items:center}.chat-messages{flex:1;overflow:auto;padding:18px;background:#f5f7fa}.chat-message{max-width:78%;margin:8px 0;padding:10px 12px;border-radius:10px;background:#fff;border:1px solid #dfe5ed}.chat-message.mine{margin-left:auto;background:#0b2d5c;color:#fff;border-color:#0b2d5c}.chat-message .meta{font-size:10px;opacity:.7;margin-top:5px}.chat-file{display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px;border-radius:6px;background:rgba(0,0,0,.05)}.chat-file button{border:0;background:#b38a28;color:#fff;padding:5px 8px;border-radius:4px;cursor:pointer}.chat-compose{padding:10px;border-top:1px solid #dbe2ea;background:#fff}.chat-compose textarea{width:100%;min-height:60px;padding:10px;border:1px solid #ccd4df;border-radius:5px;resize:vertical}.chat-compose-row{display:flex;gap:8px;margin-top:8px;align-items:center}.chat-compose-row input[type=file]{flex:1}.chat-compose-row button{border:0;background:#0b2d5c;color:#fff;padding:10px 16px;border-radius:5px;font-weight:bold;cursor:pointer}.chat-status{margin-top:8px;font-size:12px}.chat-admin-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.chat-admin-tabs button{border:1px solid #0b2d5c;background:#fff;color:#0b2d5c;padding:8px 13px;border-radius:5px;cursor:pointer;font-weight:bold}.chat-admin-tabs button.active{background:#0b2d5c;color:#fff}.chat-admin-view{display:none}.chat-admin-view.active{display:block}.chat-badge{display:inline-flex;min-width:18px;height:18px;padding:0 5px;align-items:center;justify-content:center;background:#b38a28;color:#fff;border-radius:10px;font-size:10px;margin-left:5px}@media(max-width:700px){.chat-auth-grid{grid-template-columns:1fr}.chat-sidebar{width:125px}.chat-window{height:96vh}.chat-launcher{right:12px;bottom:12px}.chat-message{max-width:90%}}
 
-/* GETI STUDENT GROUP */
-.geti-group-tabs{display:flex;gap:8px;flex-wrap:wrap;padding:10px;border-bottom:1px solid #dbe2ea;background:#fff}.geti-group-tabs button{border:1px solid #0b2d5c;background:#fff;color:#0b2d5c;padding:8px 13px;border-radius:5px;cursor:pointer;font-weight:bold}.geti-group-tabs button.active{background:#0b2d5c;color:#fff}.geti-group-view{display:none;flex:1;min-height:0}.geti-group-view.active{display:flex}.geti-group-members{width:220px;border-right:1px solid #dbe2ea;background:#f8fafc;overflow:auto}.geti-group-members .title{padding:14px;font-weight:800;color:#0b2d5c;border-bottom:1px solid #dbe2ea}.geti-group-member{padding:10px 13px;border-bottom:1px solid #e3e8ef;font-size:13px}.geti-group-member strong{display:block;color:#172033}.geti-group-member small{color:#687386}.geti-group-note{padding:10px 14px;font-size:12px;color:#687386;background:#fff;border-top:1px solid #dbe2ea}@media(max-width:700px){.geti-group-members{width:120px}}
-
+/* =========================================================
+   GETI CHAT + ADMIN SYSTEM
+========================================================= */
+.floating-tools{position:fixed;right:18px;bottom:18px;z-index:5000;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.floating-tool{border:0;border-radius:999px;padding:10px 15px;cursor:pointer;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.18);background:#071d3a;color:#fff;font-size:13px}
+.floating-tool.admin{background:#b88916}.floating-tool:hover{transform:translateY(-1px)}
+.geti-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:6000;align-items:center;justify-content:center;padding:16px}
+.geti-modal.active{display:flex}.geti-card{background:#fff;width:min(1050px,96vw);max-height:92vh;overflow:auto;border-radius:16px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.geti-card h2{margin-bottom:12px}.geti-close{float:right;border:0;background:#eee;border-radius:8px;padding:7px 10px;cursor:pointer}.geti-form{display:grid;gap:10px}.geti-form input,.geti-form textarea,.geti-form select{width:100%;padding:11px;border:1px solid #ccd4df;border-radius:8px}.geti-form textarea{min-height:100px;resize:vertical}
+.geti-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.geti-actions button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:700}.geti-primary{background:#071d3a;color:#fff}.geti-gold{background:#b88916;color:#fff}.geti-muted{background:#eef2f6}
+.chat-layout{display:grid;grid-template-columns:260px 1fr;gap:14px;min-height:520px}.chat-users{border:1px solid #dbe2ea;border-radius:10px;padding:10px;overflow:auto}.chat-user{padding:10px;border-bottom:1px solid #eee;cursor:pointer}.chat-user.active{background:#eef4fa;border-radius:8px}.chat-window{border:1px solid #dbe2ea;border-radius:10px;display:flex;flex-direction:column;min-height:520px}.chat-head{padding:12px;border-bottom:1px solid #eee;font-weight:700}.chat-messages{flex:1;padding:12px;overflow:auto;background:#f7f9fc}.chat-msg{max-width:78%;padding:9px 11px;border-radius:12px;margin:7px 0;white-space:pre-wrap;word-break:break-word}.chat-msg.me{margin-left:auto;background:#071d3a;color:#fff}.chat-msg.them{background:#e9eef4}.chat-attach{font-size:12px;margin-top:5px}.chat-compose{padding:10px;border-top:1px solid #eee}.chat-compose-row{display:flex;gap:8px}.chat-compose textarea{flex:1;min-height:65px}.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.admin-stat{background:#f3f6fa;border:1px solid #dbe2ea;border-radius:10px;padding:15px}.admin-table-wrap{overflow:auto}.admin-table{width:100%;border-collapse:collapse;font-size:13px}.admin-table th,.admin-table td{border:1px solid #dbe2ea;padding:8px;text-align:left;vertical-align:top}.admin-table th{background:#071d3a;color:#fff}.badge{display:inline-block;padding:3px 7px;border-radius:999px;background:#eef2f6;font-size:11px}.danger{background:#b42318!important;color:#fff!important}
+@media(max-width:720px){.chat-layout,.admin-grid{grid-template-columns:1fr}.chat-users{max-height:180px}.floating-tools{right:10px;bottom:10px}.floating-tool{font-size:12px;padding:9px 12px}}
 </style>
 </head>
 
@@ -1726,9 +1637,6 @@ class="result-search-output">
 </div>
 </section>
 
-<section class="section admin-section" id="admin"><div class="container"><div class="section-header"><div class="section-label">ADMINISTRATION</div><h2>GETI Administrator Dashboard</h2><p>Central administration for all messages, all results, all examination candidates, and the complete blacklist.</p></div><div class="admin-login" id="adminLogin"><input type="password" id="adminPassword" placeholder="Admin password"><button class="btn btn-gold" onclick="adminLogin()">ADMIN LOGIN</button><div id="adminLoginMessage"></div></div><div class="admin-panel" id="adminPanel" style="display:none"><div class="admin-info"><strong>GETI CENTRAL ADMIN</strong><br>All student communications and examination records are managed here.</div><div class="geti-admin-menu" id="mainAdminMenu"><button class="active" onclick="showCentralAdminTab('messages',this)">💬 ALL MESSAGES</button><button onclick="showCentralAdminTab('results',this)">📊 ALL RESULTS</button><button onclick="showCentralAdminTab('exams',this)">📝 ALL WHO DID EXAM</button><button onclick="showCentralAdminTab('blacklist',this)">🚫 ALL BLACKLIST</button></div><div id="centralAdminMessages" class="geti-admin-section"><h4>All Messages</h4><p class="geti-admin-note">Every student who sends a message is listed with name, email, telephone and country. The administrator can open the complete private conversation and reply with text, photo or PDF.</p><div id="centralAdminMessagePeople"></div><div id="centralAdminMessageChat" style="display:none;margin-top:15px"><div class="chat-toolbar"><strong id="centralAdminChatTitle">Conversation</strong></div><div class="chat-messages" id="centralAdminChatMessages" style="height:380px;border:1px solid #dbe2ea;border-radius:8px;padding:12px;overflow:auto"></div><div class="chat-compose" style="margin-top:10px"><textarea id="centralAdminChatText" placeholder="Reply to this student..."></textarea><div class="chat-compose-row"><input id="centralAdminChatFile" type="file" accept="image/*,.pdf,application/pdf"><button onclick="sendCentralAdminMessage()">SEND</button></div></div></div></div><div id="centralAdminResults" class="geti-admin-section" style="display:none"><h4>All Results</h4><div id="centralAdminResultsList"></div></div><div id="centralAdminExams" class="geti-admin-section" style="display:none"><h4>All Who Did Exam</h4><p class="geti-admin-note">Every candidate who has an examination record appears here, including PASSED and FAILED candidates.</p><div id="centralAdminExamList"></div></div><div id="centralAdminBlacklist" class="geti-admin-section" style="display:none"><h4>All Blacklist</h4><p class="geti-admin-note">Every blocked account remains listed here until the administrator selects REMOVE BLOCK.</p><div id="centralAdminBlacklistList"></div></div></div></div></section>
-
-
 <section class="section contact" id="contact">
 
 <div class="container contact-grid">
@@ -1783,6 +1691,73 @@ SEND MESSAGE
 
 </div>
 </section>
+
+
+<!-- GETI CHAT / ADMIN FLOATING TOOLS -->
+<div class="floating-tools">
+  <button class="floating-tool" onclick="openChatAuth()">💬 Chat with the administrator</button>
+  <button class="floating-tool admin" onclick="openAdminLogin()">🔐 Administrator</button>
+</div>
+
+<div id="chatAuthModal" class="geti-modal">
+  <div class="geti-card" style="max-width:520px">
+    <button class="geti-close" onclick="closeModal('chatAuthModal')">✕</button>
+    <h2>Chat with the administrator</h2>
+    <p id="chatAuthHint">Login to your GETI chat account, or create an account if you don't have one.</p>
+    <div class="geti-form">
+      <input id="chatEmail" type="email" placeholder="Email address">
+      <input id="chatPhone" placeholder="Phone number (optional)">
+      <input id="chatPassword" type="password" placeholder="Password">
+      <input id="chatName" placeholder="Full name (only for Create Account)">
+    </div>
+    <div class="geti-actions">
+      <button class="geti-primary" onclick="chatLogin()">LOGIN</button>
+      <button class="geti-gold" onclick="chatCreateAccount()">CREATE ACCOUNT</button>
+    </div>
+  </div>
+</div>
+
+<div id="chatModal" class="geti-modal">
+  <div class="geti-card">
+    <button class="geti-close" onclick="closeModal('chatModal')">✕</button>
+    <h2>💬 Chat with the administrator</h2>
+    <p id="chatLoggedUser"></p>
+    <div class="chat-layout">
+      <div class="chat-users"><strong>Conversations</strong><div id="chatConversationList"></div></div>
+      <div class="chat-window">
+        <div class="chat-head" id="chatConversationTitle">Administrator</div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-compose">
+          <textarea id="chatText" placeholder="Write your message..."></textarea>
+          <div class="chat-compose-row">
+            <input id="chatFile" type="file" accept="image/*,.pdf">
+            <button class="geti-primary" onclick="sendChatMessage()">SEND</button>
+          </div>
+          <small>Images and PDF files can be attached. Download is available for stored attachments.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="adminLoginModal" class="geti-modal">
+  <div class="geti-card" style="max-width:420px">
+    <button class="geti-close" onclick="closeModal('adminLoginModal')">✕</button>
+    <h2>🔐 Administrator Login</h2>
+    <p>Administrator access</p>
+    <div class="geti-form"><input id="adminPassword" type="password" placeholder="Password"></div>
+    <div class="geti-actions"><button class="geti-primary" onclick="adminLogin()">ENTER ADMINISTRATOR</button></div>
+  </div>
+</div>
+
+<div id="adminModal" class="geti-modal">
+  <div class="geti-card">
+    <button class="geti-close" onclick="closeModal('adminModal')">✕</button>
+    <h2>🌐 GETI Administrator — Global Monitor</h2>
+    <p>Messages, registered chat accounts, site activity, exam records and blacklist entries stored by this website are shown here.</p>
+    <div id="adminDashboard"></div>
+  </div>
+</div>
 
 <footer class="footer">
 
@@ -1842,11 +1817,7 @@ Professional Training.
 © 2026 Global English Teaching Institute.
 All rights reserved.
 
-<br><br>
 
-<a href="#admin" style="color:#d6ad45;">
-ADMIN
-</a>
 
 </div>
 
@@ -2398,6 +2369,9 @@ question structures already present in the TEFL bank.
    EXAM STATE
 ========================================================= */
 
+const EXAM_DURATION_MS = 16 * 60 * 1000;
+let examTimerInterval=null;
+
 let examState={
     program:null,
     student:null,
@@ -2406,8 +2380,7 @@ let examState={
     answers:[],
     subjectScores:[],
     started:false,
-    timeRemaining:3600,
-    timerInterval:null,
+    startedAt:null,
     timeExpired:false
 };
 
@@ -2747,10 +2720,81 @@ document.addEventListener("touchmove",function(){
 },{passive:true});
 
 /* =========================================================
+   16-MINUTE EXAM TIMER
+========================================================= */
+
+function startExamTimer(){
+    stopExamTimer();
+    examState.startedAt=Date.now();
+    examState.timeExpired=false;
+    updateExamTimer();
+    examTimerInterval=setInterval(updateExamTimer,250);
+}
+
+function stopExamTimer(){
+    if(examTimerInterval){
+        clearInterval(examTimerInterval);
+        examTimerInterval=null;
+    }
+}
+
+function updateExamTimer(){
+    if(!examState.started || !examState.startedAt){
+        stopExamTimer();
+        return;
+    }
+
+    const remaining=Math.max(0,EXAM_DURATION_MS-(Date.now()-examState.startedAt));
+    const seconds=Math.ceil(remaining/1000);
+    const minutes=Math.floor(seconds/60);
+    const secs=seconds%60;
+    const timer=document.getElementById("examTimer");
+
+    if(timer){
+        timer.textContent="TIME LEFT: "+String(minutes).padStart(2,"0")+":"+String(secs).padStart(2,"0");
+        timer.classList.toggle("warning",remaining<=5*60*1000 && remaining>0);
+        timer.classList.toggle("expired",remaining<=0);
+    }
+
+    if(remaining<=0){
+        stopExamTimer();
+        finalizeTimedOutExam();
+    }
+}
+
+function finalizeTimedOutExam(){
+    if(!examState.started || examState.timeExpired) return;
+    examState.timeExpired=true;
+
+    let subjects=examState.program==="TEFL" ? TEFL_SUBJECTS : TESOL_SUBJECTS;
+    let data=examState.program==="TEFL" ? TEFL_DATA : TESOL_DATA;
+    let subject=subjects[examState.subjectIndex];
+    let questions=data[subject];
+    let currentAnswers=examState.answers[examState.subjectIndex] || [];
+    let score=0;
+
+    for(let i=0;i<15;i++){
+        if(currentAnswers[i]===questions[i][5]) score++;
+    }
+
+    examState.subjectScores[examState.subjectIndex]={
+        subject:subject,
+        score:score,
+        total:15,
+        percentage:Math.round((score/15)*100),
+        grade:calculateGrade(Math.round((score/15)*100))
+    };
+
+    showFinalResult(true);
+}
+
+/* =========================================================
    OPEN REGISTRATION
 ========================================================= */
 
 function openExamRegistration(program){
+
+    stopExamTimer();
 
     let records=getExamRecords();
 
@@ -2886,9 +2930,6 @@ function submitRegistration(){
     };
 
     examState.started=true;
-    examState.timeRemaining=3600;
-    examState.timeExpired=false;
-    startExamTimer();
 
     examState.answers=
         Array.from(
@@ -2905,6 +2946,7 @@ function submitRegistration(){
     /* ENABLE COPY PROTECTION */
     enableExamProtection();
 
+    startExamTimer();
     showQuestion();
 
 }
@@ -2946,91 +2988,6 @@ function createCandidateID(program){
 
 }
 
-function startExamTimer(){
-
-    clearInterval(examState.timerInterval);
-
-    examState.timeRemaining=3600;
-    updateExamTimer();
-
-    examState.timerInterval=setInterval(function(){
-
-        if(!examState.started){
-            clearInterval(examState.timerInterval);
-            return;
-        }
-
-        examState.timeRemaining--;
-        updateExamTimer();
-
-        if(examState.timeRemaining<=0){
-            clearInterval(examState.timerInterval);
-            examTimeExpired();
-        }
-
-    },1000);
-}
-
-function updateExamTimer(){
-
-    let timer=document.getElementById("examTimer");
-    if(!timer)return;
-
-    let minutes=Math.floor(examState.timeRemaining/60);
-    let seconds=examState.timeRemaining%60;
-
-    timer.textContent=
-        "TIME REMAINING: "+
-        String(minutes).padStart(2,"0")+":"+
-        String(seconds).padStart(2,"0");
-
-    timer.classList.toggle("warning",examState.timeRemaining<=300);
-}
-
-function examTimeExpired(){
-
-    if(!examState.started || examState.timeExpired)return;
-
-    examState.timeExpired=true;
-    examState.started=false;
-    clearInterval(examState.timerInterval);
-
-    // Automatically grade every subject. Unanswered questions count as wrong.
-    calculateAllSubjectScores();
-    showFinalResult(true);
-}
-
-function calculateAllSubjectScores(){
-
-    let subjects=examState.program==="TEFL" ? TEFL_SUBJECTS : TESOL_SUBJECTS;
-    let data=examState.program==="TEFL" ? TEFL_DATA : TESOL_DATA;
-
-    examState.subjectScores=[];
-
-    subjects.forEach(function(subject,subjectIndex){
-
-        let questions=data[subject];
-        let score=0;
-
-        for(let i=0;i<15;i++){
-            if(examState.answers[subjectIndex] &&
-               examState.answers[subjectIndex][i]===questions[i][5]){
-                score++;
-            }
-        }
-
-        let percentage=Math.round((score/15)*100);
-
-        examState.subjectScores.push({
-            subject:subject,
-            score:score,
-            total:15,
-            percentage:percentage,
-            grade:calculateGrade(percentage)
-        });
-    });
-}
-
 /* =========================================================
    SHOW QUESTION
 ========================================================= */
@@ -3066,8 +3023,6 @@ function showQuestion(){
     panel.classList.add("exam-protected");
 
     panel.innerHTML=
-
-    '<div id="examTimer" class="exam-timer">TIME REMAINING: 60:00</div>'+
 
     '<div class="exam-progress">'+
 
@@ -3122,8 +3077,6 @@ function showQuestion(){
 
     let container=
         document.getElementById("optionsContainer");
-
-    updateExamTimer();
 
     for(let i=1;i<=4;i++){
 
@@ -3400,9 +3353,9 @@ function continueExam(){
    FINAL RESULT
 ========================================================= */
 
-function showFinalResult(timeExpired){
+function showFinalResult(timeExpired=false){
 
-    clearInterval(examState.timerInterval);
+    stopExamTimer();
 
     /* DISABLE COPY PROTECTION AFTER EXAM */
 
@@ -3493,13 +3446,12 @@ function showFinalResult(timeExpired){
         '<p>Candidate ID: <strong>'+
         escapeHTML(student.id)+
         '</strong></p>'+
+        timeoutNotice+
 
         '<div class="final-score">'+
         percentage+
         '%'+
         '</div>'+
-
-        (timeExpired ? '<div class="exam-fail-message"><strong>TIME EXPIRED.</strong> The 1-hour examination period has ended. The examination was submitted automatically.</div>' : '')+
 
         '<h2 class="pass">PASSED</h2>'+
 
@@ -3538,13 +3490,12 @@ function showFinalResult(timeExpired){
         '<p>Candidate ID: <strong>'+
         escapeHTML(student.id)+
         '</strong></p>'+
+        timeoutNotice+
 
         '<div class="final-score">'+
         percentage+
         '%'+
         '</div>'+
-
-        (timeExpired ? '<div class="exam-fail-message"><strong>TIME EXPIRED.</strong> The 1-hour examination period has ended. Unanswered questions were counted as incorrect and the examination was submitted automatically.</div>' : '')+
 
         '<h2 class="fail">FAILED</h2>'+
 
@@ -3756,274 +3707,6 @@ function searchExamResult(){
 
 }
 
-//* =========================================================
-   ADMIN LOGIN — SUPABASE
-========================================================= */
-
-async function adminLogin(){
-
-    const password = document
-        .getElementById("adminPassword")
-        .value;
-
-    const message = document
-        .getElementById("adminLoginMessage");
-
-    const emailElement = document
-        .getElementById("adminEmail");
-
-    if(!emailElement){
-
-        message.innerHTML =
-            '<div class="error" style="margin-top:12px;">' +
-            '❌ Admin email field is missing.' +
-            '</div>';
-
-        return;
-    }
-
-    const email = emailElement.value.trim();
-
-    if(!email || !password){
-
-        message.innerHTML =
-            '<div class="error" style="margin-top:12px;">' +
-            '❌ Please enter your admin email and password.' +
-            '</div>';
-
-        return;
-    }
-
-    message.innerHTML =
-        '<div style="margin-top:12px;">' +
-        '⏳ Signing in...' +
-        '</div>';
-
-    try{
-
-        const { data, error } =
-            await db.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
-
-        if(error){
-
-            console.error(error);
-
-            message.innerHTML =
-                '<div class="error" style="margin-top:12px;">' +
-                '❌ Incorrect email or password.' +
-                '</div>';
-
-            return;
-        }
-
-        if(!data || !data.user){
-
-            message.innerHTML =
-                '<div class="error" style="margin-top:12px;">' +
-                '❌ Login failed.' +
-                '</div>';
-
-            return;
-        }
-
-        const { data: profile, error: profileError } =
-            await db
-                .from("profiles")
-                .select("id, auth_user_id, email, role")
-                .eq("auth_user_id", data.user.id)
-                .maybeSingle();
-
-        if(profileError){
-
-            console.error(profileError);
-
-            await db.auth.signOut();
-
-            message.innerHTML =
-                '<div class="error" style="margin-top:12px;">' +
-                '❌ Unable to verify administrator account.' +
-                '</div>';
-
-            return;
-        }
-
-        if(!profile || profile.role !== "admin"){
-
-            await db.auth.signOut();
-
-            message.innerHTML =
-                '<div class="error" style="margin-top:12px;">' +
-                '❌ This account is not an administrator.' +
-                '</div>';
-
-            return;
-        }
-
-        message.innerHTML =
-            '<div class="success" style="margin-top:12px;">' +
-            '✅ Administrator login successful.' +
-            '</div>';
-
-        document.getElementById("adminLogin").style.display =
-            "none";
-
-        document.getElementById("adminPanel").style.display =
-            "block";
-
-        renderCentralAdmin();
-
-    }catch(error){
-
-        console.error(error);
-
-        message.innerHTML =
-            '<div class="error" style="margin-top:12px;">' +
-            '❌ An unexpected error occurred.' +
-            '</div>';
-    }
-}
-    }
-    document.getElementById("adminLogin").style.display="none";
-    document.getElementById("adminPanel").style.display="block";
-    renderCentralAdmin();
-}
-
-/* =========================================================
-   ADMIN RESULTS
-========================================================= */
-
-function loadAdminResults(){
-
-    let records=getExamRecords();
-
-    let tbody=
-        document.getElementById(
-            "adminTableBody"
-        );
-
-    tbody.innerHTML="";
-
-    if(records.length===0){
-
-        tbody.innerHTML=
-        '<tr><td colspan="8">No examination records.</td></tr>';
-
-        return;
-
-    }
-
-    records.forEach(function(r){
-
-        let grades="";
-
-        r.subjects.forEach(function(s){
-
-            grades+=
-            escapeHTML(s.grade)+
-            " ";
-
-        });
-
-        let tr=document.createElement("tr");
-
-        tr.innerHTML=
-
-        '<td>'+
-        escapeHTML(r.id)+
-        '</td>'+
-
-        '<td>'+
-        escapeHTML(r.name)+
-        '</td>'+
-
-        '<td>'+
-        escapeHTML(r.email)+
-        '</td>'+
-
-        '<td>'+
-        escapeHTML(r.program)+
-        '</td>'+
-
-        '<td><strong>'+
-        r.percentage+
-        '%</strong></td>'+
-
-        '<td class="'+
-        (r.status==="PASSED"?"pass":"fail")+
-        '">'+
-        r.status+
-        '</td>'+
-
-        '<td>'+
-        grades+
-        '</td>'+
-
-        '<td>'+
-
-        (
-            r.status==="PASSED"
-
-            ?
-
-            '<button class="admin-action" '+
-            'onclick="removeBlacklist(\''+
-            escapeHTML(r.id)+
-            '\')">'+
-            'REMOVE BLACKLIST'+
-            '</button>'
-
-            :
-
-            '<span>—</span>'
-        )+
-
-        '</td>';
-
-        tbody.appendChild(tr);
-
-    });
-
-}
-
-/* =========================================================
-   REMOVE BLACKLIST
-========================================================= */
-
-function removeBlacklist(id){
-
-    if(!confirm(
-        "Remove this candidate from the passed/blacklist records?"
-    )){
-
-        return;
-
-    }
-
-    let records=getExamRecords();
-
-    records=
-        records.filter(function(r){
-
-            return r.id!==id;
-
-        });
-
-    localStorage.setItem(
-        "GETI_EXAM_RECORDS",
-        JSON.stringify(records)
-    );
-
-    loadAdminResults();
-
-    alert(
-        "Candidate removed from the local blacklist."
-    );
-
-}
-
 /* =========================================================
    CONTACT
 ========================================================= */
@@ -4075,122 +3758,126 @@ function sendMessage(){
 
 }
 
-/* =========================================================
-   CENTRAL ADMIN PLAN — ALL MESSAGES / RESULTS / EXAM LIST / BLACKLIST
-========================================================= */
-let centralAdminStudentId=null;
-function centralAdminState(){try{return JSON.parse(localStorage.getItem('GETI_CHAT_STATE')||'null')||{users:[],messages:[],group:[],blacklist:[],passed:[],session:null};}catch(e){return {users:[],messages:[],group:[],blacklist:[],passed:[],session:null};}}
-function showCentralAdminTab(type,btn){['centralAdminMessages','centralAdminResults','centralAdminExams','centralAdminBlacklist'].forEach(id=>document.getElementById(id).style.display='none');document.querySelectorAll('#mainAdminMenu button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');document.getElementById({messages:'centralAdminMessages',results:'centralAdminResults',exams:'centralAdminExams',blacklist:'centralAdminBlacklist'}[type]).style.display='block';renderCentralAdmin();}
-function renderCentralAdmin(){renderCentralAdminMessages();renderCentralAdminResults();renderCentralAdminExams();renderCentralAdminBlacklist();}
-function renderCentralAdminMessages(){const box=document.getElementById('centralAdminMessagePeople');if(!box)return;const s=centralAdminState(),msgs=(s.messages||[]).filter(m=>m.from!=='GETI-ADMIN'),people={};msgs.forEach(m=>{const id=m.from||m.userId;if(!people[id])people[id]=[];people[id].push(m);});(s.users||[]).filter(u=>u.role!=='admin').forEach(u=>{if(!people[u.id])people[u.id]=[];});const ids=Object.keys(people);if(!ids.length){box.innerHTML='<div class="geti-empty">No students or messages yet.</div>';return;}box.innerHTML=ids.map(id=>{const u=(s.users||[]).find(x=>x.id===id),arr=people[id],last=arr[arr.length-1];return '<div class="geti-inbox-card"><strong>'+escapeHTML(u?.name||last?.userName||id)+'</strong> <span class="geti-badge">'+arr.length+' message'+(arr.length===1?'':'s')+'</span><br><small>Email: '+escapeHTML(u?.email||last?.userEmail||'')+'<br>Telephone: '+escapeHTML(u?.phone||'Not provided')+'<br>Country: '+escapeHTML(u?.country||'Not provided')+'</small>'+(last?'<div style="margin-top:8px;color:#445064">Last: '+escapeHTML(last.text||last.attachment?.name||'Attachment')+'</div>':'')+'<div class="geti-mini-actions"><button onclick="openCentralAdminChat(\''+id+'\')">OPEN COMPLETE CHAT</button><button class="danger" onclick="centralAdminBlockStudent(\''+id+'\')">BLACKLIST</button></div></div>';}).join('');if(centralAdminStudentId)renderCentralAdminChat();}
-function openCentralAdminChat(id){centralAdminStudentId=id;document.getElementById('centralAdminMessageChat').style.display='block';renderCentralAdminChat();}
-function renderCentralAdminChat(){const s=centralAdminState(),id=centralAdminStudentId;if(!id)return;const u=(s.users||[]).find(x=>x.id===id);document.getElementById('centralAdminChatTitle').textContent=(u?.name||id)+' — '+(u?.email||'');const msgs=(s.messages||[]).filter(m=>(m.from===id&&m.to==='GETI-ADMIN')||(m.from==='GETI-ADMIN'&&m.to===id));const box=document.getElementById('centralAdminChatMessages');box.innerHTML=msgs.length?msgs.map(m=>'<div class="geti-msg '+(m.from==='GETI-ADMIN'?'mine':'')+'"><div class="meta">'+escapeHTML(m.from==='GETI-ADMIN'?'GETI Administrator':(u?.name||id))+' • '+new Date(m.time).toLocaleString()+'</div><div>'+escapeHTML(m.text||'')+'</div>'+(m.attachment?'<div class="file">📎 '+escapeHTML(m.attachment.name||'Attachment')+'<br><a href="'+m.attachment.data+'" download="'+escapeHTML(m.attachment.name||'GETI-file')+'">Download</a></div>':'')+'</div>').join(''):'<div class="geti-empty">No messages in this conversation.</div>';box.scrollTop=box.scrollHeight;}
-function sendCentralAdminMessage(){if(!centralAdminStudentId)return alert('Select a student first.');const text=document.getElementById('centralAdminChatText').value.trim(),file=document.getElementById('centralAdminChatFile').files[0];if(!text&&!file)return;const finish=attachment=>{const s=centralAdminState();s.messages=s.messages||[];s.messages.push({id:'M'+Date.now(),from:'GETI-ADMIN',to:centralAdminStudentId,text,attachment,time:new Date().toISOString()});localStorage.setItem('GETI_CHAT_STATE',JSON.stringify(s));document.getElementById('centralAdminChatText').value='';document.getElementById('centralAdminChatFile').value='';renderCentralAdmin();};if(file){const r=new FileReader();r.onload=()=>finish({name:file.name,type:file.type,data:r.result});r.readAsDataURL(file);}else finish(null);}
-function centralAdminBlockStudent(id){const s=centralAdminState(),u=(s.users||[]).find(x=>x.id===id);if(!u)return;s.blacklist=s.blacklist||[];if(!s.blacklist.some(x=>x.id===id))s.blacklist.push({id:u.id,name:u.name,email:u.email,phone:u.phone||'',country:u.country||'',blockedAt:new Date().toISOString()});localStorage.setItem('GETI_CHAT_STATE',JSON.stringify(s));renderCentralAdminBlacklist();}
-function centralAdminUnblockStudent(id){const s=centralAdminState();s.blacklist=(s.blacklist||[]).filter(x=>x.id!==id);localStorage.setItem('GETI_CHAT_STATE',JSON.stringify(s));renderCentralAdminBlacklist();}
-function renderCentralAdminResults(){const box=document.getElementById('centralAdminResultsList');if(!box)return;const records=getExamRecords();if(!records.length){box.innerHTML='<div class="geti-empty">No examination results recorded yet.</div>';return;}box.innerHTML='<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Telephone</th><th>Country</th><th>Exam</th><th>Score</th><th>Status</th><th>Date</th></tr></thead><tbody>'+records.map(r=>'<tr><td>'+escapeHTML(r.id)+'</td><td>'+escapeHTML(r.name)+'</td><td>'+escapeHTML(r.email)+'</td><td>'+escapeHTML(r.phone||'Not provided')+'</td><td>'+escapeHTML(r.country||'Not provided')+'</td><td>'+escapeHTML(r.program)+'</td><td><strong>'+r.percentage+'%</strong></td><td>'+escapeHTML(r.status)+'</td><td>'+escapeHTML(r.date?new Date(r.date).toLocaleString():'')+'</td></tr>').join('')+'</tbody></table></div>';}
-function renderCentralAdminExams(){const box=document.getElementById('centralAdminExamList');if(!box)return;const records=getExamRecords();if(!records.length){box.innerHTML='<div class="geti-empty">No candidates have taken an examination yet.</div>';return;}box.innerHTML='<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Candidate</th><th>Contact</th><th>Exam</th><th>Final Result</th><th>Subjects</th><th>Date</th></tr></thead><tbody>'+records.map(r=>'<tr><td><strong>'+escapeHTML(r.name)+'</strong><br>'+escapeHTML(r.id)+'</td><td>'+escapeHTML(r.email)+'<br>'+escapeHTML(r.phone||'Not provided')+'<br>'+escapeHTML(r.country||'Not provided')+'</td><td>'+escapeHTML(r.program)+'</td><td><strong>'+r.percentage+'% — '+escapeHTML(r.status)+'</strong></td><td>'+(r.subjects||[]).map(x=>escapeHTML(x.subject)+' — '+x.percentage+'% ('+escapeHTML(x.grade)+')').join('<br>')+'</td><td>'+escapeHTML(r.date?new Date(r.date).toLocaleString():'')+'</td></tr>').join('')+'</tbody></table></div>';}
-function renderCentralAdminBlacklist(){const box=document.getElementById('centralAdminBlacklistList');if(!box)return;const list=centralAdminState().blacklist||[];if(!list.length){box.innerHTML='<div class="geti-empty">Blacklist is empty.</div>';return;}box.innerHTML=list.map(x=>'<div class="geti-inbox-card"><strong>'+escapeHTML(x.name)+'</strong><br><small>Email: '+escapeHTML(x.email)+'<br>Telephone: '+escapeHTML(x.phone||'Not provided')+'<br>Country: '+escapeHTML(x.country||'Not provided')+'</small><div class="geti-mini-actions"><button onclick="centralAdminUnblockStudent(\''+x.id+'\')">REMOVE BLOCK</button></div></div>').join('');}
-
-/* GETI CHAT */
-const GETI_CHAT_USERS_KEY="GETI_CHAT_USERS";
-const GETI_CHAT_MESSAGES_KEY="GETI_CHAT_MESSAGES";
-let chatCurrentUser=null,adminChatUser=null;
-function chatUsers(){try{return JSON.parse(localStorage.getItem(GETI_CHAT_USERS_KEY)||"[]")}catch(e){return []}}
-function chatMessages(){try{return JSON.parse(localStorage.getItem(GETI_CHAT_MESSAGES_KEY)||"[]")}catch(e){return []}}
-function saveChatUsers(a){localStorage.setItem(GETI_CHAT_USERS_KEY,JSON.stringify(a))}
-function saveChatMessages(a){localStorage.setItem(GETI_CHAT_MESSAGES_KEY,JSON.stringify(a))}
-function chatHash(p){let h=0;for(let i=0;i<p.length;i++)h=((h<<5)-h)+p.charCodeAt(i)|0;return String(h)}
-function openChat(){document.getElementById("chatModal").classList.add("show");let s=sessionStorage.getItem("GETI_CHAT_CURRENT");if(s){try{chatCurrentUser=JSON.parse(s);showUserChat()}catch(e){}}}
-function closeChat(){document.getElementById("chatModal").classList.remove("show")}
-function chatCreateAccount(){let name=document.getElementById("chatRegName").value.trim(),email=document.getElementById("chatRegEmail").value.trim().toLowerCase(),pass=document.getElementById("chatRegPassword").value,out=document.getElementById("chatRegMsg");if(!name||!email||!pass){out.innerHTML='<span class="fail">Please complete all fields.</span>';return}let users=chatUsers();if(users.some(u=>u.email===email)){out.innerHTML='<span class="fail">An account with this email already exists.</span>';return}let u={id:"CHAT-"+Date.now(),name,email,password:chatHash(pass),createdAt:new Date().toISOString()};users.push(u);saveChatUsers(users);chatCurrentUser=u;sessionStorage.setItem("GETI_CHAT_CURRENT",JSON.stringify(u));showUserChat()}
-function chatLogin(){let email=document.getElementById("chatLoginEmail").value.trim().toLowerCase(),pass=document.getElementById("chatLoginPassword").value,out=document.getElementById("chatLoginMsg"),u=chatUsers().find(x=>x.email===email&&x.password===chatHash(pass));if(!u){out.innerHTML='<span class="fail">Incorrect email or password.</span>';return}chatCurrentUser=u;sessionStorage.setItem("GETI_CHAT_CURRENT",JSON.stringify(u));showUserChat()}
-function chatLogout(){chatCurrentUser=null;sessionStorage.removeItem("GETI_CHAT_CURRENT");document.getElementById("chatUserMain").classList.remove("show");document.getElementById("chatAuth").style.display="block"}
-function showUserChat(){document.getElementById("chatAuth").style.display="none";document.getElementById("chatUserMain").classList.add("show");renderUserMessages()}
-function ensureChatDB(){return new Promise((resolve,reject)=>{let r=indexedDB.open("GETI_CHAT_FILES",1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains("files"))r.result.createObjectStore("files");};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
-async function saveChatFile(file){let db=await ensureChatDB(),id="FILE-"+Date.now()+"-"+Math.random().toString(36).slice(2);return new Promise((resolve,reject)=>{let tx=db.transaction("files","readwrite");tx.objectStore("files").put(file,id);tx.oncomplete=()=>resolve(id);tx.onerror=()=>reject(tx.error)})}
-async function getChatFile(id){let db=await ensureChatDB();return new Promise((resolve,reject)=>{let r=db.transaction("files").objectStore("files").get(id);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
-async function downloadChatFile(id,name){try{let f=await getChatFile(id);if(!f)return alert("File is not available in this browser.");let url=URL.createObjectURL(f),a=document.createElement("a");a.href=url;a.download=name||f.name||"GETI-file";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}catch(e){alert("Unable to download this file.")}}
-async function sendUserChatMessage(){if(!chatCurrentUser)return;let text=document.getElementById("chatUserText").value.trim(),file=document.getElementById("chatUserFile").files[0];if(!text&&!file)return;let fileId=null,fileName="",fileType="";if(file){fileId=await saveChatFile(file);fileName=file.name;fileType=file.type}let m={id:"MSG-"+Date.now(),userId:chatCurrentUser.id,userName:chatCurrentUser.name,userEmail:chatCurrentUser.email,sender:"user",text,fileId,fileName,fileType,time:new Date().toISOString(),readByAdmin:false};let a=chatMessages();a.push(m);saveChatMessages(a);document.getElementById("chatUserText").value="";document.getElementById("chatUserFile").value="";renderUserMessages();renderAdminConversations()}
-function chatMessageHTML(m,mine){let f=m.fileId?'<div class="chat-file">📎 '+escapeHTML(m.fileName)+' <button onclick="downloadChatFile(\''+m.fileId+'\',\''+escapeHTML(m.fileName).replace(/'/g,"\\'")+'\')">DOWNLOAD</button></div>':'';return '<div class="chat-message '+(mine?'mine':'')+'"><div>'+escapeHTML(m.text||"")+'</div>'+f+'<div class="meta">'+(m.sender==="admin"?"Administrator":"You")+" • "+new Date(m.time).toLocaleString()+"</div></div>"}
-function renderUserMessages(){if(!chatCurrentUser)return;let box=document.getElementById("chatUserMessages"),a=chatMessages().filter(m=>m.userId===chatCurrentUser.id);box.innerHTML=a.length?"":'<div class="chat-status">No messages yet. Send a message to the administrator.</div>';a.forEach(m=>box.insertAdjacentHTML("beforeend",chatMessageHTML(m,m.sender==="user")));box.scrollTop=box.scrollHeight}
-function showAdminTab(tab){["message","blacklist","passed"].forEach(x=>{let n=x.charAt(0).toUpperCase()+x.slice(1);document.getElementById("adminView"+n).classList.toggle("active",x===tab);document.getElementById("adminTab"+n).classList.toggle("active",x===tab)});if(tab==="message")renderAdminConversations();else renderAdminCandidateLists()}
-function renderAdminConversations(){let box=document.getElementById("adminConversationList");if(!box)return;let users=chatUsers(),msgs=chatMessages(),html='<div class="chat-sidebar-title">Messages</div>';users.forEach(u=>{let unread=msgs.filter(m=>m.userId===u.id&&m.sender==="user"&&!m.readByAdmin).length;html+='<div class="chat-contact '+(adminChatUser===u.id?'active':'')+'" onclick="selectAdminChat(\''+u.id+'\')"><strong>'+escapeHTML(u.name)+'</strong><small>'+escapeHTML(u.email)+(unread?' <span class="chat-badge">'+unread+'</span>':'')+'</small></div>'});box.innerHTML=html+(users.length?"":'<div class="chat-status" style="padding:14px">No accounts yet.</div>');let unread=msgs.filter(m=>m.sender==="user"&&!m.readByAdmin).length;document.getElementById("adminUnreadBadge").textContent=unread}
-function selectAdminChat(id){adminChatUser=id;let a=chatMessages();a.forEach(m=>{if(m.userId===id&&m.sender==="user")m.readByAdmin=true});saveChatMessages(a);let u=chatUsers().find(x=>x.id===id);document.getElementById("adminChatTitle").textContent=u?u.name+" — "+u.email:"Conversation";renderAdminConversations();renderAdminMessages()}
-function renderAdminMessages(){let box=document.getElementById("adminMessages");if(!adminChatUser){box.innerHTML='<div class="chat-status">Select a conversation.</div>';return}let a=chatMessages().filter(m=>m.userId===adminChatUser);box.innerHTML=a.length?"":'<div class="chat-status">No messages.</div>';a.forEach(m=>box.insertAdjacentHTML("beforeend",chatMessageHTML(m,m.sender==="admin")));box.scrollTop=box.scrollHeight}
-async function sendAdminChatMessage(){if(!adminChatUser)return alert("Select a conversation first.");let text=document.getElementById("adminChatText").value.trim(),file=document.getElementById("adminChatFile").files[0];if(!text&&!file)return;let u=chatUsers().find(x=>x.id===adminChatUser),fileId=null,fileName="",fileType="";if(file){fileId=await saveChatFile(file);fileName=file.name;fileType=file.type}let m={id:"MSG-"+Date.now(),userId:adminChatUser,userName:u?u.name:"",userEmail:u?u.email:"",sender:"admin",text,fileId,fileName,fileType,time:new Date().toISOString(),readByUser:false};let a=chatMessages();a.push(m);saveChatMessages(a);document.getElementById("adminChatText").value="";document.getElementById("adminChatFile").value="";renderAdminMessages();renderUserMessages()}
-function renderAdminCandidateLists(){let records=getExamRecords(),black=records.filter(r=>r.status!=="PASSED"),passed=records.filter(r=>r.status==="PASSED");document.getElementById("adminBlacklistList").innerHTML=adminCandidateHTML(black);document.getElementById("adminPassedList").innerHTML=adminCandidateHTML(passed)}
-function adminCandidateHTML(records){if(!records.length)return '<div class="admin-info">No records.</div>';return '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Program</th><th>Final %</th><th>Status</th></tr></thead><tbody>'+records.map(r=>'<tr><td>'+escapeHTML(r.id)+'</td><td>'+escapeHTML(r.name)+'</td><td>'+escapeHTML(r.email)+'</td><td>'+escapeHTML(r.program)+'</td><td><strong>'+r.percentage+'%</strong></td><td class="'+(r.status==="PASSED"?"pass":"fail")+'">'+r.status+'</td></tr>').join("")+'</tbody></table></div>'}
-const GETI_originalAdminLogin=adminLogin;adminLogin=function(){GETI_originalAdminLogin();if(document.getElementById("adminPanel").style.display==="block"){renderCentralAdmin();}};
 
 /* =========================================================
-   GETI STUDENT GROUP + ADMIN GROUP CHAT
+   CHAT + ADMINISTRATOR SYSTEM
+   NOTE: This single-file version stores data in this browser.
+   A real multi-device/global deployment requires a secure backend.
 ========================================================= */
-function showUserChatTab(tab){
-    document.getElementById("userChatTabAdmin").classList.toggle("active",tab==="admin");
-    document.getElementById("userChatTabGroup").classList.toggle("active",tab==="group");
-    document.getElementById("userChatViewAdmin").classList.toggle("active",tab==="admin");
-    document.getElementById("userChatViewGroup").classList.toggle("active",tab==="group");
-    if(tab==="group"){renderGroupMembers();renderGroupMessages();}
+const GETI_ADMIN_PASSWORD = "global";
+const CHAT_ACCOUNTS_KEY = "GETI_CHAT_ACCOUNTS";
+const CHAT_MESSAGES_KEY = "GETI_CHAT_MESSAGES";
+const SITE_VISITS_KEY = "GETI_SITE_VISITS";
+const BLACKLIST_KEY = "GETI_BLACKLIST";
+let chatSession = null;
+let adminSession = false;
+let adminSelectedUser = null;
+
+function getiStore(key, fallback){
+  try{return JSON.parse(localStorage.getItem(key)) || fallback;}catch(e){return fallback;}
 }
-function showAdminChatMode(mode){
-    document.getElementById("adminChatModePrivate").classList.toggle("active",mode==="private");
-    document.getElementById("adminChatModeGroup").classList.toggle("active",mode==="group");
-    document.getElementById("adminPrivateChatView").classList.toggle("show",mode==="private");
-    document.getElementById("adminGroupChatView").classList.toggle("show",mode==="group");
-    if(mode==="group"){renderAdminGroupMembers();renderAdminGroupMessages();}
+function getiSave(key,value){localStorage.setItem(key,JSON.stringify(value));}
+function closeModal(id){document.getElementById(id).classList.remove('active');}
+function openChatAuth(){
+  if(chatSession){openChat();return;}
+  document.getElementById('chatAuthModal').classList.add('active');
 }
-function groupMessages(){try{return JSON.parse(localStorage.getItem("GETI_GROUP_MESSAGES")||"[]")}catch(e){return []}}
-function saveGroupMessages(a){localStorage.setItem("GETI_GROUP_MESSAGES",JSON.stringify(a))}
-function renderGroupMembers(){
-    let box=document.getElementById("groupMemberList");if(!box)return;
-    let users=chatUsers();
-    box.innerHTML='<div class="title">GETI Students ('+users.length+')</div>'+(users.length?users.map(u=>'<div class="geti-group-member"><strong>'+escapeHTML(u.name)+'</strong><small>'+escapeHTML(u.email)+'</small></div>').join(""): '<div class="chat-status" style="padding:14px">No students yet.</div>');
+function chatCreateAccount(){
+  const name=document.getElementById('chatName').value.trim();
+  const email=document.getElementById('chatEmail').value.trim().toLowerCase();
+  const phone=document.getElementById('chatPhone').value.trim();
+  const password=document.getElementById('chatPassword').value;
+  if(!name||!email||!password){alert('Please enter full name, email and password.');return;}
+  const accounts=getiStore(CHAT_ACCOUNTS_KEY,[]);
+  if(accounts.some(a=>a.email===email)){alert('This email already has a chat account. Please login.');return;}
+  const account={id:'CHAT-'+Date.now(),name,email,phone,password,createdAt:new Date().toISOString(),blocked:false};
+  accounts.push(account);getiSave(CHAT_ACCOUNTS_KEY,accounts);
+  chatSession={id:account.id,email:account.email,name:account.name};
+  recordSiteVisit('CHAT_ACCOUNT_CREATED',account.email);
+  closeModal('chatAuthModal');openChat();
 }
-function renderAdminGroupMembers(){
-    let box=document.getElementById("adminGroupMemberList");if(!box)return;
-    let users=chatUsers();
-    box.innerHTML='<div class="title">Students ('+users.length+')</div>'+(users.length?users.map(u=>'<div class="geti-group-member"><strong>'+escapeHTML(u.name)+'</strong><small>'+escapeHTML(u.email)+'</small></div>').join(""): '<div class="chat-status" style="padding:14px">No students yet.</div>');
+function chatLogin(){
+  const email=document.getElementById('chatEmail').value.trim().toLowerCase();
+  const password=document.getElementById('chatPassword').value;
+  const account=getiStore(CHAT_ACCOUNTS_KEY,[]).find(a=>a.email===email&&a.password===password);
+  if(!account){alert('Invalid email or password.');return;}
+  if(account.blocked){alert('This chat account is blocked.');return;}
+  chatSession={id:account.id,email:account.email,name:account.name};
+  recordSiteVisit('CHAT_LOGIN',account.email);closeModal('chatAuthModal');openChat();
 }
-function groupMessageHTML(m,mine){
-    let f=m.fileId?'<div class="chat-file">📎 '+escapeHTML(m.fileName)+' <button onclick="downloadChatFile(\''+m.fileId+'\',\''+escapeHTML(m.fileName).replace(/'/g,"\\'")+'\')">DOWNLOAD</button></div>':'';
-    return '<div class="chat-message '+(mine?'mine':'')+'"><strong>'+escapeHTML(m.senderName||"GETI")+'</strong><div>'+escapeHTML(m.text||"")+'</div>'+f+'<div class="meta">'+new Date(m.time).toLocaleString()+'</div></div>';
+function openChat(){
+  if(!chatSession){openChatAuth();return;}
+  document.getElementById('chatLoggedUser').textContent='Logged in as: '+chatSession.name+' — '+chatSession.email;
+  document.getElementById('chatModal').classList.add('active');
+  renderChat();
 }
-function renderGroupMessages(){
-    if(!chatCurrentUser)return;
-    let box=document.getElementById("groupMessages"),a=groupMessages();
-    box.innerHTML=a.length?"":'<div class="chat-status">No group messages yet.</div>';
-    a.forEach(m=>box.insertAdjacentHTML("beforeend",groupMessageHTML(m,m.senderId===chatCurrentUser.id)));
-    box.scrollTop=box.scrollHeight;
+function chatMessages(){return getiStore(CHAT_MESSAGES_KEY,[]);}
+function renderChat(){
+  const msgs=chatMessages().filter(m=>m.userId===chatSession.id || m.userId==='ADMIN');
+  const box=document.getElementById('chatMessages');
+  box.innerHTML='';
+  msgs.forEach(m=>{
+    const div=document.createElement('div');div.className='chat-msg '+(m.sender==='ADMIN'?'them':'me');
+    div.textContent=(m.sender==='ADMIN'?'Administrator: ':'You: ')+m.text;
+    if(m.fileName){const a=document.createElement('a');a.className='chat-attach';a.textContent='📎 '+m.fileName+' — Download';a.href=m.fileData;a.download=m.fileName;a.style.display='block';a.style.color=m.sender==='ADMIN'?'#071d3a':'#fff';div.appendChild(a);}
+    box.appendChild(div);
+  });
+  box.scrollTop=box.scrollHeight;
+  document.getElementById('chatConversationTitle').textContent='Administrator';
 }
-function renderAdminGroupMessages(){
-    let box=document.getElementById("adminGroupMessages");if(!box)return;
-    let a=groupMessages();
-    box.innerHTML=a.length?"":'<div class="chat-status">No group messages yet.</div>';
-    a.forEach(m=>box.insertAdjacentHTML("beforeend",groupMessageHTML(m,m.senderId==="ADMIN")));
-    box.scrollTop=box.scrollHeight;
+function sendChatMessage(){
+  if(!chatSession)return;
+  const text=document.getElementById('chatText').value.trim();
+  const file=document.getElementById('chatFile').files[0];
+  if(!text&&!file){alert('Write a message or attach an image/PDF.');return;}
+  const save=(fileData,fileName)=>{
+    const msgs=chatMessages();msgs.push({id:'MSG-'+Date.now(),userId:chatSession.id,sender:'USER',email:chatSession.email,name:chatSession.name,text,fileName:fileName||'',fileData:fileData||'',createdAt:new Date().toISOString()});getiSave(CHAT_MESSAGES_KEY,msgs);
+    document.getElementById('chatText').value='';document.getElementById('chatFile').value='';renderChat();
+  };
+  if(file){const reader=new FileReader();reader.onload=()=>save(reader.result,file.name);reader.readAsDataURL(file);}else save('','');
 }
-async function sendGroupMessage(){
-    if(!chatCurrentUser)return;
-    let text=document.getElementById("groupChatText").value.trim(),file=document.getElementById("groupChatFile").files[0];
-    if(!text&&!file)return;
-    let fileId=null,fileName="",fileType="";
-    if(file){fileId=await saveChatFile(file);fileName=file.name;fileType=file.type}
-    let a=groupMessages();a.push({id:"GROUP-"+Date.now(),senderId:chatCurrentUser.id,senderName:chatCurrentUser.name,text,fileId,fileName,fileType,time:new Date().toISOString()});saveGroupMessages(a);
-    document.getElementById("groupChatText").value="";document.getElementById("groupChatFile").value="";renderGroupMessages();renderAdminGroupMessages();
+function openAdminLogin(){document.getElementById('adminLoginModal').classList.add('active');}
+function adminLogin(){
+  if(document.getElementById('adminPassword').value!==GETI_ADMIN_PASSWORD){alert('Incorrect administrator password.');return;}
+  adminSession=true;document.getElementById('adminPassword').value='';closeModal('adminLoginModal');document.getElementById('adminModal').classList.add('active');renderAdmin();
 }
-async function sendAdminGroupMessage(){
-    let text=document.getElementById("adminGroupText").value.trim(),file=document.getElementById("adminGroupFile").files[0];
-    if(!text&&!file)return;
-    let fileId=null,fileName="",fileType="";
-    if(file){fileId=await saveChatFile(file);fileName=file.name;fileType=file.type}
-    let a=groupMessages();a.push({id:"GROUP-"+Date.now(),senderId:"ADMIN",senderName:"GETI Administrator",text,fileId,fileName,fileType,time:new Date().toISOString()});saveGroupMessages(a);
-    document.getElementById("adminGroupText").value="";document.getElementById("adminGroupFile").value="";renderAdminGroupMessages();renderGroupMessages();
+function renderAdmin(){
+  if(!adminSession)return;
+  const accounts=getiStore(CHAT_ACCOUNTS_KEY,[]),msgs=chatMessages(),visits=getiStore(SITE_VISITS_KEY,[]),black=getiStore(BLACKLIST_KEY,[]),results=getExamRecords();
+  let html=`<div class="admin-grid">
+    <div class="admin-stat"><strong>${msgs.length}</strong><br>Messages / chat events</div>
+    <div class="admin-stat"><strong>${black.length}</strong><br>Blacklisted accounts</div>
+    <div class="admin-stat"><strong>${results.length}</strong><br>Exam records / all exams</div>
+    <div class="admin-stat"><strong>${visits.length}</strong><br>Site activity records</div>
+  </div><br>
+  <div class="geti-actions"><button class="geti-primary" onclick="adminTab('messages')">MESSAGES</button><button class="geti-primary" onclick="adminTab('blacklists')">BLACKLISTS</button><button class="geti-primary" onclick="adminTab('results')">RESULTS</button><button class="geti-primary" onclick="adminTab('visits')">LIST WHO TOUCHED SITE</button><button class="geti-primary" onclick="adminTab('accounts')">CHAT ACCOUNTS</button><button class="geti-gold" onclick="adminTab('exams')">ALL DID THE EXAM</button></div>
+  <div id="adminTabContent" style="margin-top:15px"></div>`;
+  document.getElementById('adminDashboard').innerHTML=html;adminTab('messages');
 }
-const GETI_oldShowUserChat=showUserChat;
-showUserChat=function(){GETI_oldShowUserChat();renderGroupMembers();renderGroupMessages()};
-const GETI_oldAdminLogin2=adminLogin;
-adminLogin=function(){GETI_oldAdminLogin2();if(document.getElementById("adminPanel").style.display==="block"){renderAdminConversations();renderAdminCandidateLists();renderAdminGroupMembers();renderAdminGroupMessages()}};
+function adminTab(tab){
+  const box=document.getElementById('adminTabContent');if(!box)return;
+  const accounts=getiStore(CHAT_ACCOUNTS_KEY,[]),msgs=chatMessages(),visits=getiStore(SITE_VISITS_KEY,[]),black=getiStore(BLACKLIST_KEY,[]),results=getExamRecords();
+  if(tab==='messages'){
+    box.innerHTML='<h3>All Messages</h3><div class="admin-table-wrap"><table class="admin-table"><tr><th>Date</th><th>Sender</th><th>Email</th><th>Phone</th><th>Message</th><th>File</th><th>Action</th></tr>'+msgs.filter(m=>m.sender==='USER').map(m=>{const a=accounts.find(x=>x.id===m.userId)||{};return `<tr><td>${new Date(m.createdAt).toLocaleString()}</td><td>${escapeHTML(m.name||a.name||'')}</td><td>${escapeHTML(m.email||a.email||'')}</td><td>${escapeHTML(a.phone||'')}</td><td>${escapeHTML(m.text||'')}</td><td>${m.fileName?`<a href="${m.fileData}" download="${escapeHTML(m.fileName)}">Download</a>`:''}</td><td><button class="geti-primary" onclick="adminReply('${m.userId}')">Reply</button> <button class="danger" onclick="blockChatUser('${m.userId}')">Block</button></td></tr>`}).join('')+'</table></div>';
+  }else if(tab==='blacklists'){
+    box.innerHTML='<h3>Blacklists</h3><div class="admin-table-wrap"><table class="admin-table"><tr><th>Account</th><th>Email</th><th>Phone</th><th>Action</th></tr>'+black.map(id=>{const a=accounts.find(x=>x.id===id)||{};return `<tr><td>${escapeHTML(a.name||id)}</td><td>${escapeHTML(a.email||'')}</td><td>${escapeHTML(a.phone||'')}</td><td><button class="geti-gold" onclick="unblockChatUser('${id}')">Unblock</button></td></tr>`}).join('')+'</table></div>';
+  }else if(tab==='accounts'){
+    box.innerHTML='<h3>Chat Accounts</h3><div class="admin-table-wrap"><table class="admin-table"><tr><th>Name</th><th>Email</th><th>Phone</th><th>Created</th><th>Status</th><th>Action</th></tr>'+accounts.map(a=>`<tr><td>${escapeHTML(a.name)}</td><td>${escapeHTML(a.email)}</td><td>${escapeHTML(a.phone||'')}</td><td>${new Date(a.createdAt).toLocaleString()}</td><td>${a.blocked?'BLOCKED':'ACTIVE'}</td><td><button class="danger" onclick="${a.blocked?`unblockChatUser('${a.id}')`:`blockChatUser('${a.id}')`} ">${a.blocked?'UNBLOCK':'BLOCK'}</button></td></tr>`).join('')+'</table></div>';
+  }else if(tab==='results'||tab==='exams'){
+    box.innerHTML='<h3>'+ (tab==='results'?'All Results':'All Who Did The Exam') +'</h3><div class="admin-table-wrap"><table class="admin-table"><tr><th>Date</th><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Country</th><th>Program</th><th>Score</th><th>Status</th></tr>'+results.map(r=>`<tr><td>${new Date(r.date).toLocaleString()}</td><td>${escapeHTML(r.id)}</td><td>${escapeHTML(r.name)}</td><td>${escapeHTML(r.email)}</td><td>${escapeHTML(r.phone||'')}</td><td>${escapeHTML(r.country||'')}</td><td>${escapeHTML(r.program)}</td><td>${r.percentage}%</td><td>${escapeHTML(r.status)}</td></tr>`).join('')+'</table></div>';
+  }else if(tab==='visits'){
+    box.innerHTML='<h3>List Who Touched The Site</h3><div class="admin-table-wrap"><table class="admin-table"><tr><th>Date</th><th>Event</th><th>Account / Identifier</th><th>Page</th><th>Browser</th></tr>'+visits.map(v=>`<tr><td>${new Date(v.time).toLocaleString()}</td><td>${escapeHTML(v.event)}</td><td>${escapeHTML(v.identifier||'')}</td><td>${escapeHTML(v.page||'')}</td><td>${escapeHTML(v.browser||'')}</td></tr>`).join('')+'</table></div>';
+  }
+}
+function adminReply(userId){
+  const text=prompt('Reply to this user:');if(!text)return;const msgs=chatMessages();msgs.push({id:'MSG-'+Date.now(),userId,sender:'ADMIN',email:'administrator',name:'Administrator',text,fileName:'',fileData:'',createdAt:new Date().toISOString()});getiSave(CHAT_MESSAGES_KEY,msgs);alert('Reply sent.');adminTab('messages');
+}
+function blockChatUser(id){
+  const accounts=getiStore(CHAT_ACCOUNTS_KEY,[]),a=accounts.find(x=>x.id===id);if(!a)return;a.blocked=true;getiSave(CHAT_ACCOUNTS_KEY,accounts);const b=getiStore(BLACKLIST_KEY,[]);if(!b.includes(id))b.push(id);getiSave(BLACKLIST_KEY,b);renderAdmin();
+}
+function unblockChatUser(id){const accounts=getiStore(CHAT_ACCOUNTS_KEY,[]);const a=accounts.find(x=>x.id===id);if(a)a.blocked=false;getiSave(CHAT_ACCOUNTS_KEY,accounts);getiSave(BLACKLIST_KEY,getiStore(BLACKLIST_KEY,[]).filter(x=>x!==id));renderAdmin();}
+function recordSiteVisit(event,identifier){const visits=getiStore(SITE_VISITS_KEY,[]);visits.push({event,identifier:identifier||'',page:location.href,time:new Date().toISOString(),browser:navigator.userAgent});if(visits.length>1000)visits.splice(0,visits.length-1000);getiSave(SITE_VISITS_KEY,visits);}
+recordSiteVisit('SITE_VISIT','anonymous');
 
 /* =========================================================
    AUTO CERTIFICATE VERIFICATION
@@ -4250,496 +3937,6 @@ document
 
 </script>
 
-<!-- CHAT WITH ADMINISTRATOR -->
-<button class="chat-launcher" onclick="openChat()">💬 CHAT WITH THE ADMINISTRATOR</button>
-<div class="chat-modal" id="chatModal" onclick="if(event.target===this)closeChat()">
-<div class="chat-window">
-<div class="chat-header"><strong>💬 GETI Chat with the Administrator</strong><button class="chat-close" onclick="closeChat()">&times;</button></div>
-<div class="chat-auth" id="chatAuth"><div class="chat-auth-grid">
-<div class="chat-card"><h3>Login</h3><input id="chatLoginEmail" type="email" placeholder="Email"><input id="chatLoginPassword" type="password" placeholder="Password"><button class="btn btn-gold" onclick="chatLogin()">LOGIN</button><div id="chatLoginMsg" class="chat-status"></div></div>
-<div class="chat-card"><h3>Create Account</h3><input id="chatRegName" placeholder="Full name"><input id="chatRegEmail" type="email" placeholder="Email"><input id="chatRegPassword" type="password" placeholder="Password"><button class="btn btn-gold" onclick="chatCreateAccount()">CREATE ACCOUNT</button><div id="chatRegMsg" class="chat-status"></div></div>
-</div><p style="margin-top:15px;color:#687386;font-size:12px">Create an account to chat with GETI. This HTML-only version stores chat data in the browser; a shared backend is required for communication between different devices.</p></div>
-<div class="chat-main" id="chatUserMain" style="flex-direction:column"><div class="geti-group-tabs"><button id="userChatTabAdmin" class="active" onclick="showUserChatTab('admin')">ADMINISTRATOR</button><button id="userChatTabGroup" onclick="showUserChatTab('group')">GETI STUDENT GROUP</button><button class="btn" style="margin-left:auto;padding:7px 12px;background:#eef3f8;color:#0b2d5c" onclick="chatLogout()">LOGOUT</button></div><div class="geti-group-view active" id="userChatViewAdmin"><aside class="chat-sidebar"><div class="chat-sidebar-title">Conversation</div><div class="chat-contact active"><strong>GETI Administrator</strong><small>Private support</small></div></aside><section class="chat-content"><div class="chat-toolbar"><strong>GETI Administrator</strong></div><div class="chat-messages" id="chatUserMessages"></div><div class="chat-compose"><textarea id="chatUserText" placeholder="Write your message..."></textarea><div class="chat-compose-row"><input id="chatUserFile" type="file" accept="image/*,.pdf"><button onclick="sendUserChatMessage()">SEND</button></div></div></section></div><div class="geti-group-view" id="userChatViewGroup"><aside class="geti-group-members" id="groupMemberList"><div class="title">Students online</div></aside><section class="chat-content"><div class="chat-toolbar"><strong>GETI Student Group</strong></div><div class="chat-messages" id="groupMessages"></div><div class="geti-group-note">All students with a GETI chat account can participate in this group.</div><div class="chat-compose"><textarea id="groupChatText" placeholder="Write to the GETI student group..."></textarea><div class="chat-compose-row"><input id="groupChatFile" type="file" accept="image/*,.pdf"><button onclick="sendGroupMessage()">SEND</button></div></div></section></div></div>
-</div></div>
-
-
-<div id="getiChatLauncher" class="geti-chat-launcher">
-  <button onclick="openGetiChat()">💬 Chat with the Administrator</button>
-</div>
-
-<!-- GETI CHAT / STUDENT COMMUNITY SYSTEM -->
-<section id="geti-chat-system" class="geti-chat-system" aria-hidden="true">
-  <div class="geti-chat-modal">
-    <div class="geti-chat-header">
-      <div>
-        <strong>GETI Communication Center</strong>
-        <small>Administrator • Student Support • Student Group</small>
-      </div>
-      <button class="geti-close" onclick="closeGetiChat()">×</button>
-    </div>
-
-    <div id="getiAuthView" class="geti-auth-view">
-      <div class="geti-auth-tabs">
-        <button id="getiLoginTab" class="active" onclick="showGetiAuth('login')">Login</button>
-        <button id="getiCreateTab" onclick="showGetiAuth('create')">Create Account</button>
-      </div>
-
-      <div id="getiLoginForm" class="geti-auth-form">
-        <h3>Login</h3>
-        <input id="getiLoginEmail" type="email" placeholder="Email">
-        <input id="getiLoginPassword" type="password" placeholder="Password">
-        <button onclick="getiLogin()">LOGIN</button>
-        <p id="getiLoginMsg"></p>
-        <small>Administrator demo login: <b>admin@geti.local</b> / <b>GETI2026</b></small>
-      </div>
-
-      <div id="getiCreateForm" class="geti-auth-form" style="display:none">
-        <h3>Create Student Account</h3>
-        <input id="getiCreateName" type="text" placeholder="Full name">
-        <input id="getiCreateEmail" type="email" placeholder="Email">
-        <input id="getiCreatePhone" type="tel" placeholder="Telephone / WhatsApp">
-        <input id="getiCreateCountry" type="text" placeholder="Country">
-        <input id="getiCreatePassword" type="password" placeholder="Password">
-        <button onclick="getiCreateAccount()">CREATE ACCOUNT</button>
-        <p id="getiCreateMsg"></p>
-      </div>
-    </div>
-
-    <div id="getiAppView" style="display:none" class="geti-app-view">
-      <aside class="geti-chat-sidebar">
-        <div class="geti-user-card">
-          <div id="getiCurrentUser"></div>
-          <button onclick="getiLogout()">Logout</button>
-        </div>
-
-        <button class="geti-side-btn active" onclick="getiOpenTab('admin-chat', this)">💬 Messages</button>
-        <button class="geti-side-btn" onclick="getiOpenTab('group-chat', this)">👥 Student Group</button>
-
-        <div id="getiAdminOnlyMenu" style="display:none">
-          <div class="geti-side-title">ADMINISTRATION</div>
-          <button class="geti-side-btn" onclick="getiOpenTab('admin-panel', this)">🛠 Admin Panel</button>
-        </div>
-      </aside>
-
-      <main class="geti-chat-main">
-        <section id="getiAdminChat" class="geti-chat-tab">
-          <div class="geti-chat-title">
-            <div>
-              <h3 id="getiConversationTitle">Chat with the Administrator</h3>
-              <small id="getiConversationSub">Send questions, documents or photos.</small>
-            </div>
-          </div>
-
-          <div id="getiConversationList" class="geti-conversation-list"></div>
-          <div id="getiPrivateMessages" class="geti-message-list"></div>
-
-          <div class="geti-compose">
-            <label class="geti-file-label">📎
-              <input id="getiPrivateFile" type="file" accept="image/*,.pdf,application/pdf">
-            </label>
-            <input id="getiPrivateText" type="text" placeholder="Write a message..." onkeydown="if(event.key==='Enter') sendGetiPrivateMessage()">
-            <button onclick="sendGetiPrivateMessage()">SEND</button>
-          </div>
-          <small class="geti-help">PDF and image attachments can be downloaded by both sides.</small>
-        </section>
-
-        <section id="getiGroupChat" class="geti-chat-tab" style="display:none">
-          <div class="geti-chat-title">
-            <div>
-              <h3>GETI Student Group</h3>
-              <small>Students can practice English together. The GETI Practice Bot replies automatically.</small>
-            </div>
-          </div>
-          <div id="getiGroupMessages" class="geti-message-list"></div>
-          <div class="geti-compose">
-            <label class="geti-file-label">📎
-              <input id="getiGroupFile" type="file" accept="image/*,.pdf,application/pdf">
-            </label>
-            <input id="getiGroupText" type="text" placeholder="Write to the group..." onkeydown="if(event.key==='Enter') sendGetiGroupMessage()">
-            <button onclick="sendGetiGroupMessage()">SEND</button>
-          </div>
-        </section>
-
-        <section id="getiAdminPanel" class="geti-chat-tab" style="display:none">
-          <div class="geti-chat-title">
-            <h3>GETI Admin</h3>
-          </div>
-          <div class="geti-admin-menu">
-            <button class="active" onclick="getiAdminSection('message',this)">💬 All Messages</button>
-            <button onclick="getiAdminSection('results',this)">📊 All Results</button>
-            <button onclick="getiAdminSection('exams',this)">📝 All Who Did Exam</button>
-            <button onclick="getiAdminSection('blacklist',this)">🚫 All Blacklist</button>
-          </div>
-
-          <div id="getiAdminMessageSection" class="geti-admin-section">
-            <h4>All Student Messages</h4>
-            <p class="geti-admin-note">Every message sent by every registered student is visible to the site administrator.</p>
-            <div id="getiAdminInbox"></div>
-          </div>
-
-          <div id="getiAdminResultsSection" class="geti-admin-section" style="display:none">
-            <h4>All Examination Results</h4>
-            <div id="getiResultsList"></div>
-          </div>
-
-          <div id="getiAdminBlacklistSection" class="geti-admin-section" style="display:none">
-            <div id="getiBlacklistList"></div>
-          </div>
-          <div id="getiAdminExamsSection" class="geti-admin-section" style="display:none"><h4>All Who Did Exam</h4><div id="getiExamCandidatesList"></div></div>
-        </section>
-      </main>
-    </div>
-  </div>
-</section>
-
-<style>
-.geti-chat-launcher{position:fixed;right:22px;bottom:22px;z-index:9998}
-.geti-chat-launcher button{border:0;background:#0b2d5c;color:#fff;padding:12px 16px;border-radius:24px;box-shadow:0 7px 25px rgba(0,0,0,.2);font-weight:700;cursor:pointer}
-.geti-chat-system{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10000;align-items:center;justify-content:center;padding:18px}
-.geti-chat-system.show{display:flex}
-.geti-chat-modal{width:min(1100px,100%);height:min(760px,94vh);background:#f5f7fa;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);display:flex;flex-direction:column}
-.geti-chat-header{background:#0b2d5c;color:#fff;padding:15px 20px;display:flex;justify-content:space-between;align-items:center}
-.geti-chat-header small{display:block;color:#dce5f2;margin-top:2px}
-.geti-close{background:transparent;border:0;color:#fff;font-size:30px;cursor:pointer}
-.geti-auth-view{padding:35px;max-width:520px;width:100%;margin:auto}
-.geti-auth-tabs{display:flex;gap:8px;margin-bottom:20px}
-.geti-auth-tabs button,.geti-admin-menu button{border:1px solid #ccd4df;background:#fff;padding:10px 16px;border-radius:6px;cursor:pointer;font-weight:700}
-.geti-auth-tabs button.active,.geti-admin-menu button.active{background:#0b2d5c;color:#fff}
-.geti-auth-form{background:#fff;padding:25px;border-radius:10px;box-shadow:0 5px 18px rgba(0,0,0,.08)}
-.geti-auth-form input{width:100%;padding:12px;margin:7px 0;border:1px solid #ccd4df;border-radius:5px}
-.geti-auth-form>button{width:100%;padding:12px;background:#b38a28;color:#fff;border:0;border-radius:5px;font-weight:700;cursor:pointer;margin-top:8px}
-.geti-auth-form p{min-height:20px;color:#a51e1e}
-.geti-app-view{display:flex;flex:1;min-height:0}
-.geti-chat-sidebar{width:230px;background:#fff;border-right:1px solid #dce2ea;padding:15px;overflow:auto}
-.geti-user-card{background:#f1f4f8;padding:12px;border-radius:8px;margin-bottom:14px}
-.geti-user-card button{margin-top:8px;border:0;background:#a51e1e;color:#fff;padding:7px 10px;border-radius:4px;cursor:pointer}
-.geti-side-btn{width:100%;text-align:left;border:0;background:transparent;padding:11px;border-radius:6px;cursor:pointer;margin:2px 0}
-.geti-side-btn.active,.geti-side-btn:hover{background:#eef3f8;color:#0b2d5c;font-weight:700}
-.geti-side-title{font-size:11px;font-weight:800;color:#788396;margin:18px 5px 5px}
-.geti-chat-main{flex:1;min-width:0;display:flex;flex-direction:column}
-.geti-chat-tab{height:100%;min-height:0;display:flex;flex-direction:column}
-.geti-chat-title{padding:16px 20px;background:#fff;border-bottom:1px solid #dce2ea}
-.geti-chat-title h3{margin:0;color:#0b2d5c}
-.geti-chat-title small{color:#6c7788}
-.geti-conversation-list{display:flex;gap:8px;overflow:auto;padding:10px;background:#eef3f8}
-.geti-conversation-item{border:1px solid #d5dce6;background:#fff;padding:9px 12px;border-radius:20px;cursor:pointer;white-space:nowrap}
-.geti-conversation-item.active{background:#0b2d5c;color:#fff}
-.geti-message-list{flex:1;overflow:auto;padding:18px}
-.geti-msg{max-width:78%;margin:8px 0;padding:11px 13px;border-radius:10px;background:#fff;border:1px solid #dce2ea}
-.geti-msg.mine{margin-left:auto;background:#eaf1fb}
-.geti-msg .meta{font-size:11px;color:#6f7a8c;margin-bottom:4px}
-.geti-msg .file{display:block;margin-top:8px;padding:8px;background:#f4f6f9;border-radius:6px}
-.geti-msg .file a{color:#0b2d5c;font-weight:700}
-.geti-compose{display:flex;gap:8px;padding:12px;background:#fff;border-top:1px solid #dce2ea}
-.geti-compose input[type=text]{flex:1;min-width:0;padding:12px;border:1px solid #ccd4df;border-radius:6px}
-.geti-compose button{border:0;background:#0b2d5c;color:#fff;padding:0 17px;border-radius:6px;font-weight:700;cursor:pointer}
-.geti-file-label{display:flex;align-items:center;justify-content:center;width:42px;border:1px solid #ccd4df;border-radius:6px;cursor:pointer}
-.geti-file-label input{display:none}
-.geti-help{padding:0 14px 10px;background:#fff;color:#778295}
-.geti-admin-menu{padding:12px;display:flex;gap:8px;flex-wrap:wrap;background:#fff;border-bottom:1px solid #dce2ea}
-.geti-admin-section{padding:18px;overflow:auto}
-.geti-admin-section h4{margin:0 0 8px;color:#0b2d5c}
-.geti-admin-note{color:#667386;font-size:13px}
-.geti-data-table{width:100%;border-collapse:collapse;background:#fff;font-size:13px}
-.geti-data-table th,.geti-data-table td{border:1px solid #dce2ea;padding:9px;text-align:left;vertical-align:top}
-.geti-data-table th{background:#eef3f8;color:#0b2d5c}
-.geti-admin-actions{display:flex;gap:6px;flex-wrap:wrap}
-.geti-admin-actions button{border:0;background:#0b2d5c;color:#fff;padding:6px 9px;border-radius:4px;cursor:pointer}
-
-.geti-inbox-card{background:#fff;border:1px solid #dce2ea;border-radius:8px;padding:13px;margin-bottom:10px;cursor:pointer}
-.geti-inbox-card strong{color:#0b2d5c}
-.geti-mini-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
-.geti-mini-actions button{border:0;background:#0b2d5c;color:#fff;padding:7px 10px;border-radius:4px;cursor:pointer}
-.geti-mini-actions button.danger{background:#a51e1e}
-.geti-empty{padding:30px;text-align:center;color:#778295}
-.geti-badge{display:inline-block;padding:3px 7px;border-radius:12px;background:#eaf8ef;color:#176b32;font-size:11px;font-weight:700}
-@media(max-width:700px){
-  .geti-chat-modal{height:96vh}
-  .geti-chat-sidebar{width:165px}
-  .geti-chat-launcher{right:10px;bottom:10px}
-  .geti-chat-launcher button{font-size:12px}
-  .geti-msg{max-width:90%}
-}
-</style>
-
-<script>
-(function(){
-  const KEY='GETI_COMMUNITY_V1';
-  const ADMIN_EMAIL='admin@geti.local';
-  const ADMIN_PASSWORD='GETI2026';
-
-  function state(){
-    let s=JSON.parse(localStorage.getItem(KEY)||'null');
-    if(!s){
-      s={users:[],messages:[],group:[],blacklist:[],passed:[],session:null};
-      localStorage.setItem(KEY,JSON.stringify(s));
-    }
-    return s;
-  }
-  function save(s){localStorage.setItem(KEY,JSON.stringify(s));}
-
-  window.openGetiChat=function(){
-    document.getElementById('geti-chat-system').classList.add('show');
-    document.getElementById('geti-chat-system').setAttribute('aria-hidden','false');
-    renderAuthOrApp();
-  };
-  window.closeGetiChat=function(){
-    document.getElementById('geti-chat-system').classList.remove('show');
-    document.getElementById('geti-chat-system').setAttribute('aria-hidden','true');
-  };
-  window.showGetiAuth=function(type){
-    document.getElementById('getiLoginForm').style.display=type==='login'?'block':'none';
-    document.getElementById('getiCreateForm').style.display=type==='create'?'block':'none';
-    document.getElementById('getiLoginTab').classList.toggle('active',type==='login');
-    document.getElementById('getiCreateTab').classList.toggle('active',type==='create');
-  };
-
-  window.getiCreateAccount=function(){
-    const s=state();
-    const name=document.getElementById('getiCreateName').value.trim();
-    const email=document.getElementById('getiCreateEmail').value.trim().toLowerCase();
-    const phone=document.getElementById('getiCreatePhone').value.trim();
-    const country=document.getElementById('getiCreateCountry').value.trim();
-    const password=document.getElementById('getiCreatePassword').value;
-    const msg=document.getElementById('getiCreateMsg');
-    if(!name||!email||!phone||!country||!password){msg.textContent='Please complete Name, Email, Telephone, Country and Password.';return;}
-    if(s.users.some(u=>u.email===email)||email===ADMIN_EMAIL){msg.textContent='This email is already registered.';return;}
-    s.users.push({id:'GETI-STU-'+String(s.users.length+1).padStart(6,'0'),name,email,phone,country,password,role:'student'});
-    save(s);msg.style.color='#176b32';msg.textContent='Account created. You can now log in.';showGetiAuth('login');
-  };
-
-  window.getiLogin=function(){
-    const s=state();
-    const email=document.getElementById('getiLoginEmail').value.trim().toLowerCase();
-    const password=document.getElementById('getiLoginPassword').value;
-    const msg=document.getElementById('getiLoginMsg');
-    let u=null;
-    if(email===ADMIN_EMAIL && password===ADMIN_PASSWORD){
-      u={id:'GETI-ADMIN',name:'GETI Administrator',email:ADMIN_EMAIL,role:'admin'};
-    }else{
-      u=s.users.find(x=>x.email===email&&x.password===password);
-    }
-    if(!u){msg.textContent='Invalid email or password.';return;}
-    s.session=u.id;save(s);renderAuthOrApp();
-  };
-
-  window.getiLogout=function(){
-    const s=state();s.session=null;save(s);renderAuthOrApp();
-  };
-
-  function currentUser(){
-    const s=state();
-    if(s.session==='GETI-ADMIN') return {id:'GETI-ADMIN',name:'GETI Administrator',email:ADMIN_EMAIL,role:'admin'};
-    return s.users.find(u=>u.id===s.session)||null;
-  }
-
-  function renderAuthOrApp(){
-    const u=currentUser();
-    document.getElementById('getiAuthView').style.display=u?'none':'block';
-    document.getElementById('getiAppView').style.display=u?'flex':'none';
-    if(!u)return;
-    document.getElementById('getiCurrentUser').innerHTML='<strong>'+esc(u.name)+'</strong><br><small>'+esc(u.email)+'</small>';
-    document.getElementById('getiAdminOnlyMenu').style.display=u.role==='admin'?'block':'none';
-    getiOpenTab(u.role==='admin'?'admin-panel':'admin-chat');
-    renderConversations();
-    renderPrivate();
-    renderGroup();
-    renderAdminInbox();
-    renderBlacklist();
-    renderPassed();
-  }
-
-  window.getiOpenTab=function(tab,btn){
-    ['getiAdminChat','getiGroupChat','getiAdminPanel'].forEach(id=>document.getElementById(id).style.display='none');
-    const map={'admin-chat':'getiAdminChat','group-chat':'getiGroupChat','admin-panel':'getiAdminPanel'};
-    document.getElementById(map[tab]).style.display='flex';
-    document.querySelectorAll('.geti-side-btn').forEach(x=>x.classList.remove('active'));
-    if(btn)btn.classList.add('active');
-    renderConversations();renderPrivate();renderGroup();renderAdminInbox();renderAllResults();renderBlacklist();renderExamCandidates();
-  };
-
-  let activeStudentId=null;
-  function renderConversations(){
-    const u=currentUser(), box=document.getElementById('getiConversationList');
-    if(!u||u.role!=='admin'){box.style.display='none';return;}
-    box.style.display='flex';
-    const s=state();
-    const ids=[...new Set(s.messages.map(m=>m.from==='GETI-ADMIN'?m.to:m.from))];
-    if(!ids.length){box.innerHTML='<div class="geti-empty">No student messages yet.</div>';return;}
-    box.innerHTML=ids.map(id=>{
-      const st=s.users.find(x=>x.id===id); if(!st)return '';
-      return '<button class="geti-conversation-item '+(activeStudentId===id?'active':'')+'" onclick="selectGetiStudent(\''+id+'\')">'+esc(st.name)+'</button>';
-    }).join('');
-    if(!activeStudentId)activeStudentId=ids[0];
-  }
-  window.selectGetiStudent=function(id){activeStudentId=id;renderConversations();renderPrivate();};
-
-  function renderPrivate(){
-    const u=currentUser(); if(!u)return;
-    const target=u.role==='admin'?activeStudentId:'GETI-ADMIN';
-    const msgs=state().messages.filter(m=>
-      (m.from===u.id&&m.to===target)||(m.from===target&&m.to===u.id)
-    );
-    const box=document.getElementById('getiPrivateMessages');
-    if(!msgs.length){box.innerHTML='<div class="geti-empty">No messages yet. Start the conversation.</div>';return;}
-    box.innerHTML=msgs.map(m=>messageHTML(m,u.id)).join('');
-    box.scrollTop=box.scrollHeight;
-    if(u.role==='admin'&&target){
-      const st=state().users.find(x=>x.id===target);
-      document.getElementById('getiConversationTitle').textContent='Chat with '+(st?st.name:'Student');
-    }else{
-      document.getElementById('getiConversationTitle').textContent='Chat with the Administrator';
-    }
-  }
-
-  window.sendGetiPrivateMessage=function(){
-    const u=currentUser(); if(!u)return;
-    const text=document.getElementById('getiPrivateText').value.trim();
-    const file=document.getElementById('getiPrivateFile').files[0];
-    const target=u.role==='admin'?activeStudentId:'GETI-ADMIN';
-    if(!target||(!text&&!file))return;
-    const s=state();
-    const finish=(attachment)=>{
-      s.messages.push({id:'M'+Date.now(),from:u.id,to:target,text,attachment,time:new Date().toISOString()});
-      save(s);
-      document.getElementById('getiPrivateText').value='';
-      document.getElementById('getiPrivateFile').value='';
-      renderPrivate();renderAdminInbox();renderConversations();
-    };
-    if(file) readFile(file,finish); else finish(null);
-  };
-
-  function readFile(file,cb){
-    const r=new FileReader();
-    r.onload=()=>cb({name:file.name,type:file.type||'application/octet-stream',data:r.result});
-    r.readAsDataURL(file);
-  }
-
-  function messageHTML(m,myId){
-    const sender=state().users.find(x=>x.id===m.from)|| (m.from==='GETI-ADMIN'?{name:'GETI Administrator'}:{name:m.from});
-    let file='';
-    if(m.attachment){
-      file='<div class="file">📎 '+esc(m.attachment.name)+'<br><a href="'+m.attachment.data+'" download="'+escAttr(m.attachment.name)+'">Download</a></div>';
-    }
-    return '<div class="geti-msg '+(m.from===myId?'mine':'')+'"><div class="meta">'+esc(sender.name||'GETI')+' • '+new Date(m.time).toLocaleString()+'</div><div>'+esc(m.text||'')+'</div>'+file+'</div>';
-  }
-
-  function renderGroup(){
-    const u=currentUser(); if(!u)return;
-    const box=document.getElementById('getiGroupMessages'), s=state();
-    if(!s.group.length){box.innerHTML='<div class="geti-empty">Welcome to the GETI Student Group. Start an English practice conversation.</div>';return;}
-    box.innerHTML=s.group.map(m=>messageHTML(m,u.id)).join('');
-    box.scrollTop=box.scrollHeight;
-  }
-
-  window.sendGetiGroupMessage=function(){
-    const u=currentUser();if(!u)return;
-    const text=document.getElementById('getiGroupText').value.trim();
-    const file=document.getElementById('getiGroupFile').files[0];
-    if(!text&&!file)return;
-    const s=state();
-    const add=(attachment)=>{
-      s.group.push({id:'G'+Date.now(),from:u.id,to:'GROUP',text,attachment,time:new Date().toISOString()});
-      save(s);
-      document.getElementById('getiGroupText').value='';document.getElementById('getiGroupFile').value='';
-      renderGroup();
-      if(text) setTimeout(()=>practiceBot(text),700);
-    };
-    if(file)readFile(file,add);else add(null);
-  };
-
-  function practiceBot(text){
-    const lower=text.toLowerCase(), s=state();
-    let reply='Great practice! Try to answer in complete English sentences. What is your next idea?';
-    if(lower.includes('hello')||lower.includes('hi')) reply='Hello! 👋 Let’s practice English. Tell me three sentences about your day.';
-    else if(lower.includes('grammar')) reply='Grammar practice: make one sentence in the present simple and one in the past simple.';
-    else if(lower.includes('question')) reply='Practice question: What did you learn today, and why was it useful?';
-    else if(lower.includes('thank')) reply='You’re welcome! Keep practicing your English.';
-    s.group.push({id:'BOT'+Date.now(),from:'GETI-PRACTICE-BOT',to:'GROUP',text:'🤖 GETI Practice Bot: '+reply,attachment:null,time:new Date().toISOString()});
-    save(s);renderGroup();
-  }
-
-  function renderAdminInbox(){
-    const u=currentUser();if(!u||u.role!=='admin')return;
-    const box=document.getElementById('getiAdminInbox'),s=state();
-    const incoming=s.messages.filter(m=>m.from!=='GETI-ADMIN');
-    if(!incoming.length){box.innerHTML='<div class="geti-empty">No student messages yet.</div>';return;}
-    const grouped={};
-    incoming.forEach(m=>{if(!grouped[m.from])grouped[m.from]=[];grouped[m.from].push(m);});
-    box.innerHTML=Object.keys(grouped).map(id=>{
-      const st=s.users.find(x=>x.id===id),msgs=grouped[id].sort((a,b)=>new Date(a.time)-new Date(b.time)),latest=msgs[msgs.length-1];
-      return '<div class="geti-inbox-card"><strong>'+esc(st?st.name:id)+'</strong> <span class="geti-badge">'+msgs.length+' message'+(msgs.length===1?'':'s')+'</span><br><small>'+esc(st?st.email:'')+'</small>'+
-        '<div style="margin-top:8px;color:#445064">'+esc(latest.text||latest.attachment?.name||'Attachment')+'</div>'+
-        '<div class="geti-mini-actions"><button onclick="selectGetiStudent(\''+id+'\');getiOpenTab(\'admin-chat\')">OPEN COMPLETE CHAT</button><button class="danger" onclick="addBlacklist(\''+id+'\')">BLACKLIST</button></div></div>';
-    }).join('');
-  }
-
-  function legacyRenderAccounts(){
-    const u=currentUser();if(!u||u.role!=='admin')return;
-    const box=document.getElementById('getiAccountsList'),s=state();
-    if(!s.users.length){box.innerHTML='<div class="geti-empty">No student accounts.</div>';return;}
-    box.innerHTML='<table class="geti-data-table"><thead><tr><th>Student ID</th><th>Name</th><th>Email</th><th>Messages</th><th>Actions</th></tr></thead><tbody>'+
-      s.users.map(st=>{
-        const count=s.messages.filter(m=>m.from===st.id||m.to===st.id).length;
-        return '<tr><td>'+esc(st.id)+'</td><td>'+esc(st.name)+'</td><td>'+esc(st.email)+'</td><td>'+count+'</td><td><div class="geti-admin-actions"><button onclick="selectGetiStudent(\''+st.id+'\');getiOpenTab(\'admin-chat\')">CHAT</button><button onclick="addBlacklist(\''+st.id+'\')">BLACKLIST</button></div></td></tr>';
-      }).join('')+'</tbody></table>';
-  }
-
-  function getAllExamRecords(){
-    try{return JSON.parse(localStorage.getItem('GETI_EXAM_RECORDS')||'[]')||[];}catch(e){return [];}
-  }
-
-  function renderAllResults(){
-    const u=currentUser();if(!u||u.role!=='admin')return;
-    const box=document.getElementById('getiResultsList'),records=getAllExamRecords();
-    if(!records.length){box.innerHTML='<div class="geti-empty">No examination results have been recorded yet.</div>';return;}
-    box.innerHTML='<table class="geti-data-table"><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Program</th><th>Score</th><th>Status</th><th>Date</th><th>Subjects</th></tr></thead><tbody>'+
-      records.map(r=>{
-        const subjects=(r.subjects||[]).map(x=>esc(x.subject)+' '+esc(x.percentage)+'% ('+esc(x.grade)+')').join('<br>');
-        return '<tr><td>'+esc(r.id)+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.email)+'</td><td>'+esc(r.program)+'</td><td><strong>'+esc(r.percentage)+'%</strong></td><td><span class="geti-badge">'+esc(r.status)+'</span></td><td>'+esc(r.date?new Date(r.date).toLocaleString():'')+'</td><td>'+subjects+'</td></tr>';
-      }).join('')+'</tbody></table>';
-  }
-
-  window.getiAdminSection=function(type,btn){
-    ['getiAdminMessageSection','getiAdminResultsSection','getiAdminExamsSection','getiAdminBlacklistSection']
-      .forEach(id=>document.getElementById(id).style.display='none');
-    document.querySelectorAll('.geti-admin-menu button').forEach(x=>x.classList.remove('active'));
-    if(btn)btn.classList.add('active');
-    const map={message:'getiAdminMessageSection',results:'getiAdminResultsSection',exams:'getiAdminExamsSection',blacklist:'getiAdminBlacklistSection'};
-    document.getElementById(map[type]).style.display='block';
-    renderAdminInbox();renderAllResults();renderBlacklist();renderExamCandidates();
-  };
-
-  function renderBlacklist(){
-    const u=currentUser();if(!u||u.role!=='admin')return;
-    const s=state(),box=document.getElementById('getiBlacklistList');
-    box.innerHTML=s.blacklist.length?s.blacklist.map(x=>'<div class="geti-inbox-card"><strong>'+esc(x.name)+'</strong><br><small>'+esc(x.email)+'</small><div class="geti-mini-actions"><button onclick="removeBlacklist(\''+x.id+'\')">Remove</button></div></div>').join(''):'<div class="geti-empty">Blacklist is empty.</div>';
-  }
-  window.addBlacklist=function(id){
-    const s=state(),u=s.users.find(x=>x.id===id);if(!u)return;
-    if(!s.blacklist.some(x=>x.id===id))s.blacklist.push({id:u.id,name:u.name,email:u.email});
-    save(s);renderBlacklist();
-  };
-  window.removeBlacklist=function(id){
-    const s=state();s.blacklist=s.blacklist.filter(x=>x.id!==id);save(s);renderBlacklist();
-  };
-  function legacyRenderPassed(){
-    const u=currentUser();if(!u||u.role!=='admin')return;
-    const s=state(),box=document.getElementById('getiPassedList');
-    box.innerHTML=s.passed.length?s.passed.map(x=>'<div class="geti-inbox-card"><strong>'+esc(x.name)+'</strong><br><small>'+esc(x.id)+' • '+esc(String(x.score||''))+'</small></div>').join(''):'<div class="geti-empty">No passed candidates recorded in this communication module.</div>';
-  }
-
-  function renderExamCandidates(){const u=currentUser();if(!u||u.role!=='admin')return;const box=document.getElementById('getiExamCandidatesList');if(!box)return;const records=getAllExamRecords();box.innerHTML=records.length?'<table class="geti-data-table"><thead><tr><th>Name</th><th>Email</th><th>Telephone</th><th>Country</th><th>Exam</th><th>Score</th><th>Status</th></tr></thead><tbody>'+records.map(r=>'<tr><td>'+esc(r.name)+'</td><td>'+esc(r.email)+'</td><td>'+esc(r.phone||'Not provided')+'</td><td>'+esc(r.country||'Not provided')+'</td><td>'+esc(r.program)+'</td><td>'+esc(r.percentage)+'%</td><td>'+esc(r.status)+'</td></tr>').join('')+'</tbody></table>':'<div class="geti-empty">No examination candidates recorded yet.</div>';}
-  function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
-  function escAttr(v){return esc(v).replace(/`/g,'&#096;');}
-
-  // Make the launcher available on the page.
-  if(!document.getElementById('getiChatLauncher'))document.body.insertAdjacentHTML('beforeend',button_html);
-
-  // Refresh the UI when the same browser tab receives storage updates.
-  window.addEventListener('storage',()=>{if(currentUser()){renderConversations();renderPrivate();renderGroup();renderAdminInbox();renderAllResults();renderBlacklist();renderExamCandidates();}});
-})();
-</script>
-
 </body>
 </html>
+
