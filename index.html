@@ -1,16 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>GLOBAL ENGLISH TEACHING INSTITUTE</title>
 
-<meta name="description"
-content="Global English Teaching Institute - International English Education, TEFL, TESOL and Certificate Verification.">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL =
+    "https://nfprquwwysgkymgwtuio.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_XzgF66p4RfQbyDZUWksPoA_G8_tYwLo";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+console.log("GETI Supabase connected");
+</script>
+
+<style>
+/* NY CSS ANAO */
+</style>
+
+</head>
+
+<body>
+
+<!-- NY WEBSITE CONTENT ANAO -->
+
+<script>
+
+/* =========================================================
+   GETI SUPABASE SYSTEM
+========================================================= */
+
+const GETI_DB = supabaseClient;
+
+/* APETRAO ETO ILAY JAVASCRIPT LAVA NALEFANAO */
+
+/* ... */
+
+console.log("GETI Supabase system loaded successfully.");
+
+</script>
+
+
+<!-- =========================================================
+     GETI ADMIN PANEL
+========================================================= -->
+
+<section id="getiAdminPanel" style="display:none; padding:30px;">
+
+    <div style="max-width:1400px;margin:auto;">
+
+        <h1>GETI Administrator</h1>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:25px 0;">
+
+            <button onclick="getiAdminLoadMessages()">
+                💬 All Messages
+            </button>
+
+            <button onclick="getiAdminLoadAccounts()">
+                👤 Chat Accounts
+            </button>
+
+            <button onclick="getiAdminLoadBlacklist()">
+                🚫 Blacklist
+            </button>
+
+            <button onclick="getiAdminLoadResults()">
+                📝 All Results
+            </button>
+
+            <button onclick="getiAdminLoadActivity()">
+                👁️ Site Activity
+            </button>
+
+        </div>
+
+        <div id="getiAdminStatus"></div>
+
+        <div id="getiAdminContent">
+            <p>Select an administrator section above.</p>
+        </div>
+
+    </div>
+
+</section>
+
+</body>
+</html>
 
 <style>
 
+*{
+    box-sizing:border-box;
+}
 *{
     margin:0;
     padding:0;
@@ -3764,7 +3858,7 @@ function sendMessage(){
    NOTE: This single-file version stores data in this browser.
    A real multi-device/global deployment requires a secure backend.
 ========================================================= */
-const GETI_ADMIN_PASSWORD = "global";
+const GETI_ADMIN_PASSWORD = ;
 const CHAT_ACCOUNTS_KEY = "GETI_CHAT_ACCOUNTS";
 const CHAT_MESSAGES_KEY = "GETI_CHAT_MESSAGES";
 const SITE_VISITS_KEY = "GETI_SITE_VISITS";
@@ -3937,6 +4031,1414 @@ document
 
 </script>
 
-</body>
+<script>
+/* =========================================================
+   GETI — SUPABASE CONNECTION
+========================================================= */
+
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+const { createClient } = supabase;
+
+const db = createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
+
+
+/* =========================================================
+   CURRENT USER
+========================================================= */
+
+let currentUser = null;
+
+
+/* =========================================================
+   CHECK LOGIN
+========================================================= */
+
+async function checkSupabaseLogin() {
+
+    try {
+
+        const {
+            data: { session },
+            error
+        } = await db.auth.getSession();
+
+        if (error) {
+            console.error("Session error:", error);
+            return;
+        }
+
+        if (session) {
+
+            currentUser = session.user;
+
+            console.log(
+                "GETI user logged in:",
+                currentUser.email
+            );
+
+            await loadMyProfile();
+
+        } else {
+
+            currentUser = null;
+
+            console.log("No GETI user logged in.");
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Supabase login check failed:",
+            error
+        );
+
+    }
+}
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+db.auth.onAuthStateChange(
+    async (event, session) => {
+
+        currentUser =
+            session ? session.user : null;
+
+        console.log(
+            "GETI Auth:",
+            event
+        );
+
+        if (session) {
+
+            await loadMyProfile();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   GET USER PROFILE
+========================================================= */
+
+async function loadMyProfile() {
+
+    if (!currentUser) return;
+
+    try {
+
+        const { data, error } = await db
+            .from("profiles")
+            .select("*")
+            .eq("id", currentUser.id)
+            .maybeSingle();
+
+        if (error) {
+
+            console.error(
+                "Profile error:",
+                error
+            );
+
+            return;
+        }
+
+        if (data) {
+
+            console.log(
+                "GETI Profile:",
+                data
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Profile loading failed:",
+            error
+        );
+
+    }
+}
+
+
+/* =========================================================
+   CREATE ACCOUNT
+========================================================= */
+
+async function createGETIAccount(
+    email,
+    password,
+    fullName,
+    phone = "",
+    country = ""
+) {
+
+    if (!email || !password || !fullName) {
+
+        alert(
+            "Please enter name, email and password."
+        );
+
+        return false;
+    }
+
+    try {
+
+        const {
+            data,
+            error
+        } = await db.auth.signUp({
+
+            email: email,
+
+            password: password
+
+        });
+
+        if (error) {
+
+            alert(error.message);
+
+            return false;
+        }
+
+        if (!data.user) {
+
+            alert(
+                "Account could not be created."
+            );
+
+            return false;
+        }
+
+
+        /* Create profile */
+
+        const {
+            error: profileError
+        } = await db
+            .from("profiles")
+            .insert({
+
+                id: data.user.id,
+
+                full_name: fullName,
+
+                email: email,
+
+                phone: phone,
+
+                country: country
+
+            });
+
+
+        if (profileError) {
+
+            console.error(
+                "Profile creation error:",
+                profileError
+            );
+
+        }
+
+
+        alert(
+            "GETI account created successfully."
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to create account."
+        );
+
+        return false;
+    }
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+async function loginGETIAccount(
+    email,
+    password
+) {
+
+    if (!email || !password) {
+
+        alert(
+            "Please enter your email and password."
+        );
+
+        return false;
+    }
+
+    try {
+
+        const {
+            data,
+            error
+        } = await db.auth.signInWithPassword({
+
+            email: email,
+
+            password: password
+
+        });
+
+        if (error) {
+
+            alert(error.message);
+
+            return false;
+        }
+
+        currentUser = data.user;
+
+        await loadMyProfile();
+
+        alert(
+            "Welcome back to GETI."
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Login failed."
+        );
+
+        return false;
+    }
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function logoutGETI() {
+
+    const { error } =
+        await db.auth.signOut();
+
+    if (error) {
+
+        console.error(error);
+
+        return;
+    }
+
+    currentUser = null;
+
+    alert(
+        "You have been logged out."
+    );
+
+    location.reload();
+}
+
+
+/* =========================================================
+   SAVE SITE ACTIVITY
+========================================================= */
+
+async function saveGETIActivity(
+    activityType,
+    details = {}
+) {
+
+    try {
+
+        await db
+            .from("site_activity")
+            .insert({
+
+                user_id:
+                    currentUser
+                    ? currentUser.id
+                    : null,
+
+                activity_type:
+                    activityType,
+
+                details:
+                    details
+
+            });
+
+    } catch (error) {
+
+        console.error(
+            "Activity error:",
+            error
+        );
+
+    }
+}
+
+
+/* =========================================================
+   SEND ADMIN MESSAGE
+========================================================= */
+
+async function sendAdminMessage(
+    message
+) {
+
+    if (!currentUser) {
+
+        alert(
+            "Please login first."
+        );
+
+        return false;
+    }
+
+    if (!message.trim()) {
+
+        alert(
+            "Please enter a message."
+        );
+
+        return false;
+    }
+
+    try {
+
+        const {
+            error
+        } = await db
+            .from("messages")
+            .insert({
+
+                sender_id:
+                    currentUser.id,
+
+                message:
+                    message.trim(),
+
+                receiver_id:
+                    null
+
+            });
+
+        if (error) {
+
+            console.error(error);
+
+            alert(
+                "Message could not be sent."
+            );
+
+            return false;
+        }
+
+        await saveGETIActivity(
+            "message_sent",
+            {
+                message_length:
+                    message.length
+            }
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(error);
+
+        return false;
+    }
+}
+
+
+/* =========================================================
+   LOAD MY MESSAGES
+========================================================= */
+
+async function loadMyMessages() {
+
+    if (!currentUser) return [];
+
+    try {
+
+        const {
+            data,
+            error
+        } = await db
+            .from("messages")
+            .select("*")
+            .or(
+                `sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            );
+
+        if (error) {
+
+            console.error(
+                "Message loading error:",
+                error
+            );
+
+            return [];
+        }
+
+        return data || [];
+
+    } catch (error) {
+
+        console.error(error);
+
+        return [];
+    }
+}
+
+
+/* =========================================================
+   REALTIME CHAT
+========================================================= */
+
+const chatChannel =
+    db
+    .channel("geti-chat-realtime")
+    .on(
+        "postgres_changes",
+        {
+            event: "INSERT",
+            schema: "public",
+            table: "messages"
+        },
+        payload => {
+
+            console.log(
+                "New GETI message:",
+                payload.new
+            );
+
+            /*
+             * Raha manana function UI
+             * displayMessage() ianao,
+             * azonao antsoina eto.
+             */
+
+            if (
+                typeof displayMessage ===
+                "function"
+            ) {
+
+                displayMessage(
+                    payload.new
+                );
+
+            }
+
+        }
+    )
+    .subscribe();
+
+
+/* =========================================================
+   SAVE EXAM RESULT
+========================================================= */
+
+async function saveGETIExamResult(result) {
+
+    if (!currentUser) {
+
+        console.error(
+            "No logged-in user."
+        );
+
+        return false;
+    }
+
+    try {
+
+        const {
+            error
+        } = await db
+            .from("subject_results")
+            .insert({
+
+                user_id:
+                    currentUser.id,
+
+                program:
+                    result.program || "",
+
+                subject:
+                    result.subject || "",
+
+                score:
+                    Number(result.score || 0),
+
+                total:
+                    Number(result.total || 0),
+
+                status:
+                    result.status || ""
+
+            });
+
+        if (error) {
+
+            console.error(
+                "Exam result error:",
+                error
+            );
+
+            return false;
+        }
+
+        await saveGETIActivity(
+            "exam_completed",
+            {
+                program:
+                    result.program,
+
+                subject:
+                    result.subject,
+
+                score:
+                    result.score,
+
+                total:
+                    result.total
+            }
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(error);
+
+        return false;
+    }
+}
+
+
+/* =========================================================
+   LOAD MY EXAM RESULTS
+========================================================= */
+
+async function loadMyExamResults() {
+
+    if (!currentUser) return [];
+
+    try {
+
+        const {
+            data,
+            error
+        } = await db
+            .from("subject_results")
+            .select("*")
+            .eq(
+                "user_id",
+                currentUser.id
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+        if (error) {
+
+            console.error(
+                "Results error:",
+                error
+            );
+
+            return [];
+        }
+
+        return data || [];
+
+    } catch (error) {
+
+        console.error(error);
+
+        return [];
+    }
+}
+
+
+/* =========================================================
+   START GETI
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async function() {
+
+        await checkSupabaseLogin();
+
+        await saveGETIActivity(
+            "site_visit",
+            {
+                page:
+                    location.pathname
+            }
+        );
+
+    }
+);
+
+</script><script>
+/* =========================================================
+   GETI SUPABASE CONNECTION
+========================================================= */
+
+const GETI_DB = supabaseClient;
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+async function getiCreateAccount(email, password, name = "") {
+
+    const { data, error } = await GETI_DB.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+            data: {
+                name: name
+            }
+        }
+    });
+
+    if (error) {
+        console.error("Create account error:", error);
+        alert(error.message);
+        return null;
+    }
+
+    return data;
+}
+
+
+async function getiLogin(email, password) {
+
+    const { data, error } =
+        await GETI_DB.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+    if (error) {
+        console.error("Login error:", error);
+        alert(error.message);
+        return null;
+    }
+
+    await getiLogActivity(
+        "chat_login",
+        location.pathname
+    );
+
+    return data;
+}
+
+
+async function getiLogout() {
+
+    await GETI_DB.auth.signOut();
+
+    location.reload();
+}
+
+
+async function getiCurrentUser() {
+
+    const {
+        data: { user }
+    } = await GETI_DB.auth.getUser();
+
+    return user;
+}
+
+
+/* =========================================================
+   ADMIN CHECK
+========================================================= */
+
+async function getiIsAdmin() {
+
+    const user = await getiCurrentUser();
+
+    if (!user) return false;
+
+    const { data, error } = await GETI_DB
+        .from("admin_users")
+        .select("id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+    if (error) {
+        console.error("Admin check:", error);
+        return false;
+    }
+
+    return !!data;
+}
+
+
+/* =========================================================
+   ACTIVITY
+========================================================= */
+
+async function getiLogActivity(
+    activityType,
+    page = location.pathname,
+    metadata = {}
+) {
+
+    const user = await getiCurrentUser();
+
+    if (!user) return;
+
+    const { error } = await GETI_DB
+        .from("site_activity")
+        .insert({
+            user_id: user.id,
+            activity_type: activityType,
+            page: page,
+            user_agent: navigator.userAgent,
+            metadata: metadata
+        });
+
+    if (error) {
+        console.error("Activity error:", error);
+    }
+}
+
+
+/* =========================================================
+   GET / CREATE CHAT CONVERSATION
+========================================================= */
+
+async function getiGetConversation() {
+
+    const user = await getiCurrentUser();
+
+    if (!user) {
+        throw new Error("Please login first.");
+    }
+
+    const { data, error } = await GETI_DB
+        .from("chat_conversations")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+    if (error) {
+        console.error(error);
+        throw error;
+    }
+
+    if (data) return data;
+
+    const { data: newConversation, error: createError } =
+        await GETI_DB
+            .from("chat_conversations")
+            .insert({
+                user_id: user.id,
+                status: "open"
+            })
+            .select()
+            .single();
+
+    if (createError) {
+        console.error(createError);
+        throw createError;
+    }
+
+    return newConversation;
+}
+
+
+/* =========================================================
+   SEND CHAT MESSAGE
+========================================================= */
+
+async function getiSendMessage(message) {
+
+    const user = await getiCurrentUser();
+
+    if (!user) {
+        alert("Please login first.");
+        return;
+    }
+
+    if (!message || !message.trim()) return;
+
+    /* Check block */
+
+    const { data: block } = await GETI_DB
+        .from("chat_blocks")
+        .select("blocked")
+        .eq("user_id", user.id)
+        .eq("blocked", true)
+        .maybeSingle();
+
+    if (block) {
+        alert("Your chat account is blocked.");
+        return;
+    }
+
+    const conversation =
+        await getiGetConversation();
+
+    const { data, error } =
+        await GETI_DB
+            .from("chat_messages")
+            .insert({
+                conversation_id: conversation.id,
+                sender_id: user.id,
+                sender_type: "user",
+                message: message.trim()
+            })
+            .select()
+            .single();
+
+    if (error) {
+        console.error("Send message error:", error);
+        alert(error.message);
+        return;
+    }
+
+    await getiLogActivity(
+        "chat_message_sent",
+        location.pathname
+    );
+
+    return data;
+}
+
+
+/* =========================================================
+   LOAD USER MESSAGES
+========================================================= */
+
+async function getiLoadMyMessages() {
+
+    const conversation =
+        await getiGetConversation();
+
+    const { data, error } =
+        await GETI_DB
+            .from("chat_messages")
+            .select("*")
+            .eq("conversation_id", conversation.id)
+            .order("created_at", {
+                ascending: true
+            });
+
+    if (error) {
+        console.error(error);
+        return [];
+    }
+
+    return data || [];
+}
+
+
+/* =========================================================
+   REALTIME USER CHAT
+========================================================= */
+
+let getiChatChannel = null;
+
+async function getiStartChatRealtime(renderFunction) {
+
+    const conversation =
+        await getiGetConversation();
+
+    if (getiChatChannel) {
+        await GETI_DB.removeChannel(getiChatChannel);
+    }
+
+    getiChatChannel =
+        GETI_DB
+            .channel(
+                "geti-chat-" + conversation.id
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "INSERT",
+                    schema: "public",
+                    table: "chat_messages",
+                    filter:
+                        "conversation_id=eq." +
+                        conversation.id
+                },
+                payload => {
+
+                    console.log(
+                        "New message:",
+                        payload.new
+                    );
+
+                    if (
+                        typeof renderFunction ===
+                        "function"
+                    ) {
+                        renderFunction(
+                            payload.new
+                        );
+                    }
+                }
+            )
+            .subscribe();
+}
+
+
+/* =========================================================
+   ADMIN - LOAD ALL CONVERSATIONS
+========================================================= */
+
+async function getiAdminConversations() {
+
+    if (!(await getiIsAdmin())) {
+        throw new Error("Administrator access required.");
+    }
+
+    const { data, error } =
+        await GETI_DB
+            .from("chat_conversations")
+            .select(`
+                *,
+                chat_messages(
+                    id,
+                    sender_id,
+                    sender_type,
+                    message,
+                    is_read,
+                    created_at
+                )
+            `)
+            .order("last_message_at", {
+                ascending: false
+            });
+
+    if (error) {
+        console.error(error);
+        return [];
+    }
+
+    return data || [];
+}
+
+
+/* =========================================================
+   ADMIN - LOAD ALL MESSAGES
+========================================================= */
+
+async function getiAdminMessages() {
+
+    if (!(await getiIsAdmin())) {
+        throw new Error("Administrator access required.");
+    }
+
+    const { data, error } =
+        await GETI_DB
+            .from("chat_messages")
+            .select(`
+                *,
+                chat_conversations(
+                    user_id,
+                    status
+                )
+            `)
+            .order("created_at", {
+                ascending: false
+            });
+
+    if (error) {
+        console.error(error);
+        return [];
+    }
+
+    return data || [];
+}
+
+
+/* =========================================================
+   ADMIN - REPLY
+========================================================= */
+
+async function getiAdminReply(
+    conversationId,
+    message
+) {
+
+    if (!(await getiIsAdmin())) {
+        alert("Administrator access required.");
+        return;
+    }
+
+    const admin =
+        await getiCurrentUser();
+
+    if (!message || !message.trim()) return;
+
+    const { data, error } =
+        await GETI_DB
+            .from("chat_messages")
+            .insert({
+                conversation_id: conversationId,
+                sender_id: admin.id,
+                sender_type: "admin",
+                message: message.trim()
+            })
+            .select()
+            .single();
+
+    if (error) {
+        console.error(error);
+        alert(error.message);
+        return;
+    }
+
+    return data;
+}
+
+
+/* =========================================================
+   ADMIN - BLOCK USER
+========================================================= */
+
+async function getiBlockUser(
+    userId,
+    reason = ""
+) {
+
+    if (!(await getiIsAdmin())) {
+        alert("Administrator access required.");
+        return;
+    }
+
+    const admin =
+        await getiCurrentUser();
+
+    const { error } =
+        await GETI_DB
+            .from("chat_blocks")
+            .upsert({
+                user_id: userId,
+                blocked: true,
+                reason: reason,
+                blocked_by: admin.id
+            }, {
+                onConflict: "user_id"
+            });
+
+    if (error) {
+        console.error(error);
+        alert(error.message);
+        return false;
+    }
+
+    await GETI_DB
+        .from("chat_conversations")
+        .update({
+            status: "blocked"
+        })
+        .eq("user_id", userId);
+
+    return true;
+}
+
+
+/* =========================================================
+   ADMIN - UNBLOCK USER
+========================================================= */
+
+async function getiUnblockUser(userId) {
+
+    if (!(await getiIsAdmin())) {
+        alert("Administrator access required.");
+        return;
+    }
+
+    const { error } =
+        await GETI_DB
+            .from("chat_blocks")
+            .update({
+                blocked: false
+            })
+            .eq("user_id", userId);
+
+    if (error) {
+        console.error(error);
+        alert(error.message);
+        return false;
+    }
+
+    await GETI_DB
+        .from("chat_conversations")
+        .update({
+            status: "open"
+        })
+        .eq("user_id", userId);
+
+    return true;
+}
+
+
+/* =========================================================
+   ADMIN - ALL BLOCKED USERS
+========================================================= */
+
+async function getiAdminBlocks() {
+
+    if (!(await getiIsAdmin())) {
+        throw new Error("Administrator access required.");
+    }
+
+    const { data, error } =
+        await GETI_DB
+            .from("chat_blocks")
+            .select("*")
+            .order("created_at", {
+                ascending: false
+            });
+
+    if (error) {
+        console.error(error);
+        return [];
+    }
+
+    return data || [];
+}
+
+
+/* =========================================================
+   ADMIN - ALL ACTIVITY
+========================================================= */
+
+async function getiAdminActivity() {
+
+    if (!(await getiIsAdmin())) {
+        throw new Error("Administrator access required.");
+    }
+
+    const { data, error } =
+        await GETI_DB
+            .from("site_activity")
+            .select("*")
+            .order("created_at", {
+                ascending: false
+            });
+
+    if (error) {
+        console.error(error);
+        return [];
+    }
+
+    return data || [];
+}
+
+
+/* =========================================================
+   ADMIN - REALTIME MESSAGES
+========================================================= */
+
+let getiAdminChannel = null;
+
+async function getiStartAdminRealtime(
+    renderFunction
+) {
+
+    if (!(await getiIsAdmin())) {
+        return;
+    }
+
+    if (getiAdminChannel) {
+        await GETI_DB.removeChannel(
+            getiAdminChannel
+        );
+    }
+
+    getiAdminChannel =
+        GETI_DB
+            .channel("geti-admin-chat")
+            .on(
+                "postgres_changes",
+                {
+                    event: "INSERT",
+                    schema: "public",
+                    table: "chat_messages"
+                },
+                payload => {
+
+                    console.log(
+                        "ADMIN NEW MESSAGE:",
+                        payload.new
+                    );
+
+                    if (
+                        typeof renderFunction ===
+                        "function"
+                    ) {
+                        renderFunction(
+                            payload.new
+                        );
+                    }
+                }
+            )
+            .subscribe();
+}
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+GETI_DB.auth.onAuthStateChange(
+    async (event, session) => {
+
+        console.log(
+            "GETI AUTH:",
+            event,
+            session?.user?.email || null
+        );
+
+        if (event === "SIGNED_IN") {
+
+            await getiLogActivity(
+                "login",
+                location.pathname
+            );
+
+        }
+
+        if (event === "SIGNED_OUT") {
+
+            console.log(
+                "GETI user logged out"
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   SITE VISIT
+========================================================= */
+
+window.addEventListener(
+    "load",
+    async function() {
+
+        const user =
+            await getiCurrentUser();
+
+        if (user) {
+
+            await getiLogActivity(
+                "site_visit",
+                location.pathname
+            );
+
+        }
+
+    }
+);
+
+console.log(
+    "GETI Supabase system loaded successfully."
+);
+
+</script>
+<!-- =========================================================
+     GETI ADMIN PANEL
+========================================================= -->
+
+<section id="getiAdminPanel" style="display:none; padding:30px;">
+
+    <div style="max-width:1400px;margin:auto;">
+
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;">
+            <div>
+                <h1>GETI Administrator</h1>
+                <p>Manage messages, accounts, blacklist, results and activity.</p>
+            </div>
+
+            <button onclick="getiAdminLogout()">
+                Logout
+            </button>
+        </div>
+
+        <!-- ADMIN NAVIGATION -->
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:25px 0;">
+
+            <button onclick="getiAdminLoadMessages()">
+                💬 All Messages
+            </button>
+
+            <button onclick="getiAdminLoadAccounts()">
+                👤 Chat Accounts
+            </button>
+
+            <button onclick="getiAdminLoadBlacklist()">
+                🚫 Blacklist
+            </button>
+
+            <button onclick="getiAdminLoadResults()">
+                📝 All Results
+            </button>
+
+            <button onclick="getiAdminLoadActivity()">
+                👁️ Site Activity
+            </button>
+
+        </div>
+
+        <div id="getiAdminStatus"></div>
+
+        <div id="getiAdminContent">
+            <p>Select an administrator section above.</p>
+        </div>
+
+    </div>
+
+</section></body>
 </html>
 
