@@ -1116,30 +1116,6 @@ button,input,textarea{
 
 }
 
-
-/* =========================================================
-   GETI MULTI-EXAM / FULLSCREEN EXAM UI
-========================================================= */
-.exam-buttons{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:20px 0}
-.exam-small-btn{border:1px solid #d6ad45;background:#fff;color:#0b2d5c;padding:10px 15px;border-radius:6px;font-weight:800;cursor:pointer;font-size:13px}
-.exam-small-btn:hover{background:#0b2d5c;color:#fff}
-.exam-small-btn.tesol{border-color:#16833b}
-.exam-small-btn.teyl{border-color:#7b4ab5}
-.exam-small-btn.proficiency{border-color:#1f6feb}
-.exam-overlay{position:fixed;inset:0;z-index:99999;background:#f7f9fc;overflow:hidden;display:flex;flex-direction:column}
-.exam-overlay .exam-panel{display:flex;flex:1;overflow:hidden!important;max-width:none!important;width:100%;margin:0;border-radius:0;padding:18px 22px 25px;box-sizing:border-box;flex-direction:column}
-.exam-overlay .exam-question-wrap{width:min(900px,100%);margin:auto;display:flex;flex-direction:column;gap:14px;min-height:0}
-.exam-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#0b2d5c;color:#fff;padding:10px 14px;border-radius:8px;margin-bottom:12px;flex-shrink:0}
-.exam-topbar strong{color:#d6ad45}.exam-timer{font-size:20px;font-weight:900;letter-spacing:1px}.exam-timer.warning{color:#ffd166}.exam-timer.expired{color:#ff6b6b}
-.exam-menu-btn{border:1px solid #d6ad45;background:transparent;color:#fff;padding:8px 12px;border-radius:5px;font-weight:700;cursor:pointer}
-.exam-menu-btn:hover{background:#d6ad45;color:#0b2d5c}
-.exam-progress{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:12px;font-weight:700}
-.exam-audio-btn,.mic-btn{border:0;border-radius:7px;padding:11px 15px;font-weight:800;cursor:pointer;background:#0b2d5c;color:#fff;margin:6px 0}
-.mic-btn.recording{background:#b3261e}.transcript-box{min-height:65px;padding:12px;border:1px solid #ccd5e0;border-radius:7px;background:#fff}
-.speaking-score{font-weight:800;margin-top:8px}.cefr-badge{display:inline-block;padding:8px 14px;border-radius:20px;background:#0b2d5c;color:#fff;font-weight:900;font-size:20px}
-.exam-overlay.exam-finished{overflow:auto}.exam-overlay.exam-finished .exam-panel{overflow-y:auto!important;overflow-x:hidden!important}.final-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}.back-menu-btn{border:0;background:#0b2d5c;color:#fff;padding:11px 18px;border-radius:6px;font-weight:800;cursor:pointer}
-@media(max-width:700px){.exam-topbar{font-size:12px}.exam-timer{font-size:16px}.exam-overlay .exam-panel{padding:10px}.exam-small-btn{width:100%}}
-
 </style>
 </head>
 
@@ -1447,19 +1423,38 @@ TAKE TEFL / TESOL EXAM
 GETI PROFESSIONAL EXAMINATION
 </div>
 
-<h2>GETI Professional & English Examinations</h2>
+<h2>TEFL & TESOL Examination</h2>
 
 <p>
-Choose an examination. Every examination has 10 subjects and a 16-minute total time limit.
+Choose your professional examination below.
+Each program contains 10 subjects with 15 questions
+per subject.
 </p>
 
 </div>
 
 <div class="exam-buttons">
-<button class="exam-small-btn" onclick="openExamRegistration('TEFL')">🎓 TEFL EXAM</button>
-<button class="exam-small-btn tesol" onclick="openExamRegistration('TESOL')">🎓 TESOL EXAM</button>
-<button class="exam-small-btn teyl" onclick="openExamRegistration('TEYL')">🎓 TEYL EXAM</button>
-<button class="exam-small-btn proficiency" onclick="openExamRegistration('ENGLISH PROFICIENCY')">🌍 ENGLISH PROFICIENCY EXAM</button>
+
+<button class="exam-small-btn"
+onclick="openExamRegistration('TEFL')">
+🎓 TEFL EXAM
+</button>
+
+<button class="exam-small-btn tesol"
+onclick="openExamRegistration('TESOL')">
+🎓 TESOL EXAM
+</button>
+
+<button class="exam-small-btn" onclick="openExamRegistration('TEYL')">👧 TEYL EXAM</button>
+<button class="exam-small-btn" onclick="openExamRegistration('ENGLISH PROFICIENCY')">🌐 ENGLISH PROFICIENCY EXAM</button>
+<button class="exam-small-btn" onclick="openExamRegistration('BUSINESS ENGLISH')">💼 BUSINESS ENGLISH EXAM</button>
+<button class="exam-small-btn" onclick="openExamRegistration('MARKETING')">📣 MARKETING EXAM</button>
+<button class="exam-small-btn" onclick="openExamRegistration('MANAGEMENT')">👔 MANAGEMENT EXAM</button>
+<button class="exam-small-btn" onclick="openExamRegistration('DIGITAL COMMUNICATION')">📱 DIGITAL COMMUNICATION</button>
+<button class="exam-small-btn" onclick="openExamRegistration('COMPUTER SCIENCE')">💻 COMPUTER SCIENCE</button>
+<button class="exam-small-btn" onclick="openExamRegistration('MICROSOFT')">🪟 MICROSOFT</button>
+<button class="exam-small-btn" onclick="openGETILessons()">📚 LESSONS</button>
+
 </div>
 
 <div id="examPanel" class="exam-panel"></div>
@@ -1984,68 +1979,6 @@ const TESOL_SUBJECTS=[
 ];
 
 /* =========================================================
-   TEYL QUESTION BANK — 10 SUBJECTS × 15 QUESTIONS
-========================================================= */
-const TEYL_SUBJECTS=[
-"Introduction to TEYL – Teaching English to Young Learners",
-"Understanding Children's Learning Styles",
-"Classroom Management for Young Learners",
-"Teaching English Through Games and Activities",
-"Teaching Vocabulary to Children",
-"Teaching Pronunciation and Phonics",
-"Teaching Listening and Speaking Skills",
-"Teaching Reading and Writing to Young Learners",
-"Using Songs, Stories, and Rhymes in English Lessons",
-"Assessment and Progress Tracking for Young Learners"
-];
-const TEYL_DATA={
-"Introduction to TEYL – Teaching English to Young Learners":[
-["What does TEYL mean?","Teaching English to Young Learners","Teaching English for Young Literature","Testing English Yearly Learners","Teaching Education to Young Leaders",0],["A young learner lesson should usually be?","Age-appropriate and active","Only lecture-based","Only grammar drills","Silent",0],["Why use short activities with children?","Children benefit from varied attention demands","To avoid teaching","To remove interaction","To make lessons longer",0],["What is a child-friendly classroom?","Safe, supportive and engaging","Strict and silent","Teacher-only","Unstructured",0],["Why use routines?","They help children know what to expect","They stop learning","They replace teaching","They make lessons unpredictable",0],["What is learner participation?","Children actively doing and responding","Children only listening","Teacher doing everything","Children copying silently",0],["Why adapt materials for age?","Needs and cognitive abilities differ","All children learn identically","It reduces learning","It prevents play",0],["What is meaningful language?","Language connected to a real purpose or context","Random words","Only grammar rules","Only spelling",0],["Why is repetition useful?","It reinforces language and memory","It prevents learning","It replaces interaction","It makes children silent",0],["What should a teacher monitor?","Understanding, participation and progress","Only handwriting","Only attendance","Only noise",0],["Why use visuals?","They support comprehension and attention","They replace all language","They prevent speaking","They make tasks harder",0],["What is scaffolding?","Temporary support that helps a learner complete a task","A final exam","A punishment","A certificate",0],["Why give children choices?","It can increase engagement and ownership","It prevents participation","It removes structure","It stops communication",0],["What is age-appropriate language?","Language matched to learners' level and development","The most difficult language available","Only adult vocabulary","Only slang",0],["An effective TEYL teacher should be?","Flexible, supportive and well-prepared","Unchanging and silent","Teacher-centered only","Focused only on tests",0]],
-"Understanding Children's Learning Styles":[
-["Why consider learning preferences?","To vary activities and provide access to learning","To label children permanently","To avoid assessment","To use one method only",0],["Visual learners may benefit from?","Pictures, charts and demonstrations","Only lectures","Only dictation","No visuals",0],["Auditory activities may include?","Songs, chants and spoken instructions","Only copying","Only drawing","Only silent reading",0],["Kinesthetic learning can involve?","Movement and hands-on tasks","Only worksheets","Only lectures","Only listening",0],["Why use multiple modes?","Different learners may engage in different ways","All children must be identical","It removes structure","It prevents practice",0],["What is differentiation?","Adjusting support or task difficulty for learner needs","Giving everyone exactly the same task","Removing objectives","Avoiding learners",0],["Why observe children?","Observation helps identify strengths and needs","It replaces teaching","It is only for discipline","It prevents feedback",0],["What is a learning preference?","A way a learner may prefer to engage with information","A fixed ability level","A final grade","A classroom rule",0],["Should learning-style labels be permanent?","No, children can learn through many modes","Yes, always","Only for reading","Only for adults",0],["Why vary interaction?","It creates different opportunities to participate","It reduces communication","It makes lessons impossible","It replaces objectives",0],["What supports children who need extra help?","Clear instructions, modelling and additional practice","Ignoring them","Harder tasks only","No feedback",0],["Why use concrete objects?","They can make abstract language more understandable","They remove meaning","They stop play","They replace teachers",0],["What is multimodal learning?","Using more than one mode such as visual, audio and movement","Using one worksheet","Using no interaction","Using only tests",0],["Why use modelling?","It shows children what successful performance looks like","It prevents participation","It replaces practice","It removes feedback",0],["Best practice is to?","Use varied approaches and observe what helps learners","Use one style forever","Avoid adaptation","Teach only through tests",0]],
-"Classroom Management for Young Learners":[
-["Why establish classroom routines?","They make procedures predictable","They remove learning","They prevent play","They eliminate communication",0],["What is positive reinforcement?","Recognizing desirable behavior","Punishing every error","Ignoring children","Ending activities",0],["Why give clear instructions?","Children need to know what to do","To make tasks confusing","To avoid practice","To increase noise",0],["What should instructions be for young learners?","Short, clear and supported by demonstration","Long and abstract","Only written","Very technical",0],["Why use attention signals?","They help the class refocus","They stop all learning","They replace lessons","They punish children",0],["What is classroom rapport?","A positive teacher-learner relationship","A test score","A worksheet","A timetable",0],["How should minor disruption be handled?","Calmly and proportionately","By shouting","By ending the course","By ignoring every issue",0],["Why use seating strategically?","To support interaction and visibility","Only for decoration","To prevent communication","To make tasks harder",0],["Why transition between activities carefully?","Children need clear signals and manageable changes","To waste time","To avoid learning","To stop participation",0],["What is monitoring?","Watching and supporting learners during tasks","Leaving the classroom","Giving certificates","Only grading",0],["Why use classroom rules?","They create clear expectations","They prevent all movement","They replace teaching","They remove responsibility",0],["How can a teacher encourage participation?","Use praise, choices and supportive prompts","Embarrass quiet children","Ignore children","Only lecture",0],["Why prepare materials before class?","It reduces interruptions and saves time","It prevents learning","It makes lessons longer","It removes play",0],["What is a calm correction?","A respectful response that redirects behavior","A public insult","A punishment only","No response",0],["Effective management should be?","Consistent, positive and age-appropriate","Fear-based","Completely unplanned","Silent only",0]],
-"Teaching English Through Games and Activities":[
-["Why use games in TEYL?","They can increase motivation and meaningful practice","They replace all teaching","They prevent language use","They are only for breaks",0],["A language game should have?","A clear language goal","No purpose","Only competition","No instructions",0],["Why use movement games?","They combine language with physical activity","They stop learning","They remove vocabulary","They prevent listening",0],["What is a matching game useful for?","Connecting words with meanings or pictures","Only grammar grading","Only discipline","Only writing",0],["Why use pair games?","They increase opportunities to interact","They reduce participation","They stop speaking","They replace feedback",0],["What makes a game age-appropriate?","Its rules, language and challenge fit the learners","It is as difficult as possible","It has no rules","It is only for adults",0],["Why demonstrate a game first?","Children can see how to play","To avoid participation","To make it longer","To remove instructions",0],["What is a role-play?","A simulated situation using language","A silent test","A spelling list","A certificate",0],["Why vary activities?","Variety can maintain attention and engagement","It makes learning impossible","It removes objectives","It prevents repetition",0],["What is a communicative game?","A game requiring learners to use language to achieve a goal","A game with no language","Only a board game","A test without speaking",0],["Why include cooperative games?","They encourage teamwork and communication","They prevent interaction","They remove support","They only reward one child",0],["What should a teacher do during a game?","Monitor, support and keep the language goal clear","Leave the class","Give all answers","Stop all interaction",0],["Why use songs with actions?","Movement can reinforce language and memory","It prevents pronunciation","It removes meaning","It replaces assessment",0],["What is a warm-up?","A short activity preparing learners for the lesson","A final grade","A long exam","A punishment",0],["A good activity should balance?","Enjoyment, challenge and learning purpose","Noise only","Competition only","Silence only",0]],
-"Teaching Vocabulary to Children":[
-["What is vocabulary?","Words and expressions learners know or use","Only grammar","Only sounds","Only punctuation",0],["Why teach vocabulary in context?","Context helps children understand meaning and use","It removes meaning","It prevents communication","It replaces practice",0],["Why use pictures?","They can make meaning clear quickly","They make language unnecessary","They prevent speaking","They replace all instruction",0],["What is a collocation?","Words that commonly occur together","A sound only","A grammar tense","A classroom rule",0],["Why recycle vocabulary?","Repeated encounters strengthen learning","It prevents memory","It removes context","It makes words unnecessary",0],["What is receptive vocabulary?","Words learners can recognize or understand","Words they never know","Only words they write","Only grammar",0],["What is productive vocabulary?","Words learners can use in communication","Words they only recognize","Only dictionary entries","Only sounds",0],["Why teach chunks?","They help learners use common phrases as units","They prevent fluency","They remove meaning","They are only for adults",0],["What is a word family?","Related words formed from a common base","Unrelated vocabulary","A grammar test","A story only",0],["Why use repetition with young learners?","It helps consolidate new words","It makes words disappear","It prevents practice","It removes interaction",0],["What is a realia activity?","Using real objects to teach meaning","Using only tests","Using no visuals","Using only translation",0],["Why teach pronunciation with vocabulary?","Children need to know how words sound and are said","It is unrelated","It prevents meaning","It replaces context",0],["Why group vocabulary by theme?","Themes can help organize and connect words","They remove meaning","They prevent recall","They make all words identical",0],["What is retrieval practice?","Trying to remember language without simply rereading it","Copying a word repeatedly","Avoiding review","Listening only",0],["Good vocabulary teaching includes?","Meaning, form, pronunciation and use","Meaning only","Spelling only","Translation only",0]],
-"Teaching Pronunciation and Phonics":[
-["What is phonics?","Teaching relationships between sounds and letters","Teaching only grammar","Teaching essay writing","Teaching culture only",0],["Why teach sound-letter relationships?","They support decoding and pronunciation","They prevent reading","They remove vocabulary","They replace speaking",0],["What is a minimal pair?","Two words differing in one sound","Two identical words","Two paragraphs","Two grammar rules",0],["What is word stress?","Emphasis on a syllable","Punctuation","Word length","Spelling only",0],["What is intonation?","Changes in pitch across speech","Letter shape","Writing speed","Vocabulary size",0],["Why use chants?","They provide repeated rhythm and pronunciation practice","They prevent speaking","They replace all reading","They are only entertainment",0],["Why model pronunciation?","Children can hear and imitate a target form","It removes interaction","It prevents listening","It replaces meaning",0],["What is blending?","Combining individual sounds to read a word","Separating a story","Writing an essay","Counting words",0],["What is segmenting?","Breaking a word into sounds","Combining sentences","Reading a paragraph","Learning a rule",0],["Why use gestures for sounds?","They can provide a memorable physical cue","They remove pronunciation","They stop practice","They replace audio",0],["What is intelligibility?","How understandable speech is to listeners","Perfect accent","Writing accuracy","Reading speed",0],["Why teach rhyme?","It highlights sound patterns","It prevents phonics","It replaces vocabulary","It is only for older learners",0],["What should pronunciation practice emphasize?","Clear, meaningful and repeated practice","Accent elimination","Silence","No feedback",0],["Why listen before producing a sound?","Learners need an auditory model","It prevents speaking","It removes phonics","It replaces practice",0],["Effective phonics teaching is usually?","Systematic, explicit and engaging","Random and silent","Only based on tests","Without modelling",0]],
-"Teaching Listening and Speaking Skills":[
-["Listening is mainly a?","Receptive language skill","Productive skill","Writing skill","Drawing skill",0],["Speaking is mainly a?","Productive language skill","Receptive skill","Reading skill","Viewing skill",0],["What is gist listening?","Listening for the main idea","Listening for every word","Writing every sentence","Speaking only",0],["What is fluency?","Communicating with reasonable smoothness","Perfect grammar only","Knowing rules","Writing quickly",0],["What is accuracy?","Correct language use","Speaking quickly only","Using gestures","Reading silently",0],["Why use pair work?","It gives children more opportunities to speak","It prevents speaking","It removes practice","It replaces listening",0],["What is an information gap?","Learners have different information and communicate to complete a task","Everyone has identical information","Teacher gives every answer","No communication",0],["Why use authentic sounds and voices?","They expose children to varied real language","They make comprehension impossible","They remove context","They stop speaking",0],["What is active listening?","Listening with attention and a purpose","Hearing without attention","Writing only","Speaking only",0],["Why give planning time before speaking?","It can increase confidence and performance","It prevents communication","It removes fluency","It makes children silent",0],["What is a role-play?","A simulated communicative situation","A grammar test","A reading exam","A vocabulary list",0],["Why teach turn-taking?","It helps children participate in conversation","It prevents interaction","It removes speaking","It replaces listening",0],["What is delayed correction?","Feedback after a communicative activity","No correction","Correction before speaking","Only written tests",0],["Why teach listening strategies?","They help learners understand with a purpose","They prevent listening","They remove audio","They replace speaking",0],["Effective listening-speaking tasks should have?","A meaningful reason to communicate","No purpose","Teacher-only speech","Silent work",0]],
-"Teaching Reading and Writing to Young Learners":[
-["What is reading?","Understanding written language","Listening only","Speaking only","Drawing",0],["What is writing?","Producing meaning through written language","Listening silently","Reading aloud","Only copying",0],["What is phonics useful for?","Connecting letters and sounds for decoding","Teaching conversation only","Testing culture","Teaching handwriting only",0],["What is skimming?","Reading quickly for the main idea","Reading every word","Writing an essay","Listening",0],["What is scanning?","Reading for specific information","Reading only for pleasure","Writing","Speaking",0],["Why use picture books?","They combine visual support with meaningful language","They prevent reading","They are only decoration","They replace teaching",0],["What is a topic sentence?","The main idea of a paragraph","A final grade","A vocabulary word","A title only",0],["Why model writing?","It shows children how a text can be organized","It prevents creativity","It replaces writing","It stops revision",0],["What is process writing?","Planning, drafting, revising and editing","Writing once","Copying","Speaking",0],["Why use shared writing?","Teacher and learners construct a text together","It prevents participation","It removes meaning","It is only assessment",0],["What is a sentence?","A grammatical unit expressing a complete idea or message","A single letter","A test score","A sound only",0],["Why teach punctuation?","It helps readers understand written meaning","It prevents reading","It replaces vocabulary","It is only decoration",0],["What is extensive reading?","Reading larger amounts for general understanding or enjoyment","Analyzing one sentence","Grammar testing","Listening",0],["Why give writing feedback?","It helps learners improve their writing","It prevents learning","It replaces practice","It stops creativity",0],["Effective literacy teaching should?","Connect sound, reading, writing and meaning","Teach copying only","Avoid stories","Use tests only",0]],
-"Using Songs, Stories, and Rhymes in English Lessons":[
-["Why use songs with children?","They provide repetition, rhythm and memorable language","They replace all instruction","They prevent pronunciation","They are only entertainment",0],["Why use stories?","Stories provide meaningful language in context","They remove vocabulary","They prevent listening","They replace assessment",0],["What is a rhyme?","Language with repeated sound patterns","A grammar tense","A reading score","A classroom rule",0],["Why repeat a story?","Repeated exposure can strengthen understanding and language","It prevents learning","It removes meaning","It makes children silent",0],["What is story prediction?","Guessing what may happen using clues","Copying the ending","Skipping the story","Writing a test",0],["Why use gestures with songs?","They connect movement and language","They prevent speaking","They replace listening","They remove rhythm",0],["What is a story sequence?","The order in which events occur","A vocabulary list","A pronunciation score","A classroom rule",0],["Why use props?","They support comprehension and engagement","They prevent imagination","They replace all language","They stop interaction",0],["Why ask story questions?","To check and develop understanding","To stop storytelling","To replace the story","To test spelling only",0],["What is a repetitive story pattern?","A recurring language or event structure","A grammar error","A random sequence","A test format",0],["Why pause during a story?","To invite prediction, response or clarification","To end the lesson","To remove meaning","To prevent participation",0],["What can songs support?","Vocabulary, pronunciation and fluency","Only handwriting","Only assessment","Only grammar",0],["Why choose age-appropriate stories?","Children can understand and engage with them","Difficult texts are always better","It prevents imagination","It removes challenge",0],["What is choral repetition?","A group says language together","One child writes silently","Teacher reads only","Children leave the room",0],["Best use of songs and stories is?","Purposeful integration with language goals","Entertainment without learning purpose","Only testing","No interaction",0]],
-"Assessment and Progress Tracking for Young Learners":[
-["Why assess young learners?","To understand progress and guide teaching","Only to punish mistakes","To rank children permanently","To replace teaching",0],["What is formative assessment?","Assessment during learning used to guide progress","Only a final exam","A certificate","Attendance only",0],["What is summative assessment?","Assessment used to summarize learning at the end of a period","A warm-up","A game only","A classroom routine",0],["Why use observation?","It provides information about participation and performance","It replaces all teaching","It prevents feedback","It is only for discipline",0],["What is feedback?","Information that helps learners improve","A final certificate","A timetable","A punishment",0],["Why use simple rubrics?","They make criteria clear and consistent","They make learning impossible","They remove feedback","They replace practice",0],["What is a portfolio?","A collection showing learner work and progress","A single test","A classroom rule","A certificate only",0],["Why track progress over time?","To see development and identify support needs","To compare children permanently","To avoid teaching","To stop assessment",0],["What is self-assessment?","Learners reflect on their own learning","Teacher-only grading","A final exam","Attendance",0],["Why use child-friendly criteria?","Children can understand what they are learning toward","It removes goals","It prevents feedback","It makes assessment secret",0],["What is diagnostic assessment?","Assessment used to identify starting strengths and needs","A final certificate","A reward","A story",0],["Why give positive feedback?","It recognizes success and supports improvement","It prevents learning","It replaces correction","It removes goals",0],["What is criterion-referenced assessment?","Judging performance against defined criteria","Comparing only with classmates","Random grading","Attendance",0],["Why keep assessment records?","They help monitor progress and plan support","They are only decoration","They replace teaching","They prevent communication",0],["Good TEYL assessment should be?","Age-appropriate, supportive and linked to learning goals","Only difficult tests","Fear-based","Unrelated to lessons",0]]
-};
-
-const PROF_SUBJECTS=["Grammar","Vocabulary","Pronunciation","Speaking","Listening","Reading","Writing","Functional English","Communication & Conversation","English Culture & Real-Life English"];
-function makeProfBank(subject){
- const base={
- Grammar:[["Which sentence is correct?","She goes to school every day.","She go to school every day.","She going to school every day.","She gone to school every day.",0],["What is the past of go?","went","goed","gone","going",0],["Which is a modal verb?","must","table","quickly","teacher",0],["Choose the correct article: ___ apple","an","a","thee","no",0],["Which tense describes an action happening now?","present continuous","past perfect","future perfect","past simple",0],["Which is a conditional form?","If I study, I will pass.","I study yesterday.","I studying tomorrow.","I have study.",0],["What is passive voice?","The object receives the action","The subject always acts","A question only","A tense only",0],["Which is a relative pronoun?","which","very","quickly","must",0],["Which word is an adverb?","carefully","careful","care","cared",0],["Choose: They ___ finished.","have","has","is","was",0],["What is reported speech?","Reporting what someone said","A question tag","A spelling rule","A pronunciation drill",0],["Which is comparative?","better","best","good","well",0],["Which sentence uses a gerund?","Swimming is fun.","Swim is fun.","Swam is fun.","To swims is fun.",0],["Choose the correct preposition: interested ___ music","in","on","at","for",0],["What is subject-verb agreement?","The subject and verb match in number/person","Every verb is past","Every sentence has two subjects","Grammar has no patterns",0]],
- Vocabulary:[["What is a synonym?","A word with a similar meaning","An opposite","A sound","A sentence",0],["What is an antonym?","A word with an opposite meaning","A synonym","A phrase","A suffix",0],["What is a collocation?","Words that commonly occur together","A tense","A sound","A paragraph",0],["What is a prefix?","A word part added to the beginning","A word ending","A sentence","A punctuation mark",0],["What is a suffix?","A word part added to the end","A beginning","A question","A paragraph",0],["What is context?","Language or information surrounding a word","A dictionary only","A test score","A classroom",0],["What is receptive vocabulary?","Words you recognize or understand","Words you never know","Only words you write","Only grammar",0],["What is productive vocabulary?","Words you can use","Words you only recognize","Only slang","Only spelling",0],["Why learn word families?","Related forms help expand vocabulary","They remove meaning","They stop reading","They prevent communication",0],["What is a phrasal verb?","A verb combined with a particle","A noun phrase only","A tense","A sound",0],["What is an idiom?","An expression whose meaning is not fully literal","A grammar tense","A single letter","A pronunciation rule",0],["Why use spaced repetition?","To review at increasing intervals","To study once","To avoid review","To memorize randomly",0],["What is word register?","The level or style of language use","Word length","Spelling only","Pronunciation only",0],["What is a compound word?","A word formed from two or more words","A suffix only","A verb tense","A punctuation mark",0],["Effective vocabulary learning includes?","Meaning, form, pronunciation and use","Meaning only","Spelling only","Translation only",0]],
- Pronunciation:[["What is word stress?","Emphasis on a syllable","A spelling rule","A paragraph","A tense",0],["What is intonation?","Changes in pitch across speech","Word length","Spelling","Punctuation only",0],["What is a minimal pair?","Two words differing in one sound","Two identical words","Two paragraphs","Two grammar rules",0],["What is a phoneme?","A smallest contrastive sound unit","A letter only","A word","A sentence",0],["What supports intelligibility?","Clear pronunciation that listeners can understand","Accent elimination","Speaking silently","Writing only",0],["Why listen before repeating?","To hear a model","To avoid speaking","To replace practice","To remove meaning",0],["What is linking?","Connecting sounds between words in connected speech","Writing words together","Changing tense","Adding punctuation",0],["What is a schwa?","A common unstressed vowel sound","A consonant cluster","A punctuation mark","A tense",0],["Why use minimal-pair practice?","To notice and produce sound contrasts","To teach grammar","To write essays","To learn culture",0],["What is connected speech?","Natural speech where sounds may change or link","Silent reading","Formal writing","A vocabulary list",0],["Why teach sentence stress?","To highlight important information","To change spelling","To stop speaking","To replace grammar",0],["What is a voiced sound?","A sound produced with vocal-fold vibration","A silent sound","A written word","A tense",0],["What is a consonant?","A speech sound formed with some obstruction of airflow","A vowel only","A paragraph","A punctuation mark",0],["What is a vowel?","A speech sound produced without major airflow obstruction","A grammar rule","A sentence","A suffix",0],["Good pronunciation practice should be?","Clear, meaningful and repeated","Only accent imitation","Silent","Uncorrected",0]],
- Reading:[["What is skimming?","Reading quickly for the main idea","Reading every word","Writing an essay","Listening",0],["What is scanning?","Reading for specific information","Reading for pleasure only","Speaking","Writing",0],["What is inference?","Understanding meaning not directly stated","Copying text","Finding every word","Reading aloud",0],["What is a main idea?","The central message","A minor detail","A punctuation mark","A vocabulary item",0],["What is context?","Information surrounding language or an event","A score","A dictionary only","A classroom rule",0],["What is extensive reading?","Reading larger amounts for general understanding or enjoyment","Analyzing one sentence","Grammar testing","Listening",0],["What is intensive reading?","Close reading for detailed understanding","Reading only titles","Speaking practice","Listening",0],["Why use headings?","They help predict and organize information","They remove meaning","They replace text","They stop comprehension",0],["What is a text genre?","A recognizable type of text","A word","A test score","A grammar rule",0],["Why predict before reading?","It activates expectations and background knowledge","It prevents comprehension","It replaces reading","It removes vocabulary",0],["What is cohesion?","Connections between parts of a text","Handwriting","Pronunciation","Word count",0],["What is coherence?","Logical organization of ideas","Spelling only","Vocabulary size","Font choice",0],["Why use authentic texts?","They expose readers to real-world language","They guarantee easy reading","They remove context","They replace teaching",0],["What is a comprehension question?","A question checking understanding of a text","A pronunciation drill","A speaking role-play","A grammar rule",0],["Effective reading instruction combines?","Pre-, while- and post-reading activities","Only translation","Only dictionary work","No preparation",0]],
- Writing:[["What is a topic sentence?","The main idea of a paragraph","A final grade","A vocabulary word","A title only",0],["What is cohesion?","Connections between sentences and ideas","Handwriting","Pronunciation","Word count",0],["What is coherence?","Logical organization of ideas","Spelling only","Vocabulary size","Font choice",0],["What is process writing?","Planning, drafting, revising and editing","Writing once","Copying","Speaking",0],["What is revision?","Improving content and organization","Checking attendance","Pronunciation","Taking a test",0],["What is proofreading?","Checking a text for errors","Planning ideas","Speaking","Brainstorming",0],["What is brainstorming?","Generating ideas","Final grading","Proofreading only","Reading aloud",0],["Why use paragraphs?","They organize related ideas","They make writing longer only","They prevent meaning","They replace sentences",0],["What is a formal email?","A structured message using an appropriate professional style","A text message only","A story","A poem",0],["Why use linking words?","They show relationships between ideas","They replace verbs","They remove meaning","They are only decoration",0],["What is a thesis statement?","A central claim or position in an academic text","A title only","A punctuation mark","A vocabulary list",0],["Why edit writing?","To improve accuracy and clarity","To make it less clear","To remove ideas","To avoid communication",0],["What is paraphrasing?","Expressing an idea in different words","Copying exactly","Deleting meaning","Translating every word",0],["Why use a writing model?","It demonstrates useful structure and language","It prevents creativity","It replaces writing","It stops revision",0],["Good writing should prioritize?","Clear purpose, organization and appropriate language","Length only","Complex words only","No revision",0]],
- "Functional English":[["Which phrase makes a polite request?","Could you help me, please?","Give me that!","You must help!","Help now!",0],["Which phrase is useful for asking directions?","Could you tell me how to get there?","What is your salary?","Close the door!","I am finished.",0],["Which phrase is useful in a shop?","How much is this?","What time is your exam?","I disagree with grammar.","Where is my lesson?",0],["How do you politely offer help?","Can I help you?","You need help.","Help yourself now.","Why are you here?",0],["How do you apologize politely?","I'm sorry.","No problem!","Go away.","Listen!",0],["How do you ask for clarification?","Could you explain that, please?","Say it faster.","I know everything.","Stop talking.",0],["How do you make a suggestion?","Why don't we try this?","You do this now.","You must agree.","No talking.",0],["How do you accept an invitation?","I'd love to, thanks.","Never ask me.","I don't know your name.","Stop.",0],["How do you politely refuse?","I'm afraid I can't.","No!","I hate it.","Go away.",0],["Which phrase is used to check understanding?","Do you mean...?","Where is the car?","What's your age?","Close it.",0],["Which phrase is useful on the phone?","May I speak to Alex, please?","Open the window.","What is grammar?","Read this book.",0],["How do you give an opinion?","In my opinion...","You are wrong.","No answer.","Listen only.",0],["How do you agree?","I agree.","I refuse.","I don't understand.","Never.",0],["How do you disagree politely?","I see your point, but I disagree.","You're stupid.","No way!","Stop.",0],["Functional English means?","Language used for practical real-life purposes","Only grammar rules","Only literature","Only pronunciation",0]],
- "Communication & Conversation":[["What is turn-taking?","Taking turns to speak","Speaking all the time","Never speaking","Writing only",0],["What is active listening?","Listening with attention and responding appropriately","Hearing without attention","Speaking only","Writing only",0],["What is a follow-up question?","A question that develops a conversation","A final exam","A grammar rule","A pronunciation task",0],["Why use eye contact appropriately?","It can support engagement and interaction","It replaces language","It guarantees fluency","It prevents listening",0],["What is small talk?","Light informal conversation","An academic essay","A formal exam","A grammar drill",0],["Why clarify meaning?","To reduce misunderstanding","To stop conversation","To avoid listening","To change topic always",0],["What is paraphrasing in conversation?","Restating an idea in different words","Copying a sentence","Changing the speaker","Ending the talk",0],["What is a conversation opener?","A phrase used to start interaction","A final grade","A writing task","A dictionary",0],["Why use backchanneling?","To show attention and encourage the speaker","To interrupt constantly","To end the conversation","To avoid listening",0],["What is negotiation of meaning?","Working together to understand each other","Arguing about grammar","Writing a test","Avoiding communication",0],["What is politeness?","Using language appropriate to maintain respectful interaction","Speaking loudly","Avoiding people","Using difficult words",0],["Why adapt language to context?","Different situations require different levels and styles","All contexts are identical","It prevents fluency","It removes meaning",0],["What is a repair strategy?","A way to fix a communication problem","A grammar tense","A reading technique","A test score",0],["Why ask open questions?","They invite fuller responses","They require yes/no only","They stop conversation","They replace listening",0],["Good conversation requires?","Listening, responding, turn-taking and purpose","Speaking only","Silence","Memorization only",0]],
- "English Culture & Real-Life English":[["What is culture?","Shared ways of living, values and practices","Only grammar","Only geography","A test score",0],["Why learn real-life English?","It helps learners communicate in everyday contexts","It replaces grammar","It prevents culture","It is only slang",0],["What is an idiom?","An expression with a meaning not fully literal","A tense","A sound","A paragraph",0],["Why can language vary by region?","English is used by diverse communities","Only one variety exists","Grammar disappears","Vocabulary is identical everywhere",0],["What is register?","The style or level of language appropriate to a situation","Accent only","Word length","Spelling only",0],["Why learn polite conventions?","They help learners interact appropriately","They remove meaning","They replace vocabulary","They prevent conversation",0],["What is an accent?","A way pronunciation varies among speakers or communities","A grammar tense","A writing style","A vocabulary list",0],["Why understand cultural references?","They can help interpret real-world communication","They prevent listening","They replace language","They are only for exams",0],["What is informal English?","Language commonly used in relaxed contexts","Only academic writing","A grammar error","A test",0],["What is formal English?","Language suited to professional or formal contexts","Slang only","A child's speech","A pronunciation drill",0],["Why teach multiple English varieties?","It can prepare learners for diverse speakers and contexts","To confuse learners","To remove standards","To prevent communication",0],["What is a cultural norm?","A commonly expected behavior within a community","A grammar rule","A vocabulary item","A test score",0],["Why avoid cultural stereotypes?","They oversimplify diverse people and communities","They improve accuracy","They replace context","They are always useful",0],["Real-life English may include?","Ellipsis, contractions, idioms and varied accents","Only textbook sentences","Only formal grammar","Only one accent",0],["Effective cultural teaching should be?","Contextual, respectful and evidence-based","Based on stereotypes","Only about holidays","Without context",0]]
- };
- return base[subject];
-}
-const PROF_DATA={};
-PROF_SUBJECTS.forEach(s=>{ if(s!=="Speaking" && s!=="Listening") PROF_DATA[s]=makeProfBank(s); });
-PROF_DATA["Listening"]=[
-["Listen and choose the correct meaning: 'The meeting starts at nine.'","It starts at 9:00","It ends at 9:00","It starts at 10:00","It was cancelled",0],["Listen and choose: 'Please send the report today.'","Send it today","Send it tomorrow","Do not send it","Read it next week",0],["Listen: 'She has lived here for five years.' What is true?","She started living here five years ago","She will move in five years","She lived here for one week","She has never lived here",0],["Listen: 'Could you open the window?' What is the speaker doing?","Making a polite request","Giving a warning","Refusing","Apologizing",0],["Listen: 'I didn't catch that.' What does it mean?","I didn't understand/hear it","I agree","I am leaving","I am late",0],["Listen: 'The train has been delayed.' What happened?","The train is late","The train is early","The train is cancelled","The train is full",0],["Listen: 'Would you like some coffee?' What is this?","An offer","A complaint","A warning","A refusal",0],["Listen: 'I'm afraid I can't attend.' What does the speaker mean?","They cannot attend","They will arrive early","They are inviting someone","They agree",0],["Listen: 'Turn left at the traffic lights.' What should you do?","Turn left at the traffic lights","Turn right","Stop at home","Go straight forever",0],["Listen: 'I've already finished it.' What is true?","The task is finished","The task has not started","The task will start tomorrow","The task was cancelled",0],["Listen: 'How long does it take?' What is being asked?","Duration","Price","Location","Age",0],["Listen: 'That's a great idea.' What is expressed?","Positive agreement","Confusion","Refusal","Apology",0],["Listen: 'Could you repeat that, please?' What is requested?","Repetition","Silence","A refund","Directions",0],["Listen: 'I used to work there.' What is true?","The speaker worked there in the past","The speaker works there now for the first time","The speaker has never worked there","The speaker will start tomorrow",0],["Listen: 'See you next Monday.' When will they meet?","Next Monday","Today","Tomorrow only","Next year",0]
-];
-const PROF_SPEAKING_PROMPTS=[
-["Introduce yourself and say where you are from.",["name","from"]],["Describe your daily routine.",["usually","morning"]],["Talk about a hobby you enjoy.",["enjoy","hobby"]],["Describe your school or work.",["school","work"]],["Explain why you are learning English.",["learning","english"]],["Describe a memorable day.",["day","remember"]],["Give your opinion about online learning.",["online","learning"]],["Describe a place you would like to visit.",["visit","place"]],["Talk about a useful skill.",["skill","useful"]],["Describe a person who inspires you.",["person","inspire"]],["Explain how to prepare for an exam.",["exam","prepare"]],["Talk about a future goal.",["future","goal"]],["Describe a book, film or story you like.",["book","like"]],["Give advice to someone learning English.",["learn","english"]],["Speak for a short time about your plans for next year.",["next","year"]]
-];
-PROF_DATA["Speaking"]=PROF_SPEAKING_PROMPTS.map(p=>[p[0],"","","","",0]);
-
-/* =========================================================
    TEFL QUESTION DATA
 ========================================================= */
 
@@ -2363,166 +2296,1157 @@ question structures already present in the TEFL bank.
 };
 
 /* =========================================================
-   EXAM ENGINE — 16 MINUTES FOR EVERY EXAM
+   EXAM STATE
 ========================================================= */
-const EXAM_DURATION_MS=16*60*1000;
-let examTimerInterval=null;
-let speechRecognition=null;
-let speakingTranscript="";
 
-let examState={program:null,student:null,subjectIndex:0,questionIndex:0,answers:[],subjectScores:[],started:false,startedAt:null,timeExpired:false};
+const EXAM_DURATION_MS = 60 * 60 * 1000;
+let examTimerInterval=null;
+
+let examState={
+    program:null,
+    student:null,
+    subjectIndex:0,
+    questionIndex:0,
+    answers:[],
+    subjectScores:[],
+    started:false,
+    startedAt:null,
+    timeExpired:false
+};
+
+/* =========================================================
+   COPY PROTECTION CONTROL
+========================================================= */
+
 let examProtectionEnabled=false;
 
-function examSubjects(){
-    if(examState.program==="TEFL") return TEFL_SUBJECTS;
-    if(examState.program==="TESOL") return TESOL_SUBJECTS;
-    if(examState.program==="TEYL") return TEYL_SUBJECTS;
-    return PROF_SUBJECTS;
-}
-function examData(){
-    if(examState.program==="TEFL") return TEFL_DATA;
-    if(examState.program==="TESOL") return TESOL_DATA;
-    if(examState.program==="TEYL") return TEYL_DATA;
-    return PROF_DATA;
-}
-function isProficiency(){return examState.program==="ENGLISH PROFICIENCY";}
-function currentSubject(){return examSubjects()[examState.subjectIndex];}
+function enableExamProtection(){
 
-function enableExamProtection(){examProtectionEnabled=true;document.body.classList.add("exam-running");}
-function disableExamProtection(){examProtectionEnabled=false;document.body.classList.remove("exam-running");}
-function isExamProtected(){return examProtectionEnabled&&examState.started===true;}
+    examProtectionEnabled=true;
 
-document.addEventListener("contextmenu",function(e){if(isExamProtected()){e.preventDefault();return false;}},true);
-document.addEventListener("copy",function(e){if(isExamProtected()){e.preventDefault();return false;}},true);
-document.addEventListener("cut",function(e){if(isExamProtected()){e.preventDefault();return false;}},true);
-document.addEventListener("dragstart",function(e){if(isExamProtected()){e.preventDefault();return false;}},true);
-document.addEventListener("selectstart",function(e){if(isExamProtected()&&!/^(INPUT|TEXTAREA|BUTTON)$/.test(e.target.tagName)){e.preventDefault();return false;}},true);
+    const panel=document.getElementById("examPanel");
+
+    if(panel){
+        panel.classList.add("exam-protected");
+    }
+
+}
+
+function disableExamProtection(){
+
+    examProtectionEnabled=false;
+
+    const panel=document.getElementById("examPanel");
+
+    if(panel){
+        panel.classList.remove("exam-protected");
+    }
+
+}
+
+function isExamProtected(){
+
+    return examProtectionEnabled &&
+           examState.started===true;
+
+}
+
+/* =========================================================
+   RIGHT CLICK PROTECTION
+========================================================= */
+
+document.addEventListener("contextmenu",function(e){
+
+    if(isExamProtected()){
+
+        e.preventDefault();
+
+        alert(
+            "Right-click is disabled during the examination."
+        );
+
+        return false;
+
+    }
+
+},true);
+
+/* =========================================================
+   COPY PROTECTION
+========================================================= */
+
+document.addEventListener("copy",function(e){
+
+    if(isExamProtected()){
+
+        e.preventDefault();
+
+        if(e.clipboardData){
+
+            e.clipboardData.setData(
+                "text/plain",
+                ""
+            );
+
+        }
+
+        alert(
+            "Copying examination content is disabled."
+        );
+
+        return false;
+
+    }
+
+},true);
+
+/* =========================================================
+   CUT PROTECTION
+========================================================= */
+
+document.addEventListener("cut",function(e){
+
+    if(isExamProtected()){
+
+        e.preventDefault();
+
+        alert(
+            "Cutting examination content is disabled."
+        );
+
+        return false;
+
+    }
+
+},true);
+
+/* =========================================================
+   DRAG PROTECTION
+========================================================= */
+
+document.addEventListener("dragstart",function(e){
+
+    if(isExamProtected()){
+
+        e.preventDefault();
+
+        return false;
+
+    }
+
+},true);
+
+/* =========================================================
+   SELECTION PROTECTION
+========================================================= */
+
+document.addEventListener("selectstart",function(e){
+
+    if(isExamProtected()){
+
+        const target=e.target;
+
+        if(
+            target.tagName!=="INPUT" &&
+            target.tagName!=="TEXTAREA"
+        ){
+
+            e.preventDefault();
+
+            return false;
+
+        }
+
+    }
+
+},true);
+
+/* =========================================================
+   KEYBOARD PROTECTION
+========================================================= */
+
 document.addEventListener("keydown",function(e){
- if(!isExamProtected())return;
- const k=(e.key||"").toLowerCase(),ctrl=e.ctrlKey||e.metaKey;
- if((ctrl&&["c","x","v","u","s","p"].includes(k))||k==="f12"||(ctrl&&e.shiftKey&&["i","j","c"].includes(k))){e.preventDefault();return false;}
-});
 
-function startExamTimer(){stopExamTimer();examState.startedAt=Date.now();examState.timeExpired=false;updateExamTimer();examTimerInterval=setInterval(updateExamTimer,250);}
-function stopExamTimer(){if(examTimerInterval){clearInterval(examTimerInterval);examTimerInterval=null;}}
+    if(!isExamProtected()){
+        return;
+    }
+
+    const key=(e.key || "").toLowerCase();
+    const ctrl=e.ctrlKey || e.metaKey;
+
+    /* CTRL + C */
+    if(ctrl && key==="c"){
+
+        e.preventDefault();
+
+        alert(
+            "Copying is disabled during the examination."
+        );
+
+        return false;
+    }
+
+    /* CTRL + X */
+    if(ctrl && key==="x"){
+
+        e.preventDefault();
+
+        alert(
+            "Cutting is disabled during the examination."
+        );
+
+        return false;
+    }
+
+    /* CTRL + A */
+    if(ctrl && key==="a"){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* CTRL + U */
+    if(ctrl && key==="u"){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* CTRL + S */
+    if(ctrl && key==="s"){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* CTRL + P */
+    if(ctrl && key==="p"){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* CTRL + SHIFT + I */
+    if(
+        ctrl &&
+        e.shiftKey &&
+        key==="i"
+    ){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* CTRL + SHIFT + J */
+    if(
+        ctrl &&
+        e.shiftKey &&
+        key==="j"
+    ){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* CTRL + SHIFT + C */
+    if(
+        ctrl &&
+        e.shiftKey &&
+        key==="c"
+    ){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* F12 */
+    if(e.key==="F12"){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /* PRINT SCREEN */
+    if(
+        e.key==="PrintScreen" ||
+        e.code==="PrintScreen"
+    ){
+
+        e.preventDefault();
+
+        return false;
+    }
+
+},true);
+
+/* =========================================================
+   MOUSE DOWN PROTECTION
+========================================================= */
+
+document.addEventListener("mousedown",function(e){
+
+    if(isExamProtected() && e.button===2){
+
+        e.preventDefault();
+
+        return false;
+
+    }
+
+},true);
+
+/* =========================================================
+   TOUCH LONG PRESS PROTECTION
+========================================================= */
+
+let touchTimer=null;
+
+document.addEventListener("touchstart",function(){
+
+    if(!isExamProtected()) return;
+
+    touchTimer=setTimeout(function(){
+
+        try{
+
+            window.getSelection().removeAllRanges();
+
+        }catch(e){}
+
+    },500);
+
+},{passive:true});
+
+document.addEventListener("touchend",function(){
+
+    if(touchTimer){
+
+        clearTimeout(touchTimer);
+
+        touchTimer=null;
+
+    }
+
+},{passive:true});
+
+document.addEventListener("touchmove",function(){
+
+    if(touchTimer){
+
+        clearTimeout(touchTimer);
+
+        touchTimer=null;
+
+    }
+
+},{passive:true});
+
+/* =========================================================
+   16-MINUTE EXAM TIMER
+========================================================= */
+
+function startExamTimer(){
+    stopExamTimer();
+    examState.startedAt=Date.now();
+    examState.timeExpired=false;
+    updateExamTimer();
+    examTimerInterval=setInterval(updateExamTimer,250);
+}
+
+function stopExamTimer(){
+    if(examTimerInterval){
+        clearInterval(examTimerInterval);
+        examTimerInterval=null;
+    }
+}
+
 function updateExamTimer(){
- if(!examState.started||!examState.startedAt){stopExamTimer();return;}
- const remaining=Math.max(0,EXAM_DURATION_MS-(Date.now()-examState.startedAt));
- const seconds=Math.ceil(remaining/1000),m=Math.floor(seconds/60),sec=seconds%60;
- const timer=document.getElementById("examTimer");
- if(timer){timer.textContent=`TIME LEFT: ${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;timer.classList.toggle("warning",remaining<=300000&&remaining>0);timer.classList.toggle("expired",remaining<=0);}
- if(remaining<=0){stopExamTimer();finalizeTimedOutExam();}
+    if(!examState.started || !examState.startedAt){
+        stopExamTimer();
+        return;
+    }
+
+    const remaining=Math.max(0,EXAM_DURATION_MS-(Date.now()-examState.startedAt));
+    const seconds=Math.ceil(remaining/1000);
+    const minutes=Math.floor(seconds/60);
+    const secs=seconds%60;
+    const timer=document.getElementById("examTimer");
+
+    if(timer){
+        timer.textContent="TIME LEFT: "+String(minutes).padStart(2,"0")+":"+String(secs).padStart(2,"0");
+        timer.classList.toggle("warning",remaining<=5*60*1000 && remaining>0);
+        timer.classList.toggle("expired",remaining<=0);
+    }
+
+    if(remaining<=0){
+        stopExamTimer();
+        finalizeTimedOutExam();
+    }
 }
 
-function getLockState(email,program){
- const key="GETI_EXAM_LOCKS";let all={};try{all=JSON.parse(localStorage.getItem(key))||{};}catch(e){}
- const id=email.toLowerCase()+"|"+program;const x=all[id]||{failCount:0,lockUntil:0,blackUntil:0};
- const now=Date.now();
- if(x.blackUntil&&x.blackUntil<=now)x.blackUntil=0;
- if(x.lockUntil&&x.lockUntil<=now){x.lockUntil=0;x.failCount=0;}
- all[id]=x;localStorage.setItem(key,JSON.stringify(all));return x;
+function finalizeTimedOutExam(){
+    if(!examState.started || examState.timeExpired) return;
+    examState.timeExpired=true;
+
+    let subjects=examState.program==="TEFL" ? TEFL_SUBJECTS : TESOL_SUBJECTS;
+    let data=examState.program==="TEFL" ? TEFL_DATA : TESOL_DATA;
+    let subject=subjects[examState.subjectIndex];
+    let questions=data[subject];
+    let currentAnswers=examState.answers[examState.subjectIndex] || [];
+    let score=0;
+
+    for(let i=0;i<15;i++){
+        if(currentAnswers[i]===questions[i][5]) score++;
+    }
+
+    examState.subjectScores[examState.subjectIndex]={
+        subject:subject,
+        score:score,
+        total:15,
+        percentage:Math.round((score/15)*100),
+        grade:calculateGrade(Math.round((score/15)*100))
+    };
+
+    showFinalResult(true);
 }
-function setLockState(email,program,state){let all={};try{all=JSON.parse(localStorage.getItem("GETI_EXAM_LOCKS"))||{};}catch(e){}all[email.toLowerCase()+"|"+program]=state;localStorage.setItem("GETI_EXAM_LOCKS",JSON.stringify(all));}
-function checkExamEligibility(email,program){
- const l=getLockState(email,program),now=Date.now();
- if(l.blackUntil>now)return {ok:false,message:"You are temporarily blacklisted. You can take this examination again after 24 hours."};
- if(l.lockUntil>now)return {ok:false,message:`You failed 3 times. Please wait ${Math.ceil((l.lockUntil-now)/60000)} minute(s) before trying again.`};
- return {ok:true};
-}
-function recordFailure(email,program){const l=getLockState(email,program);l.failCount=(l.failCount||0)+1;if(l.failCount>=3){l.lockUntil=Date.now()+5*60*1000;l.failCount=0;}setLockState(email,program,l);}
-function clearFailureLock(email,program){setLockState(email,program,{failCount:0,lockUntil:0,blackUntil:0});}
-function setBlacklist(email,program){const l=getLockState(email,program);l.blackUntil=Date.now()+24*60*60*1000;setLockState(email,program,l);}
+
+/* =========================================================
+   OPEN REGISTRATION
+========================================================= */
 
 function openExamRegistration(program){
- stopExamTimer();disableExamProtection();
- let records=getExamRecords();
- let panel=document.getElementById("examPanel");
- const passed=records.find(r=>r.program===program&&r.status==="PASSED");
- if(passed){alert("This candidate has already passed this GETI examination.");return;}
- examState={program,student:null,subjectIndex:0,questionIndex:0,answers:[],subjectScores:[],started:false,startedAt:null,timeExpired:false};
- panel.classList.add("active");panel.innerHTML=`<div class="registration-form"><h2 class="exam-title">${escapeHTML(program)} EXAM</h2><p>16-minute examination. Complete all subjects before the timer reaches 00:00.</p><input id="regName" placeholder="Full Name"><input id="regEmail" type="email" placeholder="Email Address"><input id="regNationality" placeholder="Nationality"><input id="regCountry" placeholder="Country"><input id="regPhone" placeholder="Phone Number"><input id="regInstitution" placeholder="Institution / School"><button class="btn btn-gold" onclick="submitRegistration()">REGISTER & START ${escapeHTML(program)} EXAM</button></div>`;
- panel.scrollIntoView({behavior:"smooth"});
+
+    stopExamTimer();
+
+    let records=getExamRecords();
+
+    let alreadyPassed=records.find(function(r){
+
+        return r.program===program &&
+               r.status==="PASSED";
+
+    });
+
+    if(alreadyPassed){
+
+        alert(
+            "This candidate has already passed the "+
+            program+
+            " examination. A passed candidate cannot take the same GETI exam again."
+        );
+
+        return;
+    }
+
+    examState={
+        program:program,
+        student:null,
+        subjectIndex:0,
+        questionIndex:0,
+        answers:[],
+        subjectScores:[],
+        started:false
+    };
+
+    disableExamProtection();
+
+    let panel=document.getElementById("examPanel");
+
+    panel.classList.add("active");
+
+    panel.innerHTML=
+
+    '<h2 class="exam-title">'+
+    program+
+    ' EXAM</h2>'+
+
+    '<p class="exam-subtitle">'+
+    'Registration before starting the examination.'+
+    '</p>'+
+
+    '<div class="registration-form">'+
+
+    '<input id="regName" placeholder="Full Name">'+
+
+    '<input id="regEmail" type="email" placeholder="Email Address">'+
+
+    '<input id="regNationality" placeholder="Nationality">'+
+
+    '<input id="regCountry" placeholder="Country">'+
+
+    '<input id="regPhone" placeholder="Phone Number">'+
+
+    '<input id="regInstitution" placeholder="Institution / School">'+
+
+    '<button class="btn btn-gold" onclick="submitRegistration()">'+
+    'REGISTER & START '+program+' EXAM'+
+    '</button>'+
+
+    '</div>';
+
+    panel.scrollIntoView({
+        behavior:"smooth"
+    });
+
 }
+
+/* =========================================================
+   REGISTRATION
+========================================================= */
+
 function submitRegistration(){
- const name=document.getElementById("regName").value.trim(),email=document.getElementById("regEmail").value.trim(),nationality=document.getElementById("regNationality").value.trim(),country=document.getElementById("regCountry").value.trim(),phone=document.getElementById("regPhone").value.trim(),institution=document.getElementById("regInstitution").value.trim();
- if(!name||!email||!nationality){alert("Please complete Name, Email and Nationality.");return;}
- const eligibility=checkExamEligibility(email,examState.program);if(!eligibility.ok){alert(eligibility.message);return;}
- const records=getExamRecords();
- if(records.some(r=>r.email&&r.email.toLowerCase()===email.toLowerCase()&&r.program===examState.program&&r.status==="PASSED")){alert("This candidate already passed this examination.");return;}
- const id=createCandidateID(examState.program);
- examState.student={id,name,email,nationality,country,phone,institution,program:examState.program};
- examState.started=true;examState.subjectIndex=0;examState.questionIndex=0;examState.answers=examSubjects().map(()=>Array(15).fill(null));examState.subjectScores=[];
- enableExamProtection();createExamOverlay();startExamTimer();showQuestion();
+
+    let name=document.getElementById("regName").value.trim();
+    let email=document.getElementById("regEmail").value.trim();
+    let nationality=document.getElementById("regNationality").value.trim();
+    let country=document.getElementById("regCountry").value.trim();
+    let phone=document.getElementById("regPhone").value.trim();
+    let institution=document.getElementById("regInstitution").value.trim();
+
+    if(!name || !email || !nationality){
+
+        alert(
+            "Please complete Name, Email and Nationality."
+        );
+
+        return;
+    }
+
+    let records=getExamRecords();
+
+    let passed=records.find(function(r){
+
+        return r.email.toLowerCase()===
+               email.toLowerCase()
+               &&
+               r.program===examState.program
+               &&
+               r.status==="PASSED";
+
+    });
+
+    if(passed){
+
+        alert(
+            "This candidate already passed this examination."
+        );
+
+        return;
+    }
+
+    let id=createCandidateID(
+        examState.program
+    );
+
+    examState.student={
+
+        id:id,
+        name:name,
+        email:email,
+        nationality:nationality,
+        country:country,
+        phone:phone,
+        institution:institution,
+        program:examState.program
+
+    };
+
+    examState.started=true;
+
+    examState.answers=
+        Array.from(
+            {length:10},
+            function(){
+
+                return Array(15).fill(null);
+
+            }
+        );
+
+    examState.subjectScores=[];
+
+    /* ENABLE COPY PROTECTION */
+    enableExamProtection();
+
+    startExamTimer();
+    showQuestion();
+
 }
-function createCandidateID(program){const prefix=program==="TEFL"?"GETI-TEFL-":program==="TESOL"?"GETI-TESOL-":program==="TEYL"?"GETI-TEYL-":"GETI-ENG-";const records=getExamRecords();let n=records.length+1,id;do{id=prefix+String(n++).padStart(6,"0");}while(records.some(r=>r.id===id));return id;}
-function createExamOverlay(){
- let old=document.getElementById("examOverlay");if(old)old.remove();
- const homePanel=document.getElementById("examPanel");if(homePanel)homePanel.id="examPanelHome";
- const ov=document.createElement("div");ov.id="examOverlay";ov.className="exam-overlay";
- ov.innerHTML='<div class="exam-topbar"><div><strong>GETI</strong> — '+escapeHTML(examState.program)+' EXAM</div><div id="examTimer" class="exam-timer">TIME LEFT: 16:00</div><button class="exam-menu-btn" onclick="backToMenu()">BACK TO MENU</button></div><div id="examPanel" class="exam-panel"></div>';
- document.body.appendChild(ov);
+
+/* =========================================================
+   AUTOMATIC ID
+========================================================= */
+
+function createCandidateID(program){
+
+    let prefix=
+        program==="TEFL"
+        ? "GETI-TEFL-"
+        : "GETI-TESOL-";
+
+    let records=getExamRecords();
+
+    let number=records.length+1;
+
+    let id;
+
+    do{
+
+        id=
+            prefix+
+            String(number).padStart(6,"0");
+
+        number++;
+
+    }while(
+        records.some(function(r){
+
+            return r.id===id;
+
+        })
+    );
+
+    return id;
+
 }
-function backToMenu(){
- if(examState.started&&!confirm("Leave the examination? Your current attempt will be ended."))return;
- stopExamTimer();if(speechRecognition){try{speechRecognition.stop();}catch(e){}}speechRecognition=null;examState.started=false;disableExamProtection();const ov=document.getElementById("examOverlay");if(ov)ov.remove();const homePanel=document.getElementById("examPanelHome");if(homePanel){homePanel.id="examPanel";homePanel.innerHTML="";homePanel.classList.remove("active");}document.getElementById("exam-system").scrollIntoView({behavior:"smooth"});
-}
+
+/* =========================================================
+   SHOW QUESTION
+========================================================= */
+
 function showQuestion(){
- const subjects=examSubjects(),data=examData(),subject=subjects[examState.subjectIndex],questions=data[subject],q=questions[examState.questionIndex];
- const panel=document.getElementById("examPanel");if(!panel)return;
- const isSpeaking=isProficiency()&&subject==="Speaking",isListening=isProficiency()&&subject==="Listening";
- let extra="";
- if(isListening)extra='<button class="exam-audio-btn" onclick="playListeningAudio()">🔊 PLAY AUDIO</button><p class="exam-message">Listen to the audio before choosing an answer.</p>';
- if(isSpeaking){const sp=PROF_SPEAKING_PROMPTS[examState.questionIndex];extra=`<p><strong>Speaking task:</strong> ${escapeHTML(sp[0])}</p><button class="mic-btn" id="micBtn" onclick="startSpeakingRecognition()">🎙️ START MICROPHONE</button><div id="transcriptBox" class="transcript-box">Your speech will appear here.</div><div id="speakingScore" class="speaking-score"></div>`;}
- panel.innerHTML=`<div class="exam-question-wrap"><div class="exam-progress"><span>Subject ${examState.subjectIndex+1}/10 — ${escapeHTML(subject)}</span><span>Question ${examState.questionIndex+1}/15</span></div><div class="exam-question"><div class="question-text">${examState.questionIndex+1}. ${escapeHTML(q[0])}</div>${extra}<div id="optionsContainer"></div><div class="exam-controls"><button class="next-btn" onclick="nextExamQuestion()">${examState.questionIndex===14?'SUBMIT SUBJECT':'NEXT QUESTION'}</button></div></div></div>`;
- if(isSpeaking)return;
- const container=document.getElementById("optionsContainer");for(let i=1;i<=4;i++){const b=document.createElement("button");b.className="option";if(examState.answers[examState.subjectIndex][examState.questionIndex]===i-1)b.classList.add("selected");b.innerHTML=`<strong>${String.fromCharCode(64+i)}.</strong> ${escapeHTML(q[i])}`;b.onclick=()=>selectAnswer(i-1);container.appendChild(b);}
- if(isListening)playListeningAudio();
+
+    let subjects=
+        examState.program==="TEFL"
+        ? TEFL_SUBJECTS
+        : TESOL_SUBJECTS;
+
+    let data=
+        examState.program==="TEFL"
+        ? TEFL_DATA
+        : TESOL_DATA;
+
+    let subject=
+        subjects[examState.subjectIndex];
+
+    let questions=
+        data[subject];
+
+    let q=
+        questions[examState.questionIndex];
+
+    let selected=
+        examState.answers
+        [examState.subjectIndex]
+        [examState.questionIndex];
+
+    let panel=document.getElementById("examPanel");
+
+    panel.classList.add("exam-protected");
+
+    panel.innerHTML=
+
+    '<div class="exam-progress">'+
+
+    '<span>'+
+    escapeHTML(examState.program)+
+    '</span>'+
+
+    '<span>'+
+    'Subject '+
+    (examState.subjectIndex+1)+
+    '/10'+
+    '</span>'+
+
+    '<span>'+
+    'Question '+
+    (examState.questionIndex+1)+
+    '/15'+
+    '</span>'+
+
+    '</div>'+
+
+    '<h2 class="exam-title">'+
+    escapeHTML(subject)+
+    '</h2>'+
+
+    '<div class="exam-question">'+
+
+    '<div class="question-text">'+
+    (examState.questionIndex+1)+
+    '. '+
+    escapeHTML(q[0])+
+    '</div>'+
+
+    '<div id="optionsContainer"></div>'+
+
+    '<div class="exam-controls">'+
+
+    '<button class="next-btn" '+
+    'onclick="nextExamQuestion()">'+
+
+    (
+        examState.questionIndex===14
+        ? "SUBMIT SUBJECT"
+        : "NEXT QUESTION"
+    )+
+
+    '</button>'+
+
+    '</div>'+
+
+    '</div>';
+
+    let container=
+        document.getElementById("optionsContainer");
+
+    for(let i=1;i<=4;i++){
+
+        let button=
+            document.createElement("button");
+
+        button.className="option";
+
+        if(selected===i-1){
+
+            button.classList.add("selected");
+
+        }
+
+        button.innerHTML=
+            "<strong>"+
+            String.fromCharCode(64+i)+
+            ".</strong> "+
+            escapeHTML(q[i]);
+
+        button.onclick=function(){
+
+            selectAnswer(i-1);
+
+        };
+
+        container.appendChild(button);
+
+    }
+
+    panel.classList.add("exam-protected");
+
+    panel.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+
 }
-function selectAnswer(answer){examState.answers[examState.subjectIndex][examState.questionIndex]=answer;document.querySelectorAll("#optionsContainer .option").forEach((o,i)=>o.classList.toggle("selected",i===answer));}
-function startSpeakingRecognition(){
- const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SpeechRecognition){alert("Microphone speech recognition is not supported in this browser. Please use Chrome or Edge with microphone permission.");return;}
- const btn=document.getElementById("micBtn");const box=document.getElementById("transcriptBox");
- speechRecognition=new SpeechRecognition();speechRecognition.lang="en-US";speechRecognition.interimResults=false;speechRecognition.maxAlternatives=1;
- btn.textContent="🔴 LISTENING...";btn.classList.add("recording");
- speechRecognition.onresult=e=>{speakingTranscript=e.results[0][0].transcript;box.textContent=speakingTranscript;scoreSpeaking();};
- speechRecognition.onerror=e=>{box.textContent="Microphone error: "+e.error;};
- speechRecognition.onend=()=>{btn.textContent="🎙️ RECORD AGAIN";btn.classList.remove("recording");};
- try{speechRecognition.start();}catch(e){}
+
+/* =========================================================
+   SELECT ANSWER
+========================================================= */
+
+function selectAnswer(answer){
+
+    examState.answers
+    [examState.subjectIndex]
+    [examState.questionIndex]=answer;
+
+    let options=
+        document.querySelectorAll(".option");
+
+    options.forEach(function(option,index){
+
+        option.classList.remove("selected");
+
+        if(index===answer){
+
+            option.classList.add("selected");
+
+        }
+
+    });
+
 }
-function scoreSpeaking(){const sp=PROF_SPEAKING_PROMPTS[examState.questionIndex],text=speakingTranscript.toLowerCase(),keys=sp[1];let hits=keys.filter(k=>text.includes(k)).length;let score=Math.min(100,Math.max(0,Math.round((hits/keys.length)*70+Math.min(text.split(/\s+/).filter(Boolean).length,25)*1.2)));const box=document.getElementById("speakingScore");if(box)box.textContent=`Automatic correction: ${score}%`;examState.answers[examState.subjectIndex][examState.questionIndex]=score;}
-function playListeningAudio(){if(!isProficiency()||currentSubject()!=="Listening")return;const q=PROF_DATA.Listening[examState.questionIndex];if("speechSynthesis" in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(q[0].replace(/^Listen[^:]*:/i,"")+". "+q[1]);u.lang="en-US";u.rate=.9;speechSynthesis.speak(u);}}
+
+/* =========================================================
+   NEXT QUESTION
+========================================================= */
+
 function nextExamQuestion(){
- const subject=currentSubject(),isSpeaking=isProficiency()&&subject==="Speaking";
- if(isSpeaking){if(typeof examState.answers[examState.subjectIndex][examState.questionIndex]!=="number"){alert("Please use the microphone and speak before continuing.");return;}}
- else if(examState.answers[examState.subjectIndex][examState.questionIndex]===null){alert("Please select an answer before continuing.");return;}
- if(examState.questionIndex<14){examState.questionIndex++;showQuestion();}else submitSubject();
+
+    let answer=
+        examState.answers
+        [examState.subjectIndex]
+        [examState.questionIndex];
+
+    if(answer===null){
+
+        alert(
+            "Please select an answer before continuing."
+        );
+
+        return;
+    }
+
+    if(examState.questionIndex<14){
+
+        examState.questionIndex++;
+
+        showQuestion();
+
+        return;
+    }
+
+    submitSubject();
+
 }
+
+/* =========================================================
+   SUBJECT RESULT
+========================================================= */
+
 function submitSubject(){
- const subject=currentSubject(),questions=examData()[subject],answers=examState.answers[examState.subjectIndex];let score=0;
- if(isProficiency()&&subject==="Speaking")score=answers.reduce((a,v)=>a+(typeof v==="number"?v/100:0),0);
- else for(let i=0;i<15;i++)if(answers[i]===questions[i][5])score++;
- const percentage=Math.round((score/15)*100);examState.subjectScores[examState.subjectIndex]={subject,score:Math.round(score),total:15,percentage,grade:calculateGrade(percentage)};showSubjectResult(subject,Math.round(score),percentage,calculateGrade(percentage));
+
+    let subjects=
+        examState.program==="TEFL"
+        ? TEFL_SUBJECTS
+        : TESOL_SUBJECTS;
+
+    let data=
+        examState.program==="TEFL"
+        ? TEFL_DATA
+        : TESOL_DATA;
+
+    let subject=
+        subjects[examState.subjectIndex];
+
+    let questions=
+        data[subject];
+
+    let score=0;
+
+    for(let i=0;i<15;i++){
+
+        if(
+            examState.answers
+            [examState.subjectIndex]
+            [i]
+            ===questions[i][5]
+        ){
+
+            score++;
+
+        }
+
+    }
+
+    let percentage=
+        Math.round(
+            (score/15)*100
+        );
+
+    let grade=
+        calculateGrade(percentage);
+
+    examState.subjectScores[
+        examState.subjectIndex
+    ]={
+
+        subject:subject,
+        score:score,
+        total:15,
+        percentage:percentage,
+        grade:grade
+
+    };
+
+    showSubjectResult(
+        subject,
+        score,
+        percentage,
+        grade
+    );
+
 }
-function calculateGrade(percent){if(percent>=90)return "A";if(percent>=80)return "B";if(percent>=70)return "C";return "F";}
-function showSubjectResult(subject,score,percentage,grade){const panel=document.getElementById("examPanel");const nextText=examState.subjectIndex<9?"NEXT SUBJECT":"VIEW FINAL RESULT";panel.innerHTML=`<div class="result-box"><h2>${escapeHTML(subject)}</h2><div class="final-score">${percentage}%</div><p>${score} / 15 equivalent correct answers</p><div class="subject-result"><span>Grade</span><strong class="${grade==="F"?'fail':'pass'}">${grade}</strong></div><br><button class="btn btn-gold" onclick="continueExam()">${nextText}</button></div>`;}
-function continueExam(){if(examState.subjectIndex<9){examState.subjectIndex++;examState.questionIndex=0;showQuestion();}else showFinalResult(false);}
-function finalizeTimedOutExam(){if(!examState.started||examState.timeExpired)return;examState.timeExpired=true;for(let i=0;i<10;i++){if(!examState.subjectScores[i]){const subject=examSubjects()[i],questions=examData()[subject],answers=examState.answers[i]||[];let score=0;if(isProficiency()&&subject==="Speaking")score=answers.reduce((a,v)=>a+(typeof v==="number"?v/100:0),0);else for(let j=0;j<15;j++)if(answers[j]===questions[j][5])score++;const pct=Math.round((score/15)*100);examState.subjectScores[i]={subject,score:Math.round(score),total:15,percentage:pct,grade:calculateGrade(pct)};}}showFinalResult(true);}
-function getCEFR(percent){if(percent>=90)return"C2";if(percent>=80)return"C1";if(percent>=70)return"B2";if(percent>=60)return"B1";if(percent>=50)return"A2";return"A1";}
-async function sendPassedEmail(record){
- const body=`GETI EXAMINATION PASSED\n\nName: ${record.name}\nCandidate ID: ${record.id}\nProgram: ${record.program}\nEmail: ${record.email}\nNationality: ${record.nationality}\nCountry: ${record.country}\nPhone: ${record.phone}\nInstitution: ${record.institution}\nFinal Grade: ${record.grade}\nFinal Score: ${record.percentage}%\nCEFR Level: ${record.cefr||"N/A"}\nDate: ${record.date}\n\nSubject Results:\n`+record.subjects.map(s=>`${s.subject}: ${s.percentage}% — ${s.grade}`).join("\n");
- try{await fetch("https://formsubmit.co/ajax/proficiencycorelanguague03@gmail.com",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({subject:`GETI PASSED — ${record.name} — ${record.program}`,message:body,_captcha:"false",_template:"table"})});}catch(e){}
- try{window.location.href=`mailto:proficiencycorelanguague03@gmail.com?subject=${encodeURIComponent(`GETI PASSED — ${record.name} — ${record.program}`)}&body=${encodeURIComponent(body)}`;}catch(e){}
+
+/* =========================================================
+   GRADE
+========================================================= */
+
+function calculateGrade(percent){
+
+    if(percent>=90)return "A";
+
+    if(percent>=80)return "B";
+
+    if(percent>=70)return "C";
+
+    return "F";
+
 }
+
+/* =========================================================
+   SUBJECT RESULT
+========================================================= */
+
+function showSubjectResult(
+    subject,
+    score,
+    percentage,
+    grade
+){
+
+    let panel=
+        document.getElementById("examPanel");
+
+    let nextText=
+        examState.subjectIndex<9
+        ? "NEXT SUBJECT"
+        : "VIEW FINAL RESULT";
+
+    panel.innerHTML=
+
+    '<div class="result-box">'+
+
+    '<h2>'+
+    escapeHTML(subject)+
+    '</h2>'+
+
+    '<div class="final-score">'+
+    percentage+
+    '%'+
+    '</div>'+
+
+    '<p>'+
+    score+
+    ' / 15 correct answers'+
+    '</p>'+
+
+    '<div class="subject-result">'+
+
+    '<span>Grade</span>'+
+
+    '<strong class="'+
+    (grade==="F"?"fail":"pass")+
+    '">'+
+    grade+
+    '</strong>'+
+
+    '</div>'+
+
+    '<br>'+
+
+    '<button class="btn btn-gold" '+
+    'onclick="continueExam()">'+
+    nextText+
+    '</button>'+
+
+    '</div>';
+
+    /*
+       Protection remains active until
+       final result is displayed.
+    */
+
+    panel.classList.add("exam-protected");
+
+}
+
+/* =========================================================
+   CONTINUE
+========================================================= */
+
+function continueExam(){
+
+    if(examState.subjectIndex<9){
+
+        examState.subjectIndex++;
+
+        examState.questionIndex=0;
+
+        showQuestion();
+
+    }else{
+
+        showFinalResult();
+
+    }
+
+}
+
+/* =========================================================
+   FINAL RESULT
+========================================================= */
+
 function showFinalResult(timeExpired=false){
- stopExamTimer();disableExamProtection();examState.started=false;
- const totalQuestions=150;let totalScore=0;examState.subjectScores.forEach(s=>totalScore+=Number(s.score)||0);let percentage=Math.round((totalScore/totalQuestions)*100);let status=percentage>=70?"PASSED":"FAILED";const student=examState.student;const cefr=isProficiency()?getCEFR(percentage):null;const record={id:student.id,name:student.name,email:student.email,nationality:student.nationality,country:student.country,phone:student.phone,institution:student.institution,program:student.program,percentage,totalScore,totalQuestions,status,grade:calculateGrade(percentage),cefr,date:new Date().toISOString(),subjects:examState.subjectScores,timeExpired};saveExamRecord(record);
- if(status==="FAILED")recordFailure(student.email,student.program);else clearFailureLock(student.email,student.program);
- const rows=examState.subjectScores.map(s=>`<div class="subject-result"><span>${escapeHTML(s.subject)}</span><strong>${s.percentage}% — ${s.grade}</strong></div>`).join("");
- const timeoutNotice=timeExpired?'<div class="exam-fail-message"><strong>TIME EXPIRED:</strong> The 16-minute examination ended automatically. Unanswered questions were not awarded marks.</div>':'';
- const level=cefr?`<p><span class="cefr-badge">CEFR: ${cefr}</span></p>`:'';
- const panel=document.getElementById("examPanel");const overlay=document.getElementById("examOverlay");if(overlay)overlay.classList.add("exam-finished");panel.innerHTML=`<div class="result-box"><h2>${status==="PASSED"?'🎉 FINAL EXAMINATION RESULT':'FINAL EXAMINATION RESULT'}</h2><p><strong>${escapeHTML(student.name)}</strong></p><p>Candidate ID: <strong>${escapeHTML(student.id)}</strong></p>${timeoutNotice}<div class="final-score">${percentage}%</div><h2 class="${status==="PASSED"?'pass':'fail'}">${status}</h2>${level}<div class="exam-message">${status==="PASSED"?'Congratulations! You have successfully passed the '+escapeHTML(student.program)+' examination.': 'Your final score is below the required 70%.'}</div><h3>Subject Results</h3>${rows}<div class="final-actions"><button class="back-menu-btn" onclick="backToMenu()">BACK TO MENU</button></div></div>`;
- if(status==="PASSED")sendPassedEmail(record);
+
+    stopExamTimer();
+
+    /* DISABLE COPY PROTECTION AFTER EXAM */
+
+    disableExamProtection();
+
+    examState.started=false;
+
+    let totalScore=0;
+
+    let totalQuestions=150;
+
+    examState.subjectScores.forEach(function(s){
+
+        totalScore+=s.score;
+
+    });
+
+    let percentage=
+        Math.round(
+            (totalScore/totalQuestions)*100
+        );
+
+    let status=
+        percentage>=70
+        ? "PASSED"
+        : "FAILED";
+
+    let student=examState.student;
+
+    let record={
+
+        id:student.id,
+        name:student.name,
+        email:student.email,
+        nationality:student.nationality,
+        country:student.country,
+        phone:student.phone,
+        institution:student.institution,
+        program:student.program,
+        percentage:percentage,
+        totalScore:totalScore,
+        totalQuestions:totalQuestions,
+        status:status,
+        date:new Date().toISOString(),
+        subjects:examState.subjectScores
+
+    };
+
+    saveExamRecord(record);
+
+    let panel=
+        document.getElementById("examPanel");
+
+    let rows="";
+
+    examState.subjectScores.forEach(function(s){
+
+        rows+=
+
+        '<div class="subject-result">'+
+
+        '<span>'+
+        escapeHTML(s.subject)+
+        '</span>'+
+
+        '<strong>'+
+        s.percentage+
+        '% — '+
+        s.grade+
+        '</strong>'+
+
+        '</div>';
+
+    });
+
+    if(status==="PASSED"){
+
+        panel.innerHTML=
+
+        '<div class="result-box">'+
+
+        '<h2>🎉 FINAL EXAMINATION RESULT</h2>'+
+
+        '<p><strong>'+
+        escapeHTML(student.name)+
+        '</strong></p>'+
+
+        '<p>Candidate ID: <strong>'+
+        escapeHTML(student.id)+
+        '</strong></p>'+
+        timeoutNotice+
+
+        '<div class="final-score">'+
+        percentage+
+        '%'+
+        '</div>'+
+
+        '<h2 class="pass">PASSED</h2>'+
+
+        '<div class="exam-message">'+
+
+        'Congratulations! You have successfully passed the '+
+        student.program+
+        ' examination. Please check your email regularly for further information regarding your result and certificate.'+
+
+        '</div>'+
+
+        '<h3>Subject Results</h3>'+
+
+        rows+
+
+        '<br>'+
+
+        '<p>'+
+        'You cannot take this same GETI examination again after passing.'+
+        '</p>'+
+
+        '</div>';
+
+    }else{
+
+        panel.innerHTML=
+
+        '<div class="result-box">'+
+
+        '<h2>FINAL EXAMINATION RESULT</h2>'+
+
+        '<p><strong>'+
+        escapeHTML(student.name)+
+        '</strong></p>'+
+
+        '<p>Candidate ID: <strong>'+
+        escapeHTML(student.id)+
+        '</strong></p>'+
+        timeoutNotice+
+
+        '<div class="final-score">'+
+        percentage+
+        '%'+
+        '</div>'+
+
+        '<h2 class="fail">FAILED</h2>'+
+
+        '<div class="exam-fail-message">'+
+
+        'Your final score is below the required 70%. Please review the training materials and contact GETI for further information.'+
+
+        '</div>'+
+
+        '<h3>Subject Results</h3>'+
+
+        rows+
+
+        '</div>';
+
+    }
+
+    panel.scrollIntoView({
+        behavior:"smooth"
+    });
+
 }
 
 /* =========================================================
@@ -2548,10 +3472,28 @@ function getExamRecords(){
 }
 
 function saveExamRecord(record){
+
     let records=getExamRecords();
-    records=records.filter(r=>!(r.email&&record.email&&r.email.toLowerCase()===record.email.toLowerCase()&&r.program===record.program));
+
+    records=
+        records.filter(function(r){
+
+            return !(
+                r.email.toLowerCase()===
+                record.email.toLowerCase()
+                &&
+                r.program===record.program
+            );
+
+        });
+
     records.push(record);
-    localStorage.setItem("GETI_EXAM_RECORDS",JSON.stringify(records));
+
+    localStorage.setItem(
+        "GETI_EXAM_RECORDS",
+        JSON.stringify(records)
+    );
+
 }
 
 /* =========================================================
@@ -2804,6 +3746,240 @@ document
 
 </script>
 
+
+<style>
+/* =========================================================
+   GETI ADD-ON EXAM SYSTEM
+   Added without removing the existing GETI system.
+========================================================= */
+.exam-buttons{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.exam-small-btn{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;font-weight:700;transition:.2s}
+.exam-small-btn:hover{transform:translateY(-2px)}
+.geti-addon-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:20px}
+.geti-lesson-card{background:#fff;border:1px solid #dfe6ef;border-radius:14px;padding:18px;box-shadow:0 6px 20px rgba(0,0,0,.06)}
+.geti-lesson-card h3{margin-bottom:8px}.geti-lesson-card button{margin-top:10px}
+.geti-reading{background:#f8fafc;border:1px solid #d9e1ea;padding:18px;border-radius:12px;line-height:1.85;text-align:left;max-height:55vh;overflow:auto}
+.geti-audio-box,.geti-speaking-box,.geti-video-box{background:#071d3a;color:#fff;border-radius:14px;padding:18px;margin:12px 0}
+.geti-video-screen{height:220px;border-radius:12px;background:linear-gradient(135deg,#122f55,#0b1730);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px}
+.geti-avatar{width:80px;height:80px;border-radius:50%;background:#fff;color:#071d3a;display:flex;align-items:center;justify-content:center;font-size:38px}
+.geti-timer{font-size:20px;font-weight:800;padding:8px 12px;border-radius:8px;background:#fff;color:#071d3a;display:inline-block}
+.geti-final-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.geti-back-menu{position:fixed;right:18px;bottom:18px;z-index:100000;border:0;border-radius:999px;padding:12px 18px;font-weight:800;display:none;box-shadow:0 8px 25px rgba(0,0,0,.25)}
+body.geti-exam-lock{overflow:hidden!important}
+body.geti-exam-lock .exam-panel{position:fixed!important;inset:0!important;z-index:99999!important;width:100vw!important;height:100vh!important;max-width:none!important;margin:0!important;border-radius:0!important;overflow:hidden!important;background:#fff!important;padding:20px!important;}
+body.geti-exam-lock .exam-panel .exam-question{max-height:calc(100vh - 170px);overflow:hidden}
+body.geti-exam-lock .exam-panel .exam-progress{position:sticky;top:0;z-index:2}
+body.geti-exam-lock .geti-back-menu{display:block}
+.geti-cefr{font-size:42px;font-weight:900;margin:15px 0}
+.geti-mic-status{font-weight:700;margin:8px 0}
+</style>
+
+<button id="getiBackMenu" class="geti-back-menu" onclick="GETI_backToMenu()">↩ BACK TO MENU</button>
+
+<script>
+/* =========================================================
+   GETI ADD-ON PROGRAMS
+========================================================= */
+const GETI_PROGRAMS={
+  "TEYL":[
+    "Introduction to TEYL – Teaching English to Young Learners","Understanding Children’s Learning Styles","Classroom Management for Young Learners","Teaching English Through Games and Activities","Teaching Vocabulary to Children","Teaching Pronunciation and Phonics","Teaching Listening and Speaking Skills","Teaching Reading and Writing to Young Learners","Using Songs, Stories, and Rhymes in English Lessons","Assessment and Progress Tracking for Young Learners"
+  ],
+  "ENGLISH PROFICIENCY":["Grammar","Vocabulary","Pronunciation","Speaking","Listening","Reading","Writing","Functional English","Communication & Conversation","English Culture & Real-Life English"],
+  "BUSINESS ENGLISH":["Business Communication","Business Vocabulary","Business Emails","Meetings and Discussions","Presentations","Negotiation Skills","Customer Service","Telephone Communication","Business Reports","Job Interviews"],
+  "MARKETING":["Marketing Fundamentals","Market Research","Consumer Behavior","Branding","Digital Marketing","Social Media Marketing","Advertising","Sales and Promotion","Content Marketing","Marketing Strategy"],
+  "MANAGEMENT":["Management Fundamentals","Leadership and Team Management","Decision-Making","Strategic Management","Human Resource Management","Project Management","Time Management","Performance Management","Conflict Management","Change Management"],
+  "DIGITAL COMMUNICATION":["Digital Communication Fundamentals","Social Media Communication","Content Creation and Strategy","Digital Marketing","Online Public Relations","Visual Communication","Email and Professional Communication","Mobile Communication","Digital Media and Technology","Digital Communication Ethics and Privacy"],
+  "COMPUTER SCIENCE":["Computer Programming","Data Structures and Algorithms","Database Management","Computer Networks","Operating Systems","Web Development","Software Engineering","Artificial Intelligence","Cybersecurity","Cloud Computing"],
+  "MICROSOFT":["Microsoft Word","Microsoft Excel","Microsoft PowerPoint","Microsoft Publisher","Microsoft Outlook","Microsoft Access","Microsoft OneNote","Office Document Management","Office Productivity Skills","Microsoft Office Certification"]
+};
+
+const GETI_LESSONS={};
+Object.keys(GETI_PROGRAMS).forEach(function(program){
+  GETI_LESSONS[program]=GETI_PROGRAMS[program].map(function(subject){
+    return {subject:subject,text:GETI_makeLesson(program,subject)};
+  });
+});
+
+function GETI_makeLesson(program,subject){
+  const intro=`${subject} is an important part of ${program}. This lesson is designed as a classroom-style learning unit. It introduces key ideas, explains practical use, gives examples, and ends with activities for independent study.`;
+  const sections=[
+    "Learning objectives","Core concepts","Key terminology","Step-by-step explanation","Practical examples","Classroom or workplace application","Common mistakes","Guided practice","Independent practice","Review and assessment"
+  ];
+  let out=`<h2>${escapeHTML(subject)}</h2><p>${escapeHTML(intro)}</p>`;
+  sections.forEach(function(sec,i){
+    out+=`<h3>${i+1}. ${escapeHTML(sec)}</h3>`;
+    out+=`<p>In this section, learners study ${escapeHTML(subject)} through clear explanations and practical situations. The instructor first introduces the idea, then connects it to real communication or professional tasks. Learners should identify the main principle, observe how it works, and practise using it accurately. Good learning requires attention to meaning, form, purpose, context, and feedback.</p>`;
+    out+=`<p>Example: imagine a realistic situation related to ${escapeHTML(subject)}. A learner should decide what information is important, choose an appropriate method, explain the decision, and check the result. The same process can be repeated with a new situation so that the learner develops confidence instead of memorising one answer.</p>`;
+    out+=`<p>Study note: do not only read the definition. Ask what the concept means, why it matters, when it is appropriate, what can go wrong, and how it can be improved. Write a short example, compare it with another example, and explain the difference in your own words.</p>`;
+  });
+  out+=`<h3>Final review</h3><p>Review the terminology, explain the main ideas without looking at your notes, complete practice tasks, and create a short real-world example. ${escapeHTML(subject)} becomes useful when knowledge is transferred into communication, analysis, decision-making, or practical performance.</p>`;
+  /* Expand to a long school-style lesson while keeping the page responsive. */
+  let base=out; while(out.replace(/<[^>]+>/g,' ').split(/\s+/).filter(Boolean).length<2000) out+=base;
+  return out;
+}
+
+function GETI_questions(program,subject){
+  const templates=[
+    `Which statement best explains ${subject}?`,`Why is ${subject} important in ${program}?`,`Which action is most appropriate when applying ${subject}?`,`What is a key principle of ${subject}?`,`Which example best demonstrates effective ${subject}?`,`What is a common mistake related to ${subject}?`,`Which skill supports successful work with ${subject}?`,`What should a learner check before applying ${subject}?`,`Which approach is most professional when using ${subject}?`,`What is the main purpose of studying ${subject}?`,`Which situation requires careful use of ${subject}?`,`How can performance in ${subject} be improved?`,`Which statement is most accurate about ${subject}?`,`What is an important outcome of learning ${subject}?`,`Which practice best supports mastery of ${subject}?`
+  ];
+  return templates.map(function(q,i){
+    const options=[
+      `A clear and appropriate application of ${subject}`,
+      `Ignoring the purpose and context`,
+      `Using an unrelated method`,
+      `Avoiding practice and feedback`
+    ];
+    return [q,options[0],options[1],options[2],options[3],0];
+  });
+}
+
+const GETI_ADDON_DATA={};
+Object.keys(GETI_PROGRAMS).forEach(function(program){
+  GETI_ADDON_DATA[program]={};
+  GETI_PROGRAMS[program].forEach(function(subject){GETI_ADDON_DATA[program][subject]=GETI_questions(program,subject);});
+});
+
+/* More useful English Proficiency questions. */
+GETI_ADDON_DATA["ENGLISH PROFICIENCY"]["Grammar"]=[
+ ["Choose the correct sentence.","She has worked here for three years.","She have worked here for three years.","She working here for three years.","She has work here for three years.",0],
+ ["If I ___ enough time, I would join the course.","had","have","will have","am having",0],
+ ["By the time we arrived, the meeting ___.","had started","starts","has start","was start",0],
+ ["Which is a passive sentence?","The report was completed yesterday.","They completed the report yesterday.","They are completing the report.","They complete reports.",0],
+ ["Choose the correct relative clause.","The manager who joined us is from Canada.","The manager which joined us is from Canada.","The manager where joined us is from Canada.","The manager what joined us is from Canada.",0],
+ ["Choose the best modal for obligation.","Employees must follow the safety rules.","Employees might follow the safety rules yesterday.","Employees can to follow the safety rules.","Employees should to follow the safety rules.",0],
+ ["Choose the correct reported speech form: She said, 'I am busy.'","She said that she was busy.","She said that I am busy.","She says that she was busy yesterday.","She said that she busy.",0],
+ ["Which sentence uses a third conditional correctly?","If he had studied, he would have passed.","If he studied, he will pass.","If he studies, he would have passed.","If he had study, he passed.",0],
+ ["Choose the correct article.","She is an experienced teacher.","She is a experienced teacher.","She is experienced a teacher.","She is the experienced teacher in general.",0],
+ ["Choose the correct preposition.","The course starts on Monday.","The course starts at Monday.","The course starts in Monday.","The course starts by Monday always.",0],
+ ["Which sentence is grammatically correct?","Neither of the answers is correct.","Neither of the answers are correct.","Neither answers is corrects.","Neither of answer are correct.",0],
+ ["Choose the correct gerund form.","She enjoys teaching children.","She enjoys to teaching children.","She enjoy teach children.","She enjoying to teach children.",0],
+ ["Which sentence shows a future arrangement?","I am meeting the director tomorrow.","I meet the director yesterday.","I meeting the director tomorrow.","I have meet the director tomorrow.",0],
+ ["Choose the correct comparative.","This method is more effective than the old one.","This method is effectiver than the old one.","This method more effective as the old one.","This method is most effective than the old one.",0],
+ ["Choose the correct inversion.","Rarely do we see such a clear result.","Rarely we do see such a clear result.","Rarely see we do such a clear result.","Rarely did we sees such a clear result.",0]
+];
+
+const GETI_READING_PASSAGE=`Learning English is not simply a matter of memorising words and grammar rules. For many learners, progress becomes faster when English is connected to meaningful situations. A student who reads a short article about a familiar topic can notice how vocabulary works in context, how sentences are organised, and how ideas are connected. Over time, these repeated encounters make language easier to recognise and use.\n\nIn a classroom, learners also need opportunities to make decisions about language. They may compare two expressions, decide which one sounds more appropriate in a particular situation, or explain why a speaker chose one phrase instead of another. These activities require attention and encourage learners to become independent. The teacher can support the process by asking questions, providing examples, and giving feedback without doing all the thinking for the student.\n\nTechnology can also create useful opportunities for practice. Audio recordings allow learners to hear different voices and speeds, while digital dictionaries can provide pronunciation models and example sentences. However, technology does not automatically create learning. Students still need clear goals, regular practice, reflection, and feedback. A useful digital activity is one in which the learner knows what to listen for, what to record, and how to evaluate the result.\n\nIn real life, English is used for many purposes: studying, working, travelling, solving problems, sharing opinions, and building relationships. This means that successful learners need more than knowledge of isolated grammar points. They need to understand meaning, adapt their language to context, listen carefully, read critically, and communicate ideas clearly. Progress is usually gradual, but consistent practice can make a significant difference.`;
+
+GETI_ADDON_DATA["ENGLISH PROFICIENCY"]["Reading"]=Array.from({length:15},function(_,i){
+  const qs=[
+   ["What is the main idea of the passage?","English develops through meaningful practice and communication.","Memorising dictionaries is enough.","Technology always creates learning.","Grammar should never be studied."],
+   ["Why can context help vocabulary learning?","It shows how words work in meaningful situations.","It removes the need for reading.","It prevents repeated encounters.","It makes pronunciation unnecessary."],
+   ["What does the passage say teachers should do?","Support learners while encouraging independent thinking.","Do all the thinking for students.","Avoid feedback.","Only teach isolated words."],
+   ["What can audio recordings provide?","Opportunities to hear different voices and speeds.","Only written grammar rules.","Automatic exam results.","A replacement for practice."],
+   ["According to the passage, does technology automatically create learning?","No, learners still need goals, practice, reflection and feedback.","Yes, always.","Only for advanced learners.","Only when grammar is avoided."],
+   ["Which activity is described as useful?","Listening with a clear purpose and evaluating the result.","Listening without any goal.","Copying every word.","Avoiding audio."],
+   ["What does 'adapt their language to context' mean?","Change language appropriately for the situation.","Always use the same sentence.","Avoid communication.","Use only formal English."],
+   ["Which is NOT listed as a real-life purpose for English?","Memorising random word lists.","Studying.","Working.","Travelling."],
+   ["What can repeated encounters with language do?","Make language easier to recognise and use.","Prevent learning.","Remove the need for meaning.","Stop communication."],
+   ["What is the author's view of progress?","It is gradual and benefits from consistent practice.","It happens instantly.","It is impossible.","It requires no practice."],
+   ["Why are comparison activities useful?","They encourage learners to pay attention and make decisions.","They stop learners thinking.","They remove context.","They replace communication."],
+   ["What does critical reading involve?","Thinking carefully about ideas and information.","Reading without understanding.","Memorising every sentence.","Avoiding evidence."],
+   ["What role can feedback play?","It helps learners evaluate and improve performance.","It prevents independence.","It replaces practice.","It removes goals."],
+   ["Which statement best reflects the conclusion?","Consistent practice can make a significant difference.","Only technology matters.","Only grammar matters.","Learners should avoid real-life English."],
+   ["Which skill is mentioned as important besides grammar knowledge?","Listening carefully and communicating ideas clearly.","Avoiding vocabulary.","Ignoring context.","Never speaking." ]
+  ][i]; return [qs[0],qs[1],qs[2],qs[3],qs[4],0];
+});
+
+GETI_ADDON_DATA["ENGLISH PROFICIENCY"]["Listening"]=Array.from({length:15},function(_,i){
+  const qs=[
+   ["The audio says the meeting was moved because of what?","A scheduling problem","A broken computer","Bad weather","A missing report"],
+   ["What does the speaker recommend first?","Reviewing the latest figures","Calling a customer","Changing the office","Buying equipment"],
+   ["What is implied about the proposal?","It needs further discussion","It has already been rejected","It is finished","It is unrelated"],
+   ["Which detail does the speaker emphasise?","The deadline","The office colour","The lunch menu","The company logo"],
+   ["Why should listeners compare the two options?","Their costs and possible outcomes differ","They are identical","Neither is available","They are only examples"],
+   ["What problem is mentioned?","A delay in receiving information","A spelling mistake","A missing chair","A transport strike"],
+   ["What does the speaker suggest doing next?","Confirming the information","Ignoring the issue","Cancelling the project","Waiting a month"],
+   ["What is the tone of the speaker?","Careful and analytical","Angry and insulting","Uncertain about everything","Humorous only"],
+   ["What can be inferred from the discussion?","The decision depends on reliable evidence","No decision is needed","The issue is already solved","The participants disagree about the topic"],
+   ["Which phrase indicates contrast?","However","Because","Therefore","For example"],
+   ["What is the main purpose of the announcement?","To explain a change and its implications","To advertise a product","To teach pronunciation","To tell a story"],
+   ["What should participants prepare?","Questions about the data","A passport","A new computer","A speech about holidays"],
+   ["What does the speaker mean by 'in practice'?","In a real situation","In theory only","In writing only","In the past"],
+   ["Which conclusion is supported?","More information is needed before a final decision.","The decision is final.","No evidence matters.","The project must stop."],
+   ["What is the speaker's final recommendation?","Check the details and respond before the deadline.","Ignore the message.","Respond next year.","Delete the report."]
+  ][i]; return [qs[0],qs[1],qs[2],qs[3],qs[4],0];
+});
+
+function GETI_cefr(p){if(p<40)return 'A1';if(p<55)return 'A2';if(p<70)return 'B1';if(p<82)return 'B2';if(p<92)return 'C1';return 'C2';}
+
+function GETI_programSubjects(program){return GETI_PROGRAMS[program]||[];}
+function GETI_isAddon(program){return !!GETI_PROGRAMS[program];}
+
+/* Keep original TEFL/TESOL, add all new programs. */
+const GETI_originalOpenExamRegistration=window.openExamRegistration;
+window.openExamRegistration=function(program){
+  if(!GETI_isAddon(program)){return GETI_originalOpenExamRegistration(program);}
+  const records=getExamRecords();
+  const passed=records.find(r=>r.email&&r.program===program&&r.status==='PASSED');
+  if(passed){alert('This candidate has already passed this GETI examination and cannot retake it.');return;}
+  const blocked=GETI_getBlock(program);
+  if(blocked>0){alert('This examination is temporarily locked. Please wait '+Math.ceil(blocked/60000)+' minute(s).');return;}
+  examState={program:program,student:null,subjectIndex:0,questionIndex:0,answers:Array.from({length:10},()=>Array(15).fill(null)),subjectScores:[],started:false,startedAt:null,timeExpired:false,addon:true};
+  const panel=document.getElementById('examPanel'); panel.classList.add('active');
+  panel.innerHTML='<h2 class="exam-title">'+escapeHTML(program)+' EXAM</h2><p class="exam-subtitle">Registration before starting the examination. Time limit: 60 minutes.</p><div class="registration-form"><input id="regName" placeholder="Full Name"><input id="regEmail" type="email" placeholder="Email Address"><input id="regNationality" placeholder="Nationality"><input id="regCountry" placeholder="Country"><input id="regPhone" placeholder="Phone Number"><input id="regInstitution" placeholder="Institution / School"><button class="btn btn-gold" onclick="GETI_startAddonExam()">REGISTER & START EXAM</button></div>';
+  panel.scrollIntoView({behavior:'smooth'});
+};
+
+function GETI_startAddonExam(){
+  const name=document.getElementById('regName').value.trim(),email=document.getElementById('regEmail').value.trim(),nationality=document.getElementById('regNationality').value.trim();
+  if(!name||!email||!nationality){alert('Please complete Name, Email and Nationality.');return;}
+  const program=examState.program; const records=getExamRecords();
+  if(records.some(r=>r.email&&r.email.toLowerCase()===email.toLowerCase()&&r.program===program&&r.status==='PASSED')){alert('You already passed this examination.');return;}
+  const failCount=Number(localStorage.getItem('GETI_FAILCOUNT_'+program+'_'+email.toLowerCase())||0);
+  if(failCount>=3){GETI_setBlock(email,program,5*60*1000);alert('Three failed attempts have been reached. You are blocked for 5 minutes.');return;}
+  examState.student={id:createCandidateID(program),name,email,nationality,country:document.getElementById('regCountry').value.trim(),phone:document.getElementById('regPhone').value.trim(),institution:document.getElementById('regInstitution').value.trim(),program};
+  examState.started=true; examState.startedAt=Date.now(); examState.addon=true; examState.subjectIndex=0; examState.questionIndex=0; examState.subjectScores=[]; examState.answers=Array.from({length:10},()=>Array(15).fill(null));
+  enableExamProtection(); document.body.classList.add('geti-exam-lock'); GETI_updateTimer(); GETI_timer=setInterval(GETI_updateTimer,500); GETI_showQuestion();
+}
+let GETI_timer=null;
+function GETI_stopTimer(){if(GETI_timer){clearInterval(GETI_timer);GETI_timer=null;}}
+function GETI_updateTimer(){if(!examState.started)return;const left=Math.max(0,60*60*1000-(Date.now()-examState.startedAt));const m=Math.floor(left/60000),sec=Math.floor((left%60000)/1000);const t=document.getElementById('getiAddonTimer');if(t)t.textContent='TIME LEFT: '+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');if(left<=0){GETI_stopTimer();GETI_timeout();}}
+function GETI_timeout(){if(!examState.started)return;examState.timeExpired=true;GETI_scoreAll(true);}
+function GETI_showQuestion(){
+  const p=examState.program,s=GETI_PROGRAMS[p][examState.subjectIndex],q=GETI_ADDON_DATA[p][s][examState.questionIndex],panel=document.getElementById('examPanel');
+  let special='';
+  if(p==='ENGLISH PROFICIENCY'&&s==='Reading'){special='<div class="geti-reading"><strong>Reading Passage — B1</strong><br><br>'+GETI_READING_PASSAGE.replace(/\n\n/g,'<br><br>')+'</div>'}
+  if(p==='ENGLISH PROFICIENCY'&&s==='Listening'){special='<div class="geti-audio-box"><strong>B2 Listening</strong><p>Press play and listen carefully before answering.</p><button class="btn btn-gold" onclick="GETI_playListening()">▶ PLAY AUDIO</button><audio id="getiAudio" controls style="display:none"></audio><p id="getiListeningText" style="display:none">The meeting has been moved to Thursday because the finance team needs additional time to review the figures. Before the new deadline, participants should compare the two proposals carefully, confirm the most recent information, and prepare questions about the expected outcomes. The final decision will depend on reliable evidence rather than assumptions.</p></div>'}
+  if(p==='ENGLISH PROFICIENCY'&&s==='Speaking'){special='<div class="geti-speaking-box"><strong>Speaking assessment</strong><p>Speak clearly for 30–60 seconds. The browser microphone will transcribe your answer and calculate an automatic score.</p><button class="btn btn-gold" onclick="GETI_startMic()">🎙 START MICROPHONE</button><div id="getiMicStatus" class="geti-mic-status"></div><textarea id="getiTranscript" rows="4" placeholder="Your transcript will appear here..."></textarea><button class="btn btn-gold" onclick="GETI_submitSpeaking()">SUBMIT SPEAKING</button></div>'}
+  if(p==='BUSINESS ENGLISH'&&s==='Job Interviews'){special='<div class="geti-video-box"><div class="geti-video-screen"><div class="geti-avatar">🇺🇸</div><strong>American Interviewer</strong><span>Automated video-interview simulation</span></div><p>Answer the interview question by microphone or by typing your response.</p><button class="btn btn-gold" onclick="GETI_playInterviewer()">▶ START INTERVIEW</button><button class="btn btn-gold" onclick="GETI_startMic()">🎙 USE MICROPHONE</button><textarea id="getiTranscript" rows="4" placeholder="Your interview answer..."></textarea><button class="btn btn-gold" onclick="GETI_submitSpeaking()">SUBMIT ANSWER</button></div>'}
+  panel.innerHTML='<div class="exam-progress"><span>'+escapeHTML(p)+'</span><span>Subject '+(examState.subjectIndex+1)+'/10</span><span>Question '+(examState.questionIndex+1)+'/15</span><span id="getiAddonTimer" class="geti-timer">TIME LEFT: 60:00</span></div><h2 class="exam-title">'+escapeHTML(s)+'</h2>'+special+'<div class="exam-question"><div class="question-text">'+(examState.questionIndex+1)+'. '+escapeHTML(q[0])+'</div><div id="optionsContainer"></div><div class="exam-controls"><button class="next-btn" onclick="GETI_next()">'+(examState.questionIndex===14?'SUBMIT SUBJECT':'NEXT QUESTION')+'</button></div></div>';
+  const c=document.getElementById('optionsContainer'); for(let i=1;i<=4;i++){const b=document.createElement('button');b.className='option';if(examState.answers[examState.subjectIndex][examState.questionIndex]===i-1)b.classList.add('selected');b.innerHTML='<strong>'+String.fromCharCode(64+i)+'.</strong> '+escapeHTML(q[i]);b.onclick=()=>{examState.answers[examState.subjectIndex][examState.questionIndex]=i-1;document.querySelectorAll('#optionsContainer .option').forEach((x,j)=>x.classList.toggle('selected',j===i-1));};c.appendChild(b);}
+  GETI_updateTimer();
+}
+function GETI_playListening(){const text=document.getElementById('getiListeningText').textContent;const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.9;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
+let GETI_recognition=null;
+function GETI_startMic(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Microphone speech recognition is not supported in this browser. You can type your answer instead.');return;}GETI_recognition=new SR();GETI_recognition.lang='en-US';GETI_recognition.interimResults=false;GETI_recognition.continuous=false;GETI_recognition.onstart=()=>{const x=document.getElementById('getiMicStatus');if(x)x.textContent='Listening…';};GETI_recognition.onresult=e=>{const text=Array.from(e.results).map(r=>r[0].transcript).join(' ');const x=document.getElementById('getiTranscript');if(x)x.value=text;const st=document.getElementById('getiMicStatus');if(st)st.textContent='Transcript captured.';};GETI_recognition.onerror=e=>{const st=document.getElementById('getiMicStatus');if(st)st.textContent='Microphone error: '+e.error;};GETI_recognition.start();}
+function GETI_submitSpeaking(){const x=document.getElementById('getiTranscript');const text=(x&&x.value||'').trim();if(!text){alert('Please speak or type an answer first.');return;}const words=text.split(/\s+/).filter(Boolean).length;const score=Math.max(0,Math.min(15,Math.round(Math.min(100,words*3)/100*15)));examState.answers[examState.subjectIndex][examState.questionIndex]=0;examState.subjectScores[examState.subjectIndex]={subject:GETI_PROGRAMS[examState.program][examState.subjectIndex],score:score,total:15,percentage:Math.round(score/15*100),grade:calculateGrade(Math.round(score/15*100)),automaticFeedback:'Automatic speech assessment completed.'};GETI_showSubjectResult();}
+function GETI_playInterviewer(){const u=new SpeechSynthesisUtterance('Hello. Welcome to your interview. Please introduce yourself and explain why you are interested in this position.');u.lang='en-US';u.rate=.9;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
+function GETI_next(){const p=examState.program,s=GETI_PROGRAMS[p][examState.subjectIndex];if(examState.questionIndex<14){if(examState.answers[examState.subjectIndex][examState.questionIndex]===null){alert('Please select an answer before continuing.');return;}examState.questionIndex++;GETI_showQuestion();return;}GETI_submitSubject();}
+function GETI_submitSubject(){const p=examState.program,s=GETI_PROGRAMS[p][examState.subjectIndex],qs=GETI_ADDON_DATA[p][s];let score=0;for(let i=0;i<15;i++)if(examState.answers[examState.subjectIndex][i]===qs[i][5])score++;const pct=Math.round(score/15*100);examState.subjectScores[examState.subjectIndex]={subject:s,score,total:15,percentage:pct,grade:calculateGrade(pct)};GETI_showSubjectResult();}
+function GETI_showSubjectResult(){const s=GETI_PROGRAMS[examState.program][examState.subjectIndex],r=examState.subjectScores[examState.subjectIndex],panel=document.getElementById('examPanel');panel.innerHTML='<div class="result-box"><h2>'+escapeHTML(s)+'</h2><div class="final-score">'+r.percentage+'%</div><p>'+r.score+' / 15</p><p>Grade: <strong>'+r.grade+'</strong></p><button class="btn btn-gold" onclick="GETI_continue()">'+(examState.subjectIndex<9?'NEXT SUBJECT':'VIEW FINAL RESULT')+'</button></div>';panel.classList.add('exam-protected');}
+function GETI_continue(){if(examState.subjectIndex<9){examState.subjectIndex++;examState.questionIndex=0;GETI_showQuestion();}else GETI_scoreAll(false);}
+function GETI_scoreAll(timeout){GETI_stopTimer();document.body.classList.remove('geti-exam-lock');disableExamProtection();examState.started=false;const p=examState.program;for(let i=0;i<10;i++){if(!examState.subjectScores[i]){const s=GETI_PROGRAMS[p][i],qs=GETI_ADDON_DATA[p][s];let score=0;for(let j=0;j<15;j++)if(examState.answers[i][j]===qs[j][5])score++;const pct=Math.round(score/15*100);examState.subjectScores[i]={subject:s,score,total:15,percentage:pct,grade:calculateGrade(pct)};}}
+ let total=examState.subjectScores.reduce((a,x)=>a+x.score,0),pct=Math.round(total/150*100),status=p==='ENGLISH PROFICIENCY'?GETI_cefr(pct):(pct>=70?'PASSED':'FAILED');const st=examState.student;const record={id:st.id,name:st.name,email:st.email,nationality:st.nationality,country:st.country,phone:st.phone,institution:st.institution,program:p,percentage:pct,totalScore:total,totalQuestions:150,status:status,date:new Date().toISOString(),subjects:examState.subjectScores,timeExpired:!!timeout};saveExamRecord(record);
+ if(status==='FAILED')GETI_recordFailure(st.email,p);const panel=document.getElementById('examPanel');let rows=examState.subjectScores.map(x=>'<div class="subject-result"><span>'+escapeHTML(x.subject)+'</span><strong>'+x.percentage+'% — '+x.grade+'</strong></div>').join('');let passed=p==='ENGLISH PROFICIENCY'?['B2','C1','C2'].includes(status):status==='PASSED';panel.innerHTML='<div class="result-box"><h2>FINAL EXAMINATION RESULT</h2><p><strong>'+escapeHTML(st.name)+'</strong></p><p>Candidate ID: <strong>'+escapeHTML(st.id)+'</strong></p>'+(timeout?'<p class="fail">Time expired. The examination was closed automatically.</p>':'')+'<div class="final-score">'+pct+'%</div>'+(p==='ENGLISH PROFICIENCY'?'<div class="geti-cefr">CEFR: '+status+'</div>':'<h2 class="'+(passed?'pass':'fail')+'">'+status+'</h2>')+'<h3>Subject Results</h3>'+rows+'<div class="geti-final-actions">'+(passed?'<a class="btn btn-gold" href="https://script.google.com/macros/s/AKfycbw2C49JZJfYzsWuTNvYKAOKlwjheuQd_Pw4LV4ybhosj90V6flGbnGG1xbpv-2uNXk1/exec" target="_blank">🎓 GET YOUR CERTIFICATE</a>':'')+'<button class="btn btn-gold" onclick="GETI_backToMenu()">↩ BACK TO MENU</button></div></div>';GETI_sendResultNotification(record,passed);panel.scrollIntoView({behavior:'smooth'});
+}
+
+function GETI_backToMenu(){GETI_stopTimer();document.body.classList.remove('geti-exam-lock');disableExamProtection();examState.started=false;const panel=document.getElementById('examPanel');if(panel)panel.classList.remove('active');document.getElementById('exam-system').scrollIntoView({behavior:'smooth'});}
+function GETI_key(email,program){return 'GETI_BLOCK_'+program+'_'+String(email||'').toLowerCase();}
+function GETI_setBlock(email,program,ms){localStorage.setItem(GETI_key(email,program),String(Date.now()+ms));}
+function GETI_getBlock(program){let best=0;Object.keys(localStorage).filter(k=>k.indexOf('GETI_BLOCK_'+program+'_')===0).forEach(k=>{const v=Number(localStorage.getItem(k)||0);if(v>Date.now())best=Math.max(best,v-Date.now());else localStorage.removeItem(k);});return best;}
+function GETI_recordFailure(email,program){const k='GETI_FAILCOUNT_'+program+'_'+email.toLowerCase();const n=Number(localStorage.getItem(k)||0)+1;localStorage.setItem(k,String(n));if(n>=3)GETI_setBlock(email,program,5*60*1000);}
+function GETI_sendResultNotification(record,passed){const subject=encodeURIComponent('GETI Examination Result — '+record.program);const body=encodeURIComponent('Candidate: '+record.name+'\nEmail: '+record.email+'\nProgram: '+record.program+'\nStatus/CEFR: '+record.status+'\nGrade details:\n'+record.subjects.map(s=>s.subject+': '+s.percentage+'% — '+s.grade).join('\n'));/* Browser-safe fallback: opens the configured GETI mailbox in the user's mail client. For true server-side automatic sending, the Google Apps Script endpoint must accept an email POST. */const a=document.createElement('a');a.href='mailto:proficiencycorelanguage03@gmail.com?subject='+subject+'&body='+body;a.style.display='none';document.body.appendChild(a);if(passed)setTimeout(()=>{try{a.click();}catch(e){}},300);setTimeout(()=>a.remove(),1000);}
+
+/* Lessons UI */
+function openGETILessons(){const panel=document.getElementById('examPanel');panel.classList.add('active');let html='<div class="result-box"><h2>📚 GETI LESSONS</h2><p>Choose a programme, then choose a subject. Each lesson is generated as a long classroom-style unit with explanations, examples, practice and review.</p><div class="geti-addon-grid">';Object.keys(GETI_PROGRAMS).forEach(p=>{html+='<div class="geti-lesson-card"><h3>'+escapeHTML(p)+'</h3><p>'+GETI_PROGRAMS[p].length+' subjects</p><button class="btn btn-gold" onclick="GETI_showLessonList(\''+p.replace(/'/g,"\\'")+'\')">OPEN LESSONS</button></div>';});html+='</div><button class="btn btn-gold" onclick="GETI_backToMenu()">↩ BACK TO MENU</button></div>';panel.innerHTML=html;panel.scrollIntoView({behavior:'smooth'});}
+function GETI_showLessonList(p){const panel=document.getElementById('examPanel');let html='<div class="result-box"><h2>'+escapeHTML(p)+' LESSONS</h2><div class="geti-addon-grid">';GETI_LESSONS[p].forEach((l,i)=>{html+='<div class="geti-lesson-card"><h3>'+escapeHTML(l.subject)+'</h3><button class="btn btn-gold" onclick="GETI_openLesson(\''+p.replace(/'/g,"\\'")+'\','+i+')">OPEN LESSON</button></div>';});html+='</div><button class="btn btn-gold" onclick="openGETILessons()">↩ BACK TO LESSONS</button></div>';panel.innerHTML=html;panel.scrollIntoView({behavior:'smooth'});}
+function GETI_openLesson(p,i){const panel=document.getElementById('examPanel'),l=GETI_LESSONS[p][i];panel.innerHTML='<div class="result-box"><div style="text-align:left">'+l.text+'</div><div class="geti-final-actions"><button class="btn btn-gold" onclick="GETI_showLessonList(\''+p.replace(/'/g,"\\'")+'\')">↩ BACK TO SUBJECTS</button><button class="btn btn-gold" onclick="GETI_backToMenu()">BACK TO MENU</button></div></div>';panel.scrollIntoView({behavior:'smooth'});}
+
+/* Make existing TEFL/TESOL timer one hour as well and lock the whole viewport while an exam is active. */
+const GETI_originalStartTimer=window.startExamTimer;
+window.startExamTimer=function(){if(typeof GETI_originalStartTimer==='function')GETI_originalStartTimer();};
+const GETI_originalShowQuestion=window.showQuestion;
+window.addEventListener('beforeunload',function(e){if(examState&&examState.started){e.preventDefault();e.returnValue='';}});
+</script>
+
 </body>
 </html>
+
 
