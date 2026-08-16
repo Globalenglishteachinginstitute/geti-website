@@ -934,6 +934,52 @@ button,input,textarea{
     color:inherit !important;
 }
 
+
+/* =========================================================
+   CERTIFICATE VERIFICATION DECORATION
+========================================================= */
+.verify-congratulations{
+    position:relative;
+    overflow:hidden;
+    margin:18px 0 10px;
+    padding:22px 20px;
+    border:2px solid #b38a28;
+    border-radius:16px;
+    background:linear-gradient(135deg,#fffdf4,#f7f1df,#ffffff);
+    box-shadow:0 12px 30px rgba(7,29,58,.12);
+    text-align:center;
+}
+.verify-congratulations::before,
+.verify-congratulations::after{
+    content:'✦';
+    position:absolute;
+    color:#b38a28;
+    font-size:24px;
+}
+.verify-congratulations::before{left:18px;top:12px}
+.verify-congratulations::after{right:18px;bottom:12px}
+.verify-congratulations .verify-seal{
+    display:inline-flex;
+    width:54px;
+    height:54px;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    border:3px double #b38a28;
+    color:#0b2d5c;
+    background:#fff;
+    font-size:25px;
+    margin-bottom:8px;
+}
+.verify-congratulations h3{margin:4px 0;color:#0b2d5c;font-size:22px}
+.verify-congratulations p{margin:4px 0;color:#444}
+.verify-card.decorated{
+    border:2px solid #d4b35b;
+    border-radius:16px;
+    background:linear-gradient(145deg,#fff,#fbf8ef);
+    box-shadow:0 12px 30px rgba(7,29,58,.10);
+}
+
 /* SEARCH RESULTS */
 
 .result-search-section{
@@ -1132,31 +1178,31 @@ button,input,textarea{
 @media(max-width:700px){.video-interview{grid-template-columns:1fr}.exam-timer{top:70px}}
 
 </style>
+<style>
+/* =========================================================
+   GLOBAL TEXT SELECTION / COPY / CUT PROTECTION
+   Applies to the entire GETI website.
+========================================================= */
+* {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
+}
 
-<style id="anti-copy-protection">
-html, body, body * { -webkit-user-select:none !important; user-select:none !important; -webkit-touch-callout:none !important; }
-input, textarea, select, [contenteditable="true"] { -webkit-user-select:text !important; user-select:text !important; }
+input, textarea, select, button {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+img, video {
+    -webkit-user-drag: none !important;
+    user-drag: none !important;
+}
 </style>
-
-<script>
-(function(){
-  const blocked=(e)=>{
-    const t=e.target;
-    const editable=t && (t.matches?.('input,textarea,select,[contenteditable="true"]') || t.closest?.('input,textarea,select,[contenteditable="true"]'));
-    if(editable) return;
-    e.preventDefault(); e.stopPropagation(); return false;
-  };
-  ['copy','cut','contextmenu','dragstart','selectstart'].forEach(ev=>document.addEventListener(ev,blocked,true));
-  document.addEventListener('keydown',function(e){
-    const t=e.target;
-    const editable=t && (t.matches?.('input,textarea,select,[contenteditable="true"]') || t.closest?.('input,textarea,select,[contenteditable="true"]'));
-    if(editable) return;
-    const k=e.key.toLowerCase();
-    if((e.ctrlKey||e.metaKey) && ['c','x','a'].includes(k)){e.preventDefault();e.stopPropagation();return false;}
-    if(e.shiftKey && ['insert','delete'].includes(k)){e.preventDefault();e.stopPropagation();return false;}
-  },true);
-})();
-</script>
 </head>
 
 <body>
@@ -1971,7 +2017,12 @@ for(var i=0;i<results.length;i++){
 var c=results[i];
 
 html+=
-'<div class="verify-card" style="margin-top:18px;">'+
+'<div class="verify-congratulations">'+
+'<div class="verify-seal">✓</div>'+
+'<h3>🎉 Congratulations!</h3>'+
+'<p>The GETI certificate has been successfully verified.</p>'+
+'</div>'+
+'<div class="verify-card decorated" style="margin-top:18px;">'+
 '<div class="verified">✓ Certificate Verified</div>'+
 '<div class="verify-row"><div class="verify-label">Name</div><div class="verify-value">'+escapeHTML(c.name)+'</div></div>'+
 '<div class="verify-row"><div class="verify-label">Nationality</div><div class="verify-value">'+escapeHTML(c.nationality)+'</div></div>'+
@@ -2353,7 +2404,7 @@ question structures already present in the TEFL bank.
    EXAM STATE
 ========================================================= */
 
-const EXAM_DURATION_MS = 30 * 60 * 1000;
+const EXAM_DURATION_MS = 60 * 60 * 1000;
 let examTimerInterval=null;
 
 let examState={
@@ -2704,7 +2755,7 @@ document.addEventListener("touchmove",function(){
 },{passive:true});
 
 /* =========================================================
-   16-MINUTE EXAM TIMER
+   60-MINUTE EXAM TIMER
 ========================================================= */
 
 function startExamTimer(){
@@ -3801,11 +3852,11 @@ document
 
 /* =========================================================
    GETI MULTI-PROGRAM EXAM ENGINE — ADDITIONAL MODULE
-   30 MINUTES PER EXAM / AUTOMATIC COOLDOWNS / LESSONS
+   60 MINUTES PER EXAM / AUTOMATIC COOLDOWNS / LESSONS
 ========================================================= */
 (function(){
 const GETI_CERT_URL='https://script.google.com/macros/s/AKfycbw2C49JZfYzsWuTNvYKAOKlwjheuQd_Pw4LV4ybhosj90V6flGbnGG1xbpv-2uNXk1/exec';
-const GETI_DURATION=30*60*1000;
+const GETI_DURATION=60*60*1000;
 const GETI_COOLDOWN_FAIL3=5*60*1000;
 const GETI_COOLDOWN_PASS=15*60*1000;
 const GETI_BLACKLIST=10*60*1000;
@@ -3897,13 +3948,26 @@ let timer=null;
 function stop(){if(timer){clearInterval(timer);timer=null}}
 function start(){stop();state.startedAt=Date.now();state.timeExpired=false;updateTimer();timer=setInterval(updateTimer,250)}
 function updateTimer(){if(!state.started){stop();return}let left=Math.max(0,GETI_DURATION-(Date.now()-state.startedAt));let el=document.getElementById('getiTimer');if(el)el.textContent='TIME LEFT: '+fmt(left);if(left<=0){stop();finishTimedOut()}}
-function finishTimedOut(){if(!state.started||state.timeExpired)return;state.timeExpired=true;for(let si=state.subjectIndex;si<PROGRAM_SUBJECTS[state.program].length;si++){if(!state.subjectScores[si])state.subjectScores[si]={subject:PROGRAM_SUBJECTS[state.program][si],score:0,total:15,percentage:0,grade:'F'}}showFinal(true)}
+function finishTimedOut(){
+ if(!state.started||state.timeExpired)return;
+ state.timeExpired=true;
+ stop();
+ alert('⏰ TIME IS OVER. The examination will restart from the beginning with a new 60-minute timer.');
+ state.subjectIndex=0;
+ state.questionIndex=0;
+ state.answers=PROGRAM_SUBJECTS[state.program].map(()=>Array(15).fill(null));
+ state.subjectScores=[];
+ state.started=true;
+ state.timeExpired=false;
+ start();
+ showQuestion();
+}
 
 window.openExamRegistration=function(program){
  if(!PROGRAM_SUBJECTS[program])return alert('This examination is not available.');
  state={program,student:null,subjectIndex:0,questionIndex:0,answers:[],subjectScores:[],started:false,startedAt:0,timeExpired:false,mediaRecorder:null,recognition:null,speakingText:''};
  let panel=document.getElementById('examPanel');panel.style.display='block';
- panel.innerHTML=`<h2 class="exam-title">${escapeHTML(program)} EXAM</h2><p>30-minute examination. Complete the exam before the timer reaches zero.</p><div class="registration-form"><input id="regName" placeholder="Full Name"><input id="regEmail" type="email" placeholder="Email Address"><input id="regNationality" placeholder="Nationality"><input id="regCountry" placeholder="Country"><input id="regPhone" placeholder="Phone Number"><input id="regInstitution" placeholder="Institution / School"><button class="btn btn-gold" onclick="submitRegistration()">REGISTER & START ${escapeHTML(program)} EXAM</button></div>`;
+ panel.innerHTML=`<h2 class="exam-title">${escapeHTML(program)} EXAM</h2><p>60-minute examination. Complete the exam before the timer reaches zero.</p><div class="registration-form"><input id="regName" placeholder="Full Name"><input id="regEmail" type="email" placeholder="Email Address"><input id="regNationality" placeholder="Nationality"><input id="regCountry" placeholder="Country"><input id="regPhone" placeholder="Phone Number"><input id="regInstitution" placeholder="Institution / School"><button class="btn btn-gold" onclick="submitRegistration()">REGISTER & START ${escapeHTML(program)} EXAM</button></div>`;
  panel.scrollIntoView({behavior:'smooth'});
 }
 window.submitRegistration=function(){
@@ -3924,7 +3988,7 @@ function readingPassage(){return `Learning a language is not simply a matter of 
 window.showQuestion=function(){
  let subjects=PROGRAM_SUBJECTS[state.program],subject=subjects[state.subjectIndex],data=GETI_DATA[state.program][subject],q=data[state.questionIndex],selected=state.answers[state.subjectIndex][state.questionIndex];
  let panel=document.getElementById('examPanel');panel.classList.add('active');
- panel.innerHTML=`<div class="exam-timer" id="getiTimer">TIME LEFT: 30m 00s</div><div class="exam-meta"><span>${escapeHTML(state.program)}</span><span>Subject ${state.subjectIndex+1}/${subjects.length}</span><span>Question ${state.questionIndex+1}/15</span></div><h2 class="exam-title">${escapeHTML(subject)}</h2>${renderSpecialMedia(subject,q)}<div class="exam-question"><div class="question-text">${state.questionIndex+1}. ${escapeHTML(q[0])}</div><div id="optionsContainer"></div><div class="exam-controls"><button class="next-btn" onclick="nextExamQuestion()">${state.questionIndex===14?'SUBMIT SUBJECT':'NEXT QUESTION'}</button></div></div>`;
+ panel.innerHTML=`<div class="exam-timer" id="getiTimer">TIME LEFT: 60m 00s</div><div class="exam-meta"><span>${escapeHTML(state.program)}</span><span>Subject ${state.subjectIndex+1}/${subjects.length}</span><span>Question ${state.questionIndex+1}/15</span></div><h2 class="exam-title">${escapeHTML(subject)}</h2>${renderSpecialMedia(subject,q)}<div class="exam-question"><div class="question-text">${state.questionIndex+1}. ${escapeHTML(q[0])}</div><div id="optionsContainer"></div><div class="exam-controls"><button class="next-btn" onclick="nextExamQuestion()">${state.questionIndex===14?'SUBMIT SUBJECT':'NEXT QUESTION'}</button></div></div>`;
  let container=document.getElementById('optionsContainer');for(let i=1;i<=4;i++){let b=document.createElement('button');b.className='option';if(selected===i-1)b.classList.add('selected');b.innerHTML='<strong>'+String.fromCharCode(64+i)+'.</strong> '+escapeHTML(q[i]);b.onclick=()=>selectAnswer(i-1);container.appendChild(b)}
  updateTimer();panel.scrollIntoView({behavior:'smooth',block:'start'});
  if(state.program==='ENGLISH PROFICIENCY'&&subject==='Listening')setTimeout(speakListening,300);
@@ -3958,6 +4022,42 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 
 </script>
 
+
+<script>
+/* =========================================================
+   GLOBAL COPY / CUT / SELECT-ALL / TEXT-SELECTION PROTECTION
+========================================================= */
+(function () {
+    function block(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    }
+
+    ['copy', 'cut', 'contextmenu', 'selectstart', 'dragstart'].forEach(function (eventName) {
+        document.addEventListener(eventName, block, true);
+    });
+
+    document.addEventListener('keydown', function (e) {
+        const key = (e.key || '').toLowerCase();
+        const ctrlOrCmd = e.ctrlKey || e.metaKey;
+
+        // Ctrl/Cmd+A, C, X, and common selection/copy shortcuts
+        if (ctrlOrCmd && ['a', 'c', 'x'].includes(key)) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+
+        // Shift+Arrow / Ctrl+Shift+Arrow / Cmd+Shift+Arrow selection
+        if (e.shiftKey && ['arrowleft', 'arrowright', 'arrowup', 'arrowdown', 'home', 'end'].includes(key)) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    }, true);
+})();
+</script>
 </body>
 </html>
 
