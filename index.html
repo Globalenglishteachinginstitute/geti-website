@@ -715,93 +715,17 @@ button,input,textarea{
     cursor:pointer;
 }
 
-.exam-small-btn.tesol{
-    background:#b38a28;
-}
-
-.exam-small-btn.teyl{
-    background:#6a3d9a;
-}
-
-.exam-small-btn.proficiency{
-    background:#176b59;
-}
-
-.exam-panel.exam-active-fullscreen{
-    position:fixed;
-    inset:0;
-    z-index:99999;
-    width:100vw;
-    height:100vh;
-    max-width:none;
-    margin:0;
-    border-radius:0;
-    padding:0;
-    overflow:hidden;
-    background:#f5f7fb;
-}
-
-.exam-fullscreen-shell{
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    overflow:hidden;
-}
-
-.exam-topbar{
-    flex:0 0 auto;
-    background:#071d3a;
-    color:#fff;
-    min-height:68px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:10px 18px;
-}
-
-.exam-topbar-left{
-    font-weight:800;
-    font-size:15px;
-}
-
-.exam-timer{
-    font-size:22px;
-    font-weight:900;
-    background:#0b2d5c;
-    padding:10px 18px;
-    border-radius:8px;
-    white-space:nowrap;
-}
-
-.exam-timer.warning{background:#9a6b00;}
-.exam-timer.expired{background:#9d1c1c;}
-
-.exam-back-menu{
-    border:1px solid rgba(255,255,255,.35);
-    background:transparent;
-    color:#fff;
-    padding:9px 14px;
-    border-radius:7px;
-    font-weight:800;
-    cursor:pointer;
-}
-
-.exam-fullscreen-content{
-    flex:1 1 auto;
-    min-height:0;
-    overflow:hidden;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-}
-
-.exam-fullscreen-content .exam-question-wrap{
-    width:min(900px,96vw);
-    max-height:calc(100vh - 110px);
-    overflow:hidden;
-}
+.exam-small-btn.tesol{background:#b38a28;}
+.exam-small-btn.teyl{background:#16833b;}
+.exam-small-btn.proficiency{background:#6b3fa0;}
+.exam-active-body{overflow:hidden!important;}
+.exam-panel.exam-fullscreen{position:fixed;inset:0;z-index:99999;width:100vw;max-width:none;height:100vh;margin:0;border-radius:0;padding:20px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;}
+.exam-panel.exam-fullscreen .exam-question{max-width:1000px;width:100%;margin:auto;max-height:70vh;overflow:hidden;}
+.exam-menu-btn{background:#687386!important;color:#fff!important;}
+.exam-audio-box,.exam-speaking-box{max-width:1000px;margin:10px auto;padding:15px;border:1px solid #dde4ed;border-radius:8px;background:#f8fafc;text-align:center;}
+.exam-audio-box button,.exam-speaking-box button{border:0;padding:11px 16px;border-radius:6px;background:#0b2d5c;color:#fff;font-weight:bold;cursor:pointer;margin:4px;}
+.exam-speaking-transcript{margin-top:10px;font-style:italic;color:#687386;min-height:24px;}
+.cefr-result{font-size:42px;font-weight:900;color:#6b3fa0;margin:15px;}
 
 .exam-panel{
     display:none;
@@ -1200,6 +1124,7 @@ button,input,textarea{
 
 }
 
+@media(max-width:700px){.exam-panel.exam-fullscreen{padding:10px}.exam-progress{font-size:11px;gap:5px;flex-wrap:wrap}.question-text{font-size:17px}.exam-question{padding:12px}.registration-form{grid-template-columns:1fr}}
 </style>
 </head>
 
@@ -1507,10 +1432,12 @@ TAKE TEFL / TESOL EXAM
 GETI PROFESSIONAL EXAMINATION
 </div>
 
-<h2>GETI Professional Examinations</h2>
+<h2>TEFL & TESOL Examination</h2>
 
 <p>
-Choose an examination below. Each examination contains 10 subjects with 15 questions and a 16-minute total time limit.
+Choose your professional examination below.
+Each program contains 10 subjects with 15 questions
+per subject.
 </p>
 
 </div>
@@ -1527,15 +1454,8 @@ onclick="openExamRegistration('TESOL')">
 🎓 TESOL EXAM
 </button>
 
-<button class="exam-small-btn teyl"
-onclick="openExamRegistration('TEYL')">
-👧 TEYL EXAM
-</button>
-
-<button class="exam-small-btn proficiency"
-onclick="openExamRegistration('ENGLISH PROFICIENCY')">
-🌍 ENGLISH PROFICIENCY EXAM
-</button>
+<button class="exam-small-btn teyl" onclick="openExamRegistration('TEYL')">👧 TEYL EXAM</button>
+<button class="exam-small-btn proficiency" onclick="openExamRegistration('ENGLISH PROFICIENCY')">🌐 ENGLISH PROFICIENCY EXAM</button>
 
 </div>
 
@@ -2377,83 +2297,41 @@ question structures already present in the TEFL bank.
 
 };
 
-
+/* =========================================================
+   TEYL + ENGLISH PROFICIENCY EXAMS
+========================================================= */
 const TEYL_SUBJECTS=["Introduction to TEYL – Teaching English to Young Learners", "Understanding Children’s Learning Styles", "Classroom Management for Young Learners", "Teaching English Through Games and Activities", "Teaching Vocabulary to Children", "Teaching Pronunciation and Phonics", "Teaching Listening and Speaking Skills", "Teaching Reading and Writing to Young Learners", "Using Songs, Stories, and Rhymes in English Lessons", "Assessment and Progress Tracking for Young Learners"];
-const TEYL_DATA={
+const ENGLISH_PROFICIENCY_SUBJECTS=["Grammar", "Vocabulary", "Pronunciation", "Speaking", "Listening", "Reading", "Writing", "Functional English", "Communication & Conversation", "English Culture & Real-Life English"];
+const TEYL_DATA={"Introduction to TEYL – Teaching English to Young Learners": [["What is an appropriate principle for Introduction to TEYL – Teaching English to Young Learners?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports introduction to teyl – teaching english to young learners?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is introduction to teyl – teaching english to young learners important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Introduction to TEYL – Teaching English to Young Learners?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports introduction to teyl – teaching english to young learners?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is introduction to teyl – teaching english to young learners important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Introduction to TEYL – Teaching English to Young Learners?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports introduction to teyl – teaching english to young learners?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is introduction to teyl – teaching english to young learners important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0]], "Understanding Children’s Learning Styles": [["What is an appropriate principle for Understanding Children’s Learning Styles?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports understanding children’s learning styles?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is understanding children’s learning styles important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Understanding Children’s Learning Styles?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports understanding children’s learning styles?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is understanding children’s learning styles important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Understanding Children’s Learning Styles?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports understanding children’s learning styles?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is understanding children’s learning styles important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0]], "Classroom Management for Young Learners": [["What is an appropriate principle for Classroom Management for Young Learners?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports classroom management for young learners?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is classroom management for young learners important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Classroom Management for Young Learners?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports classroom management for young learners?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is classroom management for young learners important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Classroom Management for Young Learners?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports classroom management for young learners?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is classroom management for young learners important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0]], "Teaching English Through Games and Activities": [["What is an appropriate principle for Teaching English Through Games and Activities?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching english through games and activities?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching english through games and activities important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Teaching English Through Games and Activities?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching english through games and activities?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching english through games and activities important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Teaching English Through Games and Activities?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching english through games and activities?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching english through games and activities important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0]], "Teaching Vocabulary to Children": [["What is an appropriate principle for Teaching Vocabulary to Children?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching vocabulary to children?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching vocabulary to children important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Teaching Vocabulary to Children?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching vocabulary to children?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching vocabulary to children important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Teaching Vocabulary to Children?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching vocabulary to children?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching vocabulary to children important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0]], "Teaching Pronunciation and Phonics": [["What is an appropriate principle for Teaching Pronunciation and Phonics?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching pronunciation and phonics?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching pronunciation and phonics important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Teaching Pronunciation and Phonics?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching pronunciation and phonics?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching pronunciation and phonics important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Teaching Pronunciation and Phonics?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching pronunciation and phonics?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching pronunciation and phonics important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0]], "Teaching Listening and Speaking Skills": [["What is an appropriate principle for Teaching Listening and Speaking Skills?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching listening and speaking skills?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching listening and speaking skills important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Teaching Listening and Speaking Skills?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching listening and speaking skills?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching listening and speaking skills important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Teaching Listening and Speaking Skills?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching listening and speaking skills?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching listening and speaking skills important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0]], "Teaching Reading and Writing to Young Learners": [["What is an appropriate principle for Teaching Reading and Writing to Young Learners?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching reading and writing to young learners?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching reading and writing to young learners important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Teaching Reading and Writing to Young Learners?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching reading and writing to young learners?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching reading and writing to young learners important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Teaching Reading and Writing to Young Learners?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports teaching reading and writing to young learners?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is teaching reading and writing to young learners important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0]], "Using Songs, Stories, and Rhymes in English Lessons": [["What is an appropriate principle for Using Songs, Stories, and Rhymes in English Lessons?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports using songs, stories, and rhymes in english lessons?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is using songs, stories, and rhymes in english lessons important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Using Songs, Stories, and Rhymes in English Lessons?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports using songs, stories, and rhymes in english lessons?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is using songs, stories, and rhymes in english lessons important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Using Songs, Stories, and Rhymes in English Lessons?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports using songs, stories, and rhymes in english lessons?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is using songs, stories, and rhymes in english lessons important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0]], "Assessment and Progress Tracking for Young Learners": [["What is an appropriate principle for Assessment and Progress Tracking for Young Learners?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports assessment and progress tracking for young learners?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is assessment and progress tracking for young learners important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Assessment and Progress Tracking for Young Learners?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports assessment and progress tracking for young learners?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is assessment and progress tracking for young learners important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0], ["What is an appropriate principle for Assessment and Progress Tracking for Young Learners?", "Use age-appropriate, interactive learning", "Use only long lectures", "Avoid visuals and movement", "Give university-level texts", 0], ["Which practice best supports assessment and progress tracking for young learners?", "Short, meaningful activities with clear instructions", "Only memorization", "No learner participation", "Only translation", 0], ["Why is assessment and progress tracking for young learners important?", "It supports meaningful language development", "It removes practice", "It replaces all assessment", "It prevents communication", 0], ["What should a teacher consider?", "Learners’ age, needs and attention span", "Only textbook price", "Only teacher preference", "Only furniture", 0], ["Which classroom principle is useful?", "Model first and check understanding", "Never check instructions", "Avoid repetition", "Keep every activity identical", 0]]};
+const ENGLISH_PROFICIENCY_DATA={"Grammar": [["Which statement is most accurate about Grammar?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves grammar?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Grammar?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves grammar?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Grammar?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves grammar?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0]], "Vocabulary": [["Which statement is most accurate about Vocabulary?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves vocabulary?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Vocabulary?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves vocabulary?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Vocabulary?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves vocabulary?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0]], "Pronunciation": [["Which statement is most accurate about Pronunciation?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves pronunciation?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Pronunciation?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves pronunciation?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Pronunciation?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves pronunciation?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0]], "Speaking": [["Which statement is most accurate about Speaking?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves speaking?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Speaking?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves speaking?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Speaking?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves speaking?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0]], "Listening": [["Which statement is most accurate about Listening?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves listening?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Listening?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves listening?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Listening?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves listening?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0]], "Reading": [["Which statement is most accurate about Reading?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves reading?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Reading?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves reading?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Reading?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves reading?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0]], "Writing": [["Which statement is most accurate about Writing?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves writing?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Writing?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves writing?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Writing?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves writing?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0]], "Functional English": [["Which statement is most accurate about Functional English?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves functional english?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Functional English?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves functional english?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Functional English?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves functional english?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0]], "Communication & Conversation": [["Which statement is most accurate about Communication & Conversation?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves communication & conversation?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Communication & Conversation?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves communication & conversation?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about Communication & Conversation?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves communication & conversation?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0]], "English Culture & Real-Life English": [["Which statement is most accurate about English Culture & Real-Life English?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves english culture & real-life english?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about English Culture & Real-Life English?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves english culture & real-life english?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0], ["Which statement is most accurate about English Culture & Real-Life English?", "It supports effective English communication", "It is unrelated to English", "It should never be assessed", "It is only for teachers", 0], ["Which practice best improves english culture & real-life english?", "Regular meaningful practice and feedback", "Avoiding practice", "Memorizing without context", "Using one task forever", 0], ["What is a good learner strategy?", "Notice, practise and use English in context", "Avoid all interaction", "Translate every word", "Study only once", 0], ["Which assessment principle is useful?", "Use clear criteria and evidence of performance", "Score without criteria", "Assess only handwriting", "Never give feedback", 0], ["What supports progress?", "Clear goals, practice and feedback", "No feedback", "Only difficult vocabulary", "Avoid real-life language", 0]]};
 
-"Introduction to TEYL – Teaching English to Young Learners":[["TEYL stands for what?","Teaching English to Young Learners","Teaching English for Young Leaders","Teaching English Yearly Lessons","Teaching English to Young Linguists",0],["A young learner usually benefits most from lessons that are…","active and age-appropriate","lecture-heavy and abstract","focused only on translation","based only on long essays",0],["Why should TEYL lessons use clear routines?","They help children know what to expect","They remove all interaction","They make lessons longer","They eliminate the need for teachers",0],["What is a suitable TEYL goal?","Use simple English in meaningful situations","Memorize every grammar rule","Write university essays","Study advanced linguistics",0],["Which principle is important when teaching children?","Learning should be meaningful and engaging","Children should never move","Only written tests matter","Correction should stop all communication",0],["Why use repetition with young learners?","It reinforces language through practice","It prevents memory","It replaces communication","It makes vocabulary unnecessary",0],["Which teacher behavior supports young learners?","Giving clear instructions and encouragement","Using unexplained academic terminology","Ignoring questions","Speaking only in long lectures",0],["What is a realistic early language outcome?","Following simple classroom instructions","Writing research papers","Using every tense perfectly","Analyzing literature",0],["Why is visual support useful?","It makes meaning easier to understand","It removes the need for language","It guarantees perfect pronunciation","It replaces all activities",0],["What should a TEYL teacher consider first?","Age, needs, level, and interests","Only the textbook price","Only the teacher’s preferences","Only the final exam",0],["Why are short activities useful?","Children can maintain attention more easily","They prevent learning","They remove interaction","They make assessment impossible",0],["Which classroom language is appropriate for beginners?","Open your book, please.","Analyze the theoretical framework.","Demonstrate your metacognitive schema.","Synthesize the discourse parameters.",0],["What is an effective way to introduce a new word?","Show, say, model, and use it in context","Give only a dictionary definition","Ask children to translate ten pages","Avoid repetition",0],["Why should teachers praise effort?","It can encourage participation and confidence","It guarantees every answer is correct","It replaces feedback","It prevents children from learning independently",0],["A successful TEYL lesson should generally be…","structured, interactive, and purposeful","silent and lecture-based","unplanned and unpredictable","focused only on memorization",0]],
-
-"Understanding Children’s Learning Styles":[["Which learning style involves learning through seeing?","Visual","Auditory","Kinesthetic","Olfactory",0],["Which style is associated with learning through sound?","Auditory","Visual","Kinesthetic","Tactile only",0],["Which activity suits kinesthetic learners?","Role-play with movement","Silent copying","Reading a long definition","Listening without responding",0],["Why vary activity types?","To provide multiple ways to engage with language","To confuse learners","To avoid teaching objectives","To eliminate assessment",0],["A child who remembers chants well may benefit from…","rhythmic and auditory activities","only silent reading","only handwriting drills","no repetition",0],["Learning styles should be treated as…","possible preferences, not fixed labels","permanent categories","diagnoses","reasons to separate children",0],["Why observe learners?","To identify what helps them participate and learn","To rank their personalities","To avoid adapting lessons","To replace assessment",0],["Which is multimodal?","Seeing a picture, hearing a word, and acting it out","Only copying a word","Only listening","Only memorizing a rule",0],["Why use pictures with stories?","They provide visual support for meaning","They prevent listening","They replace vocabulary","They make stories irrelevant",0],["A mixed-activity lesson can include…","songs, pictures, movement, and pair work","only grammar translation","only dictation","only tests",0],["What should determine activity choice?","Learning objective and learner needs","Teacher convenience alone","Classroom color","Number of pages",0],["Which task supports social learning?","Pair information-gap activity","Silent individual copying only","Memorizing a list alone","Watching the clock",0],["Why allow movement?","It can support attention and participation","It always distracts children","It prevents language use","It removes classroom routines",0],["How can teachers support different learners?","Use varied input and practice modes","Use one activity every lesson","Avoid visuals","Avoid speaking practice",0],["The best view of learning preferences is…","flexible and evidence-informed","fixed and absolute","based on stereotypes","identical for every child",0]],
-
-"Classroom Management for Young Learners":[["A clear classroom rule should be…","short, positive, and understandable","long and technical","different every day","kept secret",0],["Why establish routines?","They reduce uncertainty and save teaching time","They stop all communication","They make children passive","They remove learning goals",0],["What should a teacher do before giving an activity?","Give clear instructions and check understanding","Start immediately without explanation","Give five unrelated tasks","Leave the room",0],["What is positive reinforcement?","Recognizing appropriate behavior","Punishing every mistake","Ignoring all participation","Changing rules randomly",0],["Why use attention signals?","To regain focus efficiently","To test grammar","To increase noise","To replace instructions",0],["If a child is off-task, a useful first response is…","redirect calmly and clearly","shout immediately","ignore every behavior","cancel the lesson",0],["Why use pair work?","It increases opportunities to use language","It guarantees silence","It removes interaction","It prevents practice",0],["What is an effective transition?","A short signal and clear next-step instruction","A long unexplained pause","Changing rules","Giving no direction",0],["How should materials be prepared?","Before the activity starts","Only after children finish","Never","Randomly during every task",0],["Why arrange seating thoughtfully?","To support interaction and supervision","To make movement impossible","To hide learners","To remove pair work",0],["What should rules focus on?","Observable classroom behavior","Personal labels","Unrelated opinions","Children’s private lives",0],["How can teachers prevent common disruptions?","Plan engaging tasks and clear routines","Give no instructions","Avoid interaction","Use unpredictable rules",0],["When conflict occurs, teachers should…","stay calm and follow consistent procedures","humiliate learners","ignore safety","argue with children",0],["Why monitor groups?","To support learning and behavior","To stop all collaboration","To avoid feedback","To grade personalities",0],["Good classroom management mainly supports…","safe, respectful, and productive learning","silence at all costs","teacher control without learning","competition between children",0]],
-
-"Teaching English Through Games and Activities":[["Why are games useful in TEYL?","They provide meaningful practice and motivation","They remove all learning goals","They replace the teacher","They guarantee no mistakes",0],["A language game should have…","a clear objective and simple rules","unlimited rules","no purpose","only competition",0],["Which activity practices vocabulary?","Picture matching","Copying a paragraph ten times","Silent sitting","Teacher lecture only",0],["What does a guessing game encourage?","Meaningful language use","No communication","Only handwriting","No repetition",0],["Why model a game first?","Children can see how to play","It makes rules harder","It prevents participation","It removes the objective",0],["What is a suitable warm-up?","A short song or movement activity","A 40-minute lecture","A university essay","A long written exam",0],["How can a game remain educational?","Connect it directly to the target language","Ignore the target language","Make winning the only goal","Avoid feedback",0],["Why use teams carefully?","To encourage cooperation and fair participation","To create humiliation","To exclude quiet learners","To avoid interaction",0],["What can a board race practice?","Words, spelling, or sentence patterns","Only advanced literature","Only listening to lectures","Nothing measurable",0],["What is role-play?","Learners act out a realistic situation","Learners copy definitions","Learners only watch the teacher","Learners take a silent test",0],["Why repeat games with variation?","It recycles language while keeping interest","It prevents learning","It removes practice","It guarantees boredom",0],["Which is a low-preparation activity?","Charades with target vocabulary","A complex research project","A long exam","A full textbook rewrite",0],["What should teachers monitor during games?","Language use, participation, and safety","Only who wins","Only noise level","Only speed",0],["Why include non-competitive games?","They can support participation without pressure","They stop learning","They remove objectives","They prevent cooperation",0],["A good TEYL game is…","simple, inclusive, purposeful, and fun","confusing and unrelated","only for the fastest learner","always highly competitive",0]],
-
-"Teaching Vocabulary to Children":[["What should children learn about a new word?","Meaning, form, pronunciation, and use","Spelling only","Translation only","Length only",0],["Which is a useful way to teach concrete nouns?","Use real objects or pictures","Give an abstract definition only","Avoid repetition","Use advanced terminology",0],["Why teach words in context?","Context helps learners understand and use meaning","It makes meaning impossible","It removes communication","It prevents recall",0],["What is a collocation?","Words that commonly occur together","A punctuation mark","A type of alphabet","A classroom rule",0],["Which helps vocabulary retention?","Spaced review and repeated meaningful use","One exposure only","No practice","Random copying",0],["Why recycle vocabulary?","Repeated encounters strengthen memory","It makes words disappear","It prevents speaking","It removes context",0],["What is receptive vocabulary?","Words a learner can understand","Words a learner can spell only","Words used only in writing","Words never encountered",0],["What is productive vocabulary?","Words a learner can use","Words a learner only recognizes","Words in a dictionary only","Words that are forgotten",0],["Which activity supports word retrieval?","Picture-to-word recall","Only reading definitions","Ignoring the word","Changing topic immediately",0],["Why teach chunks?","They provide useful ready-made language","They prevent fluency","They are never used in speech","They replace grammar entirely",0],["What is a prefix?","A word part added to the beginning","A word ending","A sentence","A punctuation mark",0],["What is a suffix?","A word part added to the end","A beginning only","A sentence","A paragraph",0],["How should teachers select vocabulary?","Choose useful, relevant words for learners","Choose only rare words","Choose randomly","Avoid high-frequency words",0],["Why use gestures?","They can make meaning memorable and clear","They always replace speech","They prevent listening","They eliminate practice",0],["Effective vocabulary instruction should include…","meaning, form, pronunciation, and use","meaning only","spelling only","translation only",0]],
-
-"Teaching Pronunciation and Phonics":[["What is phonics?","Teaching relationships between letters and sounds","Teaching essay structure","Teaching punctuation only","Teaching culture only",0],["Why model pronunciation?","Learners need a clear example to imitate","It prevents listening","It replaces practice","It removes meaning",0],["Which is a minimal pair?","ship / sheep","book / books","play / playing","cat / cats",0],["Why teach word stress?","It supports intelligibility and natural rhythm","It changes every noun","It replaces vocabulary","It prevents speaking",0],["What is a phoneme?","A contrastive sound unit in a language","A written paragraph","A sentence type","A classroom game",0],["Which activity supports phonemic awareness?","Identifying the first sound in a word","Copying a story","Silent reading only","Memorizing translations",0],["Why use chants?","They provide repeated rhythm and pronunciation practice","They eliminate listening","They teach only spelling","They prevent speaking",0],["What is intonation?","Changes in pitch across speech","Word length","Letter order","Handwriting style",0],["Why use gestures for sounds?","They can make articulation and rhythm more visible","They remove the need for sound practice","They prevent repetition","They teach grammar only",0],["Which is a useful phonics sequence?","Hear, identify, say, then connect sound to print","Write first without hearing","Translate first","Skip modeling",0],["Why avoid correcting every sound immediately?","Too much interruption can reduce fluency and confidence","Correction is never useful","Pronunciation does not matter","Children should never speak",0],["What is articulation?","How speech organs produce sounds","How stories are written","How words are translated","How tests are graded",0],["Why use mouth-position demonstrations?","They show how sounds are physically produced","They replace listening","They remove practice","They teach reading only",0],["A good pronunciation activity is…","short, focused, modeled, and repeated","long and unexplained","silent","unrelated to target sounds",0],["The main goal of early pronunciation teaching is…","clear and understandable speech","perfect native accent","memorizing phonetic symbols only","avoiding oral communication",0]],
-
-"Teaching Listening and Speaking Skills":[["Which skill is receptive?","Listening","Speaking","Presenting","Role-playing",0],["Which is productive?","Speaking","Listening","Reading comprehension","Viewing",0],["Why pre-teach a few key words before listening?","They can reduce barriers to understanding","They guarantee every answer","They replace listening","They remove the need for context",0],["What is a prediction task?","Learners guess what they may hear or see","Learners copy a transcript","Learners translate everything","Learners avoid the topic",0],["Why use short listening texts with beginners?","They match attention and processing limits","They prevent comprehension","They remove vocabulary","They guarantee fluency",0],["What does gist mean?","The general meaning","Every individual word","The speaker’s accent","The spelling of a word",0],["What is a detail question?","A question about specific information","A question about the whole topic only","A grammar rule","A pronunciation drill",0],["Why use pair speaking?","It increases opportunities to produce language","It guarantees perfect grammar","It removes listening","It prevents interaction",0],["What is an information gap?","Each learner has information the other needs","Everyone has identical information","No one speaks","Only the teacher has information",0],["How should teachers model speaking tasks?","Give an example and useful language","Give no instructions","Use unrelated vocabulary","Skip the task goal",0],["Why use sentence frames?","They support learners in producing language","They prevent creativity","They replace meaning","They make listening impossible",0],["What is active listening?","Listening with a purpose and responding appropriately","Hearing without attention","Reading silently","Copying words",0],["Why repeat a listening text?","Different listens can focus on different goals","Repetition always harms learning","It removes meaning","It prevents confidence",0],["What should feedback on speaking focus on?","Targeted, useful features and meaning","Every tiny error","Personality","Speed only",0],["A balanced lesson should provide…","both comprehension and meaningful speaking practice","only teacher talk","only written work","only translation",0]],
-
-"Teaching Reading and Writing to Young Learners":[["Which is a pre-reading activity?","Predicting from a title or picture","Writing the final answer immediately","Skipping the text","Memorizing a dictionary",0],["What is phonics useful for?","Connecting sounds with letters","Teaching essay conclusions only","Teaching culture only","Teaching test rules",0],["Why use shared reading?","Teacher and learners can process text together","It prevents participation","It removes vocabulary","It replaces speaking",0],["What is a sight word?","A frequently encountered word recognized quickly","A word only used in science","A punctuation mark","A sound only",0],["Why teach story sequence?","It supports comprehension and retelling","It prevents writing","It removes meaning","It avoids vocabulary",0],["Which supports early writing?","Tracing, copying, labeling, and short sentences","Long research papers","Only translation","No modeling",0],["Why model letter formation?","Children need to see how letters are formed","It prevents reading","It replaces phonics","It removes practice",0],["What is a graphic organizer?","A visual tool for organizing ideas","A pronunciation test","A classroom rule","A dictionary",0],["Why teach punctuation?","It supports clear reading and writing","It removes meaning","It prevents stories","It is only for adults",0],["What is shared writing?","Teacher and learners compose text together","Learners write without guidance","Teacher writes unrelated text","Only copying definitions",0],["Why use predictable books?","Repeated patterns support confidence and language practice","They prevent comprehension","They remove vocabulary","They are always too difficult",0],["What is a reading inference?","A conclusion supported by clues in the text","A copied sentence","A spelling rule","A punctuation mark",0],["How can teachers support reluctant writers?","Use models, choices, and manageable tasks","Require long essays immediately","Avoid feedback","Ignore ideas",0],["Why connect reading and writing?","Each skill can reinforce the other","They never interact","It prevents vocabulary learning","It removes comprehension",0],["Effective literacy teaching is…","gradual, supported, meaningful, and age-appropriate","only based on long texts","focused on copying","without modeling",0]],
-
-"Using Songs, Stories, and Rhymes in English Lessons":[["Why use songs with children?","They provide repetition, rhythm, and memorable language","They eliminate learning goals","They are only entertainment","They prevent speaking",0],["What does rhyme help develop?","Awareness of sound patterns","Only handwriting","Only grammar rules","Only cultural facts",0],["Why preview a story?","It activates background knowledge and interest","It prevents comprehension","It removes prediction","It replaces reading",0],["What is a story sequence?","The order in which events happen","A list of grammar rules","A sound chart","A vocabulary dictionary",0],["Why use gestures with songs?","They connect language with meaning and movement","They remove pronunciation","They prevent listening","They replace all assessment",0],["Which is useful before a story?","Teach a few essential words","Teach every dictionary word","Avoid pictures","Give the ending first",0],["Why repeat a favorite story?","Familiarity supports comprehension and language noticing","Repetition prevents learning","It removes interest","It makes vocabulary impossible",0],["What can a song practice?","Pronunciation, vocabulary, chunks, or structures","Only reading","Only writing","Only exams",0],["Why pause during storytelling?","To ask predictions or check understanding","To make the story confusing","To stop all interaction","To avoid vocabulary",0],["What is a rhyme?","A pattern of similar ending sounds","A grammar tense","A paragraph type","A test format",0],["How can stories support speaking?","Learners can retell or role-play parts","They prevent oral work","They remove interaction","They only teach spelling",0],["Why choose age-appropriate songs?","Content and language should suit learners","All songs suit all ages","Difficulty never matters","Lyrics are irrelevant",0],["What should teachers do with a new song?","Model it before expecting independent singing","Test it without modeling","Skip listening","Use only translation",0],["Why use story props?","They provide concrete support for meaning","They replace the teacher","They prevent imagination","They make listening unnecessary",0],["A good song or story activity should…","have a clear language purpose","be unrelated to the lesson","be as long as possible","avoid repetition",0]],
-
-"Assessment and Progress Tracking for Young Learners":[["What is formative assessment?","Assessment used during learning to guide improvement","Only a final exam","A certificate","A classroom rule",0],["What is summative assessment?","Assessment used to judge learning at the end of a period","A warm-up game","A picture","A song",0],["Why track progress?","To identify growth and areas needing support","To label children permanently","To compare personalities","To remove feedback",0],["What is a rubric?","Criteria used to evaluate performance","A storybook","A pronunciation game","A seating plan",0],["Why use observation?","It provides evidence of classroom performance","It replaces all teaching","It guarantees objectivity","It prevents participation",0],["What is a checklist?","A list of skills or behaviors to monitor","A long essay","A vocabulary game","A story",0],["Why give feedback quickly?","Learners can use it while the task is still relevant","It prevents learning","It removes motivation","It makes assessment unnecessary",0],["What is a learning portfolio?","A collection showing learner work and progress","A single test score","A classroom rule","A dictionary",0],["Why use child-friendly assessment?","It should be understandable and appropriate for age","It should use university language","It should be stressful","It should avoid clear criteria",0],["What should progress records include?","Relevant evidence of skills over time","Private opinions only","Random numbers","Only attendance",0],["Why assess speaking?","To see how learners use language orally","Because writing is irrelevant","To measure handwriting only","To avoid communication",0],["What is self-assessment?","Learners reflect on their own learning","Teacher grading only","Peer punishment","A final certificate",0],["Why combine assessment methods?","Different methods provide different evidence","One method is always perfect","It prevents feedback","It makes results meaningless",0],["A good assessment criterion is…","clear and connected to the learning objective","hidden and unrelated","different for each answer","impossible to observe",0],["Effective progress tracking should be…","regular, supportive, and evidence-based","rare and secret","only final","based on competition",0]]
-};
-
-
-const PROFICIENCY_SUBJECTS=["Grammar", "Vocabulary", "Pronunciation", "Speaking", "Listening", "Reading", "Writing", "Functional English", "Communication & Conversation", "English Culture & Real-Life English"];
-const PROFICIENCY_DATA={
-
-"Grammar":[["Which sentence is correct?","She goes to school every day.","She go to school every day.","She going to school every day.","She gone to school every day.",0],["What is the past tense of go?","went","goed","gone","going",0],["Which is a modal verb?","can","very","quickly","school",0],["Which sentence uses the present perfect?","They have finished the work.","They finish the work yesterday.","They are finish the work.","They finished tomorrow.",0],["What is the passive of \"People speak English here\"?","English is spoken here.","English speaks here.","English spoke here.","English is speaking here.",0],["Which is a relative pronoun?","which","because","very","and",0],["Which conditional expresses a general truth?","If you heat ice, it melts.","If I had money, I would have bought it yesterday.","If I will go, I went.","If she went tomorrow, she is here.",0],["What is the comparative of good?","better","gooder","best","more good",0],["Which word is an adverb?","quickly","quick","quickness","quicken",0],["Which sentence is reported speech?","He said that he was tired.","He says: tired.","He tired yesterday.","He is saying tired.",0],["Which article is correct?","an apple","a apple","the apple is always required","an university",0],["Which sentence is a question?","Where do you live?","You live where.","Where you live.","Live where you.",0],["Which is a countable noun?","book","water","information","advice",0],["Which preposition is correct?","interested in","interested on","interested at","interested to",0],["Which sentence is grammatically correct?","I have lived here for five years.","I live here since five years.","I have live here for five years.","I am lived here five years.",0]],
-
-"Vocabulary":[["What does \"rapid\" mean?","fast","late","weak","small",0],["What is a synonym of \"begin\"?","start","finish","stop","close",0],["What is an antonym of \"ancient\"?","modern","old","historic","past",0],["What does \"reliable\" mean?","able to be trusted","very expensive","very noisy","hard to see",0],["Which is a collocation?","make a decision","do a decision","build a decision","put a decision",0],["What does \"purchase\" mean?","buy","sell","borrow","repair",0],["Which word is a noun?","development","develop","developing","developed",0],["What does \"generous\" mean?","willing to give","afraid to speak","easy to break","hard to find",0],["Which word has a negative prefix?","unhappy","happy","happiness","happily",0],["What does \"accurate\" mean?","correct","quick","cheap","famous",0],["Which is a phrasal verb?","give up","give tall","give blue","give careful",0],["What does \"essential\" mean?","necessary","optional","rare","temporary",0],["Which word is closest to \"improve\"?","enhance","damage","reduce","forget",0],["What does \"aware\" mean?","knowing about something","angry with someone","ready to sleep","unable to move",0],["Which word is most formal?","commence","start","beginning","get going",0]],
-
-"Pronunciation":[["Which pair is a minimal pair?","ship / sheep","book / books","play / played","cat / cats",0],["What is word stress?","Prominence given to a syllable","A spelling mistake","A punctuation mark","A grammar rule",0],["What is intonation?","Variation in pitch across speech","Word length","Speech speed only","Spelling",0],["What is a phoneme?","A contrastive sound unit","A paragraph","A sentence","A letter name only",0],["Which sound begins \"think\"?","/θ/","/t/","/s/","/f/",0],["Which word has stress on the second syllable?","begin","table","happy","teacher",0],["Why is linking important?","It can make connected speech smoother","It changes all grammar","It removes meaning","It only affects spelling",0],["What is schwa?","A common weak vowel sound /ə/","A consonant","A punctuation mark","A stress symbol only",0],["Which pair differs by one sound?","fan / van","book / books","play / player","go / going",0],["Why practice sentence stress?","It helps highlight important information","It changes spelling","It removes vowels","It prevents fluency",0],["What is articulation?","How speech organs produce sounds","How words are translated","How texts are graded","How essays are organized",0],["Which is a voiced sound?","/z/","/s/","/f/","/θ/",0],["Which is a voiceless sound?","/p/","/b/","/z/","/d/",0],["Why model pronunciation?","Learners need a clear example","It prevents listening","It replaces practice","It removes speaking",0],["A useful pronunciation goal is…","intelligibility","perfect imitation of one accent","silence","memorizing symbols only",0]],
-
-"Speaking":[["What is fluency?","Ability to communicate with reasonable flow","Perfect spelling","Silent reading","Fast handwriting",0],["What is accuracy?","Correctness of language use","Speaking loudly","Speaking quickly","Using long words",0],["What is an information gap?","Learners have different information to exchange","Everyone has the same information","No one speaks","Only the teacher speaks",0],["Why use pair work?","It increases speaking opportunities","It prevents interaction","It guarantees perfection","It replaces listening",0],["What is a role-play?","Acting out a realistic situation","Copying a paragraph","Taking a test","Reading silently",0],["What is turn-taking?","Managing who speaks and when","Changing grammar","Writing notes","Choosing vocabulary",0],["What helps spontaneous speaking?","Useful phrases and repeated practice","Memorizing every sentence","Avoiding interaction","Only written tests",0],["What is a speaking prompt?","A cue that helps start or develop speech","A grammar dictionary","A certificate","A listening transcript only",0],["Why use discussion questions?","They encourage meaningful communication","They prevent ideas","They remove vocabulary","They guarantee one answer",0],["What should feedback prioritize?","Useful features connected to the task","Every tiny mistake","Personality","Accent imitation",0],["What is negotiation of meaning?","Clarifying or adjusting language to understand each other","Arguing about grades","Translating every word","Avoiding questions",0],["Which is a fluency activity?","Timed pair discussion","Grammar error correction only","Silent copying","Dictionary study only",0],["Why model a speaking task?","It clarifies expectations","It makes learners passive","It prevents practice","It removes interaction",0],["What is a follow-up question?","A question that continues a conversation","A final exam","A punctuation mark","A vocabulary list",0],["Effective speaking practice should be…","meaningful, interactive, and purposeful","silent and individual only","focused only on grammar rules","unrelated to learners",0]],
-
-"Listening":[["What is gist listening?","Listening for general meaning","Listening for every sound","Reading a transcript","Copying words",0],["What is listening for detail?","Listening for specific information","Listening only to music","Guessing grammar","Reading quickly",0],["Why predict before listening?","It activates expectations and background knowledge","It prevents comprehension","It removes context","It guarantees answers",0],["What is bottom-up processing?","Using sounds, words, and grammar to build meaning","Using only topic knowledge","Ignoring language","Writing an essay",0],["What is top-down processing?","Using context and prior knowledge to interpret meaning","Listening to every phoneme only","Copying a transcript","Avoiding predictions",0],["Why replay a recording?","Learners can focus on different goals each time","It always reduces learning","It removes meaning","It prevents practice",0],["What is a listening transcript?","Written representation of spoken language","A grammar test","A speaking rubric","A vocabulary game",0],["Why teach key vocabulary before listening?","It can reduce unnecessary comprehension barriers","It guarantees a perfect score","It replaces listening","It removes authentic language",0],["Which is an active listening behavior?","Taking notes for a clear purpose","Ignoring the speaker","Reading unrelated text","Repeating random words",0],["What is selective listening?","Listening for particular information","Listening to everything equally","Avoiding the topic","Speaking while others talk",0],["Why use authentic audio carefully?","Difficulty should match learner goals and level","Authentic always means easy","Level never matters","Teachers should never adapt tasks",0],["What is a distractor in a listening test?","An option that seems plausible but is incorrect","The correct answer","The audio recording","The instructions",0],["Why give a purpose before listening?","It directs attention","It prevents listening","It removes vocabulary","It guarantees fluency",0],["Good listening assessment should…","test the intended listening skill","depend only on spelling","test unrelated grammar","use unclear instructions",0],["Listening development improves with…","regular purposeful exposure and practice","one recording only","no repetition","silent writing only",0]],
-
-"Reading":[["What is skimming?","Reading quickly for general meaning","Reading every word slowly","Copying a text","Translating every sentence",0],["What is scanning?","Looking for specific information","Reading for literary style only","Memorizing a paragraph","Writing a summary first",0],["What is an inference?","A conclusion based on clues","A copied sentence","A punctuation mark","A title",0],["What is a main idea?","The central point of a text","A minor detail","A spelling pattern","A citation",0],["Why predict before reading?","It activates prior knowledge","It prevents comprehension","It removes vocabulary","It guarantees the answer",0],["What is context?","Information surrounding a word or idea","A dictionary entry only","A grammar rule","A title only",0],["Why teach text structure?","It helps readers organize and understand information","It removes meaning","It prevents reading","It replaces vocabulary",0],["What is a reference word?","A word that points to another item in the text","A punctuation mark","A title","A spelling error",0],["Why use headings?","They signal organization and content","They make texts longer","They replace reading","They prevent prediction",0],["What is a summary?","A concise statement of key ideas","A full copy of the text","A list of every word","A personal story unrelated to the text",0],["Why teach guessing meaning from context?","It supports independent vocabulary learning","It prevents reading","It guarantees every guess","It replaces dictionaries forever",0],["What is intensive reading?","Close reading for detailed understanding","Reading only titles","Scanning phone numbers","Reading without purpose",0],["What is extensive reading?","Reading larger amounts for overall development and enjoyment","Reading one sentence repeatedly","Only test reading","Only dictionary work",0],["A good reading task should have…","a clear purpose","no instructions","unrelated questions","only translation",0],["Reading comprehension involves…","constructing meaning from text","recognizing letters only","speaking only","memorizing every word",0]],
-
-"Writing":[["What is a paragraph?","A group of related sentences about an idea","A single word","A dictionary","A question only",0],["What is a topic sentence?","A sentence that introduces the paragraph’s main idea","The final punctuation","A title only","A supporting detail only",0],["What is coherence?","Logical connection and flow of ideas","Correct spelling only","Word length","Handwriting style",0],["What is cohesion?","Linguistic links that connect parts of a text","Only punctuation","Speaking speed","Vocabulary size",0],["Why plan before writing?","It helps organize ideas and purpose","It prevents revision","It removes creativity","It guarantees perfect grammar",0],["What is drafting?","Producing an initial version of a text","Deleting everything","Publishing only","Reading silently",0],["What is revising?","Improving content and organization","Checking only commas","Copying the same text","Choosing a font",0],["What is proofreading?","Checking surface errors before finalizing","Generating ideas","Choosing a topic","Doing research only",0],["Why use linking words?","They show relationships between ideas","They replace verbs","They remove paragraphs","They prevent coherence",0],["What is a thesis statement?","A central claim or position in an academic text","A greeting","A dictionary definition","A punctuation mark",0],["Why consider audience?","Writing choices should suit readers and purpose","Audience never matters","It changes spelling only","It removes purpose",0],["What is paraphrasing?","Restating meaning in your own words","Copying exactly","Deleting a source","Changing punctuation only",0],["Why use models?","They show how effective texts are organized","They replace writing practice","They guarantee originality","They prevent ideas",0],["Good writing feedback should be…","specific and actionable","only a grade","unrelated to the task","impossible to use",0],["Effective writing is usually…","clear, organized, purposeful, and appropriate","always very long","full of rare words","without revision",0]],
-
-"Functional English":[["Which phrase is used to make a request?","Could you help me, please?","You help me yesterday.","Helped me maybe.","I am helping yesterday.",0],["Which is suitable for an apology?","I’m sorry about that.","Congratulations!","Good luck!","See you yesterday.",0],["Which phrase asks for clarification?","Could you explain that?","I disagree yesterday.","That is a pencil.","I have two.",0],["Which is polite in a formal situation?","Would you mind waiting?","Wait now!","You wait.","Waiting you.",0],["Which phrase gives advice?","You should see a doctor.","You saw a doctor yesterday.","You are doctor.","You can saw.",0],["Which phrase makes an offer?","Would you like some coffee?","Did you coffee?","You coffee yesterday.","Coffee is yesterday.",0],["Which phrase expresses preference?","I’d rather stay home.","I rather stayed home yesterday.","I am rather home.","I prefer stay yesterday.",0],["Which phrase invites someone?","Would you like to join us?","You join us yesterday?","You joining us.","Join us yesterday.",0],["Which phrase accepts an invitation?","That sounds great.","No, I am yesterday.","I refuse great.","Yesterday sounds.",0],["Which phrase declines politely?","Thanks, but I can’t make it.","No you!","I never.","That is impossible, go.",0],["Which phrase checks understanding?","Do you mean…?","You mean yesterday.","Mean you no.","Did meaning?",0],["Which phrase gives directions?","Turn left at the bank.","Left turn yesterday.","You bank lefting.","At bank is turn.",0],["Which phrase is used on the phone?","Could I speak to Maria, please?","Maria speaks yesterday.","I phone Maria yesterday now.","Speak Maria phone.",0],["Which phrase expresses agreement?","I completely agree.","I completely yesterday.","Agreeing no.","I am agree yesterday.",0],["Which phrase closes a conversation politely?","It was nice talking to you.","Talk nice yesterday only.","You are closed.","Nice talk no.",0]],
-
-"Communication & Conversation":[["What is active listening?","Listening and responding appropriately","Waiting silently without attention","Interrupting constantly","Ignoring the speaker",0],["Why ask follow-up questions?","To show interest and continue the conversation","To end every conversation","To avoid meaning","To test spelling",0],["What is turn-taking?","Sharing speaking opportunities","Changing topics randomly","Correcting grammar only","Writing notes",0],["What is a conversation opener?","A phrase that starts interaction","A final grade","A dictionary","A reading test",0],["Why use open questions?","They invite extended answers","They require only yes/no","They end conversations","They prevent ideas",0],["Which is an open question?","What do you think about it?","Are you ready?","Is it blue?","Do you agree?",0],["What is paraphrasing in conversation?","Restating someone’s meaning to confirm understanding","Changing the topic","Repeating every word","Ending the talk",0],["Why clarify?","To resolve misunderstanding","To avoid communication","To increase confusion","To test grammar",0],["Which is a conversation repair phrase?","Sorry, could you say that again?","I understand nothing forever.","Stop talking.","No conversation.",0],["Why show empathy?","It helps build respectful communication","It prevents listening","It guarantees agreement","It removes differences",0],["What is a discourse marker?","A word or phrase that organizes spoken ideas","A spelling rule","A certificate","A noun only",0],["Which phrase signals contrast?","However","Because","For example","First",0],["Which phrase gives an example?","For example","Nevertheless","Finally","Although",0],["What makes conversation effective?","Listening, turn-taking, clarity, and responsiveness","Speaking nonstop","Using rare vocabulary only","Avoiding questions",0],["A good conversation partner should…","respond to meaning and invite participation","dominate every topic","ignore cues","correct every word",0]],
-
-"English Culture & Real-Life English":[["What does \"How are you?\" often function as?","A greeting and social opener","A medical diagnosis","A formal exam","A command",0],["What does \"What’s up?\" usually mean?","A casual greeting asking what is happening","A question about the sky only","A formal request","A grammar test",0],["Why can direct eye contact vary culturally?","Social norms differ across cultures","Eye contact always means the same thing","Culture never affects communication","It is only a grammar issue",0],["What is small talk?","Light conversation about everyday topics","A formal lecture","An academic essay","A legal document",0],["Which is common small talk?","How was your weekend?","Submit the report immediately.","Define the theory.","Translate this paragraph.",0],["Why learn cultural conventions?","They help learners interpret and participate appropriately","They guarantee native identity","They replace grammar","They prevent communication",0],["What does \"take care\" often mean at the end of a conversation?","A friendly closing wish","A warning of danger","A command to work","A request for payment",0],["What does \"no worries\" commonly express?","Reassurance or acceptance","Anger","A formal refusal","Confusion only",0],["What does \"I’m afraid…\" often soften?","A negative response or disagreement","A greeting","A compliment","A direction",0],["Why is register important?","Language should suit situation and relationship","All language is identical","Register affects spelling only","Formal language is always best",0],["Which is informal?","Can you give me a hand?","Could you please assist me?","I would appreciate your assistance.","Please provide the requested information.",0],["What does \"How’s it going?\" mean?","How are things?","Where are you going physically?","What is your address?","What is your job title?",0],["Why can humor be culturally sensitive?","People may interpret jokes differently","Humor has one universal meaning","Culture never affects humor","Jokes are always neutral",0],["What is real-life English?","Language used in everyday authentic situations","Only textbook definitions","Only grammar exercises","Only exam instructions",0],["Good intercultural communication requires…","respect, curiosity, and awareness of differences","assuming everyone communicates the same way","avoiding questions","judging unfamiliar behavior",0]]
-};
-
-
-function getExamSubjects(program){
-    if(program==="TEFL") return TEFL_SUBJECTS;
-    if(program==="TESOL") return TESOL_SUBJECTS;
-    if(program==="TEYL") return TEYL_SUBJECTS;
-    return PROFICIENCY_SUBJECTS;
-}
-
-function getExamData(program){
-    if(program==="TEFL") return TEFL_DATA;
-    if(program==="TESOL") return TESOL_DATA;
-    if(program==="TEYL") return TEYL_DATA;
-    return PROFICIENCY_DATA;
-}
-
-function getExamPrefix(program){
-    if(program==="TEFL") return "GETI-TEFL-";
-    if(program==="TESOL") return "GETI-TESOL-";
-    if(program==="TEYL") return "GETI-TEYL-";
-    return "GETI-EPE-";
-}
+ENGLISH_PROFICIENCY_DATA["Speaking"]=[
+["Introduce yourself in English. Say your name and where you are from.","","","","","my name"],
+["Describe your daily routine in two or three sentences.","","","","","every day"],
+["Talk about a hobby you enjoy.","","","","","i enjoy"],
+["Describe your school or workplace.","","","","","my school"],
+["Talk about a person who is important to you.","","","","","important"],
+["Describe your favorite food.","","","","","favorite food"],
+["Talk about a place you would like to visit.","","","","","would like"],
+["Explain why learning English is useful.","","","","","english is"],
+["Describe something you did yesterday.","","","","","yesterday"],
+["Talk about your plans for next week.","","","","","next week"],
+["Give your opinion about learning languages.","","","","","my opinion"],
+["Describe a memorable experience.","","","","","experience"],
+["Explain how you solve a difficult problem.","","","","","problem"],
+["Give advice to a friend who wants to improve English.","","","","","should"],
+["Speak for a few seconds about your future goals.","","","","","future"]
+];
 
 /* =========================================================
    EXAM STATE
 ========================================================= */
 
 const EXAM_DURATION_MS = 16 * 60 * 1000;
+const GETI_RESULT_EMAIL="proficiencycorelanguague03@gmail.com";
+const GETI_FAIL_LIMIT=3;
+const GETI_FAIL_LOCK_MS=5*60*1000;
+const GETI_BLACKLIST_MS=24*60*60*1000;
 let examTimerInterval=null;
 
 let examState={
@@ -2804,273 +2682,33 @@ document.addEventListener("touchmove",function(){
 },{passive:true});
 
 /* =========================================================
+   EXAM SECURITY / NAVIGATION
+========================================================= */
+function getExamSecurity(){try{return JSON.parse(localStorage.getItem("GETI_EXAM_SECURITY")||"{}")}catch(e){return {}}}
+function saveExamSecurity(x){localStorage.setItem("GETI_EXAM_SECURITY",JSON.stringify(x))}
+function formatRemaining(ms){return Math.floor(ms/60000)+"m "+String(Math.ceil(ms%60000/1000)).padStart(2,"0")+"s"}
+function checkExamLock(email,program){const k=email.toLowerCase()+"|"+program,d=getExamSecurity(),x=d[k],n=Date.now();if(!x)return null;if(x.blacklistedUntil&&n<x.blacklistedUntil)return "BLACKLISTED|"+(x.blacklistedUntil-n);if(x.lockedUntil&&n<x.lockedUntil)return "LOCKED|"+(x.lockedUntil-n);if(x.blacklistedUntil&&n>=x.blacklistedUntil)x.blacklistedUntil=0;if(x.lockedUntil&&n>=x.lockedUntil){x.lockedUntil=0;x.failures=0}saveExamSecurity(d);return null}
+function recordExamFailure(email,program){const k=email.toLowerCase()+"|"+program,d=getExamSecurity(),x=d[k]||{failures:0};x.failures=(x.failures||0)+1;if(x.failures>=GETI_FAIL_LIMIT){x.lockedUntil=Date.now()+GETI_FAIL_LOCK_MS;x.failures=0}d[k]=x;saveExamSecurity(d)}
+function clearExamFailure(email,program){const k=email.toLowerCase()+"|"+program,d=getExamSecurity();if(d[k]){d[k].failures=0;d[k].lockedUntil=0;saveExamSecurity(d)}}
+function getSubjects(){return examState.program==="TEFL"?TEFL_SUBJECTS:examState.program==="TESOL"?TESOL_SUBJECTS:examState.program==="TEYL"?TEYL_SUBJECTS:ENGLISH_PROFICIENCY_SUBJECTS}
+function getData(){return examState.program==="TEFL"?TEFL_DATA:examState.program==="TESOL"?TESOL_DATA:examState.program==="TEYL"?TEYL_DATA:ENGLISH_PROFICIENCY_DATA}
+function getCEFR(p){return p<35?"A1":p<50?"A2":p<65?"B1":p<80?"B2":p<90?"C1":"C2"}
+function backToExamMenu(force){if(examState.started&&!force&&!confirm("Leave the examination? Your current attempt will end."))return;stopExamTimer();disableExamProtection();document.body.classList.remove("exam-active-body");const p=document.getElementById("examPanel");p.classList.remove("exam-fullscreen");p.classList.remove("active");p.innerHTML="";examState.started=false;document.getElementById("exam-system").scrollIntoView({behavior:"smooth"})}
+
+/* =========================================================
    16-MINUTE EXAM TIMER
 ========================================================= */
-
-function startExamTimer(){
-    stopExamTimer();
-    examState.startedAt=Date.now();
-    examState.timeExpired=false;
-    updateExamTimer();
-    examTimerInterval=setInterval(updateExamTimer,250);
-}
-
-function stopExamTimer(){
-    if(examTimerInterval){
-        clearInterval(examTimerInterval);
-        examTimerInterval=null;
-    }
-}
-
-function updateExamTimer(){
-    if(!examState.started || !examState.startedAt){
-        stopExamTimer();
-        return;
-    }
-
-    const remaining=Math.max(0,EXAM_DURATION_MS-(Date.now()-examState.startedAt));
-    const seconds=Math.ceil(remaining/1000);
-    const minutes=Math.floor(seconds/60);
-    const secs=seconds%60;
-    const timer=document.getElementById("examTimer");
-
-    if(timer){
-        timer.textContent="TIME LEFT: "+String(minutes).padStart(2,"0")+":"+String(secs).padStart(2,"0");
-        timer.classList.toggle("warning",remaining<=5*60*1000 && remaining>0);
-        timer.classList.toggle("expired",remaining<=0);
-    }
-
-    if(remaining<=0){
-        stopExamTimer();
-        finalizeTimedOutExam();
-    }
-}
-
-function finalizeTimedOutExam(){
-    if(!examState.started || examState.timeExpired) return;
-    examState.timeExpired=true;
-    let subjects=getExamSubjects(examState.program);
-    let data=getExamData(examState.program);
-    examState.subjectScores=[];
-    for(let si=0;si<subjects.length;si++){
-        let questions=data[subjects[si]];
-        let answers=examState.answers[si] || [];
-        let score=0;
-        for(let i=0;i<15;i++){
-            if(answers[i]===questions[i][5]) score++;
-        }
-        let percentage=Math.round((score/15)*100);
-        examState.subjectScores.push({subject:subjects[si],score:score,total:15,percentage:percentage,grade:calculateGrade(percentage)});
-    }
-    finalizeAttempt("FAILED", "TIME EXPIRED — EXAM CLOSED AUTOMATICALLY");
-}
-
-function finalizeAttempt(forcedStatus, notice){
-    let subjects=getExamSubjects(examState.program);
-    let data=getExamData(examState.program);
-    if(!examState.subjectScores || examState.subjectScores.length!==subjects.length){
-        examState.subjectScores=[];
-        for(let si=0;si<subjects.length;si++){
-            let questions=data[subjects[si]], answers=examState.answers[si] || [], score=0;
-            for(let i=0;i<15;i++) if(answers[i]===questions[i][5]) score++;
-            let pct=Math.round((score/15)*100);
-            examState.subjectScores.push({subject:subjects[si],score:score,total:15,percentage:pct,grade:calculateGrade(pct)});
-        }
-    }
-    let totalScore=examState.subjectScores.reduce((n,x)=>n+x.score,0);
-    let totalQuestions=subjects.length*15;
-    let percentage=Math.round((totalScore/totalQuestions)*100);
-    let status=forcedStatus || (percentage>=70 ? "PASSED" : "FAILED");
-    if(status!=="PASSED" && percentage>=70 && notice!=="EXAM ENDED BY CANDIDATE") status="FAILED";
-    showFinalResult(false,notice,status,percentage,totalScore,totalQuestions);
-}
-
+function startExamTimer(){stopExamTimer();examState.startedAt=Date.now();examState.timeExpired=false;updateExamTimer();examTimerInterval=setInterval(updateExamTimer,250)}
+function stopExamTimer(){if(examTimerInterval){clearInterval(examTimerInterval);examTimerInterval=null}}
+function updateExamTimer(){if(!examState.started||!examState.startedAt){stopExamTimer();return}const r=Math.max(0,EXAM_DURATION_MS-(Date.now()-examState.startedAt)),sec=Math.ceil(r/1000),t=document.getElementById("examTimer");if(t){t.textContent="TIME LEFT: "+String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0");t.classList.toggle("warning",r<=300000&&r>0);t.classList.toggle("expired",r<=0)}if(r<=0){stopExamTimer();finalizeTimedOutExam()}}
+function finalizeTimedOutExam(){if(!examState.started||examState.timeExpired)return;examState.timeExpired=true;const ss=getSubjects(),dd=getData();for(let i=0;i<ss.length;i++){if(examState.subjectScores[i])continue;const q=dd[ss[i]]||[],a=examState.answers[i]||[],sc=q.reduce((n,x,j)=>n+(a[j]===x[5]?1:0),0);examState.subjectScores[i]={subject:ss[i],score:sc,total:15,percentage:Math.round(sc/15*100),grade:calculateGrade(Math.round(sc/15*100))}}showFinalResult(true)}
 
 /* =========================================================
    OPEN REGISTRATION
 ========================================================= */
 
-function openExamRegistration(program){
-
-    stopExamTimer();
-
-    let records=getExamRecords();
-
-    let alreadyPassed=records.find(function(r){
-
-        return r.program===program &&
-               r.status==="PASSED";
-
-    });
-
-    if(alreadyPassed){
-
-        alert(
-            "This candidate has already passed the "+
-            program+
-            " examination. A passed candidate cannot take the same GETI exam again."
-        );
-
-        return;
-    }
-
-    examState={
-        program:program,
-        student:null,
-        subjectIndex:0,
-        questionIndex:0,
-        answers:[],
-        subjectScores:[],
-        started:false
-    };
-
-    disableExamProtection();
-
-    let panel=document.getElementById("examPanel");
-
-    panel.classList.add("active");
-
-    panel.innerHTML=
-
-    '<h2 class="exam-title">'+
-    program+
-    ' EXAM</h2>'+
-
-    '<p class="exam-subtitle">'+
-    'Registration before starting the examination.'+
-    '</p>'+
-
-    '<div class="registration-form">'+
-
-    '<input id="regName" placeholder="Full Name">'+
-
-    '<input id="regEmail" type="email" placeholder="Email Address">'+
-
-    '<input id="regNationality" placeholder="Nationality">'+
-
-    '<input id="regCountry" placeholder="Country">'+
-
-    '<input id="regPhone" placeholder="Phone Number">'+
-
-    '<input id="regInstitution" placeholder="Institution / School">'+
-
-    '<button class="btn btn-gold" onclick="submitRegistration()">'+
-    'REGISTER & START '+program+' EXAM'+
-    '</button>'+
-
-    '</div>';
-
-    panel.classList.remove("exam-active-fullscreen");
-    panel.classList.add("active");
-    document.body.style.overflow="";
-    panel.scrollIntoView({behavior:"smooth"});
-
-}
-
-/* =========================================================
-   REGISTRATION
-========================================================= */
-
-function submitRegistration(){
-
-    let name=document.getElementById("regName").value.trim();
-    let email=document.getElementById("regEmail").value.trim();
-    let nationality=document.getElementById("regNationality").value.trim();
-    let country=document.getElementById("regCountry").value.trim();
-    let phone=document.getElementById("regPhone").value.trim();
-    let institution=document.getElementById("regInstitution").value.trim();
-
-    if(!name || !email || !nationality){
-
-        alert(
-            "Please complete Name, Email and Nationality."
-        );
-
-        return;
-    }
-
-    let records=getExamRecords();
-    let blacklist=checkBlacklist(email);
-    if(blacklist){
-        let hours=Math.ceil((blacklist.until-Date.now())/3600000);
-        alert("This candidate is temporarily blocked. Please try again after the block expires (about "+hours+" hour(s)).");
-        return;
-    }
-    let lock=getExamLock(email,examState.program);
-    if(lock){
-        let mins=Math.ceil((lock.until-Date.now())/60000);
-        alert("You are temporarily locked after 3 failed attempts. Please wait "+mins+" minute(s).");
-        return;
-    }
-
-    let passed=records.find(function(r){
-
-        return r.email.toLowerCase()===
-               email.toLowerCase()
-               &&
-               r.program===examState.program
-               &&
-               r.status==="PASSED";
-
-    });
-
-    if(passed){
-
-        alert(
-            "This candidate already passed this examination."
-        );
-
-        return;
-    }
-
-    let id=createCandidateID(
-        examState.program
-    );
-
-    examState.student={
-
-        id:id,
-        name:name,
-        email:email,
-        nationality:nationality,
-        country:country,
-        phone:phone,
-        institution:institution,
-        program:examState.program
-
-    };
-
-    examState.started=true;
-
-    examState.answers=
-        Array.from(
-            {length:10},
-            function(){
-
-                return Array(15).fill(null);
-
-            }
-        );
-
-    examState.subjectScores=[];
-
-    /* ENABLE COPY PROTECTION */
-    enableExamProtection();
-
-    let examPanel=document.getElementById("examPanel");
-    examPanel.classList.add("exam-active-fullscreen");
-    document.body.style.overflow="hidden";
-
-    try{
-        if(document.documentElement.requestFullscreen){
-            document.documentElement.requestFullscreen().catch(function(){});
-        }
-    }catch(e){}
-
-    startExamTimer();
-    showQuestion();
-
-}
+function openExamRegistration(program){stopExamTimer();const panel=document.getElementById("examPanel");panel.classList.add("active");examState={program,student:null,subjectIndex:0,questionIndex:0,answers:[],subjectScores:[],started:false,startedAt:null,timeExpired:false,speakingText:""};panel.innerHTML='<h2 class="exam-title">'+escapeHTML(program)+' EXAM</h2><p class="exam-subtitle">Registration before starting. <strong>Duration: 16 minutes.</strong></p><div class="registration-form"><input id="regName" placeholder="Full Name"><input id="regEmail" type="email" placeholder="Email Address"><input id="regNationality" placeholder="Nationality"><input id="regCountry" placeholder="Country"><input id="regPhone" placeholder="Phone Number"><input id="regInstitution" placeholder="Institution / School"><button class="btn btn-gold" onclick="submitRegistration()">REGISTER & START EXAM</button></div>';panel.scrollIntoView({behavior:"smooth"})}
+function submitRegistration(){const name=document.getElementById("regName").value.trim(),email=document.getElementById("regEmail").value.trim(),nationality=document.getElementById("regNationality").value.trim(),country=document.getElementById("regCountry").value.trim(),phone=document.getElementById("regPhone").value.trim(),institution=document.getElementById("regInstitution").value.trim();if(!name||!email||!nationality){alert("Please complete Name, Email and Nationality.");return}const lock=checkExamLock(email,examState.program);if(lock){const x=lock.split("|");alert(x[0]==="BLACKLISTED"?"Blacklisted. Try again in "+formatRemaining(+x[1]):"3 failed attempts. Try again in "+formatRemaining(+x[1]));return}if(getExamRecords().find(r=>r.email.toLowerCase()===email.toLowerCase()&&r.program===examState.program&&r.status==="PASSED")){alert("This candidate already passed this examination.");return}examState.student={id:createCandidateID(examState.program),name,email,nationality,country,phone,institution,program:examState.program};examState.started=true;examState.startedAt=Date.now();examState.answers=Array.from({length:getSubjects().length},()=>Array(15).fill(null));examState.subjectScores=[];document.body.classList.add("exam-active-body");const p=document.getElementById("examPanel");p.classList.add("exam-fullscreen");enableExamProtection();startExamTimer();showQuestion()}
 
 /* =========================================================
    AUTOMATIC ID
@@ -3078,7 +2716,7 @@ function submitRegistration(){
 
 function createCandidateID(program){
 
-    let prefix=getExamPrefix(program);
+    let prefix=program==="TEFL"?"GETI-TEFL-":program==="TESOL"?"GETI-TESOL-":program==="TEYL"?"GETI-TEYL-":"GETI-ENG-";
 
     let records=getExamRecords();
 
@@ -3106,159 +2744,13 @@ function createCandidateID(program){
 
 }
 
-function backToExamMenu(){
-    if(!examState.started){
-        closeExamPanel();
-        return;
-    }
-    if(!confirm("Leave the examination? Your current attempt will be ended and recorded as FAILED.")) return;
-    stopExamTimer();
-    examState.timeExpired=false;
-    examState.forcedExit=true;
-    finalizeAttempt("FAILED", "EXAM ENDED BY CANDIDATE");
-}
-
-function closeExamPanel(){
-    stopExamTimer();
-    disableExamProtection();
-    examState.started=false;
-    const panel=document.getElementById("examPanel");
-    if(panel){
-        panel.classList.remove("active","exam-active-fullscreen","exam-protected");
-        panel.innerHTML="";
-    }
-    document.body.style.overflow="";
-}
-
 /* =========================================================
    SHOW QUESTION
 ========================================================= */
 
-function showQuestion(){
-
-    let subjects=getExamSubjects(examState.program);
-
-    let data=getExamData(examState.program);
-
-    let subject=
-        subjects[examState.subjectIndex];
-
-    let questions=
-        data[subject];
-
-    let q=
-        questions[examState.questionIndex];
-
-    let selected=
-        examState.answers
-        [examState.subjectIndex]
-        [examState.questionIndex];
-
-    let panel=document.getElementById("examPanel");
-
-    panel.classList.add("exam-protected");
-
-    panel.innerHTML=
-
-    '<div class="exam-fullscreen-shell">'+
-    '<div class="exam-topbar">'+
-    '<div class="exam-topbar-left">GETI '+escapeHTML(examState.program)+' EXAM</div>'+
-    '<div id="examTimer" class="exam-timer">TIME LEFT: 16:00</div>'+
-    '<button class="exam-back-menu" onclick="backToExamMenu()">← BACK TO MENU</button>'+
-    '</div>'+
-    '<div class="exam-fullscreen-content"><div class="exam-question-wrap">'+
-    '<div class="exam-progress">'+
-
-    '<span>'+
-    escapeHTML(examState.program)+
-    '</span>'+
-
-    '<span>'+
-    'Subject '+
-    (examState.subjectIndex+1)+
-    '/10'+
-    '</span>'+
-
-    '<span>'+
-    'Question '+
-    (examState.questionIndex+1)+
-    '/15'+
-    '</span>'+
-
-    '</div>'+
-
-    '<h2 class="exam-title">'+
-    escapeHTML(subject)+
-    '</h2>'+
-
-    '<div class="exam-question">'+
-
-    '<div class="question-text">'+
-    (examState.questionIndex+1)+
-    '. '+
-    escapeHTML(q[0])+
-    '</div>'+
-
-    '<div id="optionsContainer"></div>'+
-
-    '<div class="exam-controls">'+
-
-    '<button class="next-btn" '+
-    'onclick="nextExamQuestion()">'+
-
-    (
-        examState.questionIndex===14
-        ? "SUBMIT SUBJECT"
-        : "NEXT QUESTION"
-    )+
-
-    '</button>'+
-
-    '</div>'+
-
-    '</div>'+
-    '</div></div></div>';
-
-    let container=
-        document.getElementById("optionsContainer");
-
-    for(let i=1;i<=4;i++){
-
-        let button=
-            document.createElement("button");
-
-        button.className="option";
-
-        if(selected===i-1){
-
-            button.classList.add("selected");
-
-        }
-
-        button.innerHTML=
-            "<strong>"+
-            String.fromCharCode(64+i)+
-            ".</strong> "+
-            escapeHTML(q[i]);
-
-        button.onclick=function(){
-
-            selectAnswer(i-1);
-
-        };
-
-        container.appendChild(button);
-
-    }
-
-    panel.classList.add("exam-protected");
-
-    panel.scrollIntoView({
-        behavior:"smooth",
-        block:"start"
-    });
-
-}
+function showQuestion(){const ss=getSubjects(),dd=getData(),subject=ss[examState.subjectIndex],q=dd[subject][examState.questionIndex],sel=examState.answers[examState.subjectIndex][examState.questionIndex],p=document.getElementById("examPanel");if(examState.program==="ENGLISH PROFICIENCY"&&subject==="Speaking")examState.speakingText="";p.classList.add("exam-protected","exam-fullscreen");let special="";if(examState.program==="ENGLISH PROFICIENCY"&&subject==="Listening")special='<div class="exam-audio-box"><strong>🎧 LISTENING</strong><p>Press Play and listen carefully.</p><button onclick="playListening()">▶ PLAY AUDIO</button><div id="audioStatus"></div></div>';if(examState.program==="ENGLISH PROFICIENCY"&&subject==="Speaking")special='<div class="exam-speaking-box"><strong>🎙 SPEAKING</strong><p>Press Start and answer aloud.</p><button onclick="startSpeaking()">🎙 START MICROPHONE</button><button onclick="stopSpeaking()">STOP</button><div id="speechText" class="exam-speaking-transcript">No speech detected yet.</div></div>';p.innerHTML='<div class="exam-progress"><span>'+escapeHTML(examState.program)+'</span><span>Subject '+(examState.subjectIndex+1)+'/'+ss.length+'</span><span>Question '+(examState.questionIndex+1)+'/15</span><span id="examTimer" class="exam-timer">TIME LEFT: 16:00</span></div><h2 class="exam-title">'+escapeHTML(subject)+'</h2>'+special+'<div class="exam-question"><div class="question-text">'+(examState.questionIndex+1)+'. '+escapeHTML(q[0])+'</div><div id="optionsContainer"></div><div class="exam-controls"><button class="exam-menu-btn" onclick="backToExamMenu(false)">← BACK TO MENU</button><button class="next-btn" onclick="nextExamQuestion()">'+(examState.questionIndex===14?"SUBMIT SUBJECT":"NEXT QUESTION →")+'</button></div></div>';const c=document.getElementById("optionsContainer");if(!(examState.program==="ENGLISH PROFICIENCY"&&subject==="Speaking")){for(let i=1;i<=4;i++){const b=document.createElement("button");b.className="option";if(sel===i-1)b.classList.add("selected");b.innerHTML="<strong>"+String.fromCharCode(64+i)+".</strong> "+escapeHTML(q[i]);b.onclick=()=>selectAnswer(i-1);c.appendChild(b)}}updateExamTimer()}
+function playListening(){if(!window.speechSynthesis){alert("Audio is not supported by this browser.");return}const q=getData()[getSubjects()[examState.subjectIndex]][examState.questionIndex],u=new SpeechSynthesisUtterance(q[0].replace(/\?/g,"."));u.lang="en-US";u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u);const x=document.getElementById("audioStatus");if(x)x.textContent="Audio playing…"}
+let speechRecognition=null;function startSpeaking(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert("Microphone speech recognition is not supported. Use Chrome or Edge.");return}speechRecognition=new SR();speechRecognition.lang="en-US";speechRecognition.interimResults=true;speechRecognition.continuous=false;speechRecognition.onresult=e=>{let t="";for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;examState.speakingText=t;const x=document.getElementById("speechText");if(x)x.textContent=t};speechRecognition.start()}function stopSpeaking(){if(speechRecognition)try{speechRecognition.stop()}catch(e){}}
 
 /* =========================================================
    SELECT ANSWER
@@ -3293,6 +2785,10 @@ function selectAnswer(answer){
 
 function nextExamQuestion(){
 
+    if(examState.program==="ENGLISH PROFICIENCY" && getSubjects()[examState.subjectIndex]==="Speaking" && examState.speakingText.trim()){
+        if(examState.questionIndex<14){examState.questionIndex++;showQuestion();return;}
+        submitSubject();return;
+    }
     let answer=
         examState.answers
         [examState.subjectIndex]
@@ -3324,63 +2820,7 @@ function nextExamQuestion(){
    SUBJECT RESULT
 ========================================================= */
 
-function submitSubject(){
-
-    let subjects=getExamSubjects(examState.program);
-
-    let data=getExamData(examState.program);
-
-    let subject=
-        subjects[examState.subjectIndex];
-
-    let questions=
-        data[subject];
-
-    let score=0;
-
-    for(let i=0;i<15;i++){
-
-        if(
-            examState.answers
-            [examState.subjectIndex]
-            [i]
-            ===questions[i][5]
-        ){
-
-            score++;
-
-        }
-
-    }
-
-    let percentage=
-        Math.round(
-            (score/15)*100
-        );
-
-    let grade=
-        calculateGrade(percentage);
-
-    examState.subjectScores[
-        examState.subjectIndex
-    ]={
-
-        subject:subject,
-        score:score,
-        total:15,
-        percentage:percentage,
-        grade:grade
-
-    };
-
-    showSubjectResult(
-        subject,
-        score,
-        percentage,
-        grade
-    );
-
-}
+function submitSubject(){const ss=getSubjects(),dd=getData(),subject=ss[examState.subjectIndex],q=dd[subject],a=examState.answers[examState.subjectIndex];let score=0;for(let i=0;i<15;i++)if(a[i]===q[i][5])score++;if(examState.program==="ENGLISH PROFICIENCY"&&subject==="Speaking"){score=0;const spoken=(examState.speakingText||"").toLowerCase();const target=(q[examState.questionIndex][5]||"").toLowerCase();if(spoken&&target){const words=target.split(/\s+/).filter(w=>w.length>2);const hits=words.filter(w=>spoken.includes(w)).length;score=Math.round((hits/Math.max(1,words.length))*15)}}const percentage=Math.round(score/15*100),grade=calculateGrade(percentage);examState.subjectScores[examState.subjectIndex]={subject,score,total:15,percentage,grade};showSubjectResult(subject,score,percentage,grade)}
 
 /* =========================================================
    GRADE
@@ -3413,7 +2853,7 @@ function showSubjectResult(
         document.getElementById("examPanel");
 
     let nextText=
-        examState.subjectIndex<9
+        examState.subjectIndex<getSubjects().length-1
         ? "NEXT SUBJECT"
         : "VIEW FINAL RESULT";
 
@@ -3471,7 +2911,7 @@ function showSubjectResult(
 
 function continueExam(){
 
-    if(examState.subjectIndex<9){
+    if(examState.subjectIndex<getSubjects().length-1){
 
         examState.subjectIndex++;
 
@@ -3491,245 +2931,9 @@ function continueExam(){
    FINAL RESULT
 ========================================================= */
 
-function showFinalResult(timeoutNotice,statusOverride,percentageOverride,totalScoreOverride,totalQuestionsOverride){
+function showFinalResult(timeExpired=false){stopExamTimer();disableExamProtection();document.body.classList.remove("exam-active-body");const p=document.getElementById("examPanel");p.classList.remove("exam-fullscreen");examState.started=false;const ss=getSubjects();while(examState.subjectScores.length<ss.length){const i=examState.subjectScores.length;examState.subjectScores.push({subject:ss[i],score:0,total:15,percentage:0,grade:"F"})}const totalScore=examState.subjectScores.reduce((n,x)=>n+x.score,0),totalQuestions=ss.length*15,percentage=Math.round(totalScore/totalQuestions*100),status=percentage>=70?"PASSED":"FAILED",cefr=examState.program==="ENGLISH PROFICIENCY"?getCEFR(percentage):null,st=examState.student;const rec={id:st.id,name:st.name,email:st.email,nationality:st.nationality,country:st.country,phone:st.phone,institution:st.institution,program:st.program,percentage,totalScore,totalQuestions,status,date:new Date().toISOString(),subjects:examState.subjectScores,cefr,timeExpired};saveExamRecord(rec);if(status==="FAILED")recordExamFailure(st.email,st.program);else clearExamFailure(st.email,st.program);const rows=examState.subjectScores.map(x=>'<div class="subject-result"><span>'+escapeHTML(x.subject)+'</span><strong>'+x.percentage+'% — '+x.grade+'</strong></div>').join("");p.innerHTML='<div class="result-box"><h2>🎓 FINAL EXAMINATION RESULT</h2><p><strong>'+escapeHTML(st.name)+'</strong></p><p>Candidate ID: <strong>'+escapeHTML(st.id)+'</strong></p><div class="final-score">'+percentage+'%</div><h2 class="'+(status==="PASSED"?"pass":"fail")+'">'+status+'</h2>'+(cefr?'<div class="cefr-result">CEFR: '+cefr+'</div>':'')+(timeExpired?'<div class="exam-fail-message">⏰ Time is over. The examination ended automatically.</div>':'')+(status==="PASSED"?'<div class="exam-message">Passed result prepared for '+GETI_RESULT_EMAIL+'.</div><button class="btn btn-gold" onclick="openResultEmail()">📧 SEND RESULT TO GETI</button>':'<div class="exam-fail-message">After 3 failed attempts, access is locked for 5 minutes.</div>')+'<h3>Subject Results</h3>'+rows+'<br><button class="btn btn-gold" onclick="backToExamMenu(true)">← BACK TO MENU</button></div>';p.classList.add("active");p.scrollIntoView({behavior:"smooth"})}
 
-    stopExamTimer();
-
-    /* DISABLE COPY PROTECTION AFTER EXAM */
-
-    disableExamProtection();
-
-    examState.started=false;
-
-    let totalScore=typeof totalScoreOverride==="number" ? totalScoreOverride : examState.subjectScores.reduce(function(n,s){return n+s.score;},0);
-    let totalQuestions=typeof totalQuestionsOverride==="number" ? totalQuestionsOverride : getExamSubjects(examState.program).length*15;
-    let percentage=typeof percentageOverride==="number" ? percentageOverride : Math.round((totalScore/totalQuestions)*100);
-    let status=statusOverride || (percentage>=70 ? "PASSED" : "FAILED");
-    let resultNotice=timeoutNotice || (examState.timeExpired ? "TIME EXPIRED — EXAM CLOSED AUTOMATICALLY" : "");
-
-    let student=examState.student;
-
-    let record={
-
-        id:student.id,
-        name:student.name,
-        email:student.email,
-        nationality:student.nationality,
-        country:student.country,
-        phone:student.phone,
-        institution:student.institution,
-        program:student.program,
-        percentage:percentage,
-        totalScore:totalScore,
-        totalQuestions:totalQuestions,
-        status:status,
-        date:new Date().toISOString(),
-        subjects:examState.subjectScores
-
-    };
-
-    saveExamRecord(record);
-    if(status!=="PASSED" && student && student.email){
-        registerFailedAttempt(student.email,student.program);
-    }
-    if(status==="PASSED") sendPassedResultEmail(record);
-    stopExamTimer();
-    document.body.style.overflow="";
-    let fsExit=document.fullscreenElement && document.exitFullscreen;
-    if(fsExit){ try{document.exitFullscreen().catch(function(){});}catch(e){} }
-
-    let panel=
-        document.getElementById("examPanel");
-
-    let rows="";
-
-    examState.subjectScores.forEach(function(s){
-
-        rows+=
-
-        '<div class="subject-result">'+
-
-        '<span>'+
-        escapeHTML(s.subject)+
-        '</span>'+
-
-        '<strong>'+
-        s.percentage+
-        '% — '+
-        s.grade+
-        '</strong>'+
-
-        '</div>';
-
-    });
-
-    if(status==="PASSED"){
-
-        panel.innerHTML=
-
-        '<div class="result-box">'+
-
-        '<h2>🎉 FINAL EXAMINATION RESULT</h2>'+
-
-        '<p><strong>'+
-        escapeHTML(student.name)+
-        '</strong></p>'+
-
-        '<p>Candidate ID: <strong>'+
-        escapeHTML(student.id)+
-        '</strong></p>'+
-        (resultNotice ? '<div class="exam-fail-message">'+escapeHTML(resultNotice)+'</div>' : '')+
-
-        '<div class="final-score">'+
-        percentage+
-        '%'+
-        '</div>'+
-
-        '<h2 class="pass">PASSED</h2>'+
-
-        '<div class="exam-message">'+
-
-        'Congratulations! You have successfully passed the '+
-        student.program+
-        ' examination. Please check your email regularly for further information regarding your result and certificate.'+
-
-        '</div>'+
-
-        '<h3>Subject Results</h3>'+
-
-        rows+
-
-        '<br>'+
-
-        '<p>'+
-        'You cannot take this same GETI examination again after passing.'+
-        '</p>'+
-        '<br><button class="btn btn-gold" onclick="closeExamPanel()">BACK TO MENU</button>'+
-
-        '</div>';
-
-    }else{
-
-        panel.innerHTML=
-
-        '<div class="result-box">'+
-
-        '<h2>FINAL EXAMINATION RESULT</h2>'+
-
-        '<p><strong>'+
-        escapeHTML(student.name)+
-        '</strong></p>'+
-
-        '<p>Candidate ID: <strong>'+
-        escapeHTML(student.id)+
-        '</strong></p>'+
-        (resultNotice ? '<div class="exam-fail-message">'+escapeHTML(resultNotice)+'</div>' : '')+
-
-        '<div class="final-score">'+
-        percentage+
-        '%'+
-        '</div>'+
-
-        '<h2 class="fail">FAILED</h2>'+
-
-        '<div class="exam-fail-message">'+
-
-        'Your final score is below the required 70%. Please review the training materials and contact GETI for further information.'+
-
-        '</div>'+
-
-        '<h3>Subject Results</h3>'+
-
-        rows+
-        '<br><button class="btn btn-gold" onclick="closeExamPanel()">BACK TO MENU</button>'+
-
-        '</div>';
-
-    }
-
-    panel.scrollIntoView({
-        behavior:"smooth"
-    });
-
-}
-
-/* =========================================================
-   ATTEMPT / BLACKLIST CONTROL
-========================================================= */
-function cleanupExamLocks(){
-    let now=Date.now();
-    try{
-        let locks=JSON.parse(localStorage.getItem("GETI_EXAM_LOCKS")||"{}");
-        Object.keys(locks).forEach(function(k){
-            if(locks[k].until<=now) delete locks[k];
-        });
-        localStorage.setItem("GETI_EXAM_LOCKS",JSON.stringify(locks));
-    }catch(e){}
-}
-function getExamLock(email,program){
-    cleanupExamLocks();
-    try{
-        let locks=JSON.parse(localStorage.getItem("GETI_EXAM_LOCKS")||"{}");
-        return locks[(email||"").toLowerCase()+"|"+program] || null;
-    }catch(e){return null;}
-}
-function registerFailedAttempt(email,program){
-    let key=(email||"").toLowerCase()+"|"+program;
-    let now=Date.now();
-    let attempts={};
-    try{attempts=JSON.parse(localStorage.getItem("GETI_FAILED_ATTEMPTS")||"{}");}catch(e){}
-    let arr=(attempts[key]||[]).filter(function(t){return now-t<24*60*60*1000;});
-    arr.push(now);
-    attempts[key]=arr;
-    localStorage.setItem("GETI_FAILED_ATTEMPTS",JSON.stringify(attempts));
-    if(arr.length>=3){
-        let locks={};
-        try{locks=JSON.parse(localStorage.getItem("GETI_EXAM_LOCKS")||"{}");}catch(e){}
-        locks[key]={until:now+5*60*1000,reason:"3 FAILED ATTEMPTS"};
-        localStorage.setItem("GETI_EXAM_LOCKS",JSON.stringify(locks));
-        attempts[key]=[];
-        localStorage.setItem("GETI_FAILED_ATTEMPTS",JSON.stringify(attempts));
-        return 5*60*1000;
-    }
-    return 0;
-}
-function checkBlacklist(email){
-    try{
-        let list=JSON.parse(localStorage.getItem("GETI_BLACKLIST")||"{}");
-        let key=(email||"").toLowerCase();
-        if(list[key] && list[key].until>Date.now()) return list[key];
-        if(list[key]){delete list[key];localStorage.setItem("GETI_BLACKLIST",JSON.stringify(list));}
-    }catch(e){}
-    return null;
-}
-
-function sendPassedResultEmail(record){
-    const subject="GETI Exam Passed - "+record.program+" - "+record.name;
-    const body=[
-        "GETI EXAMINATION RESULT",
-        "Candidate ID: "+record.id,
-        "Name: "+record.name,
-        "Email: "+record.email,
-        "Nationality: "+record.nationality,
-        "Country: "+record.country,
-        "Phone: "+record.phone,
-        "Institution: "+record.institution,
-        "Program: "+record.program,
-        "Final Grade: "+calculateGrade(record.percentage),
-        "Final Score: "+record.totalScore+" / "+record.totalQuestions,
-        "Percentage: "+record.percentage+"%",
-        "Date: "+record.date,
-        "",
-        "Subject Grades:",
-        record.subjects.map(function(s){return s.subject+" — "+s.percentage+"% — "+s.grade;}).join("\n")
-    ].join("\n");
-    // A browser cannot securely send SMTP mail by itself. This creates a ready email and also supports a backend endpoint when configured.
-    if(window.GETI_RESULT_EMAIL_API){
-        fetch(window.GETI_RESULT_EMAIL_API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({to:"proficiencycorelanguague03@gmail.com",subject:subject,body:body,record:record})}).catch(function(){});
-    }
-    return {to:"proficiencycorelanguague03@gmail.com",subject:subject,body:body};
-}
-window.GETI_RESULT_EMAIL_API="";
+function openResultEmail(){const r=getExamRecords().slice(-1)[0];if(!r)return;const body=["GETI EXAMINATION RESULT","",`Name: ${r.name}`,`Email: ${r.email}`,`Nationality: ${r.nationality}`,`Country: ${r.country}`,`Phone: ${r.phone}`,`Institution: ${r.institution}`,`Program: ${r.program}`,`Score: ${r.percentage}%`,`Status: ${r.status}`,r.cefr?`CEFR: ${r.cefr}`:"","Subject Grades:",...(r.subjects||[]).map(x=>`${x.subject}: ${x.percentage}% (${x.grade})`)].join("\n");window.location.href="mailto:"+GETI_RESULT_EMAIL+"?subject="+encodeURIComponent("GETI Passed Result - "+r.name)+"&body="+encodeURIComponent(body)}
 
 /* =========================================================
    LOCAL DATABASE
