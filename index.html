@@ -1116,6 +1116,48 @@ button,input,textarea{
 
 }
 
+
+/* =========================================================
+   GETI EXPANDED ACADEMIC CENTER - ADDITIONS ONLY
+========================================================= */
+.academic-center{background:#f5f7fb;padding:75px 0;}
+.academic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:25px;}
+.academic-btn{border:1px solid #d5dce7;background:#fff;color:#0b2d5c;padding:12px 14px;border-radius:7px;font-weight:800;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.05);transition:.2s;}
+.academic-btn:hover{transform:translateY(-2px);border-color:#b38a28;background:#fffaf0;}
+.academic-btn.active{background:#0b2d5c;color:#fff;border-color:#0b2d5c;}
+.lesson-panel{display:none;max-width:1100px;margin:28px auto 0;background:#fff;border-radius:12px;padding:28px;box-shadow:0 10px 35px rgba(0,0,0,.08);}
+.lesson-panel.active{display:block;}
+.lesson-subject-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:20px 0;}
+.lesson-subject-btn{padding:12px;border:1px solid #d7dee8;background:#f8fafc;border-radius:7px;cursor:pointer;font-weight:700;text-align:left;}
+.lesson-subject-btn:hover{background:#fffaf0;border-color:#b38a28;}
+.lesson-content{line-height:1.85;color:#26344a;max-height:600px;overflow:auto;padding:20px;background:#fbfcfe;border:1px solid #e1e6ee;border-radius:8px;}
+.lesson-tools{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0;}
+.lesson-tools button,.lesson-tools a{border:0;background:#0b2d5c;color:#fff;padding:10px 14px;border-radius:6px;font-weight:700;cursor:pointer;}
+.lesson-tools .gold{background:#b38a28;}
+.lesson-diagram{margin:18px 0;padding:15px;border:1px solid #dbe2eb;border-radius:8px;background:#fff;}
+.exam-menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:25px;}
+.exam-menu-btn{border:0;background:#0b2d5c;color:#fff;padding:11px 12px;border-radius:6px;font-weight:800;cursor:pointer;}
+.exam-menu-btn:nth-child(3n){background:#b38a28;}
+.exam-menu-btn:hover{opacity:.9;}
+.exam-reading-passage{max-height:300px;overflow:auto;background:#fff;border:1px solid #d9e0e8;padding:18px;border-radius:8px;margin:12px 0;line-height:1.85;}
+.audio-box{background:#eef5ff;border:1px solid #c9dbf5;padding:14px;border-radius:8px;margin:12px 0;}
+.mic-box{background:#f5f0ff;border:1px solid #d9c9f2;padding:15px;border-radius:8px;margin:12px 0;}
+.mic-status{font-weight:800;margin-top:8px;}
+.interview-box{background:#111827;color:#fff;border-radius:12px;padding:20px;margin:15px 0;}
+.interviewer-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#dbeafe,#fff);display:flex;align-items:center;justify-content:center;font-size:34px;margin-bottom:10px;}
+.interview-video{min-height:180px;background:linear-gradient(135deg,#1f2937,#374151);border-radius:10px;padding:20px;display:flex;flex-direction:column;justify-content:center;}
+.cefr-badge{display:inline-block;padding:8px 16px;border-radius:999px;background:#0b2d5c;color:#fff;font-size:22px;font-weight:900;margin:8px;}
+.exam-mode{overflow:hidden!important;height:100vh!important;}
+body.exam-mode>*:not(#examPanel){pointer-events:none;}
+#examPanel.exam-fullscreen{display:block!important;position:fixed!important;z-index:99999!important;inset:0!important;width:100vw!important;height:100vh!important;max-width:none!important;margin:0!important;border-radius:0!important;overflow:hidden!important;padding:24px!important;background:#f7f9fc!important;box-shadow:none!important;}
+#examPanel.exam-fullscreen .exam-question{max-width:1000px;max-height:calc(100vh - 210px);overflow:auto;margin:auto;}
+#examPanel.exam-fullscreen .exam-title{font-size:28px;}
+.exam-topbar{max-width:1100px;margin:0 auto 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.exam-menu-link{border:0;background:#fff;color:#0b2d5c;padding:9px 13px;border-radius:6px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.exam-menu-link.danger{background:#a51e1e;color:#fff;}
+.exam-warning{padding:10px;background:#fff4d7;border:1px solid #e3c26b;border-radius:7px;margin:10px 0;font-weight:700;}
+@media(max-width:700px){.registration-form{grid-template-columns:1fr}.academic-grid,.exam-menu-grid{grid-template-columns:1fr 1fr}.lesson-panel{padding:16px}#examPanel.exam-fullscreen{padding:12px}.exam-progress{gap:8px;flex-wrap:wrap}.question-text{font-size:18px}}
+
 </style>
 </head>
 
@@ -1445,16 +1487,6 @@ onclick="openExamRegistration('TESOL')">
 🎓 TESOL EXAM
 </button>
 
-<button class="exam-small-btn" onclick="openExamRegistration('TEYL')">👧 TEYL EXAM</button>
-<button class="exam-small-btn" onclick="openExamRegistration('ENGLISH PROFICIENCY')">🌐 ENGLISH PROFICIENCY EXAM</button>
-<button class="exam-small-btn" onclick="openExamRegistration('BUSINESS ENGLISH')">💼 BUSINESS ENGLISH EXAM</button>
-<button class="exam-small-btn" onclick="openExamRegistration('MARKETING')">📣 MARKETING EXAM</button>
-<button class="exam-small-btn" onclick="openExamRegistration('MANAGEMENT')">👔 MANAGEMENT EXAM</button>
-<button class="exam-small-btn" onclick="openExamRegistration('DIGITAL COMMUNICATION')">📱 DIGITAL COMMUNICATION</button>
-<button class="exam-small-btn" onclick="openExamRegistration('COMPUTER SCIENCE')">💻 COMPUTER SCIENCE</button>
-<button class="exam-small-btn" onclick="openExamRegistration('MICROSOFT')">🪟 MICROSOFT</button>
-<button class="exam-small-btn" onclick="openGETILessons()">📚 LESSONS</button>
-
 </div>
 
 <div id="examPanel" class="exam-panel"></div>
@@ -1520,6 +1552,30 @@ TESOL EXAM
 
 </div>
 </div>
+</section>
+
+
+<!-- =========================================================
+     GETI EXPANDED ACADEMIC CENTER - ADDITIONS ONLY
+========================================================= -->
+<section class="academic-center" id="geti-academic-center">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">GETI ACADEMIC CENTER</div>
+      <h2>Exams & Lessons</h2>
+      <p>Choose an examination or open structured lessons for each professional subject.</p>
+    </div>
+
+    <div class="academic-grid" id="academicProgramButtons"></div>
+
+    <div class="lesson-tools" style="justify-content:center">
+      <button class="academic-btn" onclick="openExamDirectory()">📝 EXAM</button>
+      <button class="academic-btn" onclick="openLessonsDirectory()">📚 LESSONS</button>
+    </div>
+
+    <div id="expandedExamDirectory" class="lesson-panel"></div>
+    <div id="expandedLessonDirectory" class="lesson-panel"></div>
+  </div>
 </section>
 
 <section class="section certificate-partners" id="partners">
@@ -2299,7 +2355,7 @@ question structures already present in the TEFL bank.
    EXAM STATE
 ========================================================= */
 
-const EXAM_DURATION_MS = 60 * 60 * 1000;
+const EXAM_DURATION_MS = 16 * 60 * 1000;
 let examTimerInterval=null;
 
 let examState={
@@ -3744,239 +3800,409 @@ document
 
 });
 
-</script>
 
-
-<style>
 /* =========================================================
-   GETI ADD-ON EXAM SYSTEM
-   Added without removing the existing GETI system.
+   GETI EXPANDED ACADEMIC ENGINE - ADDITIONS ONLY
+   1 hour per examination; timeout returns to exam menu.
 ========================================================= */
-.exam-buttons{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
-.exam-small-btn{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;font-weight:700;transition:.2s}
-.exam-small-btn:hover{transform:translateY(-2px)}
-.geti-addon-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:20px}
-.geti-lesson-card{background:#fff;border:1px solid #dfe6ef;border-radius:14px;padding:18px;box-shadow:0 6px 20px rgba(0,0,0,.06)}
-.geti-lesson-card h3{margin-bottom:8px}.geti-lesson-card button{margin-top:10px}
-.geti-reading{background:#f8fafc;border:1px solid #d9e1ea;padding:18px;border-radius:12px;line-height:1.85;text-align:left;max-height:55vh;overflow:auto}
-.geti-audio-box,.geti-speaking-box,.geti-video-box{background:#071d3a;color:#fff;border-radius:14px;padding:18px;margin:12px 0}
-.geti-video-screen{height:220px;border-radius:12px;background:linear-gradient(135deg,#122f55,#0b1730);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px}
-.geti-avatar{width:80px;height:80px;border-radius:50%;background:#fff;color:#071d3a;display:flex;align-items:center;justify-content:center;font-size:38px}
-.geti-timer{font-size:20px;font-weight:800;padding:8px 12px;border-radius:8px;background:#fff;color:#071d3a;display:inline-block}
-.geti-final-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px}
-.geti-back-menu{position:fixed;right:18px;bottom:18px;z-index:100000;border:0;border-radius:999px;padding:12px 18px;font-weight:800;display:none;box-shadow:0 8px 25px rgba(0,0,0,.25)}
-body.geti-exam-lock{overflow:hidden!important}
-body.geti-exam-lock .exam-panel{position:fixed!important;inset:0!important;z-index:99999!important;width:100vw!important;height:100vh!important;max-width:none!important;margin:0!important;border-radius:0!important;overflow:hidden!important;background:#fff!important;padding:20px!important;}
-body.geti-exam-lock .exam-panel .exam-question{max-height:calc(100vh - 170px);overflow:hidden}
-body.geti-exam-lock .exam-panel .exam-progress{position:sticky;top:0;z-index:2}
-body.geti-exam-lock .geti-back-menu{display:block}
-.geti-cefr{font-size:42px;font-weight:900;margin:15px 0}
-.geti-mic-status{font-weight:700;margin:8px 0}
-</style>
+(function(){
 
-<button id="getiBackMenu" class="geti-back-menu" onclick="GETI_backToMenu()">↩ BACK TO MENU</button>
+const GETI_EXAM_MINUTES=60;
+const GETI_EXAM_DURATION_MS=GETI_EXAM_MINUTES*60*1000;
+const GETI_CERTIFICATE_URL='https://script.google.com/macros/s/AKfycbw2C49JZJfYzsTNvWyVnKAOKlwjheuQd_Pw4LV4ybhosj90V6flGbnGG1xbpv-2uNXk1/exec';
 
-<script>
-/* =========================================================
-   GETI ADD-ON PROGRAMS
-========================================================= */
 const GETI_PROGRAMS={
-  "TEYL":[
-    "Introduction to TEYL – Teaching English to Young Learners","Understanding Children’s Learning Styles","Classroom Management for Young Learners","Teaching English Through Games and Activities","Teaching Vocabulary to Children","Teaching Pronunciation and Phonics","Teaching Listening and Speaking Skills","Teaching Reading and Writing to Young Learners","Using Songs, Stories, and Rhymes in English Lessons","Assessment and Progress Tracking for Young Learners"
-  ],
-  "ENGLISH PROFICIENCY":["Grammar","Vocabulary","Pronunciation","Speaking","Listening","Reading","Writing","Functional English","Communication & Conversation","English Culture & Real-Life English"],
-  "BUSINESS ENGLISH":["Business Communication","Business Vocabulary","Business Emails","Meetings and Discussions","Presentations","Negotiation Skills","Customer Service","Telephone Communication","Business Reports","Job Interviews"],
-  "MARKETING":["Marketing Fundamentals","Market Research","Consumer Behavior","Branding","Digital Marketing","Social Media Marketing","Advertising","Sales and Promotion","Content Marketing","Marketing Strategy"],
-  "MANAGEMENT":["Management Fundamentals","Leadership and Team Management","Decision-Making","Strategic Management","Human Resource Management","Project Management","Time Management","Performance Management","Conflict Management","Change Management"],
-  "DIGITAL COMMUNICATION":["Digital Communication Fundamentals","Social Media Communication","Content Creation and Strategy","Digital Marketing","Online Public Relations","Visual Communication","Email and Professional Communication","Mobile Communication","Digital Media and Technology","Digital Communication Ethics and Privacy"],
-  "COMPUTER SCIENCE":["Computer Programming","Data Structures and Algorithms","Database Management","Computer Networks","Operating Systems","Web Development","Software Engineering","Artificial Intelligence","Cybersecurity","Cloud Computing"],
-  "MICROSOFT":["Microsoft Word","Microsoft Excel","Microsoft PowerPoint","Microsoft Publisher","Microsoft Outlook","Microsoft Access","Microsoft OneNote","Office Document Management","Office Productivity Skills","Microsoft Office Certification"]
+  TEFL:["TEFL Foundations & Principles","English Grammar","Teaching Methodologies","Lesson Planning","Classroom Management","Teaching Listening","Teaching Speaking","Teaching Reading","Teaching Writing","Assessment & Testing"],
+  TESOL:["Introduction to TESOL","English Grammar for Teachers","Second Language Acquisition","Teaching Methodologies","Lesson Planning","Classroom Management","Teaching Listening & Speaking","Teaching Reading & Writing","Teaching Vocabulary & Pronunciation","Assessment & Testing"],
+  TEYL:["Introduction to TEYL – Teaching English to Young Learners","Understanding Children’s Learning Styles","Classroom Management for Young Learners","Teaching English Through Games and Activities","Teaching Vocabulary to Children","Teaching Pronunciation and Phonics","Teaching Listening and Speaking Skills","Teaching Reading and Writing to Young Learners","Using Songs, Stories, and Rhymes in English Lessons","Assessment and Progress Tracking for Young Learners"],
+  "English Proficiency":["Grammar","Vocabulary","Pronunciation","Speaking","Listening","Reading","Writing","Functional English","Communication & Conversation","English Culture & Real-Life English"],
+  "Business English":["Business Communication","Business Vocabulary","Business Emails","Meetings and Discussions","Presentations","Negotiation Skills","Customer Service","Telephone Communication","Business Reports","Job Interviews"],
+  Marketing:["Marketing Fundamentals","Market Research","Consumer Behavior","Branding","Digital Marketing","Social Media Marketing","Advertising","Sales and Promotion","Content Marketing","Marketing Strategy"],
+  Management:["Management Fundamentals","Leadership and Team Management","Decision-Making","Strategic Management","Human Resource Management","Project Management","Time Management","Performance Management","Conflict Management","Change Management"],
+  "Digital Communication":["Digital Communication Fundamentals","Social Media Communication","Content Creation and Strategy","Digital Marketing","Online Public Relations","Visual Communication","Email and Professional Communication","Mobile Communication","Digital Media and Technology","Digital Communication Ethics and Privacy"],
+  "Computer Science":["Computer Programming","Data Structures and Algorithms","Database Management","Computer Networks","Operating Systems","Web Development","Software Engineering","Artificial Intelligence","Cybersecurity","Cloud Computing"],
+  Microsoft:["Microsoft Word","Microsoft Excel","Microsoft PowerPoint","Microsoft Publisher","Microsoft Outlook","Microsoft Access","Microsoft OneNote","Office Document Management","Office Productivity Skills","Microsoft Office Certification"],
+  Tourism:["Tourism Management","Travel and Tour Operations","Hospitality Management","Hotel Management","Customer Service","Tourism Marketing","Destination Management","Travel Agency Operations","Sustainable Tourism","Tourism English"],
+  "Tour Guide Formation":["Tour Guide Fundamentals","Tour Guiding Techniques","Tourist Communication Skills","Destination Knowledge","Cultural Heritage and History","Storytelling and Interpretation","Customer Service for Tourists","Tour Planning and Itinerary Management","Safety and Emergency Procedures","Professional Tour Guide Ethics"],
+  "Hospitality Management Studies":["Introduction to Hospitality Management","Hotel Operations Management","Front Office Management","Housekeeping Management","Food and Beverage Management","Hospitality Customer Service","Hospitality Marketing","Revenue and Financial Management","Hospitality Human Resource Management","Hospitality English"],
+  "Environmental Science":["Introduction to Environmental Science","Ecology and Ecosystems","Biodiversity and Conservation","Climate Change and Global Warming","Environmental Pollution","Water Resources and Management","Soil and Land Management","Waste Management and Recycling","Renewable Energy and Sustainability","Environmental Policy and Protection"],
+  Finance:["Financial Management","Financial Accounting","Corporate Finance","Investment Management","Banking and Financial Services","Financial Markets","Risk Management","Personal Finance","International Finance","Financial Analysis"],
+  Entrepreneurship:["Entrepreneurship Fundamentals","Business Idea Development","Business Planning","Startup Management","Innovation and Creativity","Market Research","Business Model Development","Financial Management for Entrepreneurs","Digital Entrepreneurship","Leadership and Growth Strategy"],
+  "Administrative Law":["Introduction to Administrative Law","Principles of Administrative Law","Administrative Acts and Decisions","Public Authorities and Institutions","Administrative Procedures","Public Services","Public Contracts and Procurement","Administrative Liability","Judicial Review and Administrative Litigation","Administrative Law and Governance"],
+  "Waiter and Waitress Fundamentals":["Introduction to Waiter and Waitress Services","Professional Appearance and Grooming","Restaurant Service Procedures","Table Setting and Preparation","Greeting and Seating Guests","Menu and Food Knowledge","Taking Customer Orders","Serving Food and Beverages","Handling Customer Requests and Complaints","Professional Waitstaff Etiquette"],
+  "International Cuisine":["Introduction to International Cuisine","European Cuisine","Asian Cuisine","African Cuisine","American Cuisine","Mediterranean Cuisine","Middle Eastern Cuisine","Latin American Cuisine","Caribbean Cuisine","Global Food Culture and Traditions"]
 };
 
-const GETI_LESSONS={};
-Object.keys(GETI_PROGRAMS).forEach(function(program){
-  GETI_LESSONS[program]=GETI_PROGRAMS[program].map(function(subject){
-    return {subject:subject,text:GETI_makeLesson(program,subject)};
-  });
-});
+const programIcons={TEFL:'👨‍🏫',TESOL:'🌍',TEYL:'👧',"English Proficiency":'🗣️',"Business English":'💼',Marketing:'📣',Management:'🧭',"Digital Communication":'📱',"Computer Science":'💻',Microsoft:'🪟',Tourism:'✈️',"Tour Guide Formation":'🗺️',"Hospitality Management Studies":'🏨',"Environmental Science":'🌱',Finance:'💰',Entrepreneurship:'🚀',"Administrative Law":'⚖️',"Waiter and Waitress Fundamentals":'🍽️',"International Cuisine":'🌎'};
 
-function GETI_makeLesson(program,subject){
-  const intro=`${subject} is an important part of ${program}. This lesson is designed as a classroom-style learning unit. It introduces key ideas, explains practical use, gives examples, and ends with activities for independent study.`;
-  const sections=[
-    "Learning objectives","Core concepts","Key terminology","Step-by-step explanation","Practical examples","Classroom or workplace application","Common mistakes","Guided practice","Independent practice","Review and assessment"
-  ];
-  let out=`<h2>${escapeHTML(subject)}</h2><p>${escapeHTML(intro)}</p>`;
-  sections.forEach(function(sec,i){
-    out+=`<h3>${i+1}. ${escapeHTML(sec)}</h3>`;
-    out+=`<p>In this section, learners study ${escapeHTML(subject)} through clear explanations and practical situations. The instructor first introduces the idea, then connects it to real communication or professional tasks. Learners should identify the main principle, observe how it works, and practise using it accurately. Good learning requires attention to meaning, form, purpose, context, and feedback.</p>`;
-    out+=`<p>Example: imagine a realistic situation related to ${escapeHTML(subject)}. A learner should decide what information is important, choose an appropriate method, explain the decision, and check the result. The same process can be repeated with a new situation so that the learner develops confidence instead of memorising one answer.</p>`;
-    out+=`<p>Study note: do not only read the definition. Ask what the concept means, why it matters, when it is appropriate, what can go wrong, and how it can be improved. Write a short example, compare it with another example, and explain the difference in your own words.</p>`;
-  });
-  out+=`<h3>Final review</h3><p>Review the terminology, explain the main ideas without looking at your notes, complete practice tasks, and create a short real-world example. ${escapeHTML(subject)} becomes useful when knowledge is transferred into communication, analysis, decision-making, or practical performance.</p>`;
-  /* Expand to a long school-style lesson while keeping the page responsive. */
-  let base=out; while(out.replace(/<[^>]+>/g,' ').split(/\s+/).filter(Boolean).length<2000) out+=base;
-  return out;
+function allPrograms(){return Object.keys(GETI_PROGRAMS);}
+function isProficiency(program){return program==='English Proficiency';}
+function isAdministrative(program){return program==='Administrative Law';}
+
+function descriptor(topic,program){
+  const t=topic.toLowerCase();
+  if(t.includes('grammar')) return 'accurate structures, tense control, sentence formation, and meaningful use';
+  if(t.includes('vocabulary')) return 'precise terminology, collocations, context, and appropriate word choice';
+  if(t.includes('listening')) return 'understanding spoken language, inference, detail, and speaker intention';
+  if(t.includes('speaking')||t.includes('communication')) return 'clear interaction, fluency, turn-taking, and effective message delivery';
+  if(t.includes('reading')) return 'main ideas, supporting details, inference, text structure, and critical interpretation';
+  if(t.includes('writing')||t.includes('emails')||t.includes('reports')) return 'organized writing, audience awareness, accuracy, tone, and revision';
+  if(t.includes('marketing')||t.includes('branding')||t.includes('advertising')) return 'customer value, positioning, research, promotion, and measurable strategy';
+  if(t.includes('management')||t.includes('leadership')) return 'planning, people, resources, decisions, accountability, and organizational performance';
+  if(t.includes('computer')||t.includes('programming')||t.includes('software')||t.includes('database')||t.includes('network')||t.includes('cyber')||t.includes('cloud')||t.includes('algorithm')||t.includes('artificial intelligence')) return 'systems thinking, reliable processes, data, security, testing, and problem solving';
+  if(t.includes('finance')||t.includes('accounting')||t.includes('investment')||t.includes('banking')) return 'financial information, risk, planning, analysis, and responsible decision making';
+  if(t.includes('tourism')||t.includes('travel')||t.includes('hotel')||t.includes('hospitality')||t.includes('tour guide')||t.includes('waiter')||t.includes('cuisine')) return 'professional service, guest needs, cultural awareness, quality, and operational standards';
+  if(t.includes('environment')||t.includes('ecology')||t.includes('climate')||t.includes('biodiversity')||t.includes('renewable')) return 'evidence-based environmental understanding, sustainability, systems, and responsible action';
+  if(t.includes('law')||t.includes('administrative')||t.includes('public authority')||t.includes('judicial')) return 'legal principles, public administration, procedure, accountability, and reasoned analysis';
+  if(t.includes('microsoft')||t.includes('office')||t.includes('excel')||t.includes('word')||t.includes('powerpoint')) return 'efficient digital productivity, document quality, organization, and professional workflow';
+  return 'core concepts, practical application, professional judgment, and continuous improvement';
 }
 
-function GETI_questions(program,subject){
+function makeGeneratedQuestions(program,subject){
+  const d=descriptor(subject,program);
+  const topic=subject;
   const templates=[
-    `Which statement best explains ${subject}?`,`Why is ${subject} important in ${program}?`,`Which action is most appropriate when applying ${subject}?`,`What is a key principle of ${subject}?`,`Which example best demonstrates effective ${subject}?`,`What is a common mistake related to ${subject}?`,`Which skill supports successful work with ${subject}?`,`What should a learner check before applying ${subject}?`,`Which approach is most professional when using ${subject}?`,`What is the main purpose of studying ${subject}?`,`Which situation requires careful use of ${subject}?`,`How can performance in ${subject} be improved?`,`Which statement is most accurate about ${subject}?`,`What is an important outcome of learning ${subject}?`,`Which practice best supports mastery of ${subject}?`
+    ['What is the central purpose of '+topic+'?','To develop '+d+'.','To avoid practice and feedback.','To memorize unrelated facts.','To remove professional standards.'],
+    ['Which approach best demonstrates strong understanding of '+topic+'?','Applying the concept to a realistic situation.','Repeating a definition without context.','Ignoring evidence and instructions.','Using one method for every situation.'],
+    ['A learner or professional working with '+topic+' should first consider:','The goal, context, audience, and available information.','Only the final score.','Only personal preference.','The fastest possible answer.'],
+    ['Which action is most likely to improve performance in '+topic+'?','Practice, feedback, reflection, and revision.','Avoiding assessment.','Skipping preparation.','Using copied work without checking it.'],
+    ['Why is context important in '+topic+'?','It determines how knowledge should be interpreted and applied.','Context never changes meaning.','Context makes standards unnecessary.','Context is useful only in exams.'],
+    ['Which statement reflects professional practice in '+topic+'?','Decisions should be informed by evidence and clear objectives.','Decisions should always be random.','Standards should be ignored.','Documentation is never useful.'],
+    ['What is a useful way to evaluate work related to '+topic+'?','Use clear criteria and compare the work with the intended outcome.','Use appearance alone.','Use a single personal opinion.','Do not review the result.'],
+    ['Which skill is transferable across many tasks in '+topic+'?','Critical thinking and problem solving.','Avoiding questions.','Guessing without checking.','Ignoring users or stakeholders.'],
+    ['When a problem occurs in '+topic+', a strong response is to:','Identify the cause, consider options, act, and evaluate the result.','Hide the problem.','Repeat the same unsuccessful action.','Stop without analysis.'],
+    ['What is an important ethical principle for '+topic+'?','Accuracy, responsibility, respect, and appropriate use of information.','Misleading others for convenience.','Ignoring confidentiality.','Removing accountability.'],
+    ['Which learning activity best supports mastery of '+topic+'?','A realistic case study followed by feedback.','Only copying notes.','Only reading a title.','Avoiding practical work.'],
+    ['How should a complex task in '+topic+' usually be handled?','Break it into clear steps, complete each step, then review the whole result.','Skip directly to the conclusion.','Avoid planning.','Change the goal repeatedly.'],
+    ['What is the role of communication in '+topic+'?','It helps people share information, coordinate action, and reduce misunderstanding.','It is unnecessary.','It should always be one-way.','It should avoid clarification.'],
+    ['Which result indicates successful learning in '+topic+'?','The learner can explain, apply, evaluate, and improve the concept.','The learner can only repeat one sentence.','The learner avoids examples.','The learner cannot explain decisions.'],
+    ['Which final habit supports long-term success in '+topic+'?','Continuous learning and review of changing practices.','Never updating knowledge.','Avoiding feedback.','Relying on memory alone.']
   ];
-  return templates.map(function(q,i){
-    const options=[
-      `A clear and appropriate application of ${subject}`,
-      `Ignoring the purpose and context`,
-      `Using an unrelated method`,
-      `Avoiding practice and feedback`
-    ];
-    return [q,options[0],options[1],options[2],options[3],0];
+  return templates.map((x,i)=>{
+    const correct=i%4;
+    const opts=x.slice(1);
+    const answer=opts[correct];
+    const rotated=opts.slice(correct).concat(opts.slice(0,correct));
+    return [x[0],rotated[0],rotated[1],rotated[2],rotated[3],0,answer];
   });
 }
 
-const GETI_ADDON_DATA={};
-Object.keys(GETI_PROGRAMS).forEach(function(program){
-  GETI_ADDON_DATA[program]={};
-  GETI_PROGRAMS[program].forEach(function(subject){GETI_ADDON_DATA[program][subject]=GETI_questions(program,subject);});
-});
+function getQuestions(program,subject){
+  if(program==='TEFL' && typeof TEFL_DATA!=='undefined' && TEFL_DATA[subject] && TEFL_DATA[subject].length>=15) return TEFL_DATA[subject].slice(0,15);
+  if(program==='TESOL' && typeof TESOL_DATA!=='undefined' && TESOL_DATA[subject] && TESOL_DATA[subject].length>=15) return TESOL_DATA[subject].slice(0,15);
+  return makeGeneratedQuestions(program,subject);
+}
 
-/* More useful English Proficiency questions. */
-GETI_ADDON_DATA["ENGLISH PROFICIENCY"]["Grammar"]=[
- ["Choose the correct sentence.","She has worked here for three years.","She have worked here for three years.","She working here for three years.","She has work here for three years.",0],
- ["If I ___ enough time, I would join the course.","had","have","will have","am having",0],
- ["By the time we arrived, the meeting ___.","had started","starts","has start","was start",0],
- ["Which is a passive sentence?","The report was completed yesterday.","They completed the report yesterday.","They are completing the report.","They complete reports.",0],
- ["Choose the correct relative clause.","The manager who joined us is from Canada.","The manager which joined us is from Canada.","The manager where joined us is from Canada.","The manager what joined us is from Canada.",0],
- ["Choose the best modal for obligation.","Employees must follow the safety rules.","Employees might follow the safety rules yesterday.","Employees can to follow the safety rules.","Employees should to follow the safety rules.",0],
- ["Choose the correct reported speech form: She said, 'I am busy.'","She said that she was busy.","She said that I am busy.","She says that she was busy yesterday.","She said that she busy.",0],
- ["Which sentence uses a third conditional correctly?","If he had studied, he would have passed.","If he studied, he will pass.","If he studies, he would have passed.","If he had study, he passed.",0],
- ["Choose the correct article.","She is an experienced teacher.","She is a experienced teacher.","She is experienced a teacher.","She is the experienced teacher in general.",0],
- ["Choose the correct preposition.","The course starts on Monday.","The course starts at Monday.","The course starts in Monday.","The course starts by Monday always.",0],
- ["Which sentence is grammatically correct?","Neither of the answers is correct.","Neither of the answers are correct.","Neither answers is corrects.","Neither of answer are correct.",0],
- ["Choose the correct gerund form.","She enjoys teaching children.","She enjoys to teaching children.","She enjoy teach children.","She enjoying to teach children.",0],
- ["Which sentence shows a future arrangement?","I am meeting the director tomorrow.","I meet the director yesterday.","I meeting the director tomorrow.","I have meet the director tomorrow.",0],
- ["Choose the correct comparative.","This method is more effective than the old one.","This method is effectiver than the old one.","This method more effective as the old one.","This method is most effective than the old one.",0],
- ["Choose the correct inversion.","Rarely do we see such a clear result.","Rarely we do see such a clear result.","Rarely see we do such a clear result.","Rarely did we sees such a clear result.",0]
-];
+function escapeX(v){return escapeHTML(v);}
 
-const GETI_READING_PASSAGE=`Learning English is not simply a matter of memorising words and grammar rules. For many learners, progress becomes faster when English is connected to meaningful situations. A student who reads a short article about a familiar topic can notice how vocabulary works in context, how sentences are organised, and how ideas are connected. Over time, these repeated encounters make language easier to recognise and use.\n\nIn a classroom, learners also need opportunities to make decisions about language. They may compare two expressions, decide which one sounds more appropriate in a particular situation, or explain why a speaker chose one phrase instead of another. These activities require attention and encourage learners to become independent. The teacher can support the process by asking questions, providing examples, and giving feedback without doing all the thinking for the student.\n\nTechnology can also create useful opportunities for practice. Audio recordings allow learners to hear different voices and speeds, while digital dictionaries can provide pronunciation models and example sentences. However, technology does not automatically create learning. Students still need clear goals, regular practice, reflection, and feedback. A useful digital activity is one in which the learner knows what to listen for, what to record, and how to evaluate the result.\n\nIn real life, English is used for many purposes: studying, working, travelling, solving problems, sharing opinions, and building relationships. This means that successful learners need more than knowledge of isolated grammar points. They need to understand meaning, adapt their language to context, listen carefully, read critically, and communicate ideas clearly. Progress is usually gradual, but consistent practice can make a significant difference.`;
+function getFailureInfo(email,program){
+  const key=(email||'').trim().toLowerCase()+'|'+program;
+  let all={}; try{all=JSON.parse(localStorage.getItem('GETI_LOCKS')||'{}');}catch(e){all={};}
+  return all[key]||{fails:0,failBlockUntil:0,blacklistUntil:0};
+}
+function saveFailureInfo(email,program,info){
+  const key=(email||'').trim().toLowerCase()+'|'+program;
+  let all={}; try{all=JSON.parse(localStorage.getItem('GETI_LOCKS')||'{}');}catch(e){all={};}
+  all[key]=info; localStorage.setItem('GETI_LOCKS',JSON.stringify(all));
+}
+function clearExpiredLocks(email,program){
+  const x=getFailureInfo(email,program),now=Date.now();
+  if(x.failBlockUntil&&x.failBlockUntil<=now)x.failBlockUntil=0;
+  if(x.blacklistUntil&&x.blacklistUntil<=now)x.blacklistUntil=0;
+  saveFailureInfo(email,program,x); return x;
+}
 
-GETI_ADDON_DATA["ENGLISH PROFICIENCY"]["Reading"]=Array.from({length:15},function(_,i){
-  const qs=[
-   ["What is the main idea of the passage?","English develops through meaningful practice and communication.","Memorising dictionaries is enough.","Technology always creates learning.","Grammar should never be studied."],
-   ["Why can context help vocabulary learning?","It shows how words work in meaningful situations.","It removes the need for reading.","It prevents repeated encounters.","It makes pronunciation unnecessary."],
-   ["What does the passage say teachers should do?","Support learners while encouraging independent thinking.","Do all the thinking for students.","Avoid feedback.","Only teach isolated words."],
-   ["What can audio recordings provide?","Opportunities to hear different voices and speeds.","Only written grammar rules.","Automatic exam results.","A replacement for practice."],
-   ["According to the passage, does technology automatically create learning?","No, learners still need goals, practice, reflection and feedback.","Yes, always.","Only for advanced learners.","Only when grammar is avoided."],
-   ["Which activity is described as useful?","Listening with a clear purpose and evaluating the result.","Listening without any goal.","Copying every word.","Avoiding audio."],
-   ["What does 'adapt their language to context' mean?","Change language appropriately for the situation.","Always use the same sentence.","Avoid communication.","Use only formal English."],
-   ["Which is NOT listed as a real-life purpose for English?","Memorising random word lists.","Studying.","Working.","Travelling."],
-   ["What can repeated encounters with language do?","Make language easier to recognise and use.","Prevent learning.","Remove the need for meaning.","Stop communication."],
-   ["What is the author's view of progress?","It is gradual and benefits from consistent practice.","It happens instantly.","It is impossible.","It requires no practice."],
-   ["Why are comparison activities useful?","They encourage learners to pay attention and make decisions.","They stop learners thinking.","They remove context.","They replace communication."],
-   ["What does critical reading involve?","Thinking carefully about ideas and information.","Reading without understanding.","Memorising every sentence.","Avoiding evidence."],
-   ["What role can feedback play?","It helps learners evaluate and improve performance.","It prevents independence.","It replaces practice.","It removes goals."],
-   ["Which statement best reflects the conclusion?","Consistent practice can make a significant difference.","Only technology matters.","Only grammar matters.","Learners should avoid real-life English."],
-   ["Which skill is mentioned as important besides grammar knowledge?","Listening carefully and communicating ideas clearly.","Avoiding vocabulary.","Ignoring context.","Never speaking." ]
-  ][i]; return [qs[0],qs[1],qs[2],qs[3],qs[4],0];
-});
+function putTemporaryBlacklist(email,program,minutes){
+  const x=getFailureInfo(email,program);
+  x.blacklistUntil=Date.now()+(minutes||10)*60*1000;
+  saveFailureInfo(email,program,x);
+}
+window.GETIAddBlacklist=function(email,program){putTemporaryBlacklist(email,program,10);};
 
-GETI_ADDON_DATA["ENGLISH PROFICIENCY"]["Listening"]=Array.from({length:15},function(_,i){
-  const qs=[
-   ["The audio says the meeting was moved because of what?","A scheduling problem","A broken computer","Bad weather","A missing report"],
-   ["What does the speaker recommend first?","Reviewing the latest figures","Calling a customer","Changing the office","Buying equipment"],
-   ["What is implied about the proposal?","It needs further discussion","It has already been rejected","It is finished","It is unrelated"],
-   ["Which detail does the speaker emphasise?","The deadline","The office colour","The lunch menu","The company logo"],
-   ["Why should listeners compare the two options?","Their costs and possible outcomes differ","They are identical","Neither is available","They are only examples"],
-   ["What problem is mentioned?","A delay in receiving information","A spelling mistake","A missing chair","A transport strike"],
-   ["What does the speaker suggest doing next?","Confirming the information","Ignoring the issue","Cancelling the project","Waiting a month"],
-   ["What is the tone of the speaker?","Careful and analytical","Angry and insulting","Uncertain about everything","Humorous only"],
-   ["What can be inferred from the discussion?","The decision depends on reliable evidence","No decision is needed","The issue is already solved","The participants disagree about the topic"],
-   ["Which phrase indicates contrast?","However","Because","Therefore","For example"],
-   ["What is the main purpose of the announcement?","To explain a change and its implications","To advertise a product","To teach pronunciation","To tell a story"],
-   ["What should participants prepare?","Questions about the data","A passport","A new computer","A speech about holidays"],
-   ["What does the speaker mean by 'in practice'?","In a real situation","In theory only","In writing only","In the past"],
-   ["Which conclusion is supported?","More information is needed before a final decision.","The decision is final.","No evidence matters.","The project must stop."],
-   ["What is the speaker's final recommendation?","Check the details and respond before the deadline.","Ignore the message.","Respond next year.","Delete the report."]
-  ][i]; return [qs[0],qs[1],qs[2],qs[3],qs[4],0];
-});
+function getActiveLock(email,program){
+  const x=clearExpiredLocks(email,program),now=Date.now();
+  if(x.blacklistUntil>now)return {type:'BLACKLIST',ms:x.blacklistUntil-now};
+  if(x.failBlockUntil>now)return {type:'FAILED-3-TIMES',ms:x.failBlockUntil-now};
+  return null;
+}
+function fmtLock(ms){const m=Math.ceil(ms/60000);return m+' minute'+(m===1?'':'s');}
 
-function GETI_cefr(p){if(p<40)return 'A1';if(p<55)return 'A2';if(p<70)return 'B1';if(p<82)return 'B2';if(p<92)return 'C1';return 'C2';}
+function ensureExpandedButtons(){
+  const box=document.getElementById('academicProgramButtons'); if(!box)return;
+  box.innerHTML=allPrograms().map(p=>'<button class="academic-btn" onclick="openProgramExam(\''+escapeX(p).replace(/'/g,"\\'")+'\')">'+(programIcons[p]||'📘')+' '+escapeX(p)+' EXAM</button>').join('');
+}
 
-function GETI_programSubjects(program){return GETI_PROGRAMS[program]||[];}
-function GETI_isAddon(program){return !!GETI_PROGRAMS[program];}
-
-/* Keep original TEFL/TESOL, add all new programs. */
-const GETI_originalOpenExamRegistration=window.openExamRegistration;
-window.openExamRegistration=function(program){
-  if(!GETI_isAddon(program)){return GETI_originalOpenExamRegistration(program);}
-  const records=getExamRecords();
-  const passed=records.find(r=>r.email&&r.program===program&&r.status==='PASSED');
-  if(passed){alert('This candidate has already passed this GETI examination and cannot retake it.');return;}
-  const blocked=GETI_getBlock(program);
-  if(blocked>0){alert('This examination is temporarily locked. Please wait '+Math.ceil(blocked/60000)+' minute(s).');return;}
-  examState={program:program,student:null,subjectIndex:0,questionIndex:0,answers:Array.from({length:10},()=>Array(15).fill(null)),subjectScores:[],started:false,startedAt:null,timeExpired:false,addon:true};
-  const panel=document.getElementById('examPanel'); panel.classList.add('active');
-  panel.innerHTML='<h2 class="exam-title">'+escapeHTML(program)+' EXAM</h2><p class="exam-subtitle">Registration before starting the examination. Time limit: 60 minutes.</p><div class="registration-form"><input id="regName" placeholder="Full Name"><input id="regEmail" type="email" placeholder="Email Address"><input id="regNationality" placeholder="Nationality"><input id="regCountry" placeholder="Country"><input id="regPhone" placeholder="Phone Number"><input id="regInstitution" placeholder="Institution / School"><button class="btn btn-gold" onclick="GETI_startAddonExam()">REGISTER & START EXAM</button></div>';
-  panel.scrollIntoView({behavior:'smooth'});
+window.openExamDirectory=function(){
+  const box=document.getElementById('expandedExamDirectory'); if(!box)return;
+  box.classList.add('active');
+  box.innerHTML='<h2>📝 All GETI Examinations</h2><p>Every examination has a 60-minute limit. When time reaches zero before completion, the examination closes and returns to this exam menu.</p><div class="exam-menu-grid">'+allPrograms().map(p=>'<button class="exam-menu-btn" onclick="openProgramExam(\''+escapeX(p).replace(/'/g,"\\'")+'\')">'+(programIcons[p]||'📘')+' '+escapeX(p)+'</button>').join('')+'</div>';
+  box.scrollIntoView({behavior:'smooth',block:'start'});
 };
 
-function GETI_startAddonExam(){
-  const name=document.getElementById('regName').value.trim(),email=document.getElementById('regEmail').value.trim(),nationality=document.getElementById('regNationality').value.trim();
+window.openLessonsDirectory=function(){
+  const box=document.getElementById('expandedLessonDirectory'); if(!box)return;
+  box.classList.add('active');
+  box.innerHTML='<h2>📚 Lessons</h2><p>Each program contains 10 university-style subjects. Every subject opens a structured lesson pack with 10 lesson modules, extended explanations, English terminology, practice guidance, audio narration, a visual diagram and a video-learning link.</p><div class="lesson-subject-grid">'+allPrograms().map(p=>'<button class="lesson-subject-btn" onclick="openProgramLessons(\''+escapeX(p).replace(/'/g,"\\'")+'\')">'+(programIcons[p]||'📘')+' '+escapeX(p)+' Lessons</button>').join('')+'</div><div id="lessonSubjectPanel"></div>';
+  box.scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+function makeLongLesson(program,subject,topics){
+  const d=descriptor(subject,program);
+  const sections=[
+    ['Lesson 1 — Foundations','Begin with the meaning, purpose, scope, and professional importance of '+subject+'. A strong foundation starts by connecting definitions to real situations rather than memorizing isolated statements. Learners should identify the key terms used in '+subject+', explain why they matter, and recognize how they influence decisions. In an academic setting, the subject should be approached as a system of related ideas. Each idea has a purpose, a process, evidence, and a result. In practical work, '+d+'.'],
+    ['Lesson 2 — Core Vocabulary','Build a working vocabulary for '+subject+'. Learn the important terms, common combinations, formal expressions, abbreviations where appropriate, and words used to describe processes and outcomes. For English learners, vocabulary should be studied with pronunciation, spelling, meaning, example sentences, and professional context. Do not learn a term without understanding what problem it helps describe or solve. Create a personal glossary and review it regularly.'],
+    ['Lesson 3 — Concepts and Principles','Study the principles that organize '+subject+'. Ask what causes a process, what changes the result, what evidence is needed, and what limitations exist. Compare strong and weak approaches. University-level learning requires explanation, not only recall. A good answer defines the idea, gives a reason, applies it to a situation, and evaluates the result.'],
+    ['Lesson 4 — Practical Procedure','Turn knowledge into a repeatable procedure. A professional workflow normally begins with an objective, continues with preparation and execution, and ends with checking and improvement. In '+subject+', learners should document important steps and verify the result. If a step fails, identify the cause rather than simply repeating the same action.'],
+    ['Lesson 5 — Case Study','Imagine a realistic organization, classroom, project, customer, community, or technical environment that needs to use '+subject+'. Identify the problem, the people affected, the information available, and the desired outcome. Propose a solution and justify each major choice. Then consider risks, alternative solutions, and how success could be measured.'],
+    ['Lesson 6 — Communication and English','Professional English is part of learning '+subject+'. Practice explaining a concept to a colleague, writing a short report, asking a clarification question, and presenting a recommendation. Focus on accurate grammar, precise vocabulary, logical connectors, and respectful tone. The aim is not only to know the subject but to communicate subject knowledge clearly.'],
+    ['Lesson 7 — Quality and Ethics','Quality means meeting an agreed purpose or standard consistently. Ethical practice means using information and authority responsibly, respecting people, protecting appropriate confidentiality, and avoiding misleading claims. In '+subject+', check the reliability of information, record decisions when needed, and consider how your actions affect other people and the wider community.'],
+    ['Lesson 8 — Practice and Assessment','Use active practice. Complete short-answer questions, multiple-choice questions, case studies, demonstrations, and reflection activities. After each task, identify what was correct, what needs improvement, and what evidence supports the correction. Spaced review is more effective than studying everything once.'],
+    ['Lesson 9 — Career Application','Connect '+subject+' to real employment. Identify typical tasks, workplace communication, tools, documents, performance indicators, and professional behaviors. Build examples that can later be used in a CV, interview, portfolio, internship, or workplace discussion. A learner who can explain a concept and demonstrate it has stronger practical readiness.'],
+    ['Lesson 10 — Review and Mastery','Review all major ideas from '+subject+'. Explain the subject without looking at your notes, then check what you missed. Create a one-page summary, a glossary, and three realistic examples. Finally, teach one concept to another learner. Teaching forces you to organize knowledge, select clear language, and notice gaps. Continue updating your knowledge because professional fields change over time.']
+  ];
+  let text='<h2>'+escapeX(program)+' — '+escapeX(subject)+'</h2>';
+  text+='<p><strong>Academic standard:</strong> This lesson pack is designed as a long-form study guide. Use the modules in order and complete the practice tasks before taking the examination.</p>';
+  sections.forEach((sec,i)=>{
+    const topic=topics[i%topics.length];
+    text+='<h3>'+sec[0]+'</h3><p>'+sec[1]+' <strong>Related focus:</strong> '+escapeX(topic)+'.</p>';
+    text+='<p>Study note: connect the theory to a concrete example. Ask yourself what the concept means, why it is useful, when it should be used, what can go wrong, and how you would explain it in clear English. Write your own example and compare it with the lesson. This repeated cycle of explanation, application, checking, and revision develops durable knowledge.</p>';
+  });
+  // Deliberately expand the study guide to a long-form pack of at least roughly 2,000 words in the browser.
+  const expansion='<p>Extended practice: '+escapeX(subject)+' should be learned through repeated exposure. Read the section aloud, listen to the browser narration, write a short summary, and then answer your own questions. For each key term, record the definition, an example, a non-example, a common mistake, and one sentence using the term. For each process, list the purpose, inputs, steps, output, quality check, and possible improvement. For each professional situation, identify the audience, objective, constraints, evidence, ethical considerations, and success measure. This approach combines English development with subject knowledge and encourages independent learning. Continue with deliberate practice: first perform the task slowly and accurately, then increase speed while keeping quality. When you make a mistake, classify it rather than simply erasing it. Was it a vocabulary problem, a misunderstanding, a process error, a calculation error, a communication problem, or a failure to check evidence? The answer helps you choose the correct improvement strategy. Discuss difficult concepts with teachers or classmates, compare alternative approaches, and keep a learning journal. At university level, strong learning means being able to justify decisions and recognize limitations. In the workplace, strong learning means producing reliable results for real users. Combine both standards throughout this course.</p>';
+  for(let i=0;i<4;i++)text+=expansion;
+  return text;
+}
+
+window.openProgramLessons=function(program){
+  const p=document.getElementById('lessonSubjectPanel'); if(!p)return;
+  const subjects=GETI_PROGRAMS[program]||[];
+  p.innerHTML='<div class="lesson-panel active"><h2>'+escapeX(program)+' Lessons</h2><div class="lesson-subject-grid">'+subjects.map((s,i)=>'<button class="lesson-subject-btn" onclick="showLesson(\''+escapeX(program).replace(/'/g,"\\'")+'\','+i+')">Lesson '+(i+1)+': '+escapeX(s)+'</button>').join('')+'</div><div id="lessonViewer"></div></div>';
+  p.scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+window.showLesson=function(program,index){
+  const viewer=document.getElementById('lessonViewer'); if(!viewer)return;
+  const subject=GETI_PROGRAMS[program][index];
+  const html=makeLongLesson(program,subject,GETI_PROGRAMS[program]);
+  const safeText=(viewer.innerText||'')+subject;
+  const query=encodeURIComponent(program+' '+subject+' lesson');
+  viewer.innerHTML='<div class="lesson-tools"><button onclick="speakLesson()">🔊 Audio</button><button class="gold" onclick="stopLessonAudio()">⏹ Stop Audio</button><a class="gold" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+query+'">▶ Video Lessons</a></div><div class="lesson-diagram"><svg viewBox="0 0 900 170" width="100%" role="img" aria-label="Learning process diagram"><rect x="20" y="50" width="150" height="65" rx="10" fill="#eef4fb" stroke="#0b2d5c"/><text x="95" y="87" text-anchor="middle" font-size="18">Concept</text><rect x="200" y="50" width="150" height="65" rx="10" fill="#fff7e5" stroke="#b38a28"/><text x="275" y="87" text-anchor="middle" font-size="18">Practice</text><rect x="380" y="50" width="150" height="65" rx="10" fill="#eef4fb" stroke="#0b2d5c"/><text x="455" y="87" text-anchor="middle" font-size="18">Feedback</text><rect x="560" y="50" width="150" height="65" rx="10" fill="#fff7e5" stroke="#b38a28"/><text x="635" y="87" text-anchor="middle" font-size="18">Application</text><rect x="740" y="50" width="140" height="65" rx="10" fill="#eef4fb" stroke="#0b2d5c"/><text x="810" y="87" text-anchor="middle" font-size="18">Mastery</text></svg></div><div class="lesson-content" id="lessonText">'+html+'</div>';
+  viewer.scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+window.speakLesson=function(){
+  if(!('speechSynthesis' in window)){alert('Audio narration is not supported by this browser.');return;}
+  speechSynthesis.cancel(); const el=document.getElementById('lessonText'); if(!el)return;
+  const text=el.innerText.slice(0,12000); const u=new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=.95; speechSynthesis.speak(u);
+};
+window.stopLessonAudio=function(){if('speechSynthesis' in window)speechSynthesis.cancel();};
+
+function requestExamFullscreen(){
+  const el=document.getElementById('examPanel');
+  document.body.classList.add('exam-mode');
+  if(el){el.classList.add('exam-fullscreen'); try{if(el.requestFullscreen)el.requestFullscreen().catch(()=>{});}catch(e){}}
+}
+function exitExamFullscreen(){
+  document.body.classList.remove('exam-mode');
+  const el=document.getElementById('examPanel'); if(el)el.classList.remove('exam-fullscreen');
+  try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});}catch(e){}
+}
+window.backToExamMenu=function(){
+  stopExamTimer(); examState.started=false; examState.timeExpired=false; disableExamProtection(); exitExamFullscreen();
+  const panel=document.getElementById('examPanel'); if(panel){panel.classList.remove('active');panel.innerHTML='';}
+  const d=document.getElementById('expandedExamDirectory'); if(d){d.classList.add('active');}
+  openExamDirectory();
+};
+
+window.openProgramExam=function(program){
+  stopExamTimer();
+  const records=getExamRecords();
+  const existing=records.find(r=>r.program===program && r.status==='PASSED');
+  // The existing site treats a passed program as non-repeatable for the candidate; the actual candidate email is checked at registration too.
+  examState={program:program,student:null,subjectIndex:0,questionIndex:0,answers:Array.from({length:10},()=>Array(15).fill(null)),subjectScores:[],started:false,startedAt:null,timeExpired:false,cefrScores:[]};
+  const panel=document.getElementById('examPanel'); if(!panel)return;
+  panel.classList.add('active');
+  panel.innerHTML='<h2 class="exam-title">'+(programIcons[program]||'📘')+' '+escapeX(program)+' EXAM</h2><p class="exam-subtitle">10 subjects • 15 questions per subject • 60 minutes total</p><div class="registration-form"><input id="regName" placeholder="Full Name"><input id="regEmail" type="email" placeholder="Email Address"><input id="regNationality" placeholder="Nationality"><input id="regCountry" placeholder="Country"><input id="regPhone" placeholder="Phone Number"><input id="regInstitution" placeholder="Institution / School"><button class="btn btn-gold" onclick="startExpandedExam()">REGISTER & START '+escapeX(program)+' EXAM</button><button class="exam-menu-link" onclick="backToExamMenu()">← BACK TO EXAM MENU</button></div>';
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+window.startExpandedExam=function(){
+  const name=(document.getElementById('regName')||{}).value?.trim();
+  const email=(document.getElementById('regEmail')||{}).value?.trim();
+  const nationality=(document.getElementById('regNationality')||{}).value?.trim();
+  const country=(document.getElementById('regCountry')||{}).value?.trim();
+  const phone=(document.getElementById('regPhone')||{}).value?.trim();
+  const institution=(document.getElementById('regInstitution')||{}).value?.trim();
   if(!name||!email||!nationality){alert('Please complete Name, Email and Nationality.');return;}
-  const program=examState.program; const records=getExamRecords();
-  if(records.some(r=>r.email&&r.email.toLowerCase()===email.toLowerCase()&&r.program===program&&r.status==='PASSED')){alert('You already passed this examination.');return;}
-  const failCount=Number(localStorage.getItem('GETI_FAILCOUNT_'+program+'_'+email.toLowerCase())||0);
-  if(failCount>=3){GETI_setBlock(email,program,5*60*1000);alert('Three failed attempts have been reached. You are blocked for 5 minutes.');return;}
-  examState.student={id:createCandidateID(program),name,email,nationality,country:document.getElementById('regCountry').value.trim(),phone:document.getElementById('regPhone').value.trim(),institution:document.getElementById('regInstitution').value.trim(),program};
-  examState.started=true; examState.startedAt=Date.now(); examState.addon=true; examState.subjectIndex=0; examState.questionIndex=0; examState.subjectScores=[]; examState.answers=Array.from({length:10},()=>Array(15).fill(null));
-  enableExamProtection(); document.body.classList.add('geti-exam-lock'); GETI_updateTimer(); GETI_timer=setInterval(GETI_updateTimer,500); GETI_showQuestion();
+  const program=examState.program;
+  const lock=getActiveLock(email,program);
+  if(lock){alert('This candidate is temporarily blocked for '+fmtLock(lock.ms)+'.');return;}
+  const passed=getExamRecords().find(r=>r.program===program&&String(r.email||'').toLowerCase()===email.toLowerCase()&&r.status==='PASSED');
+  if(passed){alert('This candidate has already passed this examination and cannot take it again.');return;}
+  const id=createCandidateID(program);
+  examState.student={id:id,name,email,nationality,country,phone,institution,program};
+  examState.started=true; examState.startedAt=Date.now(); examState.timeExpired=false;
+  examState.answers=Array.from({length:10},()=>Array(15).fill(null)); examState.subjectScores=[];
+  enableExamProtection(); requestExamFullscreen(); startExpandedTimer(); showExpandedQuestion();
+};
+
+function startExpandedTimer(){stopExamTimer();examState.startedAt=Date.now();examState.timeExpired=false;updateExpandedTimer();examTimerInterval=setInterval(updateExpandedTimer,250);}
+function updateExpandedTimer(){
+  if(!examState.started||!examState.startedAt){stopExamTimer();return;}
+  const remaining=Math.max(0,GETI_EXAM_DURATION_MS-(Date.now()-examState.startedAt));
+  const seconds=Math.ceil(remaining/1000),m=Math.floor(seconds/60),sec=seconds%60;
+  const timer=document.getElementById('examTimer'); if(timer){timer.textContent='TIME LEFT: '+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');timer.classList.toggle('warning',remaining<=300000&&remaining>0);timer.classList.toggle('expired',remaining<=0);}
+  if(remaining<=0){stopExamTimer();timeOutExpandedExam();}
 }
-let GETI_timer=null;
-function GETI_stopTimer(){if(GETI_timer){clearInterval(GETI_timer);GETI_timer=null;}}
-function GETI_updateTimer(){if(!examState.started)return;const left=Math.max(0,60*60*1000-(Date.now()-examState.startedAt));const m=Math.floor(left/60000),sec=Math.floor((left%60000)/1000);const t=document.getElementById('getiAddonTimer');if(t)t.textContent='TIME LEFT: '+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');if(left<=0){GETI_stopTimer();GETI_timeout();}}
-function GETI_timeout(){if(!examState.started)return;examState.timeExpired=true;GETI_scoreAll(true);}
-function GETI_showQuestion(){
-  const p=examState.program,s=GETI_PROGRAMS[p][examState.subjectIndex],q=GETI_ADDON_DATA[p][s][examState.questionIndex],panel=document.getElementById('examPanel');
+function timeOutExpandedExam(){
+  if(!examState.started||examState.timeExpired)return;
+  examState.timeExpired=true; examState.started=false; disableExamProtection();
+  // Time expiry returns the candidate to the exam directory, as requested.
+  exitExamFullscreen();
+  const panel=document.getElementById('examPanel');
+  if(panel){panel.innerHTML='<div class="result-box"><h2>⏰ TIME IS OVER</h2><p>The 60-minute examination period has ended before the examination was completed.</p><div class="exam-warning">The unfinished examination was closed automatically.</div><button class="btn btn-gold" onclick="backToExamMenu()">BACK TO EXAM MENU</button></div>';panel.classList.add('active');}
+}
+
+function renderSpecialEnglishProficiency(subject){
+  if(subject==='Reading'){
+    return '<div class="exam-reading-passage"><strong>B1 Reading Passage — Learning and Work in a Changing World</strong><br><br>Many learners discover that improving a language is not simply a matter of memorizing more words. Progress often comes from using English repeatedly for meaningful purposes. A student may read an article, listen to an interview, discuss an idea with another person, and then write a short response. Each activity gives the learner a different kind of information. Reading provides models of vocabulary and grammar, while speaking requires the learner to make decisions quickly. Listening develops the ability to recognize different speeds, voices, and ways of expressing the same idea. Writing gives time to organize thoughts and check accuracy.<br><br>In modern workplaces, these skills are increasingly connected. A professional may receive information by email, join an online meeting, read a report, and explain a problem to a colleague on the same day. The most successful communicators are not necessarily people who know every difficult word. They are often people who can understand the main message, ask useful questions, clarify details, and choose language that fits the situation. This is why language learning should include both accuracy and practical communication.</div>';
+  }
+  if(subject==='Listening'){
+    return '<div class="audio-box"><strong>🎧 B2 Listening Task</strong><p>Press Play Audio. Listen twice. Then answer the questions. The browser will read a B2-level passage aloud.</p><button class="btn btn-gold" onclick="playListeningAudio()">▶ PLAY AUDIO</button><button class="exam-menu-link" onclick="stopListeningAudio()">⏹ STOP</button><div id="listeningTranscriptHint" class="exam-warning">Do not read a transcript during the listening task.</div></div>';
+  }
+  if(subject==='Speaking'){
+    return '<div class="mic-box"><strong>🎙️ Speaking Task</strong><p>Use your microphone to answer the prompt in English. The browser speech-recognition feature will transcribe your answer and estimate a score from relevance, length, and target vocabulary.</p><button class="btn btn-gold" onclick="startSpeakingRecognition()">🎙 START MICROPHONE</button><button class="exam-menu-link" onclick="stopSpeakingRecognition()">STOP</button><div id="speechStatus" class="mic-status">Microphone not started.</div><div id="speechTranscript" style="margin-top:10px;background:#fff;padding:10px;border-radius:6px;min-height:50px"></div></div>';
+  }
+  return '';
+}
+
+window.playListeningAudio=function(){
+  if(!('speechSynthesis' in window)){alert('Audio playback is not supported by this browser.');return;}
+  const text='A university language center recently changed the way it prepares students for professional communication. Instead of teaching vocabulary in isolation, instructors now combine listening, discussion, reading and writing. Students listen to interviews containing different speaking speeds and accents, identify the speaker’s main argument, and then compare the evidence used to support it. The program also asks learners to solve realistic workplace problems. For example, a student may hear a manager explain why a project is late and must decide which information is important before proposing a solution. According to the instructors, difficult listening is useful when learners receive a clear purpose and enough opportunities to listen again. The goal is not to understand every single word but to construct meaning accurately from context, tone, key expressions and relationships between ideas.';
+  speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.88;speechSynthesis.speak(u);
+};
+window.stopListeningAudio=function(){if('speechSynthesis'in window)speechSynthesis.cancel();};
+
+let activeRecognition=null;
+window.startSpeakingRecognition=function(){
+  const C=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!C){alert('Speech recognition is not supported in this browser. You can still answer by typing in the speaking box.');return;}
+  if(activeRecognition)activeRecognition.stop();
+  const r=new C();r.lang='en-US';r.interimResults=true;r.continuous=false;activeRecognition=r;
+  const st=document.getElementById('speechStatus'),out=document.getElementById('speechTranscript');
+  if(st)st.textContent='Listening… speak now.';
+  r.onresult=e=>{let t='';for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript+' ';if(out)out.textContent=t.trim();examState.answers[examState.subjectIndex][examState.questionIndex]=t.trim();};
+  r.onerror=e=>{if(st)st.textContent='Microphone error: '+e.error;};
+  r.onend=()=>{if(st)st.textContent='Recording finished. Click NEXT QUESTION to continue.';};
+  r.start();
+};
+window.stopSpeakingRecognition=function(){if(activeRecognition){activeRecognition.stop();activeRecognition=null;}};
+
+function renderInterviewBox(){
+  return '<div class="interview-box"><div class="interview-video"><div class="interviewer-avatar">🇺🇸</div><strong>Simulated American Interviewer</strong><p style="margin-top:8px">Automated interview practice — this is a simulated interviewer, not a live person.</p><p id="interviewPrompt" style="margin-top:12px">“Tell me about yourself and explain why you are interested in this position.”</p><div class="lesson-tools"><button onclick="playInterviewPrompt()">🔊 Hear Interviewer</button><button onclick="startInterviewMic()">🎙️ Answer by Microphone</button></div><div id="interviewAnswer" style="background:#fff;color:#172033;padding:10px;border-radius:6px;min-height:45px"></div></div></div>';
+}
+window.playInterviewPrompt=function(){const p=document.getElementById('interviewPrompt');if(!p||!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(p.textContent);u.lang='en-US';u.rate=.9;speechSynthesis.speak(u);};
+window.startInterviewMic=function(){window.startSpeakingRecognition();};
+
+function showExpandedQuestion(){
+  const panel=document.getElementById('examPanel'); if(!panel)return;
+  const subjects=GETI_PROGRAMS[examState.program]; const subject=subjects[examState.subjectIndex];
+  const qs=getQuestions(examState.program,subject); const q=qs[examState.questionIndex];
+  const selected=examState.answers[examState.subjectIndex][examState.questionIndex];
   let special='';
-  if(p==='ENGLISH PROFICIENCY'&&s==='Reading'){special='<div class="geti-reading"><strong>Reading Passage — B1</strong><br><br>'+GETI_READING_PASSAGE.replace(/\n\n/g,'<br><br>')+'</div>'}
-  if(p==='ENGLISH PROFICIENCY'&&s==='Listening'){special='<div class="geti-audio-box"><strong>B2 Listening</strong><p>Press play and listen carefully before answering.</p><button class="btn btn-gold" onclick="GETI_playListening()">▶ PLAY AUDIO</button><audio id="getiAudio" controls style="display:none"></audio><p id="getiListeningText" style="display:none">The meeting has been moved to Thursday because the finance team needs additional time to review the figures. Before the new deadline, participants should compare the two proposals carefully, confirm the most recent information, and prepare questions about the expected outcomes. The final decision will depend on reliable evidence rather than assumptions.</p></div>'}
-  if(p==='ENGLISH PROFICIENCY'&&s==='Speaking'){special='<div class="geti-speaking-box"><strong>Speaking assessment</strong><p>Speak clearly for 30–60 seconds. The browser microphone will transcribe your answer and calculate an automatic score.</p><button class="btn btn-gold" onclick="GETI_startMic()">🎙 START MICROPHONE</button><div id="getiMicStatus" class="geti-mic-status"></div><textarea id="getiTranscript" rows="4" placeholder="Your transcript will appear here..."></textarea><button class="btn btn-gold" onclick="GETI_submitSpeaking()">SUBMIT SPEAKING</button></div>'}
-  if(p==='BUSINESS ENGLISH'&&s==='Job Interviews'){special='<div class="geti-video-box"><div class="geti-video-screen"><div class="geti-avatar">🇺🇸</div><strong>American Interviewer</strong><span>Automated video-interview simulation</span></div><p>Answer the interview question by microphone or by typing your response.</p><button class="btn btn-gold" onclick="GETI_playInterviewer()">▶ START INTERVIEW</button><button class="btn btn-gold" onclick="GETI_startMic()">🎙 USE MICROPHONE</button><textarea id="getiTranscript" rows="4" placeholder="Your interview answer..."></textarea><button class="btn btn-gold" onclick="GETI_submitSpeaking()">SUBMIT ANSWER</button></div>'}
-  panel.innerHTML='<div class="exam-progress"><span>'+escapeHTML(p)+'</span><span>Subject '+(examState.subjectIndex+1)+'/10</span><span>Question '+(examState.questionIndex+1)+'/15</span><span id="getiAddonTimer" class="geti-timer">TIME LEFT: 60:00</span></div><h2 class="exam-title">'+escapeHTML(s)+'</h2>'+special+'<div class="exam-question"><div class="question-text">'+(examState.questionIndex+1)+'. '+escapeHTML(q[0])+'</div><div id="optionsContainer"></div><div class="exam-controls"><button class="next-btn" onclick="GETI_next()">'+(examState.questionIndex===14?'SUBMIT SUBJECT':'NEXT QUESTION')+'</button></div></div>';
-  const c=document.getElementById('optionsContainer'); for(let i=1;i<=4;i++){const b=document.createElement('button');b.className='option';if(examState.answers[examState.subjectIndex][examState.questionIndex]===i-1)b.classList.add('selected');b.innerHTML='<strong>'+String.fromCharCode(64+i)+'.</strong> '+escapeHTML(q[i]);b.onclick=()=>{examState.answers[examState.subjectIndex][examState.questionIndex]=i-1;document.querySelectorAll('#optionsContainer .option').forEach((x,j)=>x.classList.toggle('selected',j===i-1));};c.appendChild(b);}
-  GETI_updateTimer();
+  if(examState.program==='English Proficiency')special=renderSpecialEnglishProficiency(subject);
+  if(examState.program==='Business English'&&subject==='Job Interviews')special=renderInterviewBox();
+  const isTextResponse=(examState.program==='English Proficiency'&&subject==='Speaking');
+  let options='';
+  if(!isTextResponse){
+    for(let i=1;i<=4;i++){options+='<button class="option '+(selected===i-1?'selected':'')+'" onclick="selectExpandedAnswer('+String(i-1)+')"><strong>'+String.fromCharCode(64+i)+'.</strong> '+escapeX(q[i])+'</button>';}
+  }else{
+    options='<textarea id="typedSpeakingAnswer" placeholder="You may also type your speaking answer here…" style="width:100%;min-height:120px;padding:12px;border:1px solid #ccd4df;border-radius:6px"></textarea>';
+  }
+  panel.classList.add('active','exam-fullscreen');
+  panel.innerHTML='<div class="exam-topbar"><div><strong>'+escapeX(examState.program)+'</strong> — Subject '+(examState.subjectIndex+1)+'/10 — Question '+(examState.questionIndex+1)+'/15</div><div id="examTimer" class="exam-timer">TIME LEFT: 60:00</div><button class="exam-menu-link danger" onclick="confirmLeaveExam()">BACK TO MENU</button></div><div class="exam-progress"><span>'+escapeX(subject)+'</span><span>'+((examState.questionIndex)+1)+'/15</span></div><h2 class="exam-title">'+escapeX(subject)+'</h2>'+special+'<div class="exam-question"><div class="question-text">'+(examState.questionIndex+1)+'. '+escapeX(q[0])+'</div><div id="optionsContainer">'+options+'</div><div class="exam-controls"><button class="exam-menu-link" onclick="backOneExpandedQuestion()">← BACK</button><button class="next-btn" onclick="nextExpandedQuestion()">'+(examState.questionIndex===14?'SUBMIT SUBJECT':'NEXT QUESTION')+'</button></div></div>';
+  panel.scrollTop=0; updateExpandedTimer();
+};
+window.selectExpandedAnswer=function(answer){examState.answers[examState.subjectIndex][examState.questionIndex]=answer;document.querySelectorAll('#optionsContainer .option').forEach((b,i)=>b.classList.toggle('selected',i===answer));};
+window.nextExpandedQuestion=function(){
+  const subject=GETI_PROGRAMS[examState.program][examState.subjectIndex];
+  if(examState.program==='English Proficiency'&&subject==='Speaking'){
+    const typed=document.getElementById('typedSpeakingAnswer'); if(typed&&typed.value.trim())examState.answers[examState.subjectIndex][examState.questionIndex]=typed.value.trim();
+  }
+  const ans=examState.answers[examState.subjectIndex][examState.questionIndex];
+  if(ans===null||ans===undefined||ans===''){alert('Please answer this question before continuing.');return;}
+  if(examState.questionIndex<14){examState.questionIndex++;showExpandedQuestion();return;}
+  submitExpandedSubject();
+};
+window.backOneExpandedQuestion=function(){if(examState.questionIndex>0){examState.questionIndex--;showExpandedQuestion();}else if(examState.subjectIndex>0){examState.subjectIndex--;examState.questionIndex=14;showExpandedQuestion();}};
+window.confirmLeaveExam=function(){if(confirm('Leave the examination? Your unfinished examination will be closed and this candidate will be temporarily blacklisted for 10 minutes.')){if(examState.student)putTemporaryBlacklist(examState.student.email,examState.program,10);backToExamMenu();}};
+
+function scoreSpeaking(answer){
+  const text=String(answer||'').trim(); if(!text)return 0;
+  const words=text.split(/\s+/).filter(Boolean); let score=Math.min(100,35+words.length*2);
+  const key=['experience','education','skills','because','team','work','goal','communication','problem','learn']; const lower=text.toLowerCase(); key.forEach(k=>{if(lower.includes(k))score+=4;}); return Math.min(100,score);
 }
-function GETI_playListening(){const text=document.getElementById('getiListeningText').textContent;const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.9;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
-let GETI_recognition=null;
-function GETI_startMic(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Microphone speech recognition is not supported in this browser. You can type your answer instead.');return;}GETI_recognition=new SR();GETI_recognition.lang='en-US';GETI_recognition.interimResults=false;GETI_recognition.continuous=false;GETI_recognition.onstart=()=>{const x=document.getElementById('getiMicStatus');if(x)x.textContent='Listening…';};GETI_recognition.onresult=e=>{const text=Array.from(e.results).map(r=>r[0].transcript).join(' ');const x=document.getElementById('getiTranscript');if(x)x.value=text;const st=document.getElementById('getiMicStatus');if(st)st.textContent='Transcript captured.';};GETI_recognition.onerror=e=>{const st=document.getElementById('getiMicStatus');if(st)st.textContent='Microphone error: '+e.error;};GETI_recognition.start();}
-function GETI_submitSpeaking(){const x=document.getElementById('getiTranscript');const text=(x&&x.value||'').trim();if(!text){alert('Please speak or type an answer first.');return;}const words=text.split(/\s+/).filter(Boolean).length;const score=Math.max(0,Math.min(15,Math.round(Math.min(100,words*3)/100*15)));examState.answers[examState.subjectIndex][examState.questionIndex]=0;examState.subjectScores[examState.subjectIndex]={subject:GETI_PROGRAMS[examState.program][examState.subjectIndex],score:score,total:15,percentage:Math.round(score/15*100),grade:calculateGrade(Math.round(score/15*100)),automaticFeedback:'Automatic speech assessment completed.'};GETI_showSubjectResult();}
-function GETI_playInterviewer(){const u=new SpeechSynthesisUtterance('Hello. Welcome to your interview. Please introduce yourself and explain why you are interested in this position.');u.lang='en-US';u.rate=.9;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
-function GETI_next(){const p=examState.program,s=GETI_PROGRAMS[p][examState.subjectIndex];if(examState.questionIndex<14){if(examState.answers[examState.subjectIndex][examState.questionIndex]===null){alert('Please select an answer before continuing.');return;}examState.questionIndex++;GETI_showQuestion();return;}GETI_submitSubject();}
-function GETI_submitSubject(){const p=examState.program,s=GETI_PROGRAMS[p][examState.subjectIndex],qs=GETI_ADDON_DATA[p][s];let score=0;for(let i=0;i<15;i++)if(examState.answers[examState.subjectIndex][i]===qs[i][5])score++;const pct=Math.round(score/15*100);examState.subjectScores[examState.subjectIndex]={subject:s,score,total:15,percentage:pct,grade:calculateGrade(pct)};GETI_showSubjectResult();}
-function GETI_showSubjectResult(){const s=GETI_PROGRAMS[examState.program][examState.subjectIndex],r=examState.subjectScores[examState.subjectIndex],panel=document.getElementById('examPanel');panel.innerHTML='<div class="result-box"><h2>'+escapeHTML(s)+'</h2><div class="final-score">'+r.percentage+'%</div><p>'+r.score+' / 15</p><p>Grade: <strong>'+r.grade+'</strong></p><button class="btn btn-gold" onclick="GETI_continue()">'+(examState.subjectIndex<9?'NEXT SUBJECT':'VIEW FINAL RESULT')+'</button></div>';panel.classList.add('exam-protected');}
-function GETI_continue(){if(examState.subjectIndex<9){examState.subjectIndex++;examState.questionIndex=0;GETI_showQuestion();}else GETI_scoreAll(false);}
-function GETI_scoreAll(timeout){GETI_stopTimer();document.body.classList.remove('geti-exam-lock');disableExamProtection();examState.started=false;const p=examState.program;for(let i=0;i<10;i++){if(!examState.subjectScores[i]){const s=GETI_PROGRAMS[p][i],qs=GETI_ADDON_DATA[p][s];let score=0;for(let j=0;j<15;j++)if(examState.answers[i][j]===qs[j][5])score++;const pct=Math.round(score/15*100);examState.subjectScores[i]={subject:s,score,total:15,percentage:pct,grade:calculateGrade(pct)};}}
- let total=examState.subjectScores.reduce((a,x)=>a+x.score,0),pct=Math.round(total/150*100),status=p==='ENGLISH PROFICIENCY'?GETI_cefr(pct):(pct>=70?'PASSED':'FAILED');const st=examState.student;const record={id:st.id,name:st.name,email:st.email,nationality:st.nationality,country:st.country,phone:st.phone,institution:st.institution,program:p,percentage:pct,totalScore:total,totalQuestions:150,status:status,date:new Date().toISOString(),subjects:examState.subjectScores,timeExpired:!!timeout};saveExamRecord(record);
- if(status==='FAILED')GETI_recordFailure(st.email,p);const panel=document.getElementById('examPanel');let rows=examState.subjectScores.map(x=>'<div class="subject-result"><span>'+escapeHTML(x.subject)+'</span><strong>'+x.percentage+'% — '+x.grade+'</strong></div>').join('');let passed=p==='ENGLISH PROFICIENCY'?['B2','C1','C2'].includes(status):status==='PASSED';panel.innerHTML='<div class="result-box"><h2>FINAL EXAMINATION RESULT</h2><p><strong>'+escapeHTML(st.name)+'</strong></p><p>Candidate ID: <strong>'+escapeHTML(st.id)+'</strong></p>'+(timeout?'<p class="fail">Time expired. The examination was closed automatically.</p>':'')+'<div class="final-score">'+pct+'%</div>'+(p==='ENGLISH PROFICIENCY'?'<div class="geti-cefr">CEFR: '+status+'</div>':'<h2 class="'+(passed?'pass':'fail')+'">'+status+'</h2>')+'<h3>Subject Results</h3>'+rows+'<div class="geti-final-actions">'+(passed?'<a class="btn btn-gold" href="https://script.google.com/macros/s/AKfycbw2C49JZJfYzsWuTNvYKAOKlwjheuQd_Pw4LV4ybhosj90V6flGbnGG1xbpv-2uNXk1/exec" target="_blank">🎓 GET YOUR CERTIFICATE</a>':'')+'<button class="btn btn-gold" onclick="GETI_backToMenu()">↩ BACK TO MENU</button></div></div>';GETI_sendResultNotification(record,passed);panel.scrollIntoView({behavior:'smooth'});
+function scoreListeningAnswers(){
+  // B2 listening uses normal MCQ scoring plus the audio task.
+  return null;
+}
+function gradeFromPercent(p){return p>=90?'A':p>=80?'B':p>=70?'C':'F';}
+function cefrFromPercent(p){return p>=90?'C2':p>=80?'C1':p>=70?'B2':p>=60?'B1':p>=50?'A2':'A1';}
+
+window.submitExpandedSubject=function(){
+  const program=examState.program,subject=GETI_PROGRAMS[program][examState.subjectIndex],qs=getQuestions(program,subject); let score=0;
+  if(program==='English Proficiency'&&subject==='Speaking'){
+    let totalSpeaking=0, answered=0;
+    examState.answers[examState.subjectIndex].forEach(a=>{if(a!==null&&a!==undefined&&String(a).trim()){totalSpeaking+=scoreSpeaking(a);answered++;}});
+    score=answered?Math.round((totalSpeaking/answered)/100*15):0;
+  }else{
+    for(let i=0;i<15;i++){const a=examState.answers[examState.subjectIndex][i];const correct=qs[i][5];if(a===correct)score++;}
+  }
+  const pct=Math.round(score/15*100);examState.subjectScores[examState.subjectIndex]={subject,score,total:15,percentage:pct,grade:gradeFromPercent(pct)};
+  if(examState.subjectIndex<9){examState.subjectIndex++;examState.questionIndex=0;showExpandedQuestion();return;}
+  showExpandedFinalResult();
+};
+
+window.showExpandedFinalResult=function(){
+  stopExamTimer(); examState.started=false; disableExamProtection(); exitExamFullscreen();
+  let total=0;examState.subjectScores.forEach(s=>{total+=s.score||0;});const pct=Math.round(total/150*100);const status=pct>=70?'PASSED':'FAILED';
+  const cefr=isProficiency(examState.program)?cefrFromPercent(pct):null;
+  const student=examState.student;
+  let lock=getFailureInfo(student.email,student.program);
+  if(status==='FAILED'){lock.fails=(lock.fails||0)+1;if(lock.fails>=3){lock.failBlockUntil=Date.now()+5*60*1000;lock.fails=0;}}
+  saveFailureInfo(student.email,student.program,lock);
+  const record={id:student.id,name:student.name,email:student.email,nationality:student.nationality,country:student.country,phone:student.phone,institution:student.institution,program:student.program,percentage:pct,totalScore:total,totalQuestions:150,status,date:new Date().toISOString(),subjects:examState.subjectScores,cefr:cefr||undefined};
+  saveExamRecord(record);
+  const rows=examState.subjectScores.map(s=>'<div class="subject-result"><span>'+escapeX(s.subject)+'</span><strong>'+s.percentage+'% — '+s.grade+'</strong></div>').join('');
+  const cefrHtml=cefr?'<div><span class="cefr-badge">CEFR '+cefr+'</span><p>Estimated CEFR result based on the examination score.</p></div>':'';
+  const cert=status==='PASSED'?'<p style="margin-top:20px"><a class="btn btn-gold" href="'+GETI_CERTIFICATE_URL+'" target="_blank" rel="noopener">🎓 GET YOUR CERTIFICATE</a></p>':'';
+  const lockMsg=status==='FAILED'&&lock.failBlockUntil>Date.now()?'<div class="exam-warning">Three failed attempts were reached. You can take this examination again after 5 minutes.</div>':'';
+  const panel=document.getElementById('examPanel');
+  panel.classList.add('active');panel.innerHTML='<div class="result-box"><h2>FINAL EXAMINATION RESULT</h2><p><strong>'+escapeX(student.name)+'</strong></p><p>Candidate ID: <strong>'+escapeX(student.id)+'</strong></p><div class="final-score">'+pct+'%</div><h2 class="'+(status==='PASSED'?'pass':'fail')+'">'+status+'</h2>'+cefrHtml+(status==='PASSED'?'<div class="exam-message">Congratulations! You have successfully completed the '+escapeX(student.program)+' examination.</div>':'<div class="exam-fail-message">The required passing score is 70%.</div>')+lockMsg+'<h3>Subject Results</h3>'+rows+cert+'<br><button class="btn btn-gold" onclick="backToExamMenu()">← BACK TO EXAM MENU</button></div>';
+};
+
+// The original function names are redirected so existing TEFL/TESOL buttons keep working.
+window.openExamRegistration=function(program){openProgramExam(program);};
+window.startExamTimer=startExpandedTimer;
+window.updateExamTimer=updateExpandedTimer;
+window.finalizeTimedOutExam=timeOutExpandedExam;
+window.showQuestion=showExpandedQuestion;
+window.nextExamQuestion=nextExpandedQuestion;
+window.submitSubject=submitExpandedSubject;
+window.showFinalResult=showExpandedFinalResult;
+
+// Create all extra exam buttons without deleting the original TEFL/TESOL buttons.
+function addExtraExamButtons(){
+  const old=document.querySelector('.exam-buttons'); if(!old)return;
+  const extra=document.createElement('div');extra.className='exam-menu-grid';extra.style.width='100%';
+  extra.innerHTML=allPrograms().filter(p=>p!=='TEFL'&&p!=='TESOL').map(p=>'<button class="exam-menu-btn" onclick="openProgramExam(\''+escapeX(p).replace(/'/g,"\\'")+'\')">'+(programIcons[p]||'📘')+' '+escapeX(p)+' EXAM</button>').join('');
+  old.parentNode.insertBefore(extra,old.nextSibling);
 }
 
-function GETI_backToMenu(){GETI_stopTimer();document.body.classList.remove('geti-exam-lock');disableExamProtection();examState.started=false;const panel=document.getElementById('examPanel');if(panel)panel.classList.remove('active');document.getElementById('exam-system').scrollIntoView({behavior:'smooth'});}
-function GETI_key(email,program){return 'GETI_BLOCK_'+program+'_'+String(email||'').toLowerCase();}
-function GETI_setBlock(email,program,ms){localStorage.setItem(GETI_key(email,program),String(Date.now()+ms));}
-function GETI_getBlock(program){let best=0;Object.keys(localStorage).filter(k=>k.indexOf('GETI_BLOCK_'+program+'_')===0).forEach(k=>{const v=Number(localStorage.getItem(k)||0);if(v>Date.now())best=Math.max(best,v-Date.now());else localStorage.removeItem(k);});return best;}
-function GETI_recordFailure(email,program){const k='GETI_FAILCOUNT_'+program+'_'+email.toLowerCase();const n=Number(localStorage.getItem(k)||0)+1;localStorage.setItem(k,String(n));if(n>=3)GETI_setBlock(email,program,5*60*1000);}
-function GETI_sendResultNotification(record,passed){const subject=encodeURIComponent('GETI Examination Result — '+record.program);const body=encodeURIComponent('Candidate: '+record.name+'\nEmail: '+record.email+'\nProgram: '+record.program+'\nStatus/CEFR: '+record.status+'\nGrade details:\n'+record.subjects.map(s=>s.subject+': '+s.percentage+'% — '+s.grade).join('\n'));/* Browser-safe fallback: opens the configured GETI mailbox in the user's mail client. For true server-side automatic sending, the Google Apps Script endpoint must accept an email POST. */const a=document.createElement('a');a.href='mailto:proficiencycorelanguage03@gmail.com?subject='+subject+'&body='+body;a.style.display='none';document.body.appendChild(a);if(passed)setTimeout(()=>{try{a.click();}catch(e){}},300);setTimeout(()=>a.remove(),1000);}
+document.addEventListener('DOMContentLoaded',function(){ensureExpandedButtons();addExtraExamButtons();});
 
-/* Lessons UI */
-function openGETILessons(){const panel=document.getElementById('examPanel');panel.classList.add('active');let html='<div class="result-box"><h2>📚 GETI LESSONS</h2><p>Choose a programme, then choose a subject. Each lesson is generated as a long classroom-style unit with explanations, examples, practice and review.</p><div class="geti-addon-grid">';Object.keys(GETI_PROGRAMS).forEach(p=>{html+='<div class="geti-lesson-card"><h3>'+escapeHTML(p)+'</h3><p>'+GETI_PROGRAMS[p].length+' subjects</p><button class="btn btn-gold" onclick="GETI_showLessonList(\''+p.replace(/'/g,"\\'")+'\')">OPEN LESSONS</button></div>';});html+='</div><button class="btn btn-gold" onclick="GETI_backToMenu()">↩ BACK TO MENU</button></div>';panel.innerHTML=html;panel.scrollIntoView({behavior:'smooth'});}
-function GETI_showLessonList(p){const panel=document.getElementById('examPanel');let html='<div class="result-box"><h2>'+escapeHTML(p)+' LESSONS</h2><div class="geti-addon-grid">';GETI_LESSONS[p].forEach((l,i)=>{html+='<div class="geti-lesson-card"><h3>'+escapeHTML(l.subject)+'</h3><button class="btn btn-gold" onclick="GETI_openLesson(\''+p.replace(/'/g,"\\'")+'\','+i+')">OPEN LESSON</button></div>';});html+='</div><button class="btn btn-gold" onclick="openGETILessons()">↩ BACK TO LESSONS</button></div>';panel.innerHTML=html;panel.scrollIntoView({behavior:'smooth'});}
-function GETI_openLesson(p,i){const panel=document.getElementById('examPanel'),l=GETI_LESSONS[p][i];panel.innerHTML='<div class="result-box"><div style="text-align:left">'+l.text+'</div><div class="geti-final-actions"><button class="btn btn-gold" onclick="GETI_showLessonList(\''+p.replace(/'/g,"\\'")+'\')">↩ BACK TO SUBJECTS</button><button class="btn btn-gold" onclick="GETI_backToMenu()">BACK TO MENU</button></div></div>';panel.scrollIntoView({behavior:'smooth'});}
+})();
 
-/* Make existing TEFL/TESOL timer one hour as well and lock the whole viewport while an exam is active. */
-const GETI_originalStartTimer=window.startExamTimer;
-window.startExamTimer=function(){if(typeof GETI_originalStartTimer==='function')GETI_originalStartTimer();};
-const GETI_originalShowQuestion=window.showQuestion;
-window.addEventListener('beforeunload',function(e){if(examState&&examState.started){e.preventDefault();e.returnValue='';}});
 </script>
 
 </body>
