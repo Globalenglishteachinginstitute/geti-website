@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -12,9 +17,7 @@ const db = createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
-</script><head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</script>
 
 <title>GLOBAL ENGLISH TEACHING INSTITUTE</title>
 
@@ -3753,15 +3756,135 @@ function searchExamResult(){
 
 }
 
-/* =========================================================
-   ADMIN LOGIN
+//* =========================================================
+   ADMIN LOGIN — SUPABASE
 ========================================================= */
 
-function adminLogin(){
-    let password=document.getElementById("adminPassword").value;
-    let message=document.getElementById("adminLoginMessage");
-    if(password!=="global"){
-        message.innerHTML='<div class="error" style="margin-top:12px;">❌ Incorrect admin password.</div>'; return;
+async function adminLogin(){
+
+    const password = document
+        .getElementById("adminPassword")
+        .value;
+
+    const message = document
+        .getElementById("adminLoginMessage");
+
+    const emailElement = document
+        .getElementById("adminEmail");
+
+    if(!emailElement){
+
+        message.innerHTML =
+            '<div class="error" style="margin-top:12px;">' +
+            '❌ Admin email field is missing.' +
+            '</div>';
+
+        return;
+    }
+
+    const email = emailElement.value.trim();
+
+    if(!email || !password){
+
+        message.innerHTML =
+            '<div class="error" style="margin-top:12px;">' +
+            '❌ Please enter your admin email and password.' +
+            '</div>';
+
+        return;
+    }
+
+    message.innerHTML =
+        '<div style="margin-top:12px;">' +
+        '⏳ Signing in...' +
+        '</div>';
+
+    try{
+
+        const { data, error } =
+            await db.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+        if(error){
+
+            console.error(error);
+
+            message.innerHTML =
+                '<div class="error" style="margin-top:12px;">' +
+                '❌ Incorrect email or password.' +
+                '</div>';
+
+            return;
+        }
+
+        if(!data || !data.user){
+
+            message.innerHTML =
+                '<div class="error" style="margin-top:12px;">' +
+                '❌ Login failed.' +
+                '</div>';
+
+            return;
+        }
+
+        const { data: profile, error: profileError } =
+            await db
+                .from("profiles")
+                .select("id, auth_user_id, email, role")
+                .eq("auth_user_id", data.user.id)
+                .maybeSingle();
+
+        if(profileError){
+
+            console.error(profileError);
+
+            await db.auth.signOut();
+
+            message.innerHTML =
+                '<div class="error" style="margin-top:12px;">' +
+                '❌ Unable to verify administrator account.' +
+                '</div>';
+
+            return;
+        }
+
+        if(!profile || profile.role !== "admin"){
+
+            await db.auth.signOut();
+
+            message.innerHTML =
+                '<div class="error" style="margin-top:12px;">' +
+                '❌ This account is not an administrator.' +
+                '</div>';
+
+            return;
+        }
+
+        message.innerHTML =
+            '<div class="success" style="margin-top:12px;">' +
+            '✅ Administrator login successful.' +
+            '</div>';
+
+        document.getElementById("adminLogin").style.display =
+            "none";
+
+        document.getElementById("adminPanel").style.display =
+            "block";
+
+        renderCentralAdmin();
+
+    }catch(error){
+
+        console.error(error);
+
+        message.innerHTML =
+            '<div class="error" style="margin-top:12px;">' +
+            '❌ An unexpected error occurred.' +
+            '</div>';
+    }
+}
     }
     document.getElementById("adminLogin").style.display="none";
     document.getElementById("adminPanel").style.display="block";
