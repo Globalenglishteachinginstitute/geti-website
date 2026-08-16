@@ -1,110 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>GLOBAL ENGLISH TEACHING INSTITUTE</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const SUPABASE_URL =
-    "https://nfprquwwysgkymgwtuio.supabase.co";
-
-const SUPABASE_ANON_KEY =
-    "sb_publishable_XzgF66p4RfQbyDZUWksPoA_G8_tYwLo";
-
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-    );
-
-console.log("GETI Supabase connected");
-</script>
-
-<style>
-/* NY CSS ANAO */
-</style>
-
-</head>
-
-<body>
-
-<!-- NY WEBSITE CONTENT ANAO -->
-
-<script>
-
-/* =========================================================
-   GETI SUPABASE SYSTEM
-========================================================= */
-
-const GETI_DB = supabaseClient;
-
-/* APETRAO ETO ILAY JAVASCRIPT LAVA NALEFANAO */
-
-/* ... */
-
-console.log("GETI Supabase system loaded successfully.");
-
-</script>
-
-
-<!-- =========================================================
-     GETI ADMIN PANEL
-========================================================= -->
-
-<section id="getiAdminPanel" style="display:none; padding:30px;">
-
-    <div style="max-width:1400px;margin:auto;">
-
-        <h1>GETI Administrator</h1>
-
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:25px 0;">
-
-            <button onclick="getiAdminLoadMessages()">
-                💬 All Messages
-            </button>
-
-            <button onclick="getiAdminLoadAccounts()">
-                👤 Chat Accounts
-            </button>
-
-            <button onclick="getiAdminLoadBlacklist()">
-                🚫 Blacklist
-            </button>
-
-            <button onclick="getiAdminLoadResults()">
-                📝 All Results
-            </button>
-
-            <button onclick="getiAdminLoadActivity()">
-                👁️ Site Activity
-            </button>
-
-        </div>
-
-        <div id="getiAdminStatus"></div>
-
-        <div id="getiAdminContent">
-            <p>Select an administrator section above.</p>
-        </div>
-
-    </div>
-
-</section>
-
-</body>
-</html>
+<meta name="description"
+content="Global English Teaching Institute - International English Education, TEFL, TESOL and Certificate Verification.">
 
 <style>
 
-*{
-    box-sizing:border-box;
-}
 *{
     margin:0;
     padding:0;
@@ -813,6 +719,90 @@ button,input,textarea{
     background:#b38a28;
 }
 
+.exam-small-btn.teyl{
+    background:#6a3d9a;
+}
+
+.exam-small-btn.proficiency{
+    background:#176b59;
+}
+
+.exam-panel.exam-active-fullscreen{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    width:100vw;
+    height:100vh;
+    max-width:none;
+    margin:0;
+    border-radius:0;
+    padding:0;
+    overflow:hidden;
+    background:#f5f7fb;
+}
+
+.exam-fullscreen-shell{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+}
+
+.exam-topbar{
+    flex:0 0 auto;
+    background:#071d3a;
+    color:#fff;
+    min-height:68px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:10px 18px;
+}
+
+.exam-topbar-left{
+    font-weight:800;
+    font-size:15px;
+}
+
+.exam-timer{
+    font-size:22px;
+    font-weight:900;
+    background:#0b2d5c;
+    padding:10px 18px;
+    border-radius:8px;
+    white-space:nowrap;
+}
+
+.exam-timer.warning{background:#9a6b00;}
+.exam-timer.expired{background:#9d1c1c;}
+
+.exam-back-menu{
+    border:1px solid rgba(255,255,255,.35);
+    background:transparent;
+    color:#fff;
+    padding:9px 14px;
+    border-radius:7px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.exam-fullscreen-content{
+    flex:1 1 auto;
+    min-height:0;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.exam-fullscreen-content .exam-question-wrap{
+    width:min(900px,96vw);
+    max-height:calc(100vh - 110px);
+    overflow:hidden;
+}
+
 .exam-panel{
     display:none;
     max-width:900px;
@@ -1210,19 +1200,6 @@ button,input,textarea{
 
 }
 
-
-/* =========================================================
-   GETI CHAT + ADMIN SYSTEM
-========================================================= */
-.floating-tools{position:fixed;right:18px;bottom:18px;z-index:5000;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
-.floating-tool{border:0;border-radius:999px;padding:10px 15px;cursor:pointer;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.18);background:#071d3a;color:#fff;font-size:13px}
-.floating-tool.admin{background:#b88916}.floating-tool:hover{transform:translateY(-1px)}
-.geti-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:6000;align-items:center;justify-content:center;padding:16px}
-.geti-modal.active{display:flex}.geti-card{background:#fff;width:min(1050px,96vw);max-height:92vh;overflow:auto;border-radius:16px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.geti-card h2{margin-bottom:12px}.geti-close{float:right;border:0;background:#eee;border-radius:8px;padding:7px 10px;cursor:pointer}.geti-form{display:grid;gap:10px}.geti-form input,.geti-form textarea,.geti-form select{width:100%;padding:11px;border:1px solid #ccd4df;border-radius:8px}.geti-form textarea{min-height:100px;resize:vertical}
-.geti-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.geti-actions button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:700}.geti-primary{background:#071d3a;color:#fff}.geti-gold{background:#b88916;color:#fff}.geti-muted{background:#eef2f6}
-.chat-layout{display:grid;grid-template-columns:260px 1fr;gap:14px;min-height:520px}.chat-users{border:1px solid #dbe2ea;border-radius:10px;padding:10px;overflow:auto}.chat-user{padding:10px;border-bottom:1px solid #eee;cursor:pointer}.chat-user.active{background:#eef4fa;border-radius:8px}.chat-window{border:1px solid #dbe2ea;border-radius:10px;display:flex;flex-direction:column;min-height:520px}.chat-head{padding:12px;border-bottom:1px solid #eee;font-weight:700}.chat-messages{flex:1;padding:12px;overflow:auto;background:#f7f9fc}.chat-msg{max-width:78%;padding:9px 11px;border-radius:12px;margin:7px 0;white-space:pre-wrap;word-break:break-word}.chat-msg.me{margin-left:auto;background:#071d3a;color:#fff}.chat-msg.them{background:#e9eef4}.chat-attach{font-size:12px;margin-top:5px}.chat-compose{padding:10px;border-top:1px solid #eee}.chat-compose-row{display:flex;gap:8px}.chat-compose textarea{flex:1;min-height:65px}.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.admin-stat{background:#f3f6fa;border:1px solid #dbe2ea;border-radius:10px;padding:15px}.admin-table-wrap{overflow:auto}.admin-table{width:100%;border-collapse:collapse;font-size:13px}.admin-table th,.admin-table td{border:1px solid #dbe2ea;padding:8px;text-align:left;vertical-align:top}.admin-table th{background:#071d3a;color:#fff}.badge{display:inline-block;padding:3px 7px;border-radius:999px;background:#eef2f6;font-size:11px}.danger{background:#b42318!important;color:#fff!important}
-@media(max-width:720px){.chat-layout,.admin-grid{grid-template-columns:1fr}.chat-users{max-height:180px}.floating-tools{right:10px;bottom:10px}.floating-tool{font-size:12px;padding:9px 12px}}
 </style>
 </head>
 
@@ -1530,12 +1507,10 @@ TAKE TEFL / TESOL EXAM
 GETI PROFESSIONAL EXAMINATION
 </div>
 
-<h2>TEFL & TESOL Examination</h2>
+<h2>GETI Professional Examinations</h2>
 
 <p>
-Choose your professional examination below.
-Each program contains 10 subjects with 15 questions
-per subject.
+Choose an examination below. Each examination contains 10 subjects with 15 questions and a 16-minute total time limit.
 </p>
 
 </div>
@@ -1550,6 +1525,16 @@ onclick="openExamRegistration('TEFL')">
 <button class="exam-small-btn tesol"
 onclick="openExamRegistration('TESOL')">
 🎓 TESOL EXAM
+</button>
+
+<button class="exam-small-btn teyl"
+onclick="openExamRegistration('TEYL')">
+👧 TEYL EXAM
+</button>
+
+<button class="exam-small-btn proficiency"
+onclick="openExamRegistration('ENGLISH PROFICIENCY')">
+🌍 ENGLISH PROFICIENCY EXAM
 </button>
 
 </div>
@@ -1785,73 +1770,6 @@ SEND MESSAGE
 
 </div>
 </section>
-
-
-<!-- GETI CHAT / ADMIN FLOATING TOOLS -->
-<div class="floating-tools">
-  <button class="floating-tool" onclick="openChatAuth()">💬 Chat with the administrator</button>
-  <button class="floating-tool admin" onclick="openAdminLogin()">🔐 Administrator</button>
-</div>
-
-<div id="chatAuthModal" class="geti-modal">
-  <div class="geti-card" style="max-width:520px">
-    <button class="geti-close" onclick="closeModal('chatAuthModal')">✕</button>
-    <h2>Chat with the administrator</h2>
-    <p id="chatAuthHint">Login to your GETI chat account, or create an account if you don't have one.</p>
-    <div class="geti-form">
-      <input id="chatEmail" type="email" placeholder="Email address">
-      <input id="chatPhone" placeholder="Phone number (optional)">
-      <input id="chatPassword" type="password" placeholder="Password">
-      <input id="chatName" placeholder="Full name (only for Create Account)">
-    </div>
-    <div class="geti-actions">
-      <button class="geti-primary" onclick="chatLogin()">LOGIN</button>
-      <button class="geti-gold" onclick="chatCreateAccount()">CREATE ACCOUNT</button>
-    </div>
-  </div>
-</div>
-
-<div id="chatModal" class="geti-modal">
-  <div class="geti-card">
-    <button class="geti-close" onclick="closeModal('chatModal')">✕</button>
-    <h2>💬 Chat with the administrator</h2>
-    <p id="chatLoggedUser"></p>
-    <div class="chat-layout">
-      <div class="chat-users"><strong>Conversations</strong><div id="chatConversationList"></div></div>
-      <div class="chat-window">
-        <div class="chat-head" id="chatConversationTitle">Administrator</div>
-        <div class="chat-messages" id="chatMessages"></div>
-        <div class="chat-compose">
-          <textarea id="chatText" placeholder="Write your message..."></textarea>
-          <div class="chat-compose-row">
-            <input id="chatFile" type="file" accept="image/*,.pdf">
-            <button class="geti-primary" onclick="sendChatMessage()">SEND</button>
-          </div>
-          <small>Images and PDF files can be attached. Download is available for stored attachments.</small>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="adminLoginModal" class="geti-modal">
-  <div class="geti-card" style="max-width:420px">
-    <button class="geti-close" onclick="closeModal('adminLoginModal')">✕</button>
-    <h2>🔐 Administrator Login</h2>
-    <p>Administrator access</p>
-    <div class="geti-form"><input id="adminPassword" type="password" placeholder="Password"></div>
-    <div class="geti-actions"><button class="geti-primary" onclick="adminLogin()">ENTER ADMINISTRATOR</button></div>
-  </div>
-</div>
-
-<div id="adminModal" class="geti-modal">
-  <div class="geti-card">
-    <button class="geti-close" onclick="closeModal('adminModal')">✕</button>
-    <h2>🌐 GETI Administrator — Global Monitor</h2>
-    <p>Messages, registered chat accounts, site activity, exam records and blacklist entries stored by this website are shown here.</p>
-    <div id="adminDashboard"></div>
-  </div>
-</div>
 
 <footer class="footer">
 
@@ -2459,6 +2377,78 @@ question structures already present in the TEFL bank.
 
 };
 
+
+const TEYL_SUBJECTS=["Introduction to TEYL – Teaching English to Young Learners", "Understanding Children’s Learning Styles", "Classroom Management for Young Learners", "Teaching English Through Games and Activities", "Teaching Vocabulary to Children", "Teaching Pronunciation and Phonics", "Teaching Listening and Speaking Skills", "Teaching Reading and Writing to Young Learners", "Using Songs, Stories, and Rhymes in English Lessons", "Assessment and Progress Tracking for Young Learners"];
+const TEYL_DATA={
+
+"Introduction to TEYL – Teaching English to Young Learners":[["TEYL stands for what?","Teaching English to Young Learners","Teaching English for Young Leaders","Teaching English Yearly Lessons","Teaching English to Young Linguists",0],["A young learner usually benefits most from lessons that are…","active and age-appropriate","lecture-heavy and abstract","focused only on translation","based only on long essays",0],["Why should TEYL lessons use clear routines?","They help children know what to expect","They remove all interaction","They make lessons longer","They eliminate the need for teachers",0],["What is a suitable TEYL goal?","Use simple English in meaningful situations","Memorize every grammar rule","Write university essays","Study advanced linguistics",0],["Which principle is important when teaching children?","Learning should be meaningful and engaging","Children should never move","Only written tests matter","Correction should stop all communication",0],["Why use repetition with young learners?","It reinforces language through practice","It prevents memory","It replaces communication","It makes vocabulary unnecessary",0],["Which teacher behavior supports young learners?","Giving clear instructions and encouragement","Using unexplained academic terminology","Ignoring questions","Speaking only in long lectures",0],["What is a realistic early language outcome?","Following simple classroom instructions","Writing research papers","Using every tense perfectly","Analyzing literature",0],["Why is visual support useful?","It makes meaning easier to understand","It removes the need for language","It guarantees perfect pronunciation","It replaces all activities",0],["What should a TEYL teacher consider first?","Age, needs, level, and interests","Only the textbook price","Only the teacher’s preferences","Only the final exam",0],["Why are short activities useful?","Children can maintain attention more easily","They prevent learning","They remove interaction","They make assessment impossible",0],["Which classroom language is appropriate for beginners?","Open your book, please.","Analyze the theoretical framework.","Demonstrate your metacognitive schema.","Synthesize the discourse parameters.",0],["What is an effective way to introduce a new word?","Show, say, model, and use it in context","Give only a dictionary definition","Ask children to translate ten pages","Avoid repetition",0],["Why should teachers praise effort?","It can encourage participation and confidence","It guarantees every answer is correct","It replaces feedback","It prevents children from learning independently",0],["A successful TEYL lesson should generally be…","structured, interactive, and purposeful","silent and lecture-based","unplanned and unpredictable","focused only on memorization",0]],
+
+"Understanding Children’s Learning Styles":[["Which learning style involves learning through seeing?","Visual","Auditory","Kinesthetic","Olfactory",0],["Which style is associated with learning through sound?","Auditory","Visual","Kinesthetic","Tactile only",0],["Which activity suits kinesthetic learners?","Role-play with movement","Silent copying","Reading a long definition","Listening without responding",0],["Why vary activity types?","To provide multiple ways to engage with language","To confuse learners","To avoid teaching objectives","To eliminate assessment",0],["A child who remembers chants well may benefit from…","rhythmic and auditory activities","only silent reading","only handwriting drills","no repetition",0],["Learning styles should be treated as…","possible preferences, not fixed labels","permanent categories","diagnoses","reasons to separate children",0],["Why observe learners?","To identify what helps them participate and learn","To rank their personalities","To avoid adapting lessons","To replace assessment",0],["Which is multimodal?","Seeing a picture, hearing a word, and acting it out","Only copying a word","Only listening","Only memorizing a rule",0],["Why use pictures with stories?","They provide visual support for meaning","They prevent listening","They replace vocabulary","They make stories irrelevant",0],["A mixed-activity lesson can include…","songs, pictures, movement, and pair work","only grammar translation","only dictation","only tests",0],["What should determine activity choice?","Learning objective and learner needs","Teacher convenience alone","Classroom color","Number of pages",0],["Which task supports social learning?","Pair information-gap activity","Silent individual copying only","Memorizing a list alone","Watching the clock",0],["Why allow movement?","It can support attention and participation","It always distracts children","It prevents language use","It removes classroom routines",0],["How can teachers support different learners?","Use varied input and practice modes","Use one activity every lesson","Avoid visuals","Avoid speaking practice",0],["The best view of learning preferences is…","flexible and evidence-informed","fixed and absolute","based on stereotypes","identical for every child",0]],
+
+"Classroom Management for Young Learners":[["A clear classroom rule should be…","short, positive, and understandable","long and technical","different every day","kept secret",0],["Why establish routines?","They reduce uncertainty and save teaching time","They stop all communication","They make children passive","They remove learning goals",0],["What should a teacher do before giving an activity?","Give clear instructions and check understanding","Start immediately without explanation","Give five unrelated tasks","Leave the room",0],["What is positive reinforcement?","Recognizing appropriate behavior","Punishing every mistake","Ignoring all participation","Changing rules randomly",0],["Why use attention signals?","To regain focus efficiently","To test grammar","To increase noise","To replace instructions",0],["If a child is off-task, a useful first response is…","redirect calmly and clearly","shout immediately","ignore every behavior","cancel the lesson",0],["Why use pair work?","It increases opportunities to use language","It guarantees silence","It removes interaction","It prevents practice",0],["What is an effective transition?","A short signal and clear next-step instruction","A long unexplained pause","Changing rules","Giving no direction",0],["How should materials be prepared?","Before the activity starts","Only after children finish","Never","Randomly during every task",0],["Why arrange seating thoughtfully?","To support interaction and supervision","To make movement impossible","To hide learners","To remove pair work",0],["What should rules focus on?","Observable classroom behavior","Personal labels","Unrelated opinions","Children’s private lives",0],["How can teachers prevent common disruptions?","Plan engaging tasks and clear routines","Give no instructions","Avoid interaction","Use unpredictable rules",0],["When conflict occurs, teachers should…","stay calm and follow consistent procedures","humiliate learners","ignore safety","argue with children",0],["Why monitor groups?","To support learning and behavior","To stop all collaboration","To avoid feedback","To grade personalities",0],["Good classroom management mainly supports…","safe, respectful, and productive learning","silence at all costs","teacher control without learning","competition between children",0]],
+
+"Teaching English Through Games and Activities":[["Why are games useful in TEYL?","They provide meaningful practice and motivation","They remove all learning goals","They replace the teacher","They guarantee no mistakes",0],["A language game should have…","a clear objective and simple rules","unlimited rules","no purpose","only competition",0],["Which activity practices vocabulary?","Picture matching","Copying a paragraph ten times","Silent sitting","Teacher lecture only",0],["What does a guessing game encourage?","Meaningful language use","No communication","Only handwriting","No repetition",0],["Why model a game first?","Children can see how to play","It makes rules harder","It prevents participation","It removes the objective",0],["What is a suitable warm-up?","A short song or movement activity","A 40-minute lecture","A university essay","A long written exam",0],["How can a game remain educational?","Connect it directly to the target language","Ignore the target language","Make winning the only goal","Avoid feedback",0],["Why use teams carefully?","To encourage cooperation and fair participation","To create humiliation","To exclude quiet learners","To avoid interaction",0],["What can a board race practice?","Words, spelling, or sentence patterns","Only advanced literature","Only listening to lectures","Nothing measurable",0],["What is role-play?","Learners act out a realistic situation","Learners copy definitions","Learners only watch the teacher","Learners take a silent test",0],["Why repeat games with variation?","It recycles language while keeping interest","It prevents learning","It removes practice","It guarantees boredom",0],["Which is a low-preparation activity?","Charades with target vocabulary","A complex research project","A long exam","A full textbook rewrite",0],["What should teachers monitor during games?","Language use, participation, and safety","Only who wins","Only noise level","Only speed",0],["Why include non-competitive games?","They can support participation without pressure","They stop learning","They remove objectives","They prevent cooperation",0],["A good TEYL game is…","simple, inclusive, purposeful, and fun","confusing and unrelated","only for the fastest learner","always highly competitive",0]],
+
+"Teaching Vocabulary to Children":[["What should children learn about a new word?","Meaning, form, pronunciation, and use","Spelling only","Translation only","Length only",0],["Which is a useful way to teach concrete nouns?","Use real objects or pictures","Give an abstract definition only","Avoid repetition","Use advanced terminology",0],["Why teach words in context?","Context helps learners understand and use meaning","It makes meaning impossible","It removes communication","It prevents recall",0],["What is a collocation?","Words that commonly occur together","A punctuation mark","A type of alphabet","A classroom rule",0],["Which helps vocabulary retention?","Spaced review and repeated meaningful use","One exposure only","No practice","Random copying",0],["Why recycle vocabulary?","Repeated encounters strengthen memory","It makes words disappear","It prevents speaking","It removes context",0],["What is receptive vocabulary?","Words a learner can understand","Words a learner can spell only","Words used only in writing","Words never encountered",0],["What is productive vocabulary?","Words a learner can use","Words a learner only recognizes","Words in a dictionary only","Words that are forgotten",0],["Which activity supports word retrieval?","Picture-to-word recall","Only reading definitions","Ignoring the word","Changing topic immediately",0],["Why teach chunks?","They provide useful ready-made language","They prevent fluency","They are never used in speech","They replace grammar entirely",0],["What is a prefix?","A word part added to the beginning","A word ending","A sentence","A punctuation mark",0],["What is a suffix?","A word part added to the end","A beginning only","A sentence","A paragraph",0],["How should teachers select vocabulary?","Choose useful, relevant words for learners","Choose only rare words","Choose randomly","Avoid high-frequency words",0],["Why use gestures?","They can make meaning memorable and clear","They always replace speech","They prevent listening","They eliminate practice",0],["Effective vocabulary instruction should include…","meaning, form, pronunciation, and use","meaning only","spelling only","translation only",0]],
+
+"Teaching Pronunciation and Phonics":[["What is phonics?","Teaching relationships between letters and sounds","Teaching essay structure","Teaching punctuation only","Teaching culture only",0],["Why model pronunciation?","Learners need a clear example to imitate","It prevents listening","It replaces practice","It removes meaning",0],["Which is a minimal pair?","ship / sheep","book / books","play / playing","cat / cats",0],["Why teach word stress?","It supports intelligibility and natural rhythm","It changes every noun","It replaces vocabulary","It prevents speaking",0],["What is a phoneme?","A contrastive sound unit in a language","A written paragraph","A sentence type","A classroom game",0],["Which activity supports phonemic awareness?","Identifying the first sound in a word","Copying a story","Silent reading only","Memorizing translations",0],["Why use chants?","They provide repeated rhythm and pronunciation practice","They eliminate listening","They teach only spelling","They prevent speaking",0],["What is intonation?","Changes in pitch across speech","Word length","Letter order","Handwriting style",0],["Why use gestures for sounds?","They can make articulation and rhythm more visible","They remove the need for sound practice","They prevent repetition","They teach grammar only",0],["Which is a useful phonics sequence?","Hear, identify, say, then connect sound to print","Write first without hearing","Translate first","Skip modeling",0],["Why avoid correcting every sound immediately?","Too much interruption can reduce fluency and confidence","Correction is never useful","Pronunciation does not matter","Children should never speak",0],["What is articulation?","How speech organs produce sounds","How stories are written","How words are translated","How tests are graded",0],["Why use mouth-position demonstrations?","They show how sounds are physically produced","They replace listening","They remove practice","They teach reading only",0],["A good pronunciation activity is…","short, focused, modeled, and repeated","long and unexplained","silent","unrelated to target sounds",0],["The main goal of early pronunciation teaching is…","clear and understandable speech","perfect native accent","memorizing phonetic symbols only","avoiding oral communication",0]],
+
+"Teaching Listening and Speaking Skills":[["Which skill is receptive?","Listening","Speaking","Presenting","Role-playing",0],["Which is productive?","Speaking","Listening","Reading comprehension","Viewing",0],["Why pre-teach a few key words before listening?","They can reduce barriers to understanding","They guarantee every answer","They replace listening","They remove the need for context",0],["What is a prediction task?","Learners guess what they may hear or see","Learners copy a transcript","Learners translate everything","Learners avoid the topic",0],["Why use short listening texts with beginners?","They match attention and processing limits","They prevent comprehension","They remove vocabulary","They guarantee fluency",0],["What does gist mean?","The general meaning","Every individual word","The speaker’s accent","The spelling of a word",0],["What is a detail question?","A question about specific information","A question about the whole topic only","A grammar rule","A pronunciation drill",0],["Why use pair speaking?","It increases opportunities to produce language","It guarantees perfect grammar","It removes listening","It prevents interaction",0],["What is an information gap?","Each learner has information the other needs","Everyone has identical information","No one speaks","Only the teacher has information",0],["How should teachers model speaking tasks?","Give an example and useful language","Give no instructions","Use unrelated vocabulary","Skip the task goal",0],["Why use sentence frames?","They support learners in producing language","They prevent creativity","They replace meaning","They make listening impossible",0],["What is active listening?","Listening with a purpose and responding appropriately","Hearing without attention","Reading silently","Copying words",0],["Why repeat a listening text?","Different listens can focus on different goals","Repetition always harms learning","It removes meaning","It prevents confidence",0],["What should feedback on speaking focus on?","Targeted, useful features and meaning","Every tiny error","Personality","Speed only",0],["A balanced lesson should provide…","both comprehension and meaningful speaking practice","only teacher talk","only written work","only translation",0]],
+
+"Teaching Reading and Writing to Young Learners":[["Which is a pre-reading activity?","Predicting from a title or picture","Writing the final answer immediately","Skipping the text","Memorizing a dictionary",0],["What is phonics useful for?","Connecting sounds with letters","Teaching essay conclusions only","Teaching culture only","Teaching test rules",0],["Why use shared reading?","Teacher and learners can process text together","It prevents participation","It removes vocabulary","It replaces speaking",0],["What is a sight word?","A frequently encountered word recognized quickly","A word only used in science","A punctuation mark","A sound only",0],["Why teach story sequence?","It supports comprehension and retelling","It prevents writing","It removes meaning","It avoids vocabulary",0],["Which supports early writing?","Tracing, copying, labeling, and short sentences","Long research papers","Only translation","No modeling",0],["Why model letter formation?","Children need to see how letters are formed","It prevents reading","It replaces phonics","It removes practice",0],["What is a graphic organizer?","A visual tool for organizing ideas","A pronunciation test","A classroom rule","A dictionary",0],["Why teach punctuation?","It supports clear reading and writing","It removes meaning","It prevents stories","It is only for adults",0],["What is shared writing?","Teacher and learners compose text together","Learners write without guidance","Teacher writes unrelated text","Only copying definitions",0],["Why use predictable books?","Repeated patterns support confidence and language practice","They prevent comprehension","They remove vocabulary","They are always too difficult",0],["What is a reading inference?","A conclusion supported by clues in the text","A copied sentence","A spelling rule","A punctuation mark",0],["How can teachers support reluctant writers?","Use models, choices, and manageable tasks","Require long essays immediately","Avoid feedback","Ignore ideas",0],["Why connect reading and writing?","Each skill can reinforce the other","They never interact","It prevents vocabulary learning","It removes comprehension",0],["Effective literacy teaching is…","gradual, supported, meaningful, and age-appropriate","only based on long texts","focused on copying","without modeling",0]],
+
+"Using Songs, Stories, and Rhymes in English Lessons":[["Why use songs with children?","They provide repetition, rhythm, and memorable language","They eliminate learning goals","They are only entertainment","They prevent speaking",0],["What does rhyme help develop?","Awareness of sound patterns","Only handwriting","Only grammar rules","Only cultural facts",0],["Why preview a story?","It activates background knowledge and interest","It prevents comprehension","It removes prediction","It replaces reading",0],["What is a story sequence?","The order in which events happen","A list of grammar rules","A sound chart","A vocabulary dictionary",0],["Why use gestures with songs?","They connect language with meaning and movement","They remove pronunciation","They prevent listening","They replace all assessment",0],["Which is useful before a story?","Teach a few essential words","Teach every dictionary word","Avoid pictures","Give the ending first",0],["Why repeat a favorite story?","Familiarity supports comprehension and language noticing","Repetition prevents learning","It removes interest","It makes vocabulary impossible",0],["What can a song practice?","Pronunciation, vocabulary, chunks, or structures","Only reading","Only writing","Only exams",0],["Why pause during storytelling?","To ask predictions or check understanding","To make the story confusing","To stop all interaction","To avoid vocabulary",0],["What is a rhyme?","A pattern of similar ending sounds","A grammar tense","A paragraph type","A test format",0],["How can stories support speaking?","Learners can retell or role-play parts","They prevent oral work","They remove interaction","They only teach spelling",0],["Why choose age-appropriate songs?","Content and language should suit learners","All songs suit all ages","Difficulty never matters","Lyrics are irrelevant",0],["What should teachers do with a new song?","Model it before expecting independent singing","Test it without modeling","Skip listening","Use only translation",0],["Why use story props?","They provide concrete support for meaning","They replace the teacher","They prevent imagination","They make listening unnecessary",0],["A good song or story activity should…","have a clear language purpose","be unrelated to the lesson","be as long as possible","avoid repetition",0]],
+
+"Assessment and Progress Tracking for Young Learners":[["What is formative assessment?","Assessment used during learning to guide improvement","Only a final exam","A certificate","A classroom rule",0],["What is summative assessment?","Assessment used to judge learning at the end of a period","A warm-up game","A picture","A song",0],["Why track progress?","To identify growth and areas needing support","To label children permanently","To compare personalities","To remove feedback",0],["What is a rubric?","Criteria used to evaluate performance","A storybook","A pronunciation game","A seating plan",0],["Why use observation?","It provides evidence of classroom performance","It replaces all teaching","It guarantees objectivity","It prevents participation",0],["What is a checklist?","A list of skills or behaviors to monitor","A long essay","A vocabulary game","A story",0],["Why give feedback quickly?","Learners can use it while the task is still relevant","It prevents learning","It removes motivation","It makes assessment unnecessary",0],["What is a learning portfolio?","A collection showing learner work and progress","A single test score","A classroom rule","A dictionary",0],["Why use child-friendly assessment?","It should be understandable and appropriate for age","It should use university language","It should be stressful","It should avoid clear criteria",0],["What should progress records include?","Relevant evidence of skills over time","Private opinions only","Random numbers","Only attendance",0],["Why assess speaking?","To see how learners use language orally","Because writing is irrelevant","To measure handwriting only","To avoid communication",0],["What is self-assessment?","Learners reflect on their own learning","Teacher grading only","Peer punishment","A final certificate",0],["Why combine assessment methods?","Different methods provide different evidence","One method is always perfect","It prevents feedback","It makes results meaningless",0],["A good assessment criterion is…","clear and connected to the learning objective","hidden and unrelated","different for each answer","impossible to observe",0],["Effective progress tracking should be…","regular, supportive, and evidence-based","rare and secret","only final","based on competition",0]]
+};
+
+
+const PROFICIENCY_SUBJECTS=["Grammar", "Vocabulary", "Pronunciation", "Speaking", "Listening", "Reading", "Writing", "Functional English", "Communication & Conversation", "English Culture & Real-Life English"];
+const PROFICIENCY_DATA={
+
+"Grammar":[["Which sentence is correct?","She goes to school every day.","She go to school every day.","She going to school every day.","She gone to school every day.",0],["What is the past tense of go?","went","goed","gone","going",0],["Which is a modal verb?","can","very","quickly","school",0],["Which sentence uses the present perfect?","They have finished the work.","They finish the work yesterday.","They are finish the work.","They finished tomorrow.",0],["What is the passive of \"People speak English here\"?","English is spoken here.","English speaks here.","English spoke here.","English is speaking here.",0],["Which is a relative pronoun?","which","because","very","and",0],["Which conditional expresses a general truth?","If you heat ice, it melts.","If I had money, I would have bought it yesterday.","If I will go, I went.","If she went tomorrow, she is here.",0],["What is the comparative of good?","better","gooder","best","more good",0],["Which word is an adverb?","quickly","quick","quickness","quicken",0],["Which sentence is reported speech?","He said that he was tired.","He says: tired.","He tired yesterday.","He is saying tired.",0],["Which article is correct?","an apple","a apple","the apple is always required","an university",0],["Which sentence is a question?","Where do you live?","You live where.","Where you live.","Live where you.",0],["Which is a countable noun?","book","water","information","advice",0],["Which preposition is correct?","interested in","interested on","interested at","interested to",0],["Which sentence is grammatically correct?","I have lived here for five years.","I live here since five years.","I have live here for five years.","I am lived here five years.",0]],
+
+"Vocabulary":[["What does \"rapid\" mean?","fast","late","weak","small",0],["What is a synonym of \"begin\"?","start","finish","stop","close",0],["What is an antonym of \"ancient\"?","modern","old","historic","past",0],["What does \"reliable\" mean?","able to be trusted","very expensive","very noisy","hard to see",0],["Which is a collocation?","make a decision","do a decision","build a decision","put a decision",0],["What does \"purchase\" mean?","buy","sell","borrow","repair",0],["Which word is a noun?","development","develop","developing","developed",0],["What does \"generous\" mean?","willing to give","afraid to speak","easy to break","hard to find",0],["Which word has a negative prefix?","unhappy","happy","happiness","happily",0],["What does \"accurate\" mean?","correct","quick","cheap","famous",0],["Which is a phrasal verb?","give up","give tall","give blue","give careful",0],["What does \"essential\" mean?","necessary","optional","rare","temporary",0],["Which word is closest to \"improve\"?","enhance","damage","reduce","forget",0],["What does \"aware\" mean?","knowing about something","angry with someone","ready to sleep","unable to move",0],["Which word is most formal?","commence","start","beginning","get going",0]],
+
+"Pronunciation":[["Which pair is a minimal pair?","ship / sheep","book / books","play / played","cat / cats",0],["What is word stress?","Prominence given to a syllable","A spelling mistake","A punctuation mark","A grammar rule",0],["What is intonation?","Variation in pitch across speech","Word length","Speech speed only","Spelling",0],["What is a phoneme?","A contrastive sound unit","A paragraph","A sentence","A letter name only",0],["Which sound begins \"think\"?","/θ/","/t/","/s/","/f/",0],["Which word has stress on the second syllable?","begin","table","happy","teacher",0],["Why is linking important?","It can make connected speech smoother","It changes all grammar","It removes meaning","It only affects spelling",0],["What is schwa?","A common weak vowel sound /ə/","A consonant","A punctuation mark","A stress symbol only",0],["Which pair differs by one sound?","fan / van","book / books","play / player","go / going",0],["Why practice sentence stress?","It helps highlight important information","It changes spelling","It removes vowels","It prevents fluency",0],["What is articulation?","How speech organs produce sounds","How words are translated","How texts are graded","How essays are organized",0],["Which is a voiced sound?","/z/","/s/","/f/","/θ/",0],["Which is a voiceless sound?","/p/","/b/","/z/","/d/",0],["Why model pronunciation?","Learners need a clear example","It prevents listening","It replaces practice","It removes speaking",0],["A useful pronunciation goal is…","intelligibility","perfect imitation of one accent","silence","memorizing symbols only",0]],
+
+"Speaking":[["What is fluency?","Ability to communicate with reasonable flow","Perfect spelling","Silent reading","Fast handwriting",0],["What is accuracy?","Correctness of language use","Speaking loudly","Speaking quickly","Using long words",0],["What is an information gap?","Learners have different information to exchange","Everyone has the same information","No one speaks","Only the teacher speaks",0],["Why use pair work?","It increases speaking opportunities","It prevents interaction","It guarantees perfection","It replaces listening",0],["What is a role-play?","Acting out a realistic situation","Copying a paragraph","Taking a test","Reading silently",0],["What is turn-taking?","Managing who speaks and when","Changing grammar","Writing notes","Choosing vocabulary",0],["What helps spontaneous speaking?","Useful phrases and repeated practice","Memorizing every sentence","Avoiding interaction","Only written tests",0],["What is a speaking prompt?","A cue that helps start or develop speech","A grammar dictionary","A certificate","A listening transcript only",0],["Why use discussion questions?","They encourage meaningful communication","They prevent ideas","They remove vocabulary","They guarantee one answer",0],["What should feedback prioritize?","Useful features connected to the task","Every tiny mistake","Personality","Accent imitation",0],["What is negotiation of meaning?","Clarifying or adjusting language to understand each other","Arguing about grades","Translating every word","Avoiding questions",0],["Which is a fluency activity?","Timed pair discussion","Grammar error correction only","Silent copying","Dictionary study only",0],["Why model a speaking task?","It clarifies expectations","It makes learners passive","It prevents practice","It removes interaction",0],["What is a follow-up question?","A question that continues a conversation","A final exam","A punctuation mark","A vocabulary list",0],["Effective speaking practice should be…","meaningful, interactive, and purposeful","silent and individual only","focused only on grammar rules","unrelated to learners",0]],
+
+"Listening":[["What is gist listening?","Listening for general meaning","Listening for every sound","Reading a transcript","Copying words",0],["What is listening for detail?","Listening for specific information","Listening only to music","Guessing grammar","Reading quickly",0],["Why predict before listening?","It activates expectations and background knowledge","It prevents comprehension","It removes context","It guarantees answers",0],["What is bottom-up processing?","Using sounds, words, and grammar to build meaning","Using only topic knowledge","Ignoring language","Writing an essay",0],["What is top-down processing?","Using context and prior knowledge to interpret meaning","Listening to every phoneme only","Copying a transcript","Avoiding predictions",0],["Why replay a recording?","Learners can focus on different goals each time","It always reduces learning","It removes meaning","It prevents practice",0],["What is a listening transcript?","Written representation of spoken language","A grammar test","A speaking rubric","A vocabulary game",0],["Why teach key vocabulary before listening?","It can reduce unnecessary comprehension barriers","It guarantees a perfect score","It replaces listening","It removes authentic language",0],["Which is an active listening behavior?","Taking notes for a clear purpose","Ignoring the speaker","Reading unrelated text","Repeating random words",0],["What is selective listening?","Listening for particular information","Listening to everything equally","Avoiding the topic","Speaking while others talk",0],["Why use authentic audio carefully?","Difficulty should match learner goals and level","Authentic always means easy","Level never matters","Teachers should never adapt tasks",0],["What is a distractor in a listening test?","An option that seems plausible but is incorrect","The correct answer","The audio recording","The instructions",0],["Why give a purpose before listening?","It directs attention","It prevents listening","It removes vocabulary","It guarantees fluency",0],["Good listening assessment should…","test the intended listening skill","depend only on spelling","test unrelated grammar","use unclear instructions",0],["Listening development improves with…","regular purposeful exposure and practice","one recording only","no repetition","silent writing only",0]],
+
+"Reading":[["What is skimming?","Reading quickly for general meaning","Reading every word slowly","Copying a text","Translating every sentence",0],["What is scanning?","Looking for specific information","Reading for literary style only","Memorizing a paragraph","Writing a summary first",0],["What is an inference?","A conclusion based on clues","A copied sentence","A punctuation mark","A title",0],["What is a main idea?","The central point of a text","A minor detail","A spelling pattern","A citation",0],["Why predict before reading?","It activates prior knowledge","It prevents comprehension","It removes vocabulary","It guarantees the answer",0],["What is context?","Information surrounding a word or idea","A dictionary entry only","A grammar rule","A title only",0],["Why teach text structure?","It helps readers organize and understand information","It removes meaning","It prevents reading","It replaces vocabulary",0],["What is a reference word?","A word that points to another item in the text","A punctuation mark","A title","A spelling error",0],["Why use headings?","They signal organization and content","They make texts longer","They replace reading","They prevent prediction",0],["What is a summary?","A concise statement of key ideas","A full copy of the text","A list of every word","A personal story unrelated to the text",0],["Why teach guessing meaning from context?","It supports independent vocabulary learning","It prevents reading","It guarantees every guess","It replaces dictionaries forever",0],["What is intensive reading?","Close reading for detailed understanding","Reading only titles","Scanning phone numbers","Reading without purpose",0],["What is extensive reading?","Reading larger amounts for overall development and enjoyment","Reading one sentence repeatedly","Only test reading","Only dictionary work",0],["A good reading task should have…","a clear purpose","no instructions","unrelated questions","only translation",0],["Reading comprehension involves…","constructing meaning from text","recognizing letters only","speaking only","memorizing every word",0]],
+
+"Writing":[["What is a paragraph?","A group of related sentences about an idea","A single word","A dictionary","A question only",0],["What is a topic sentence?","A sentence that introduces the paragraph’s main idea","The final punctuation","A title only","A supporting detail only",0],["What is coherence?","Logical connection and flow of ideas","Correct spelling only","Word length","Handwriting style",0],["What is cohesion?","Linguistic links that connect parts of a text","Only punctuation","Speaking speed","Vocabulary size",0],["Why plan before writing?","It helps organize ideas and purpose","It prevents revision","It removes creativity","It guarantees perfect grammar",0],["What is drafting?","Producing an initial version of a text","Deleting everything","Publishing only","Reading silently",0],["What is revising?","Improving content and organization","Checking only commas","Copying the same text","Choosing a font",0],["What is proofreading?","Checking surface errors before finalizing","Generating ideas","Choosing a topic","Doing research only",0],["Why use linking words?","They show relationships between ideas","They replace verbs","They remove paragraphs","They prevent coherence",0],["What is a thesis statement?","A central claim or position in an academic text","A greeting","A dictionary definition","A punctuation mark",0],["Why consider audience?","Writing choices should suit readers and purpose","Audience never matters","It changes spelling only","It removes purpose",0],["What is paraphrasing?","Restating meaning in your own words","Copying exactly","Deleting a source","Changing punctuation only",0],["Why use models?","They show how effective texts are organized","They replace writing practice","They guarantee originality","They prevent ideas",0],["Good writing feedback should be…","specific and actionable","only a grade","unrelated to the task","impossible to use",0],["Effective writing is usually…","clear, organized, purposeful, and appropriate","always very long","full of rare words","without revision",0]],
+
+"Functional English":[["Which phrase is used to make a request?","Could you help me, please?","You help me yesterday.","Helped me maybe.","I am helping yesterday.",0],["Which is suitable for an apology?","I’m sorry about that.","Congratulations!","Good luck!","See you yesterday.",0],["Which phrase asks for clarification?","Could you explain that?","I disagree yesterday.","That is a pencil.","I have two.",0],["Which is polite in a formal situation?","Would you mind waiting?","Wait now!","You wait.","Waiting you.",0],["Which phrase gives advice?","You should see a doctor.","You saw a doctor yesterday.","You are doctor.","You can saw.",0],["Which phrase makes an offer?","Would you like some coffee?","Did you coffee?","You coffee yesterday.","Coffee is yesterday.",0],["Which phrase expresses preference?","I’d rather stay home.","I rather stayed home yesterday.","I am rather home.","I prefer stay yesterday.",0],["Which phrase invites someone?","Would you like to join us?","You join us yesterday?","You joining us.","Join us yesterday.",0],["Which phrase accepts an invitation?","That sounds great.","No, I am yesterday.","I refuse great.","Yesterday sounds.",0],["Which phrase declines politely?","Thanks, but I can’t make it.","No you!","I never.","That is impossible, go.",0],["Which phrase checks understanding?","Do you mean…?","You mean yesterday.","Mean you no.","Did meaning?",0],["Which phrase gives directions?","Turn left at the bank.","Left turn yesterday.","You bank lefting.","At bank is turn.",0],["Which phrase is used on the phone?","Could I speak to Maria, please?","Maria speaks yesterday.","I phone Maria yesterday now.","Speak Maria phone.",0],["Which phrase expresses agreement?","I completely agree.","I completely yesterday.","Agreeing no.","I am agree yesterday.",0],["Which phrase closes a conversation politely?","It was nice talking to you.","Talk nice yesterday only.","You are closed.","Nice talk no.",0]],
+
+"Communication & Conversation":[["What is active listening?","Listening and responding appropriately","Waiting silently without attention","Interrupting constantly","Ignoring the speaker",0],["Why ask follow-up questions?","To show interest and continue the conversation","To end every conversation","To avoid meaning","To test spelling",0],["What is turn-taking?","Sharing speaking opportunities","Changing topics randomly","Correcting grammar only","Writing notes",0],["What is a conversation opener?","A phrase that starts interaction","A final grade","A dictionary","A reading test",0],["Why use open questions?","They invite extended answers","They require only yes/no","They end conversations","They prevent ideas",0],["Which is an open question?","What do you think about it?","Are you ready?","Is it blue?","Do you agree?",0],["What is paraphrasing in conversation?","Restating someone’s meaning to confirm understanding","Changing the topic","Repeating every word","Ending the talk",0],["Why clarify?","To resolve misunderstanding","To avoid communication","To increase confusion","To test grammar",0],["Which is a conversation repair phrase?","Sorry, could you say that again?","I understand nothing forever.","Stop talking.","No conversation.",0],["Why show empathy?","It helps build respectful communication","It prevents listening","It guarantees agreement","It removes differences",0],["What is a discourse marker?","A word or phrase that organizes spoken ideas","A spelling rule","A certificate","A noun only",0],["Which phrase signals contrast?","However","Because","For example","First",0],["Which phrase gives an example?","For example","Nevertheless","Finally","Although",0],["What makes conversation effective?","Listening, turn-taking, clarity, and responsiveness","Speaking nonstop","Using rare vocabulary only","Avoiding questions",0],["A good conversation partner should…","respond to meaning and invite participation","dominate every topic","ignore cues","correct every word",0]],
+
+"English Culture & Real-Life English":[["What does \"How are you?\" often function as?","A greeting and social opener","A medical diagnosis","A formal exam","A command",0],["What does \"What’s up?\" usually mean?","A casual greeting asking what is happening","A question about the sky only","A formal request","A grammar test",0],["Why can direct eye contact vary culturally?","Social norms differ across cultures","Eye contact always means the same thing","Culture never affects communication","It is only a grammar issue",0],["What is small talk?","Light conversation about everyday topics","A formal lecture","An academic essay","A legal document",0],["Which is common small talk?","How was your weekend?","Submit the report immediately.","Define the theory.","Translate this paragraph.",0],["Why learn cultural conventions?","They help learners interpret and participate appropriately","They guarantee native identity","They replace grammar","They prevent communication",0],["What does \"take care\" often mean at the end of a conversation?","A friendly closing wish","A warning of danger","A command to work","A request for payment",0],["What does \"no worries\" commonly express?","Reassurance or acceptance","Anger","A formal refusal","Confusion only",0],["What does \"I’m afraid…\" often soften?","A negative response or disagreement","A greeting","A compliment","A direction",0],["Why is register important?","Language should suit situation and relationship","All language is identical","Register affects spelling only","Formal language is always best",0],["Which is informal?","Can you give me a hand?","Could you please assist me?","I would appreciate your assistance.","Please provide the requested information.",0],["What does \"How’s it going?\" mean?","How are things?","Where are you going physically?","What is your address?","What is your job title?",0],["Why can humor be culturally sensitive?","People may interpret jokes differently","Humor has one universal meaning","Culture never affects humor","Jokes are always neutral",0],["What is real-life English?","Language used in everyday authentic situations","Only textbook definitions","Only grammar exercises","Only exam instructions",0],["Good intercultural communication requires…","respect, curiosity, and awareness of differences","assuming everyone communicates the same way","avoiding questions","judging unfamiliar behavior",0]]
+};
+
+
+function getExamSubjects(program){
+    if(program==="TEFL") return TEFL_SUBJECTS;
+    if(program==="TESOL") return TESOL_SUBJECTS;
+    if(program==="TEYL") return TEYL_SUBJECTS;
+    return PROFICIENCY_SUBJECTS;
+}
+
+function getExamData(program){
+    if(program==="TEFL") return TEFL_DATA;
+    if(program==="TESOL") return TESOL_DATA;
+    if(program==="TEYL") return TEYL_DATA;
+    return PROFICIENCY_DATA;
+}
+
+function getExamPrefix(program){
+    if(program==="TEFL") return "GETI-TEFL-";
+    if(program==="TESOL") return "GETI-TESOL-";
+    if(program==="TEYL") return "GETI-TEYL-";
+    return "GETI-EPE-";
+}
+
 /* =========================================================
    EXAM STATE
 ========================================================= */
@@ -2859,28 +2849,42 @@ function updateExamTimer(){
 function finalizeTimedOutExam(){
     if(!examState.started || examState.timeExpired) return;
     examState.timeExpired=true;
-
-    let subjects=examState.program==="TEFL" ? TEFL_SUBJECTS : TESOL_SUBJECTS;
-    let data=examState.program==="TEFL" ? TEFL_DATA : TESOL_DATA;
-    let subject=subjects[examState.subjectIndex];
-    let questions=data[subject];
-    let currentAnswers=examState.answers[examState.subjectIndex] || [];
-    let score=0;
-
-    for(let i=0;i<15;i++){
-        if(currentAnswers[i]===questions[i][5]) score++;
+    let subjects=getExamSubjects(examState.program);
+    let data=getExamData(examState.program);
+    examState.subjectScores=[];
+    for(let si=0;si<subjects.length;si++){
+        let questions=data[subjects[si]];
+        let answers=examState.answers[si] || [];
+        let score=0;
+        for(let i=0;i<15;i++){
+            if(answers[i]===questions[i][5]) score++;
+        }
+        let percentage=Math.round((score/15)*100);
+        examState.subjectScores.push({subject:subjects[si],score:score,total:15,percentage:percentage,grade:calculateGrade(percentage)});
     }
-
-    examState.subjectScores[examState.subjectIndex]={
-        subject:subject,
-        score:score,
-        total:15,
-        percentage:Math.round((score/15)*100),
-        grade:calculateGrade(Math.round((score/15)*100))
-    };
-
-    showFinalResult(true);
+    finalizeAttempt("FAILED", "TIME EXPIRED — EXAM CLOSED AUTOMATICALLY");
 }
+
+function finalizeAttempt(forcedStatus, notice){
+    let subjects=getExamSubjects(examState.program);
+    let data=getExamData(examState.program);
+    if(!examState.subjectScores || examState.subjectScores.length!==subjects.length){
+        examState.subjectScores=[];
+        for(let si=0;si<subjects.length;si++){
+            let questions=data[subjects[si]], answers=examState.answers[si] || [], score=0;
+            for(let i=0;i<15;i++) if(answers[i]===questions[i][5]) score++;
+            let pct=Math.round((score/15)*100);
+            examState.subjectScores.push({subject:subjects[si],score:score,total:15,percentage:pct,grade:calculateGrade(pct)});
+        }
+    }
+    let totalScore=examState.subjectScores.reduce((n,x)=>n+x.score,0);
+    let totalQuestions=subjects.length*15;
+    let percentage=Math.round((totalScore/totalQuestions)*100);
+    let status=forcedStatus || (percentage>=70 ? "PASSED" : "FAILED");
+    if(status!=="PASSED" && percentage>=70 && notice!=="EXAM ENDED BY CANDIDATE") status="FAILED";
+    showFinalResult(false,notice,status,percentage,totalScore,totalQuestions);
+}
+
 
 /* =========================================================
    OPEN REGISTRATION
@@ -2956,9 +2960,10 @@ function openExamRegistration(program){
 
     '</div>';
 
-    panel.scrollIntoView({
-        behavior:"smooth"
-    });
+    panel.classList.remove("exam-active-fullscreen");
+    panel.classList.add("active");
+    document.body.style.overflow="";
+    panel.scrollIntoView({behavior:"smooth"});
 
 }
 
@@ -2985,6 +2990,18 @@ function submitRegistration(){
     }
 
     let records=getExamRecords();
+    let blacklist=checkBlacklist(email);
+    if(blacklist){
+        let hours=Math.ceil((blacklist.until-Date.now())/3600000);
+        alert("This candidate is temporarily blocked. Please try again after the block expires (about "+hours+" hour(s)).");
+        return;
+    }
+    let lock=getExamLock(email,examState.program);
+    if(lock){
+        let mins=Math.ceil((lock.until-Date.now())/60000);
+        alert("You are temporarily locked after 3 failed attempts. Please wait "+mins+" minute(s).");
+        return;
+    }
 
     let passed=records.find(function(r){
 
@@ -3040,6 +3057,16 @@ function submitRegistration(){
     /* ENABLE COPY PROTECTION */
     enableExamProtection();
 
+    let examPanel=document.getElementById("examPanel");
+    examPanel.classList.add("exam-active-fullscreen");
+    document.body.style.overflow="hidden";
+
+    try{
+        if(document.documentElement.requestFullscreen){
+            document.documentElement.requestFullscreen().catch(function(){});
+        }
+    }catch(e){}
+
     startExamTimer();
     showQuestion();
 
@@ -3051,10 +3078,7 @@ function submitRegistration(){
 
 function createCandidateID(program){
 
-    let prefix=
-        program==="TEFL"
-        ? "GETI-TEFL-"
-        : "GETI-TESOL-";
+    let prefix=getExamPrefix(program);
 
     let records=getExamRecords();
 
@@ -3082,21 +3106,39 @@ function createCandidateID(program){
 
 }
 
+function backToExamMenu(){
+    if(!examState.started){
+        closeExamPanel();
+        return;
+    }
+    if(!confirm("Leave the examination? Your current attempt will be ended and recorded as FAILED.")) return;
+    stopExamTimer();
+    examState.timeExpired=false;
+    examState.forcedExit=true;
+    finalizeAttempt("FAILED", "EXAM ENDED BY CANDIDATE");
+}
+
+function closeExamPanel(){
+    stopExamTimer();
+    disableExamProtection();
+    examState.started=false;
+    const panel=document.getElementById("examPanel");
+    if(panel){
+        panel.classList.remove("active","exam-active-fullscreen","exam-protected");
+        panel.innerHTML="";
+    }
+    document.body.style.overflow="";
+}
+
 /* =========================================================
    SHOW QUESTION
 ========================================================= */
 
 function showQuestion(){
 
-    let subjects=
-        examState.program==="TEFL"
-        ? TEFL_SUBJECTS
-        : TESOL_SUBJECTS;
+    let subjects=getExamSubjects(examState.program);
 
-    let data=
-        examState.program==="TEFL"
-        ? TEFL_DATA
-        : TESOL_DATA;
+    let data=getExamData(examState.program);
 
     let subject=
         subjects[examState.subjectIndex];
@@ -3118,6 +3160,13 @@ function showQuestion(){
 
     panel.innerHTML=
 
+    '<div class="exam-fullscreen-shell">'+
+    '<div class="exam-topbar">'+
+    '<div class="exam-topbar-left">GETI '+escapeHTML(examState.program)+' EXAM</div>'+
+    '<div id="examTimer" class="exam-timer">TIME LEFT: 16:00</div>'+
+    '<button class="exam-back-menu" onclick="backToExamMenu()">← BACK TO MENU</button>'+
+    '</div>'+
+    '<div class="exam-fullscreen-content"><div class="exam-question-wrap">'+
     '<div class="exam-progress">'+
 
     '<span>'+
@@ -3167,7 +3216,8 @@ function showQuestion(){
 
     '</div>'+
 
-    '</div>';
+    '</div>'+
+    '</div></div></div>';
 
     let container=
         document.getElementById("optionsContainer");
@@ -3276,15 +3326,9 @@ function nextExamQuestion(){
 
 function submitSubject(){
 
-    let subjects=
-        examState.program==="TEFL"
-        ? TEFL_SUBJECTS
-        : TESOL_SUBJECTS;
+    let subjects=getExamSubjects(examState.program);
 
-    let data=
-        examState.program==="TEFL"
-        ? TEFL_DATA
-        : TESOL_DATA;
+    let data=getExamData(examState.program);
 
     let subject=
         subjects[examState.subjectIndex];
@@ -3447,7 +3491,7 @@ function continueExam(){
    FINAL RESULT
 ========================================================= */
 
-function showFinalResult(timeExpired=false){
+function showFinalResult(timeoutNotice,statusOverride,percentageOverride,totalScoreOverride,totalQuestionsOverride){
 
     stopExamTimer();
 
@@ -3457,25 +3501,11 @@ function showFinalResult(timeExpired=false){
 
     examState.started=false;
 
-    let totalScore=0;
-
-    let totalQuestions=150;
-
-    examState.subjectScores.forEach(function(s){
-
-        totalScore+=s.score;
-
-    });
-
-    let percentage=
-        Math.round(
-            (totalScore/totalQuestions)*100
-        );
-
-    let status=
-        percentage>=70
-        ? "PASSED"
-        : "FAILED";
+    let totalScore=typeof totalScoreOverride==="number" ? totalScoreOverride : examState.subjectScores.reduce(function(n,s){return n+s.score;},0);
+    let totalQuestions=typeof totalQuestionsOverride==="number" ? totalQuestionsOverride : getExamSubjects(examState.program).length*15;
+    let percentage=typeof percentageOverride==="number" ? percentageOverride : Math.round((totalScore/totalQuestions)*100);
+    let status=statusOverride || (percentage>=70 ? "PASSED" : "FAILED");
+    let resultNotice=timeoutNotice || (examState.timeExpired ? "TIME EXPIRED — EXAM CLOSED AUTOMATICALLY" : "");
 
     let student=examState.student;
 
@@ -3499,6 +3529,14 @@ function showFinalResult(timeExpired=false){
     };
 
     saveExamRecord(record);
+    if(status!=="PASSED" && student && student.email){
+        registerFailedAttempt(student.email,student.program);
+    }
+    if(status==="PASSED") sendPassedResultEmail(record);
+    stopExamTimer();
+    document.body.style.overflow="";
+    let fsExit=document.fullscreenElement && document.exitFullscreen;
+    if(fsExit){ try{document.exitFullscreen().catch(function(){});}catch(e){} }
 
     let panel=
         document.getElementById("examPanel");
@@ -3540,7 +3578,7 @@ function showFinalResult(timeExpired=false){
         '<p>Candidate ID: <strong>'+
         escapeHTML(student.id)+
         '</strong></p>'+
-        timeoutNotice+
+        (resultNotice ? '<div class="exam-fail-message">'+escapeHTML(resultNotice)+'</div>' : '')+
 
         '<div class="final-score">'+
         percentage+
@@ -3566,6 +3604,7 @@ function showFinalResult(timeExpired=false){
         '<p>'+
         'You cannot take this same GETI examination again after passing.'+
         '</p>'+
+        '<br><button class="btn btn-gold" onclick="closeExamPanel()">BACK TO MENU</button>'+
 
         '</div>';
 
@@ -3584,7 +3623,7 @@ function showFinalResult(timeExpired=false){
         '<p>Candidate ID: <strong>'+
         escapeHTML(student.id)+
         '</strong></p>'+
-        timeoutNotice+
+        (resultNotice ? '<div class="exam-fail-message">'+escapeHTML(resultNotice)+'</div>' : '')+
 
         '<div class="final-score">'+
         percentage+
@@ -3602,6 +3641,7 @@ function showFinalResult(timeExpired=false){
         '<h3>Subject Results</h3>'+
 
         rows+
+        '<br><button class="btn btn-gold" onclick="closeExamPanel()">BACK TO MENU</button>'+
 
         '</div>';
 
@@ -3612,6 +3652,84 @@ function showFinalResult(timeExpired=false){
     });
 
 }
+
+/* =========================================================
+   ATTEMPT / BLACKLIST CONTROL
+========================================================= */
+function cleanupExamLocks(){
+    let now=Date.now();
+    try{
+        let locks=JSON.parse(localStorage.getItem("GETI_EXAM_LOCKS")||"{}");
+        Object.keys(locks).forEach(function(k){
+            if(locks[k].until<=now) delete locks[k];
+        });
+        localStorage.setItem("GETI_EXAM_LOCKS",JSON.stringify(locks));
+    }catch(e){}
+}
+function getExamLock(email,program){
+    cleanupExamLocks();
+    try{
+        let locks=JSON.parse(localStorage.getItem("GETI_EXAM_LOCKS")||"{}");
+        return locks[(email||"").toLowerCase()+"|"+program] || null;
+    }catch(e){return null;}
+}
+function registerFailedAttempt(email,program){
+    let key=(email||"").toLowerCase()+"|"+program;
+    let now=Date.now();
+    let attempts={};
+    try{attempts=JSON.parse(localStorage.getItem("GETI_FAILED_ATTEMPTS")||"{}");}catch(e){}
+    let arr=(attempts[key]||[]).filter(function(t){return now-t<24*60*60*1000;});
+    arr.push(now);
+    attempts[key]=arr;
+    localStorage.setItem("GETI_FAILED_ATTEMPTS",JSON.stringify(attempts));
+    if(arr.length>=3){
+        let locks={};
+        try{locks=JSON.parse(localStorage.getItem("GETI_EXAM_LOCKS")||"{}");}catch(e){}
+        locks[key]={until:now+5*60*1000,reason:"3 FAILED ATTEMPTS"};
+        localStorage.setItem("GETI_EXAM_LOCKS",JSON.stringify(locks));
+        attempts[key]=[];
+        localStorage.setItem("GETI_FAILED_ATTEMPTS",JSON.stringify(attempts));
+        return 5*60*1000;
+    }
+    return 0;
+}
+function checkBlacklist(email){
+    try{
+        let list=JSON.parse(localStorage.getItem("GETI_BLACKLIST")||"{}");
+        let key=(email||"").toLowerCase();
+        if(list[key] && list[key].until>Date.now()) return list[key];
+        if(list[key]){delete list[key];localStorage.setItem("GETI_BLACKLIST",JSON.stringify(list));}
+    }catch(e){}
+    return null;
+}
+
+function sendPassedResultEmail(record){
+    const subject="GETI Exam Passed - "+record.program+" - "+record.name;
+    const body=[
+        "GETI EXAMINATION RESULT",
+        "Candidate ID: "+record.id,
+        "Name: "+record.name,
+        "Email: "+record.email,
+        "Nationality: "+record.nationality,
+        "Country: "+record.country,
+        "Phone: "+record.phone,
+        "Institution: "+record.institution,
+        "Program: "+record.program,
+        "Final Grade: "+calculateGrade(record.percentage),
+        "Final Score: "+record.totalScore+" / "+record.totalQuestions,
+        "Percentage: "+record.percentage+"%",
+        "Date: "+record.date,
+        "",
+        "Subject Grades:",
+        record.subjects.map(function(s){return s.subject+" — "+s.percentage+"% — "+s.grade;}).join("\n")
+    ].join("\n");
+    // A browser cannot securely send SMTP mail by itself. This creates a ready email and also supports a backend endpoint when configured.
+    if(window.GETI_RESULT_EMAIL_API){
+        fetch(window.GETI_RESULT_EMAIL_API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({to:"proficiencycorelanguague03@gmail.com",subject:subject,body:body,record:record})}).catch(function(){});
+    }
+    return {to:"proficiencycorelanguague03@gmail.com",subject:subject,body:body};
+}
+window.GETI_RESULT_EMAIL_API="";
 
 /* =========================================================
    LOCAL DATABASE
@@ -3852,127 +3970,6 @@ function sendMessage(){
 
 }
 
-
-/* =========================================================
-   CHAT + ADMINISTRATOR SYSTEM
-   NOTE: This single-file version stores data in this browser.
-   A real multi-device/global deployment requires a secure backend.
-========================================================= */
-const GETI_ADMIN_PASSWORD = ;
-const CHAT_ACCOUNTS_KEY = "GETI_CHAT_ACCOUNTS";
-const CHAT_MESSAGES_KEY = "GETI_CHAT_MESSAGES";
-const SITE_VISITS_KEY = "GETI_SITE_VISITS";
-const BLACKLIST_KEY = "GETI_BLACKLIST";
-let chatSession = null;
-let adminSession = false;
-let adminSelectedUser = null;
-
-function getiStore(key, fallback){
-  try{return JSON.parse(localStorage.getItem(key)) || fallback;}catch(e){return fallback;}
-}
-function getiSave(key,value){localStorage.setItem(key,JSON.stringify(value));}
-function closeModal(id){document.getElementById(id).classList.remove('active');}
-function openChatAuth(){
-  if(chatSession){openChat();return;}
-  document.getElementById('chatAuthModal').classList.add('active');
-}
-function chatCreateAccount(){
-  const name=document.getElementById('chatName').value.trim();
-  const email=document.getElementById('chatEmail').value.trim().toLowerCase();
-  const phone=document.getElementById('chatPhone').value.trim();
-  const password=document.getElementById('chatPassword').value;
-  if(!name||!email||!password){alert('Please enter full name, email and password.');return;}
-  const accounts=getiStore(CHAT_ACCOUNTS_KEY,[]);
-  if(accounts.some(a=>a.email===email)){alert('This email already has a chat account. Please login.');return;}
-  const account={id:'CHAT-'+Date.now(),name,email,phone,password,createdAt:new Date().toISOString(),blocked:false};
-  accounts.push(account);getiSave(CHAT_ACCOUNTS_KEY,accounts);
-  chatSession={id:account.id,email:account.email,name:account.name};
-  recordSiteVisit('CHAT_ACCOUNT_CREATED',account.email);
-  closeModal('chatAuthModal');openChat();
-}
-function chatLogin(){
-  const email=document.getElementById('chatEmail').value.trim().toLowerCase();
-  const password=document.getElementById('chatPassword').value;
-  const account=getiStore(CHAT_ACCOUNTS_KEY,[]).find(a=>a.email===email&&a.password===password);
-  if(!account){alert('Invalid email or password.');return;}
-  if(account.blocked){alert('This chat account is blocked.');return;}
-  chatSession={id:account.id,email:account.email,name:account.name};
-  recordSiteVisit('CHAT_LOGIN',account.email);closeModal('chatAuthModal');openChat();
-}
-function openChat(){
-  if(!chatSession){openChatAuth();return;}
-  document.getElementById('chatLoggedUser').textContent='Logged in as: '+chatSession.name+' — '+chatSession.email;
-  document.getElementById('chatModal').classList.add('active');
-  renderChat();
-}
-function chatMessages(){return getiStore(CHAT_MESSAGES_KEY,[]);}
-function renderChat(){
-  const msgs=chatMessages().filter(m=>m.userId===chatSession.id || m.userId==='ADMIN');
-  const box=document.getElementById('chatMessages');
-  box.innerHTML='';
-  msgs.forEach(m=>{
-    const div=document.createElement('div');div.className='chat-msg '+(m.sender==='ADMIN'?'them':'me');
-    div.textContent=(m.sender==='ADMIN'?'Administrator: ':'You: ')+m.text;
-    if(m.fileName){const a=document.createElement('a');a.className='chat-attach';a.textContent='📎 '+m.fileName+' — Download';a.href=m.fileData;a.download=m.fileName;a.style.display='block';a.style.color=m.sender==='ADMIN'?'#071d3a':'#fff';div.appendChild(a);}
-    box.appendChild(div);
-  });
-  box.scrollTop=box.scrollHeight;
-  document.getElementById('chatConversationTitle').textContent='Administrator';
-}
-function sendChatMessage(){
-  if(!chatSession)return;
-  const text=document.getElementById('chatText').value.trim();
-  const file=document.getElementById('chatFile').files[0];
-  if(!text&&!file){alert('Write a message or attach an image/PDF.');return;}
-  const save=(fileData,fileName)=>{
-    const msgs=chatMessages();msgs.push({id:'MSG-'+Date.now(),userId:chatSession.id,sender:'USER',email:chatSession.email,name:chatSession.name,text,fileName:fileName||'',fileData:fileData||'',createdAt:new Date().toISOString()});getiSave(CHAT_MESSAGES_KEY,msgs);
-    document.getElementById('chatText').value='';document.getElementById('chatFile').value='';renderChat();
-  };
-  if(file){const reader=new FileReader();reader.onload=()=>save(reader.result,file.name);reader.readAsDataURL(file);}else save('','');
-}
-function openAdminLogin(){document.getElementById('adminLoginModal').classList.add('active');}
-function adminLogin(){
-  if(document.getElementById('adminPassword').value!==GETI_ADMIN_PASSWORD){alert('Incorrect administrator password.');return;}
-  adminSession=true;document.getElementById('adminPassword').value='';closeModal('adminLoginModal');document.getElementById('adminModal').classList.add('active');renderAdmin();
-}
-function renderAdmin(){
-  if(!adminSession)return;
-  const accounts=getiStore(CHAT_ACCOUNTS_KEY,[]),msgs=chatMessages(),visits=getiStore(SITE_VISITS_KEY,[]),black=getiStore(BLACKLIST_KEY,[]),results=getExamRecords();
-  let html=`<div class="admin-grid">
-    <div class="admin-stat"><strong>${msgs.length}</strong><br>Messages / chat events</div>
-    <div class="admin-stat"><strong>${black.length}</strong><br>Blacklisted accounts</div>
-    <div class="admin-stat"><strong>${results.length}</strong><br>Exam records / all exams</div>
-    <div class="admin-stat"><strong>${visits.length}</strong><br>Site activity records</div>
-  </div><br>
-  <div class="geti-actions"><button class="geti-primary" onclick="adminTab('messages')">MESSAGES</button><button class="geti-primary" onclick="adminTab('blacklists')">BLACKLISTS</button><button class="geti-primary" onclick="adminTab('results')">RESULTS</button><button class="geti-primary" onclick="adminTab('visits')">LIST WHO TOUCHED SITE</button><button class="geti-primary" onclick="adminTab('accounts')">CHAT ACCOUNTS</button><button class="geti-gold" onclick="adminTab('exams')">ALL DID THE EXAM</button></div>
-  <div id="adminTabContent" style="margin-top:15px"></div>`;
-  document.getElementById('adminDashboard').innerHTML=html;adminTab('messages');
-}
-function adminTab(tab){
-  const box=document.getElementById('adminTabContent');if(!box)return;
-  const accounts=getiStore(CHAT_ACCOUNTS_KEY,[]),msgs=chatMessages(),visits=getiStore(SITE_VISITS_KEY,[]),black=getiStore(BLACKLIST_KEY,[]),results=getExamRecords();
-  if(tab==='messages'){
-    box.innerHTML='<h3>All Messages</h3><div class="admin-table-wrap"><table class="admin-table"><tr><th>Date</th><th>Sender</th><th>Email</th><th>Phone</th><th>Message</th><th>File</th><th>Action</th></tr>'+msgs.filter(m=>m.sender==='USER').map(m=>{const a=accounts.find(x=>x.id===m.userId)||{};return `<tr><td>${new Date(m.createdAt).toLocaleString()}</td><td>${escapeHTML(m.name||a.name||'')}</td><td>${escapeHTML(m.email||a.email||'')}</td><td>${escapeHTML(a.phone||'')}</td><td>${escapeHTML(m.text||'')}</td><td>${m.fileName?`<a href="${m.fileData}" download="${escapeHTML(m.fileName)}">Download</a>`:''}</td><td><button class="geti-primary" onclick="adminReply('${m.userId}')">Reply</button> <button class="danger" onclick="blockChatUser('${m.userId}')">Block</button></td></tr>`}).join('')+'</table></div>';
-  }else if(tab==='blacklists'){
-    box.innerHTML='<h3>Blacklists</h3><div class="admin-table-wrap"><table class="admin-table"><tr><th>Account</th><th>Email</th><th>Phone</th><th>Action</th></tr>'+black.map(id=>{const a=accounts.find(x=>x.id===id)||{};return `<tr><td>${escapeHTML(a.name||id)}</td><td>${escapeHTML(a.email||'')}</td><td>${escapeHTML(a.phone||'')}</td><td><button class="geti-gold" onclick="unblockChatUser('${id}')">Unblock</button></td></tr>`}).join('')+'</table></div>';
-  }else if(tab==='accounts'){
-    box.innerHTML='<h3>Chat Accounts</h3><div class="admin-table-wrap"><table class="admin-table"><tr><th>Name</th><th>Email</th><th>Phone</th><th>Created</th><th>Status</th><th>Action</th></tr>'+accounts.map(a=>`<tr><td>${escapeHTML(a.name)}</td><td>${escapeHTML(a.email)}</td><td>${escapeHTML(a.phone||'')}</td><td>${new Date(a.createdAt).toLocaleString()}</td><td>${a.blocked?'BLOCKED':'ACTIVE'}</td><td><button class="danger" onclick="${a.blocked?`unblockChatUser('${a.id}')`:`blockChatUser('${a.id}')`} ">${a.blocked?'UNBLOCK':'BLOCK'}</button></td></tr>`).join('')+'</table></div>';
-  }else if(tab==='results'||tab==='exams'){
-    box.innerHTML='<h3>'+ (tab==='results'?'All Results':'All Who Did The Exam') +'</h3><div class="admin-table-wrap"><table class="admin-table"><tr><th>Date</th><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Country</th><th>Program</th><th>Score</th><th>Status</th></tr>'+results.map(r=>`<tr><td>${new Date(r.date).toLocaleString()}</td><td>${escapeHTML(r.id)}</td><td>${escapeHTML(r.name)}</td><td>${escapeHTML(r.email)}</td><td>${escapeHTML(r.phone||'')}</td><td>${escapeHTML(r.country||'')}</td><td>${escapeHTML(r.program)}</td><td>${r.percentage}%</td><td>${escapeHTML(r.status)}</td></tr>`).join('')+'</table></div>';
-  }else if(tab==='visits'){
-    box.innerHTML='<h3>List Who Touched The Site</h3><div class="admin-table-wrap"><table class="admin-table"><tr><th>Date</th><th>Event</th><th>Account / Identifier</th><th>Page</th><th>Browser</th></tr>'+visits.map(v=>`<tr><td>${new Date(v.time).toLocaleString()}</td><td>${escapeHTML(v.event)}</td><td>${escapeHTML(v.identifier||'')}</td><td>${escapeHTML(v.page||'')}</td><td>${escapeHTML(v.browser||'')}</td></tr>`).join('')+'</table></div>';
-  }
-}
-function adminReply(userId){
-  const text=prompt('Reply to this user:');if(!text)return;const msgs=chatMessages();msgs.push({id:'MSG-'+Date.now(),userId,sender:'ADMIN',email:'administrator',name:'Administrator',text,fileName:'',fileData:'',createdAt:new Date().toISOString()});getiSave(CHAT_MESSAGES_KEY,msgs);alert('Reply sent.');adminTab('messages');
-}
-function blockChatUser(id){
-  const accounts=getiStore(CHAT_ACCOUNTS_KEY,[]),a=accounts.find(x=>x.id===id);if(!a)return;a.blocked=true;getiSave(CHAT_ACCOUNTS_KEY,accounts);const b=getiStore(BLACKLIST_KEY,[]);if(!b.includes(id))b.push(id);getiSave(BLACKLIST_KEY,b);renderAdmin();
-}
-function unblockChatUser(id){const accounts=getiStore(CHAT_ACCOUNTS_KEY,[]);const a=accounts.find(x=>x.id===id);if(a)a.blocked=false;getiSave(CHAT_ACCOUNTS_KEY,accounts);getiSave(BLACKLIST_KEY,getiStore(BLACKLIST_KEY,[]).filter(x=>x!==id));renderAdmin();}
-function recordSiteVisit(event,identifier){const visits=getiStore(SITE_VISITS_KEY,[]);visits.push({event,identifier:identifier||'',page:location.href,time:new Date().toISOString(),browser:navigator.userAgent});if(visits.length>1000)visits.splice(0,visits.length-1000);getiSave(SITE_VISITS_KEY,visits);}
-recordSiteVisit('SITE_VISIT','anonymous');
-
 /* =========================================================
    AUTO CERTIFICATE VERIFICATION
 ========================================================= */
@@ -4031,1414 +4028,7 @@ document
 
 </script>
 
-<script>
-/* =========================================================
-   GETI — SUPABASE CONNECTION
-========================================================= */
-
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-
-const { createClient } = supabase;
-
-const db = createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
-
-
-/* =========================================================
-   CURRENT USER
-========================================================= */
-
-let currentUser = null;
-
-
-/* =========================================================
-   CHECK LOGIN
-========================================================= */
-
-async function checkSupabaseLogin() {
-
-    try {
-
-        const {
-            data: { session },
-            error
-        } = await db.auth.getSession();
-
-        if (error) {
-            console.error("Session error:", error);
-            return;
-        }
-
-        if (session) {
-
-            currentUser = session.user;
-
-            console.log(
-                "GETI user logged in:",
-                currentUser.email
-            );
-
-            await loadMyProfile();
-
-        } else {
-
-            currentUser = null;
-
-            console.log("No GETI user logged in.");
-
-        }
-
-    } catch (error) {
-
-        console.error(
-            "Supabase login check failed:",
-            error
-        );
-
-    }
-}
-
-
-/* =========================================================
-   AUTH STATE
-========================================================= */
-
-db.auth.onAuthStateChange(
-    async (event, session) => {
-
-        currentUser =
-            session ? session.user : null;
-
-        console.log(
-            "GETI Auth:",
-            event
-        );
-
-        if (session) {
-
-            await loadMyProfile();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   GET USER PROFILE
-========================================================= */
-
-async function loadMyProfile() {
-
-    if (!currentUser) return;
-
-    try {
-
-        const { data, error } = await db
-            .from("profiles")
-            .select("*")
-            .eq("id", currentUser.id)
-            .maybeSingle();
-
-        if (error) {
-
-            console.error(
-                "Profile error:",
-                error
-            );
-
-            return;
-        }
-
-        if (data) {
-
-            console.log(
-                "GETI Profile:",
-                data
-            );
-
-        }
-
-    } catch (error) {
-
-        console.error(
-            "Profile loading failed:",
-            error
-        );
-
-    }
-}
-
-
-/* =========================================================
-   CREATE ACCOUNT
-========================================================= */
-
-async function createGETIAccount(
-    email,
-    password,
-    fullName,
-    phone = "",
-    country = ""
-) {
-
-    if (!email || !password || !fullName) {
-
-        alert(
-            "Please enter name, email and password."
-        );
-
-        return false;
-    }
-
-    try {
-
-        const {
-            data,
-            error
-        } = await db.auth.signUp({
-
-            email: email,
-
-            password: password
-
-        });
-
-        if (error) {
-
-            alert(error.message);
-
-            return false;
-        }
-
-        if (!data.user) {
-
-            alert(
-                "Account could not be created."
-            );
-
-            return false;
-        }
-
-
-        /* Create profile */
-
-        const {
-            error: profileError
-        } = await db
-            .from("profiles")
-            .insert({
-
-                id: data.user.id,
-
-                full_name: fullName,
-
-                email: email,
-
-                phone: phone,
-
-                country: country
-
-            });
-
-
-        if (profileError) {
-
-            console.error(
-                "Profile creation error:",
-                profileError
-            );
-
-        }
-
-
-        alert(
-            "GETI account created successfully."
-        );
-
-        return true;
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Unable to create account."
-        );
-
-        return false;
-    }
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-async function loginGETIAccount(
-    email,
-    password
-) {
-
-    if (!email || !password) {
-
-        alert(
-            "Please enter your email and password."
-        );
-
-        return false;
-    }
-
-    try {
-
-        const {
-            data,
-            error
-        } = await db.auth.signInWithPassword({
-
-            email: email,
-
-            password: password
-
-        });
-
-        if (error) {
-
-            alert(error.message);
-
-            return false;
-        }
-
-        currentUser = data.user;
-
-        await loadMyProfile();
-
-        alert(
-            "Welcome back to GETI."
-        );
-
-        return true;
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Login failed."
-        );
-
-        return false;
-    }
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-async function logoutGETI() {
-
-    const { error } =
-        await db.auth.signOut();
-
-    if (error) {
-
-        console.error(error);
-
-        return;
-    }
-
-    currentUser = null;
-
-    alert(
-        "You have been logged out."
-    );
-
-    location.reload();
-}
-
-
-/* =========================================================
-   SAVE SITE ACTIVITY
-========================================================= */
-
-async function saveGETIActivity(
-    activityType,
-    details = {}
-) {
-
-    try {
-
-        await db
-            .from("site_activity")
-            .insert({
-
-                user_id:
-                    currentUser
-                    ? currentUser.id
-                    : null,
-
-                activity_type:
-                    activityType,
-
-                details:
-                    details
-
-            });
-
-    } catch (error) {
-
-        console.error(
-            "Activity error:",
-            error
-        );
-
-    }
-}
-
-
-/* =========================================================
-   SEND ADMIN MESSAGE
-========================================================= */
-
-async function sendAdminMessage(
-    message
-) {
-
-    if (!currentUser) {
-
-        alert(
-            "Please login first."
-        );
-
-        return false;
-    }
-
-    if (!message.trim()) {
-
-        alert(
-            "Please enter a message."
-        );
-
-        return false;
-    }
-
-    try {
-
-        const {
-            error
-        } = await db
-            .from("messages")
-            .insert({
-
-                sender_id:
-                    currentUser.id,
-
-                message:
-                    message.trim(),
-
-                receiver_id:
-                    null
-
-            });
-
-        if (error) {
-
-            console.error(error);
-
-            alert(
-                "Message could not be sent."
-            );
-
-            return false;
-        }
-
-        await saveGETIActivity(
-            "message_sent",
-            {
-                message_length:
-                    message.length
-            }
-        );
-
-        return true;
-
-    } catch (error) {
-
-        console.error(error);
-
-        return false;
-    }
-}
-
-
-/* =========================================================
-   LOAD MY MESSAGES
-========================================================= */
-
-async function loadMyMessages() {
-
-    if (!currentUser) return [];
-
-    try {
-
-        const {
-            data,
-            error
-        } = await db
-            .from("messages")
-            .select("*")
-            .or(
-                `sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: true
-                }
-            );
-
-        if (error) {
-
-            console.error(
-                "Message loading error:",
-                error
-            );
-
-            return [];
-        }
-
-        return data || [];
-
-    } catch (error) {
-
-        console.error(error);
-
-        return [];
-    }
-}
-
-
-/* =========================================================
-   REALTIME CHAT
-========================================================= */
-
-const chatChannel =
-    db
-    .channel("geti-chat-realtime")
-    .on(
-        "postgres_changes",
-        {
-            event: "INSERT",
-            schema: "public",
-            table: "messages"
-        },
-        payload => {
-
-            console.log(
-                "New GETI message:",
-                payload.new
-            );
-
-            /*
-             * Raha manana function UI
-             * displayMessage() ianao,
-             * azonao antsoina eto.
-             */
-
-            if (
-                typeof displayMessage ===
-                "function"
-            ) {
-
-                displayMessage(
-                    payload.new
-                );
-
-            }
-
-        }
-    )
-    .subscribe();
-
-
-/* =========================================================
-   SAVE EXAM RESULT
-========================================================= */
-
-async function saveGETIExamResult(result) {
-
-    if (!currentUser) {
-
-        console.error(
-            "No logged-in user."
-        );
-
-        return false;
-    }
-
-    try {
-
-        const {
-            error
-        } = await db
-            .from("subject_results")
-            .insert({
-
-                user_id:
-                    currentUser.id,
-
-                program:
-                    result.program || "",
-
-                subject:
-                    result.subject || "",
-
-                score:
-                    Number(result.score || 0),
-
-                total:
-                    Number(result.total || 0),
-
-                status:
-                    result.status || ""
-
-            });
-
-        if (error) {
-
-            console.error(
-                "Exam result error:",
-                error
-            );
-
-            return false;
-        }
-
-        await saveGETIActivity(
-            "exam_completed",
-            {
-                program:
-                    result.program,
-
-                subject:
-                    result.subject,
-
-                score:
-                    result.score,
-
-                total:
-                    result.total
-            }
-        );
-
-        return true;
-
-    } catch (error) {
-
-        console.error(error);
-
-        return false;
-    }
-}
-
-
-/* =========================================================
-   LOAD MY EXAM RESULTS
-========================================================= */
-
-async function loadMyExamResults() {
-
-    if (!currentUser) return [];
-
-    try {
-
-        const {
-            data,
-            error
-        } = await db
-            .from("subject_results")
-            .select("*")
-            .eq(
-                "user_id",
-                currentUser.id
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            );
-
-        if (error) {
-
-            console.error(
-                "Results error:",
-                error
-            );
-
-            return [];
-        }
-
-        return data || [];
-
-    } catch (error) {
-
-        console.error(error);
-
-        return [];
-    }
-}
-
-
-/* =========================================================
-   START GETI
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    async function() {
-
-        await checkSupabaseLogin();
-
-        await saveGETIActivity(
-            "site_visit",
-            {
-                page:
-                    location.pathname
-            }
-        );
-
-    }
-);
-
-</script><script>
-/* =========================================================
-   GETI SUPABASE CONNECTION
-========================================================= */
-
-const GETI_DB = supabaseClient;
-
-
-/* =========================================================
-   AUTH
-========================================================= */
-
-async function getiCreateAccount(email, password, name = "") {
-
-    const { data, error } = await GETI_DB.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-            data: {
-                name: name
-            }
-        }
-    });
-
-    if (error) {
-        console.error("Create account error:", error);
-        alert(error.message);
-        return null;
-    }
-
-    return data;
-}
-
-
-async function getiLogin(email, password) {
-
-    const { data, error } =
-        await GETI_DB.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
-
-    if (error) {
-        console.error("Login error:", error);
-        alert(error.message);
-        return null;
-    }
-
-    await getiLogActivity(
-        "chat_login",
-        location.pathname
-    );
-
-    return data;
-}
-
-
-async function getiLogout() {
-
-    await GETI_DB.auth.signOut();
-
-    location.reload();
-}
-
-
-async function getiCurrentUser() {
-
-    const {
-        data: { user }
-    } = await GETI_DB.auth.getUser();
-
-    return user;
-}
-
-
-/* =========================================================
-   ADMIN CHECK
-========================================================= */
-
-async function getiIsAdmin() {
-
-    const user = await getiCurrentUser();
-
-    if (!user) return false;
-
-    const { data, error } = await GETI_DB
-        .from("admin_users")
-        .select("id")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-    if (error) {
-        console.error("Admin check:", error);
-        return false;
-    }
-
-    return !!data;
-}
-
-
-/* =========================================================
-   ACTIVITY
-========================================================= */
-
-async function getiLogActivity(
-    activityType,
-    page = location.pathname,
-    metadata = {}
-) {
-
-    const user = await getiCurrentUser();
-
-    if (!user) return;
-
-    const { error } = await GETI_DB
-        .from("site_activity")
-        .insert({
-            user_id: user.id,
-            activity_type: activityType,
-            page: page,
-            user_agent: navigator.userAgent,
-            metadata: metadata
-        });
-
-    if (error) {
-        console.error("Activity error:", error);
-    }
-}
-
-
-/* =========================================================
-   GET / CREATE CHAT CONVERSATION
-========================================================= */
-
-async function getiGetConversation() {
-
-    const user = await getiCurrentUser();
-
-    if (!user) {
-        throw new Error("Please login first.");
-    }
-
-    const { data, error } = await GETI_DB
-        .from("chat_conversations")
-        .select("*")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-    if (error) {
-        console.error(error);
-        throw error;
-    }
-
-    if (data) return data;
-
-    const { data: newConversation, error: createError } =
-        await GETI_DB
-            .from("chat_conversations")
-            .insert({
-                user_id: user.id,
-                status: "open"
-            })
-            .select()
-            .single();
-
-    if (createError) {
-        console.error(createError);
-        throw createError;
-    }
-
-    return newConversation;
-}
-
-
-/* =========================================================
-   SEND CHAT MESSAGE
-========================================================= */
-
-async function getiSendMessage(message) {
-
-    const user = await getiCurrentUser();
-
-    if (!user) {
-        alert("Please login first.");
-        return;
-    }
-
-    if (!message || !message.trim()) return;
-
-    /* Check block */
-
-    const { data: block } = await GETI_DB
-        .from("chat_blocks")
-        .select("blocked")
-        .eq("user_id", user.id)
-        .eq("blocked", true)
-        .maybeSingle();
-
-    if (block) {
-        alert("Your chat account is blocked.");
-        return;
-    }
-
-    const conversation =
-        await getiGetConversation();
-
-    const { data, error } =
-        await GETI_DB
-            .from("chat_messages")
-            .insert({
-                conversation_id: conversation.id,
-                sender_id: user.id,
-                sender_type: "user",
-                message: message.trim()
-            })
-            .select()
-            .single();
-
-    if (error) {
-        console.error("Send message error:", error);
-        alert(error.message);
-        return;
-    }
-
-    await getiLogActivity(
-        "chat_message_sent",
-        location.pathname
-    );
-
-    return data;
-}
-
-
-/* =========================================================
-   LOAD USER MESSAGES
-========================================================= */
-
-async function getiLoadMyMessages() {
-
-    const conversation =
-        await getiGetConversation();
-
-    const { data, error } =
-        await GETI_DB
-            .from("chat_messages")
-            .select("*")
-            .eq("conversation_id", conversation.id)
-            .order("created_at", {
-                ascending: true
-            });
-
-    if (error) {
-        console.error(error);
-        return [];
-    }
-
-    return data || [];
-}
-
-
-/* =========================================================
-   REALTIME USER CHAT
-========================================================= */
-
-let getiChatChannel = null;
-
-async function getiStartChatRealtime(renderFunction) {
-
-    const conversation =
-        await getiGetConversation();
-
-    if (getiChatChannel) {
-        await GETI_DB.removeChannel(getiChatChannel);
-    }
-
-    getiChatChannel =
-        GETI_DB
-            .channel(
-                "geti-chat-" + conversation.id
-            )
-            .on(
-                "postgres_changes",
-                {
-                    event: "INSERT",
-                    schema: "public",
-                    table: "chat_messages",
-                    filter:
-                        "conversation_id=eq." +
-                        conversation.id
-                },
-                payload => {
-
-                    console.log(
-                        "New message:",
-                        payload.new
-                    );
-
-                    if (
-                        typeof renderFunction ===
-                        "function"
-                    ) {
-                        renderFunction(
-                            payload.new
-                        );
-                    }
-                }
-            )
-            .subscribe();
-}
-
-
-/* =========================================================
-   ADMIN - LOAD ALL CONVERSATIONS
-========================================================= */
-
-async function getiAdminConversations() {
-
-    if (!(await getiIsAdmin())) {
-        throw new Error("Administrator access required.");
-    }
-
-    const { data, error } =
-        await GETI_DB
-            .from("chat_conversations")
-            .select(`
-                *,
-                chat_messages(
-                    id,
-                    sender_id,
-                    sender_type,
-                    message,
-                    is_read,
-                    created_at
-                )
-            `)
-            .order("last_message_at", {
-                ascending: false
-            });
-
-    if (error) {
-        console.error(error);
-        return [];
-    }
-
-    return data || [];
-}
-
-
-/* =========================================================
-   ADMIN - LOAD ALL MESSAGES
-========================================================= */
-
-async function getiAdminMessages() {
-
-    if (!(await getiIsAdmin())) {
-        throw new Error("Administrator access required.");
-    }
-
-    const { data, error } =
-        await GETI_DB
-            .from("chat_messages")
-            .select(`
-                *,
-                chat_conversations(
-                    user_id,
-                    status
-                )
-            `)
-            .order("created_at", {
-                ascending: false
-            });
-
-    if (error) {
-        console.error(error);
-        return [];
-    }
-
-    return data || [];
-}
-
-
-/* =========================================================
-   ADMIN - REPLY
-========================================================= */
-
-async function getiAdminReply(
-    conversationId,
-    message
-) {
-
-    if (!(await getiIsAdmin())) {
-        alert("Administrator access required.");
-        return;
-    }
-
-    const admin =
-        await getiCurrentUser();
-
-    if (!message || !message.trim()) return;
-
-    const { data, error } =
-        await GETI_DB
-            .from("chat_messages")
-            .insert({
-                conversation_id: conversationId,
-                sender_id: admin.id,
-                sender_type: "admin",
-                message: message.trim()
-            })
-            .select()
-            .single();
-
-    if (error) {
-        console.error(error);
-        alert(error.message);
-        return;
-    }
-
-    return data;
-}
-
-
-/* =========================================================
-   ADMIN - BLOCK USER
-========================================================= */
-
-async function getiBlockUser(
-    userId,
-    reason = ""
-) {
-
-    if (!(await getiIsAdmin())) {
-        alert("Administrator access required.");
-        return;
-    }
-
-    const admin =
-        await getiCurrentUser();
-
-    const { error } =
-        await GETI_DB
-            .from("chat_blocks")
-            .upsert({
-                user_id: userId,
-                blocked: true,
-                reason: reason,
-                blocked_by: admin.id
-            }, {
-                onConflict: "user_id"
-            });
-
-    if (error) {
-        console.error(error);
-        alert(error.message);
-        return false;
-    }
-
-    await GETI_DB
-        .from("chat_conversations")
-        .update({
-            status: "blocked"
-        })
-        .eq("user_id", userId);
-
-    return true;
-}
-
-
-/* =========================================================
-   ADMIN - UNBLOCK USER
-========================================================= */
-
-async function getiUnblockUser(userId) {
-
-    if (!(await getiIsAdmin())) {
-        alert("Administrator access required.");
-        return;
-    }
-
-    const { error } =
-        await GETI_DB
-            .from("chat_blocks")
-            .update({
-                blocked: false
-            })
-            .eq("user_id", userId);
-
-    if (error) {
-        console.error(error);
-        alert(error.message);
-        return false;
-    }
-
-    await GETI_DB
-        .from("chat_conversations")
-        .update({
-            status: "open"
-        })
-        .eq("user_id", userId);
-
-    return true;
-}
-
-
-/* =========================================================
-   ADMIN - ALL BLOCKED USERS
-========================================================= */
-
-async function getiAdminBlocks() {
-
-    if (!(await getiIsAdmin())) {
-        throw new Error("Administrator access required.");
-    }
-
-    const { data, error } =
-        await GETI_DB
-            .from("chat_blocks")
-            .select("*")
-            .order("created_at", {
-                ascending: false
-            });
-
-    if (error) {
-        console.error(error);
-        return [];
-    }
-
-    return data || [];
-}
-
-
-/* =========================================================
-   ADMIN - ALL ACTIVITY
-========================================================= */
-
-async function getiAdminActivity() {
-
-    if (!(await getiIsAdmin())) {
-        throw new Error("Administrator access required.");
-    }
-
-    const { data, error } =
-        await GETI_DB
-            .from("site_activity")
-            .select("*")
-            .order("created_at", {
-                ascending: false
-            });
-
-    if (error) {
-        console.error(error);
-        return [];
-    }
-
-    return data || [];
-}
-
-
-/* =========================================================
-   ADMIN - REALTIME MESSAGES
-========================================================= */
-
-let getiAdminChannel = null;
-
-async function getiStartAdminRealtime(
-    renderFunction
-) {
-
-    if (!(await getiIsAdmin())) {
-        return;
-    }
-
-    if (getiAdminChannel) {
-        await GETI_DB.removeChannel(
-            getiAdminChannel
-        );
-    }
-
-    getiAdminChannel =
-        GETI_DB
-            .channel("geti-admin-chat")
-            .on(
-                "postgres_changes",
-                {
-                    event: "INSERT",
-                    schema: "public",
-                    table: "chat_messages"
-                },
-                payload => {
-
-                    console.log(
-                        "ADMIN NEW MESSAGE:",
-                        payload.new
-                    );
-
-                    if (
-                        typeof renderFunction ===
-                        "function"
-                    ) {
-                        renderFunction(
-                            payload.new
-                        );
-                    }
-                }
-            )
-            .subscribe();
-}
-
-
-/* =========================================================
-   AUTH STATE
-========================================================= */
-
-GETI_DB.auth.onAuthStateChange(
-    async (event, session) => {
-
-        console.log(
-            "GETI AUTH:",
-            event,
-            session?.user?.email || null
-        );
-
-        if (event === "SIGNED_IN") {
-
-            await getiLogActivity(
-                "login",
-                location.pathname
-            );
-
-        }
-
-        if (event === "SIGNED_OUT") {
-
-            console.log(
-                "GETI user logged out"
-            );
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   SITE VISIT
-========================================================= */
-
-window.addEventListener(
-    "load",
-    async function() {
-
-        const user =
-            await getiCurrentUser();
-
-        if (user) {
-
-            await getiLogActivity(
-                "site_visit",
-                location.pathname
-            );
-
-        }
-
-    }
-);
-
-console.log(
-    "GETI Supabase system loaded successfully."
-);
-
-</script>
-<!-- =========================================================
-     GETI ADMIN PANEL
-========================================================= -->
-
-<section id="getiAdminPanel" style="display:none; padding:30px;">
-
-    <div style="max-width:1400px;margin:auto;">
-
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;">
-            <div>
-                <h1>GETI Administrator</h1>
-                <p>Manage messages, accounts, blacklist, results and activity.</p>
-            </div>
-
-            <button onclick="getiAdminLogout()">
-                Logout
-            </button>
-        </div>
-
-        <!-- ADMIN NAVIGATION -->
-
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:25px 0;">
-
-            <button onclick="getiAdminLoadMessages()">
-                💬 All Messages
-            </button>
-
-            <button onclick="getiAdminLoadAccounts()">
-                👤 Chat Accounts
-            </button>
-
-            <button onclick="getiAdminLoadBlacklist()">
-                🚫 Blacklist
-            </button>
-
-            <button onclick="getiAdminLoadResults()">
-                📝 All Results
-            </button>
-
-            <button onclick="getiAdminLoadActivity()">
-                👁️ Site Activity
-            </button>
-
-        </div>
-
-        <div id="getiAdminStatus"></div>
-
-        <div id="getiAdminContent">
-            <p>Select an administrator section above.</p>
-        </div>
-
-    </div>
-
-</section></body>
+</body>
 </html>
+
 
