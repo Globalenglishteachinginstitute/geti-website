@@ -1132,6 +1132,31 @@ button,input,textarea{
 @media(max-width:700px){.video-interview{grid-template-columns:1fr}.exam-timer{top:70px}}
 
 </style>
+
+<style id="anti-copy-protection">
+html, body, body * { -webkit-user-select:none !important; user-select:none !important; -webkit-touch-callout:none !important; }
+input, textarea, select, [contenteditable="true"] { -webkit-user-select:text !important; user-select:text !important; }
+</style>
+
+<script>
+(function(){
+  const blocked=(e)=>{
+    const t=e.target;
+    const editable=t && (t.matches?.('input,textarea,select,[contenteditable="true"]') || t.closest?.('input,textarea,select,[contenteditable="true"]'));
+    if(editable) return;
+    e.preventDefault(); e.stopPropagation(); return false;
+  };
+  ['copy','cut','contextmenu','dragstart','selectstart'].forEach(ev=>document.addEventListener(ev,blocked,true));
+  document.addEventListener('keydown',function(e){
+    const t=e.target;
+    const editable=t && (t.matches?.('input,textarea,select,[contenteditable="true"]') || t.closest?.('input,textarea,select,[contenteditable="true"]'));
+    if(editable) return;
+    const k=e.key.toLowerCase();
+    if((e.ctrlKey||e.metaKey) && ['c','x','a'].includes(k)){e.preventDefault();e.stopPropagation();return false;}
+    if(e.shiftKey && ['insert','delete'].includes(k)){e.preventDefault();e.stopPropagation();return false;}
+  },true);
+})();
+</script>
 </head>
 
 <body>
