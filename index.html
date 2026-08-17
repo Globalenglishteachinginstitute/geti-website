@@ -360,6 +360,78 @@ button,input,textarea{
     color:#fff;
 }
 
+/* =========================================================
+   CERTIFICATE VERIFICATION DECORATION
+========================================================= */
+.verification-seal{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:6px 12px;
+    border:1px solid #d6ad45;
+    border-radius:999px;
+    color:#0b2d5c;
+    background:#fffdf4;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1px;
+    margin-bottom:10px;
+}
+
+.verification-box{
+    position:relative;
+    overflow:hidden;
+    border:1px solid rgba(214,173,69,.35);
+    box-shadow:0 18px 50px rgba(7,29,58,.12);
+}
+.verification-box::before{
+    content:"GETI • OFFICIAL CERTIFICATE VERIFICATION";
+    display:block;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:2px;
+    color:#b38a28;
+    margin-bottom:12px;
+}
+.verify-card{
+    position:relative;
+    border:2px solid #d6ad45 !important;
+    border-radius:16px !important;
+    padding:26px !important;
+    background:linear-gradient(135deg,#fffdf5,#ffffff 55%,#f3f7fb);
+    box-shadow:0 16px 40px rgba(7,29,58,.14);
+}
+.verify-card::before{
+    content:"✓  VERIFIED • GLOBAL ENGLISH TEACHING INSTITUTE";
+    display:block;
+    text-align:center;
+    padding:8px 10px;
+    margin:-10px -10px 18px;
+    border-bottom:1px solid rgba(214,173,69,.35);
+    color:#0b2d5c;
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:1.2px;
+}
+.verify-card::after{
+    content:"GETI";
+    position:absolute;
+    right:18px;
+    bottom:10px;
+    font-size:42px;
+    font-weight:900;
+    color:rgba(11,45,92,.055);
+    pointer-events:none;
+}
+.verified{
+    display:inline-block;
+    padding:7px 13px;
+    border-radius:999px;
+    background:#e8f5ec;
+    color:#176b35;
+    font-weight:900;
+    margin-bottom:14px;
+}
 #verifyResult{
     margin-top:25px;
 }
@@ -934,52 +1006,6 @@ button,input,textarea{
     color:inherit !important;
 }
 
-
-/* =========================================================
-   CERTIFICATE VERIFICATION DECORATION
-========================================================= */
-.verify-congratulations{
-    position:relative;
-    overflow:hidden;
-    margin:18px 0 10px;
-    padding:22px 20px;
-    border:2px solid #b38a28;
-    border-radius:16px;
-    background:linear-gradient(135deg,#fffdf4,#f7f1df,#ffffff);
-    box-shadow:0 12px 30px rgba(7,29,58,.12);
-    text-align:center;
-}
-.verify-congratulations::before,
-.verify-congratulations::after{
-    content:'✦';
-    position:absolute;
-    color:#b38a28;
-    font-size:24px;
-}
-.verify-congratulations::before{left:18px;top:12px}
-.verify-congratulations::after{right:18px;bottom:12px}
-.verify-congratulations .verify-seal{
-    display:inline-flex;
-    width:54px;
-    height:54px;
-    align-items:center;
-    justify-content:center;
-    border-radius:50%;
-    border:3px double #b38a28;
-    color:#0b2d5c;
-    background:#fff;
-    font-size:25px;
-    margin-bottom:8px;
-}
-.verify-congratulations h3{margin:4px 0;color:#0b2d5c;font-size:22px}
-.verify-congratulations p{margin:4px 0;color:#444}
-.verify-card.decorated{
-    border:2px solid #d4b35b;
-    border-radius:16px;
-    background:linear-gradient(145deg,#fff,#fbf8ef);
-    box-shadow:0 12px 30px rgba(7,29,58,.10);
-}
-
 /* SEARCH RESULTS */
 
 .result-search-section{
@@ -1177,30 +1203,25 @@ button,input,textarea{
 .video-interview{display:grid;grid-template-columns:minmax(220px,1fr) minmax(220px,1fr);gap:15px}.video-interview video{width:100%;background:#111;border-radius:10px;min-height:200px}.interviewer-card{background:#eef3f8;border-radius:10px;padding:15px}.cefr-result{font-size:26px;font-weight:900;color:#0b2d5c;text-align:center;padding:15px}
 @media(max-width:700px){.video-interview{grid-template-columns:1fr}.exam-timer{top:70px}}
 
-</style>
-<style>
+
+
 /* =========================================================
    GLOBAL TEXT SELECTION / COPY / CUT PROTECTION
-   Applies to the entire GETI website.
+   Applies to the entire GETI website
 ========================================================= */
 * {
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
-    -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
 }
 
-input, textarea, select, button {
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
-}
-
-img, video {
-    -webkit-user-drag: none !important;
-    user-drag: none !important;
+input, textarea {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
 }
 </style>
 </head>
@@ -1259,7 +1280,7 @@ img, video {
 
 <div class="verification-box">
 
-<h2>Certificate Verification</h2>
+<div class="verification-seal">🎓 GETI CERTIFICATE</div><h2>Certificate Verification</h2>
 
 <p class="verification-description">
 Verify the authenticity of a GETI certificate using the
@@ -2017,12 +2038,7 @@ for(var i=0;i<results.length;i++){
 var c=results[i];
 
 html+=
-'<div class="verify-congratulations">'+
-'<div class="verify-seal">✓</div>'+
-'<h3>🎉 Congratulations!</h3>'+
-'<p>The GETI certificate has been successfully verified.</p>'+
-'</div>'+
-'<div class="verify-card decorated" style="margin-top:18px;">'+
+'<div class="verify-card" style="margin-top:18px;">'+
 '<div class="verified">✓ Certificate Verified</div>'+
 '<div class="verify-row"><div class="verify-label">Name</div><div class="verify-value">'+escapeHTML(c.name)+'</div></div>'+
 '<div class="verify-row"><div class="verify-label">Nationality</div><div class="verify-value">'+escapeHTML(c.nationality)+'</div></div>'+
@@ -2549,21 +2565,26 @@ document.addEventListener("selectstart",function(e){
 
     if(isExamProtected()){
 
-        const target=e.target;
+        e.preventDefault();
 
-        if(
-            target.tagName!=="INPUT" &&
-            target.tagName!=="TEXTAREA"
-        ){
+        try{
+            window.getSelection().removeAllRanges();
+        }catch(err){}
 
-            e.preventDefault();
-
-            return false;
-
-        }
+        return false;
 
     }
 
+},true);
+
+/* Extra browser-level selection protection during exams.
+   Typing in permitted fields still works; selecting/copying text does not. */
+document.addEventListener("selectionchange",function(){
+    if(isExamProtected()){
+        try{
+            window.getSelection().removeAllRanges();
+        }catch(err){}
+    }
 },true);
 
 /* =========================================================
@@ -2820,7 +2841,17 @@ function finalizeTimedOutExam(){
         grade:calculateGrade(Math.round((score/15)*100))
     };
 
-    showFinalResult(true);
+    /* If the one-hour limit is reached before completion,
+       restart the same examination from the beginning. */
+    examState.subjectIndex=0;
+    examState.questionIndex=0;
+    examState.answers=Array.from({length:subjects.length},function(){return Array(15).fill(null);});
+    examState.subjectScores=[];
+    examState.timeExpired=false;
+    examState.started=true;
+    alert("The 60-minute examination time has ended. The examination will restart from the beginning.");
+    startExamTimer();
+    showQuestion();
 }
 
 /* =========================================================
@@ -3948,20 +3979,7 @@ let timer=null;
 function stop(){if(timer){clearInterval(timer);timer=null}}
 function start(){stop();state.startedAt=Date.now();state.timeExpired=false;updateTimer();timer=setInterval(updateTimer,250)}
 function updateTimer(){if(!state.started){stop();return}let left=Math.max(0,GETI_DURATION-(Date.now()-state.startedAt));let el=document.getElementById('getiTimer');if(el)el.textContent='TIME LEFT: '+fmt(left);if(left<=0){stop();finishTimedOut()}}
-function finishTimedOut(){
- if(!state.started||state.timeExpired)return;
- state.timeExpired=true;
- stop();
- alert('⏰ TIME IS OVER. The examination will restart from the beginning with a new 60-minute timer.');
- state.subjectIndex=0;
- state.questionIndex=0;
- state.answers=PROGRAM_SUBJECTS[state.program].map(()=>Array(15).fill(null));
- state.subjectScores=[];
- state.started=true;
- state.timeExpired=false;
- start();
- showQuestion();
-}
+function finishTimedOut(){if(!state.started||state.timeExpired)return;state.timeExpired=true;alert('The 60-minute examination time has ended. The examination will restart from the beginning.');state.subjectIndex=0;state.questionIndex=0;state.answers=PROGRAM_SUBJECTS[state.program].map(()=>Array(15).fill(null));state.subjectScores=[];state.timeExpired=false;state.started=true;start();showQuestion()}
 
 window.openExamRegistration=function(program){
  if(!PROGRAM_SUBJECTS[program])return alert('This examination is not available.');
@@ -4025,39 +4043,33 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 
 <script>
 /* =========================================================
-   GLOBAL COPY / CUT / SELECT-ALL / TEXT-SELECTION PROTECTION
+   GLOBAL NO SELECT / NO COPY / NO CUT PROTECTION
 ========================================================= */
-(function () {
-    function block(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-    }
+(function(){
+  function block(e){
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  }
 
-    ['copy', 'cut', 'contextmenu', 'selectstart', 'dragstart'].forEach(function (eventName) {
-        document.addEventListener(eventName, block, true);
-    });
+  document.addEventListener('selectstart', block, true);
+  document.addEventListener('selectionchange', function(){
+    try {
+      var sel = window.getSelection();
+      if(sel && sel.rangeCount) sel.removeAllRanges();
+    } catch(err) {}
+  }, true);
+  document.addEventListener('copy', block, true);
+  document.addEventListener('cut', block, true);
+  document.addEventListener('contextmenu', block, true);
 
-    document.addEventListener('keydown', function (e) {
-        const key = (e.key || '').toLowerCase();
-        const ctrlOrCmd = e.ctrlKey || e.metaKey;
-
-        // Ctrl/Cmd+A, C, X, and common selection/copy shortcuts
-        if (ctrlOrCmd && ['a', 'c', 'x'].includes(key)) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-
-        // Shift+Arrow / Ctrl+Shift+Arrow / Cmd+Shift+Arrow selection
-        if (e.shiftKey && ['arrowleft', 'arrowright', 'arrowup', 'arrowdown', 'home', 'end'].includes(key)) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-    }, true);
+  document.addEventListener('keydown', function(e){
+    var k=(e.key||'').toLowerCase();
+    if((e.ctrlKey||e.metaKey) && ['a','c','x'].indexOf(k)!==-1) return block(e);
+  }, true);
 })();
 </script>
+
 </body>
 </html>
 
