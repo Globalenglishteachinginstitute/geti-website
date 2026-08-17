@@ -360,78 +360,6 @@ button,input,textarea{
     color:#fff;
 }
 
-/* =========================================================
-   CERTIFICATE VERIFICATION DECORATION
-========================================================= */
-.verification-seal{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    padding:6px 12px;
-    border:1px solid #d6ad45;
-    border-radius:999px;
-    color:#0b2d5c;
-    background:#fffdf4;
-    font-size:11px;
-    font-weight:900;
-    letter-spacing:1px;
-    margin-bottom:10px;
-}
-
-.verification-box{
-    position:relative;
-    overflow:hidden;
-    border:1px solid rgba(214,173,69,.35);
-    box-shadow:0 18px 50px rgba(7,29,58,.12);
-}
-.verification-box::before{
-    content:"GETI • OFFICIAL CERTIFICATE VERIFICATION";
-    display:block;
-    font-size:11px;
-    font-weight:800;
-    letter-spacing:2px;
-    color:#b38a28;
-    margin-bottom:12px;
-}
-.verify-card{
-    position:relative;
-    border:2px solid #d6ad45 !important;
-    border-radius:16px !important;
-    padding:26px !important;
-    background:linear-gradient(135deg,#fffdf5,#ffffff 55%,#f3f7fb);
-    box-shadow:0 16px 40px rgba(7,29,58,.14);
-}
-.verify-card::before{
-    content:"✓  VERIFIED • GLOBAL ENGLISH TEACHING INSTITUTE";
-    display:block;
-    text-align:center;
-    padding:8px 10px;
-    margin:-10px -10px 18px;
-    border-bottom:1px solid rgba(214,173,69,.35);
-    color:#0b2d5c;
-    font-size:12px;
-    font-weight:900;
-    letter-spacing:1.2px;
-}
-.verify-card::after{
-    content:"GETI";
-    position:absolute;
-    right:18px;
-    bottom:10px;
-    font-size:42px;
-    font-weight:900;
-    color:rgba(11,45,92,.055);
-    pointer-events:none;
-}
-.verified{
-    display:inline-block;
-    padding:7px 13px;
-    border-radius:999px;
-    background:#e8f5ec;
-    color:#176b35;
-    font-weight:900;
-    margin-bottom:14px;
-}
 #verifyResult{
     margin-top:25px;
 }
@@ -967,6 +895,28 @@ button,input,textarea{
 }
 
 /* =========================================================
+   GLOBAL TEXT SELECTION PROTECTION — ADDED
+   Text on the GETI site cannot be selected. Form fields remain usable.
+========================================================= */
+html, body, body *{
+    -webkit-user-select:none !important;
+    -moz-user-select:none !important;
+    -ms-user-select:none !important;
+    user-select:none !important;
+    -webkit-touch-callout:none !important;
+}
+input, textarea, select, option{
+    -webkit-user-select:text !important;
+    -moz-user-select:text !important;
+    -ms-user-select:text !important;
+    user-select:text !important;
+}
+img, a, button{
+    -webkit-user-drag:none !important;
+    user-drag:none !important;
+}
+
+/* =========================================================
    EXAM COPY PROTECTION - ADDED
 ========================================================= */
 
@@ -1204,25 +1154,16 @@ button,input,textarea{
 @media(max-width:700px){.video-interview{grid-template-columns:1fr}.exam-timer{top:70px}}
 
 
-
-/* =========================================================
-   GLOBAL TEXT SELECTION / COPY / CUT PROTECTION
-   Applies to the entire GETI website
-========================================================= */
-* {
-  -webkit-user-select: none !important;
-  -moz-user-select: none !important;
-  -ms-user-select: none !important;
-  user-select: none !important;
-  -webkit-touch-callout: none !important;
+.certificate-download-btn{
+    display:inline-block;
+    border:2px solid #b38a28 !important;
+    box-shadow:0 8px 20px rgba(179,138,40,.22);
+    letter-spacing:.4px;
 }
-
-input, textarea {
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  user-select: text !important;
+.geti-certificate-verified::before,.geti-certificate-verified::after{
+    content:"✦";position:absolute;color:#b38a28;font-size:30px;opacity:.35;
 }
+.geti-certificate-verified::before{top:8px;left:12px}.geti-certificate-verified::after{bottom:8px;right:12px}
 </style>
 </head>
 
@@ -1280,7 +1221,7 @@ input, textarea {
 
 <div class="verification-box">
 
-<div class="verification-seal">🎓 GETI CERTIFICATE</div><h2>Certificate Verification</h2>
+<h2>Certificate Verification</h2>
 
 <p class="verification-description">
 Verify the authenticity of a GETI certificate using the
@@ -2038,13 +1979,15 @@ for(var i=0;i<results.length;i++){
 var c=results[i];
 
 html+=
-'<div class="verify-card" style="margin-top:18px;">'+
-'<div class="verified">✓ Certificate Verified</div>'+
+'<div class="verify-card geti-certificate-verified" style="margin-top:18px;position:relative;overflow:hidden;border:2px solid #b38a28;border-radius:18px;padding:26px;background:linear-gradient(135deg,#fffdf5,#ffffff 55%,#f5f8ff);box-shadow:0 12px 30px rgba(7,29,58,.14);">'+
+'<div style="text-align:center;font-size:12px;letter-spacing:3px;color:#b38a28;font-weight:900;margin-bottom:8px;">✦ GLOBAL ENGLISH TEACHING INSTITUTE ✦</div>'+
+'<div class="verified" style="text-align:center;font-size:20px;font-weight:900;">✓ CERTIFICATE VERIFIED</div>'+
 '<div class="verify-row"><div class="verify-label">Name</div><div class="verify-value">'+escapeHTML(c.name)+'</div></div>'+
 '<div class="verify-row"><div class="verify-label">Nationality</div><div class="verify-value">'+escapeHTML(c.nationality)+'</div></div>'+
 '<div class="verify-row"><div class="verify-label">Certificate</div><div class="verify-value">'+escapeHTML(c.certificate)+'</div></div>'+
 '<div class="verify-row"><div class="verify-label">Certificate ID</div><div class="verify-value"><strong>'+escapeHTML(c.id)+'</strong></div></div>'+
 '<div class="verify-row"><div class="verify-label">Certificate Type</div><div class="verify-value">'+escapeHTML(c.type)+'</div></div>'+
+'<div style="margin-top:18px;text-align:center;color:#b38a28;font-weight:900;letter-spacing:1px;">✦ AUTHENTIC • VERIFIED • GETI ✦</div>'+
 '</div>';
 
 }
@@ -2565,26 +2508,21 @@ document.addEventListener("selectstart",function(e){
 
     if(isExamProtected()){
 
-        e.preventDefault();
+        const target=e.target;
 
-        try{
-            window.getSelection().removeAllRanges();
-        }catch(err){}
+        if(
+            target.tagName!=="INPUT" &&
+            target.tagName!=="TEXTAREA"
+        ){
 
-        return false;
+            e.preventDefault();
+
+            return false;
+
+        }
 
     }
 
-},true);
-
-/* Extra browser-level selection protection during exams.
-   Typing in permitted fields still works; selecting/copying text does not. */
-document.addEventListener("selectionchange",function(){
-    if(isExamProtected()){
-        try{
-            window.getSelection().removeAllRanges();
-        }catch(err){}
-    }
 },true);
 
 /* =========================================================
@@ -2776,7 +2714,7 @@ document.addEventListener("touchmove",function(){
 },{passive:true});
 
 /* =========================================================
-   60-MINUTE EXAM TIMER
+   16-MINUTE EXAM TIMER
 ========================================================= */
 
 function startExamTimer(){
@@ -2841,17 +2779,7 @@ function finalizeTimedOutExam(){
         grade:calculateGrade(Math.round((score/15)*100))
     };
 
-    /* If the one-hour limit is reached before completion,
-       restart the same examination from the beginning. */
-    examState.subjectIndex=0;
-    examState.questionIndex=0;
-    examState.answers=Array.from({length:subjects.length},function(){return Array(15).fill(null);});
-    examState.subjectScores=[];
-    examState.timeExpired=false;
-    examState.started=true;
-    alert("The 60-minute examination time has ended. The examination will restart from the beginning.");
-    startExamTimer();
-    showQuestion();
+    showFinalResult(true);
 }
 
 /* =========================================================
@@ -3883,7 +3811,7 @@ document
 
 /* =========================================================
    GETI MULTI-PROGRAM EXAM ENGINE — ADDITIONAL MODULE
-   60 MINUTES PER EXAM / AUTOMATIC COOLDOWNS / LESSONS
+   30 MINUTES PER EXAM / AUTOMATIC COOLDOWNS / LESSONS
 ========================================================= */
 (function(){
 const GETI_CERT_URL='https://script.google.com/macros/s/AKfycbw2C49JZfYzsWuTNvYKAOKlwjheuQd_Pw4LV4ybhosj90V6flGbnGG1xbpv-2uNXk1/exec';
@@ -3979,7 +3907,7 @@ let timer=null;
 function stop(){if(timer){clearInterval(timer);timer=null}}
 function start(){stop();state.startedAt=Date.now();state.timeExpired=false;updateTimer();timer=setInterval(updateTimer,250)}
 function updateTimer(){if(!state.started){stop();return}let left=Math.max(0,GETI_DURATION-(Date.now()-state.startedAt));let el=document.getElementById('getiTimer');if(el)el.textContent='TIME LEFT: '+fmt(left);if(left<=0){stop();finishTimedOut()}}
-function finishTimedOut(){if(!state.started||state.timeExpired)return;state.timeExpired=true;alert('The 60-minute examination time has ended. The examination will restart from the beginning.');state.subjectIndex=0;state.questionIndex=0;state.answers=PROGRAM_SUBJECTS[state.program].map(()=>Array(15).fill(null));state.subjectScores=[];state.timeExpired=false;state.started=true;start();showQuestion()}
+function finishTimedOut(){if(!state.started||state.timeExpired)return;state.timeExpired=true;stop();alert('TIME EXPIRED. The examination will restart from the beginning.');state.subjectIndex=0;state.questionIndex=0;state.answers=PROGRAM_SUBJECTS[state.program].map(()=>Array(15).fill(null));state.subjectScores=[];state.timeExpired=false;state.started=true;showQuestion();start()}
 
 window.openExamRegistration=function(program){
  if(!PROGRAM_SUBJECTS[program])return alert('This examination is not available.');
@@ -4023,7 +3951,7 @@ window.speakInterviewQuestion=function(){let q=document.getElementById('intervie
 window.submitSubject=function(){let subjects=PROGRAM_SUBJECTS[state.program],subject=subjects[state.subjectIndex],questions=GETI_DATA[state.program][subject],score=0;for(let i=0;i<15;i++){if(state.answers[state.subjectIndex][i]===questions[i][5])score++}if(state.program==='ENGLISH PROFICIENCY'&&subject==='Speaking'){let sc=scoreSpeaking();score=Math.round(sc.score/100*15)}let pct=Math.round(score/15*100);state.subjectScores[state.subjectIndex]={subject,score,total:15,percentage:pct,grade:pct>=90?'A':pct>=80?'B':pct>=70?'C':'F'};if(state.subjectIndex<subjects.length-1){state.subjectIndex++;state.questionIndex=0;showQuestion()}else showFinal(false)}
 function cefr(total){if(total<35)return'A1';if(total<50)return'A2';if(total<65)return'B1';if(total<80)return'B2';if(total<90)return'C1';return'C2'}
 function registerAttempt(passed){let email=state.student.email,program=state.program,st=getStatus(email,program);if(passed){st.fails=0;st.passedUntil=Date.now()+GETI_COOLDOWN_PASS;st.blockedUntil=0}else{st.fails=(st.fails||0)+1;if(st.fails>=3){st.blockedUntil=Date.now()+GETI_COOLDOWN_FAIL3;st.fails=0}}saveStatus(email,program,st)}
-window.showFinal=function(timedOut){stop();state.started=false;let total=0;state.subjectScores.forEach(s=>total+=s.score||0);let n=PROGRAM_SUBJECTS[state.program].length*15;let pct=Math.round(total/n*100);let passed=pct>=70;registerAttempt(passed);let record={id:state.student.id,name:state.student.name,email:state.student.email,nationality:state.student.nationality,country:state.student.country,phone:state.student.phone,institution:state.student.institution,program:state.program,percentage:pct,totalScore:total,totalQuestions:n,status:passed?'PASSED':'FAILED',date:new Date().toISOString(),subjects:state.subjectScores,timedOut:!!timedOut};let old=storage('GETI_EXAM_RECORDS',[]).filter(r=>!(String(r.email).toLowerCase()===String(record.email).toLowerCase()&&r.program===record.program));old.push(record);setStorage('GETI_EXAM_RECORDS',old);let rows=state.subjectScores.map(s=>`<div class="subject-result"><span>${escapeHTML(s.subject)}</span><strong>${s.percentage}% — ${s.grade}</strong></div>`).join('');let cefrBox=state.program==='ENGLISH PROFICIENCY'?`<div class="cefr-result">CEFR LEVEL: ${cefr(pct)}</div>`:'';let cert=passed?`<br><a class="btn btn-gold" href="${GETI_CERT_URL}" target="_blank" rel="noopener">🎓 GET YOUR CERTIFICATE</a>`:'';document.getElementById('examPanel').innerHTML=`<div class="result-box"><h2>${timedOut?'⏰ TIME EXPIRED — ':''}FINAL EXAMINATION RESULT</h2><p><strong>${escapeHTML(state.student.name)}</strong></p><p>Candidate ID: <strong>${escapeHTML(state.student.id)}</strong></p><div class="final-score">${pct}%</div><h2 class="${passed?'pass':'fail'}">${passed?'PASSED':'FAILED'}</h2>${cefrBox}<div class="exam-message">${passed?'Congratulations! Your examination has been completed successfully.':'Your result is below the required 70%. Please review the lessons and try again after the temporary waiting period.'}</div><h3>Subject Results</h3>${rows}${cert}</div>`;document.getElementById('examPanel').scrollIntoView({behavior:'smooth'})}
+window.showFinal=function(timedOut){stop();state.started=false;let total=0;state.subjectScores.forEach(s=>total+=s.score||0);let n=PROGRAM_SUBJECTS[state.program].length*15;let pct=Math.round(total/n*100);let passed=pct>=70;registerAttempt(passed);let record={id:state.student.id,name:state.student.name,email:state.student.email,nationality:state.student.nationality,country:state.student.country,phone:state.student.phone,institution:state.student.institution,program:state.program,percentage:pct,totalScore:total,totalQuestions:n,status:passed?'PASSED':'FAILED',date:new Date().toISOString(),subjects:state.subjectScores,timedOut:!!timedOut};let old=storage('GETI_EXAM_RECORDS',[]).filter(r=>!(String(r.email).toLowerCase()===String(record.email).toLowerCase()&&r.program===record.program));old.push(record);setStorage('GETI_EXAM_RECORDS',old);let rows=state.subjectScores.map(s=>`<div class="subject-result"><span>${escapeHTML(s.subject)}</span><strong>${s.percentage}% — ${s.grade}</strong></div>`).join('');let cefrBox=state.program==='ENGLISH PROFICIENCY'?`<div class="cefr-result">CEFR LEVEL: ${cefr(pct)}</div>`:'';let cert=passed?`<br><a class="btn btn-gold certificate-download-btn" href="${GETI_CERT_URL}" target="_blank" rel="noopener">🎓 GET YOUR CERTIFICATE</a>`:'';document.getElementById('examPanel').innerHTML=`<div class="result-box"><h2>${timedOut?'⏰ TIME EXPIRED — ':''}FINAL EXAMINATION RESULT</h2><p><strong>${escapeHTML(state.student.name)}</strong></p><p>Candidate ID: <strong>${escapeHTML(state.student.id)}</strong></p><div class="final-score">${pct}%</div><h2 class="${passed?'pass':'fail'}">${passed?'PASSED':'FAILED'}</h2>${cefrBox}<div class="exam-message">${passed?'Congratulations! Your examination has been completed successfully.':'Your result is below the required 70%. Please review the lessons and try again after the temporary waiting period.'}</div><h3>Subject Results</h3>${rows}${cert}</div>`;document.getElementById('examPanel').scrollIntoView({behavior:'smooth'})}
 
 /* LESSON LIBRARY: structured university/school-style lessons, generated to at least 2,000 words per subject. */
 function lessonParagraph(program,subject,section){return `In ${program}, the subject ${subject} develops knowledge that can be used in academic study and practical professional situations. ${section} should be approached through clear concepts, examples, guided practice, reflection, and independent application. A learner should first understand the purpose of the topic, then identify its main principles, examine examples, practise the skill, receive feedback, and finally apply the knowledge to a new situation. In a school or university setting, this process encourages accuracy, critical thinking, communication, problem solving, and professional responsibility. In real work, the same knowledge helps a person make informed decisions, explain ideas clearly, work with other people, and respond appropriately to changing circumstances.`}
@@ -4040,37 +3968,6 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 
 </script>
 
-
-<script>
-/* =========================================================
-   GLOBAL NO SELECT / NO COPY / NO CUT PROTECTION
-========================================================= */
-(function(){
-  function block(e){
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-  }
-
-  document.addEventListener('selectstart', block, true);
-  document.addEventListener('selectionchange', function(){
-    try {
-      var sel = window.getSelection();
-      if(sel && sel.rangeCount) sel.removeAllRanges();
-    } catch(err) {}
-  }, true);
-  document.addEventListener('copy', block, true);
-  document.addEventListener('cut', block, true);
-  document.addEventListener('contextmenu', block, true);
-
-  document.addEventListener('keydown', function(e){
-    var k=(e.key||'').toLowerCase();
-    if((e.ctrlKey||e.metaKey) && ['a','c','x'].indexOf(k)!==-1) return block(e);
-  }, true);
-})();
-</script>
-
 </body>
 </html>
-
 
