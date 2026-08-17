@@ -1128,6 +1128,17 @@ button,input,textarea{
 .exam-media{background:#f7f9fc;border:1px solid #dce4ef;padding:16px;border-radius:10px;margin:15px 0}.exam-media textarea{width:100%;min-height:120px;padding:12px;border:1px solid #ccd6e4;border-radius:8px}.mic-btn{margin:8px 5px 8px 0;padding:9px 12px;border:0;border-radius:7px;background:#0b2d5c;color:#fff;cursor:pointer}.mic-btn.recording{background:#9b1c1c}
 .reading-passage{max-height:360px;overflow:auto;background:#fff;border-left:4px solid #b38a28;padding:16px;margin:12px 0;line-height:1.8}
 .lessons-panel{margin-top:25px;background:#fff;border:1px solid #dce4ef;border-radius:12px;padding:20px}.lesson-programs,.lesson-subjects{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.lesson-btn{border:1px solid #cbd5e1;background:#f8fafc;padding:9px 12px;border-radius:7px;cursor:pointer;font-weight:600}.lesson-btn.active{background:#0b2d5c;color:#fff}.lesson-content{margin-top:18px;padding:20px;background:#f8fafc;border-radius:10px;max-height:650px;overflow:auto}.lesson-content h3{color:#0b2d5c;margin:18px 0 8px}.lesson-audio{position:sticky;bottom:0;background:#fff;padding:10px;border-top:1px solid #ddd;margin-top:15px}.cooldown-box{background:#fff4d6;border:1px solid #e0b84c;padding:14px;border-radius:9px;margin:12px 0;font-weight:600}
+/* =========================================================
+   LESSON MICROPHONE PRACTICE + AUTOMATIC LEVEL FEEDBACK
+   Added without removing existing lesson/exam functionality.
+========================================================= */
+.lesson-speaking-lab{margin-top:16px;padding:16px;border:1px solid #d7e0ea;border-radius:10px;background:#fff}
+.lesson-speaking-lab .speech-status{font-weight:700;margin:8px 0}
+.lesson-speaking-lab .speech-result{margin-top:10px;padding:12px;border-radius:8px;background:#f5f8fc;line-height:1.55}
+.lesson-speaking-lab .level-badge{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:800;margin-top:8px}
+.lesson-speaking-lab textarea{width:100%;min-height:110px;margin-top:8px;padding:10px;border:1px solid #cbd5e1;border-radius:8px;box-sizing:border-box}
+.lesson-speaking-lab .mic-btn{margin:5px}
+
 .video-interview{display:grid;grid-template-columns:minmax(220px,1fr) minmax(220px,1fr);gap:15px}.video-interview video{width:100%;background:#111;border-radius:10px;min-height:200px}.interviewer-card{background:#eef3f8;border-radius:10px;padding:15px}.cefr-result{font-size:26px;font-weight:900;color:#0b2d5c;text-align:center;padding:15px}
 @media(max-width:700px){.video-interview{grid-template-columns:1fr}.exam-timer{top:70px}}
 
@@ -4201,11 +4212,12 @@ function lessonPractice(program,subject,title,idx){
  let oral=['Explain the concept aloud in your own words for 60–120 seconds.','Teach the idea to an imaginary classmate without reading your notes.','Answer: What is it, why is it useful, and when would you use it?'][idx%3];
  let written=['Write five key terms and define each one. Then write three original examples.','Complete a short case: identify the problem, choose a method, justify the choice and give the result.','Write a six-sentence summary followed by three questions and their answers.'][idx%3];
  let practicalTask=practical?['Create a small document, spreadsheet, program, query or workflow that demonstrates the concept.','Repeat the task with a different set of data and verify the result.','Intentionally make one small error, identify it, explain why it is wrong and fix it.'][idx%3]:['Apply the concept to a realistic school or workplace situation.','Create a mini role-play or case study and solve it step by step.','Build a checklist or procedure that another learner could follow.'][idx%3];
- return `<div class="lesson-practice"><h4>Practice Lab ${idx+1}</h4><p><strong>Written:</strong> ${written}</p><p><strong>Practical:</strong> ${practicalTask}</p><p><strong>Oral:</strong> ${oral}</p><button class="mic-btn" onclick="speakPractice(this)">🎙️ PRACTICE ORAL</button><button class="lesson-check-btn" onclick="checkLessonPractice(this)">✓ MARK PRACTICE COMPLETE</button><div class="practice-feedback"></div></div>`;
+ let labId='lessonSpeech_'+Date.now()+'_'+idx;
+ return `<div class="lesson-practice"><h4>Practice Lab ${idx+1}</h4><p><strong>Written:</strong> ${written}</p><p><strong>Practical:</strong> ${practicalTask}</p><p><strong>Oral:</strong> ${oral}</p><button class="mic-btn" onclick="speakPractice(this)">🔊 PLAY ORAL INSTRUCTION</button><button class="mic-btn" onclick="startLessonSpeakingPractice(this,'${labId}')">🎙️ USE MICROPHONE</button><button class="mic-btn" onclick="stopLessonSpeakingPractice(this)">⏹ STOP & GET LEVEL</button><div id="${labId}" class="lesson-speaking-lab" data-program="${escapeLesson(program)}" data-subject="${escapeLesson(subject)}" style="display:none"><div class="speech-status">Microphone practice ready.</div><div class="speech-result"></div></div><button class="lesson-check-btn" onclick="checkLessonPractice(this)">✓ MARK PRACTICE COMPLETE</button><div class="practice-feedback"></div></div>`;
 }
 function makeLesson(program,subject){
  let units=getLessonUnits(program,subject), html='';
- html+=`<div class="lesson-overview"><h3>Course purpose</h3><p>This lesson is connected directly to the <strong>${escapeLesson(subject)}</strong> examination. Study the theory, complete the written and practical activities, practise orally, then take the exam. The lesson does not reveal exam answers; it prepares the knowledge and skills needed to solve new questions.</p><p><strong>Recommended method:</strong> Read → Study examples → Practise → Speak/explain → Review mistakes → Take the related exam.</p></div>`;
+ html+=`<div class="lesson-overview"><h3>Course purpose</h3><p>This lesson is connected directly to the <strong>${escapeLesson(subject)}</strong> examination. Study the theory, complete the written and practical activities, practise orally, then take the exam. The lesson does not reveal exam answers; it prepares the knowledge and skills needed to solve new questions.</p><p><strong>Recommended method:</strong> Read → Study examples → Written practice → Practical practice → Use microphone → Receive automatic level feedback → Review mistakes → Take the related exam.</p></div>`;
  units.forEach((u,i)=>{let title=u[0],focus=u[1],example=u[2];html+=lessonTheory(program,subject,title,focus,example);html+=lessonPractice(program,subject,title,i);});
  let words=html.replace(/<[^>]*>/g,' ').trim().split(/\s+/).length;
  let seed=`For deeper study, revisit each unit and produce your own examples, comparisons, case studies, explanations, error corrections, summaries and practical demonstrations. Academic mastery requires repeated retrieval rather than passive reading. Connect every definition to a situation, every rule to an example, and every example to a reason. When you make a mistake, write the original answer, the corrected answer, and the rule that explains the correction. This creates a personal revision guide that grows throughout the course.`;
@@ -4216,6 +4228,48 @@ window.speakPractice=function(btn){let box=btn.parentElement;let text=box.innerT
 window.checkLessonPractice=function(btn){let box=btn.parentElement;let f=box.querySelector('.practice-feedback');if(f)f.innerHTML='<strong>Practice recorded.</strong> Now repeat the task without notes and check your answer. For speaking tasks, use the microphone in the related exam when you are ready.';btn.disabled=true;btn.textContent='✓ COMPLETED';};
 window.openLessons=function(){let p=document.getElementById('lessonsPanel');p.style.display='block';p.innerHTML=`<h2>📚 GETI LESSONS</h2><p>Select a programme and subject. Every lesson is organised like a school/university course: objectives, theory, terminology, worked examples, written practice, practical work, oral practice, review and exam preparation. Long-form lessons provide extended study material.</p><div class="lesson-programs">${Object.keys(PROGRAM_SUBJECTS).map(x=>`<button class="lesson-btn" onclick="loadLessonSubjects('${x.replace(/'/g,"\\'")}')">${escapeHTML(x)}</button>`).join('')}</div><div id="lessonSubjects"></div><div id="lessonContent"></div>`;p.scrollIntoView({behavior:'smooth'});}
 window.loadLessonSubjects=function(program){let box=document.getElementById('lessonSubjects');box.innerHTML=`<h3>${escapeHTML(program)} Subjects</h3><div class="lesson-subjects">${PROGRAM_SUBJECTS[program].map(x=>`<button class="lesson-btn" onclick="showLesson('${program.replace(/'/g,"\\'")}','${x.replace(/'/g,"\\'")}')">${escapeHTML(x)}</button>`).join('')}</div>`;};
+window.lessonSpeechState=null;
+window.startLessonSpeakingPractice=function(btn,labId){
+ const lab=document.getElementById(labId); if(!lab)return;
+ lab.style.display='block';
+ const status=lab.querySelector('.speech-status'); const result=lab.querySelector('.speech-result');
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){status.textContent='Microphone speech recognition is not supported by this browser. You can type your answer below.'; result.innerHTML='<textarea placeholder="Type your spoken answer here..."></textarea><button class="mic-btn" onclick="scoreLessonTypedSpeech(this)">GET AUTOMATIC LEVEL</button>';return;}
+ if(window.lessonSpeechState&&window.lessonSpeechState.recognition){try{window.lessonSpeechState.recognition.stop()}catch(e){}}
+ const recognition=new SR(); recognition.lang='en-US'; recognition.interimResults=true; recognition.continuous=true;
+ let finalText=''; let started=Date.now();
+ recognition.onstart=function(){status.textContent='🎙️ Listening... Speak naturally and explain the lesson without reading your notes.';};
+ recognition.onresult=function(e){let interim=''; for(let i=e.resultIndex;i<e.results.length;i++){let txt=e.results[i][0].transcript;if(e.results[i].isFinal)finalText+=' '+txt;else interim+=' '+txt;} result.innerHTML='<div><strong>Transcript:</strong> '+escapeLesson((finalText+' '+interim).trim())+'</div>';};
+ recognition.onerror=function(e){status.textContent='Microphone error: '+e.error+'. Try again or type your answer.';};
+ recognition.onend=function(){if(window.lessonSpeechState&&window.lessonSpeechState.active){status.textContent='Practice stopped. Click STOP & GET LEVEL to receive your automatic result.';}else{scoreLessonSpeech(lab,finalText,Math.max(1,Math.round((Date.now()-started)/1000)));}};
+ window.lessonSpeechState={recognition:recognition,lab:lab,active:true,getText:function(){return finalText;},started:started};
+ try{recognition.start()}catch(e){status.textContent='Microphone could not start. Please allow microphone permission.';}
+};
+window.stopLessonSpeakingPractice=function(btn){
+ const st=window.lessonSpeechState;
+ if(!st){alert('Start microphone practice first.');return;}
+ st.active=false;
+ try{st.recognition.stop()}catch(e){}
+ scoreLessonSpeech(st.lab,st.getText(),Math.max(1,Math.round((Date.now()-st.started)/1000)));
+ window.lessonSpeechState=null;
+};
+window.scoreLessonTypedSpeech=function(btn){const lab=btn.closest('.lesson-speaking-lab');const ta=lab.querySelector('textarea');scoreLessonSpeech(lab,ta?ta.value:'',60);};
+window.scoreLessonSpeech=function(lab,text,seconds){
+ text=String(text||'').trim();
+ const words=text?text.split(/\s+/).filter(Boolean):[]; const n=words.length;
+ const unique=new Set(words.map(w=>w.toLowerCase().replace(/[^a-z']/g,''))).size;
+ const complex=words.filter(w=>w.length>=7).length;
+ const sentences=(text.match(/[.!?]+/g)||[]).length;
+ const connectors=(text.match(/\b(because|although|however|therefore|while|whereas|for example|in addition|as a result|on the other hand)\b/gi)||[]).length;
+ let score=0;
+ if(n>=25)score+=20; if(n>=60)score+=15; if(n>=120)score+=15; if(unique>=20)score+=10; if(unique>=40)score+=10; if(complex>=4)score+=10; if(sentences>=3)score+=5; if(connectors>=2)score+=10; if(seconds>=45)score+=5;
+ score=Math.min(100,score);
+ let level=score>=90?'C2':score>=78?'C1':score>=64?'B2':score>=50?'B1':score>=35?'A2':'A1';
+ let advice=level==='A1'?'Use short clear sentences and practise basic vocabulary and structures.':level==='A2'?'Add more complete sentences, details and everyday vocabulary.':level==='B1'?'Explain ideas with connected sentences and more supporting details.':level==='B2'?'Use varied vocabulary, clear organisation and more complex structures.':level==='C1'?'Develop precise, well-organised explanations with flexible language.':'Aim for nuanced, precise and well-structured communication with strong control.';
+ const result=lab.querySelector('.speech-result');
+ result.innerHTML=`<div><strong>Automatic speaking assessment</strong></div><div>Words: ${n} &nbsp; • &nbsp; Practice time: ${seconds}s &nbsp; • &nbsp; Score: ${score}/100</div><div class="level-badge">Estimated CEFR: ${level}</div><p>${advice}</p><details><summary>Transcript</summary><p>${escapeLesson(text||'No transcript captured.')}</p></details>`;
+ lab.querySelector('.speech-status').textContent='✅ Practice assessed automatically.';
+};
 window.showLesson=function(program,subject){let content=document.getElementById('lessonContent');let html=makeLesson(program,subject);content.innerHTML=`<div class="lesson-content"><h2>${escapeHTML(subject)}</h2><p><strong>Programme:</strong> ${escapeHTML(program)}</p><p><strong>Study route:</strong> theory → examples → written practice → practical practice → oral practice → review → related examination.</p>${html}<div class="lesson-audio"><button class="mic-btn" onclick="readLessonAudio()">🔊 PLAY LESSON AUDIO</button><button class="mic-btn" onclick="window.speechSynthesis.cancel()">⏹ STOP AUDIO</button></div></div>`;window.currentLessonText=content.innerText;content.scrollIntoView({behavior:'smooth'});};
 window.readLessonAudio=function(){let t=window.currentLessonText||'';if(!t)return;let parts=t.slice(0,30000),u=new SpeechSynthesisUtterance(parts);u.lang='en-US';u.rate=.88;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);};
 
