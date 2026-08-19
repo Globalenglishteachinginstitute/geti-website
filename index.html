@@ -4290,6 +4290,91 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 
 </script>
 
+
+<!-- =========================================================
+     GETI CHAT WITH ADMINISTRATOR — ADDED MODULE
+========================================================= -->
+<style>
+.chat-admin-fab{position:fixed;right:22px;bottom:22px;z-index:5000;background:#0b2d5c;color:#fff;border:none;border-radius:999px;padding:13px 18px;font-weight:800;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.25)}
+.chat-admin-panel{position:fixed;right:22px;bottom:78px;width:min(420px,92vw);max-height:76vh;overflow:auto;background:#fff;border:1px solid #dbe2ea;border-radius:14px;box-shadow:0 18px 48px rgba(0,0,0,.25);z-index:4999;display:none}
+.chat-admin-head{background:#071d3a;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
+.chat-admin-body{padding:16px}.chat-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.chat-tabs button{border:1px solid #ccd4df;background:#f8fafc;padding:8px 11px;border-radius:8px;cursor:pointer}.chat-tabs button.active{background:#0b2d5c;color:#fff}
+.chat-admin-body input,.chat-admin-body textarea{width:100%;padding:11px;border:1px solid #ccd4df;border-radius:8px;margin:7px 0}.chat-admin-body textarea{min-height:90px}.chat-btn{border:none;background:#b38a28;color:#fff;padding:10px 14px;border-radius:8px;font-weight:700;cursor:pointer;margin-top:7px}.chat-btn.navy{background:#0b2d5c}.chat-btn.danger{background:#9b1c1c}.chat-msg{padding:10px 12px;border-radius:10px;margin:8px 0;background:#eef3f8}.chat-msg.me{background:#fff4d6}.chat-meta{font-size:11px;color:#687386;margin-bottom:4px}.chat-file{display:inline-block;margin-top:6px;font-size:13px;font-weight:700;color:#0b2d5c}.admin-card{border:1px solid #dde4ed;border-radius:10px;padding:12px;margin:10px 0;background:#f8fafc}.admin-badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#0b2d5c;color:#fff;font-size:11px;font-weight:800}.chat-note{font-size:12px;color:#687386;margin-top:8px}.chat-close{background:transparent;border:none;color:white;font-size:22px;cursor:pointer}
+</style>
+<button class="chat-admin-fab" onclick="openGetiChat()">💬 Chat with Administrator</button>
+<div id="getiChatPanel" class="chat-admin-panel">
+  <div class="chat-admin-head"><strong>GETI Support</strong><button class="chat-close" onclick="closeGetiChat()">×</button></div>
+  <div id="getiChatBody" class="chat-admin-body"></div>
+</div>
+<script>
+(function(){
+const K_USERS='GETI_CHAT_USERS', K_SESSION='GETI_CHAT_SESSION', K_MSG='GETI_CHAT_MESSAGES';
+function get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}
+function set(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function esc(v){return String(v||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function session(){return get(K_SESSION,null)}
+function saveSession(v){v?set(K_SESSION,v):localStorage.removeItem(K_SESSION)}
+function users(){return get(K_USERS,[])}
+function messages(){return get(K_MSG,[])}
+function saveMessages(v){set(K_MSG,v)}
+window.openGetiChat=function(){document.getElementById('getiChatPanel').style.display='block';render()}
+window.closeGetiChat=function(){document.getElementById('getiChatPanel').style.display='none'}
+function tabs(active){return `<div class="chat-tabs"><button class="${active==='signin'?'active':''}" onclick="chatSignInView()">Sign in</button><button class="${active==='create'?'active':''}" onclick="chatCreateView()">Create account</button><button class="${active==='forgot'?'active':''}" onclick="chatForgotView()">Forgot password</button><button class="${active==='admin'?'active':''}" onclick="chatAdminLoginView()">Administrator</button></div>`}
+function body(){return document.getElementById('getiChatBody')}
+function render(){let s=session();if(!s)return chatSignInView();if(s.role==='admin')return renderAdmin();return renderUser()}
+window.chatSignInView=function(){body().innerHTML=tabs('signin')+`<h3>Sign in</h3><input id="ciEmail" type="email" placeholder="Email"><input id="ciPass" type="password" placeholder="Password"><button class="chat-btn navy" onclick="chatDoSignIn()">SIGN IN</button>`}
+window.chatCreateView=function(){body().innerHTML=tabs('create')+`<h3>Create account</h3><input id="ccName" placeholder="Full name"><input id="ccEmail" type="email" placeholder="Email"><input id="ccPass" type="password" placeholder="Password"><button class="chat-btn" onclick="chatDoCreate()">CREATE ACCOUNT</button>`}
+window.chatForgotView=function(){body().innerHTML=tabs('forgot')+`<h3>Forgot password</h3><input id="cfEmail" type="email" placeholder="Your account email"><button class="chat-btn" onclick="chatDoForgot()">SHOW RESET HELP</button><div class="chat-note">Prototype: password recovery is stored in this browser only. For production, use a secure server/email reset flow.</div>`}
+window.chatAdminLoginView=function(){body().innerHTML=tabs('admin')+`<h3>Administrator</h3><input id="caCode" type="password" placeholder="Administrator code"><button class="chat-btn navy" onclick="chatDoAdminLogin()">OPEN ADMINISTRATOR</button>`}
+window.chatDoCreate=function(){let n=ccName.value.trim(),e=ccEmail.value.trim().toLowerCase(),p=ccPass.value;if(!n||!e||!p)return alert('Please complete all fields.');let u=users();if(u.some(x=>x.email===e))return alert('Account already exists.');u.push({name:n,email:e,password:p,createdAt:Date.now()});set(K_USERS,u);saveSession({role:'user',email:e,name:n});renderUser()}
+window.chatDoSignIn=function(){let e=ciEmail.value.trim().toLowerCase(),p=ciPass.value;let u=users().find(x=>x.email===e&&x.password===p);if(!u)return alert('Incorrect email or password.');saveSession({role:'user',email:u.email,name:u.name});renderUser()}
+window.chatDoForgot=function(){let e=cfEmail.value.trim().toLowerCase(),u=users().find(x=>x.email===e);if(!u)return alert('Account not found.');alert('Prototype recovery: contact GETI administrator to reset the password for '+u.email+'.')}
+window.chatDoAdminLogin=function(){if(caCode.value!=='global')return alert('Incorrect administrator code.');saveSession({role:'admin',name:'Administrator'});renderAdmin()}
+window.chatLogout=function(){saveSession(null);render()}
+function userThread(email){return messages().filter(m=>m.email===email).sort((a,b)=>a.time-b.time)}
+function renderUser(){let s=session(),rows=userThread(s.email).map(m=>`<div class="chat-msg ${m.from==='user'?'me':''}"><div class="chat-meta">${esc(m.from==='user'?'You':'Administrator')} • ${new Date(m.time).toLocaleString()}</div><div>${esc(m.text)}</div>${m.fileData?`<a class="chat-file" href="${m.fileData}" download="${esc(m.fileName)}">📎 ${esc(m.fileName)} — Download</a>`:''}</div>`).join('');body().innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${esc(s.name)}</strong><div class="chat-note">${esc(s.email)}</div></div><button class="chat-btn danger" onclick="chatLogout()">Logout</button></div><hr style="margin:12px 0"><div id="chatThread">${rows||'<div class="chat-note">No messages yet.</div>'}</div><textarea id="chatText" placeholder="Write a message to administrator..."></textarea><input id="chatFile" type="file" accept="image/*,.pdf,application/pdf"><button class="chat-btn navy" onclick="chatSendUser()">SEND MESSAGE / FILE</button><div class="chat-note">Photos and PDFs are saved in this browser for this prototype and can be downloaded from the chat.</div>`}
+window.chatSendUser=function(){let s=session(),t=chatText.value.trim(),f=chatFile.files&&chatFile.files[0];if(!t&&!f)return alert('Write a message or choose a file.');if(f&&f.size>5*1024*1024)return alert('Maximum file size in this browser prototype is 5 MB.');if(f){let r=new FileReader();r.onload=()=>saveUserMsg(t,f.name,f.type,r.result);r.readAsDataURL(f)}else saveUserMsg(t,'','','')}
+function saveUserMsg(t,n,type,data){let s=session(),m=messages();m.push({id:Date.now(),email:s.email,name:s.name,from:'user',text:t,fileName:n,fileType:type,fileData:data,time:Date.now()});saveMessages(m);renderUser()}
+function examResults(){try{return JSON.parse(localStorage.getItem('GETI_EXAM_RECORDS'))||[]}catch(e){return []}}
+function renderAdmin(){
+  let all=messages(),group={};
+  all.forEach(m=>(group[m.email]??=[]).push(m));
+
+  /* ALL STUDENTS: combine created chat accounts + exam candidates, even if they never sent a message */
+  let allUsers=users();
+  let allResults=examResults();
+  let studentMap={};
+  allUsers.forEach(u=>{
+    let key=String(u.email||'').toLowerCase();
+    if(!key)return;
+    studentMap[key]={name:u.name||'',email:key,account:true,createdAt:u.createdAt||0,exams:[]};
+  });
+  allResults.forEach(r=>{
+    let key=String(r.email||'').toLowerCase();
+    if(!key) key='candidate:'+String(r.id||Math.random());
+    if(!studentMap[key]) studentMap[key]={name:r.name||'',email:r.email||'',account:false,createdAt:0,exams:[]};
+    if(!studentMap[key].name) studentMap[key].name=r.name||'';
+    studentMap[key].exams.push(r);
+  });
+  let students=Object.values(studentMap).sort((a,b)=>String(a.name).localeCompare(String(b.name))).map(st=>{
+    let exams=st.exams.slice().reverse().map(r=>`<div class="chat-note">🎓 ${esc(r.program||'Exam')} — ${Number(r.percentage||0)}% — <strong>${esc(r.status||'')}</strong> — ${esc(r.id||'')}</div>`).join('');
+    return `<div class="admin-card"><div><span class="admin-badge">STUDENT</span> <strong>${esc(st.name||'Unnamed student')}</strong></div><div class="chat-note">${esc(st.email||'No email')} ${st.account?'• Chat account created':'• Exam candidate'}</div>${exams||'<div class="chat-note">No exam result yet.</div>'}</div>`;
+  }).join('');
+
+  let threads=Object.keys(group).map(email=>{
+    let arr=group[email].sort((a,b)=>a.time-b.time),name=arr[0]?.name||email,
+    msgs=arr.map(m=>`<div class="chat-msg ${m.from==='admin'?'me':''}"><div class="chat-meta">${esc(m.from==='admin'?'Administrator':name)} • ${new Date(m.time).toLocaleString()}</div><div>${esc(m.text)}</div>${m.fileData?`<a class="chat-file" href="${m.fileData}" download="${esc(m.fileName)}">📎 ${esc(m.fileName)} — Download</a>`:''}</div>`).join('');
+    return `<div class="admin-card"><div><span class="admin-badge">USER</span> <strong>${esc(name)}</strong><div class="chat-note">${esc(email)}</div></div>${msgs}<textarea id="reply_${btoa(email).replace(/=/g,'')}" placeholder="Reply to this user..."></textarea><input id="file_${btoa(email).replace(/=/g,'')}" type="file" accept="image/*,.pdf,application/pdf"><button class="chat-btn navy" onclick="chatAdminReply('${encodeURIComponent(email)}')">SEND REPLY / FILE</button></div>`;
+  }).join('');
+
+  let results=allResults.slice().reverse().map(r=>`<div class="admin-card"><strong>${esc(r.name)}</strong> — ${esc(r.program)}<div class="chat-note">${esc(r.id)} • ${esc(r.email||'')}</div><div>${r.percentage}% — <strong>${esc(r.status)}</strong></div></div>`).join('');
+
+  body().innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>Administrator</strong><div class="chat-note">Students, messages & exam results</div></div><button class="chat-btn danger" onclick="chatLogout()">Logout</button></div><h3 style="margin-top:14px">All Students (${Object.keys(studentMap).length})</h3>${students||'<div class="chat-note">No students saved in this browser yet.</div>'}<h3 style="margin-top:18px">Messages</h3>${threads||'<div class="chat-note">No messages.</div>'}<h3 style="margin-top:18px">Exam Results</h3>${results||'<div class="chat-note">No exam results saved in this browser.</div>'}`
+}
+window.chatAdminReply=function(enc){let email=decodeURIComponent(enc),id=btoa(email).replace(/=/g,''),ta=document.getElementById('reply_'+id),fi=document.getElementById('file_'+id),t=ta.value.trim(),f=fi.files&&fi.files[0];if(!t&&!f)return alert('Write a reply or choose a file.');if(f&&f.size>5*1024*1024)return alert('Maximum file size is 5 MB.');if(f){let r=new FileReader();r.onload=()=>saveAdmin(email,t,f.name,f.type,r.result);r.readAsDataURL(f)}else saveAdmin(email,t,'','','')}
+function saveAdmin(email,t,n,type,data){let m=messages(),u=users().find(x=>x.email===email);m.push({id:Date.now(),email,name:u?.name||email,from:'admin',text:t,fileName:n,fileType:type,fileData:data,time:Date.now()});saveMessages(m);renderAdmin()}
+})();
+</script>
 </body>
 </html>
 
