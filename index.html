@@ -4490,14 +4490,19 @@ window.GETIChat=(function(){
   function fmtTime(t){try{return new Date(t).toLocaleString()}catch(e){return ''}}
 
   function messageHtml(m,myRole){
-    const role=m.senderRole||(m.from==='admin'?'admin':'student');
+    const role=m.senderRole||m.sender||(m.from==='admin'?'admin':'student');
     const mine=myRole==='admin'?role==='admin':role==='student';
+    const text=m.text??m.message??'';
+    const fileUrl=m.fileUrl||m.fileURL||'';
+    const fileName=m.fileName||'File';
+    const mimeType=m.mimeType||m.fileType||'';
+    const createdAt=m.createdAt||m.time||m.date||m.Date||'';
     let file='';
-    if(m.fileUrl){
-      const isImg=(m.mimeType||'').startsWith('image/')||/\.(png|jpe?g|gif|webp)$/i.test(m.fileName||'');
-      file=`<a class="gc-file" href="${esc(m.fileUrl)}" target="_blank" rel="noopener">${isImg?'🖼️':'📎'} ${esc(m.fileName||'File')} — Open / Download</a>`;
+    if(fileUrl){
+      const isImg=String(mimeType).startsWith('image/')||/\.(png|jpe?g|gif|webp)$/i.test(fileName);
+      file=`<a class="gc-file" href="${esc(fileUrl)}" target="_blank" rel="noopener">${isImg?'🖼️':'📎'} ${esc(fileName)} — Open / Download</a>`;
     }
-    return `<div class="gc-bubble-row ${mine?'me':''}"><div class="gc-bubble"><div>${esc(m.text||'')}</div>${file}<div class="gc-meta">${esc(fmtTime(m.createdAt||m.time))}</div></div></div>`;
+    return `<div class="gc-bubble-row ${mine?'me':''}"><div class="gc-bubble"><div>${esc(text)}</div>${file}<div class="gc-meta">${esc(fmtTime(createdAt))}</div></div></div>`;
   }
   async function filePayload(input){
     const f=input?.files?.[0];if(!f)return {fileName:'',fileUrl:'',fileId:'',mimeType:''};
@@ -4505,7 +4510,13 @@ window.GETIChat=(function(){
     const base64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)});
     const s=ses();
     const up=await apiPost({action:'uploadFile',token:s.token,fileName:f.name,mimeType:f.type||'application/octet-stream',base64});
-    return {fileName:up.file.name,fileUrl:up.file.url,fileId:up.file.id,mimeType:up.file.mimeType};
+    const uf=up.file||{};
+    return {
+      fileName:up.fileName||uf.name||f.name,
+      fileUrl:up.fileURL||up.fileUrl||uf.url||'',
+      fileId:up.fileId||uf.id||'',
+      mimeType:up.fileType||uf.mimeType||f.type||'application/octet-stream'
+    };
   }
 
   async function renderUser(refreshOnly=false){
@@ -4555,7 +4566,7 @@ window.GETIChat=(function(){
     const s=ses(),q=($('gcSearch')?.value||'').trim().toLowerCase();
     try{
       const d=await apiPost({action:'adminGetConversations',token:s.token});
-      const rows=(d.conversations||[]).map(x=>({name:x.studentName,email:x.studentEmail,lastText:x.lastMessage,lastTime:x.lastAt,unread:x.unread})).filter(x=>!q||String(x.name||'').toLowerCase().includes(q)||String(x.email||'').toLowerCase().includes(q));
+      const rows=(d.conversations||d.threads||[]).map(x=>({name:x.studentName||x.name,email:x.studentEmail||x.email,lastText:x.lastMessage||x.lastText,lastTime:x.lastAt||x.lastDate||x.lastTime,unread:x.unread||0})).filter(x=>!q||String(x.name||'').toLowerCase().includes(q)||String(x.email||'').toLowerCase().includes(q));
       const box=$('gcThreadList');if(box)box.innerHTML=rows.length?rows.map(x=>`<div class="gc-thread ${activeEmail===x.email?'active':''}" onclick="GETIChat.openThread('${encodeURIComponent(x.email)}')"><div class="gc-thread-row"><div class="gc-avatar">${esc((x.name||x.email||'?').charAt(0).toUpperCase())}</div><div class="gc-thread-copy"><strong>${esc(x.name||x.email)}</strong><small>${esc(x.email)}</small><small>${esc(x.lastText||x.fileName||'Attachment')} · ${esc(fmtTime(x.lastTime))}</small></div></div></div>`).join(''):'<div class="gc-empty">No conversations.</div>'
     }catch(e){if(!silent){const box=$('gcThreadList');if(box)box.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`}}
   }
@@ -4590,7 +4601,10 @@ window.GETIChat=(function(){
     const main=$('gcAdminMain');
     try{
       const d=await apiPost({action:'adminGetResults',token:s.token});
-      const rows=d.results||[];
+      const rows=(d.results||[]).map(r=>({
+        name:r.name||r.Name||'', email:r.email||r.Email||'', program:r.program||r.Program||'',
+        percentage:r.percentage??r.Percentage??0, status:r.status||r.Status||'', date:r.date||r.Date||r.savedAt||''
+      }));
       if(list)list.innerHTML=rows.length?rows.map(r=>`<div class="gc-thread"><div class="gc-thread-row"><div class="gc-avatar">${esc((r.name||r.email||'?').charAt(0).toUpperCase())}</div><div class="gc-thread-copy"><strong>${esc(r.name||r.email)}</strong><small>${esc(r.email)}</small><small>${esc(String(r.percentage||0))}% · ${esc(r.status||'Result')}</small></div></div></div>`).join(''):'<div class="gc-empty">No online exam results yet.</div>';
       if(main)main.innerHTML=rows.length?`<div style="padding:18px;overflow:auto;height:100%"><h3>Examination results</h3><div style="display:grid;gap:10px">${rows.map(r=>`<div class="gc-auth-card" style="max-width:none;margin:0"><strong>${esc(r.name||r.email)}</strong><div>${esc(r.email)}</div><div>${esc(r.program||'')} · ${esc(String(r.percentage||0))}% · ${esc(r.status||'')}</div><small>${esc(r.date||r.savedAt||'')}</small></div>`).join('')}</div></div>`:'<div class="gc-empty">No online exam results yet.</div>';
     }catch(e){if(!silent){if(list)list.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`;if(main)main.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`;}}
@@ -4614,7 +4628,7 @@ window.GETIChat=(function(){
     if(key==='GETI_EXAM_RECORDS'&&configured()){
       try{
         const arr=JSON.parse(value)||[],r=arr[arr.length-1];
-        if(r&&r.id&&r.email)apiPost({action:'saveResult',apiKey:RESULT_API_KEY,result:r}).catch(()=>{});
+        if(r&&r.id&&r.email)apiPost({action:'saveResult',apiKey:RESULT_API_KEY,...r}).catch(()=>{});
       }catch(e){}
     }
   };
