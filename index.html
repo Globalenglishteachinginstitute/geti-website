@@ -4476,7 +4476,7 @@ window.GETIChat=(function(){
   async function resetPassword(){
     try{
       const email=$('gcForgotEmail').value.trim().toLowerCase(),code=$('gcResetCode').value.trim(),password=$('gcResetPass').value;
-      const d=await apiPost({action:'resetPassword',email,code,password});authMsg(d.message,true);setTimeout(loginView,900)
+      const d=await apiPost({action:'resetPassword',email,code,newPassword:password});authMsg(d.message,true);setTimeout(loginView,900)
     }catch(e){authMsg(e.message)}
   }
   async function doAdmin(){
