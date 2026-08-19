@@ -4585,8 +4585,15 @@ window.GETIChat=(function(){
   }
   async function loadResults(silent=false){
     adminMode='results';
-    const list=$('gcThreadList');if(list)list.innerHTML='<div class="gc-empty">Exam results integration will use the existing GETI exam database.</div>';
-    const main=$('gcAdminMain');if(main)main.innerHTML='<div class="gc-empty">Messages are online and working. Exam results require the separate exam-results endpoint.</div>';
+    const s=ses();
+    const list=$('gcThreadList');
+    const main=$('gcAdminMain');
+    try{
+      const d=await apiPost({action:'adminGetResults',token:s.token});
+      const rows=d.results||[];
+      if(list)list.innerHTML=rows.length?rows.map(r=>`<div class="gc-thread"><div class="gc-thread-row"><div class="gc-avatar">${esc((r.name||r.email||'?').charAt(0).toUpperCase())}</div><div class="gc-thread-copy"><strong>${esc(r.name||r.email)}</strong><small>${esc(r.email)}</small><small>${esc(String(r.percentage||0))}% · ${esc(r.status||'Result')}</small></div></div></div>`).join(''):'<div class="gc-empty">No online exam results yet.</div>';
+      if(main)main.innerHTML=rows.length?`<div style="padding:18px;overflow:auto;height:100%"><h3>Examination results</h3><div style="display:grid;gap:10px">${rows.map(r=>`<div class="gc-auth-card" style="max-width:none;margin:0"><strong>${esc(r.name||r.email)}</strong><div>${esc(r.email)}</div><div>${esc(r.program||'')} · ${esc(String(r.percentage||0))}% · ${esc(r.status||'')}</div><small>${esc(r.date||r.savedAt||'')}</small></div>`).join('')}</div></div>`:'<div class="gc-empty">No online exam results yet.</div>';
+    }catch(e){if(!silent){if(list)list.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`;if(main)main.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`;}}
   }
   function adminMessages(){adminMode='messages';renderAdmin()}
   function adminResults(){adminMode='results';renderAdmin()}
