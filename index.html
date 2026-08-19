@@ -4403,6 +4403,64 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
  .gc-tabs{grid-template-columns:1fr 1fr}
  .gc-bubble{max-width:88%}
 }
+
+  .gc-attachment-card{
+    margin-top:8px;
+    border:1px solid #dbe3ef;
+    border-radius:14px;
+    overflow:hidden;
+    background:#fff;
+    max-width:320px;
+  }
+  .gc-attachment-image{
+    display:block;
+    width:100%;
+    max-height:260px;
+    object-fit:cover;
+    background:#eef2f7;
+    cursor:pointer;
+  }
+  .gc-attachment-info{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+  }
+  .gc-attachment-icon{
+    font-size:28px;
+    flex:0 0 auto;
+  }
+  .gc-attachment-copy{
+    min-width:0;
+    flex:1;
+  }
+  .gc-attachment-copy strong{
+    display:block;
+    font-size:13px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .gc-attachment-actions{
+    display:flex;
+    gap:8px;
+    margin-top:6px;
+    flex-wrap:wrap;
+  }
+  .gc-attachment-actions a{
+    text-decoration:none;
+    font-size:12px;
+    font-weight:700;
+    padding:6px 9px;
+    border-radius:9px;
+    border:1px solid #d7deea;
+    background:#f8fafc;
+    color:#111827;
+  }
+  .gc-bubble-row.me .gc-attachment-card{
+    border-color:rgba(255,255,255,.28);
+  }
+
 </style>
 
 <button id="getiChatFab" onclick="GETIChat.open()"><span class="gc-fab-icon">💬</span><span class="gc-fab-label">Chat with Administrator</span></button>
@@ -4521,20 +4579,88 @@ window.GETIChat=(function(){
   function logout(){stopPoll();setSes(null);activeEmail=null;adminRenderedEmail=null;loginView()}
   function fmtTime(t){try{return new Date(t).toLocaleString()}catch(e){return ''}}
 
+  function driveFileId(url){
+    const u=String(url||'');
+    let m=u.match(/\/file\/d\/([^/]+)/i);
+    if(m&&m[1])return m[1];
+    m=u.match(/[?&]id=([^&]+)/i);
+    return m&&m[1]?m[1]:'';
+  }
+
   function messageHtml(m,myRole){
     const role=m.senderRole||m.sender||(m.from==='admin'?'admin':'student');
     const mine=myRole==='admin'?role==='admin':role==='student';
     const text=m.text??m.message??'';
     const fileUrl=m.fileUrl||m.fileURL||'';
-    const fileName=m.fileName||'File';
+    const fileName=m.fileName||'Attachment';
     const mimeType=m.mimeType||m.fileType||'';
     const createdAt=m.createdAt||m.time||m.date||m.Date||'';
+
     let file='';
     if(fileUrl){
-      const isImg=String(mimeType).startsWith('image/')||/\.(png|jpe?g|gif|webp)$/i.test(fileName);
-      file=`<a class="gc-file" href="${esc(fileUrl)}" target="_blank" rel="noopener">${isImg?'🖼️':'📎'} ${esc(fileName)} — Open / Download</a>`;
+      const isImg=
+        String(mimeType).toLowerCase().startsWith('image/') ||
+        /\.(png|jpe?g|gif|webp)$/i.test(fileName);
+
+      const isPdf=
+        String(mimeType).toLowerCase()==='application/pdf' ||
+        /\.pdf$/i.test(fileName);
+
+      const id=driveFileId(fileUrl);
+      const directDownload=id
+        ? `https://drive.google.com/uc?export=download&id=${encodeURIComponent(id)}`
+        : fileUrl;
+
+      if(isImg){
+        const preview=id
+          ? `https://drive.google.com/thumbnail?id=${encodeURIComponent(id)}&sz=w1000`
+          : fileUrl;
+
+        file=`
+          <div class="gc-attachment-card">
+            <a href="${esc(fileUrl)}" target="_blank" rel="noopener">
+              <img class="gc-attachment-image"
+                   src="${esc(preview)}"
+                   alt="${esc(fileName)}"
+                   loading="lazy"
+                   onerror="this.style.display='none';this.closest('.gc-attachment-card').querySelector('.gc-image-fallback').style.display='flex'">
+            </a>
+            <div class="gc-image-fallback gc-attachment-info" style="display:none">
+              <div class="gc-attachment-icon">🖼️</div>
+              <div class="gc-attachment-copy">
+                <strong>${esc(fileName)}</strong>
+              </div>
+            </div>
+            <div class="gc-attachment-info">
+              <div class="gc-attachment-icon">🖼️</div>
+              <div class="gc-attachment-copy">
+                <strong>${esc(fileName)}</strong>
+                <div class="gc-attachment-actions">
+                  <a href="${esc(fileUrl)}" target="_blank" rel="noopener">Open</a>
+                  <a href="${esc(directDownload)}" target="_blank" rel="noopener">Download</a>
+                </div>
+              </div>
+            </div>
+          </div>`;
+      }else{
+        file=`
+          <div class="gc-attachment-card">
+            <div class="gc-attachment-info">
+              <div class="gc-attachment-icon">${isPdf?'📄':'📎'}</div>
+              <div class="gc-attachment-copy">
+                <strong>${esc(fileName)}</strong>
+                <div class="gc-attachment-actions">
+                  <a href="${esc(fileUrl)}" target="_blank" rel="noopener">Open</a>
+                  <a href="${esc(directDownload)}" target="_blank" rel="noopener">Download</a>
+                </div>
+              </div>
+            </div>
+          </div>`;
+      }
     }
-    return `<div class="gc-bubble-row ${mine?'me':''}"><div class="gc-bubble"><div>${esc(text)}</div>${file}<div class="gc-meta">${esc(fmtTime(createdAt))}</div></div></div>`;
+
+    const textHtml=text ? `<div>${esc(text)}</div>` : '';
+    return `<div class="gc-bubble-row ${mine?'me':''}"><div class="gc-bubble">${textHtml}${file}<div class="gc-meta">${esc(fmtTime(createdAt))}</div></div></div>`;
   }
 
   function ensureUploadOverlay(){
