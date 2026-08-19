@@ -4474,6 +4474,7 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 
 <script>
 window.GETI_CHAT_BUILD='GETI_SUPABASE_CLEAN_V1'; console.log('GETI chat build:',window.GETI_CHAT_BUILD);
+window.GETI_CHAT_BUILD='GETI_MESSENGER_CORE_V2_20260820';
 window.GETIChat=(function(){
   const CHAT_API_URL='https://script.google.com/macros/s/AKfycbyrYlYRBo3OCb37-PFvdpqTJCyafBrkVMGKOJIDfJd7sV_Rag3UkVIDp06IVzgoxvCpYg/exec';
 
@@ -4590,13 +4591,17 @@ window.GETIChat=(function(){
     try{
       const name=$('gcCreateName').value.trim(),email=$('gcCreateEmail').value.trim().toLowerCase(),password=$('gcCreatePass').value;
       if(!name||!email||password.length<6)return authMsg('Complete all fields. Password must contain at least 6 characters.');
-      const d=await apiPost({action:'createAccount',name,email,password}); setSes({token:d.token,role:'user',email:d.user.email,name:d.user.name}); renderUser();
+      const d=await apiPost({action:'createAccount',name,email,password});
+      setSes({token:d.token,role:'user',email:d.user.email,name:d.user.name});
+      await ensureProfileThen('user');
     }catch(e){authMsg(e.message)}
   }
   async function doLogin(){
     try{
       const email=$('gcLoginEmail').value.trim().toLowerCase(),password=$('gcLoginPass').value;
-      const d=await apiPost({action:'login',email,password}); setSes({token:d.token,role:'user',email:d.user.email,name:d.user.name}); renderUser();
+      const d=await apiPost({action:'login',email,password});
+      setSes({token:d.token,role:'user',email:d.user.email,name:d.user.name});
+      await ensureProfileThen('user');
     }catch(e){authMsg(e.message)}
   }
   async function requestReset(){
@@ -4610,8 +4615,12 @@ window.GETIChat=(function(){
     }catch(e){authMsg(e.message)}
   }
   async function doAdmin(){
-    try{const code=$('gcAdminCode').value.trim();const d=await apiPost({action:'adminLogin',code});setSes({token:d.token,role:'admin',email:d.user.email,name:d.user.name});renderAdmin()}
-    catch(e){authMsg(e.message)}
+    try{
+      const code=$('gcAdminCode').value.trim();
+      const d=await apiPost({action:'adminLogin',code});
+      setSes({token:d.token,role:'admin',email:d.user.email,name:d.user.name});
+      await ensureProfileThen('admin');
+    }catch(e){authMsg(e.message)}
   }
 
   function stopPoll(){if(pollTimer){clearInterval(pollTimer);pollTimer=null}}
@@ -4869,12 +4878,14 @@ window.GETIChat=(function(){
     const allowed=
       f.type==='application/pdf' ||
       String(f.type||'').startsWith('image/') ||
+      String(f.type||'').startsWith('video/') ||
+      String(f.type||'').startsWith('audio/') ||
       /\.pdf$/i.test(f.name||'') ||
-      /\.(png|jpe?g|gif|webp|bmp|heic|heif)$/i.test(f.name||'');
+      /\.(png|jpe?g|gif|webp|bmp|heic|heif|mp4|webm|mov|mp3|wav|m4a|ogg)$/i.test(f.name||'');
 
     if(!allowed){
       throw new Error(
-        'Only photos/images and PDF files are allowed.'
+        'Photos, videos, audio and PDF files are allowed.'
       );
     }
 
@@ -4981,15 +4992,195 @@ window.GETIChat=(function(){
     }
   }
 
-  async function renderUser(refreshOnly=false){
+  
+  async function ensureProfileThen(targetRole){
+    const s=ses();
+    const d=await apiPost({action:'getProfile',token:s.token});
+    if(d.profileRequired){
+      return profileView(targetRole,d.profile||{});
+    }
+    if(targetRole==='admin')return renderAdmin();
+    return renderUser();
+  }
+
+  async function profileView(returnRole,existing={}){
+    stopPoll();
+    const s=ses();
+    root().innerHTML=`<div class="gc-auth">
+      <div class="gc-auth-card" style="max-width:560px">
+        <h2>Complete your GETI profile</h2>
+        <p class="gc-status">A profile photo is required for every GETI account.</p>
+        <div style="display:flex;justify-content:center;margin:12px 0">
+          <img id="gcProfilePreview" src="${esc(existing.photoURL||'')}" style="width:96px;height:96px;border-radius:50%;object-fit:cover;background:#e5e7eb" onerror="this.removeAttribute('src')">
+        </div>
+        <div class="gc-field"><label>Profile photo *</label><input id="gcProfileFile" type="file" accept="image/*"></div>
+        <div class="gc-field"><label>Full name *</label><input id="gcProfileName" value="${esc(existing.name||s.name||'')}"></div>
+        <div class="gc-field"><label>@username *</label><input id="gcProfileUsername" value="${esc(existing.username||String(s.email||'').split('@')[0])}"></div>
+        <div class="gc-field"><label>Bio</label><textarea id="gcProfileBio" maxlength="240">${esc(existing.bio||'')}</textarea></div>
+        <button class="gc-btn blue" onclick="GETIChat.saveProfile('${returnRole}')">SAVE PROFILE</button>
+        <div id="gcProfileMsg"></div>
+      </div>
+    </div>`;
+    const f=$('gcProfileFile');
+    if(f)f.onchange=()=>{const x=f.files?.[0];if(x)$('gcProfilePreview').src=URL.createObjectURL(x)};
+  }
+
+  async function saveProfile(returnRole){
+    try{
+      const s=ses();
+      let photoURL='';
+      const current=await apiPost({action:'getProfile',token:s.token});
+      photoURL=current.profile?.photoURL||'';
+
+      const f=$('gcProfileFile')?.files?.[0];
+      if(f){
+        if(!String(f.type||'').startsWith('image/'))throw new Error('Profile photo must be an image.');
+        const path='profiles/'+safeStoragePart(s.email)+'/'+Date.now()+'_'+safeStoragePart(f.name||'profile.jpg');
+        showUploadProgress(f);
+        try{
+          await directSupabaseUpload(f,path);
+          photoURL=storagePublicUrl(path);
+        }finally{hideUploadProgress()}
+      }
+
+      if(!photoURL)throw new Error('Profile photo is required.');
+
+      await apiPost({
+        action:'saveProfile',
+        token:s.token,
+        name:$('gcProfileName').value.trim(),
+        username:$('gcProfileUsername').value.trim(),
+        bio:$('gcProfileBio').value.trim(),
+        photoURL
+      });
+
+      if(returnRole==='admin')return renderAdmin();
+      return renderUser();
+    }catch(e){
+      const m=$('gcProfileMsg');if(m)m.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`;
+    }
+  }
+
+  async function openProfile(){
+    const s=ses();
+    const d=await apiPost({action:'getProfile',token:s.token});
+    profileView(s.role==='admin'?'admin':'user',d.profile||{});
+  }
+
+  async function renderGeneralGroup(refreshOnly=false){
+    const s=ses();
+    if(!s)return loginView();
+
+    if(!refreshOnly){
+      root().innerHTML=`<div class="gc-chat mobile-open">
+        <main class="gc-main" style="display:flex">
+          <div class="gc-chat-top">
+            <div class="gc-brand-row"><div class="gc-avatar">G</div><div><strong>GETI Students</strong><small>General group · all students</small></div></div>
+            <div style="display:flex;gap:6px">
+              <button class="gc-btn light" onclick="GETIChat.openProfile()">Profile</button>
+              <button class="gc-btn light" onclick="${s.role==='admin'?'GETIChat.renderAdmin()':'GETIChat.renderUser()'}">Back</button>
+            </div>
+          </div>
+          <div id="gcGroupMessages" class="gc-messages"><div class="gc-empty">Loading group…</div></div>
+          <div class="gc-compose">
+            <label class="gc-attach">📎<input id="gcGroupFile" type="file" accept="image/*,video/*,audio/*,application/pdf,.pdf" hidden onchange="GETIChat.showFileName('gcGroupFile','gcGroupFileName')"></label>
+            <textarea id="gcGroupText" placeholder="Write to all students…" oninput="GETIChat.autoGrow(this);GETIChat.groupTyping()"></textarea>
+            <button class="gc-btn blue" onclick="GETIChat.sendGroup()">Send ➤</button>
+            <div id="gcGroupFileName" class="gc-file-preview"></div>
+          </div>
+        </main></div>`;
+    }
+
+    try{
+      const d=await apiPost({action:'groupGetMessages',token:s.token,groupId:'GETI_GENERAL'});
+      const box=$('gcGroupMessages');
+      if(box){
+        box.innerHTML=(d.messages||[]).length?(d.messages||[]).map(groupMessageHtml).join(''):'<div class="gc-empty">No group messages yet.</div>';
+        box.scrollTop=box.scrollHeight;
+      }
+    }catch(e){
+      const box=$('gcGroupMessages');if(box)box.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`;
+    }
+
+    if(!refreshOnly)startPoll(()=>renderGeneralGroup(true));
+  }
+
+  function groupMessageHtml(m){
+    const s=ses();
+    const mine=String(m.senderEmail||'').toLowerCase()===String(s?.email||'').toLowerCase();
+    const photo=m.senderPhotoURL||'';
+    const fileUrl=m.fileURL||m.fileUrl||'';
+    const type=String(m.fileType||'');
+    const fileName=m.fileName||'Attachment';
+    let attachment='';
+    if(fileUrl){
+      if(type.startsWith('image/'))attachment=`<a href="${esc(fileUrl)}" target="_blank"><img src="${esc(fileUrl)}" style="max-width:260px;border-radius:14px;display:block;margin-top:6px"></a>`;
+      else if(type.startsWith('video/'))attachment=`<video controls style="max-width:280px;margin-top:6px"><source src="${esc(fileUrl)}"></video>`;
+      else if(type.startsWith('audio/'))attachment=`<audio controls src="${esc(fileUrl)}" style="margin-top:6px;max-width:260px"></audio>`;
+      else attachment=`<a href="${esc(fileUrl)}" target="_blank" rel="noopener">📎 ${esc(fileName)}</a>`;
+    }
+    const reactions=Object.values(m.reactions||{});
+    const count={};reactions.forEach(r=>count[r]=(count[r]||0)+1);
+    const pills=Object.entries(count).map(([r,n])=>`<span style="font-size:12px">${esc(r)} ${n}</span>`).join(' ');
+    return `<div class="gc-bubble-row ${mine?'me':''}">
+      ${mine?'':`<img src="${esc(photo)}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;margin-right:6px">`}
+      <div class="gc-bubble ${mine?'mine':''}">
+        <small style="font-weight:700">${esc(m.senderName||m.senderEmail||'Member')}</small>
+        ${m.text?`<div>${esc(m.text)}</div>`:''}${attachment}
+        <div style="display:flex;gap:8px;margin-top:5px">
+          <button onclick="GETIChat.reactGroup('${esc(m.id)}','❤️')" style="border:0;background:none;cursor:pointer">❤️</button>
+          <button onclick="GETIChat.reactGroup('${esc(m.id)}','👍')" style="border:0;background:none;cursor:pointer">👍</button>
+          <button onclick="GETIChat.reactGroup('${esc(m.id)}','😂')" style="border:0;background:none;cursor:pointer">😂</button>
+          ${pills}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  async function sendGroup(){
+    try{
+      const s=ses(),text=($('gcGroupText')?.value||'').trim();
+      const fp=await filePayload($('gcGroupFile'));
+      if(!text&&!fp.fileURL)return;
+      await apiPost({
+        action:'groupSendMessage',
+        token:s.token,
+        groupId:'GETI_GENERAL',
+        text,
+        fileName:fp.fileName||'',
+        fileURL:fp.fileURL||'',
+        fileType:fp.fileType||''
+      });
+      $('gcGroupText').value='';
+      $('gcGroupFile').value='';
+      $('gcGroupFileName').textContent='';
+      await renderGeneralGroup(true);
+    }catch(e){alert(e.message)}
+  }
+
+  async function reactGroup(messageId,reaction){
+    const s=ses();
+    await apiPost({action:'groupReact',token:s.token,groupId:'GETI_GENERAL',messageId,reaction});
+    await renderGeneralGroup(true);
+  }
+
+  let typingTimer=null;
+  function groupTyping(){
+    const s=ses();if(!s)return;
+    apiPost({action:'presenceUpdate',token:s.token,typingContext:'GETI_GENERAL'},0).catch(()=>{});
+    clearTimeout(typingTimer);
+    typingTimer=setTimeout(()=>apiPost({action:'presenceUpdate',token:s.token,typingContext:''},0).catch(()=>{}),1800);
+  }
+
+async function renderUser(refreshOnly=false){
     const s=ses();if(!s||s.role!=='user')return loginView();
     if(!refreshOnly){
       root().innerHTML=`<div class="gc-chat mobile-open">
         <main class="gc-main" style="display:flex">
-          <div class="gc-chat-top"><div class="gc-brand-row"><div class="gc-avatar gc-avatar-admin">A</div><div><strong>GETI Administrator</strong><small><span class="gc-online-dot"></span> Online support · ${esc(s.email)}</small></div></div><button class="gc-btn light" onclick="GETIChat.logout()">Logout</button></div>
+          <div class="gc-chat-top"><div class="gc-brand-row"><div class="gc-avatar gc-avatar-admin">A</div><div><strong>GETI Administrator</strong><small><span class="gc-online-dot"></span> Online support · ${esc(s.email)}</small></div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="gc-btn light" onclick="GETIChat.renderGeneralGroup()">👥 Students Group</button><button class="gc-btn light" onclick="GETIChat.openProfile()">Profile</button><button class="gc-btn light" onclick="GETIChat.logout()">Logout</button></div></div>
           <div id="gcUserMessages" class="gc-messages"><div class="gc-empty">Loading conversation…</div></div>
           <div class="gc-compose">
-            <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcUserFile" type="file" accept="image/*,application/pdf,.pdf" hidden onchange="GETIChat.showFileName('gcUserFile','gcUserFileName')"></label>
+            <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcUserFile" type="file" accept="image/*,video/*,audio/*,application/pdf,.pdf" hidden onchange="GETIChat.showFileName('gcUserFile','gcUserFileName')"></label>
             <textarea id="gcUserText" placeholder="Write a message…" onkeydown="GETIChat.enterSend(event,'user')" oninput="GETIChat.autoGrow(this)"></textarea>
             <button class="gc-btn blue" onclick="GETIChat.sendUser()">Send ➤</button>
             <div id="gcUserFileName" class="gc-file-preview"></div>
@@ -5051,7 +5242,7 @@ window.GETIChat=(function(){
       <aside class="gc-sidebar">
         <div class="gc-side-top"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Administrator</strong><button class="gc-btn light" onclick="GETIChat.logout()">Logout</button></div>
         <input id="gcSearch" class="gc-search" placeholder="Search name or email…" oninput="GETIChat.loadThreads()"></div>
-        <div class="gc-admin-tabs"><button class="gc-btn ${adminMode==='messages'?'blue':'light'}" onclick="GETIChat.adminMessages()">Messages</button><button class="gc-btn ${adminMode==='results'?'blue':'light'}" onclick="GETIChat.adminResults()">Exam results</button></div>
+        <div class="gc-admin-tabs"><button class="gc-btn ${adminMode==='messages'?'blue':'light'}" onclick="GETIChat.adminMessages()">Messages</button><button class="gc-btn light" onclick="GETIChat.renderGeneralGroup()">Students Group</button><button class="gc-btn light" onclick="GETIChat.openProfile()">Profile</button><button class="gc-btn ${adminMode==='results'?'blue':'light'}" onclick="GETIChat.adminResults()">Exam results</button></div>
         <div id="gcThreadList" class="gc-list"></div>
       </aside>
       <main class="gc-main"><div id="gcAdminMain" style="height:100%;display:flex;flex-direction:column"><div class="gc-empty">Select a conversation.</div></div></main>
@@ -5095,7 +5286,7 @@ window.GETIChat=(function(){
       main.innerHTML=`<div class="gc-chat-top"><div class="gc-brand-row"><button class="gc-back" onclick="GETIChat.mobileBack()">←</button><div class="gc-avatar">${esc((d.messages?.[0]?.studentName||email||'?').charAt(0).toUpperCase())}</div><div><strong>${esc(d.messages?.[0]?.studentName||email)}</strong><small><span class="gc-online-dot"></span> ${esc(email)}</small></div></div><button class="gc-btn light" onclick="GETIChat.openThread('${encodeURIComponent(email)}',true)">Refresh</button></div>
         <div id="gcAdminMessages" class="gc-messages">${d.messages.length?d.messages.map(m=>messageHtml(m,'admin')).join(''):'<div class="gc-empty">No messages.</div>'}</div>
         <div class="gc-compose">
-          <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcAdminFile" type="file" accept="image/*,application/pdf,.pdf" hidden onchange="GETIChat.showFileName('gcAdminFile','gcAdminFileName')"></label>
+          <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcAdminFile" type="file" accept="image/*,video/*,audio/*,application/pdf,.pdf" hidden onchange="GETIChat.showFileName('gcAdminFile','gcAdminFileName')"></label>
           <textarea id="gcAdminText" placeholder="Write a message…" onkeydown="GETIChat.enterSend(event,'admin')" oninput="GETIChat.autoGrow(this)"></textarea>
           <button class="gc-btn blue" onclick="GETIChat.sendAdmin()">Send ➤</button>
           <div id="gcAdminFileName" class="gc-file-preview"></div>
@@ -5210,7 +5401,8 @@ window.GETIChat=(function(){
   };
 
   return {open,close,loginView,createView,forgotView,adminView,doCreate,doLogin,requestReset,resetPassword,doAdmin,logout,
-    renderUser,sendUser,renderAdmin,loadThreads,openThread,sendAdmin,adminMessages,adminResults,mobileBack,showFileName,autoGrow,enterSend};
+    renderUser,sendUser,renderAdmin,loadThreads,openThread,sendAdmin,adminMessages,adminResults,mobileBack,showFileName,autoGrow,enterSend,
+    ensureProfileThen,profileView,saveProfile,openProfile,renderGeneralGroup,sendGroup,reactGroup,groupTyping};
 })();
 </script>
 </body>
