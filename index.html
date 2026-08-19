@@ -4472,9 +4472,19 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
   <div id="getiChatRoot" class="gc-body"></div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/dist/tus.min.js"></script>
 <script>
 window.GETIChat=(function(){
   const CHAT_API_URL='https://script.google.com/macros/s/AKfycbyrYlYRBo3OCb37-PFvdpqTJCyafBrkVMGKOJIDfJd7sV_Rag3UkVIDp06IVzgoxvCpYg/exec';
+
+  /* Supabase Storage — GETI attachments */
+  const SUPABASE_PROJECT_REF='syawyulrelrhjprnxdyn';
+  const SUPABASE_URL='https://syawyulrelrhjprnxdyn.supabase.co';
+  const SUPABASE_STORAGE_URL='https://syawyulrelrhjprnxdyn.storage.supabase.co';
+  const SUPABASE_BUCKET='geti-chat';
+  const SUPABASE_PUBLISHABLE_KEY='sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8';
+  const SUPABASE_ANON_JWT='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5YXd5dWxyZWxyaGpwcm54ZHluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxNDEwMTYsImV4cCI6MjEwMjcxNzAxNn0.9k3UYcdXxDivpciWPnOSVV1cwP8dNLvtI3t810eYHi0';
+
   const RESULT_API_KEY='GETI-RESULT-2026';
   const SESSION_KEY='GETI_WORLD_CHAT_SESSION';
   let pollTimer=null, activeEmail=null, adminMode='messages', adminRenderedEmail=null;
@@ -4703,83 +4713,205 @@ window.GETIChat=(function(){
     if(el)el.classList.remove('show');
   }
 
+  function safeStoragePart(value){
+    return String(value||'')
+      .trim()
+      .replace(/[^a-zA-Z0-9._-]+/g,'_')
+      .replace(/^_+|_+$/g,'')
+      .slice(0,120) || 'file';
+  }
+
+  function storagePublicUrl(objectPath){
+    return SUPABASE_URL+
+      '/storage/v1/object/public/'+
+      encodeURIComponent(SUPABASE_BUCKET)+'/'+
+      String(objectPath).split('/').map(encodeURIComponent).join('/');
+  }
+
   async function filePayload(input){
     const f=input?.files?.[0];
-    if(!f)return {fileName:'',fileUrl:'',fileURL:'',fileId:'',mimeType:'',fileType:''};
+    if(!f){
+      return {
+        fileName:'',
+        fileUrl:'',
+        fileURL:'',
+        fileId:'',
+        mimeType:'',
+        fileType:''
+      };
+    }
 
-    const allowed=(f.type==='application/pdf')||String(f.type||'').startsWith('image/');
-    if(!allowed)throw new Error('Only images and PDF files are allowed.');
-    if(f.size>15*1024*1024)throw new Error('Maximum file size is 15 MB.');
+    const allowed=
+      f.type==='application/pdf' ||
+      String(f.type||'').startsWith('image/') ||
+      /\.pdf$/i.test(f.name||'') ||
+      /\.(png|jpe?g|gif|webp|bmp|heic|heif)$/i.test(f.name||'');
+
+    if(!allowed){
+      throw new Error('Only photos/images and PDF files are allowed.');
+    }
 
     const s=ses();
-    if(!s?.token)throw new Error('Please sign in again.');
+    if(!s?.token){
+      throw new Error('Please sign in again.');
+    }
+
+    if(!window.tus || !window.tus.Upload){
+      throw new Error('Upload library did not load. Check the internet connection and reload the page.');
+    }
+
+    const roleFolder=s.role==='admin'?'admin':'student';
+    const emailFolder=safeStoragePart(s.email||'unknown');
+    const originalName=safeStoragePart(f.name||'attachment');
+    const uniqueName=
+      Date.now()+'_'+
+      Math.random().toString(36).slice(2,10)+'_'+
+      originalName;
+
+    const objectPath=
+      'messages/'+
+      roleFolder+'/'+
+      emailFolder+'/'+
+      uniqueName;
 
     showUploadProgress(f);
+    setUploadProgress(0);
+
     try{
-      setUploadProgress(1);
-      const dataURL=await new Promise((res,rej)=>{
-        const r=new FileReader();
-        r.onload=()=>res(String(r.result||''));
-        r.onerror=()=>rej(new Error('Unable to read the selected file.'));
-        r.readAsDataURL(f);
+      await new Promise((resolve,reject)=>{
+        const upload=new tus.Upload(f,{
+          endpoint:
+            SUPABASE_STORAGE_URL+
+            '/storage/v1/upload/resumable',
+
+          retryDelays:[
+            0,
+            1000,
+            3000,
+            5000,
+            10000,
+            20000
+          ],
+
+          headers:{
+            authorization:
+              'Bearer '+SUPABASE_ANON_JWT,
+            apikey:
+              SUPABASE_PUBLISHABLE_KEY,
+            'x-upsert':'false'
+          },
+
+          uploadDataDuringCreation:true,
+          removeFingerprintOnSuccess:true,
+
+          /* Supabase currently requires 6 MB chunks for TUS uploads. */
+          chunkSize:6*1024*1024,
+
+          metadata:{
+            bucketName:SUPABASE_BUCKET,
+            objectName:objectPath,
+            contentType:
+              f.type ||
+              (
+                /\.pdf$/i.test(f.name||'')
+                ? 'application/pdf'
+                : 'application/octet-stream'
+              ),
+            cacheControl:'3600'
+          },
+
+          onError:function(error){
+            console.error('Supabase upload error:',error);
+            reject(
+              new Error(
+                error?.message ||
+                'Unable to upload the selected file.'
+              )
+            );
+          },
+
+          onProgress:function(bytesUploaded,bytesTotal){
+            const percent=
+              bytesTotal>0
+                ? (bytesUploaded/bytesTotal)*100
+                : 0;
+
+            setUploadProgress(percent);
+          },
+
+          onSuccess:function(){
+            setUploadProgress(100);
+            resolve();
+          }
+        });
+
+        upload.findPreviousUploads()
+          .then(function(previousUploads){
+            if(previousUploads.length){
+              upload.resumeFromPreviousUpload(
+                previousUploads[0]
+              );
+            }
+            upload.start();
+          })
+          .catch(function(error){
+            console.error(
+              'Unable to inspect previous upload:',
+              error
+            );
+            upload.start();
+          });
       });
 
-      const comma=dataURL.indexOf(',');
-      const rawBase64=comma>=0?dataURL.slice(comma+1):dataURL;
+      const publicUrl=
+        storagePublicUrl(objectPath);
 
-      // Larger chunks = far fewer requests; each chunk remains under 400 KB backend limit.
-      const CHUNK_SIZE=300000;
-      const totalChunks=Math.ceil(rawBase64.length/CHUNK_SIZE);
-
-      setUploadProgress(3);
-      const init=await apiPost({
-        action:'uploadInit',
-        token:s.token,
-        fileName:f.name,
-        mimeType:f.type||'application/octet-stream',
-        fileSize:f.size,
-        totalChunks
-      },2);
-      if(!init.uploadId)throw new Error('Unable to initialize upload.');
-
-      const uploadId=init.uploadId;
-
-      for(let i=0;i<totalChunks;i++){
-        const chunk=rawBase64.slice(i*CHUNK_SIZE,Math.min((i+1)*CHUNK_SIZE,rawBase64.length));
-        await apiPost({action:'uploadChunk',token:s.token,uploadId,index:i,chunk},3);
-        const progress=4+Math.round(((i+1)/totalChunks)*90);
-        setUploadProgress(progress);
-      }
-
-      setUploadProgress(95);
-      const up=await apiPost({
-        action:'uploadFinish',
-        token:s.token,
-        uploadId,
-        totalChunks
-      },2);
-
-      const url=up.fileURL||up.fileUrl||'';
-      if(!url)throw new Error('Upload finished but no file URL was returned.');
-      setUploadProgress(100);
-      await new Promise(r=>setTimeout(r,500));
+      await new Promise(
+        r=>setTimeout(r,350)
+      );
 
       return {
-        fileName:up.fileName||f.name,
-        fileUrl:url,
-        fileURL:url,
-        fileId:up.fileId||'',
-        mimeType:up.mimeType||up.fileType||f.type||'application/octet-stream',
-        fileType:up.fileType||up.mimeType||f.type||'application/octet-stream'
+        fileName:f.name,
+        fileUrl:publicUrl,
+        fileURL:publicUrl,
+        fileId:objectPath,
+        mimeType:
+          f.type ||
+          (
+            /\.pdf$/i.test(f.name||'')
+            ? 'application/pdf'
+            : 'application/octet-stream'
+          ),
+        fileType:
+          f.type ||
+          (
+            /\.pdf$/i.test(f.name||'')
+            ? 'application/pdf'
+            : 'application/octet-stream'
+          )
       };
+
     }catch(err){
       const title=$('gcUploadTitle');
       const note=$('gcUploadNote');
-      if(title)title.textContent='Upload failed';
-      if(note)note.textContent=err.message||'Please try again';
-      await new Promise(r=>setTimeout(r,1200));
+
+      if(title){
+        title.textContent='Upload failed';
+      }
+
+      if(note){
+        note.textContent=
+          err.message ||
+          'Please try again';
+      }
+
+      await new Promise(
+        r=>setTimeout(r,1300)
+      );
+
       throw err;
-    } finally {
+
+    }finally{
       hideUploadProgress();
     }
   }
