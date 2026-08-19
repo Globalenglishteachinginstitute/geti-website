@@ -4466,7 +4466,7 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 <button id="getiChatFab" onclick="GETIChat.open()"><span class="gc-fab-icon">💬</span><span class="gc-fab-label">Chat with Administrator</span></button>
 <div id="getiChatShell">
   <div class="gc-head">
-    <div class="gc-brand-row"><div class="gc-avatar gc-avatar-admin">A</div><div><strong>GETI Messenger</strong><small><span class="gc-online-dot"></span> Administrator support</small></div></div>
+    <div class="gc-brand-row"><div class="gc-avatar gc-avatar-admin">A</div><div><strong>GETI Messenger</strong><small><span class="gc-online-dot"></span> Administrator support · GETI_SUPABASE_FORCE_FINAL_20260820_0500</small></div></div>
     <button class="gc-x" onclick="GETIChat.close()">×</button>
   </div>
   <div id="getiChatRoot" class="gc-body"></div>
@@ -4474,6 +4474,7 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/dist/tus.min.js"></script>
 <script>
+window.GETI_CHAT_BUILD='GETI_SUPABASE_FORCE_FINAL_20260820_0500'; console.log('GETI chat build:',window.GETI_CHAT_BUILD);
 window.GETIChat=(function(){
   const CHAT_API_URL='https://script.google.com/macros/s/AKfycbyrYlYRBo3OCb37-PFvdpqTJCyafBrkVMGKOJIDfJd7sV_Rag3UkVIDp06IVzgoxvCpYg/exec';
 
@@ -4498,30 +4499,54 @@ window.GETIChat=(function(){
 
   async function apiPost(payload, retries=2){
     if(!configured()) throw new Error('Online chat backend is not configured yet.');
+
     let lastErr;
+
     for(let attempt=0;attempt<=retries;attempt++){
       try{
-        const r=await fetch(CHAT_API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+        const url=CHAT_API_URL+'?v='+Date.now()+'&build='+encodeURIComponent(window.GETI_CHAT_BUILD||'');
+        const r=await fetch(url,{
+          method:'POST',
+          mode:'cors',
+          redirect:'follow',
+          cache:'no-store',
+          headers:{
+            'Content-Type':'text/plain;charset=utf-8',
+            'Cache-Control':'no-cache'
+          },
+          body:JSON.stringify(payload)
+        });
+
         const txt=await r.text();
+        console.log('GETI backend raw:',txt);
+
         let d;
         try{
           d=JSON.parse(txt);
         }catch(_){
-          console.error('GETI raw server response:',txt);
-          throw new Error('Invalid server response from chat backend.');
+          throw new Error('Backend returned non-JSON data: '+txt.slice(0,180));
         }
+
         if(!(d.success||d.ok)){
-          console.error('GETI backend error response:',d);
-          throw new Error(d.message||d.error||'Server error');
+          const msg=d.message||d.error||('Server error ('+r.status+')');
+          throw new Error(msg);
         }
+
         return d;
+
       }catch(err){
         lastErr=err;
-        if(attempt<retries) await new Promise(r=>setTimeout(r,700*(attempt+1)));
+        console.error('GETI apiPost attempt failed:',attempt+1,err,payload);
+
+        if(attempt<retries){
+          await new Promise(r=>setTimeout(r,700*(attempt+1)));
+        }
       }
     }
-    throw lastErr||new Error('Upload connection failed');
+
+    throw lastErr||new Error('Connection failed');
   }
+
   async function apiGet(params){
     if(!configured()) throw new Error('Online chat backend is not configured yet.');
     const r=await fetch(CHAT_API_URL+'?'+new URLSearchParams(params).toString());
@@ -4947,33 +4972,45 @@ window.GETIChat=(function(){
     if(!refreshOnly)startPoll(()=>renderUser(true));
   }
   async function sendUser(){
+    const s=ses();
+    if(!s?.token)return alert('Please sign in again.');
+
+    const box=$('gcUserText');
+    const input=$('gcUserFile');
+    const text=(box?.value||'').trim();
+
     try{
-      const s=ses();
-      const box=$('gcUserText');
-      const text=box.value.trim();
-      const fp=await filePayload($('gcUserFile'));
+      const fp=await filePayload(input);
 
       if(!text && !fp.fileURL)return;
 
-      await apiPost({
+      const payload={
         action:'studentSendMessage',
-        token:s.token,
-        text:text,
-        message:text,
-        fileName:fp.fileName || '',
-        fileURL:fp.fileURL || fp.fileUrl || '',
-        fileType:fp.fileType || fp.mimeType || ''
-      });
+        token:String(s.token),
+        text:String(text||''),
+        message:String(text||''),
+        fileName:String(fp.fileName||''),
+        fileURL:String(fp.fileURL||''),
+        fileType:String(fp.fileType||'')
+      };
 
-      box.value='';
-      box.style.height='auto';
-      $('gcUserFile').value='';
-      $('gcUserFileName').textContent='';
+      console.log('GETI SEND USER PAYLOAD',payload);
+
+      const result=await apiPost(payload,0);
+      console.log('GETI SEND USER RESULT',result);
+
+      if(box){
+        box.value='';
+        box.style.height='auto';
+      }
+      if(input)input.value='';
+      if($('gcUserFileName'))$('gcUserFileName').textContent='';
+
       await renderUser(true);
 
     }catch(e){
-      console.error('GETI student send error:',e);
-      alert(e.message || 'Unable to send message.');
+      console.error('GETI SEND USER ERROR',e);
+      alert('SEND ERROR: '+(e?.message||String(e)));
     }
   }
 
@@ -5054,40 +5091,50 @@ window.GETIChat=(function(){
     }
   }
   async function sendAdmin(){
-    try{
-      const s=ses();
-      if(!activeEmail)throw new Error('Select a student conversation first.');
+    const s=ses();
 
-      const box=$('gcAdminText');
-      const text=(box?.value || '').trim();
-      const fp=await filePayload($('gcAdminFile'));
+    if(!s?.token)return alert('Please sign in again.');
+    if(!activeEmail)return alert('Select a student conversation first.');
+
+    const box=$('gcAdminText');
+    const input=$('gcAdminFile');
+    const text=(box?.value||'').trim();
+
+    try{
+      const fp=await filePayload(input);
 
       if(!text && !fp.fileURL)return;
 
-      await apiPost({
+      const payload={
         action:'adminSendMessage',
-        token:s.token,
-        studentEmail:activeEmail,
-        email:activeEmail,
-        text:text,
-        message:text,
-        fileName:fp.fileName || '',
-        fileURL:fp.fileURL || fp.fileUrl || '',
-        fileType:fp.fileType || fp.mimeType || ''
-      });
+        token:String(s.token),
+        studentEmail:String(activeEmail),
+        email:String(activeEmail),
+        text:String(text||''),
+        message:String(text||''),
+        fileName:String(fp.fileName||''),
+        fileURL:String(fp.fileURL||''),
+        fileType:String(fp.fileType||'')
+      };
+
+      console.log('GETI SEND ADMIN PAYLOAD',payload);
+
+      const result=await apiPost(payload,0);
+      console.log('GETI SEND ADMIN RESULT',result);
 
       if(box){
         box.value='';
         box.style.height='auto';
       }
+      if(input)input.value='';
       if($('gcAdminFile'))$('gcAdminFile').value='';
       if($('gcAdminFileName'))$('gcAdminFileName').textContent='';
 
       await openThread(encodeURIComponent(activeEmail),true);
 
     }catch(e){
-      console.error('GETI admin send error:',e);
-      alert(e.message || 'Unable to send message.');
+      console.error('GETI SEND ADMIN ERROR',e);
+      alert('SEND ERROR: '+(e?.message||String(e)));
     }
   }
 
