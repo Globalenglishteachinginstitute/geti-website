@@ -4472,7 +4472,6 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
   <div id="getiChatRoot" class="gc-body"></div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/dist/tus.min.js"></script>
 <script>
 window.GETI_CHAT_BUILD='GETI_SUPABASE_CORS_FIXED_20260820_0500'; console.log('GETI chat build:',window.GETI_CHAT_BUILD);
 window.GETIChat=(function(){
@@ -4755,12 +4754,107 @@ window.GETIChat=(function(){
   function storagePublicUrl(objectPath){
     return SUPABASE_URL+
       '/storage/v1/object/public/'+
-      encodeURIComponent(SUPABASE_BUCKET)+'/'+
+      SUPABASE_BUCKET+'/'+
       String(objectPath).split('/').map(encodeURIComponent).join('/');
+  }
+
+  function directSupabaseUpload(file,objectPath){
+    return new Promise((resolve,reject)=>{
+      const xhr=new XMLHttpRequest();
+
+      const endpoint=
+        SUPABASE_URL+
+        '/storage/v1/object/'+
+        SUPABASE_BUCKET+'/'+
+        String(objectPath).split('/').map(encodeURIComponent).join('/');
+
+      xhr.open('POST',endpoint,true);
+
+      xhr.setRequestHeader(
+        'Authorization',
+        'Bearer '+SUPABASE_ANON_JWT
+      );
+
+      xhr.setRequestHeader(
+        'apikey',
+        SUPABASE_PUBLISHABLE_KEY
+      );
+
+      xhr.setRequestHeader(
+        'Content-Type',
+        file.type || 'application/octet-stream'
+      );
+
+      xhr.setRequestHeader(
+        'x-upsert',
+        'false'
+      );
+
+      xhr.upload.onprogress=function(e){
+        if(e.lengthComputable){
+          setUploadProgress(
+            (e.loaded/e.total)*100
+          );
+        }
+      };
+
+      xhr.onerror=function(){
+        reject(
+          new Error(
+            'Network error while uploading to Supabase.'
+          )
+        );
+      };
+
+      xhr.ontimeout=function(){
+        reject(
+          new Error(
+            'Upload timed out.'
+          )
+        );
+      };
+
+      xhr.onload=function(){
+        let data={};
+
+        try{
+          data=JSON.parse(
+            xhr.responseText || '{}'
+          );
+        }catch(_){}
+
+        if(
+          xhr.status>=200 &&
+          xhr.status<300
+        ){
+          setUploadProgress(100);
+          resolve(data);
+          return;
+        }
+
+        console.error(
+          'Supabase upload response:',
+          xhr.status,
+          xhr.responseText
+        );
+
+        reject(
+          new Error(
+            data.message ||
+            data.error ||
+            ('Supabase upload failed ('+xhr.status+')')
+          )
+        );
+      };
+
+      xhr.timeout=10*60*1000;
+      xhr.send(file);
+    });
   }
 
   async function filePayload(input){
     const f=input?.files?.[0];
+
     if(!f){
       return {
         fileName:'',
@@ -4779,24 +4873,41 @@ window.GETIChat=(function(){
       /\.(png|jpe?g|gif|webp|bmp|heic|heif)$/i.test(f.name||'');
 
     if(!allowed){
-      throw new Error('Only photos/images and PDF files are allowed.');
+      throw new Error(
+        'Only photos/images and PDF files are allowed.'
+      );
     }
 
     const s=ses();
+
     if(!s?.token){
-      throw new Error('Please sign in again.');
+      throw new Error(
+        'Please sign in again.'
+      );
     }
 
-    if(!window.tus || !window.tus.Upload){
-      throw new Error('Upload library did not load. Check the internet connection and reload the page.');
-    }
+    const roleFolder=
+      s.role==='admin'
+        ? 'admin'
+        : 'student';
 
-    const roleFolder=s.role==='admin'?'admin':'student';
-    const emailFolder=safeStoragePart(s.email||'unknown');
-    const originalName=safeStoragePart(f.name||'attachment');
+    const emailFolder=
+      safeStoragePart(
+        s.email || 'unknown'
+      );
+
+    const originalName=
+      safeStoragePart(
+        f.name || 'attachment'
+      );
+
     const uniqueName=
-      Date.now()+'_'+
-      Math.random().toString(36).slice(2,10)+'_'+
+      Date.now()+
+      '_'+
+      Math.random()
+        .toString(36)
+        .slice(2,10)+
+      '_'+
       originalName;
 
     const objectPath=
@@ -4806,106 +4917,28 @@ window.GETIChat=(function(){
       uniqueName;
 
     showUploadProgress(f);
-    setUploadProgress(0);
 
     try{
-      await new Promise((resolve,reject)=>{
-        const upload=new tus.Upload(f,{
-          endpoint:
-            SUPABASE_STORAGE_URL+
-            '/storage/v1/upload/resumable',
+      setUploadProgress(0);
 
-          retryDelays:[
-            0,
-            1000,
-            3000,
-            5000,
-            10000,
-            20000
-          ],
-
-          headers:{
-            authorization:
-              'Bearer '+SUPABASE_ANON_JWT,
-            apikey:
-              SUPABASE_PUBLISHABLE_KEY,
-            'x-upsert':'false'
-          },
-
-          uploadDataDuringCreation:true,
-          removeFingerprintOnSuccess:true,
-
-          /* Supabase currently requires 6 MB chunks for TUS uploads. */
-          chunkSize:6*1024*1024,
-
-          metadata:{
-            bucketName:SUPABASE_BUCKET,
-            objectName:objectPath,
-            contentType:
-              f.type ||
-              (
-                /\.pdf$/i.test(f.name||'')
-                ? 'application/pdf'
-                : 'application/octet-stream'
-              ),
-            cacheControl:'3600'
-          },
-
-          onError:function(error){
-            console.error('Supabase upload error:',error);
-            reject(
-              new Error(
-                error?.message ||
-                'Unable to upload the selected file.'
-              )
-            );
-          },
-
-          onProgress:function(bytesUploaded,bytesTotal){
-            const percent=
-              bytesTotal>0
-                ? (bytesUploaded/bytesTotal)*100
-                : 0;
-
-            setUploadProgress(percent);
-          },
-
-          onSuccess:function(){
-            setUploadProgress(100);
-            resolve();
-          }
-        });
-
-        upload.findPreviousUploads()
-          .then(function(previousUploads){
-            if(previousUploads.length){
-              upload.resumeFromPreviousUpload(
-                previousUploads[0]
-              );
-            }
-            upload.start();
-          })
-          .catch(function(error){
-            console.error(
-              'Unable to inspect previous upload:',
-              error
-            );
-            upload.start();
-          });
-      });
+      const uploaded=
+        await directSupabaseUpload(
+          f,
+          objectPath
+        );
 
       const publicUrl=
-        storagePublicUrl(objectPath);
-
-      await new Promise(
-        r=>setTimeout(r,350)
-      );
+        storagePublicUrl(
+          objectPath
+        );
 
       return {
         fileName:f.name,
         fileUrl:publicUrl,
         fileURL:publicUrl,
-        fileId:objectPath,
+        fileId:
+          uploaded.path ||
+          objectPath,
         mimeType:
           f.type ||
           (
@@ -4927,7 +4960,8 @@ window.GETIChat=(function(){
       const note=$('gcUploadNote');
 
       if(title){
-        title.textContent='Upload failed';
+        title.textContent=
+          'Upload failed';
       }
 
       if(note){
@@ -4937,7 +4971,7 @@ window.GETIChat=(function(){
       }
 
       await new Promise(
-        r=>setTimeout(r,1300)
+        r=>setTimeout(r,1200)
       );
 
       throw err;
@@ -4955,7 +4989,7 @@ window.GETIChat=(function(){
           <div class="gc-chat-top"><div class="gc-brand-row"><div class="gc-avatar gc-avatar-admin">A</div><div><strong>GETI Administrator</strong><small><span class="gc-online-dot"></span> Online support · ${esc(s.email)}</small></div></div><button class="gc-btn light" onclick="GETIChat.logout()">Logout</button></div>
           <div id="gcUserMessages" class="gc-messages"><div class="gc-empty">Loading conversation…</div></div>
           <div class="gc-compose">
-            <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcUserFile" type="file" accept="image/*,.pdf,application/pdf" hidden onchange="GETIChat.showFileName('gcUserFile','gcUserFileName')"></label>
+            <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcUserFile" type="file" accept="image/*,application/pdf,.pdf" hidden onchange="GETIChat.showFileName('gcUserFile','gcUserFileName')"></label>
             <textarea id="gcUserText" placeholder="Write a message…" onkeydown="GETIChat.enterSend(event,'user')" oninput="GETIChat.autoGrow(this)"></textarea>
             <button class="gc-btn blue" onclick="GETIChat.sendUser()">Send ➤</button>
             <div id="gcUserFileName" class="gc-file-preview"></div>
@@ -5061,7 +5095,7 @@ window.GETIChat=(function(){
       main.innerHTML=`<div class="gc-chat-top"><div class="gc-brand-row"><button class="gc-back" onclick="GETIChat.mobileBack()">←</button><div class="gc-avatar">${esc((d.messages?.[0]?.studentName||email||'?').charAt(0).toUpperCase())}</div><div><strong>${esc(d.messages?.[0]?.studentName||email)}</strong><small><span class="gc-online-dot"></span> ${esc(email)}</small></div></div><button class="gc-btn light" onclick="GETIChat.openThread('${encodeURIComponent(email)}',true)">Refresh</button></div>
         <div id="gcAdminMessages" class="gc-messages">${d.messages.length?d.messages.map(m=>messageHtml(m,'admin')).join(''):'<div class="gc-empty">No messages.</div>'}</div>
         <div class="gc-compose">
-          <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcAdminFile" type="file" accept="image/*,.pdf,application/pdf" hidden onchange="GETIChat.showFileName('gcAdminFile','gcAdminFileName')"></label>
+          <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcAdminFile" type="file" accept="image/*,application/pdf,.pdf" hidden onchange="GETIChat.showFileName('gcAdminFile','gcAdminFileName')"></label>
           <textarea id="gcAdminText" placeholder="Write a message…" onkeydown="GETIChat.enterSend(event,'admin')" oninput="GETIChat.autoGrow(this)"></textarea>
           <button class="gc-btn blue" onclick="GETIChat.sendAdmin()">Send ➤</button>
           <div id="gcAdminFileName" class="gc-file-preview"></div>
