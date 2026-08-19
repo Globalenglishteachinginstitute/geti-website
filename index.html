@@ -4428,10 +4428,22 @@ window.GETIChat=(function(){
   const root=()=>$('getiChatRoot');
   const configured=()=>/^https:\/\/script\.google\.com\/macros\/s\//.test(CHAT_API_URL);
 
-  async function apiPost(payload){
+  async function apiPost(payload, retries=2){
     if(!configured()) throw new Error('Online chat backend is not configured yet.');
-    const r=await fetch(CHAT_API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
-    const d=await r.json(); if(!(d.success||d.ok)) throw new Error(d.message||d.error||'Server error'); return d;
+    let lastErr;
+    for(let attempt=0;attempt<=retries;attempt++){
+      try{
+        const r=await fetch(CHAT_API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+        const txt=await r.text();
+        let d; try{d=JSON.parse(txt)}catch(_){throw new Error('Invalid server response');}
+        if(!(d.success||d.ok)) throw new Error(d.message||d.error||'Server error');
+        return d;
+      }catch(err){
+        lastErr=err;
+        if(attempt<retries) await new Promise(r=>setTimeout(r,700*(attempt+1)));
+      }
+    }
+    throw lastErr||new Error('Upload connection failed');
   }
   async function apiGet(params){
     if(!configured()) throw new Error('Online chat backend is not configured yet.');
@@ -4578,7 +4590,7 @@ window.GETIChat=(function(){
 
     showUploadProgress(f);
     try{
-      setUploadProgress(2);
+      setUploadProgress(1);
       const dataURL=await new Promise((res,rej)=>{
         const r=new FileReader();
         r.onload=()=>res(String(r.result||''));
@@ -4589,39 +4601,42 @@ window.GETIChat=(function(){
       const comma=dataURL.indexOf(',');
       const rawBase64=comma>=0?dataURL.slice(comma+1):dataURL;
 
-      setUploadProgress(5);
+      // Larger chunks = far fewer requests; each chunk remains under 400 KB backend limit.
+      const CHUNK_SIZE=300000;
+      const totalChunks=Math.ceil(rawBase64.length/CHUNK_SIZE);
+
+      setUploadProgress(3);
       const init=await apiPost({
         action:'uploadInit',
         token:s.token,
         fileName:f.name,
         mimeType:f.type||'application/octet-stream',
-        fileSize:f.size
-      });
+        fileSize:f.size,
+        totalChunks
+      },2);
       if(!init.uploadId)throw new Error('Unable to initialize upload.');
 
       const uploadId=init.uploadId;
-      const CHUNK_SIZE=50000;
-      const totalChunks=Math.ceil(rawBase64.length/CHUNK_SIZE);
 
       for(let i=0;i<totalChunks;i++){
         const chunk=rawBase64.slice(i*CHUNK_SIZE,Math.min((i+1)*CHUNK_SIZE,rawBase64.length));
-        await apiPost({action:'uploadChunk',token:s.token,uploadId,index:i,chunk});
-        const progress=5+Math.round(((i+1)/totalChunks)*90);
+        await apiPost({action:'uploadChunk',token:s.token,uploadId,index:i,chunk},3);
+        const progress=4+Math.round(((i+1)/totalChunks)*90);
         setUploadProgress(progress);
       }
 
-      setUploadProgress(97);
+      setUploadProgress(95);
       const up=await apiPost({
         action:'uploadFinish',
         token:s.token,
         uploadId,
         totalChunks
-      });
+      },2);
 
       const url=up.fileURL||up.fileUrl||'';
       if(!url)throw new Error('Upload finished but no file URL was returned.');
       setUploadProgress(100);
-      await new Promise(r=>setTimeout(r,350));
+      await new Promise(r=>setTimeout(r,500));
 
       return {
         fileName:up.fileName||f.name,
@@ -4631,6 +4646,13 @@ window.GETIChat=(function(){
         mimeType:up.mimeType||up.fileType||f.type||'application/octet-stream',
         fileType:up.fileType||up.mimeType||f.type||'application/octet-stream'
       };
+    }catch(err){
+      const title=$('gcUploadTitle');
+      const note=$('gcUploadNote');
+      if(title)title.textContent='Upload failed';
+      if(note)note.textContent=err.message||'Please try again';
+      await new Promise(r=>setTimeout(r,1200));
+      throw err;
     } finally {
       hideUploadProgress();
     }
