@@ -4466,7 +4466,7 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 <button id="getiChatFab" onclick="GETIChat.open()"><span class="gc-fab-icon">💬</span><span class="gc-fab-label">Chat with Administrator</span></button>
 <div id="getiChatShell">
   <div class="gc-head">
-    <div class="gc-brand-row"><div class="gc-avatar gc-avatar-admin">A</div><div><strong>GETI Messenger</strong><small><span class="gc-online-dot"></span> Administrator support · GETI_SUPABASE_FORCE_FINAL_20260820_0500</small></div></div>
+    <div class="gc-brand-row"><div class="gc-avatar gc-avatar-admin">A</div><div><strong>GETI Messenger</strong><small><span class="gc-online-dot"></span> Administrator support · GETI_SUPABASE_CORS_FIXED_20260820_0500</small></div></div>
     <button class="gc-x" onclick="GETIChat.close()">×</button>
   </div>
   <div id="getiChatRoot" class="gc-body"></div>
@@ -4474,7 +4474,7 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/dist/tus.min.js"></script>
 <script>
-window.GETI_CHAT_BUILD='GETI_SUPABASE_FORCE_FINAL_20260820_0500'; console.log('GETI chat build:',window.GETI_CHAT_BUILD);
+window.GETI_CHAT_BUILD='GETI_SUPABASE_CORS_FIXED_20260820_0500'; console.log('GETI chat build:',window.GETI_CHAT_BUILD);
 window.GETIChat=(function(){
   const CHAT_API_URL='https://script.google.com/macros/s/AKfycbyrYlYRBo3OCb37-PFvdpqTJCyafBrkVMGKOJIDfJd7sV_Rag3UkVIDp06IVzgoxvCpYg/exec';
 
@@ -4507,12 +4507,9 @@ window.GETIChat=(function(){
         const url=CHAT_API_URL+'?v='+Date.now()+'&build='+encodeURIComponent(window.GETI_CHAT_BUILD||'');
         const r=await fetch(url,{
           method:'POST',
-          mode:'cors',
           redirect:'follow',
-          cache:'no-store',
           headers:{
-            'Content-Type':'text/plain;charset=utf-8',
-            'Cache-Control':'no-cache'
+            'Content-Type':'text/plain;charset=utf-8'
           },
           body:JSON.stringify(payload)
         });
