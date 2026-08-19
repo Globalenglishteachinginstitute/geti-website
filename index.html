@@ -4419,7 +4419,7 @@ window.GETIChat=(function(){
   const CHAT_API_URL='https://script.google.com/macros/s/AKfycbyrYlYRBo3OCb37-PFvdpqTJCyafBrkVMGKOJIDfJd7sV_Rag3UkVIDp06IVzgoxvCpYg/exec';
   const RESULT_API_KEY='GETI-RESULT-2026';
   const SESSION_KEY='GETI_WORLD_CHAT_SESSION';
-  let pollTimer=null, activeEmail=null, adminMode='messages';
+  let pollTimer=null, activeEmail=null, adminMode='messages', adminRenderedEmail=null;
 
   const $=id=>document.getElementById(id);
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -4518,7 +4518,7 @@ window.GETIChat=(function(){
 
   function stopPoll(){if(pollTimer){clearInterval(pollTimer);pollTimer=null}}
   function startPoll(fn){stopPoll();pollTimer=setInterval(()=>{if($('getiChatShell')?.style.display==='block')fn().catch(()=>{})},3000)}
-  function logout(){stopPoll();setSes(null);activeEmail=null;loginView()}
+  function logout(){stopPoll();setSes(null);activeEmail=null;adminRenderedEmail=null;loginView()}
   function fmtTime(t){try{return new Date(t).toLocaleString()}catch(e){return ''}}
 
   function messageHtml(m,myRole){
@@ -4710,21 +4710,58 @@ window.GETIChat=(function(){
     }catch(e){if(!silent){const box=$('gcThreadList');if(box)box.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`}}
   }
   async function openThread(encoded,silent=false){
-    const email=decodeURIComponent(encoded);activeEmail=email;const s=ses();
+    const email=decodeURIComponent(encoded);
+    const switchingThread = adminRenderedEmail !== email;
+    activeEmail=email;
+    const s=ses();
+
     try{
       const d=await apiPost({action:'adminGetConversation',token:s.token,studentEmail:email});
       const main=$('gcAdminMain');if(!main)return;
-      main.innerHTML=`<div class="gc-chat-top"><div class="gc-brand-row"><button class="gc-back" onclick="GETIChat.mobileBack()">←</button><div class="gc-avatar">${esc((d.messages?.[0]?.studentName||email||'?').charAt(0).toUpperCase())}</div><div><strong>${esc(d.messages?.[0]?.studentName||email)}</strong><small><span class="gc-online-dot"></span> ${esc(email)}</small></div></div><button class="gc-btn light" onclick="GETIChat.loadThreads()">Refresh</button></div>
+
+      // IMPORTANT: when auto-refreshing the same conversation, update ONLY the messages.
+      // The textarea/composer stays mounted exactly like the Student side, so focus and typed text are never lost.
+      if(!switchingThread && $('gcAdminMessages') && $('gcAdminText')){
+        const box=$('gcAdminMessages');
+        const wasNearBottom = (box.scrollHeight - box.scrollTop - box.clientHeight) < 120;
+        box.innerHTML=d.messages.length
+          ? d.messages.map(m=>messageHtml(m,'admin')).join('')
+          : '<div class="gc-empty">No messages.</div>';
+        if(wasNearBottom) box.scrollTop=box.scrollHeight;
+        await loadThreads(true);
+        return;
+      }
+
+      adminRenderedEmail=email;
+
+      main.innerHTML=`<div class="gc-chat-top"><div class="gc-brand-row"><button class="gc-back" onclick="GETIChat.mobileBack()">←</button><div class="gc-avatar">${esc((d.messages?.[0]?.studentName||email||'?').charAt(0).toUpperCase())}</div><div><strong>${esc(d.messages?.[0]?.studentName||email)}</strong><small><span class="gc-online-dot"></span> ${esc(email)}</small></div></div><button class="gc-btn light" onclick="GETIChat.openThread('${encodeURIComponent(email)}',true)">Refresh</button></div>
         <div id="gcAdminMessages" class="gc-messages">${d.messages.length?d.messages.map(m=>messageHtml(m,'admin')).join(''):'<div class="gc-empty">No messages.</div>'}</div>
         <div class="gc-compose">
-          <label class="gc-attach">📎<input id="gcAdminFile" type="file" accept="image/*,.pdf,application/pdf" hidden onchange="GETIChat.showFileName('gcAdminFile','gcAdminFileName')"></label>
-          <textarea id="gcAdminText" placeholder="Reply to ${esc(d.messages?.[0]?.studentName||email)}…" onkeydown="GETIChat.enterSend(event,'admin')" oninput="GETIChat.autoGrow(this)"></textarea>
+          <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcAdminFile" type="file" accept="image/*,.pdf,application/pdf" hidden onchange="GETIChat.showFileName('gcAdminFile','gcAdminFileName')"></label>
+          <textarea id="gcAdminText" placeholder="Write a message…" onkeydown="GETIChat.enterSend(event,'admin')" oninput="GETIChat.autoGrow(this)"></textarea>
           <button class="gc-btn blue" onclick="GETIChat.sendAdmin()">Send ➤</button>
           <div id="gcAdminFileName" class="gc-file-preview"></div>
         </div>`;
-      const box=$('gcAdminMessages');if(box)box.scrollTop=box.scrollHeight;
-      $('gcAdminChat')?.classList.add('mobile-open'); await loadThreads(true)
-    }catch(e){if(!silent){const main=$('gcAdminMain');if(main)main.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`}}
+
+      const box=$('gcAdminMessages');
+      if(box)box.scrollTop=box.scrollHeight;
+
+      const text=$('gcAdminText');
+      if(text){
+        text.focus();
+        text.setAttribute('autocomplete','off');
+        text.setAttribute('spellcheck','true');
+      }
+
+      $('gcAdminChat')?.classList.add('mobile-open');
+      await loadThreads(true);
+
+    }catch(e){
+      if(!silent){
+        const main=$('gcAdminMain');
+        if(main)main.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`;
+      }
+    }
   }
   async function sendAdmin(){
     try{
@@ -4748,8 +4785,8 @@ window.GETIChat=(function(){
       if(main)main.innerHTML=rows.length?`<div style="padding:18px;overflow:auto;height:100%"><h3>Examination results</h3><div style="display:grid;gap:10px">${rows.map(r=>`<div class="gc-auth-card" style="max-width:none;margin:0"><strong>${esc(r.name||r.email)}</strong><div>${esc(r.email)}</div><div>${esc(r.program||'')} · ${esc(String(r.percentage||0))}% · ${esc(r.status||'')}</div><small>${esc(r.date||r.savedAt||'')}</small></div>`).join('')}</div></div>`:'<div class="gc-empty">No online exam results yet.</div>';
     }catch(e){if(!silent){if(list)list.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`;if(main)main.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`;}}
   }
-  function adminMessages(){adminMode='messages';renderAdmin()}
-  function adminResults(){adminMode='results';renderAdmin()}
+  function adminMessages(){adminMode='messages';adminRenderedEmail=null;renderAdmin()}
+  function adminResults(){adminMode='results';adminRenderedEmail=null;renderAdmin()}
   function mobileBack(){$('gcAdminChat')?.classList.remove('mobile-open')}
   function showFileName(inputId,outId){const f=$(inputId)?.files?.[0];const o=$(outId);if(o)o.textContent=f?'Attached: '+f.name:''}
   function autoGrow(el){if(!el)return;el.style.height='auto';el.style.height=Math.min(el.scrollHeight,160)+'px'}
