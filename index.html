@@ -3627,7 +3627,6 @@ function saveExamRecord(record){
         "GETI_EXAM_RECORDS",
         JSON.stringify(records)
     );
-    try{ getiPushExamRecord(record); }catch(e){}
 
 }
 
@@ -4060,7 +4059,7 @@ window.speakInterviewQuestion=function(){let q=document.getElementById('intervie
 window.submitSubject=function(){let subjects=PROGRAM_SUBJECTS[state.program],subject=subjects[state.subjectIndex],questions=GETI_DATA[state.program][subject],score=0;if(state.program==='ENGLISH PROFICIENCY'&&subject==='Speaking'){if(speakingTimer)stopSpeaking();let totalSeconds=(state.speakingResponses||[]).reduce((a,r)=>a+(r.duration||0),0);if(totalSeconds<60)return alert('The Speaking subject requires a minimum total speaking time of 1 minute. Please continue answering the speaking topics.');let scores=state.speakingScores||[],avg=scores.length?scores.reduce((a,x)=>a+x.score,0)/scores.length:0;score=Math.round(avg/100*questions.length);state.subjectScores[state.subjectIndex]={subject,score,total:questions.length,percentage:Math.round(score/questions.length*100),grade:score>=Math.ceil(questions.length*.9)?'A':score>=Math.ceil(questions.length*.8)?'B':score>=Math.ceil(questions.length*.7)?'C':'F',speakingAssessment:{score:Math.round(avg),duration:totalSeconds,level:avg<35?'A1':avg<50?'A2':avg<65?'B1':avg<80?'B2':avg<90?'C1':'C2',criteria:['Grammar','Vocabulary','Fluency','Coherence','Relevance','Pronunciation']}};resumeMainExamTimerAfterSpeaking();}else{for(let i=0;i<questions.length;i++){if(state.answers[state.subjectIndex][i]===questions[i][5])score++;}let pct0=Math.round(score/questions.length*100);state.subjectScores[state.subjectIndex]={subject,score,total:questions.length,percentage:pct0,grade:pct0>=90?'A':pct0>=80?'B':pct0>=70?'C':'F'};}if(state.subjectIndex<subjects.length-1){state.subjectIndex++;state.questionIndex=0;showQuestion()}else showFinal(false)}
 function cefr(total){if(total<35)return'A1';if(total<50)return'A2';if(total<65)return'B1';if(total<80)return'B2';if(total<90)return'C1';return'C2'}
 function registerAttempt(passed){let email=state.student.email,program=state.program,st=getStatus(email,program);if(passed){st.fails=0;st.passedUntil=Date.now()+GETI_COOLDOWN_PASS;st.blockedUntil=0}else{st.fails=(st.fails||0)+1;if(st.fails>=3){st.blockedUntil=Date.now()+GETI_COOLDOWN_FAIL3;st.fails=0}}saveStatus(email,program,st)}
-window.showFinal=function(timedOut){stop();state.started=false;let total=0;state.subjectScores.forEach(s=>total+=s.score||0);let n=PROGRAM_SUBJECTS[state.program].reduce((sum,subject)=>sum+questionCount(state.program,subject),0);let pct=Math.round(total/n*100);let passed=pct>=70;registerAttempt(passed);let record={id:state.student.id,name:state.student.name,email:state.student.email,nationality:state.student.nationality,country:state.student.country,phone:state.student.phone,institution:state.student.institution,program:state.program,percentage:pct,totalScore:total,totalQuestions:n,status:passed?'PASSED':'FAILED',date:new Date().toISOString(),subjects:state.subjectScores,timedOut:!!timedOut};let old=storage('GETI_EXAM_RECORDS',[]).filter(r=>!(String(r.email).toLowerCase()===String(record.email).toLowerCase()&&r.program===record.program));old.push(record);setStorage('GETI_EXAM_RECORDS',old);try{getiPushExamRecord(record)}catch(e){};let rows=state.subjectScores.map(s=>`<div class="subject-result"><span>${escapeHTML(s.subject)}</span><strong>${s.percentage}% — ${s.grade}</strong></div>`).join('');let cefrBox=state.program==='ENGLISH PROFICIENCY'?`<div class="cefr-result">CEFR LEVEL: ${cefr(pct)}</div>`:'';let cert=passed?`<br><a class="btn btn-gold certificate-action" href="${GETI_CERT_URL}" target="_blank" rel="noopener">🎓 GET YOUR CERTIFICATE</a>`:'';document.getElementById('examPanel').innerHTML=`<div class="result-box"><h2>${timedOut?'⏰ TIME EXPIRED — ':''}FINAL EXAMINATION RESULT</h2><p><strong>${escapeHTML(state.student.name)}</strong></p><p>Candidate ID: <strong>${escapeHTML(state.student.id)}</strong></p><div class="final-score">${pct}%</div><h2 class="${passed?'pass':'fail'}">${passed?'PASSED':'FAILED'}</h2>${cefrBox}<div class="exam-message">${passed?'Congratulations! Your examination has been completed successfully.':'Your result is below the required 70%. Please review the lessons and try again after the temporary waiting period.'}</div><h3>Subject Results</h3>${rows}${cert}</div>`;document.getElementById('examPanel').scrollIntoView({behavior:'smooth'})}
+window.showFinal=function(timedOut){stop();state.started=false;let total=0;state.subjectScores.forEach(s=>total+=s.score||0);let n=PROGRAM_SUBJECTS[state.program].reduce((sum,subject)=>sum+questionCount(state.program,subject),0);let pct=Math.round(total/n*100);let passed=pct>=70;registerAttempt(passed);let record={id:state.student.id,name:state.student.name,email:state.student.email,nationality:state.student.nationality,country:state.student.country,phone:state.student.phone,institution:state.student.institution,program:state.program,percentage:pct,totalScore:total,totalQuestions:n,status:passed?'PASSED':'FAILED',date:new Date().toISOString(),subjects:state.subjectScores,timedOut:!!timedOut};let old=storage('GETI_EXAM_RECORDS',[]).filter(r=>!(String(r.email).toLowerCase()===String(record.email).toLowerCase()&&r.program===record.program));old.push(record);setStorage('GETI_EXAM_RECORDS',old);let rows=state.subjectScores.map(s=>`<div class="subject-result"><span>${escapeHTML(s.subject)}</span><strong>${s.percentage}% — ${s.grade}</strong></div>`).join('');let cefrBox=state.program==='ENGLISH PROFICIENCY'?`<div class="cefr-result">CEFR LEVEL: ${cefr(pct)}</div>`:'';let cert=passed?`<br><a class="btn btn-gold certificate-action" href="${GETI_CERT_URL}" target="_blank" rel="noopener">🎓 GET YOUR CERTIFICATE</a>`:'';document.getElementById('examPanel').innerHTML=`<div class="result-box"><h2>${timedOut?'⏰ TIME EXPIRED — ':''}FINAL EXAMINATION RESULT</h2><p><strong>${escapeHTML(state.student.name)}</strong></p><p>Candidate ID: <strong>${escapeHTML(state.student.id)}</strong></p><div class="final-score">${pct}%</div><h2 class="${passed?'pass':'fail'}">${passed?'PASSED':'FAILED'}</h2>${cefrBox}<div class="exam-message">${passed?'Congratulations! Your examination has been completed successfully.':'Your result is below the required 70%. Please review the lessons and try again after the temporary waiting period.'}</div><h3>Subject Results</h3>${rows}${cert}</div>`;document.getElementById('examPanel').scrollIntoView({behavior:'smooth'})}
 
 /* LESSON LIBRARY — SCHOOL / UNIVERSITY STYLE, THEORY + EXAMPLES + PRACTICE */
 const LESSON_BLUEPRINTS={
@@ -4285,144 +4284,337 @@ window.startAdministrativeDissertation=function(){let panel=document.getElementB
 window.submitAdministrativeDissertation=function(){let t=document.getElementById('dissertationBox')?.value.trim()||'';if(t.split(/\s+/).filter(Boolean).length<300)return alert('Please complete a substantial dissertation before submitting.');localStorage.setItem('GETI_ADMIN_LAW_DISSERTATION_'+state.student.email,JSON.stringify({date:Date.now(),text:t}));alert('Dissertation submitted successfully. It cannot be submitted again for this attempt.');state.subjectIndex++;state.questionIndex=0;showQuestion()}
 })();
 
+
+
 /* =========================================================
    FINAL LEVEL RULES — B1 FOR ALL NON-PROFICIENCY EXAMS
 ========================================================= */
-
-</script>
-
-
-<!-- =========================================================
-     GETI CENTRAL ONLINE DATABASE — ADDITIVE MODULE
-     Paste the deployed Apps Script Web App URL below.
-========================================================= -->
-<script>
-const GETI_ONLINE_API_URL = "https://script.google.com/macros/s/AKfycbzQ_YczGnSdh4GJZ73XTt8LfrUtdjJFAlUZGUx3Chhlk-0Es3rskQkun5LgrZYhkKRF/exec";
-function getiOnlineReady(){return /^https:\/\/script\.google\.com\/macros\/s\//.test(GETI_ONLINE_API_URL)}
-function getiOnlinePost(data){
-  if(!getiOnlineReady()) return Promise.resolve(false);
-  const body=new URLSearchParams(); Object.keys(data||{}).forEach(k=>body.append(k,typeof data[k]==='object'?JSON.stringify(data[k]):String(data[k]??'')));
-  return fetch(GETI_ONLINE_API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body}).then(()=>true).catch(()=>false);
-}
-function getiOnlineJsonp(params){
-  return new Promise((resolve,reject)=>{
-    if(!getiOnlineReady()) return reject(new Error('Online API not configured'));
-    const cb='getiOnlineCb_'+Date.now()+'_'+Math.floor(Math.random()*10000); window[cb]=d=>{try{delete window[cb]}catch(e){};script.remove();resolve(d)};
-    const script=document.createElement('script'); const q=new URLSearchParams(params||{}); q.set('callback',cb); script.src=GETI_ONLINE_API_URL+'?'+q.toString(); script.onerror=()=>{try{delete window[cb]}catch(e){};script.remove();reject(new Error('Online server unavailable'))}; document.body.appendChild(script);
-  });
-}
-function getiPushExamRecord(record){
-  if(!record)return; getiOnlinePost({action:'saveExam',id:record.id,name:record.name,email:record.email,nationality:record.nationality,country:record.country,phone:record.phone,institution:record.institution,program:record.program,percentage:record.percentage,totalScore:record.totalScore,totalQuestions:record.totalQuestions,status:record.status,date:record.date||new Date().toISOString(),subjectsJSON:JSON.stringify(record.subjects||[])});
-}
 </script>
 
 <!-- =========================================================
-     GETI CHAT WITH ADMINISTRATOR — ADDED MODULE
+     GETI WORLDWIDE MESSENGER-STYLE CHAT
 ========================================================= -->
 <style>
-.chat-admin-fab{position:fixed;right:22px;bottom:22px;z-index:5000;background:#0b2d5c;color:#fff;border:none;border-radius:999px;padding:13px 18px;font-weight:800;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.25)}
-.chat-admin-panel{position:fixed;right:22px;bottom:78px;width:min(420px,92vw);max-height:76vh;overflow:auto;background:#fff;border:1px solid #dbe2ea;border-radius:14px;box-shadow:0 18px 48px rgba(0,0,0,.25);z-index:4999;display:none}
-.chat-admin-head{background:#071d3a;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
-.chat-admin-body{padding:16px}.chat-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.chat-tabs button{border:1px solid #ccd4df;background:#f8fafc;padding:8px 11px;border-radius:8px;cursor:pointer}.chat-tabs button.active{background:#0b2d5c;color:#fff}
-.chat-admin-body input,.chat-admin-body textarea{width:100%;padding:11px;border:1px solid #ccd4df;border-radius:8px;margin:7px 0}.chat-admin-body textarea{min-height:90px}.chat-btn{border:none;background:#b38a28;color:#fff;padding:10px 14px;border-radius:8px;font-weight:700;cursor:pointer;margin-top:7px}.chat-btn.navy{background:#0b2d5c}.chat-btn.danger{background:#9b1c1c}.chat-msg{padding:10px 12px;border-radius:10px;margin:8px 0;background:#eef3f8}.chat-msg.me{background:#fff4d6}.chat-meta{font-size:11px;color:#687386;margin-bottom:4px}.chat-file{display:inline-block;margin-top:6px;font-size:13px;font-weight:700;color:#0b2d5c}.admin-card{border:1px solid #dde4ed;border-radius:10px;padding:12px;margin:10px 0;background:#f8fafc}.admin-badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#0b2d5c;color:#fff;font-size:11px;font-weight:800}.chat-note{font-size:12px;color:#687386;margin-top:8px}.chat-close{background:transparent;border:none;color:white;font-size:22px;cursor:pointer}
+#getiChatFab{
+ position:fixed;right:20px;bottom:20px;z-index:9000;border:0;border-radius:999px;
+ background:#0b2d5c;color:#fff;padding:13px 18px;font-weight:800;cursor:pointer;
+ box-shadow:0 12px 30px rgba(0,0,0,.28)
+}
+#getiChatShell{
+ position:fixed;right:18px;bottom:76px;z-index:8999;width:min(1040px,96vw);height:min(720px,84vh);
+ background:#fff;border:1px solid #dbe3ec;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.28);
+ display:none;overflow:hidden
+}
+.gc-head{height:62px;background:#071d3a;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+.gc-head small{display:block;color:#c9d3df;font-weight:400}
+.gc-x{border:0;background:transparent;color:#fff;font-size:28px;cursor:pointer}
+.gc-body{height:calc(100% - 62px);display:flex;background:#f5f7fb}
+.gc-auth{margin:auto;width:min(460px,92%);background:#fff;border:1px solid #e0e6ee;border-radius:16px;padding:24px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.gc-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:14px 0}
+.gc-tabs button{border:1px solid #d2dae5;background:#f7f9fc;padding:9px 6px;border-radius:9px;cursor:pointer;font-size:12px;font-weight:700}
+.gc-tabs button.active{background:#0b2d5c;color:#fff}
+.gc-field{margin:10px 0}
+.gc-field label{display:block;font-size:12px;font-weight:800;color:#40506a;margin-bottom:5px}
+.gc-field input,.gc-field textarea,.gc-search{
+ width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:11px 12px;background:#fff;outline:none
+}
+.gc-field input:focus,.gc-field textarea:focus,.gc-search:focus{border-color:#0b2d5c;box-shadow:0 0 0 3px rgba(11,45,92,.08)}
+.gc-btn{border:0;border-radius:10px;padding:11px 14px;font-weight:800;cursor:pointer;background:#b38a28;color:#fff}
+.gc-btn.blue{background:#0b2d5c}.gc-btn.red{background:#a32626}.gc-btn.light{background:#eef3f8;color:#0b2d5c}
+.gc-btn:disabled{opacity:.55;cursor:not-allowed}
+.gc-status{font-size:12px;color:#6b7280;margin-top:9px;line-height:1.45}
+.gc-error{background:#fff0f0;border:1px solid #f0b0b0;color:#9c1c1c;border-radius:10px;padding:10px;margin:10px 0;font-size:13px}
+.gc-success{background:#effaf2;border:1px solid #b8e2c2;color:#176b32;border-radius:10px;padding:10px;margin:10px 0;font-size:13px}
+.gc-chat{display:flex;width:100%;height:100%}
+.gc-sidebar{width:310px;border-right:1px solid #dde4ec;background:#fff;display:flex;flex-direction:column}
+.gc-side-top{padding:14px;border-bottom:1px solid #edf0f4}
+.gc-list{overflow:auto;flex:1}
+.gc-thread{padding:12px 14px;border-bottom:1px solid #eef1f5;cursor:pointer}
+.gc-thread:hover,.gc-thread.active{background:#eef4fb}
+.gc-thread strong{display:block;color:#172033}
+.gc-thread small{display:block;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gc-main{flex:1;display:flex;flex-direction:column;min-width:0}
+.gc-chat-top{height:58px;background:#fff;border-bottom:1px solid #e5eaf0;padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
+.gc-chat-top strong{display:block}.gc-chat-top small{color:#6b7280}
+.gc-messages{flex:1;overflow:auto;padding:18px;background:#f4f7fb}
+.gc-bubble-row{display:flex;margin:8px 0}.gc-bubble-row.me{justify-content:flex-end}
+.gc-bubble{max-width:76%;padding:9px 12px;border-radius:16px 16px 16px 4px;background:#fff;border:1px solid #e0e6ed;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.gc-bubble-row.me .gc-bubble{background:#0b2d5c;color:#fff;border-color:#0b2d5c;border-radius:16px 16px 4px 16px}
+.gc-meta{font-size:10px;opacity:.68;margin-top:4px}
+.gc-file{display:inline-block;margin-top:7px;padding:7px 9px;border-radius:8px;background:rgba(179,138,40,.13);font-size:12px;font-weight:800}
+.gc-bubble-row.me .gc-file{color:#fff;background:rgba(255,255,255,.14)}
+.gc-compose{background:#fff;border-top:1px solid #e1e7ee;padding:10px 12px;display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:end}
+.gc-compose textarea{resize:none;max-height:110px;min-height:42px;border:1px solid #cbd5e1;border-radius:14px;padding:10px 12px;width:100%}
+.gc-attach{border:0;background:#eef3f8;border-radius:10px;padding:10px;cursor:pointer;font-size:18px}
+.gc-file-preview{grid-column:1/-1;font-size:11px;color:#657084}
+.gc-admin-tabs{display:flex;gap:8px;padding:10px 14px;background:#fff;border-bottom:1px solid #e3e8ef}
+.gc-result{background:#fff;border:1px solid #dfe5ec;border-radius:12px;padding:12px;margin:10px 14px}
+.gc-result strong{color:#0b2d5c}
+.gc-empty{margin:auto;text-align:center;color:#748094;padding:28px}
+.gc-back{display:none}
+
+.gc-brand-row{display:flex;align-items:center;gap:10px}
+.gc-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#dbeafe;color:#0b2d5c;font-weight:900;flex:0 0 auto}
+.gc-avatar-admin{background:#0b2d5c;color:#fff}
+.gc-online-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;margin-right:5px;vertical-align:1px}
+.gc-thread-row{display:flex;gap:10px;align-items:center}
+.gc-thread-copy{min-width:0;flex:1}
+.gc-thread-copy strong,.gc-thread-copy small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#getiChatFab{display:flex;align-items:center;gap:9px;border-radius:999px;padding:12px 16px;box-shadow:0 8px 24px rgba(11,45,92,.28)}
+.gc-fab-icon{font-size:20px}.gc-fab-label{font-weight:800}
+.gc-compose{grid-template-columns:auto 1fr auto;border-radius:0 0 16px 16px}
+.gc-compose textarea{border-radius:22px;background:#f4f7fb;border-color:#e5e7eb;padding:11px 14px}
+.gc-compose .gc-btn.blue{border-radius:999px;padding:11px 18px}
+.gc-messages{background:linear-gradient(#f8fafc,#f3f6fb)}
+.gc-bubble{line-height:1.42}
+.gc-chat-top{min-height:64px;height:auto}
+@media(max-width:760px){
+ #getiChatShell{inset:0;width:auto;height:auto;border-radius:0}
+ .gc-fab-label{display:none}
+ #getiChatFab{width:54px;height:54px;justify-content:center;padding:0}
+ .gc-chat-top{padding:9px 10px}
+ .gc-avatar{width:34px;height:34px}
+ .gc-compose{padding:8px}
+ .gc-sidebar{width:100%}
+ #getiChatFab{right:12px;bottom:12px}
+ .gc-sidebar{width:100%}.gc-main{display:none}
+ .gc-chat.mobile-open .gc-sidebar{display:none}.gc-chat.mobile-open .gc-main{display:flex}
+ .gc-back{display:inline-block;border:0;background:#eef3f8;border-radius:8px;padding:8px;cursor:pointer;margin-right:8px}
+ .gc-tabs{grid-template-columns:1fr 1fr}
+ .gc-bubble{max-width:88%}
+}
 </style>
-<button class="chat-admin-fab" onclick="openGetiChat()">💬 Chat with Administrator</button>
-<div id="getiChatPanel" class="chat-admin-panel">
-  <div class="chat-admin-head"><strong>GETI Support</strong><button class="chat-close" onclick="closeGetiChat()">×</button></div>
-  <div id="getiChatBody" class="chat-admin-body"></div>
+
+<button id="getiChatFab" onclick="GETIChat.open()"><span class="gc-fab-icon">💬</span><span class="gc-fab-label">Chat with Administrator</span></button>
+<div id="getiChatShell">
+  <div class="gc-head">
+    <div class="gc-brand-row"><div class="gc-avatar gc-avatar-admin">A</div><div><strong>GETI Messenger</strong><small><span class="gc-online-dot"></span> Administrator support</small></div></div>
+    <button class="gc-x" onclick="GETIChat.close()">×</button>
+  </div>
+  <div id="getiChatRoot" class="gc-body"></div>
 </div>
+
 <script>
-(function(){
-const K_USERS='GETI_CHAT_USERS', K_SESSION='GETI_CHAT_SESSION', K_MSG='GETI_CHAT_MESSAGES';
-function get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}
-function set(k,v){localStorage.setItem(k,JSON.stringify(v))}
-function esc(v){return String(v||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function session(){return get(K_SESSION,null)}
-function saveSession(v){v?set(K_SESSION,v):localStorage.removeItem(K_SESSION)}
-function users(){return get(K_USERS,[])}
-function messages(){return get(K_MSG,[])}
-function saveMessages(v){set(K_MSG,v)}
-window.openGetiChat=function(){document.getElementById('getiChatPanel').style.display='block';render()}
-window.closeGetiChat=function(){document.getElementById('getiChatPanel').style.display='none'}
-function tabs(active){return `<div class="chat-tabs"><button class="${active==='signin'?'active':''}" onclick="chatSignInView()">Sign in</button><button class="${active==='create'?'active':''}" onclick="chatCreateView()">Create account</button><button class="${active==='forgot'?'active':''}" onclick="chatForgotView()">Forgot password</button><button class="${active==='admin'?'active':''}" onclick="chatAdminLoginView()">Administrator</button></div>`}
-function body(){return document.getElementById('getiChatBody')}
-function render(){let s=session();if(!s)return chatSignInView();if(s.role==='admin')return renderAdmin();return renderUser()}
-window.chatSignInView=function(){body().innerHTML=tabs('signin')+`<h3>Sign in</h3><input id="ciEmail" type="email" placeholder="Email"><input id="ciPass" type="password" placeholder="Password"><button class="chat-btn navy" onclick="chatDoSignIn()">SIGN IN</button>`}
-window.chatCreateView=function(){body().innerHTML=tabs('create')+`<h3>Create account</h3><input id="ccName" placeholder="Full name"><input id="ccEmail" type="email" placeholder="Email"><input id="ccPass" type="password" placeholder="Password"><button class="chat-btn" onclick="chatDoCreate()">CREATE ACCOUNT</button>`}
-window.chatForgotView=function(){body().innerHTML=tabs('forgot')+`<h3>Forgot password</h3><input id="cfEmail" type="email" placeholder="Your account email"><button class="chat-btn" onclick="chatDoForgot()">SHOW RESET HELP</button><div class="chat-note">Prototype: password recovery is stored in this browser only. For production, use a secure server/email reset flow.</div>`}
-window.chatAdminLoginView=function(){body().innerHTML=tabs('admin')+`<h3>Administrator</h3><div class="chat-note">Online database: ${getiOnlineReady()?'CONNECTED':'NOT CONFIGURED'}</div><input id="caCode" type="password" placeholder="Administrator code"><button class="chat-btn navy" onclick="chatDoAdminLogin()">OPEN ADMINISTRATOR</button>`}
-window.chatDoCreate=function(){let n=ccName.value.trim(),e=ccEmail.value.trim().toLowerCase(),p=ccPass.value;if(!n||!e||!p)return alert('Please complete all fields.');let u=users();if(u.some(x=>x.email===e))return alert('Account already exists.');u.push({name:n,email:e,password:p,createdAt:Date.now()});set(K_USERS,u);saveSession({role:'user',email:e,name:n,password:p});getiOnlinePost({action:'createAccount',name:n,email:e,password:p});renderUser()}
-window.chatDoSignIn=function(){let e=ciEmail.value.trim().toLowerCase(),p=ciPass.value;if(getiOnlineReady()){getiOnlineJsonp({action:'login',email:e,password:p}).then(d=>{if(!d||!d.success)return alert('Incorrect email or password.');saveSession({role:'user',email:d.email,name:d.name,password:p});renderUser()}).catch(()=>alert('Unable to connect to online server.'));return;}let u=users().find(x=>x.email===e&&x.password===p);if(!u)return alert('Incorrect email or password.');saveSession({role:'user',email:u.email,name:u.name,password:p});renderUser()}
-window.chatDoForgot=function(){let e=cfEmail.value.trim().toLowerCase(),u=users().find(x=>x.email===e);if(!u)return alert('Account not found.');alert('Prototype recovery: contact GETI administrator to reset the password for '+u.email+'.')}
-window.chatDoAdminLogin=function(){if(caCode.value!=='global')return alert('Incorrect administrator code.');saveSession({role:'admin',name:'Administrator'});renderAdmin()}
-window.chatLogout=function(){saveSession(null);render()}
-function userThread(email){return messages().filter(m=>m.email===email).sort((a,b)=>a.time-b.time)}
-function renderUser(){let s=session(),rows=userThread(s.email).map(m=>`<div class="chat-msg ${m.from==='user'?'me':''}"><div class="chat-meta">${esc(m.from==='user'?'You':'Administrator')} • ${new Date(m.time).toLocaleString()}</div><div>${esc(m.text)}</div>${m.fileData?`<a class="chat-file" href="${m.fileData}" download="${esc(m.fileName)}">📎 ${esc(m.fileName)} — Download</a>`:''}</div>`).join('');body().innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${esc(s.name)}</strong><div class="chat-note">${esc(s.email)}</div></div><button class="chat-btn danger" onclick="chatLogout()">Logout</button></div><hr style="margin:12px 0"><div id="chatThread">${rows||'<div class="chat-note">No messages yet.</div>'}</div><textarea id="chatText" placeholder="Write a message to administrator..."></textarea><input id="chatFile" type="file" accept="image/*,.pdf,application/pdf"><button class="chat-btn navy" onclick="chatSendUser()">SEND MESSAGE / FILE</button><div class="chat-note">Photos and PDFs are saved in this browser for this prototype and can be downloaded from the chat.</div>`}
-window.chatSendUser=function(){let s=session(),t=chatText.value.trim(),f=chatFile.files&&chatFile.files[0];if(!t&&!f)return alert('Write a message or choose a file.');if(f&&f.size>5*1024*1024)return alert('Maximum file size in this browser prototype is 5 MB.');if(f){let r=new FileReader();r.onload=()=>saveUserMsg(t,f.name,f.type,r.result);r.readAsDataURL(f)}else saveUserMsg(t,'','','')}
-function saveUserMsg(t,n,type,data){let s=session(),m=messages();m.push({id:Date.now(),email:s.email,name:s.name,from:'user',text:t,fileName:n,fileType:type,fileData:data,time:Date.now()});saveMessages(m);getiOnlinePost({action:'sendMessage',email:s.email,name:s.name,password:s.password||'',text:t,fileName:n,fileType:type,fileData:data});renderUser()}
-function examResults(){try{return JSON.parse(localStorage.getItem('GETI_EXAM_RECORDS'))||[]}catch(e){return []}}
-function renderAdmin(){
-  let all=messages(),group={};
-  all.forEach(m=>(group[m.email]??=[]).push(m));
+window.GETIChat=(function(){
+  const CHAT_API_URL='https://script.google.com/macros/s/AKfycbyrYlYRBo3OCb37-PFvdpqTJCyafBrkVMGKOJIDfJd7sV_Rag3UkVIDp06IVzgoxvCpYg/exec';
+  const RESULT_API_KEY='GETI-RESULT-2026';
+  const SESSION_KEY='GETI_WORLD_CHAT_SESSION';
+  let pollTimer=null, activeEmail=null, adminMode='messages';
 
-  /* ALL STUDENTS: combine created chat accounts + exam candidates, even if they never sent a message */
-  let allUsers=users();
-  let allResults=examResults();
-  let studentMap={};
-  allUsers.forEach(u=>{
-    let key=String(u.email||'').toLowerCase();
-    if(!key)return;
-    studentMap[key]={name:u.name||'',email:key,account:true,createdAt:u.createdAt||0,exams:[]};
-  });
-  allResults.forEach(r=>{
-    let key=String(r.email||'').toLowerCase();
-    if(!key) key='candidate:'+String(r.id||Math.random());
-    if(!studentMap[key]) studentMap[key]={name:r.name||'',email:r.email||'',account:false,createdAt:0,exams:[]};
-    if(!studentMap[key].name) studentMap[key].name=r.name||'';
-    studentMap[key].exams.push(r);
-  });
-  let students=Object.values(studentMap).sort((a,b)=>String(a.name).localeCompare(String(b.name))).map(st=>{
-    let exams=st.exams.slice().reverse().map(r=>`<div class="chat-note">🎓 ${esc(r.program||'Exam')} — ${Number(r.percentage||0)}% — <strong>${esc(r.status||'')}</strong> — ${esc(r.id||'')}</div>`).join('');
-    return `<div class="admin-card"><div><span class="admin-badge">STUDENT</span> <strong>${esc(st.name||'Unnamed student')}</strong></div><div class="chat-note">${esc(st.email||'No email')} ${st.account?'• Chat account created':'• Exam candidate'}</div>${exams||'<div class="chat-note">No exam result yet.</div>'}</div>`;
-  }).join('');
+  const $=id=>document.getElementById(id);
+  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const ses=()=>{try{return JSON.parse(localStorage.getItem(SESSION_KEY))}catch(e){return null}};
+  const setSes=v=>v?localStorage.setItem(SESSION_KEY,JSON.stringify(v)):localStorage.removeItem(SESSION_KEY);
+  const root=()=>$('getiChatRoot');
+  const configured=()=>/^https:\/\/script\.google\.com\/macros\/s\//.test(CHAT_API_URL);
 
-  let threads=Object.keys(group).map(email=>{
-    let arr=group[email].sort((a,b)=>a.time-b.time),name=arr[0]?.name||email,
-    msgs=arr.map(m=>`<div class="chat-msg ${m.from==='admin'?'me':''}"><div class="chat-meta">${esc(m.from==='admin'?'Administrator':name)} • ${new Date(m.time).toLocaleString()}</div><div>${esc(m.text)}</div>${m.fileData?`<a class="chat-file" href="${m.fileData}" download="${esc(m.fileName)}">📎 ${esc(m.fileName)} — Download</a>`:''}</div>`).join('');
-    return `<div class="admin-card"><div><span class="admin-badge">USER</span> <strong>${esc(name)}</strong><div class="chat-note">${esc(email)}</div></div>${msgs}<textarea id="reply_${btoa(email).replace(/=/g,'')}" placeholder="Reply to this user..."></textarea><input id="file_${btoa(email).replace(/=/g,'')}" type="file" accept="image/*,.pdf,application/pdf"><button class="chat-btn navy" onclick="chatAdminReply('${encodeURIComponent(email)}')">SEND REPLY / FILE</button></div>`;
-  }).join('');
+  async function apiPost(payload){
+    if(!configured()) throw new Error('Online chat backend is not configured yet.');
+    const r=await fetch(CHAT_API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    const d=await r.json(); if(!d.success) throw new Error(d.message||'Server error'); return d;
+  }
+  async function apiGet(params){
+    if(!configured()) throw new Error('Online chat backend is not configured yet.');
+    const r=await fetch(CHAT_API_URL+'?'+new URLSearchParams(params).toString());
+    const d=await r.json(); if(!d.success) throw new Error(d.message||'Server error'); return d;
+  }
+  function tabs(active){
+    return `<div class="gc-tabs">
+      <button class="${active==='login'?'active':''}" onclick="GETIChat.loginView()">Sign in</button>
+      <button class="${active==='create'?'active':''}" onclick="GETIChat.createView()">Create account</button>
+      <button class="${active==='forgot'?'active':''}" onclick="GETIChat.forgotView()">Forgot password</button>
+      <button class="${active==='admin'?'active':''}" onclick="GETIChat.adminView()">Administrator</button>
+    </div>`;
+  }
+  function authWrap(inner){root().innerHTML=`<div class="gc-auth">${inner}</div>`}
+  function setupWarning(){return configured()?'':`<div class="gc-error"><strong>Backend not connected.</strong><br>This page is ready for worldwide chat, but the Google Apps Script Web App URL must be inserted in <code>CHAT_API_URL</code>.</div>`}
 
-  let results=allResults.slice().reverse().map(r=>`<div class="admin-card"><strong>${esc(r.name)}</strong> — ${esc(r.program)}<div class="chat-note">${esc(r.id)} • ${esc(r.email||'')}</div><div>${r.percentage}% — <strong>${esc(r.status)}</strong></div></div>`).join('');
+  function loginView(){
+    stopPoll(); authWrap(`${setupWarning()}<h2>Sign in</h2><p class="gc-status">Use your email account to continue your conversation from any phone or computer.</p>${tabs('login')}
+      <div class="gc-field"><label>Email</label><input id="gcLoginEmail" type="email" autocomplete="email" placeholder="name@example.com"></div>
+      <div class="gc-field"><label>Password</label><input id="gcLoginPass" type="password" autocomplete="current-password" placeholder="Your password"></div>
+      <button class="gc-btn blue" onclick="GETIChat.doLogin()">SIGN IN</button><div id="gcAuthMsg"></div>`);
+  }
+  function createView(){
+    stopPoll(); authWrap(`${setupWarning()}<h2>Create account</h2><p class="gc-status">One email account works on your phone or computer anywhere in the world.</p>${tabs('create')}
+      <div class="gc-field"><label>Full name</label><input id="gcCreateName" autocomplete="name" placeholder="Full name"></div>
+      <div class="gc-field"><label>Email</label><input id="gcCreateEmail" type="email" autocomplete="email" placeholder="name@example.com"></div>
+      <div class="gc-field"><label>Password</label><input id="gcCreatePass" type="password" autocomplete="new-password" minlength="6" placeholder="Minimum 6 characters"></div>
+      <button class="gc-btn" onclick="GETIChat.doCreate()">CREATE ACCOUNT</button><div id="gcAuthMsg"></div>`);
+  }
+  function forgotView(){
+    stopPoll(); authWrap(`${setupWarning()}<h2>Forgot password</h2>${tabs('forgot')}
+      <div class="gc-field"><label>Your email</label><input id="gcForgotEmail" type="email" placeholder="name@example.com"></div>
+      <button class="gc-btn blue" onclick="GETIChat.requestReset()">SEND RESET CODE</button>
+      <div class="gc-field"><label>Reset code received by email</label><input id="gcResetCode" inputmode="numeric" placeholder="6-digit code"></div>
+      <div class="gc-field"><label>New password</label><input id="gcResetPass" type="password" minlength="6" placeholder="New password"></div>
+      <button class="gc-btn" onclick="GETIChat.resetPassword()">RESET PASSWORD</button><div id="gcAuthMsg"></div>`);
+  }
+  function adminView(){
+    stopPoll(); authWrap(`${setupWarning()}<h2>Administrator</h2><p class="gc-status">Administrator can see all conversations and examination results.</p>${tabs('admin')}
+      <div class="gc-field"><label>Administrator code</label><input id="gcAdminCode" type="password" placeholder="Administrator code"></div>
+      <button class="gc-btn blue" onclick="GETIChat.doAdmin()">OPEN ADMINISTRATOR</button><div id="gcAuthMsg"></div>`);
+  }
+  function authMsg(text,ok=false){const e=$('gcAuthMsg');if(e)e.innerHTML=`<div class="${ok?'gc-success':'gc-error'}">${esc(text)}</div>`}
+  async function doCreate(){
+    try{
+      const name=$('gcCreateName').value.trim(),email=$('gcCreateEmail').value.trim().toLowerCase(),password=$('gcCreatePass').value;
+      if(!name||!email||password.length<6)return authMsg('Complete all fields. Password must contain at least 6 characters.');
+      const d=await apiPost({action:'createAccount',name,email,password}); setSes(d.session); renderUser();
+    }catch(e){authMsg(e.message)}
+  }
+  async function doLogin(){
+    try{
+      const email=$('gcLoginEmail').value.trim().toLowerCase(),password=$('gcLoginPass').value;
+      const d=await apiPost({action:'login',email,password}); setSes(d.session); renderUser();
+    }catch(e){authMsg(e.message)}
+  }
+  async function requestReset(){
+    try{const email=$('gcForgotEmail').value.trim().toLowerCase();const d=await apiPost({action:'requestReset',email});authMsg(d.message,true)}
+    catch(e){authMsg(e.message)}
+  }
+  async function resetPassword(){
+    try{
+      const email=$('gcForgotEmail').value.trim().toLowerCase(),code=$('gcResetCode').value.trim(),password=$('gcResetPass').value;
+      const d=await apiPost({action:'resetPassword',email,code,password});authMsg(d.message,true);setTimeout(loginView,900)
+    }catch(e){authMsg(e.message)}
+  }
+  async function doAdmin(){
+    try{const code=$('gcAdminCode').value;const d=await apiPost({action:'adminLogin',code});setSes(d.session);renderAdmin()}
+    catch(e){authMsg(e.message)}
+  }
 
-  body().innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>Administrator</strong><div class="chat-note">Students, messages & exam results</div></div><button class="chat-btn danger" onclick="chatLogout()">Logout</button></div><h3 style="margin-top:14px">All Students (${Object.keys(studentMap).length})</h3>${students||'<div class="chat-note">No students saved in this browser yet.</div>'}<h3 style="margin-top:18px">Messages</h3>${threads||'<div class="chat-note">No messages.</div>'}<h3 style="margin-top:18px">Exam Results</h3>${results||'<div class="chat-note">No exam results saved in this browser.</div>'}`; if(getiOnlineReady()) loadOnlineAdminData();
-}
+  function stopPoll(){if(pollTimer){clearInterval(pollTimer);pollTimer=null}}
+  function startPoll(fn){stopPoll();pollTimer=setInterval(()=>{if($('getiChatShell')?.style.display==='block')fn().catch(()=>{})},3000)}
+  function logout(){stopPoll();setSes(null);activeEmail=null;loginView()}
+  function fmtTime(t){try{return new Date(t).toLocaleString()}catch(e){return ''}}
 
-function loadOnlineAdminData(){
-  getiOnlineJsonp({action:'adminData',code:'global'}).then(d=>{
-    if(!d||!d.success)return;
-    const current=body();
-    let old=document.getElementById('onlineCentralData'); if(old)old.remove();
-    const wrap=document.createElement('div'); wrap.id='onlineCentralData';
-    const students=(d.students||[]).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''))).map(st=>{
-      const ex=(st.exams||[]).slice().reverse().map(r=>`<div class="chat-note">🎓 ${esc(r.program||'Exam')} — ${Number(r.percentage||0)}% — <strong>${esc(r.status||'')}</strong> — ${esc(r.id||'')}</div>`).join('');
-      return `<div class="admin-card"><div><span class="admin-badge">ONLINE STUDENT</span> <strong>${esc(st.name||'Unnamed student')}</strong></div><div class="chat-note">${esc(st.email||'No email')}</div>${ex||'<div class="chat-note">No exam result yet.</div>'}</div>`;
-    }).join('');
-    const results=(d.results||[]).slice().reverse().map(r=>`<div class="admin-card"><strong>${esc(r.name)}</strong> — ${esc(r.program)}<div class="chat-note">${esc(r.id)} • ${esc(r.email||'')}</div><div>${Number(r.percentage||0)}% — <strong>${esc(r.status||'')}</strong></div></div>`).join('');
-    const grouped={}; (d.messages||[]).forEach(m=>(grouped[m.email]??=[]).push(m));
-    const msgs=Object.keys(grouped).map(email=>{const arr=grouped[email].sort((a,b)=>a.time-b.time),name=arr[0]?.name||email;return `<div class="admin-card"><strong>${esc(name)}</strong><div class="chat-note">${esc(email)}</div>${arr.map(m=>`<div class="chat-msg ${m.from==='admin'?'me':''}"><div class="chat-meta">${esc(m.from==='admin'?'Administrator':name)} • ${new Date(m.time).toLocaleString()}</div><div>${esc(m.text)}</div>${m.fileURL?`<a class="chat-file" href="${esc(m.fileURL)}" target="_blank" rel="noopener">📎 ${esc(m.fileName||'File')} — Open / Download</a>`:''}</div>`).join('')}<textarea id="oreply_${btoa(email).replace(/=/g,'')}" placeholder="Reply to this user..."></textarea><input id="ofile_${btoa(email).replace(/=/g,'')}" type="file" accept="image/*,.pdf,application/pdf"><button class="chat-btn navy" onclick="chatOnlineAdminReply('${encodeURIComponent(email)}','${encodeURIComponent(name)}')">SEND ONLINE REPLY / FILE</button></div>`}).join('');
-    wrap.innerHTML=`<hr style="margin:18px 0"><h2>🌐 CENTRAL ONLINE DATABASE</h2><div class="chat-note">Students from all phones/computers that use this deployed index.</div><h3>All Online Students (${(d.students||[]).length})</h3>${students||'<div class="chat-note">No online students yet.</div>'}<h3 style="margin-top:18px">Online Messages</h3>${msgs||'<div class="chat-note">No online messages.</div>'}<h3 style="margin-top:18px">Online Exam Results (${(d.results||[]).length})</h3>${results||'<div class="chat-note">No online exam results yet.</div>'}`;
-    current.prepend(wrap);
-  }).catch(()=>{});
-}
-window.chatOnlineAdminReply=function(encEmail,encName){const email=decodeURIComponent(encEmail),name=decodeURIComponent(encName),id=btoa(email).replace(/=/g,''),ta=document.getElementById('oreply_'+id),fi=document.getElementById('ofile_'+id),t=ta?.value.trim()||'',f=fi?.files&&fi.files[0];if(!t&&!f)return alert('Write a reply or choose a file.');if(f&&f.size>2*1024*1024)return alert('For online upload, maximum file size is 2 MB.');if(f){const r=new FileReader();r.onload=()=>{getiOnlinePost({action:'adminReply',code:'global',email,name,text:t,fileName:f.name,fileType:f.type,fileData:r.result}).then(()=>setTimeout(loadOnlineAdminData,800));};r.readAsDataURL(f);}else{getiOnlinePost({action:'adminReply',code:'global',email,name,text:t}).then(()=>setTimeout(loadOnlineAdminData,800));}}
+  function messageHtml(m,myRole){
+    const mine=myRole==='admin'?m.from==='admin':m.from==='user';
+    let file='';
+    if(m.fileUrl){
+      const isImg=/\.(png|jpe?g|gif|webp)$/i.test(m.fileName||'');
+      file=`<a class="gc-file" href="${esc(m.fileUrl)}" target="_blank" rel="noopener">${isImg?'🖼️':'📎'} ${esc(m.fileName||'File')} — Open / Download</a>`;
+    }
+    return `<div class="gc-bubble-row ${mine?'me':''}"><div class="gc-bubble"><div>${esc(m.text||'')}</div>${file}<div class="gc-meta">${esc(fmtTime(m.time))}</div></div></div>`;
+  }
+  async function filePayload(input){
+    const f=input?.files?.[0];if(!f)return {fileName:'',fileData:''};
+    if(f.size>8*1024*1024)throw new Error('Maximum file size is 8 MB.');
+    const fileData=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)});
+    return {fileName:f.name,fileData};
+  }
 
-window.chatAdminReply=function(enc){let email=decodeURIComponent(enc),id=btoa(email).replace(/=/g,''),ta=document.getElementById('reply_'+id),fi=document.getElementById('file_'+id),t=ta.value.trim(),f=fi.files&&fi.files[0];if(!t&&!f)return alert('Write a reply or choose a file.');if(f&&f.size>5*1024*1024)return alert('Maximum file size is 5 MB.');if(f){let r=new FileReader();r.onload=()=>saveAdmin(email,t,f.name,f.type,r.result);r.readAsDataURL(f)}else saveAdmin(email,t,'','','')}
-function saveAdmin(email,t,n,type,data){let m=messages(),u=users().find(x=>x.email===email);m.push({id:Date.now(),email,name:u?.name||email,from:'admin',text:t,fileName:n,fileType:type,fileData:data,time:Date.now()});saveMessages(m);getiOnlinePost({action:'adminReply',code:'global',email:email,name:u?.name||email,text:t,fileName:n,fileType:type,fileData:data});renderAdmin()}
+  async function renderUser(refreshOnly=false){
+    const s=ses();if(!s||s.role!=='user')return loginView();
+    if(!refreshOnly){
+      root().innerHTML=`<div class="gc-chat mobile-open">
+        <main class="gc-main" style="display:flex">
+          <div class="gc-chat-top"><div class="gc-brand-row"><div class="gc-avatar gc-avatar-admin">A</div><div><strong>GETI Administrator</strong><small><span class="gc-online-dot"></span> Online support · ${esc(s.email)}</small></div></div><button class="gc-btn light" onclick="GETIChat.logout()">Logout</button></div>
+          <div id="gcUserMessages" class="gc-messages"><div class="gc-empty">Loading conversation…</div></div>
+          <div class="gc-compose">
+            <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcUserFile" type="file" accept="image/*,.pdf,application/pdf" hidden onchange="GETIChat.showFileName('gcUserFile','gcUserFileName')"></label>
+            <textarea id="gcUserText" placeholder="Write a message…" onkeydown="GETIChat.enterSend(event,'user')"></textarea>
+            <button class="gc-btn blue" onclick="GETIChat.sendUser()">Send</button>
+            <div id="gcUserFileName" class="gc-file-preview"></div>
+          </div>
+        </main></div>`;
+    }
+    try{
+      const d=await apiGet({action:'messages',token:s.token});
+      const box=$('gcUserMessages');if(box){box.innerHTML=d.messages.length?d.messages.map(m=>messageHtml(m,'user')).join(''):'<div class="gc-empty">No messages yet. Write to the administrator below.</div>';box.scrollTop=box.scrollHeight}
+    }catch(e){const box=$('gcUserMessages');if(box)box.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`}
+    if(!refreshOnly)startPoll(()=>renderUser(true));
+  }
+  async function sendUser(){
+    try{
+      const s=ses(),text=$('gcUserText').value.trim(),fp=await filePayload($('gcUserFile'));if(!text&&!fp.fileData)return;
+      $('gcUserText').value='';$('gcUserFile').value='';$('gcUserFileName').textContent='';
+      await apiPost({action:'sendMessage',token:s.token,text,...fp});await renderUser(true)
+    }catch(e){alert(e.message)}
+  }
+
+  async function renderAdmin(){
+    const s=ses();if(!s||s.role!=='admin')return adminView();
+    root().innerHTML=`<div id="gcAdminChat" class="gc-chat">
+      <aside class="gc-sidebar">
+        <div class="gc-side-top"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Administrator</strong><button class="gc-btn light" onclick="GETIChat.logout()">Logout</button></div>
+        <input id="gcSearch" class="gc-search" placeholder="Search name or email…" oninput="GETIChat.loadThreads()"></div>
+        <div class="gc-admin-tabs"><button class="gc-btn ${adminMode==='messages'?'blue':'light'}" onclick="GETIChat.adminMessages()">Messages</button><button class="gc-btn ${adminMode==='results'?'blue':'light'}" onclick="GETIChat.adminResults()">Exam results</button></div>
+        <div id="gcThreadList" class="gc-list"></div>
+      </aside>
+      <main class="gc-main"><div id="gcAdminMain" style="height:100%;display:flex;flex-direction:column"><div class="gc-empty">Select a conversation.</div></div></main>
+    </div>`;
+    if(adminMode==='results')await loadResults();else await loadThreads();
+    startPoll(async()=>{if(adminMode==='results')await loadResults(true);else{await loadThreads(true);if(activeEmail)await openThread(activeEmail,true)}});
+  }
+  async function loadThreads(silent=false){
+    const s=ses(),q=($('gcSearch')?.value||'').trim().toLowerCase();
+    try{
+      const d=await apiGet({action:'threads',token:s.token});
+      const rows=(d.threads||[]).filter(x=>!q||String(x.name).toLowerCase().includes(q)||String(x.email).toLowerCase().includes(q));
+      const box=$('gcThreadList');if(box)box.innerHTML=rows.length?rows.map(x=>`<div class="gc-thread ${activeEmail===x.email?'active':''}" onclick="GETIChat.openThread('${encodeURIComponent(x.email)}')"><div class="gc-thread-row"><div class="gc-avatar">${esc((x.name||x.email||'?').charAt(0).toUpperCase())}</div><div class="gc-thread-copy"><strong>${esc(x.name||x.email)}</strong><small>${esc(x.email)}</small><small>${esc(x.lastText||x.fileName||'Attachment')} · ${esc(fmtTime(x.lastTime))}</small></div></div></div>`).join(''):'<div class="gc-empty">No conversations.</div>'
+    }catch(e){if(!silent){const box=$('gcThreadList');if(box)box.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`}}
+  }
+  async function openThread(encoded,silent=false){
+    const email=decodeURIComponent(encoded);activeEmail=email;const s=ses();
+    try{
+      const d=await apiGet({action:'messages',token:s.token,email});
+      const main=$('gcAdminMain');if(!main)return;
+      main.innerHTML=`<div class="gc-chat-top"><div class="gc-brand-row"><button class="gc-back" onclick="GETIChat.mobileBack()">←</button><div class="gc-avatar">${esc((d.user?.name||email||'?').charAt(0).toUpperCase())}</div><div><strong>${esc(d.user?.name||email)}</strong><small><span class="gc-online-dot"></span> ${esc(email)}</small></div></div><button class="gc-btn light" onclick="GETIChat.loadThreads()">Refresh</button></div>
+        <div id="gcAdminMessages" class="gc-messages">${d.messages.length?d.messages.map(m=>messageHtml(m,'admin')).join(''):'<div class="gc-empty">No messages.</div>'}</div>
+        <div class="gc-compose">
+          <label class="gc-attach">📎<input id="gcAdminFile" type="file" accept="image/*,.pdf,application/pdf" hidden onchange="GETIChat.showFileName('gcAdminFile','gcAdminFileName')"></label>
+          <textarea id="gcAdminText" placeholder="Reply to ${esc(d.user?.name||email)}…" onkeydown="GETIChat.enterSend(event,'admin')"></textarea>
+          <button class="gc-btn blue" onclick="GETIChat.sendAdmin()">Send</button>
+          <div id="gcAdminFileName" class="gc-file-preview"></div>
+        </div>`;
+      const box=$('gcAdminMessages');if(box)box.scrollTop=box.scrollHeight;
+      $('gcAdminChat')?.classList.add('mobile-open'); await loadThreads(true)
+    }catch(e){if(!silent){const main=$('gcAdminMain');if(main)main.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`}}
+  }
+  async function sendAdmin(){
+    try{
+      const s=ses(),text=$('gcAdminText').value.trim(),fp=await filePayload($('gcAdminFile'));if(!text&&!fp.fileData)return;
+      $('gcAdminText').value='';$('gcAdminFile').value='';$('gcAdminFileName').textContent='';
+      await apiPost({action:'sendMessage',token:s.token,email:activeEmail,text,...fp});await openThread(encodeURIComponent(activeEmail),true)
+    }catch(e){alert(e.message)}
+  }
+  async function loadResults(silent=false){
+    adminMode='results';
+    try{
+      const s=ses(),d=await apiGet({action:'results',token:s.token});
+      const list=$('gcThreadList');if(list)list.innerHTML='<div class="gc-empty">Exam results are shown on the right.</div>';
+      const main=$('gcAdminMain');if(main)main.innerHTML=`<div class="gc-chat-top"><div><strong>All examination results</strong><small>${d.results.length} result(s)</small></div></div><div class="gc-messages">${d.results.length?d.results.map(r=>`<div class="gc-result"><strong>${esc(r.name)}</strong> — ${esc(r.program)}<div class="gc-status">${esc(r.email)} · ${esc(r.id)} · ${esc(fmtTime(r.date))}</div><div style="font-size:20px;font-weight:900;margin-top:5px">${esc(r.percentage)}% — ${esc(r.status)}</div></div>`).join(''):'<div class="gc-empty">No online exam results yet.</div>'}</div>`
+    }catch(e){if(!silent){const main=$('gcAdminMain');if(main)main.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`}}
+  }
+  function adminMessages(){adminMode='messages';renderAdmin()}
+  function adminResults(){adminMode='results';renderAdmin()}
+  function mobileBack(){$('gcAdminChat')?.classList.remove('mobile-open')}
+  function showFileName(inputId,outId){const f=$(inputId)?.files?.[0];const o=$(outId);if(o)o.textContent=f?'Attached: '+f.name:''}
+  function enterSend(e,who){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();who==='admin'?sendAdmin():sendUser()}}
+
+  function open(){
+    $('getiChatShell').style.display='block';
+    const s=ses();if(!s)loginView();else if(s.role==='admin')renderAdmin();else renderUser();
+  }
+  function close(){stopPoll();$('getiChatShell').style.display='none'}
+
+  /* Synchronize the latest locally saved GETI exam result to the online admin database. */
+  const nativeSetItem=Storage.prototype.setItem;
+  Storage.prototype.setItem=function(key,value){
+    nativeSetItem.call(this,key,value);
+    if(key==='GETI_EXAM_RECORDS'&&configured()){
+      try{
+        const arr=JSON.parse(value)||[],r=arr[arr.length-1];
+        if(r&&r.id&&r.email)apiPost({action:'saveResult',apiKey:RESULT_API_KEY,result:r}).catch(()=>{});
+      }catch(e){}
+    }
+  };
+
+  return {open,close,loginView,createView,forgotView,adminView,doCreate,doLogin,requestReset,resetPassword,doAdmin,logout,
+    renderUser,sendUser,renderAdmin,loadThreads,openThread,sendAdmin,adminMessages,adminResults,mobileBack,showFileName,enterSend};
 })();
 </script>
 </body>
 </html>
-
-
-
-<style>.topic-options{display:grid;gap:12px;margin:14px 0}.topic-choice{padding:14px;border:1px solid #ccc;border-radius:10px;background:#fff;text-align:left;cursor:pointer;font-weight:600}.topic-choice.selected{outline:3px solid #b8860b;background:#fff8df}.paused-timer{opacity:.8}.speaking-topic-box{padding:16px;border:1px solid #ddd;border-radius:12px;margin-bottom:15px}.speaking-note{font-size:.95rem;line-height:1.5}</style>
