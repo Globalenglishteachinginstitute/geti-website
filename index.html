@@ -1192,6 +1192,13 @@ input, textarea, select{
    GETI uses only its own GETI branding.
 ========================================================= */
 .gemini-logo,.gemini-badge,.gemini-watermark,[class*="gemini"]{display:none !important;}
+
+@media(max-width:640px){
+  .gc-compose{grid-template-columns:46px minmax(0,1fr) 78px;padding:10px;gap:7px}
+  .gc-compose textarea{min-height:56px;max-height:150px;font-size:16px;padding:15px 13px;border-radius:18px}
+  .gc-compose .gc-btn.blue{min-height:56px;padding:0 10px;font-size:14px;border-radius:16px}
+  .gc-attach{height:56px;border-radius:16px}
+}
 </style>
 </head>
 
@@ -4296,7 +4303,7 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 ========================================================= -->
 <style>
 #getiChatFab{
- position:fixed;right:20px;bottom:20px;z-index:9000;border:0;border-radius:999px;
+ position:fixed;right:18px;top:50%;bottom:auto;transform:translateY(-50%);z-index:9000;border:0;border-radius:999px;
  background:#0b2d5c;color:#fff;padding:13px 18px;font-weight:800;cursor:pointer;
  box-shadow:0 12px 30px rgba(0,0,0,.28)
 }
@@ -4343,10 +4350,12 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 .gc-meta{font-size:10px;opacity:.68;margin-top:4px}
 .gc-file{display:inline-block;margin-top:7px;padding:7px 9px;border-radius:8px;background:rgba(179,138,40,.13);font-size:12px;font-weight:800}
 .gc-bubble-row.me .gc-file{color:#fff;background:rgba(255,255,255,.14)}
-.gc-compose{background:#fff;border-top:1px solid #e1e7ee;padding:10px 12px;display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:end}
-.gc-compose textarea{resize:none;max-height:110px;min-height:42px;border:1px solid #cbd5e1;border-radius:14px;padding:10px 12px;width:100%}
-.gc-attach{border:0;background:#eef3f8;border-radius:10px;padding:10px;cursor:pointer;font-size:18px}
-.gc-file-preview{grid-column:1/-1;font-size:11px;color:#657084}
+.gc-compose{background:#fff;border-top:1px solid #e1e7ee;padding:12px;display:grid;grid-template-columns:46px minmax(0,1fr) 86px;gap:9px;align-items:end;position:sticky;bottom:0;z-index:4;box-shadow:0 -4px 14px rgba(15,23,42,.05)}
+.gc-compose textarea{resize:none;overflow-y:auto;max-height:160px;min-height:52px;border:1.5px solid #cbd5e1;border-radius:18px;padding:14px 15px;width:100%;font-size:16px;line-height:1.35;outline:none;background:#f8fafc;box-sizing:border-box}
+.gc-compose textarea:focus{border-color:#0b2d5c;background:#fff;box-shadow:0 0 0 3px rgba(11,45,92,.10)}
+.gc-compose .gc-btn.blue{min-height:52px;border-radius:16px;font-size:15px;font-weight:900;padding:0 14px;white-space:nowrap}
+.gc-attach{border:0;background:#eef3f8;border-radius:14px;min-width:46px;height:52px;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:21px}
+.gc-file-preview{grid-column:1/-1;font-size:12px;color:#475569;min-height:16px;padding:0 4px;font-weight:700}
 .gc-admin-tabs{display:flex;gap:8px;padding:10px 14px;background:#fff;border-bottom:1px solid #e3e8ef}
 .gc-result{background:#fff;border:1px solid #dfe5ec;border-radius:12px;padding:12px;margin:10px 14px}
 .gc-result strong{color:#0b2d5c}
@@ -4360,7 +4369,7 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 .gc-thread-row{display:flex;gap:10px;align-items:center}
 .gc-thread-copy{min-width:0;flex:1}
 .gc-thread-copy strong,.gc-thread-copy small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#getiChatFab{display:flex;align-items:center;gap:9px;border-radius:999px;padding:12px 16px;box-shadow:0 8px 24px rgba(11,45,92,.28)}
+#getiChatFab{display:flex;align-items:center;gap:9px;border-radius:999px;padding:12px 16px;box-shadow:0 8px 24px rgba(11,45,92,.28);max-width:220px}
 .gc-fab-icon{font-size:20px}.gc-fab-label{font-weight:800}
 .gc-compose{grid-template-columns:auto 1fr auto;border-radius:0 0 16px 16px}
 .gc-compose textarea{border-radius:22px;background:#f4f7fb;border-color:#e5e7eb;padding:11px 14px}
@@ -4376,7 +4385,7 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
  .gc-avatar{width:34px;height:34px}
  .gc-compose{padding:8px}
  .gc-sidebar{width:100%}
- #getiChatFab{right:12px;bottom:12px}
+ #getiChatFab{right:12px;bottom:12px;top:auto;transform:none}
  .gc-sidebar{width:100%}.gc-main{display:none}
  .gc-chat.mobile-open .gc-sidebar{display:none}.gc-chat.mobile-open .gc-main{display:flex}
  .gc-back{display:inline-block;border:0;background:#eef3f8;border-radius:8px;padding:8px;cursor:pointer;margin-right:8px}
@@ -4510,7 +4519,7 @@ window.GETIChat=(function(){
 
     const allowed=(f.type==='application/pdf')||String(f.type||'').startsWith('image/');
     if(!allowed)throw new Error('Only images and PDF files are allowed.');
-    if(f.size>4*1024*1024)throw new Error('Maximum file size is 4 MB.');
+    if(f.size>15*1024*1024)throw new Error('Maximum file size is 15 MB.');
 
     const s=ses();
     if(!s?.token)throw new Error('Please sign in again.');
@@ -4575,8 +4584,8 @@ window.GETIChat=(function(){
           <div id="gcUserMessages" class="gc-messages"><div class="gc-empty">Loading conversation…</div></div>
           <div class="gc-compose">
             <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcUserFile" type="file" accept="image/*,.pdf,application/pdf" hidden onchange="GETIChat.showFileName('gcUserFile','gcUserFileName')"></label>
-            <textarea id="gcUserText" placeholder="Write a message…" onkeydown="GETIChat.enterSend(event,'user')"></textarea>
-            <button class="gc-btn blue" onclick="GETIChat.sendUser()">Send</button>
+            <textarea id="gcUserText" placeholder="Write a message…" onkeydown="GETIChat.enterSend(event,'user')" oninput="GETIChat.autoGrow(this)"></textarea>
+            <button class="gc-btn blue" onclick="GETIChat.sendUser()">Send ➤</button>
             <div id="gcUserFileName" class="gc-file-preview"></div>
           </div>
         </main></div>`;
@@ -4589,9 +4598,9 @@ window.GETIChat=(function(){
   }
   async function sendUser(){
     try{
-      const s=ses(),text=$('gcUserText').value.trim(),fp=await filePayload($('gcUserFile'));if(!text&&!fp.fileUrl)return;
-      $('gcUserText').value='';$('gcUserFile').value='';$('gcUserFileName').textContent='';
-      await apiPost({action:'studentSendMessage',token:s.token,text,...fp});await renderUser(true)
+      const s=ses(),box=$('gcUserText'),text=box.value.trim(),fp=await filePayload($('gcUserFile'));if(!text&&!fp.fileUrl)return;
+      await apiPost({action:'studentSendMessage',token:s.token,text,...fp});
+      box.value='';box.style.height='auto';$('gcUserFile').value='';$('gcUserFileName').textContent='';await renderUser(true)
     }catch(e){alert(e.message)}
   }
 
@@ -4626,8 +4635,8 @@ window.GETIChat=(function(){
         <div id="gcAdminMessages" class="gc-messages">${d.messages.length?d.messages.map(m=>messageHtml(m,'admin')).join(''):'<div class="gc-empty">No messages.</div>'}</div>
         <div class="gc-compose">
           <label class="gc-attach">📎<input id="gcAdminFile" type="file" accept="image/*,.pdf,application/pdf" hidden onchange="GETIChat.showFileName('gcAdminFile','gcAdminFileName')"></label>
-          <textarea id="gcAdminText" placeholder="Reply to ${esc(d.messages?.[0]?.studentName||email)}…" onkeydown="GETIChat.enterSend(event,'admin')"></textarea>
-          <button class="gc-btn blue" onclick="GETIChat.sendAdmin()">Send</button>
+          <textarea id="gcAdminText" placeholder="Reply to ${esc(d.messages?.[0]?.studentName||email)}…" onkeydown="GETIChat.enterSend(event,'admin')" oninput="GETIChat.autoGrow(this)"></textarea>
+          <button class="gc-btn blue" onclick="GETIChat.sendAdmin()">Send ➤</button>
           <div id="gcAdminFileName" class="gc-file-preview"></div>
         </div>`;
       const box=$('gcAdminMessages');if(box)box.scrollTop=box.scrollHeight;
@@ -4636,9 +4645,9 @@ window.GETIChat=(function(){
   }
   async function sendAdmin(){
     try{
-      const s=ses(),text=$('gcAdminText').value.trim(),fp=await filePayload($('gcAdminFile'));if(!text&&!fp.fileUrl)return;
-      $('gcAdminText').value='';$('gcAdminFile').value='';$('gcAdminFileName').textContent='';
-      await apiPost({action:'adminSendMessage',token:s.token,studentEmail:activeEmail,text,...fp});await openThread(encodeURIComponent(activeEmail),true)
+      const s=ses(),box=$('gcAdminText'),text=box.value.trim(),fp=await filePayload($('gcAdminFile'));if(!text&&!fp.fileUrl)return;
+      await apiPost({action:'adminSendMessage',token:s.token,studentEmail:activeEmail,text,...fp});
+      box.value='';box.style.height='auto';$('gcAdminFile').value='';$('gcAdminFileName').textContent='';await openThread(encodeURIComponent(activeEmail),true)
     }catch(e){alert(e.message)}
   }
   async function loadResults(silent=false){
@@ -4660,6 +4669,7 @@ window.GETIChat=(function(){
   function adminResults(){adminMode='results';renderAdmin()}
   function mobileBack(){$('gcAdminChat')?.classList.remove('mobile-open')}
   function showFileName(inputId,outId){const f=$(inputId)?.files?.[0];const o=$(outId);if(o)o.textContent=f?'Attached: '+f.name:''}
+  function autoGrow(el){if(!el)return;el.style.height='auto';el.style.height=Math.min(el.scrollHeight,160)+'px'}
   function enterSend(e,who){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();who==='admin'?sendAdmin():sendUser()}}
 
   function open(){
@@ -4681,7 +4691,7 @@ window.GETIChat=(function(){
   };
 
   return {open,close,loginView,createView,forgotView,adminView,doCreate,doLogin,requestReset,resetPassword,doAdmin,logout,
-    renderUser,sendUser,renderAdmin,loadThreads,openThread,sendAdmin,adminMessages,adminResults,mobileBack,showFileName,enterSend};
+    renderUser,sendUser,renderAdmin,loadThreads,openThread,sendAdmin,adminMessages,adminResults,mobileBack,showFileName,autoGrow,enterSend};
 })();
 </script>
 </body>
