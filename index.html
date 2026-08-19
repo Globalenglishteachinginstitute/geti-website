@@ -1199,10 +1199,6 @@ input, textarea, select{
   .gc-compose .gc-btn.blue{min-height:56px;padding:0 10px;font-size:14px;border-radius:16px}
   .gc-attach{height:56px;border-radius:16px}
 }
-
-/* GETI Messenger notifications */
-.gc-notify-badge{display:inline-flex;min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:#ef4444;color:white;font-size:12px;font-weight:800;align-items:center;justify-content:center}
-.gc-block-btn{background:#ef4444;color:white;border:0;border-radius:999px;padding:8px 12px;cursor:pointer}
 </style>
 </head>
 
@@ -4467,19 +4463,17 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 
 </style>
 
-<button id="getiChatFab" onclick="GETIChat.open()"><span class="gc-fab-icon">💬</span><span class="gc-fab-label">GETI Messenger</span></button>
+<button id="getiChatFab" onclick="GETIChat.open()"><span class="gc-fab-icon">💬</span><span class="gc-fab-label">Chat with Administrator</span></button>
 <div id="getiChatShell">
   <div class="gc-head">
-    <div class="gc-brand-row"><div class="gc-avatar gc-avatar-admin">A</div><div><strong>GETI Messenger</strong><small><span class="gc-online-dot"></span> Administrator support · GETI_MESSENGER_CALLS_V3_FIXED</small></div></div>
+    <div class="gc-brand-row"><div class="gc-avatar gc-avatar-admin">A</div><div><strong>GETI Messenger</strong><small><span class="gc-online-dot"></span> Administrator support · GETI_SUPABASE_CORS_FIXED_20260820_0500</small></div></div>
     <button class="gc-x" onclick="GETIChat.close()">×</button>
   </div>
   <div id="getiChatRoot" class="gc-body"></div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.2/dist/umd/supabase.min.js"></script>
 <script>
-window.GETI_CHAT_BUILD='GETI_MESSENGER_CALLS_V3_FIXED_20260820';
-console.log('GETI chat build:',window.GETI_CHAT_BUILD);
+window.GETI_CHAT_BUILD='GETI_SUPABASE_CORS_FIXED_20260820_0500'; console.log('GETI chat build:',window.GETI_CHAT_BUILD);
 window.GETIChat=(function(){
   const CHAT_API_URL='https://script.google.com/macros/s/AKfycbyrYlYRBo3OCb37-PFvdpqTJCyafBrkVMGKOJIDfJd7sV_Rag3UkVIDp06IVzgoxvCpYg/exec';
 
@@ -4494,8 +4488,6 @@ window.GETIChat=(function(){
   const RESULT_API_KEY='GETI-RESULT-2026';
   const SESSION_KEY='GETI_WORLD_CHAT_SESSION';
   let pollTimer=null, activeEmail=null, adminMode='messages', adminRenderedEmail=null;
-  let getiUnreadCount=0;
-  let getiBlockedStudents={};
 
   const $=id=>document.getElementById(id);
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -4598,17 +4590,13 @@ window.GETIChat=(function(){
     try{
       const name=$('gcCreateName').value.trim(),email=$('gcCreateEmail').value.trim().toLowerCase(),password=$('gcCreatePass').value;
       if(!name||!email||password.length<6)return authMsg('Complete all fields. Password must contain at least 6 characters.');
-      const d=await apiPost({action:'createAccount',name,email,password});
-      setSes({token:d.token,role:'user',email:d.user.email,name:d.user.name});
-      await ensureProfileThen('user');
+      const d=await apiPost({action:'createAccount',name,email,password}); setSes({token:d.token,role:'user',email:d.user.email,name:d.user.name}); renderUser();
     }catch(e){authMsg(e.message)}
   }
   async function doLogin(){
     try{
       const email=$('gcLoginEmail').value.trim().toLowerCase(),password=$('gcLoginPass').value;
-      const d=await apiPost({action:'login',email,password});
-      setSes({token:d.token,role:'user',email:d.user.email,name:d.user.name});
-      await ensureProfileThen('user');
+      const d=await apiPost({action:'login',email,password}); setSes({token:d.token,role:'user',email:d.user.email,name:d.user.name}); renderUser();
     }catch(e){authMsg(e.message)}
   }
   async function requestReset(){
@@ -4622,12 +4610,8 @@ window.GETIChat=(function(){
     }catch(e){authMsg(e.message)}
   }
   async function doAdmin(){
-    try{
-      const code=$('gcAdminCode').value.trim();
-      const d=await apiPost({action:'adminLogin',code});
-      setSes({token:d.token,role:'admin',email:d.user.email,name:d.user.name});
-      await ensureProfileThen('admin');
-    }catch(e){authMsg(e.message)}
+    try{const code=$('gcAdminCode').value.trim();const d=await apiPost({action:'adminLogin',code});setSes({token:d.token,role:'admin',email:d.user.email,name:d.user.name});renderAdmin()}
+    catch(e){authMsg(e.message)}
   }
 
   function stopPoll(){if(pollTimer){clearInterval(pollTimer);pollTimer=null}}
@@ -4885,14 +4869,12 @@ window.GETIChat=(function(){
     const allowed=
       f.type==='application/pdf' ||
       String(f.type||'').startsWith('image/') ||
-      String(f.type||'').startsWith('video/') ||
-      String(f.type||'').startsWith('audio/') ||
       /\.pdf$/i.test(f.name||'') ||
-      /\.(png|jpe?g|gif|webp|bmp|heic|heif|mp4|webm|mov|mp3|wav|m4a|ogg)$/i.test(f.name||'');
+      /\.(png|jpe?g|gif|webp|bmp|heic|heif)$/i.test(f.name||'');
 
     if(!allowed){
       throw new Error(
-        'Photos, videos, audio and PDF files are allowed.'
+        'Only photos/images and PDF files are allowed.'
       );
     }
 
@@ -4999,762 +4981,15 @@ window.GETIChat=(function(){
     }
   }
 
-  
-
-  /* =======================================================
-     AUDIO / VIDEO CALLS V3 — WebRTC + Supabase Realtime
-  ======================================================= */
-
-  const rtClient =
-    window.supabase?.createClient
-      ? window.supabase.createClient(
-          SUPABASE_URL,
-          SUPABASE_PUBLISHABLE_KEY,
-          {
-            auth:{
-              persistSession:false,
-              autoRefreshToken:false,
-              detectSessionInUrl:false
-            }
-          }
-        )
-      : null;
-
-  let callState={
-    call:null,
-    pc:null,
-    channel:null,
-    localStream:null,
-    remoteStream:null,
-    initiator:false,
-    connected:false,
-    pollBusy:false
-  };
-
-  const RTC_CONFIG={
-    iceServers:[
-      {urls:'stun:stun.l.google.com:19302'},
-      {urls:'stun:stun1.l.google.com:19302'}
-    ]
-  };
-
-  function callOverlay(){
-    let el=document.getElementById('gcCallOverlay');
-    if(el)return el;
-
-    el=document.createElement('div');
-    el.id='gcCallOverlay';
-    el.style.cssText='position:fixed;inset:0;z-index:999999;background:rgba(5,10,25,.92);display:none;align-items:center;justify-content:center;padding:20px;color:white';
-    el.innerHTML=`
-      <div style="width:min(760px,96vw);background:#111827;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45)">
-        <div id="gcCallHead" style="padding:16px 18px;font-weight:800;text-align:center">GETI Call</div>
-        <div id="gcCallMedia" style="position:relative;background:#020617;min-height:300px;display:flex;align-items:center;justify-content:center">
-          <video id="gcRemoteVideo" autoplay playsinline style="width:100%;max-height:68vh;object-fit:contain;background:#020617"></video>
-          <video id="gcLocalVideo" autoplay muted playsinline style="position:absolute;right:12px;bottom:12px;width:min(180px,30vw);border-radius:14px;border:2px solid rgba(255,255,255,.35);background:#111827"></video>
-          <div id="gcAudioAvatar" style="display:none;text-align:center">
-            <img id="gcCallAvatar" style="width:116px;height:116px;border-radius:50%;object-fit:cover;background:#334155">
-            <div id="gcCallPerson" style="font-size:22px;font-weight:800;margin-top:14px"></div>
-            <div id="gcCallStatus" style="opacity:.75;margin-top:5px">Calling…</div>
-          </div>
-        </div>
-        <div id="gcCallControls" style="padding:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-          <button id="gcMuteBtn" onclick="GETIChat.toggleMute()" style="border:0;border-radius:999px;padding:12px 16px;cursor:pointer">🎤 Mute</button>
-          <button id="gcCameraBtn" onclick="GETIChat.toggleCamera()" style="border:0;border-radius:999px;padding:12px 16px;cursor:pointer">📹 Camera</button>
-          <button onclick="GETIChat.endCall()" style="border:0;border-radius:999px;padding:12px 20px;background:#ef4444;color:white;font-weight:800;cursor:pointer">☎ End</button>
-        </div>
-      </div>`;
-    document.body.appendChild(el);
-    return el;
-  }
-
-  function incomingCallOverlay(call){
-    let el=document.getElementById('gcIncomingCall');
-    if(!el){
-      el=document.createElement('div');
-      el.id='gcIncomingCall';
-      el.style.cssText='position:fixed;inset:0;z-index:1000000;background:rgba(2,6,23,.88);display:none;align-items:center;justify-content:center;padding:20px;color:white';
-      document.body.appendChild(el);
-    }
-
-    el.innerHTML=`
-      <div style="width:min(390px,94vw);background:#111827;border-radius:24px;padding:28px;text-align:center;box-shadow:0 25px 70px rgba(0,0,0,.5)">
-        <img src="${esc(call.callerPhotoURL||'')}" style="width:100px;height:100px;border-radius:50%;object-fit:cover;background:#334155">
-        <h2 style="margin:14px 0 5px">${esc(call.callerName||call.callerEmail||'Incoming call')}</h2>
-        <p style="opacity:.75">${call.callType==='video'?'📹 Video call':'📞 Audio call'}</p>
-        <div style="display:flex;gap:14px;justify-content:center;margin-top:22px">
-          <button onclick="GETIChat.rejectCall()" style="border:0;border-radius:999px;padding:14px 22px;background:#ef4444;color:white;font-weight:800;cursor:pointer">Reject</button>
-          <button onclick="GETIChat.acceptCall()" style="border:0;border-radius:999px;padding:14px 22px;background:#22c55e;color:white;font-weight:800;cursor:pointer">Accept</button>
-        </div>
-      </div>`;
-    el.style.display='flex';
-  }
-
-  function hideIncomingCall(){
-    const el=document.getElementById('gcIncomingCall');
-    if(el)el.style.display='none';
-  }
-
-  function otherParty(call){
-    const s=ses();
-    if(!call||!s)return {};
-    const me=String(s.email||'').toLowerCase();
-
-    if(String(call.callerEmail||'').toLowerCase()===me){
-      return {
-        email:call.calleeEmail,
-        name:call.calleeName,
-        photoURL:call.calleePhotoURL
-      };
-    }
-
-    return {
-      email:call.callerEmail,
-      name:call.callerName,
-      photoURL:call.callerPhotoURL
-    };
-  }
-
-  function showCallScreen(call,statusText){
-    const el=callOverlay();
-    const other=otherParty(call);
-    const isVideo=call.callType==='video';
-
-    el.style.display='flex';
-
-    const media=$('gcCallMedia');
-    const audioAvatar=$('gcAudioAvatar');
-    const remote=$('gcRemoteVideo');
-    const local=$('gcLocalVideo');
-    const camBtn=$('gcCameraBtn');
-
-    if(isVideo){
-      audioAvatar.style.display='none';
-      remote.style.display='block';
-      local.style.display='block';
-      camBtn.style.display='inline-block';
-    }else{
-      remote.style.display='none';
-      local.style.display='none';
-      audioAvatar.style.display='block';
-      camBtn.style.display='none';
-      $('gcCallAvatar').src=other.photoURL||'';
-      $('gcCallPerson').textContent=other.name||other.email||'GETI user';
-      $('gcCallStatus').textContent=statusText||'Calling…';
-    }
-
-    $('gcCallHead').textContent=
-      (isVideo?'📹 ':'📞 ')+(other.name||other.email||'GETI Call');
-  }
-
-  async function createCallChannel(roomId){
-    if(!rtClient)throw new Error('Supabase Realtime library did not load.');
-
-    if(callState.channel){
-      try{await rtClient.removeChannel(callState.channel)}catch(_){}
-    }
-
-    const channel=rtClient.channel(
-      'geti-call:'+roomId,
-      {config:{broadcast:{ack:true,self:false}}}
-    );
-
-    channel
-      .on('broadcast',{event:'webrtc-offer'},async({payload})=>{
-        if(callState.initiator)return;
-        await onRtcOffer(payload);
-      })
-      .on('broadcast',{event:'webrtc-answer'},async({payload})=>{
-        if(!callState.initiator)return;
-        await onRtcAnswer(payload);
-      })
-      .on('broadcast',{event:'webrtc-ice'},async({payload})=>{
-        await onRtcIce(payload);
-      })
-      .on('broadcast',{event:'call-ended'},async()=>{
-        await closeRtc(false);
-        alert('Call ended.');
-      });
-
-    await new Promise((resolve,reject)=>{
-      let done=false;
-      channel.subscribe(status=>{
-        if(status==='SUBSCRIBED'&&!done){
-          done=true;
-          resolve();
-        }
-        if((status==='CHANNEL_ERROR'||status==='TIMED_OUT')&&!done){
-          done=true;
-          reject(new Error('Unable to connect to call signaling.'));
-        }
-      });
-      setTimeout(()=>{
-        if(!done){
-          done=true;
-          reject(new Error('Realtime connection timed out.'));
-        }
-      },12000);
-    });
-
-    callState.channel=channel;
-    return channel;
-  }
-
-  async function getCallMedia(type){
-    const constraints=
-      type==='video'
-        ? {audio:true,video:{facingMode:'user'}}
-        : {audio:true,video:false};
-
-    try{
-      return await navigator.mediaDevices.getUserMedia(constraints);
-    }catch(e){
-      if(e?.name==='NotAllowedError'){
-        throw new Error('Microphone/camera permission was denied.');
-      }
-      throw new Error('Unable to access microphone/camera: '+(e?.message||e));
-    }
-  }
-
-  async function setupPeer(call,initiator){
-    callState.initiator=initiator;
-    callState.call=call;
-    callState.connected=false;
-
-    showCallScreen(
-      call,
-      initiator?'Calling…':'Connecting…'
-    );
-
-    callState.localStream=
-      await getCallMedia(call.callType);
-
-    callState.remoteStream=
-      new MediaStream();
-
-    const pc=
-      new RTCPeerConnection(RTC_CONFIG);
-
-    callState.pc=pc;
-
-    callState.localStream
-      .getTracks()
-      .forEach(track=>
-        pc.addTrack(
-          track,
-          callState.localStream
-        )
-      );
-
-    pc.ontrack=e=>{
-      e.streams[0]?.getTracks().forEach(track=>{
-        if(!callState.remoteStream.getTracks().some(t=>t.id===track.id)){
-          callState.remoteStream.addTrack(track);
-        }
-      });
-      const remote=$('gcRemoteVideo');
-      if(remote)remote.srcObject=callState.remoteStream;
-    };
-
-    pc.onicecandidate=e=>{
-      if(e.candidate&&callState.channel){
-        callState.channel.send({
-          type:'broadcast',
-          event:'webrtc-ice',
-          payload:{
-            candidate:e.candidate.toJSON()
-          }
-        });
-      }
-    };
-
-    pc.onconnectionstatechange=()=>{
-      if(pc.connectionState==='connected'){
-        callState.connected=true;
-        if($('gcCallStatus'))$('gcCallStatus').textContent='Connected';
-      }
-
-      if(['failed','closed','disconnected'].includes(pc.connectionState)){
-        if(pc.connectionState==='failed'){
-          console.warn('WebRTC connection failed');
-        }
-      }
-    };
-
-    const local=$('gcLocalVideo');
-    if(local&&call.callType==='video'){
-      local.srcObject=callState.localStream;
-    }
-
-    await createCallChannel(call.roomId);
-
-    if(initiator){
-      const offer=
-        await pc.createOffer();
-
-      await pc.setLocalDescription(offer);
-
-      await callState.channel.send({
-        type:'broadcast',
-        event:'webrtc-offer',
-        payload:{
-          sdp:pc.localDescription.toJSON()
-        }
-      });
-    }
-  }
-
-  async function onRtcOffer(payload){
-    const pc=callState.pc;
-    if(!pc||!payload?.sdp)return;
-
-    await pc.setRemoteDescription(
-      new RTCSessionDescription(payload.sdp)
-    );
-
-    const answer=
-      await pc.createAnswer();
-
-    await pc.setLocalDescription(answer);
-
-    await callState.channel.send({
-      type:'broadcast',
-      event:'webrtc-answer',
-      payload:{
-        sdp:pc.localDescription.toJSON()
-      }
-    });
-  }
-
-  async function onRtcAnswer(payload){
-    const pc=callState.pc;
-    if(!pc||!payload?.sdp)return;
-
-    if(!pc.currentRemoteDescription){
-      await pc.setRemoteDescription(
-        new RTCSessionDescription(payload.sdp)
-      );
-    }
-  }
-
-  async function onRtcIce(payload){
-    const pc=callState.pc;
-    if(!pc||!payload?.candidate)return;
-
-    try{
-      await pc.addIceCandidate(
-        new RTCIceCandidate(payload.candidate)
-      );
-    }catch(e){
-      console.warn('ICE candidate ignored',e);
-    }
-  }
-
-  async function startCall(type){
-    const s=ses();
-    if(!s)return loginView();
-
-    try{
-      const payload={
-        action:'callCreate',
-        token:s.token,
-        callType:type
-      };
-
-      if(s.role==='admin'){
-        if(!activeEmail)throw new Error('Select a student conversation first.');
-        payload.studentEmail=activeEmail;
-      }
-
-      const d=await apiPost(payload,0);
-
-      callState.call=d.call;
-      callState.initiator=true;
-
-      showCallScreen(
-        d.call,
-        'Ringing…'
-      );
-
-    }catch(e){
-      alert(e.message);
-    }
-  }
-
-  async function acceptCall(){
-    const s=ses();
-    const call=callState.call;
-    if(!s||!call)return;
-
-    hideIncomingCall();
-
-    try{
-      const d=await apiPost({
-        action:'callRespond',
-        token:s.token,
-        callId:call.callId,
-        response:'accepted'
-      },0);
-
-      call.status='accepted';
-      call.roomId=d.roomId||call.roomId;
-
-      await setupPeer(call,false);
-
-    }catch(e){
-      alert(e.message);
-      await closeRtc(false);
-    }
-  }
-
-  async function rejectCall(){
-    const s=ses();
-    const call=callState.call;
-
-    hideIncomingCall();
-
-    if(s&&call){
-      try{
-        await apiPost({
-          action:'callRespond',
-          token:s.token,
-          callId:call.callId,
-          response:'rejected'
-        },0);
-      }catch(_){}
-    }
-
-    await closeRtc(false);
-  }
-
-  async function pollCall(){
-    const s=ses();
-
-    if(!s||callState.pollBusy)return;
-
-    callState.pollBusy=true;
-
-    try{
-      const d=await apiPost({
-        action:'callPoll',
-        token:s.token
-      },0);
-
-      const call=d.call;
-
-      if(!call){
-        if(callState.call&&!callState.connected){
-          const hadCall=callState.call;
-          await closeRtc(false);
-          if(hadCall.direction==='outgoing'){
-            // call may have been rejected/cancelled/missed
-          }
-        }
-        return;
-      }
-
-      if(
-        callState.call &&
-        callState.call.callId !== call.callId &&
-        (callState.connected||callState.pc)
-      ){
-        return;
-      }
-
-      callState.call=call;
-
-      if(call.direction==='incoming'&&call.status==='ringing'){
-        incomingCallOverlay(call);
-        return;
-      }
-
-      if(
-        call.direction==='outgoing' &&
-        call.status==='accepted' &&
-        !callState.pc
-      ){
-        await setupPeer(call,true);
-        return;
-      }
-
-    }catch(e){
-      console.warn('Call poll:',e.message);
-    }finally{
-      callState.pollBusy=false;
-    }
-  }
-
-  async function endCall(){
-    const s=ses();
-    const call=callState.call;
-
-    try{
-      if(callState.channel){
-        await callState.channel.send({
-          type:'broadcast',
-          event:'call-ended',
-          payload:{}
-        });
-      }
-    }catch(_){}
-
-    if(s&&call){
-      try{
-        await apiPost({
-          action:'callEnd',
-          token:s.token,
-          callId:call.callId
-        },0);
-      }catch(_){}
-    }
-
-    await closeRtc(false);
-  }
-
-  async function closeRtc(clearCall=true){
-    hideIncomingCall();
-
-    if(callState.pc){
-      try{callState.pc.close()}catch(_){}
-    }
-
-    if(callState.localStream){
-      callState.localStream.getTracks().forEach(t=>t.stop());
-    }
-
-    if(callState.remoteStream){
-      callState.remoteStream.getTracks().forEach(t=>t.stop());
-    }
-
-    if(callState.channel&&rtClient){
-      try{await rtClient.removeChannel(callState.channel)}catch(_){}
-    }
-
-    const overlay=document.getElementById('gcCallOverlay');
-    if(overlay)overlay.style.display='none';
-
-    callState.pc=null;
-    callState.channel=null;
-    callState.localStream=null;
-    callState.remoteStream=null;
-    callState.connected=false;
-    callState.initiator=false;
-
-    if(clearCall)callState.call=null;
-    else callState.call=null;
-  }
-
-  function toggleMute(){
-    const tracks=callState.localStream?.getAudioTracks()||[];
-    if(!tracks.length)return;
-
-    const enabled=!tracks[0].enabled;
-    tracks.forEach(t=>t.enabled=enabled);
-
-    const b=$('gcMuteBtn');
-    if(b)b.textContent=enabled?'🎤 Mute':'🔇 Unmute';
-  }
-
-  function toggleCamera(){
-    const tracks=callState.localStream?.getVideoTracks()||[];
-    if(!tracks.length)return;
-
-    const enabled=!tracks[0].enabled;
-    tracks.forEach(t=>t.enabled=enabled);
-
-    const b=$('gcCameraBtn');
-    if(b)b.textContent=enabled?'📹 Camera':'🚫 Camera off';
-  }
-
-  setInterval(pollCall,2000);
-
-  async function ensureProfileThen(targetRole){
-    const s=ses();
-    const d=await apiPost({action:'getProfile',token:s.token});
-    if(d.profileRequired){
-      return profileView(targetRole,d.profile||{});
-    }
-    if(targetRole==='admin')return renderAdmin();
-    return renderUser();
-  }
-
-  async function profileView(returnRole,existing={}){
-    stopPoll();
-    const s=ses();
-    root().innerHTML=`<div class="gc-auth">
-      <div class="gc-auth-card" style="max-width:560px">
-        <h2>Complete your GETI profile</h2>
-        <p class="gc-status">A profile photo is required for every GETI account.</p>
-        <div style="display:flex;justify-content:center;margin:12px 0">
-          <img id="gcProfilePreview" src="${esc(existing.photoURL||'')}" style="width:96px;height:96px;border-radius:50%;object-fit:cover;background:#e5e7eb" onerror="this.removeAttribute('src')">
-        </div>
-        <div class="gc-field"><label>Profile photo *</label><input id="gcProfileFile" type="file" accept="image/*"></div>
-        <div class="gc-field"><label>Full name *</label><input id="gcProfileName" value="${esc(existing.name||s.name||'')}"></div>
-        <div class="gc-field"><label>@username *</label><input id="gcProfileUsername" value="${esc(existing.username||String(s.email||'').split('@')[0])}"></div>
-        <div class="gc-field"><label>Bio</label><textarea id="gcProfileBio" maxlength="240">${esc(existing.bio||'')}</textarea></div>
-        <button class="gc-btn blue" onclick="GETIChat.saveProfile('${returnRole}')">SAVE PROFILE</button>
-        <div id="gcProfileMsg"></div>
-      </div>
-    </div>`;
-    const f=$('gcProfileFile');
-    if(f)f.onchange=()=>{const x=f.files?.[0];if(x)$('gcProfilePreview').src=URL.createObjectURL(x)};
-  }
-
-  async function saveProfile(returnRole){
-    try{
-      const s=ses();
-      let photoURL='';
-      const current=await apiPost({action:'getProfile',token:s.token});
-      photoURL=current.profile?.photoURL||'';
-
-      const f=$('gcProfileFile')?.files?.[0];
-      if(f){
-        if(!String(f.type||'').startsWith('image/'))throw new Error('Profile photo must be an image.');
-        const path='profiles/'+safeStoragePart(s.email)+'/'+Date.now()+'_'+safeStoragePart(f.name||'profile.jpg');
-        showUploadProgress(f);
-        try{
-          await directSupabaseUpload(f,path);
-          photoURL=storagePublicUrl(path);
-        }finally{hideUploadProgress()}
-      }
-
-      if(!photoURL)throw new Error('Profile photo is required.');
-
-      await apiPost({
-        action:'saveProfile',
-        token:s.token,
-        name:$('gcProfileName').value.trim(),
-        username:$('gcProfileUsername').value.trim(),
-        bio:$('gcProfileBio').value.trim(),
-        photoURL
-      });
-
-      if(returnRole==='admin')return renderAdmin();
-      return renderUser();
-    }catch(e){
-      const m=$('gcProfileMsg');if(m)m.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`;
-    }
-  }
-
-  async function openProfile(){
-    const s=ses();
-    const d=await apiPost({action:'getProfile',token:s.token});
-    profileView(s.role==='admin'?'admin':'user',d.profile||{});
-  }
-
-  async function renderGeneralGroup(refreshOnly=false){
-    const s=ses();
-    if(!s)return loginView();
-
-    if(!refreshOnly){
-      root().innerHTML=`<div class="gc-chat mobile-open">
-        <main class="gc-main" style="display:flex">
-          <div class="gc-chat-top">
-            <div class="gc-brand-row"><div class="gc-avatar">G</div><div><strong>GETI Students</strong><small>General group · all students</small></div></div>
-            <div style="display:flex;gap:6px">
-              <button class="gc-btn light" onclick="GETIChat.openProfile()">Profile</button>
-              <button class="gc-btn light" onclick="${s.role==='admin'?'GETIChat.renderAdmin()':'GETIChat.renderUser()'}">Back</button>
-            </div>
-          </div>
-          <div id="gcGroupMessages" class="gc-messages"><div class="gc-empty">Loading group…</div></div>
-          <div class="gc-compose">
-            <label class="gc-attach">📎<input id="gcGroupFile" type="file" accept="image/*,video/*,audio/*,application/pdf,.pdf" hidden onchange="GETIChat.showFileName('gcGroupFile','gcGroupFileName')"></label>
-            <textarea id="gcGroupText" placeholder="Write to all students…" oninput="GETIChat.autoGrow(this);GETIChat.groupTyping()"></textarea>
-            <button class="gc-btn blue" onclick="GETIChat.sendGroup()">Send ➤</button>
-            <div id="gcGroupFileName" class="gc-file-preview"></div>
-          </div>
-        </main></div>`;
-    }
-
-    try{
-      const d=await apiPost({action:'groupGetMessages',token:s.token,groupId:'GETI_GENERAL'});
-      const box=$('gcGroupMessages');
-      if(box){
-        box.innerHTML=(d.messages||[]).length?(d.messages||[]).map(groupMessageHtml).join(''):'<div class="gc-empty">No group messages yet.</div>';
-        box.scrollTop=box.scrollHeight;
-      }
-    }catch(e){
-      const box=$('gcGroupMessages');if(box)box.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`;
-    }
-
-    if(!refreshOnly)startPoll(()=>renderGeneralGroup(true));
-  }
-
-  function groupMessageHtml(m){
-    const s=ses();
-    const mine=String(m.senderEmail||'').toLowerCase()===String(s?.email||'').toLowerCase();
-    const photo=m.senderPhotoURL||'';
-    const fileUrl=m.fileURL||m.fileUrl||'';
-    const type=String(m.fileType||'');
-    const fileName=m.fileName||'Attachment';
-    let attachment='';
-    if(fileUrl){
-      if(type.startsWith('image/'))attachment=`<a href="${esc(fileUrl)}" target="_blank"><img src="${esc(fileUrl)}" style="max-width:260px;border-radius:14px;display:block;margin-top:6px"></a>`;
-      else if(type.startsWith('video/'))attachment=`<video controls style="max-width:280px;margin-top:6px"><source src="${esc(fileUrl)}"></video>`;
-      else if(type.startsWith('audio/'))attachment=`<audio controls src="${esc(fileUrl)}" style="margin-top:6px;max-width:260px"></audio>`;
-      else attachment=`<a href="${esc(fileUrl)}" target="_blank" rel="noopener">📎 ${esc(fileName)}</a>`;
-    }
-    const reactions=Object.values(m.reactions||{});
-    const count={};reactions.forEach(r=>count[r]=(count[r]||0)+1);
-    const pills=Object.entries(count).map(([r,n])=>`<span style="font-size:12px">${esc(r)} ${n}</span>`).join(' ');
-    return `<div class="gc-bubble-row ${mine?'me':''}">
-      ${mine?'':`<img src="${esc(photo)}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;margin-right:6px">`}
-      <div class="gc-bubble ${mine?'mine':''}">
-        <small style="font-weight:700">${esc(m.senderName||m.senderEmail||'Member')}</small>
-        ${m.text?`<div>${esc(m.text)}</div>`:''}${attachment}
-        <div style="display:flex;gap:8px;margin-top:5px">
-          <button onclick="GETIChat.reactGroup('${esc(m.id)}','❤️')" style="border:0;background:none;cursor:pointer">❤️</button>
-          <button onclick="GETIChat.reactGroup('${esc(m.id)}','👍')" style="border:0;background:none;cursor:pointer">👍</button>
-          <button onclick="GETIChat.reactGroup('${esc(m.id)}','😂')" style="border:0;background:none;cursor:pointer">😂</button>
-          ${pills}
-        </div>
-      </div>
-    </div>`;
-  }
-
-  async function sendGroup(){
-    try{
-      const s=ses(),text=($('gcGroupText')?.value||'').trim();
-      const fp=await filePayload($('gcGroupFile'));
-      if(!text&&!fp.fileURL)return;
-      await apiPost({
-        action:'groupSendMessage',
-        token:s.token,
-        groupId:'GETI_GENERAL',
-        text,
-        fileName:fp.fileName||'',
-        fileURL:fp.fileURL||'',
-        fileType:fp.fileType||''
-      });
-      $('gcGroupText').value='';
-      $('gcGroupFile').value='';
-      $('gcGroupFileName').textContent='';
-      await renderGeneralGroup(true);
-    }catch(e){alert(e.message)}
-  }
-
-  async function reactGroup(messageId,reaction){
-    const s=ses();
-    await apiPost({action:'groupReact',token:s.token,groupId:'GETI_GENERAL',messageId,reaction});
-    await renderGeneralGroup(true);
-  }
-
-  let typingTimer=null;
-  function groupTyping(){
-    const s=ses();if(!s)return;
-    apiPost({action:'presenceUpdate',token:s.token,typingContext:'GETI_GENERAL'},0).catch(()=>{});
-    clearTimeout(typingTimer);
-    typingTimer=setTimeout(()=>apiPost({action:'presenceUpdate',token:s.token,typingContext:''},0).catch(()=>{}),1800);
-  }
-
-async function renderUser(refreshOnly=false){
+  async function renderUser(refreshOnly=false){
     const s=ses();if(!s||s.role!=='user')return loginView();
     if(!refreshOnly){
       root().innerHTML=`<div class="gc-chat mobile-open">
         <main class="gc-main" style="display:flex">
-          <div class="gc-chat-top"><div class="gc-brand-row"><div class="gc-avatar gc-avatar-admin">A</div><div><strong>GETI Administrator</strong><small><span class="gc-online-dot"></span> Online support · ${esc(s.email)}</small></div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="gc-btn light" onclick="GETIChat.startCall('audio')">📞</button><button class="gc-btn light" onclick="GETIChat.startCall('video')">📹</button><button class="gc-btn light" onclick="GETIChat.renderGeneralGroup()">👥 Students Group</button><button class="gc-btn light" onclick="GETIChat.openProfile()">Profile</button><button class="gc-btn light" onclick="GETIChat.logout()">Logout</button></div></div>
+          <div class="gc-chat-top"><div class="gc-brand-row"><div class="gc-avatar gc-avatar-admin">A</div><div><strong>GETI Administrator</strong><small><span class="gc-online-dot"></span> Online support · ${esc(s.email)}</small></div></div><button class="gc-btn light" onclick="GETIChat.logout()">Logout</button></div>
           <div id="gcUserMessages" class="gc-messages"><div class="gc-empty">Loading conversation…</div></div>
           <div class="gc-compose">
-            <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcUserFile" type="file" accept="image/*,video/*,audio/*,application/pdf,.pdf" hidden onchange="GETIChat.showFileName('gcUserFile','gcUserFileName')"></label>
+            <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcUserFile" type="file" accept="image/*,application/pdf,.pdf" hidden onchange="GETIChat.showFileName('gcUserFile','gcUserFileName')"></label>
             <textarea id="gcUserText" placeholder="Write a message…" onkeydown="GETIChat.enterSend(event,'user')" oninput="GETIChat.autoGrow(this)"></textarea>
             <button class="gc-btn blue" onclick="GETIChat.sendUser()">Send ➤</button>
             <div id="gcUserFileName" class="gc-file-preview"></div>
@@ -5816,7 +5051,7 @@ async function renderUser(refreshOnly=false){
       <aside class="gc-sidebar">
         <div class="gc-side-top"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Administrator</strong><button class="gc-btn light" onclick="GETIChat.logout()">Logout</button></div>
         <input id="gcSearch" class="gc-search" placeholder="Search name or email…" oninput="GETIChat.loadThreads()"></div>
-        <div class="gc-admin-tabs"><button class="gc-btn ${adminMode==='messages'?'blue':'light'}" onclick="GETIChat.adminMessages()">Messages</button><button class="gc-btn light" onclick="GETIChat.renderGeneralGroup()">Students Group</button><button class="gc-btn light" onclick="GETIChat.openProfile()">Profile</button><button class="gc-btn ${adminMode==='results'?'blue':'light'}" onclick="GETIChat.adminResults()">Exam results</button></div>
+        <div class="gc-admin-tabs"><button class="gc-btn ${adminMode==='messages'?'blue':'light'}" onclick="GETIChat.adminMessages()">Messages</button><button class="gc-btn ${adminMode==='results'?'blue':'light'}" onclick="GETIChat.adminResults()">Exam results</button></div>
         <div id="gcThreadList" class="gc-list"></div>
       </aside>
       <main class="gc-main"><div id="gcAdminMain" style="height:100%;display:flex;flex-direction:column"><div class="gc-empty">Select a conversation.</div></div></main>
@@ -5858,9 +5093,9 @@ async function renderUser(refreshOnly=false){
       adminRenderedEmail=email;
 
       main.innerHTML=`<div class="gc-chat-top"><div class="gc-brand-row"><button class="gc-back" onclick="GETIChat.mobileBack()">←</button><div class="gc-avatar">${esc((d.messages?.[0]?.studentName||email||'?').charAt(0).toUpperCase())}</div><div><strong>${esc(d.messages?.[0]?.studentName||email)}</strong><small><span class="gc-online-dot"></span> ${esc(email)}</small></div></div><button class="gc-btn light" onclick="GETIChat.openThread('${encodeURIComponent(email)}',true)">Refresh</button></div>
-        <div style="padding:8px 12px;display:flex;gap:8px;justify-content:flex-end"><button class="gc-btn light" onclick="GETIChat.startCall('audio')">📞 Audio call</button><button class="gc-btn light" onclick="GETIChat.startCall('video')">📹 Video call</button></div><div id="gcAdminMessages" class="gc-messages">${d.messages.length?d.messages.map(m=>messageHtml(m,'admin')).join(''):'<div class="gc-empty">No messages.</div>'}</div>
+        <div id="gcAdminMessages" class="gc-messages">${d.messages.length?d.messages.map(m=>messageHtml(m,'admin')).join(''):'<div class="gc-empty">No messages.</div>'}</div>
         <div class="gc-compose">
-          <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcAdminFile" type="file" accept="image/*,video/*,audio/*,application/pdf,.pdf" hidden onchange="GETIChat.showFileName('gcAdminFile','gcAdminFileName')"></label>
+          <label class="gc-attach" title="Attach photo or PDF">📎<input id="gcAdminFile" type="file" accept="image/*,application/pdf,.pdf" hidden onchange="GETIChat.showFileName('gcAdminFile','gcAdminFileName')"></label>
           <textarea id="gcAdminText" placeholder="Write a message…" onkeydown="GETIChat.enterSend(event,'admin')" oninput="GETIChat.autoGrow(this)"></textarea>
           <button class="gc-btn blue" onclick="GETIChat.sendAdmin()">Send ➤</button>
           <div id="gcAdminFileName" class="gc-file-preview"></div>
@@ -5956,62 +5191,7 @@ async function renderUser(refreshOnly=false){
   function autoGrow(el){if(!el)return;el.style.height='auto';el.style.height=Math.min(el.scrollHeight,160)+'px'}
   function enterSend(e,who){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();who==='admin'?sendAdmin():sendUser()}}
 
-
-  function updateMessengerBadge(count){
-    getiUnreadCount=count||0;
-    let b=document.getElementById('getiMsgBadge');
-    if(!b){
-      b=document.createElement('span');
-      b.id='getiMsgBadge';
-      b.className='gc-notify-badge';
-      const fab=document.querySelector('.gc-fab-label');
-      if(fab)fab.parentNode.appendChild(b);
-    }
-    b.textContent=getiUnreadCount>99?'99+':String(getiUnreadCount);
-    b.style.display=getiUnreadCount?'inline-flex':'none';
-  }
-
-  function notifyMessage(){
-    if(Notification && Notification.permission==='granted'){
-      new Notification('GETI Messenger',{body:'New message received'});
-    }
-  }
-
-  async function requestNotifications(){
-    if(window.Notification && Notification.permission==='default'){
-      try{await Notification.requestPermission();}catch(e){}
-    }
-  }
-
-  async function adminBlockStudent(email){
-    const s=ses();
-    if(!s||s.role!=='admin') return;
-    if(!confirm('Bloquer cet étudiant ? Il ne pourra plus passer examen.')) return;
-    try{
-      await apiPost({action:'adminBlockStudent',token:s.token,email:String(email)},0);
-      alert('Etudiant bloqué');
-      await loadThreads(true);
-    }catch(e){alert(e.message||e);}
-  }
-
-  async function adminUnblockStudent(email){
-    const s=ses();
-    if(!s||s.role!=='admin') return;
-    try{
-      await apiPost({action:'adminUnblockStudent',token:s.token,email:String(email)},0);
-      alert('Etudiant débloqué');
-      await loadThreads(true);
-    }catch(e){alert(e.message||e);}
-  }
-
-  function checkExamAccess(){
-    const s=ses();
-    if(!s)return true;
-    return !getiBlockedStudents[String(s.email||'').toLowerCase()];
-  }
-
   function open(){
-    requestNotifications();
     $('getiChatShell').style.display='block';
     const s=ses();if(!s)loginView();else if(s.role==='admin')renderAdmin();else renderUser();
   }
@@ -6030,9 +5210,7 @@ async function renderUser(refreshOnly=false){
   };
 
   return {open,close,loginView,createView,forgotView,adminView,doCreate,doLogin,requestReset,resetPassword,doAdmin,logout,
-    renderUser,sendUser,renderAdmin,loadThreads,openThread,sendAdmin,adminMessages,adminResults,mobileBack,showFileName,autoGrow,enterSend,
-    ensureProfileThen,profileView,saveProfile,openProfile,renderGeneralGroup,sendGroup,reactGroup,groupTyping,
-    startCall,acceptCall,rejectCall,endCall,toggleMute,toggleCamera,pollCall,adminBlockStudent,adminUnblockStudent,updateMessengerBadge,requestNotifications};
+    renderUser,sendUser,renderAdmin,loadThreads,openThread,sendAdmin,adminMessages,adminResults,mobileBack,showFileName,autoGrow,enterSend};
 })();
 </script>
 </body>
