@@ -4503,8 +4503,17 @@ window.GETIChat=(function(){
       try{
         const r=await fetch(CHAT_API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
         const txt=await r.text();
-        let d; try{d=JSON.parse(txt)}catch(_){throw new Error('Invalid server response');}
-        if(!(d.success||d.ok)) throw new Error(d.message||d.error||'Server error');
+        let d;
+        try{
+          d=JSON.parse(txt);
+        }catch(_){
+          console.error('GETI raw server response:',txt);
+          throw new Error('Invalid server response from chat backend.');
+        }
+        if(!(d.success||d.ok)){
+          console.error('GETI backend error response:',d);
+          throw new Error(d.message||d.error||'Server error');
+        }
         return d;
       }catch(err){
         lastErr=err;
@@ -4939,10 +4948,33 @@ window.GETIChat=(function(){
   }
   async function sendUser(){
     try{
-      const s=ses(),box=$('gcUserText'),text=box.value.trim(),fp=await filePayload($('gcUserFile'));if(!text&&!fp.fileUrl)return;
-      await apiPost({action:'studentSendMessage',token:s.token,text,...fp});
-      box.value='';box.style.height='auto';$('gcUserFile').value='';$('gcUserFileName').textContent='';await renderUser(true)
-    }catch(e){alert(e.message)}
+      const s=ses();
+      const box=$('gcUserText');
+      const text=box.value.trim();
+      const fp=await filePayload($('gcUserFile'));
+
+      if(!text && !fp.fileURL)return;
+
+      await apiPost({
+        action:'studentSendMessage',
+        token:s.token,
+        text:text,
+        message:text,
+        fileName:fp.fileName || '',
+        fileURL:fp.fileURL || fp.fileUrl || '',
+        fileType:fp.fileType || fp.mimeType || ''
+      });
+
+      box.value='';
+      box.style.height='auto';
+      $('gcUserFile').value='';
+      $('gcUserFileName').textContent='';
+      await renderUser(true);
+
+    }catch(e){
+      console.error('GETI student send error:',e);
+      alert(e.message || 'Unable to send message.');
+    }
   }
 
   async function renderAdmin(){
@@ -5023,11 +5055,42 @@ window.GETIChat=(function(){
   }
   async function sendAdmin(){
     try{
-      const s=ses(),box=$('gcAdminText'),text=box.value.trim(),fp=await filePayload($('gcAdminFile'));if(!text&&!fp.fileUrl)return;
-      await apiPost({action:'adminSendMessage',token:s.token,studentEmail:activeEmail,text,...fp});
-      box.value='';box.style.height='auto';$('gcAdminFile').value='';$('gcAdminFileName').textContent='';await openThread(encodeURIComponent(activeEmail),true)
-    }catch(e){alert(e.message)}
+      const s=ses();
+      if(!activeEmail)throw new Error('Select a student conversation first.');
+
+      const box=$('gcAdminText');
+      const text=(box?.value || '').trim();
+      const fp=await filePayload($('gcAdminFile'));
+
+      if(!text && !fp.fileURL)return;
+
+      await apiPost({
+        action:'adminSendMessage',
+        token:s.token,
+        studentEmail:activeEmail,
+        email:activeEmail,
+        text:text,
+        message:text,
+        fileName:fp.fileName || '',
+        fileURL:fp.fileURL || fp.fileUrl || '',
+        fileType:fp.fileType || fp.mimeType || ''
+      });
+
+      if(box){
+        box.value='';
+        box.style.height='auto';
+      }
+      if($('gcAdminFile'))$('gcAdminFile').value='';
+      if($('gcAdminFileName'))$('gcAdminFileName').textContent='';
+
+      await openThread(encodeURIComponent(activeEmail),true);
+
+    }catch(e){
+      console.error('GETI admin send error:',e);
+      alert(e.message || 'Unable to send message.');
+    }
   }
+
   async function loadResults(silent=false){
     adminMode='results';
     const s=ses();
