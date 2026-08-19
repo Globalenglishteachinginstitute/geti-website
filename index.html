@@ -4356,6 +4356,17 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 .gc-compose .gc-btn.blue{min-height:52px;border-radius:16px;font-size:15px;font-weight:900;padding:0 14px;white-space:nowrap}
 .gc-attach{border:0;background:#eef3f8;border-radius:14px;min-width:46px;height:52px;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:21px}
 .gc-file-preview{grid-column:1/-1;font-size:12px;color:#475569;min-height:16px;padding:0 4px;font-weight:700}
+.gc-upload-overlay{position:absolute;inset:0;background:rgba(15,23,42,.58);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;backdrop-filter:blur(2px)}
+.gc-upload-overlay.show{display:flex}
+.gc-upload-card{width:min(360px,92%);background:#fff;border-radius:22px;padding:24px 22px;box-shadow:0 24px 60px rgba(0,0,0,.28);text-align:center;border:1px solid #e2e8f0}
+.gc-upload-icon{font-size:42px;line-height:1;margin-bottom:8px}
+.gc-upload-title{font-size:18px;font-weight:900;color:#0f172a;margin-bottom:5px}
+.gc-upload-file{font-size:13px;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:15px}
+.gc-upload-percent{font-size:32px;font-weight:1000;color:#0b2d5c;margin:4px 0 10px}
+.gc-upload-track{height:14px;background:#e2e8f0;border-radius:999px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.08)}
+.gc-upload-bar{height:100%;width:0%;background:linear-gradient(90deg,#0b2d5c,#1d4ed8);border-radius:999px;transition:width .18s ease}
+.gc-upload-note{font-size:12px;color:#64748b;margin-top:11px;font-weight:700}
+
 .gc-admin-tabs{display:flex;gap:8px;padding:10px 14px;background:#fff;border-bottom:1px solid #e3e8ef}
 .gc-result{background:#fff;border:1px solid #dfe5ec;border-radius:12px;padding:12px;margin:10px 14px}
 .gc-result strong{color:#0b2d5c}
@@ -4513,6 +4524,47 @@ window.GETIChat=(function(){
     }
     return `<div class="gc-bubble-row ${mine?'me':''}"><div class="gc-bubble"><div>${esc(text)}</div>${file}<div class="gc-meta">${esc(fmtTime(createdAt))}</div></div></div>`;
   }
+
+  function ensureUploadOverlay(){
+    let el=$('gcUploadOverlay');
+    if(el)return el;
+    el=document.createElement('div');
+    el.id='gcUploadOverlay';
+    el.className='gc-upload-overlay';
+    el.innerHTML=`<div class="gc-upload-card">
+      <div id="gcUploadIcon" class="gc-upload-icon">📤</div>
+      <div id="gcUploadTitle" class="gc-upload-title">Uploading...</div>
+      <div id="gcUploadFile" class="gc-upload-file"></div>
+      <div id="gcUploadPercent" class="gc-upload-percent">0%</div>
+      <div class="gc-upload-track"><div id="gcUploadBar" class="gc-upload-bar"></div></div>
+      <div id="gcUploadNote" class="gc-upload-note">Please keep this window open</div>
+    </div>`;
+    const shell=$('getiChatShell');
+    (shell||document.body).appendChild(el);
+    return el;
+  }
+  function showUploadProgress(file){
+    const el=ensureUploadOverlay();
+    const isPdf=(file?.type==='application/pdf')||/\.pdf$/i.test(file?.name||'');
+    $('gcUploadIcon').textContent=isPdf?'📄':'🖼️';
+    $('gcUploadTitle').textContent=isPdf?'Uploading PDF...':'Uploading photo...';
+    $('gcUploadFile').textContent=file?.name||'Attachment';
+    setUploadProgress(0);
+    el.classList.add('show');
+  }
+  function setUploadProgress(percent){
+    const p=Math.max(0,Math.min(100,Math.round(Number(percent)||0)));
+    const pct=$('gcUploadPercent'),bar=$('gcUploadBar');
+    if(pct)pct.textContent=p+'%';
+    if(bar)bar.style.width=p+'%';
+    const note=$('gcUploadNote');
+    if(note)note.textContent=p>=100?'Finishing upload...':'Please keep this window open';
+  }
+  function hideUploadProgress(){
+    const el=$('gcUploadOverlay');
+    if(el)el.classList.remove('show');
+  }
+
   async function filePayload(input){
     const f=input?.files?.[0];
     if(!f)return {fileName:'',fileUrl:'',fileURL:'',fileId:'',mimeType:'',fileType:''};
@@ -4524,55 +4576,64 @@ window.GETIChat=(function(){
     const s=ses();
     if(!s?.token)throw new Error('Please sign in again.');
 
-    const dataURL=await new Promise((res,rej)=>{
-      const r=new FileReader();
-      r.onload=()=>res(String(r.result||''));
-      r.onerror=()=>rej(new Error('Unable to read the selected file.'));
-      r.readAsDataURL(f);
-    });
+    showUploadProgress(f);
+    try{
+      setUploadProgress(2);
+      const dataURL=await new Promise((res,rej)=>{
+        const r=new FileReader();
+        r.onload=()=>res(String(r.result||''));
+        r.onerror=()=>rej(new Error('Unable to read the selected file.'));
+        r.readAsDataURL(f);
+      });
 
-    const comma=dataURL.indexOf(',');
-    const rawBase64=comma>=0?dataURL.slice(comma+1):dataURL;
+      const comma=dataURL.indexOf(',');
+      const rawBase64=comma>=0?dataURL.slice(comma+1):dataURL;
 
-    const init=await apiPost({
-      action:'uploadInit',
-      token:s.token,
-      fileName:f.name,
-      mimeType:f.type||'application/octet-stream',
-      fileSize:f.size
-    });
-    if(!init.uploadId)throw new Error('Unable to initialize upload.');
+      setUploadProgress(5);
+      const init=await apiPost({
+        action:'uploadInit',
+        token:s.token,
+        fileName:f.name,
+        mimeType:f.type||'application/octet-stream',
+        fileSize:f.size
+      });
+      if(!init.uploadId)throw new Error('Unable to initialize upload.');
 
-    const uploadId=init.uploadId;
-    const CHUNK_SIZE=50000;
-    const totalChunks=Math.ceil(rawBase64.length/CHUNK_SIZE);
+      const uploadId=init.uploadId;
+      const CHUNK_SIZE=50000;
+      const totalChunks=Math.ceil(rawBase64.length/CHUNK_SIZE);
 
-    for(let i=0;i<totalChunks;i++){
-      const chunk=rawBase64.slice(i*CHUNK_SIZE,Math.min((i+1)*CHUNK_SIZE,rawBase64.length));
-      await apiPost({action:'uploadChunk',token:s.token,uploadId,index:i,chunk});
-      const progress=Math.round(((i+1)/totalChunks)*100);
-      const preview=$(s.role==='admin'?'gcAdminFileName':'gcUserFileName');
-      if(preview)preview.textContent=`Uploading ${progress}%`;
+      for(let i=0;i<totalChunks;i++){
+        const chunk=rawBase64.slice(i*CHUNK_SIZE,Math.min((i+1)*CHUNK_SIZE,rawBase64.length));
+        await apiPost({action:'uploadChunk',token:s.token,uploadId,index:i,chunk});
+        const progress=5+Math.round(((i+1)/totalChunks)*90);
+        setUploadProgress(progress);
+      }
+
+      setUploadProgress(97);
+      const up=await apiPost({
+        action:'uploadFinish',
+        token:s.token,
+        uploadId,
+        totalChunks
+      });
+
+      const url=up.fileURL||up.fileUrl||'';
+      if(!url)throw new Error('Upload finished but no file URL was returned.');
+      setUploadProgress(100);
+      await new Promise(r=>setTimeout(r,350));
+
+      return {
+        fileName:up.fileName||f.name,
+        fileUrl:url,
+        fileURL:url,
+        fileId:up.fileId||'',
+        mimeType:up.mimeType||up.fileType||f.type||'application/octet-stream',
+        fileType:up.fileType||up.mimeType||f.type||'application/octet-stream'
+      };
+    } finally {
+      hideUploadProgress();
     }
-
-    const up=await apiPost({
-      action:'uploadFinish',
-      token:s.token,
-      uploadId,
-      totalChunks
-    });
-
-    const url=up.fileURL||up.fileUrl||'';
-    if(!url)throw new Error('Upload finished but no file URL was returned.');
-
-    return {
-      fileName:up.fileName||f.name,
-      fileUrl:url,
-      fileURL:url,
-      fileId:up.fileId||'',
-      mimeType:up.mimeType||up.fileType||f.type||'application/octet-stream',
-      fileType:up.fileType||up.mimeType||f.type||'application/octet-stream'
-    };
   }
 
   async function renderUser(refreshOnly=false){
