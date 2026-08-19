@@ -4505,17 +4505,64 @@ window.GETIChat=(function(){
     return `<div class="gc-bubble-row ${mine?'me':''}"><div class="gc-bubble"><div>${esc(text)}</div>${file}<div class="gc-meta">${esc(fmtTime(createdAt))}</div></div></div>`;
   }
   async function filePayload(input){
-    const f=input?.files?.[0];if(!f)return {fileName:'',fileUrl:'',fileId:'',mimeType:''};
-    if(f.size>8*1024*1024)throw new Error('Maximum file size is 8 MB.');
-    const base64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)});
+    const f=input?.files?.[0];
+    if(!f)return {fileName:'',fileUrl:'',fileURL:'',fileId:'',mimeType:'',fileType:''};
+
+    const allowed=(f.type==='application/pdf')||String(f.type||'').startsWith('image/');
+    if(!allowed)throw new Error('Only images and PDF files are allowed.');
+    if(f.size>4*1024*1024)throw new Error('Maximum file size is 4 MB.');
+
     const s=ses();
-    const up=await apiPost({action:'uploadFile',token:s.token,fileName:f.name,mimeType:f.type||'application/octet-stream',base64});
-    const uf=up.file||{};
+    if(!s?.token)throw new Error('Please sign in again.');
+
+    const dataURL=await new Promise((res,rej)=>{
+      const r=new FileReader();
+      r.onload=()=>res(String(r.result||''));
+      r.onerror=()=>rej(new Error('Unable to read the selected file.'));
+      r.readAsDataURL(f);
+    });
+
+    const comma=dataURL.indexOf(',');
+    const rawBase64=comma>=0?dataURL.slice(comma+1):dataURL;
+
+    const init=await apiPost({
+      action:'uploadInit',
+      token:s.token,
+      fileName:f.name,
+      mimeType:f.type||'application/octet-stream',
+      fileSize:f.size
+    });
+    if(!init.uploadId)throw new Error('Unable to initialize upload.');
+
+    const uploadId=init.uploadId;
+    const CHUNK_SIZE=50000;
+    const totalChunks=Math.ceil(rawBase64.length/CHUNK_SIZE);
+
+    for(let i=0;i<totalChunks;i++){
+      const chunk=rawBase64.slice(i*CHUNK_SIZE,Math.min((i+1)*CHUNK_SIZE,rawBase64.length));
+      await apiPost({action:'uploadChunk',token:s.token,uploadId,index:i,chunk});
+      const progress=Math.round(((i+1)/totalChunks)*100);
+      const preview=$(s.role==='admin'?'gcAdminFileName':'gcUserFileName');
+      if(preview)preview.textContent=`Uploading ${progress}%`;
+    }
+
+    const up=await apiPost({
+      action:'uploadFinish',
+      token:s.token,
+      uploadId,
+      totalChunks
+    });
+
+    const url=up.fileURL||up.fileUrl||'';
+    if(!url)throw new Error('Upload finished but no file URL was returned.');
+
     return {
-      fileName:up.fileName||uf.name||f.name,
-      fileUrl:up.fileURL||up.fileUrl||uf.url||'',
-      fileId:up.fileId||uf.id||'',
-      mimeType:up.fileType||uf.mimeType||f.type||'application/octet-stream'
+      fileName:up.fileName||f.name,
+      fileUrl:url,
+      fileURL:url,
+      fileId:up.fileId||'',
+      mimeType:up.mimeType||up.fileType||f.type||'application/octet-stream',
+      fileType:up.fileType||up.mimeType||f.type||'application/octet-stream'
     };
   }
 
