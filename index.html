@@ -1199,6 +1199,10 @@ input, textarea, select{
   .gc-compose .gc-btn.blue{min-height:56px;padding:0 10px;font-size:14px;border-radius:16px}
   .gc-attach{height:56px;border-radius:16px}
 }
+
+/* GETI Messenger notifications */
+.gc-notify-badge{display:inline-flex;min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:#ef4444;color:white;font-size:12px;font-weight:800;align-items:center;justify-content:center}
+.gc-block-btn{background:#ef4444;color:white;border:0;border-radius:999px;padding:8px 12px;cursor:pointer}
 </style>
 </head>
 
@@ -4463,7 +4467,7 @@ window.submitAdministrativeDissertation=function(){let t=document.getElementById
 
 </style>
 
-<button id="getiChatFab" onclick="GETIChat.open()"><span class="gc-fab-icon">💬</span><span class="gc-fab-label">Chat with Administrator</span></button>
+<button id="getiChatFab" onclick="GETIChat.open()"><span class="gc-fab-icon">💬</span><span class="gc-fab-label">GETI Messenger</span></button>
 <div id="getiChatShell">
   <div class="gc-head">
     <div class="gc-brand-row"><div class="gc-avatar gc-avatar-admin">A</div><div><strong>GETI Messenger</strong><small><span class="gc-online-dot"></span> Administrator support · GETI_MESSENGER_CALLS_V3_FIXED</small></div></div>
@@ -4490,6 +4494,8 @@ window.GETIChat=(function(){
   const RESULT_API_KEY='GETI-RESULT-2026';
   const SESSION_KEY='GETI_WORLD_CHAT_SESSION';
   let pollTimer=null, activeEmail=null, adminMode='messages', adminRenderedEmail=null;
+  let getiUnreadCount=0;
+  let getiBlockedStudents={};
 
   const $=id=>document.getElementById(id);
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -5950,7 +5956,62 @@ async function renderUser(refreshOnly=false){
   function autoGrow(el){if(!el)return;el.style.height='auto';el.style.height=Math.min(el.scrollHeight,160)+'px'}
   function enterSend(e,who){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();who==='admin'?sendAdmin():sendUser()}}
 
+
+  function updateMessengerBadge(count){
+    getiUnreadCount=count||0;
+    let b=document.getElementById('getiMsgBadge');
+    if(!b){
+      b=document.createElement('span');
+      b.id='getiMsgBadge';
+      b.className='gc-notify-badge';
+      const fab=document.querySelector('.gc-fab-label');
+      if(fab)fab.parentNode.appendChild(b);
+    }
+    b.textContent=getiUnreadCount>99?'99+':String(getiUnreadCount);
+    b.style.display=getiUnreadCount?'inline-flex':'none';
+  }
+
+  function notifyMessage(){
+    if(Notification && Notification.permission==='granted'){
+      new Notification('GETI Messenger',{body:'New message received'});
+    }
+  }
+
+  async function requestNotifications(){
+    if(window.Notification && Notification.permission==='default'){
+      try{await Notification.requestPermission();}catch(e){}
+    }
+  }
+
+  async function adminBlockStudent(email){
+    const s=ses();
+    if(!s||s.role!=='admin') return;
+    if(!confirm('Bloquer cet étudiant ? Il ne pourra plus passer examen.')) return;
+    try{
+      await apiPost({action:'adminBlockStudent',token:s.token,email:String(email)},0);
+      alert('Etudiant bloqué');
+      await loadThreads(true);
+    }catch(e){alert(e.message||e);}
+  }
+
+  async function adminUnblockStudent(email){
+    const s=ses();
+    if(!s||s.role!=='admin') return;
+    try{
+      await apiPost({action:'adminUnblockStudent',token:s.token,email:String(email)},0);
+      alert('Etudiant débloqué');
+      await loadThreads(true);
+    }catch(e){alert(e.message||e);}
+  }
+
+  function checkExamAccess(){
+    const s=ses();
+    if(!s)return true;
+    return !getiBlockedStudents[String(s.email||'').toLowerCase()];
+  }
+
   function open(){
+    requestNotifications();
     $('getiChatShell').style.display='block';
     const s=ses();if(!s)loginView();else if(s.role==='admin')renderAdmin();else renderUser();
   }
@@ -5971,7 +6032,7 @@ async function renderUser(refreshOnly=false){
   return {open,close,loginView,createView,forgotView,adminView,doCreate,doLogin,requestReset,resetPassword,doAdmin,logout,
     renderUser,sendUser,renderAdmin,loadThreads,openThread,sendAdmin,adminMessages,adminResults,mobileBack,showFileName,autoGrow,enterSend,
     ensureProfileThen,profileView,saveProfile,openProfile,renderGeneralGroup,sendGroup,reactGroup,groupTyping,
-    startCall,acceptCall,rejectCall,endCall,toggleMute,toggleCamera,pollCall};
+    startCall,acceptCall,rejectCall,endCall,toggleMute,toggleCamera,pollCall,adminBlockStudent,adminUnblockStudent,updateMessengerBadge,requestNotifications};
 })();
 </script>
 </body>
