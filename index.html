@@ -2692,7 +2692,7 @@ Professional Training
 
 <div class="contact-item">
 <strong>📧 Email</strong>
-<span>globalenglish123@gmail.com</span>
+<span>globalenglishteachinginstitute.github.io</span>
 </div>
 
 <div class="contact-item">
@@ -5012,7 +5012,7 @@ window.speakInterviewQuestion=function(){let q=document.getElementById('intervie
 window.submitSubject=function(){let subjects=PROGRAM_SUBJECTS[state.program],subject=subjects[state.subjectIndex],questions=GETI_DATA[state.program][subject],score=0;if(state.program==='ENGLISH PROFICIENCY'&&subject==='Speaking'){if(speakingTimer)stopSpeaking();let totalSeconds=(state.speakingResponses||[]).reduce((a,r)=>a+(r.duration||0),0);if(totalSeconds<60)return alert('The Speaking subject requires a minimum total speaking time of 1 minute. Please continue answering the speaking topics.');let scores=state.speakingScores||[],avg=scores.length?scores.reduce((a,x)=>a+x.score,0)/scores.length:0;score=Math.round(avg/100*questions.length);state.subjectScores[state.subjectIndex]={subject,score,total:questions.length,percentage:Math.round(score/questions.length*100),grade:score>=Math.ceil(questions.length*.9)?'A':score>=Math.ceil(questions.length*.8)?'B':score>=Math.ceil(questions.length*.7)?'C':'F',speakingAssessment:{score:Math.round(avg),duration:totalSeconds,level:avg<35?'A1':avg<50?'A2':avg<65?'B1':avg<80?'B2':avg<90?'C1':'C2',criteria:['Grammar','Vocabulary','Fluency','Coherence','Relevance','Pronunciation']}};resumeMainExamTimerAfterSpeaking();}else{for(let i=0;i<questions.length;i++){if(state.answers[state.subjectIndex][i]===questions[i][5])score++;}let pct0=Math.round(score/questions.length*100);state.subjectScores[state.subjectIndex]={subject,score,total:questions.length,percentage:pct0,grade:pct0>=90?'A':pct0>=80?'B':pct0>=70?'C':'F'};}if(state.subjectIndex<subjects.length-1){state.subjectIndex++;state.questionIndex=0;showQuestion()}else showFinal(false)}
 function cefr(total){if(total<35)return'A1';if(total<50)return'A2';if(total<65)return'B1';if(total<80)return'B2';if(total<90)return'C1';return'C2'}
 function registerAttempt(passed){let email=state.student.email,program=state.program,st=getStatus(email,program);if(passed){st.fails=0;st.passedUntil=Date.now()+GETI_COOLDOWN_PASS;st.blockedUntil=0}else{st.fails=(st.fails||0)+1;if(st.fails>=3){st.blockedUntil=Date.now()+GETI_COOLDOWN_FAIL3;st.fails=0}}saveStatus(email,program,st)}
-window.showFinal=function(timedOut){stop();state.started=false;let total=0;state.subjectScores.forEach(s=>total+=s.score||0);let n=PROGRAM_SUBJECTS[state.program].reduce((sum,subject)=>sum+questionCount(state.program,subject),0);let pct=Math.round(total/n*100);let passed=pct>=70;registerAttempt(passed);let record={id:state.student.id,name:state.student.name,email:state.student.email,nationality:state.student.nationality,country:state.student.country,phone:state.student.phone,institution:state.student.institution,program:state.program,percentage:pct,totalScore:total,totalQuestions:n,status:passed?'PASSED':'FAILED',date:new Date().toISOString(),subjects:state.subjectScores,timedOut:!!timedOut};let old=storage('GETI_EXAM_RECORDS',[]).filter(r=>!(String(r.email).toLowerCase()===String(record.email).toLowerCase()&&r.program===record.program));old.push(record);setStorage('GETI_EXAM_RECORDS',old);let rows=state.subjectScores.map(s=>`<div class="subject-result"><span>${escapeHTML(s.subject)}</span><strong>${s.percentage}% — ${s.grade}</strong></div>`).join('');let cefrBox=state.program==='ENGLISH PROFICIENCY'?`<div class="cefr-result">CEFR LEVEL: ${cefr(pct)}</div>`:'';let cert=passed?`<br><a class="btn btn-gold certificate-action" href="${GETI_CERT_URL}" target="_blank" rel="noopener">🎓 GET YOUR CERTIFICATE</a>`:'';document.getElementById('examPanel').innerHTML=`<div class="result-box"><h2>${timedOut?'⏰ TIME EXPIRED — ':''}FINAL EXAMINATION RESULT</h2><p><strong>${escapeHTML(state.student.name)}</strong></p><p>Candidate ID: <strong>${escapeHTML(state.student.id)}</strong></p><div class="final-score">${pct}%</div><h2 class="${passed?'pass':'fail'}">${passed?'PASSED':'FAILED'}</h2>${cefrBox}<div class="exam-message">${passed?'Congratulations! Your examination has been completed successfully.':'Your result is below the required 70%. Please review the lessons and try again after the temporary waiting period.'}</div><h3>Subject Results</h3>${rows}${cert}</div>`;document.getElementById('examPanel').scrollIntoView({behavior:'smooth'})}
+window.showFinal=function(timedOut){stop();state.started=false;let total=0;state.subjectScores.forEach(s=>total+=s.score||0);let n=PROGRAM_SUBJECTS[state.program].reduce((sum,subject)=>sum+questionCount(state.program,subject),0);let pct=Math.round(total/n*100);let passed=pct>=70;registerAttempt(passed);let record={id:state.student.id,name:state.student.name,email:state.student.email,nationality:state.student.nationality,country:state.student.country,phone:state.student.phone,institution:state.student.institution,program:state.program,percentage:pct,totalScore:total,totalQuestions:n,status:passed?'PASSED':'FAILED',date:new Date().toISOString(),subjects:state.subjectScores,timedOut:!!timedOut};let old=storage('GETI_EXAM_RECORDS',[]).filter(r=>!(String(r.email).toLowerCase()===String(record.email).toLowerCase()&&r.program===record.program));old.push(record);setStorage('GETI_EXAM_RECORDS',old);let rows=state.subjectScores.map(s=>`<div class="subject-result"><span>${escapeHTML(s.subject)}</span><strong>${s.percentage}% — ${s.grade}</strong></div>`).join('');let cefrBox=state.program==='ENGLISH PROFICIENCY'?`<div class="cefr-result">CEFR LEVEL: ${cefr(pct)}</div>`:'';let cert=passed?`<br><button id="getiCertificateRequestBtn" class="btn btn-gold certificate-action" type="button" onclick="GETICertificateRequest.submit()">🎓 GET YOUR CERTIFICATE</button><div id="getiCertificateRequestMsg" style="margin-top:14px"></div>`:'';document.getElementById('examPanel').innerHTML=`<div class="result-box"><h2>${timedOut?'⏰ TIME EXPIRED — ':''}FINAL EXAMINATION RESULT</h2><p><strong>${escapeHTML(state.student.name)}</strong></p><p>Candidate ID: <strong>${escapeHTML(state.student.id)}</strong></p><div class="final-score">${pct}%</div><h2 class="${passed?'pass':'fail'}">${passed?'PASSED':'FAILED'}</h2>${cefrBox}<div class="exam-message">${passed?'Congratulations! Your examination has been completed successfully.':'Your result is below the required 70%. Please review the lessons and try again after the temporary waiting period.'}</div><h3>Subject Results</h3>${rows}${cert}</div>`;document.getElementById('examPanel').scrollIntoView({behavior:'smooth'})}
 
 /* LESSON LIBRARY — SCHOOL / UNIVERSITY STYLE, THEORY + EXAMPLES + PRACTICE */
 const LESSON_BLUEPRINTS={
@@ -6159,5 +6159,401 @@ window.GETIChat=(function(){
     renderUser,sendUser,renderAdmin,loadThreads,openThread,sendAdmin,adminMessages,adminResults,mobileBack,showFileName,autoGrow,enterSend};
 })();
 </script>
+
+<!-- =========================================================
+     ENGLISH PROFICIENCY — LISTENING / READING / WRITING FIX
+========================================================= -->
+<script id="getiEnglishProficiencyLRWFix">
+(function(){
+  if (typeof GETI_DATA === "undefined" || !GETI_DATA["ENGLISH PROFICIENCY"]) return;
+
+  GETI_DATA["ENGLISH PROFICIENCY"]["Listening"] = [
+    ["What is the main point of the speaker?","Part-time work can develop useful skills when balanced with study.","Part-time work guarantees immediate success.","Students should stop attending classes.","Work is useful only in business courses.",0,"Part-time employment can provide practical experience, improve time management, and help students understand workplace expectations, although too many working hours may interfere with academic responsibilities."],
+    ["What does the speaker say about remote work?","It offers flexibility but requires strong self-management.","It is perfect for every employee.","It removes all communication problems.","It always increases productivity.",0,"Remote work can save commuting time and provide flexibility, but successful remote teams need clear communication, reliable technology, and employees who can manage their time independently."],
+    ["What does the teacher recommend for language learning?","Combining regular practice with meaningful exposure and use.","Studying vocabulary only before exams.","Avoiding speaking practice.","Memorising without context.",0,"The teacher argues that learners make better progress when they combine regular practice, meaningful exposure, vocabulary in context, and opportunities to use English rather than relying only on memorisation."],
+    ["What is the transport project intended to do?","Improve connections and reduce pressure on busy roads.","Close every road in the city.","Help private cars only.","End all traffic problems immediately.",0,"The proposed transport project would improve connections between residential areas and employment centres, reduce pressure on busy roads, and require careful planning during construction."],
+    ["How should people evaluate information online?","By comparing evidence and checking source reliability.","By trusting information because it is popular.","By assuming long articles are always reliable.","By using comments as the only evidence.",0,"People should check who produced information, compare claims with independent evidence, consider publication dates, and distinguish evidence from opinion before sharing material online."],
+    ["Why does the manager value customer feedback?","It can reveal recurring problems and guide improvements.","Only positive feedback is useful.","Customers should never influence decisions.","Feedback automatically solves every problem.",0,"Customer feedback can identify recurring problems, reveal expectations, and suggest improvements, but organisations should analyse patterns instead of reacting to every individual comment."],
+    ["What conclusion does the student reach about study methods?","The best approach depends on the learner and the task.","One method is perfect for everyone.","Study methods do not matter.","Only very long sessions work.",0,"Different tasks require different approaches. Some learners benefit from discussion while others need quiet time to concentrate, so an effective method depends partly on the learner and the purpose."],
+    ["Why is the coastal problem described as complex?","Several environmental and human factors are involved.","There is one simple cause.","The coastline has not changed.","Only tourists are affected.",0,"Coastal conditions can be influenced by weather patterns, human development, erosion, and local management decisions, making the situation more complex than a single-cause explanation."],
+    ["What did the entrepreneur learn from an early mistake?","To test assumptions with customers before investing heavily.","That planning is unnecessary.","That mistakes should be hidden.","That customers are irrelevant.",0,"The entrepreneur developed a product without enough customer research and learned to test ideas with potential users before spending significant resources."],
+    ["Why can sleep support learning?","It supports attention and memory.","It prevents learning.","It is less important than studying all night.","It affects only physical fitness.",0,"Sleep supports attention and memory consolidation, so replacing sleep with very long study sessions may be counterproductive when students need to retain new information."],
+    ["How was the museum exhibition designed?","It combines objects, explanations, and different perspectives.","It presents objects without context.","Visitors cannot ask questions.","It focuses on one advertisement.",0,"The exhibition places historical objects alongside explanations and personal perspectives so visitors can understand both events and how different people experienced them."],
+    ["What does the health educator recommend?","Small, consistent choices and realistic goals.","Dramatic changes that are difficult to maintain.","Expensive products only.","Ignoring daily habits.",0,"Sustainable routines often develop through small consistent choices, realistic goals, and regular reflection rather than dramatic changes that are difficult to maintain."],
+    ["What should effective workplace communication consider?","Purpose, audience, context, and an appropriate level of detail.","Only the length of a message.","Informal language in every situation.","Audience expectations are irrelevant.",0,"Effective workplace communication depends on a clear purpose, appropriate detail, awareness of the audience, and a suitable communication channel."],
+    ["Why must research findings be interpreted carefully?","Study design and limitations affect what conclusions can be justified.","One result proves every possible conclusion.","Limitations are unnecessary.","Scientific findings never need interpretation.",0,"Research findings must be interpreted in relation to the sample, methods, measurements, and limitations because a single result does not automatically justify a broad conclusion."],
+    ["What is one idea in responsible tourism?","Visitors can respect local culture and support local communities.","Responsible tourism means never travelling.","Tourists should ignore local customs.","Only luxury hotels can be responsible.",0,"Responsible tourism can include respecting local culture, supporting local businesses, reducing waste, conserving resources, and choosing activities that benefit communities."]
+  ];
+
+  const r1="Learning a language is not simply a matter of memorising individual words. Learners gradually develop the ability to understand messages, identify important information, connect ideas and use what they know in new situations. Effective learning combines regular practice with meaningful exposure to communication. Reflection also helps learners notice what they can already do and what they still need to improve.";
+  const r2="Many students believe that studying for longer automatically produces better results. However, the quality of study can be more important than the number of hours. Short, focused sessions can help learners review information and notice areas that need improvement. Taking short breaks and returning to difficult material later can also improve concentration.";
+  const r3="Public libraries have changed considerably. In addition to books, many libraries now provide computers, internet access, study spaces, workshops and community activities. These services can be especially valuable for people who do not have reliable access to technology at home. Libraries therefore continue to play an important social and educational role.";
+  const r4="Travelling can introduce people to different ways of living. Visitors may discover new foods, languages, traditions and forms of communication. Responsible travellers should also consider the effect of tourism on local communities and the environment. Choosing local services, respecting customs and reducing waste are simple ways to travel more responsibly.";
+  const r5="Technology has made communication faster, but speed does not always mean clarity. A short message can sometimes be misunderstood because it does not include tone of voice or facial expression. People should therefore choose communication methods carefully. Complex or sensitive matters may be better discussed through a call or face-to-face conversation.";
+
+  GETI_DATA["ENGLISH PROFICIENCY"]["Reading"] = [
+    ["What is the main idea of the passage?","Effective language learning combines practice, exposure and reflection.","Language learning is only memorising words.","Learners should avoid communication.","Reflection prevents progress.",0,r1],
+    ["According to the passage, what does reflection help learners do?","Notice strengths and areas that still need improvement.","Memorise every word immediately.","Avoid practical communication.","Stop reviewing their progress.",0,r1],
+    ["Which statement is supported by the passage?","Learners need to connect and use information in new situations.","Individual words are the only important part of a language.","Meaningful exposure is unnecessary.","Practice should happen only before an exam.",0,r1],
+    ["What is the writer mainly explaining?","Why effective study depends on quality as well as time.","Why students should study without breaks.","Why long study sessions are always best.","Why difficult material should be ignored.",0,r2],
+    ["What can short, focused study sessions help learners do?","Review information and identify areas for improvement.","Avoid concentration completely.","Finish every subject immediately.","Remove the need for revision.",0,r2],
+    ["Which study strategy is recommended in the passage?","Take short breaks and return to difficult material later.","Study continuously without resting.","Ignore difficult material.","Measure success only by the number of hours.",0,r2],
+    ["What is the main idea of the passage?","Modern libraries provide a range of educational and community services.","Libraries are used only for borrowing novels.","Technology has made libraries unnecessary.","Libraries should remove study spaces.",0,r3],
+    ["Who may especially benefit from library technology services?","People without reliable technology access at home.","Only professional writers.","Only library employees.","People who already own every device.",0,r3],
+    ["What can be inferred about modern libraries?","They still have an important social and educational role.","They no longer support learning.","They provide no community activities.","Their only purpose is storing old books.",0,r3],
+    ["What is the main purpose of the passage?","To explain how people can travel more responsibly.","To discourage all international travel.","To say that tourists should ignore local culture.","To promote waste during travel.",0,r4],
+    ["Which action is presented as responsible tourism?","Respecting customs and choosing local services.","Ignoring environmental effects.","Avoiding all local businesses.","Expecting every culture to be the same.",0,r4],
+    ["What can travel help visitors discover?","Different foods, languages, traditions and communication styles.","Only hotel prices.","Only transportation systems.","That all communities are identical.",0,r4],
+    ["Why can short written messages be misunderstood?","They may not include tone of voice or facial expression.","They are always too formal.","They contain too much body language.","Technology automatically changes every word.",0,r5],
+    ["What does the writer recommend for complex or sensitive matters?","Use a call or face-to-face conversation when appropriate.","Always send the shortest possible message.","Avoid communication completely.","Use only social-media comments.",0,r5],
+    ["What is the main message of the passage?","Fast communication is useful, but the method should fit the situation.","Technology always guarantees perfect clarity.","Face-to-face communication is never useful.","Every message should use the same communication channel.",0,r5]
+  ];
+
+  GETI_DATA["ENGLISH PROFICIENCY"]["Writing"] = [
+    ["Which is the strongest feature of a well-organised paragraph?","A clear main idea supported by relevant details.","Several unrelated ideas.","Only one very long sentence.","A list of words without connections.",0],
+    ["What is the main purpose of a topic sentence?","To introduce the main idea of a paragraph.","To add an unrelated example.","To replace the entire conclusion.","To list punctuation marks.",0],
+    ["Which connector best shows contrast?","However","Therefore","For example","In addition",0],
+    ["Which connector best introduces an example?","For example","However","Although","Therefore",0],
+    ["What should a writer normally do before producing a final draft?","Plan, draft, revise and edit.","Submit the first sentence immediately.","Avoid checking organisation.","Remove all supporting details.",0],
+    ["What does revising mainly focus on?","Improving ideas, organisation and clarity.","Changing every word randomly.","Checking only the font size.","Avoiding the main idea.",0],
+    ["What does proofreading mainly involve?","Checking grammar, spelling and punctuation errors.","Adding unrelated paragraphs.","Changing the topic completely.","Removing all punctuation.",0],
+    ["Which sentence is most suitable for formal writing?","I am writing to request further information about the programme.","Hey, send me the info ASAP.","Yo, what is this course about?","Gimme the details now.",0],
+    ["Why are supporting details important?","They explain, develop or provide evidence for the main idea.","They make the paragraph unrelated.","They replace the topic completely.","They remove coherence.",0],
+    ["What is coherence in writing?","The logical connection and flow of ideas.","Using the longest possible words.","Writing without paragraphs.","Repeating the same sentence many times.",0],
+    ["What is cohesion in writing?","Using language features that connect sentences and ideas.","Avoiding pronouns and connectors.","Writing every sentence independently.","Using only questions.",0],
+    ["Which is the best conclusion for an argumentative paragraph?","A sentence that reinforces the main point based on the discussion.","A completely new unrelated topic.","A random list of vocabulary.","A sentence that contradicts all previous ideas without explanation.",0],
+    ["Why should a writer consider the audience?","To choose appropriate tone, vocabulary and level of detail.","To make every text informal.","To avoid having a purpose.","To remove useful information.",0],
+    ["Which practice helps avoid plagiarism?","Paraphrasing appropriately and acknowledging sources.","Copying another writer's sentences without credit.","Changing only one word in copied text.","Removing the author's name from a quotation.",0],
+    ["Which is the best way to improve clarity in a sentence?","Use precise language and a logical sentence structure.","Add unnecessary words and repeated ideas.","Mix several unrelated topics in one sentence.","Avoid punctuation completely.",0]
+  ];
+
+  if (typeof renderSpecialMedia === "function") {
+    const oldRenderSpecialMedia = renderSpecialMedia;
+    renderSpecialMedia = function(subject,q){
+      if (state.program==="ENGLISH PROFICIENCY" && subject==="Reading") {
+        const passage=(q&&q[6])?q[6]:"";
+        return '<div class="reading-passage"><strong>Reading Passage</strong><p>'+escapeHTML(passage)+'</p></div>';
+      }
+      if (state.program==="ENGLISH PROFICIENCY" && subject==="Listening") {
+        return '<div class="exam-media"><strong>Listening Comprehension</strong><p>Press play, listen carefully, then answer the question.</p><button id="listenPlay" class="mic-btn" onclick="speakListening()">🔊 PLAY AUDIO</button><button class="mic-btn" onclick="stopListening()">⏹ STOP AUDIO</button><p><small>You may replay the audio before selecting your answer.</small></p></div>';
+      }
+      return oldRenderSpecialMedia(subject,q);
+    };
+  }
+})();
+</script>
+
+
+<!-- =========================================================
+     GETI LISTENING AUDIO — VERIFIED RELIABILITY PATCH
+     Addition only. Keeps the existing English Proficiency exam.
+========================================================= -->
+<script id="getiListeningAudioVerifiedPatch">
+(function(){
+
+  function currentListeningQuestion(){
+    try{
+      if(!window.state || state.program !== "ENGLISH PROFICIENCY") return null;
+      var subjects = (window.PROGRAM_SUBJECTS && PROGRAM_SUBJECTS[state.program]) || [];
+      var subject = subjects[state.subjectIndex];
+      if(subject !== "Listening") return null;
+      var data = GETI_DATA["ENGLISH PROFICIENCY"]["Listening"] || [];
+      return data[state.questionIndex] || null;
+    }catch(e){
+      return null;
+    }
+  }
+
+  function resetListeningButton(){
+    var b = document.getElementById("listenPlay");
+    if(b){
+      b.textContent = "🔊 PLAY AUDIO";
+      b.disabled = false;
+    }
+  }
+
+  window.stopListening = function(){
+    try{
+      if("speechSynthesis" in window){
+        window.speechSynthesis.cancel();
+      }
+    }catch(e){}
+    resetListeningButton();
+  };
+
+  window.speakListening = function(){
+    var q = currentListeningQuestion();
+    var text = q && q[6] ? String(q[6]).trim() : "";
+
+    if(!q || !text){
+      alert("Listening audio is not available for this question.");
+      resetListeningButton();
+      return;
+    }
+
+    if(!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)){
+      alert("Audio is not supported by this browser. Please use the latest Chrome or Edge.");
+      resetListeningButton();
+      return;
+    }
+
+    try{
+      window.speechSynthesis.cancel();
+
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = "en-US";
+      u.rate = 0.88;
+      u.pitch = 1;
+      u.volume = 1;
+
+      var voices = window.speechSynthesis.getVoices
+        ? window.speechSynthesis.getVoices()
+        : [];
+
+      if(voices && voices.length){
+        var englishVoice =
+          voices.find(function(v){ return /^en-US/i.test(v.lang || ""); }) ||
+          voices.find(function(v){ return /^en-GB/i.test(v.lang || ""); }) ||
+          voices.find(function(v){ return /^en/i.test(v.lang || ""); });
+
+        if(englishVoice) u.voice = englishVoice;
+      }
+
+      u.onstart = function(){
+        var b = document.getElementById("listenPlay");
+        if(b){
+          b.textContent = "🔊 PLAYING...";
+          b.disabled = true;
+        }
+      };
+
+      u.onend = resetListeningButton;
+      u.onerror = function(){
+        resetListeningButton();
+      };
+
+      window.speechSynthesis.speak(u);
+
+    }catch(e){
+      resetListeningButton();
+      alert("Unable to start the listening audio. Please reload the page or use Chrome/Edge.");
+    }
+  };
+
+  /* Stop old audio automatically before navigation. */
+  if(typeof window.nextExamQuestion === "function"){
+    var originalNextExamQuestion = window.nextExamQuestion;
+    window.nextExamQuestion = function(){
+      stopListening();
+      return originalNextExamQuestion.apply(this, arguments);
+    };
+  }
+
+  if(typeof window.submitSubject === "function"){
+    var originalSubmitSubject = window.submitSubject;
+    window.submitSubject = function(){
+      stopListening();
+      return originalSubmitSubject.apply(this, arguments);
+    };
+  }
+
+  if(typeof window.openExamRegistration === "function"){
+    var originalOpenExamRegistration = window.openExamRegistration;
+    window.openExamRegistration = function(){
+      stopListening();
+      return originalOpenExamRegistration.apply(this, arguments);
+    };
+  }
+
+  /* Also stop speech when the tab/page is hidden or closed. */
+  document.addEventListener("visibilitychange", function(){
+    if(document.hidden) stopListening();
+  });
+  window.addEventListener("beforeunload", stopListening);
+
+})();
+</script>
+
+
+<!-- =========================================================
+     GETI PASSED EXAM → CERTIFICATE REQUEST
+     No second registration. Uses the information entered before the exam.
+========================================================= -->
+<script id="getiAutomaticCertificateRequest">
+window.GETICertificateRequest=(function(){
+
+  const RESULT_BACKEND='https://script.google.com/macros/s/AKfycbyrYlYRBo3OCb37-PFvdpqTJCyafBrkVMGKOJIDfJd7sV_Rag3UkVIDp06IVzgoxvCpYg/exec';
+  const RESULT_API_KEY='GETI-RESULT-2026';
+  const GETI_OFFICIAL_SITE='globalenglishteachinginstitute.github.io';
+
+  function esc(v){
+    return String(v??'').replace(/[&<>"']/g,function(m){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m];
+    });
+  }
+
+  function getLatestPassedRecord(){
+    try{
+      const records=JSON.parse(localStorage.getItem('GETI_EXAM_RECORDS')||'[]');
+      if(!Array.isArray(records)||!records.length)return null;
+
+      /* Prefer the current exam candidate if state is available. */
+      if(window.state && state.student && state.student.id){
+        for(let i=records.length-1;i>=0;i--){
+          const r=records[i];
+          if(String(r.id||'')===String(state.student.id||'') &&
+             String(r.program||'')===String(state.program||'') &&
+             String(r.status||'').toUpperCase()==='PASSED'){
+            return r;
+          }
+        }
+      }
+
+      /* Fallback to the latest passed record. */
+      for(let i=records.length-1;i>=0;i--){
+        if(String(records[i]?.status||'').toUpperCase()==='PASSED'){
+          return records[i];
+        }
+      }
+    }catch(e){}
+    return null;
+  }
+
+  async function sendToGeti(record){
+    const payload={
+      action:'saveResult',
+      apiKey:RESULT_API_KEY,
+
+      /* Candidate information already captured before the exam. */
+      id:record.id||'',
+      name:record.name||'',
+      email:record.email||'',
+      nationality:record.nationality||'',
+      country:record.country||'',
+      phone:record.phone||'',
+      institution:record.institution||'',
+
+      /* Complete examination result. */
+      program:record.program||'',
+      percentage:record.percentage??0,
+      totalScore:record.totalScore??0,
+      totalQuestions:record.totalQuestions??0,
+      status:record.status||'PASSED',
+      date:record.date||new Date().toISOString(),
+      subjects:Array.isArray(record.subjects)?record.subjects:[],
+      timedOut:!!record.timedOut,
+
+      /* Certificate request metadata. */
+      certificateRequested:true,
+      certificateRequestDate:new Date().toISOString(),
+      certificateDeliveryEmail:record.email||'',
+      requestSource:GETI_OFFICIAL_SITE
+    };
+
+    const url=RESULT_BACKEND+'?v='+Date.now()+'&source=certificate-request';
+    const response=await fetch(url,{
+      method:'POST',
+      redirect:'follow',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(payload)
+    });
+
+    const text=await response.text();
+    let data={};
+    try{ data=JSON.parse(text); }
+    catch(e){ throw new Error('GETI server returned an invalid response.'); }
+
+    if(!(data.success||data.ok)){
+      throw new Error(data.message||data.error||'GETI server did not accept the certificate request.');
+    }
+
+    return data;
+  }
+
+  async function submit(){
+    const btn=document.getElementById('getiCertificateRequestBtn');
+    const msg=document.getElementById('getiCertificateRequestMsg');
+    const record=getLatestPassedRecord();
+
+    if(!record){
+      if(msg)msg.innerHTML='<div class="error">❌ Passed examination record was not found. Please refresh the result and try again.</div>';
+      return;
+    }
+
+    if(String(record.status||'').toUpperCase()!=='PASSED'){
+      if(msg)msg.innerHTML='<div class="error">❌ A certificate can only be requested after a PASSED examination.</div>';
+      return;
+    }
+
+    if(!record.email){
+      if(msg)msg.innerHTML='<div class="error">❌ Candidate email is missing from the original exam registration.</div>';
+      return;
+    }
+
+    if(btn){
+      btn.disabled=true;
+      btn.textContent='⏳ SENDING RESULT TO GETI...';
+      btn.style.opacity='.7';
+      btn.style.cursor='wait';
+    }
+
+    if(msg){
+      msg.innerHTML='<div class="success">⏳ Sending your examination result and candidate information to GETI...</div>';
+    }
+
+    try{
+      await sendToGeti(record);
+
+      /* Save request confirmation locally as well. */
+      const key='GETI_CERTIFICATE_REQUEST_'+String(record.id||record.email||'').replace(/[^A-Za-z0-9_-]/g,'_');
+      localStorage.setItem(key,JSON.stringify({
+        candidateId:record.id||'',
+        email:record.email||'',
+        program:record.program||'',
+        percentage:record.percentage??0,
+        sentAt:new Date().toISOString(),
+        status:'SENT'
+      }));
+
+      if(btn){
+        btn.textContent='✅ CERTIFICATE REQUEST SENT';
+        btn.disabled=true;
+        btn.style.opacity='1';
+        btn.style.cursor='default';
+      }
+
+      if(msg){
+        msg.innerHTML=
+          '<div class="success" style="text-align:left">'+
+          '<strong>✅ Your result and information have been sent to GETI successfully.</strong><br><br>'+
+          'No additional registration is required.<br>'+
+          'Please check your email: <strong>'+esc(record.email)+'</strong><br>'+
+          'Your certificate information will be sent to that email after GETI processing.'+
+          '</div>';
+      }
+
+    }catch(err){
+      if(btn){
+        btn.disabled=false;
+        btn.textContent='🎓 GET YOUR CERTIFICATE';
+        btn.style.opacity='1';
+        btn.style.cursor='pointer';
+      }
+
+      if(msg){
+        msg.innerHTML=
+          '<div class="error">'+
+          '❌ The certificate request could not be sent online. Your exam result is still saved. '+
+          'Please check your internet connection and press GET YOUR CERTIFICATE again.<br>'+
+          '<small>'+esc(err && err.message ? err.message : String(err))+'</small>'+
+          '</div>';
+      }
+    }
+  }
+
+  return {submit:submit};
+})();
+</script>
+
 </body>
 </html>
