@@ -4411,12 +4411,12 @@ window.GETIChat=(function(){
   async function apiPost(payload){
     if(!configured()) throw new Error('Online chat backend is not configured yet.');
     const r=await fetch(CHAT_API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
-    const d=await r.json(); if(!d.success) throw new Error(d.message||'Server error'); return d;
+    const d=await r.json(); if(!(d.success||d.ok)) throw new Error(d.message||d.error||'Server error'); return d;
   }
   async function apiGet(params){
     if(!configured()) throw new Error('Online chat backend is not configured yet.');
     const r=await fetch(CHAT_API_URL+'?'+new URLSearchParams(params).toString());
-    const d=await r.json(); if(!d.success) throw new Error(d.message||'Server error'); return d;
+    const d=await r.json(); if(!(d.success||d.ok)) throw new Error(d.message||d.error||'Server error'); return d;
   }
   function tabs(active){
     return `<div class="gc-tabs">
@@ -4460,17 +4460,17 @@ window.GETIChat=(function(){
     try{
       const name=$('gcCreateName').value.trim(),email=$('gcCreateEmail').value.trim().toLowerCase(),password=$('gcCreatePass').value;
       if(!name||!email||password.length<6)return authMsg('Complete all fields. Password must contain at least 6 characters.');
-      const d=await apiPost({action:'createAccount',name,email,password}); setSes(d.session); renderUser();
+      const d=await apiPost({action:'createAccount',name,email,password}); setSes({token:d.token,role:'user',email:d.user.email,name:d.user.name}); renderUser();
     }catch(e){authMsg(e.message)}
   }
   async function doLogin(){
     try{
       const email=$('gcLoginEmail').value.trim().toLowerCase(),password=$('gcLoginPass').value;
-      const d=await apiPost({action:'login',email,password}); setSes(d.session); renderUser();
+      const d=await apiPost({action:'login',email,password}); setSes({token:d.token,role:'user',email:d.user.email,name:d.user.name}); renderUser();
     }catch(e){authMsg(e.message)}
   }
   async function requestReset(){
-    try{const email=$('gcForgotEmail').value.trim().toLowerCase();const d=await apiPost({action:'requestReset',email});authMsg(d.message,true)}
+    try{const email=$('gcForgotEmail').value.trim().toLowerCase();const d=await apiPost({action:'forgotPassword',email});authMsg(d.message||'Reset code sent.',true)}
     catch(e){authMsg(e.message)}
   }
   async function resetPassword(){
@@ -4480,7 +4480,7 @@ window.GETIChat=(function(){
     }catch(e){authMsg(e.message)}
   }
   async function doAdmin(){
-    try{const code=$('gcAdminCode').value;const d=await apiPost({action:'adminLogin',code});setSes(d.session);renderAdmin()}
+    try{const code=$('gcAdminCode').value.trim();const d=await apiPost({action:'adminLogin',code});setSes({token:d.token,role:'admin',email:d.user.email,name:d.user.name});renderAdmin()}
     catch(e){authMsg(e.message)}
   }
 
@@ -4490,19 +4490,22 @@ window.GETIChat=(function(){
   function fmtTime(t){try{return new Date(t).toLocaleString()}catch(e){return ''}}
 
   function messageHtml(m,myRole){
-    const mine=myRole==='admin'?m.from==='admin':m.from==='user';
+    const role=m.senderRole||(m.from==='admin'?'admin':'student');
+    const mine=myRole==='admin'?role==='admin':role==='student';
     let file='';
     if(m.fileUrl){
-      const isImg=/\.(png|jpe?g|gif|webp)$/i.test(m.fileName||'');
+      const isImg=(m.mimeType||'').startsWith('image/')||/\.(png|jpe?g|gif|webp)$/i.test(m.fileName||'');
       file=`<a class="gc-file" href="${esc(m.fileUrl)}" target="_blank" rel="noopener">${isImg?'🖼️':'📎'} ${esc(m.fileName||'File')} — Open / Download</a>`;
     }
-    return `<div class="gc-bubble-row ${mine?'me':''}"><div class="gc-bubble"><div>${esc(m.text||'')}</div>${file}<div class="gc-meta">${esc(fmtTime(m.time))}</div></div></div>`;
+    return `<div class="gc-bubble-row ${mine?'me':''}"><div class="gc-bubble"><div>${esc(m.text||'')}</div>${file}<div class="gc-meta">${esc(fmtTime(m.createdAt||m.time))}</div></div></div>`;
   }
   async function filePayload(input){
-    const f=input?.files?.[0];if(!f)return {fileName:'',fileData:''};
+    const f=input?.files?.[0];if(!f)return {fileName:'',fileUrl:'',fileId:'',mimeType:''};
     if(f.size>8*1024*1024)throw new Error('Maximum file size is 8 MB.');
-    const fileData=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)});
-    return {fileName:f.name,fileData};
+    const base64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)});
+    const s=ses();
+    const up=await apiPost({action:'uploadFile',token:s.token,fileName:f.name,mimeType:f.type||'application/octet-stream',base64});
+    return {fileName:up.file.name,fileUrl:up.file.url,fileId:up.file.id,mimeType:up.file.mimeType};
   }
 
   async function renderUser(refreshOnly=false){
@@ -4521,16 +4524,16 @@ window.GETIChat=(function(){
         </main></div>`;
     }
     try{
-      const d=await apiGet({action:'messages',token:s.token});
+      const d=await apiPost({action:'studentGetMessages',token:s.token});
       const box=$('gcUserMessages');if(box){box.innerHTML=d.messages.length?d.messages.map(m=>messageHtml(m,'user')).join(''):'<div class="gc-empty">No messages yet. Write to the administrator below.</div>';box.scrollTop=box.scrollHeight}
     }catch(e){const box=$('gcUserMessages');if(box)box.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`}
     if(!refreshOnly)startPoll(()=>renderUser(true));
   }
   async function sendUser(){
     try{
-      const s=ses(),text=$('gcUserText').value.trim(),fp=await filePayload($('gcUserFile'));if(!text&&!fp.fileData)return;
+      const s=ses(),text=$('gcUserText').value.trim(),fp=await filePayload($('gcUserFile'));if(!text&&!fp.fileUrl)return;
       $('gcUserText').value='';$('gcUserFile').value='';$('gcUserFileName').textContent='';
-      await apiPost({action:'sendMessage',token:s.token,text,...fp});await renderUser(true)
+      await apiPost({action:'studentSendMessage',token:s.token,text,...fp});await renderUser(true)
     }catch(e){alert(e.message)}
   }
 
@@ -4551,21 +4554,21 @@ window.GETIChat=(function(){
   async function loadThreads(silent=false){
     const s=ses(),q=($('gcSearch')?.value||'').trim().toLowerCase();
     try{
-      const d=await apiGet({action:'threads',token:s.token});
-      const rows=(d.threads||[]).filter(x=>!q||String(x.name).toLowerCase().includes(q)||String(x.email).toLowerCase().includes(q));
+      const d=await apiPost({action:'adminGetConversations',token:s.token});
+      const rows=(d.conversations||[]).map(x=>({name:x.studentName,email:x.studentEmail,lastText:x.lastMessage,lastTime:x.lastAt,unread:x.unread})).filter(x=>!q||String(x.name||'').toLowerCase().includes(q)||String(x.email||'').toLowerCase().includes(q));
       const box=$('gcThreadList');if(box)box.innerHTML=rows.length?rows.map(x=>`<div class="gc-thread ${activeEmail===x.email?'active':''}" onclick="GETIChat.openThread('${encodeURIComponent(x.email)}')"><div class="gc-thread-row"><div class="gc-avatar">${esc((x.name||x.email||'?').charAt(0).toUpperCase())}</div><div class="gc-thread-copy"><strong>${esc(x.name||x.email)}</strong><small>${esc(x.email)}</small><small>${esc(x.lastText||x.fileName||'Attachment')} · ${esc(fmtTime(x.lastTime))}</small></div></div></div>`).join(''):'<div class="gc-empty">No conversations.</div>'
     }catch(e){if(!silent){const box=$('gcThreadList');if(box)box.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`}}
   }
   async function openThread(encoded,silent=false){
     const email=decodeURIComponent(encoded);activeEmail=email;const s=ses();
     try{
-      const d=await apiGet({action:'messages',token:s.token,email});
+      const d=await apiPost({action:'adminGetConversation',token:s.token,studentEmail:email});
       const main=$('gcAdminMain');if(!main)return;
-      main.innerHTML=`<div class="gc-chat-top"><div class="gc-brand-row"><button class="gc-back" onclick="GETIChat.mobileBack()">←</button><div class="gc-avatar">${esc((d.user?.name||email||'?').charAt(0).toUpperCase())}</div><div><strong>${esc(d.user?.name||email)}</strong><small><span class="gc-online-dot"></span> ${esc(email)}</small></div></div><button class="gc-btn light" onclick="GETIChat.loadThreads()">Refresh</button></div>
+      main.innerHTML=`<div class="gc-chat-top"><div class="gc-brand-row"><button class="gc-back" onclick="GETIChat.mobileBack()">←</button><div class="gc-avatar">${esc((d.messages?.[0]?.studentName||email||'?').charAt(0).toUpperCase())}</div><div><strong>${esc(d.messages?.[0]?.studentName||email)}</strong><small><span class="gc-online-dot"></span> ${esc(email)}</small></div></div><button class="gc-btn light" onclick="GETIChat.loadThreads()">Refresh</button></div>
         <div id="gcAdminMessages" class="gc-messages">${d.messages.length?d.messages.map(m=>messageHtml(m,'admin')).join(''):'<div class="gc-empty">No messages.</div>'}</div>
         <div class="gc-compose">
           <label class="gc-attach">📎<input id="gcAdminFile" type="file" accept="image/*,.pdf,application/pdf" hidden onchange="GETIChat.showFileName('gcAdminFile','gcAdminFileName')"></label>
-          <textarea id="gcAdminText" placeholder="Reply to ${esc(d.user?.name||email)}…" onkeydown="GETIChat.enterSend(event,'admin')"></textarea>
+          <textarea id="gcAdminText" placeholder="Reply to ${esc(d.messages?.[0]?.studentName||email)}…" onkeydown="GETIChat.enterSend(event,'admin')"></textarea>
           <button class="gc-btn blue" onclick="GETIChat.sendAdmin()">Send</button>
           <div id="gcAdminFileName" class="gc-file-preview"></div>
         </div>`;
@@ -4575,18 +4578,15 @@ window.GETIChat=(function(){
   }
   async function sendAdmin(){
     try{
-      const s=ses(),text=$('gcAdminText').value.trim(),fp=await filePayload($('gcAdminFile'));if(!text&&!fp.fileData)return;
+      const s=ses(),text=$('gcAdminText').value.trim(),fp=await filePayload($('gcAdminFile'));if(!text&&!fp.fileUrl)return;
       $('gcAdminText').value='';$('gcAdminFile').value='';$('gcAdminFileName').textContent='';
-      await apiPost({action:'sendMessage',token:s.token,email:activeEmail,text,...fp});await openThread(encodeURIComponent(activeEmail),true)
+      await apiPost({action:'adminSendMessage',token:s.token,studentEmail:activeEmail,text,...fp});await openThread(encodeURIComponent(activeEmail),true)
     }catch(e){alert(e.message)}
   }
   async function loadResults(silent=false){
     adminMode='results';
-    try{
-      const s=ses(),d=await apiGet({action:'results',token:s.token});
-      const list=$('gcThreadList');if(list)list.innerHTML='<div class="gc-empty">Exam results are shown on the right.</div>';
-      const main=$('gcAdminMain');if(main)main.innerHTML=`<div class="gc-chat-top"><div><strong>All examination results</strong><small>${d.results.length} result(s)</small></div></div><div class="gc-messages">${d.results.length?d.results.map(r=>`<div class="gc-result"><strong>${esc(r.name)}</strong> — ${esc(r.program)}<div class="gc-status">${esc(r.email)} · ${esc(r.id)} · ${esc(fmtTime(r.date))}</div><div style="font-size:20px;font-weight:900;margin-top:5px">${esc(r.percentage)}% — ${esc(r.status)}</div></div>`).join(''):'<div class="gc-empty">No online exam results yet.</div>'}</div>`
-    }catch(e){if(!silent){const main=$('gcAdminMain');if(main)main.innerHTML=`<div class="gc-error">${esc(e.message)}</div>`}}
+    const list=$('gcThreadList');if(list)list.innerHTML='<div class="gc-empty">Exam results integration will use the existing GETI exam database.</div>';
+    const main=$('gcAdminMain');if(main)main.innerHTML='<div class="gc-empty">Messages are online and working. Exam results require the separate exam-results endpoint.</div>';
   }
   function adminMessages(){adminMode='messages';renderAdmin()}
   function adminResults(){adminMode='results';renderAdmin()}
