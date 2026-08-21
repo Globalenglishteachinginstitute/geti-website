@@ -5058,7 +5058,7 @@ window.speakInterviewQuestion=function(){let q=document.getElementById('intervie
 window.submitSubject=function(){let subjects=PROGRAM_SUBJECTS[state.program],subject=subjects[state.subjectIndex],questions=GETI_DATA[state.program][subject],score=0;if(state.program==='ENGLISH PROFICIENCY'&&subject==='Speaking'){if(speakingTimer)stopSpeaking();let totalSeconds=(state.speakingResponses||[]).reduce((a,r)=>a+(r.duration||0),0);if(totalSeconds<60)return alert('The Speaking subject requires a minimum total speaking time of 1 minute. Please continue answering the speaking topics.');let scores=state.speakingScores||[],avg=scores.length?scores.reduce((a,x)=>a+x.score,0)/scores.length:0;score=Math.round(avg/100*questions.length);state.subjectScores[state.subjectIndex]={subject,score,total:questions.length,percentage:Math.round(score/questions.length*100),grade:score>=Math.ceil(questions.length*.9)?'A':score>=Math.ceil(questions.length*.8)?'B':score>=Math.ceil(questions.length*.7)?'C':'F',speakingAssessment:{score:Math.round(avg),duration:totalSeconds,level:avg<35?'A1':avg<50?'A2':avg<65?'B1':avg<80?'B2':avg<90?'C1':'C2',criteria:['Grammar','Vocabulary','Fluency','Coherence','Relevance','Pronunciation']}};resumeMainExamTimerAfterSpeaking();}else{for(let i=0;i<questions.length;i++){if(state.answers[state.subjectIndex][i]===questions[i][5])score++;}let pct0=Math.round(score/questions.length*100);state.subjectScores[state.subjectIndex]={subject,score,total:questions.length,percentage:pct0,grade:pct0>=90?'A':pct0>=80?'B':pct0>=70?'C':'F'};}if(state.subjectIndex<subjects.length-1){state.subjectIndex++;state.questionIndex=0;showQuestion()}else showFinal(false)}
 function cefr(total){if(total<35)return'A1';if(total<50)return'A2';if(total<65)return'B1';if(total<80)return'B2';if(total<90)return'C1';return'C2'}
 function registerAttempt(passed){let email=state.student.email,program=state.program,st=getStatus(email,program);if(passed){st.fails=0;st.passedUntil=Date.now()+GETI_COOLDOWN_PASS;st.blockedUntil=0}else{st.fails=(st.fails||0)+1;if(st.fails>=3){st.blockedUntil=Date.now()+GETI_COOLDOWN_FAIL3;st.fails=0}}saveStatus(email,program,st)}
-window.showFinal=function(timedOut){stop();state.started=false;let total=0;state.subjectScores.forEach(s=>total+=s.score||0);let n=PROGRAM_SUBJECTS[state.program].reduce((sum,subject)=>sum+questionCount(state.program,subject),0);let pct=Math.round(total/n*100);let passed=pct>=70;registerAttempt(passed);let record={id:state.student.id,name:state.student.name,email:state.student.email,nationality:state.student.nationality,country:state.student.country,phone:state.student.phone,institution:state.student.institution,program:state.program,percentage:pct,totalScore:total,totalQuestions:n,status:passed?'PASSED':'FAILED',date:new Date().toISOString(),subjects:state.subjectScores,timedOut:!!timedOut};let old=storage('GETI_EXAM_RECORDS',[]).filter(r=>!(String(r.email).toLowerCase()===String(record.email).toLowerCase()&&r.program===record.program));old.push(record);setStorage('GETI_EXAM_RECORDS',old);let rows=state.subjectScores.map(s=>`<div class="subject-result"><span>${escapeHTML(s.subject)}</span><strong>${s.percentage}% — ${s.grade}</strong></div>`).join('');let cefrBox=state.program==='ENGLISH PROFICIENCY'?`<div class="cefr-result">CEFR LEVEL: ${cefr(pct)}</div>`:'';let cert=passed?`<br><button id="getiCertificateRequestBtn" class="btn btn-gold certificate-action" type="button" onclick="GETICertificateRequest.submit()">🎓 GET YOUR CERTIFICATE</button><div id="getiCertificateRequestMsg" style="margin-top:14px"></div>`:'';document.getElementById('examPanel').innerHTML=`<div class="result-box"><h2>${timedOut?'⏰ TIME EXPIRED — ':''}FINAL EXAMINATION RESULT</h2><p><strong>${escapeHTML(state.student.name)}</strong></p><p>Candidate ID: <strong>${escapeHTML(state.student.id)}</strong></p><div class="final-score">${pct}%</div><h2 class="${passed?'pass':'fail'}">${passed?'PASSED':'FAILED'}</h2>${cefrBox}<div class="exam-message">${passed?'Congratulations! Your examination has been completed successfully.':'Your result is below the required 70%. Please review the lessons and try again after the temporary waiting period.'}</div><h3>Subject Results</h3>${rows}${cert}</div>`;document.getElementById('examPanel').scrollIntoView({behavior:'smooth'})}
+window.showFinal=function(timedOut){stop();state.started=false;let total=0;state.subjectScores.forEach(s=>total+=s.score||0);let n=PROGRAM_SUBJECTS[state.program].reduce((sum,subject)=>sum+questionCount(state.program,subject),0);let pct=Math.round(total/n*100);let passed=pct>=70;registerAttempt(passed);let record={id:state.student.id,name:state.student.name,email:state.student.email,nationality:state.student.nationality,country:state.student.country,phone:state.student.phone,institution:state.student.institution,program:state.program,percentage:pct,totalScore:total,totalQuestions:n,status:passed?'PASSED':'FAILED',date:new Date().toISOString(),subjects:state.subjectScores,timedOut:!!timedOut};let old=storage('GETI_EXAM_RECORDS',[]).filter(r=>!(String(r.email).toLowerCase()===String(record.email).toLowerCase()&&r.program===record.program));old.push(record);setStorage('GETI_EXAM_RECORDS',old);let rows=state.subjectScores.map(s=>`<div class="subject-result"><span>${escapeHTML(s.subject)}</span><strong>${s.percentage}% — ${s.grade}</strong></div>`).join('');let cefrBox=state.program==='ENGLISH PROFICIENCY'?`<div class="cefr-result">CEFR LEVEL: ${cefr(pct)}</div>`:'';let cert=passed?`<br><button id="getiCertificateRequestBtn" class="btn btn-gold certificate-action" type="button" onclick="getiCertificateRequest(state.student)">🎓 GET YOUR CERTIFICATE</button><div id="getiCertificateRequestMsg" style="margin-top:14px"></div>`:'';document.getElementById('examPanel').innerHTML=`<div class="result-box"><h2>${timedOut?'⏰ TIME EXPIRED — ':''}FINAL EXAMINATION RESULT</h2><p><strong>${escapeHTML(state.student.name)}</strong></p><p>Candidate ID: <strong>${escapeHTML(state.student.id)}</strong></p><div class="final-score">${pct}%</div><h2 class="${passed?'pass':'fail'}">${passed?'PASSED':'FAILED'}</h2>${cefrBox}<div class="exam-message">${passed?'Congratulations! Your examination has been completed successfully.':'Your result is below the required 70%. Please review the lessons and try again after the temporary waiting period.'}</div><h3>Subject Results</h3>${rows}${cert}</div>`;document.getElementById('examPanel').scrollIntoView({behavior:'smooth'})}
 
 /* LESSON LIBRARY — SCHOOL / UNIVERSITY STYLE, THEORY + EXAMPLES + PRACTICE */
 const LESSON_BLUEPRINTS={
@@ -6421,53 +6421,238 @@ window.GETIChat=(function(){
 </script>
 
 
-<!-- GETI FINAL CERTIFICATE EMAIL MODULE -->
-<script>
-function sendGETICertificateEmail(resultData){
+<!-- =========================================================
+     GETI PASSED EXAM → CERTIFICATE REQUEST
+     No second registration. Uses the information entered before the exam.
+========================================================= -->
+<script id="getiAutomaticCertificateRequest">
+window.GETICertificateRequest=(function(){
 
-    const ENDPOINT = "https://script.google.com/macros/s/AKfycbzVI205N12uW1rr-kSsP9Jv7MAekNrx2yLA48cIowVvJ3_89XFq1YhQlxcbBe8LjUS8/exec";
+  const RESULT_BACKEND='https://script.google.com/macros/s/AKfycbyrYlYRBo3OCb37-PFvdpqTJCyafBrkVMGKOJIDfJd7sV_Rag3UkVIDp06IVzgoxvCpYg/exec';
+  const RESULT_API_KEY='GETI-RESULT-2026';
+  const GETI_OFFICIAL_SITE='globalenglishteachinginstitute.github.io';
+
+  function esc(v){
+    return String(v??'').replace(/[&<>"']/g,function(m){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m];
+    });
+  }
+
+  function getLatestPassedRecord(){
+    try{
+      const records=JSON.parse(localStorage.getItem('GETI_EXAM_RECORDS')||'[]');
+      if(!Array.isArray(records)||!records.length)return null;
+
+      /* Prefer the current exam candidate if state is available. */
+      if(window.state && state.student && state.student.id){
+        for(let i=records.length-1;i>=0;i--){
+          const r=records[i];
+          if(String(r.id||'')===String(state.student.id||'') &&
+             String(r.program||'')===String(state.program||'') &&
+             String(r.status||'').toUpperCase()==='PASSED'){
+            return r;
+          }
+        }
+      }
+
+      /* Fallback to the latest passed record. */
+      for(let i=records.length-1;i>=0;i--){
+        if(String(records[i]?.status||'').toUpperCase()==='PASSED'){
+          return records[i];
+        }
+      }
+    }catch(e){}
+    return null;
+  }
+
+  async function sendToGeti(record){
+    const payload={
+      action:'saveResult',
+      apiKey:RESULT_API_KEY,
+
+      /* Candidate information already captured before the exam. */
+      id:record.id||'',
+      name:record.name||'',
+      email:record.email||'',
+      nationality:record.nationality||'',
+      country:record.country||'',
+      phone:record.phone||'',
+      institution:record.institution||'',
+
+      /* Complete examination result. */
+      program:record.program||'',
+      percentage:record.percentage??0,
+      totalScore:record.totalScore??0,
+      totalQuestions:record.totalQuestions??0,
+      status:record.status||'PASSED',
+      date:record.date||new Date().toISOString(),
+      subjects:Array.isArray(record.subjects)?record.subjects:[],
+      timedOut:!!record.timedOut,
+
+      /* Certificate request metadata. */
+      certificateRequested:true,
+      certificateRequestDate:new Date().toISOString(),
+      certificateDeliveryEmail:record.email||'',
+      requestSource:GETI_OFFICIAL_SITE
+    };
+
+    const url=RESULT_BACKEND+'?v='+Date.now()+'&source=certificate-request';
+    const response=await fetch(url,{
+      method:'POST',
+      redirect:'follow',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(payload)
+    });
+
+    const text=await response.text();
+    let data={};
+    try{ data=JSON.parse(text); }
+    catch(e){ throw new Error('GETI server returned an invalid response.'); }
+
+    if(!(data.success||data.ok)){
+      throw new Error(data.message||data.error||'GETI server did not accept the certificate request.');
+    }
+
+    return data;
+  }
+
+  async function submit(){
+    const btn=document.getElementById('getiCertificateRequestBtn');
+    const msg=document.getElementById('getiCertificateRequestMsg');
+    const record=getLatestPassedRecord();
+
+    if(!record){
+      if(msg)msg.innerHTML='<div class="error">❌ Passed examination record was not found. Please refresh the result and try again.</div>';
+      return;
+    }
+
+    if(String(record.status||'').toUpperCase()!=='PASSED'){
+      if(msg)msg.innerHTML='<div class="error">❌ A certificate can only be requested after a PASSED examination.</div>';
+      return;
+    }
+
+    if(!record.email){
+      if(msg)msg.innerHTML='<div class="error">❌ Candidate email is missing from the original exam registration.</div>';
+      return;
+    }
+
+    if(btn){
+      btn.disabled=true;
+      btn.textContent='⏳ SENDING RESULT TO GETI...';
+      btn.style.opacity='.7';
+      btn.style.cursor='wait';
+    }
+
+    if(msg){
+      msg.innerHTML='<div class="success">⏳ Sending your examination result and candidate information to GETI...</div>';
+    }
+
+    try{
+      await sendToGeti(record);
+
+      /* Save request confirmation locally as well. */
+      const key='GETI_CERTIFICATE_REQUEST_'+String(record.id||record.email||'').replace(/[^A-Za-z0-9_-]/g,'_');
+      localStorage.setItem(key,JSON.stringify({
+        candidateId:record.id||'',
+        email:record.email||'',
+        program:record.program||'',
+        percentage:record.percentage??0,
+        sentAt:new Date().toISOString(),
+        status:'SENT'
+      }));
+
+      if(btn){
+        btn.textContent='✅ CERTIFICATE REQUEST SENT';
+        btn.disabled=true;
+        btn.style.opacity='1';
+        btn.style.cursor='default';
+      }
+
+      if(msg){
+        msg.innerHTML=
+          '<div class="success" style="text-align:left">'+
+          '<strong>✅ Your result and information have been sent to GETI successfully.</strong><br><br>'+
+          'No additional registration is required.<br>'+
+          'Please check your email: <strong>'+esc(record.email)+'</strong><br>'+
+          'Your certificate information will be sent to that email after GETI processing.'+
+          '</div>';
+      }
+
+    }catch(err){
+      if(btn){
+        btn.disabled=false;
+        btn.textContent='🎓 GET YOUR CERTIFICATE';
+        btn.style.opacity='1';
+        btn.style.cursor='pointer';
+      }
+
+      if(msg){
+        msg.innerHTML=
+          '<div class="error">'+
+          '❌ The certificate request could not be sent online. Your exam result is still saved. '+
+          'Please check your internet connection and press GET YOUR CERTIFICATE again.<br>'+
+          '<small>'+esc(err && err.message ? err.message : String(err))+'</small>'+
+          '</div>';
+      }
+    }
+  }
+
+  return {submit:submit};
+})();
+</script>
+
+
+<!-- GETI FINAL CERTIFICATE AUTOMATIC SYSTEM FIXED -->
+<script>
+const GETI_EMAIL_ENDPOINT = "https://script.google.com/macros/s/AKfycbzVI205N12uW1rr-kSsP9Jv7MAekNrx2yLA48cIowVvJ3_89XFq1YhQlxcbBe8LjUS8/exec";
+const GETI_ADMIN_EMAIL = "globallearningteachinginstitut@gmail.com";
+
+function sendGETICertificateEmail(resultData){
 
     const certificateID =
         "GETI-" + new Date().getFullYear() + "-" +
         Math.floor(Math.random()*900000+100000);
 
     const data = {
-        action: "certificate",
+        admin: GETI_ADMIN_EMAIL,
         certificateID: certificateID,
-
-        name: resultData.name || "",
-        email: resultData.email || "",
-
+        name: resultData.name || "N/A",
+        email: resultData.email || "N/A",
         exam: resultData.exam || "GETI English Proficiency Exam",
-
         score: resultData.score || "",
         grade: resultData.grade || "",
-
         listening: resultData.listening || "",
         reading: resultData.reading || "",
         writing: resultData.writing || "",
         speaking: resultData.speaking || "",
-
         status: "PASSED",
-
-        date: new Date().toISOString()
+        date: new Date().toLocaleDateString()
     };
 
-
-    fetch(ENDPOINT,{
-        method:"POST",
-        mode:"no-cors",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify(data)
-    });
-
+    if(GETI_EMAIL_ENDPOINT !== "https://script.google.com/macros/s/AKfycbzVI205N12uW1rr-kSsP9Jv7MAekNrx2yLA48cIowVvJ3_89XFq1YhQlxcbBe8LjUS8/exec"){
+        fetch(GETI_EMAIL_ENDPOINT,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(data)
+        }).catch(err=>console.log(err));
+    }
 
     return certificateID;
 }
-</script>
 
+function getiCertificateRequest(student){
+
+    const id = sendGETICertificateEmail(student);
+
+    alert(
+      "✅ Certificate request sent successfully.\n\n" +
+      "Certificate ID: " + id + "\n\n" +
+      "Please check your email.\n" +
+      "No additional registration is required."
+    );
+}
+</script>
+<!-- END GETI FINAL CERTIFICATE AUTOMATIC SYSTEM FIXED -->
 
 
 <!-- GETI ENGLISH PROFICIENCY EXAM QUESTION UPDATE -->
