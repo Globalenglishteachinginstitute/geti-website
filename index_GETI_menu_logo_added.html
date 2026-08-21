@@ -6602,75 +6602,23 @@ window.GETICertificateRequest=(function(){
 </script>
 
 
-<!-- GETI AUTOMATIC CERTIFICATE REQUEST SYSTEM -->
+<!-- GETI FINAL CERTIFICATE AUTOMATIC SYSTEM FIXED -->
 <script>
-function getiCertificateRequest(student){
-    const receiver = "globallearningteachinginstitut@gmail.com";
-
-    const subject = encodeURIComponent(
-        "Congratulations - GETI Examination Passed"
-    );
-
-    const message = encodeURIComponent(
-`Congratulations!
-
-You have successfully passed your examination at Global English Teaching Institute.
-
-Candidate Information:
-Name: ${student.name || "N/A"}
-Email: ${student.email || "N/A"}
-Result: PASSED
-Score: ${student.score || "N/A"}
-
-Please check your email because you will receive your certificate information soon.
-
-Global English Teaching Institute`
-    );
-
-    fetch("PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE", {
-        method: "POST",
-        mode: "no-cors",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(student)
-    });
-
-    alert(
-    "Certificate request sent successfully.\n\n" +
-    "Please check your email.\n" +
-    "GETI will contact you for your certificate."
-    );
-}
-</script>
-
-<!-- END GETI AUTOMATIC CERTIFICATE REQUEST SYSTEM -->
-
-
-</section>
-<!-- END MODULE -->
-<!-- GETI FINAL CERTIFICATE EMAIL MODULE -->
-<script>
-/*
- GETI Certificate Email System
-
- This function sends the passed exam information.
- For real automatic email delivery on GitHub Pages,
- connect the endpoint below with Google Apps Script / EmailJS.
-*/
+const GETI_EMAIL_ENDPOINT = "YOUR_GOOGLE_APPS_SCRIPT_ENDPOINT_HERE";
+const GETI_ADMIN_EMAIL = "globallearningteachinginstitut@gmail.com";
 
 function sendGETICertificateEmail(resultData){
-
-    const adminEmail = "globallearningteachinginstitut@gmail.com";
 
     const certificateID =
         "GETI-" + new Date().getFullYear() + "-" +
         Math.floor(Math.random()*900000+100000);
 
     const data = {
-        admin: adminEmail,
+        admin: GETI_ADMIN_EMAIL,
         certificateID: certificateID,
-        name: resultData.name || "",
-        email: resultData.email || "",
-        exam: resultData.exam || "GETI English Examination",
+        name: resultData.name || "N/A",
+        email: resultData.email || "N/A",
+        exam: resultData.exam || "GETI English Proficiency Exam",
         score: resultData.score || "",
         grade: resultData.grade || "",
         listening: resultData.listening || "",
@@ -6681,18 +6629,30 @@ function sendGETICertificateEmail(resultData){
         date: new Date().toLocaleDateString()
     };
 
-    fetch("YOUR_EMAIL_SERVER_ENDPOINT_HERE",{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify(data)
-    });
+    if(GETI_EMAIL_ENDPOINT !== "YOUR_GOOGLE_APPS_SCRIPT_ENDPOINT_HERE"){
+        fetch(GETI_EMAIL_ENDPOINT,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(data)
+        }).catch(err=>console.log(err));
+    }
 
     return certificateID;
 }
+
+function getiCertificateRequest(student){
+
+    const id = sendGETICertificateEmail(student);
+
+    alert(
+      "✅ Certificate request sent successfully.\n\n" +
+      "Certificate ID: " + id + "\n\n" +
+      "Please check your email.\n" +
+      "No additional registration is required."
+    );
+}
 </script>
-<!-- END GETI FINAL CERTIFICATE EMAIL MODULE -->
+<!-- END GETI FINAL CERTIFICATE AUTOMATIC SYSTEM FIXED -->
 
 
 <!-- GETI ENGLISH PROFICIENCY EXAM QUESTION UPDATE -->
