@@ -6712,3 +6712,15 @@ Writing: [
 <!-- END GETI PHOTO SECTION -->
 </body>
 </html>
+
+<script>
+/* GETI Certificate button compatibility fix */
+if (typeof GETICertificateRequest === 'undefined' && typeof getiCertificateRequest === 'function') {
+  window.GETICertificateRequest = {
+    submit: function(){
+      var student = (typeof state !== 'undefined' && state.student) ? state.student : {};
+      return getiCertificateRequest(student);
+    }
+  };
+}
+</script>
