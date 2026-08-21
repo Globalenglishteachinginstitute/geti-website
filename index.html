@@ -6421,278 +6421,53 @@ window.GETIChat=(function(){
 </script>
 
 
-<!-- =========================================================
-     GETI PASSED EXAM → CERTIFICATE REQUEST
-     No second registration. Uses the information entered before the exam.
-========================================================= -->
-<script id="getiAutomaticCertificateRequest">
-window.GETICertificateRequest=(function(){
-
-  const RESULT_BACKEND='https://script.google.com/macros/s/AKfycbyrYlYRBo3OCb37-PFvdpqTJCyafBrkVMGKOJIDfJd7sV_Rag3UkVIDp06IVzgoxvCpYg/exec';
-  const RESULT_API_KEY='GETI-RESULT-2026';
-  const GETI_OFFICIAL_SITE='globalenglishteachinginstitute.github.io';
-
-  function esc(v){
-    return String(v??'').replace(/[&<>"']/g,function(m){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m];
-    });
-  }
-
-  function getLatestPassedRecord(){
-    try{
-      const records=JSON.parse(localStorage.getItem('GETI_EXAM_RECORDS')||'[]');
-      if(!Array.isArray(records)||!records.length)return null;
-
-      /* Prefer the current exam candidate if state is available. */
-      if(window.state && state.student && state.student.id){
-        for(let i=records.length-1;i>=0;i--){
-          const r=records[i];
-          if(String(r.id||'')===String(state.student.id||'') &&
-             String(r.program||'')===String(state.program||'') &&
-             String(r.status||'').toUpperCase()==='PASSED'){
-            return r;
-          }
-        }
-      }
-
-      /* Fallback to the latest passed record. */
-      for(let i=records.length-1;i>=0;i--){
-        if(String(records[i]?.status||'').toUpperCase()==='PASSED'){
-          return records[i];
-        }
-      }
-    }catch(e){}
-    return null;
-  }
-
-  async function sendToGeti(record){
-    const payload={
-      action:'saveResult',
-      apiKey:RESULT_API_KEY,
-
-      /* Candidate information already captured before the exam. */
-      id:record.id||'',
-      name:record.name||'',
-      email:record.email||'',
-      nationality:record.nationality||'',
-      country:record.country||'',
-      phone:record.phone||'',
-      institution:record.institution||'',
-
-      /* Complete examination result. */
-      program:record.program||'',
-      percentage:record.percentage??0,
-      totalScore:record.totalScore??0,
-      totalQuestions:record.totalQuestions??0,
-      status:record.status||'PASSED',
-      date:record.date||new Date().toISOString(),
-      subjects:Array.isArray(record.subjects)?record.subjects:[],
-      timedOut:!!record.timedOut,
-
-      /* Certificate request metadata. */
-      certificateRequested:true,
-      certificateRequestDate:new Date().toISOString(),
-      certificateDeliveryEmail:record.email||'',
-      requestSource:GETI_OFFICIAL_SITE
-    };
-
-    const url=RESULT_BACKEND+'?v='+Date.now()+'&source=certificate-request';
-    const response=await fetch(url,{
-      method:'POST',
-      redirect:'follow',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify(payload)
-    });
-
-    const text=await response.text();
-    let data={};
-    try{ data=JSON.parse(text); }
-    catch(e){ throw new Error('GETI server returned an invalid response.'); }
-
-    if(!(data.success||data.ok)){
-      throw new Error(data.message||data.error||'GETI server did not accept the certificate request.');
-    }
-
-    return data;
-  }
-
-  async function submit(){
-    const btn=document.getElementById('getiCertificateRequestBtn');
-    const msg=document.getElementById('getiCertificateRequestMsg');
-    const record=getLatestPassedRecord();
-
-    if(!record){
-      if(msg)msg.innerHTML='<div class="error">❌ Passed examination record was not found. Please refresh the result and try again.</div>';
-      return;
-    }
-
-    if(String(record.status||'').toUpperCase()!=='PASSED'){
-      if(msg)msg.innerHTML='<div class="error">❌ A certificate can only be requested after a PASSED examination.</div>';
-      return;
-    }
-
-    if(!record.email){
-      if(msg)msg.innerHTML='<div class="error">❌ Candidate email is missing from the original exam registration.</div>';
-      return;
-    }
-
-    if(btn){
-      btn.disabled=true;
-      btn.textContent='⏳ SENDING RESULT TO GETI...';
-      btn.style.opacity='.7';
-      btn.style.cursor='wait';
-    }
-
-    if(msg){
-      msg.innerHTML='<div class="success">⏳ Sending your examination result and candidate information to GETI...</div>';
-    }
-
-    try{
-      await sendToGeti(record);
-
-      /* Save request confirmation locally as well. */
-      const key='GETI_CERTIFICATE_REQUEST_'+String(record.id||record.email||'').replace(/[^A-Za-z0-9_-]/g,'_');
-      localStorage.setItem(key,JSON.stringify({
-        candidateId:record.id||'',
-        email:record.email||'',
-        program:record.program||'',
-        percentage:record.percentage??0,
-        sentAt:new Date().toISOString(),
-        status:'SENT'
-      }));
-
-      if(btn){
-        btn.textContent='✅ CERTIFICATE REQUEST SENT';
-        btn.disabled=true;
-        btn.style.opacity='1';
-        btn.style.cursor='default';
-      }
-
-      if(msg){
-        msg.innerHTML=
-          '<div class="success" style="text-align:left">'+
-          '<strong>✅ Your result and information have been sent to GETI successfully.</strong><br><br>'+
-          'No additional registration is required.<br>'+
-          'Please check your email: <strong>'+esc(record.email)+'</strong><br>'+
-          'Your certificate information will be sent to that email after GETI processing.'+
-          '</div>';
-      }
-
-    }catch(err){
-      if(btn){
-        btn.disabled=false;
-        btn.textContent='🎓 GET YOUR CERTIFICATE';
-        btn.style.opacity='1';
-        btn.style.cursor='pointer';
-      }
-
-      if(msg){
-        msg.innerHTML=
-          '<div class="error">'+
-          '❌ The certificate request could not be sent online. Your exam result is still saved. '+
-          'Please check your internet connection and press GET YOUR CERTIFICATE again.<br>'+
-          '<small>'+esc(err && err.message ? err.message : String(err))+'</small>'+
-          '</div>';
-      }
-    }
-  }
-
-  return {submit:submit};
-})();
-</script>
-
-
-<!-- GETI AUTOMATIC CERTIFICATE REQUEST SYSTEM -->
-<script>
-function getiCertificateRequest(student){
-    const receiver = "globallearningteachinginstitut@gmail.com";
-
-    const subject = encodeURIComponent(
-        "Congratulations - GETI Examination Passed"
-    );
-
-    const message = encodeURIComponent(
-`Congratulations!
-
-You have successfully passed your examination at Global English Teaching Institute.
-
-Candidate Information:
-Name: ${student.name || "N/A"}
-Email: ${student.email || "N/A"}
-Result: PASSED
-Score: ${student.score || "N/A"}
-
-Please check your email because you will receive your certificate information soon.
-
-Global English Teaching Institute`
-    );
-
-    fetch("https://script.google.com/macros/s/AKfycbzVI205N12uW1rr-kSsP9Jv7MAekNrx2yLA48cIowVvJ3_89XFq1YhQlxcbBe8LjUS8/exec", {
-        method: "POST",
-        mode: "no-cors",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(student)
-    });
-
-    alert(
-    "Certificate request sent successfully.\n\n" +
-    "Please check your email.\n" +
-    "GETI will contact you for your certificate."
-    );
-}
-</script>
-
-<!-- END GETI AUTOMATIC CERTIFICATE REQUEST SYSTEM -->
-
-
-</section>
-<!-- END MODULE -->
 <!-- GETI FINAL CERTIFICATE EMAIL MODULE -->
 <script>
-/*
- GETI Certificate Email System
-
- This function sends the passed exam information.
- For real automatic email delivery on GitHub Pages,
- connect the endpoint below with Google Apps Script / EmailJS.
-*/
-
 function sendGETICertificateEmail(resultData){
 
-    const adminEmail = "globallearningteachinginstitut@gmail.com";
+    const ENDPOINT = "https://script.google.com/macros/s/AKfycbzVI205N12uW1rr-kSsP9Jv7MAekNrx2yLA48cIowVvJ3_89XFq1YhQlxcbBe8LjUS8/exec";
 
     const certificateID =
         "GETI-" + new Date().getFullYear() + "-" +
         Math.floor(Math.random()*900000+100000);
 
     const data = {
-        admin: adminEmail,
+        action: "certificate",
         certificateID: certificateID,
+
         name: resultData.name || "",
         email: resultData.email || "",
-        exam: resultData.exam || "GETI English Examination",
+
+        exam: resultData.exam || "GETI English Proficiency Exam",
+
         score: resultData.score || "",
         grade: resultData.grade || "",
+
         listening: resultData.listening || "",
         reading: resultData.reading || "",
         writing: resultData.writing || "",
         speaking: resultData.speaking || "",
+
         status: "PASSED",
-        date: new Date().toLocaleDateString()
+
+        date: new Date().toISOString()
     };
 
-    fetch("YOUR_EMAIL_SERVER_ENDPOINT_HERE",{
+
+    fetch(ENDPOINT,{
         method:"POST",
+        mode:"no-cors",
         headers:{
             "Content-Type":"application/json"
         },
         body:JSON.stringify(data)
     });
 
+
     return certificateID;
 }
 </script>
-<!-- END GETI FINAL CERTIFICATE EMAIL MODULE -->
+
 
 
 <!-- GETI ENGLISH PROFICIENCY EXAM QUESTION UPDATE -->
