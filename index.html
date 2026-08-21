@@ -6603,56 +6603,11 @@ window.GETICertificateRequest=(function(){
 
 
 <!-- GETI FINAL CERTIFICATE AUTOMATIC SYSTEM FIXED -->
-<script>
-const GETI_EMAIL_ENDPOINT = "https://script.google.com/macros/s/AKfycbzVI205N12uW1rr-kSsP9Jv7MAekNrx2yLA48cIowVvJ3_89XFq1YhQlxcbBe8LjUS8/exec";
-const GETI_ADMIN_EMAIL = "globallearningteachinginstitut@gmail.com";
 
-function sendGETICertificateEmail(resultData){
-
-    const certificateID =
-        "GETI-" + new Date().getFullYear() + "-" +
-        Math.floor(Math.random()*900000+100000);
-
-    const data = {
-        admin: GETI_ADMIN_EMAIL,
-        certificateID: certificateID,
-        name: resultData.name || "N/A",
-        email: resultData.email || "N/A",
-        exam: resultData.exam || "GETI English Proficiency Exam",
-        score: resultData.score || "",
-        grade: resultData.grade || "",
-        listening: resultData.listening || "",
-        reading: resultData.reading || "",
-        writing: resultData.writing || "",
-        speaking: resultData.speaking || "",
-        status: "PASSED",
-        date: new Date().toLocaleDateString()
-    };
-
-    if(GETI_EMAIL_ENDPOINT !== "https://script.google.com/macros/s/AKfycbzVI205N12uW1rr-kSsP9Jv7MAekNrx2yLA48cIowVvJ3_89XFq1YhQlxcbBe8LjUS8/exec"){
-        fetch(GETI_EMAIL_ENDPOINT,{
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify(data)
-        }).catch(err=>console.log(err));
-    }
-
-    return certificateID;
-}
-
-function getiCertificateRequest(student){
-
-    const id = sendGETICertificateEmail(student);
-
-    alert(
-      "✅ Certificate request sent successfully.\n\n" +
-      "Certificate ID: " + id + "\n\n" +
-      "Please check your email.\n" +
-      "No additional registration is required."
-    );
-}
-</script>
 <!-- END GETI FINAL CERTIFICATE AUTOMATIC SYSTEM FIXED -->
+
+
+
 
 
 <!-- GETI ENGLISH PROFICIENCY EXAM QUESTION UPDATE -->
@@ -6710,17 +6665,58 @@ Writing: [
 </div>
 </section>
 <!-- END GETI PHOTO SECTION -->
-</body>
-</html>
+
+
+
 
 <script>
-/* GETI Certificate button compatibility fix */
-if (typeof GETICertificateRequest === 'undefined' && typeof getiCertificateRequest === 'function') {
-  window.GETICertificateRequest = {
-    submit: function(){
-      var student = (typeof state !== 'undefined' && state.student) ? state.student : {};
-      return getiCertificateRequest(student);
+// GETI FINAL CERTIFICATE SYSTEM
+const GETI_EMAIL_ENDPOINT = "https://script.google.com/macros/s/AKfycbzVI205N12uW1rr-kSsP9Jv7MAekNrx2yLA48cIowVvJ3_89XFq1YhQlxcbBe8LjUS8/exec";
+
+window.getiCertificateRequest = async function(student) {
+
+    try {
+
+        if(!student) {
+            student = {};
+        }
+
+        const data = {
+            name: student.name || "",
+            email: student.email || "",
+            score: student.score || "",
+            status: "PASSED",
+            date: new Date().toLocaleDateString()
+        };
+
+        await fetch(GETI_EMAIL_ENDPOINT, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        alert("✅ Certificate request sent successfully. Please check your email.");
+
+    } catch(error) {
+
+        console.error("GETI Certificate Error:", error);
+        alert("❌ Certificate request failed.");
+
     }
-  };
-}
+
+};
+
+// Compatibility for existing buttons
+window.GETICertificateRequest = {
+    submit: function(){
+        let student = (typeof state !== "undefined" && state.student) ? state.student : {};
+        return window.getiCertificateRequest(student);
+    }
+};
 </script>
+
+</body>
+</html>
