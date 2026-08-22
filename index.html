@@ -6694,7 +6694,152 @@ function sendGETICertificateEmail(resultData){
 </script>
 <!-- END GETI FINAL CERTIFICATE EMAIL MODULE -->
 
+<!-- GETI CERTIFICATE DOWNLOAD WORKFLOW INTEGRATION
+Added under Explore Programme and Take an Exam
 
+Workflow:
+1. Student clicks Download Your Certificate.
+2. Registration form appears.
+3. After registration, student account shows upload/request area.
+4. Student can manage maximum 4 PDF files.
+5. Administrator uses Send Certificate.
+6. Uploaded certificate PDF appears above Download button.
+7. Student downloads final PDF certificate.
+-->
+
+<section class="certificate-download-module" id="certificate-download">
+<h2>📄 Download Your Certificate</h2>
+<p>Complete your registration to receive your official GETI certificate.</p>
+
+<button onclick="openGETICertificateRegistration()" class="btn btn-gold">
+Download Your Certificate
+</button>
+
+<div id="getiCertificateRegistration" style="display:none;margin-top:20px;background:#fff;padding:25px;border-radius:10px;">
+<h3>Certificate Registration</h3>
+
+<input id="getiCertName" placeholder="Full Name">
+<input id="getiCertEmail" placeholder="Email Address">
+<input id="getiCertProgram" placeholder="Programme / Exam">
+
+<button onclick="registerGETICertificate()" class="btn btn-gold">
+Register
+</button>
+</div>
+
+
+<div id="getiStudentCertificateArea" style="display:none;margin-top:20px;background:#f8fafc;padding:25px;border-radius:10px;">
+
+<h3>Your Certificate Area</h3>
+
+<p id="getiCertStatus">
+Waiting for administrator certificate PDF.
+</p>
+
+<div>
+<h4>Send PDF files (Maximum 4)</h4>
+
+<input type="file" id="getiPDFUpload" accept="application/pdf" multiple>
+
+<button onclick="saveGETIPDF()" class="btn btn-gold">
+Send PDF
+</button>
+
+<p id="getiPDFList"></p>
+</div>
+
+<div id="getiDownloadBox"></div>
+
+</div>
+
+
+<div id="getiAdminCertificateArea" style="margin-top:30px;background:#eef3f8;padding:25px;border-radius:10px;">
+<h3>Administrator - Send Certificate</h3>
+
+<input type="file" id="getiAdminPDF" accept="application/pdf">
+
+<button onclick="adminSendGETICertificate()" class="btn btn-gold">
+Send Certificate
+</button>
+
+<p>
+The administrator uploaded PDF will appear above the Download button.
+</p>
+
+</div>
+
+</section>
+
+
+<script>
+let getiPDFFiles=[];
+
+function openGETICertificateRegistration(){
+ document.getElementById("getiCertificateRegistration").style.display="block";
+}
+
+function registerGETICertificate(){
+
+ let name=document.getElementById("getiCertName").value;
+ let email=document.getElementById("getiCertEmail").value;
+
+ localStorage.setItem("GETI_CERT_STUDENT",
+ JSON.stringify({name,email}));
+
+ document.getElementById("getiStudentCertificateArea").style.display="block";
+
+ alert("Registration completed. Waiting for certificate.");
+}
+
+
+function saveGETIPDF(){
+
+ let files=document.getElementById("getiPDFUpload").files;
+
+ if(getiPDFFiles.length + files.length > 4){
+   alert("Maximum 4 PDF files allowed.");
+   return;
+ }
+
+ for(let f of files){
+   getiPDFFiles.push(f.name);
+ }
+
+ document.getElementById("getiPDFList").innerHTML=
+ "Uploaded PDF: "+getiPDFFiles.join(", ");
+
+}
+
+
+function adminSendGETICertificate(){
+
+ let file=document.getElementById("getiAdminPDF").files[0];
+
+ if(!file){
+   alert("Select PDF certificate.");
+   return;
+ }
+
+ let url=URL.createObjectURL(file);
+
+ localStorage.setItem("GETI_FINAL_CERTIFICATE",url);
+
+ document.getElementById("getiDownloadBox").innerHTML=
+ `
+ <a href="${url}" download="${file.name}">
+ <button class="btn btn-gold">
+ Download PDF Certificate
+ </button>
+ </a>
+ `;
+
+ document.getElementById("getiCertStatus").innerHTML=
+ "✅ Certificate available for download.";
+
+ alert("Certificate sent successfully.");
+}
+
+</script>
 <!-- GETI ENGLISH PROFICIENCY EXAM QUESTION UPDATE -->
 <script>
 /* Updated Professional English Proficiency Subjects */
