@@ -1215,7 +1215,7 @@ button,input,textarea{
 .geti-public-hero:after{width:230px;height:230px;left:-90px;bottom:-120px}
 .geti-public-inner{
  position:relative;z-index:2;max-width:1180px;margin:auto;
- display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center
+ display:block;
 }
 .geti-public-copy .geti-eyebrow{
  color:#e2bd55;font-weight:800;letter-spacing:2.4px;font-size:12px;text-transform:uppercase
@@ -1223,22 +1223,40 @@ button,input,textarea{
 .geti-public-copy h1{
  font-size:clamp(34px,5vw,62px);line-height:1.04;margin:12px 0 18px;color:#fff
 }
-.geti-public-copy p{font-size:17px;line-height:1.75;color:#dce6f2;max-width:620px}
+.geti-public-copy p{font-size:17px;line-height:1.75;color:#dce6f2;max-width:760px}
 .geti-public-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
 .geti-public-pill{
  padding:9px 13px;border:1px solid rgba(255,255,255,.2);
  background:rgba(255,255,255,.08);border-radius:30px;font-size:12px;font-weight:700
 }
-.geti-student-collage{position:relative;min-height:410px}
-.geti-student-photo{
- position:absolute;overflow:hidden;border-radius:18px;border:5px solid rgba(255,255,255,.95);
- box-shadow:0 18px 45px rgba(0,0,0,.32);background:#dce5ef
+.geti-student-collage{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:18px;
+ margin-top:38px;
+ min-height:auto;
 }
-.geti-student-photo img{width:100%;height:100%;object-fit:cover;display:block}
-.geti-student-photo.p1{width:55%;height:270px;left:0;top:35px;transform:rotate(-3deg)}
-.geti-student-photo.p2{width:50%;height:245px;right:0;top:0;transform:rotate(3deg)}
-.geti-student-photo.p3{width:48%;height:210px;right:7%;bottom:0;transform:rotate(-2deg)}
-.geti-student-photo.p4{width:38%;height:165px;left:9%;bottom:0;transform:rotate(2deg)}
+.geti-student-photo{
+ position:relative;
+ overflow:hidden;
+ border-radius:16px;
+ border:4px solid rgba(255,255,255,.95);
+ box-shadow:0 14px 34px rgba(0,0,0,.28);
+ background:#dce5ef;
+ width:100%!important;
+ height:230px!important;
+ left:auto!important;
+ right:auto!important;
+ top:auto!important;
+ bottom:auto!important;
+ transform:none!important;
+}
+.geti-student-photo img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ display:block;
+}
 .geti-public-access-title{
  text-align:center;background:#f4f7fb;padding:35px 20px 8px
 }
@@ -1261,14 +1279,38 @@ button,input,textarea{
 }
 .geti-auth-card{border-top:5px solid #b38a28}
 @media(max-width:820px){
- .geti-public-inner{grid-template-columns:1fr}
  .geti-public-hero{padding-top:52px}
- .geti-student-collage{min-height:370px;margin-top:5px}
+ .geti-student-collage{grid-template-columns:repeat(2,1fr);margin-top:28px}
  .geti-public-copy{text-align:center}
  .geti-public-copy p{margin-left:auto;margin-right:auto}
  .geti-public-pills{justify-content:center}
 }
 
+
+@media(max-width:520px){
+ .geti-student-collage{grid-template-columns:1fr}
+ .geti-student-photo{height:250px!important}
+}
+
+
+#getiStudentPortal{display:none;min-height:100vh;background:#f3f6fa}
+.geti-sp-top{background:#071d3a;color:#fff;padding:18px 25px;display:flex;justify-content:space-between;align-items:center}
+.geti-sp-shell{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 65px)}
+.geti-sp-nav{background:#fff;border-right:1px solid #e1e6ed;padding:20px 12px}
+.geti-sp-nav button{width:100%;border:0;background:transparent;text-align:left;padding:13px 14px;border-radius:7px;margin-bottom:5px;color:#27364b;font-weight:700;cursor:pointer}
+.geti-sp-nav button.active,.geti-sp-nav button:hover{background:#eef3f8;color:#0b2d5c}
+.geti-sp-main{padding:28px}
+.geti-sp-panel{display:none}.geti-sp-panel.active{display:block}
+.geti-sp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:18px 0}
+.geti-sp-card{background:#fff;border-radius:10px;padding:18px;box-shadow:0 4px 15px rgba(0,0,0,.05)}
+.geti-sp-card strong{font-size:25px;color:#0b2d5c;display:block;margin-top:6px}
+.geti-sp-form{background:#fff;padding:22px;border-radius:10px;max-width:800px}
+.geti-sp-form input,.geti-sp-form textarea,.geti-sp-form select{width:100%;padding:11px;border:1px solid #ccd4df;border-radius:6px;margin:6px 0 14px}
+.geti-sp-table{width:100%;border-collapse:collapse;background:#fff}
+.geti-sp-table th,.geti-sp-table td{padding:11px;border-bottom:1px solid #e5e9ef;text-align:left;font-size:13px}
+.geti-sp-table th{background:#0b2d5c;color:#fff}
+.geti-course-card{background:#fff;padding:20px;border-radius:10px;border-left:5px solid #b38a28;margin-bottom:14px}
+@media(max-width:850px){.geti-sp-shell{grid-template-columns:1fr}.geti-sp-nav{display:flex;overflow:auto}.geti-sp-nav button{min-width:145px}.geti-sp-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 
@@ -1572,23 +1614,20 @@ Nationality
 </div>
 
 <div class="geti-auth-card" id="getiVerifyCard" style="display:none">
-  <h2>Verify Your Email</h2>
+  <h2>Confirm Your Email</h2>
   <p>
-    We sent a 6-digit confirmation code to
+    A confirmation email has been sent to
     <strong id="getiVerifyEmailText"></strong>.
   </p>
 
-  <input
-    id="getiVerificationCode"
-    type="text"
-    inputmode="numeric"
-    maxlength="6"
-    placeholder="Enter 6-digit code">
+  <div style="background:#eef6ff;border-left:4px solid #0b2d5c;padding:14px;margin:15px 0;border-radius:6px;line-height:1.6;">
+    Open your email inbox and click the <strong>Confirm Email</strong> link sent by GETI.
+    After confirmation, return to this page and login with your email and password.
+  </div>
 
-  <button class="geti-primary" onclick="getiConfirmEmailCode()">CONFIRM CODE</button>
+  <button class="geti-primary" onclick="getiResendConfirmationEmail()">RESEND CONFIRMATION EMAIL</button>
 
-  <div class="geti-link" onclick="getiResendCode()">Resend Code</div>
-  <div class="geti-link" onclick="getiBackToCreate()">Change Email / Back</div>
+  <div class="geti-link" onclick="getiShowLogin()">Back to Login</div>
 
   <p id="getiVerificationStatus" style="margin-top:14px;font-size:13px;"></p>
 </div>
@@ -1638,7 +1677,8 @@ Nationality
 
 <div id="getiStudentBar">
  <span id="getiStudentWelcome"></span>
- <button onclick="getiToggleMessage()">Message</button>
+ <button onclick="getiOpenStudentPortal()">My Dashboard</button>
+ <button onclick="getiToggleMessage()">Messages</button>
  <button onclick="getiLogout()">Logout</button>
 </div>
 
@@ -1648,6 +1688,78 @@ Nationality
  <strong>Message Administrator</strong>
  <textarea id="getiStudentMessage" placeholder="Write your message..."></textarea>
  <button class="geti-btn geti-secondary" onclick="getiSendMessage()">SEND</button>
+</div>
+
+
+<div id="getiStudentPortal">
+ <div class="geti-sp-top">
+  <div><strong>GETI STUDENT CENTER</strong><div style="font-size:12px;opacity:.75">Global English Teaching Institute</div></div>
+  <button class="geti-btn" onclick="getiCloseStudentPortal()">Back to Website</button>
+ </div>
+ <div class="geti-sp-shell">
+  <aside class="geti-sp-nav">
+   <button class="active" onclick="getiStudentTab('home',this)">Dashboard</button>
+   <button onclick="getiStudentTab('profile',this)">My Profile</button>
+   <button onclick="getiStudentTab('courses',this)">My Courses</button>
+   <button onclick="getiStudentTab('exams',this)">Examinations</button>
+   <button onclick="getiStudentTab('results',this)">Exam Results</button>
+   <button onclick="getiStudentTab('certificates',this)">My Certificates</button>
+   <button onclick="getiToggleMessage()">Messages</button>
+   <button onclick="getiStudentTab('account',this)">Account & Security</button>
+  </aside>
+  <main class="geti-sp-main">
+   <section id="getiSP-home" class="geti-sp-panel active">
+    <h2>Student Dashboard</h2><p id="getiSPGreeting">Welcome to your GETI account.</p>
+    <div class="geti-sp-grid">
+     <div class="geti-sp-card">Courses<strong>2</strong></div>
+     <div class="geti-sp-card">Examinations<strong id="spExamCount">0</strong></div>
+     <div class="geti-sp-card">Passed<strong id="spPassedCount">0</strong></div>
+     <div class="geti-sp-card">Certificates<strong id="spCertCount">0</strong></div>
+    </div>
+    <div class="geti-course-card"><strong>Complete your student profile</strong><p>Keep your full name and account information accurate before taking an examination or requesting a certificate.</p></div>
+    <div class="geti-course-card"><strong>Certificate procedure</strong><p>After passing an examination, contact the GETI Administrator through Messages to request your certificate.</p></div>
+   </section>
+
+   <section id="getiSP-profile" class="geti-sp-panel">
+    <h2>My Profile</h2><br>
+    <div class="geti-sp-form">
+     <label>Full Name</label><input id="spProfileName" readonly>
+     <label>Email Address</label><input id="spProfileEmail" readonly>
+     <label>Student ID</label><input id="spProfileId" readonly>
+     <label>Account Status</label><input value="Active Student" readonly>
+    </div>
+   </section>
+
+   <section id="getiSP-courses" class="geti-sp-panel">
+    <h2>My Courses</h2><br>
+    <div class="geti-course-card"><h3>TEFL — Teaching English as a Foreign Language</h3><p>Professional English teaching preparation and certification pathway.</p></div>
+    <div class="geti-course-card"><h3>TESOL — Teaching English to Speakers of Other Languages</h3><p>English teaching methodology and professional certification pathway.</p></div>
+   </section>
+
+   <section id="getiSP-exams" class="geti-sp-panel">
+    <h2>Examinations</h2><br>
+    <div class="geti-course-card"><h3>GETI Professional Examination</h3><p>Complete the examination within the permitted time. Your final result will be recorded in your account.</p><button class="geti-btn geti-secondary" onclick="getiCloseStudentPortal()">OPEN EXAMINATION AREA</button></div>
+   </section>
+
+   <section id="getiSP-results" class="geti-sp-panel">
+    <h2>Exam Results</h2><br>
+    <div style="overflow:auto"><table class="geti-sp-table"><thead><tr><th>Candidate ID</th><th>Program</th><th>Score</th><th>Status</th><th>Date</th></tr></thead><tbody id="spResultsBody"><tr><td colspan="5">No results yet.</td></tr></tbody></table></div>
+   </section>
+
+   <section id="getiSP-certificates" class="geti-sp-panel">
+    <h2>My Certificates</h2><br>
+    <div style="overflow:auto"><table class="geti-sp-table"><thead><tr><th>Certificate</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody id="spCertificatesBody"><tr><td colspan="4">No certificates available yet.</td></tr></tbody></table></div>
+   </section>
+
+   <section id="getiSP-account" class="geti-sp-panel">
+    <h2>Account & Security</h2><br>
+    <div class="geti-sp-form">
+     <p>Your GETI account is personal. Keep your password private and use your registered email address for all official communication.</p>
+     <button class="geti-btn geti-secondary" onclick="getiLogout()">SIGN OUT</button>
+    </div>
+   </section>
+  </main>
+ </div>
 </div>
 
 <div id="getiAdminDashboard">
@@ -1831,10 +1943,15 @@ async function getiStartCreateAccount(){
   alert("Password must contain at least 6 characters."); return;
  }
 
+ const redirectUrl=window.location.origin+window.location.pathname;
+
  const {data,error}=await getiSupabase.auth.signUp({
   email:email,
   password:password,
-  options:{data:{full_name:name}}
+  options:{
+   data:{full_name:name},
+   emailRedirectTo:redirectUrl
+  }
  });
 
  if(error){
@@ -1842,12 +1959,12 @@ async function getiStartCreateAccount(){
  }
 
  GETI_PENDING_ACCOUNT={name:name,email:email,password:password};
- document.getElementById("getiCreateCard").style.display="none";
+
+ getiHideAllAuthCards();
  document.getElementById("getiVerifyCard").style.display="block";
  document.getElementById("getiVerifyEmailText").textContent=email;
- document.getElementById("getiVerificationCode").value="";
  document.getElementById("getiVerificationStatus").textContent=
-  "A confirmation code has been requested from GETI authentication. Check your email and enter the code.";
+  "Confirmation email sent. Please check Inbox, Spam, or Promotions.";
 }
 
 async function getiSendVerificationCode(email,code,name){
@@ -1876,40 +1993,29 @@ async function getiSendVerificationCode(email,code,name){
  }
 }
 
-async function getiConfirmEmailCode(){
- if(!GETI_PENDING_ACCOUNT){alert("Please create your account first.");return;}
- let token=document.getElementById("getiVerificationCode").value.trim();
- if(!/^\d{6}$/.test(token)){alert("Please enter the 6-digit confirmation code.");return;}
 
- const {data,error}=await getiSupabase.auth.verifyOtp({
-  email:GETI_PENDING_ACCOUNT.email,
-  token:token,
-  type:"signup"
- });
 
- if(error){alert("Invalid or expired confirmation code.");return;}
+async function getiResendConfirmationEmail(){
+ if(!GETI_PENDING_ACCOUNT){
+  alert("Please create your account again or return to Login.");
+  return;
+ }
 
- GETI_CURRENT_STUDENT={
-  id:data.user.id,
-  name:(data.user.user_metadata&&data.user.user_metadata.full_name)||GETI_PENDING_ACCOUNT.name,
-  email:data.user.email
- };
- GETI_PENDING_ACCOUNT=null;
- document.getElementById("getiAuthOverlay").style.display="none";
- document.getElementById("getiVerifyCard").style.display="none";
- document.getElementById("getiStudentWelcomeModal").style.display="flex";
- document.body.classList.add("geti-locked");
-}
+ const redirectUrl=window.location.origin+window.location.pathname;
 
-async function getiResendCode(){
- if(!GETI_PENDING_ACCOUNT){alert("Please start account creation again.");return;}
  const {error}=await getiSupabase.auth.resend({
   type:"signup",
-  email:GETI_PENDING_ACCOUNT.email
+  email:GETI_PENDING_ACCOUNT.email,
+  options:{emailRedirectTo:redirectUrl}
  });
- if(error){alert(error.message);return;}
+
+ if(error){
+  alert(error.message);
+  return;
+ }
+
  document.getElementById("getiVerificationStatus").textContent=
-  "A new confirmation code has been requested. Please check your email.";
+  "A new confirmation email has been sent. Please check Inbox, Spam, or Promotions.";
 }
 
 function getiBackToCreate(){
@@ -2030,12 +2136,60 @@ async function getiSaveNewPassword(){
  getiShowLogin();
 }
 
+
+getiSupabase.auth.onAuthStateChange(async function(event,session){
+ if((event==="SIGNED_IN" || event==="INITIAL_SESSION") && session && session.user){
+  try{
+   const user=session.user;
+
+   const {data:profile,error:profileError}=await getiSupabase
+    .from("profiles")
+    .select("id,full_name,email,blocked,block_reason")
+    .eq("id",user.id)
+    .single();
+
+   if(profileError || !profile)return;
+
+   if(profile.blocked){
+    await getiSupabase.auth.signOut();
+    alert("This account has been blocked by the GETI Administrator.");
+    return;
+   }
+
+   GETI_CURRENT_STUDENT={
+    id:profile.id,
+    name:profile.full_name,
+    email:profile.email
+   };
+
+   // If the user has just returned from email confirmation,
+   // show the Important Information screen before student access.
+   if(window.location.hash || window.location.search.includes("code=")){
+    document.getElementById("getiAuthOverlay").style.display="none";
+    document.getElementById("getiStudentWelcomeModal").style.display="flex";
+    document.body.classList.add("geti-locked");
+
+    if(history.replaceState){
+     history.replaceState(null,"",window.location.pathname);
+    }
+   }
+  }catch(e){}
+ }
+});
+
 async function getiStudentLogin(){
  let email=document.getElementById("getiLoginEmail").value.trim().toLowerCase();
  let password=document.getElementById("getiLoginPassword").value;
 
  const {data,error}=await getiSupabase.auth.signInWithPassword({email,password});
- if(error){alert("Invalid email or password.");return;}
+ if(error){
+  if(String(error.message||"").toLowerCase().includes("email not confirmed")){
+   alert("Your email is not confirmed yet. Please open the GETI confirmation email and click Confirm Email.");
+  }else{
+   alert("Invalid email or password.");
+  }
+  return;
+ }
 
  const {data:profile,error:profileError}=await getiSupabase
   .from("profiles").select("id,full_name,email,blocked,block_reason")
@@ -2093,6 +2247,47 @@ async function getiSendMessage(){
  if(error){alert("Unable to send message: "+error.message);return;}
  document.getElementById("getiStudentMessage").value="";
  alert("Message sent to administrator.");
+}
+
+
+function getiOpenStudentPortal(){
+ if(!GETI_CURRENT_STUDENT)return;
+ document.getElementById("getiStudentWebsite").style.display="none";
+ document.getElementById("getiStudentPortal").style.display="block";
+ document.getElementById("getiStudentBar").style.display="none";
+ getiLoadStudentPortal();
+ window.scrollTo(0,0);
+}
+function getiCloseStudentPortal(){
+ document.getElementById("getiStudentPortal").style.display="none";
+ document.getElementById("getiStudentWebsite").style.display="block";
+ document.getElementById("getiStudentBar").style.display="block";
+ window.scrollTo(0,0);
+}
+function getiStudentTab(name,btn){
+ document.querySelectorAll(".geti-sp-panel").forEach(x=>x.classList.remove("active"));
+ document.querySelectorAll(".geti-sp-nav button").forEach(x=>x.classList.remove("active"));
+ document.getElementById("getiSP-"+name).classList.add("active");
+ if(btn)btn.classList.add("active");
+ if(name==="results"||name==="certificates")getiLoadStudentPortal();
+}
+async function getiLoadStudentPortal(){
+ if(!GETI_CURRENT_STUDENT)return;
+ document.getElementById("getiSPGreeting").textContent="Welcome, "+GETI_CURRENT_STUDENT.name+".";
+ document.getElementById("spProfileName").value=GETI_CURRENT_STUDENT.name||"";
+ document.getElementById("spProfileEmail").value=GETI_CURRENT_STUDENT.email||"";
+ document.getElementById("spProfileId").value=GETI_CURRENT_STUDENT.id||"";
+
+ const [{data:results},{data:certs}]=await Promise.all([
+  getiSupabase.from("exam_results").select("*").eq("user_id",GETI_CURRENT_STUDENT.id).order("created_at",{ascending:false}),
+  getiSupabase.from("certificates").select("*").eq("user_id",GETI_CURRENT_STUDENT.id).order("created_at",{ascending:false})
+ ]);
+ let rr=results||[], cc=certs||[];
+ document.getElementById("spExamCount").textContent=rr.length;
+ document.getElementById("spPassedCount").textContent=rr.filter(r=>r.status==="PASSED").length;
+ document.getElementById("spCertCount").textContent=cc.filter(c=>c.sent).length;
+ document.getElementById("spResultsBody").innerHTML=rr.length?rr.map(r=>`<tr><td>${getiEsc(r.candidate_id)}</td><td>${getiEsc(r.program)}</td><td>${getiEsc(r.percentage)}%</td><td>${getiEsc(r.status)}</td><td>${new Date(r.created_at).toLocaleDateString()}</td></tr>`).join(""):'<tr><td colspan="5">No results yet.</td></tr>';
+ document.getElementById("spCertificatesBody").innerHTML=cc.length?cc.map(c=>`<tr><td>GETI Certificate</td><td>${c.sent?"Available":"Processing"}</td><td>${new Date(c.created_at).toLocaleDateString()}</td><td>${c.file_url?`<a class="geti-btn geti-cert" href="${getiEsc(c.file_url)}" target="_blank">DOWNLOAD</a>`:"Waiting for administrator"}</td></tr>`).join(""):'<tr><td colspan="4">No certificates available yet.</td></tr>';
 }
 
 function getiOpenTab(name,btn){
@@ -4820,3 +5015,7 @@ document
 </html>
 
 
+tsy ovany ity cody it fa ampina fotsiny ampio misy minitra eo aminy exam 1h de temps fotsiny  raha tapitra dia miverina ny exame rah ohatra mbola tsy vita
+
+
+code rehetra omeo efa izy jiaby mitambatra
