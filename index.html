@@ -1197,98 +1197,631 @@ button,input,textarea{
 
 }
 
-
-.login-overlay{
-position:fixed;
-inset:0;
-background:#071d3a;
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:99999;
-}
-.login-box{
-background:white;
-width:380px;
-max-width:90%;
-padding:35px;
-border-radius:12px;
-box-shadow:0 15px 40px rgba(0,0,0,.3);
-text-align:center;
-}
-.login-box h2{color:#0b2d5c;margin-bottom:20px;}
-.login-box input{
-width:100%;
-padding:13px;
-margin:8px 0;
-border:1px solid #ccd4df;
-border-radius:5px;
-}
-.login-box button{
-width:100%;
-margin-top:12px;
-}
-.login-code{
-display:none;
-}
-.login-error{
-color:#a51e1e;
-margin-top:10px;
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="login-overlay" id="loginOverlay">
-<div class="login-box">
+<!-- GETI ACCOUNT + ADMIN DASHBOARD SYSTEM -->
+<style>
+body.geti-locked{overflow:hidden}
+#getiAuthOverlay{
+ position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#071d3a,#0b2d5c);
+ display:flex;align-items:center;justify-content:center;padding:20px
+}
+.geti-auth-card{
+ width:430px;max-width:95%;background:#fff;padding:30px;border-radius:14px;
+ box-shadow:0 20px 60px rgba(0,0,0,.35)
+}
+.geti-auth-card h2{color:#0b2d5c;text-align:center;margin-bottom:8px}
+.geti-auth-card p{color:#687386;text-align:center;font-size:14px;margin-bottom:15px}
+.geti-auth-card input,.geti-auth-card textarea{
+ width:100%;padding:12px;border:1px solid #ccd4df;border-radius:6px;margin:7px 0
+}
+.geti-auth-card button,.geti-btn{
+ border:none;border-radius:6px;padding:11px 15px;font-weight:bold;cursor:pointer
+}
+.geti-primary{background:#b38a28;color:#fff;width:100%;margin-top:8px}
+.geti-secondary{background:#0b2d5c;color:#fff;width:100%;margin-top:8px}
+.geti-link{text-align:center;color:#0b2d5c;font-weight:bold;cursor:pointer;margin-top:14px}
+.geti-sep{border-top:1px solid #e1e6ed;margin-top:22px;padding-top:18px}
 
-<h2>GETI Member Access</h2>
+#getiStudentBar{
+ display:none;position:fixed;right:18px;bottom:18px;z-index:5000;
+ background:#071d3a;color:#fff;padding:11px 13px;border-radius:9px;
+ box-shadow:0 8px 24px rgba(0,0,0,.25)
+}
+#getiStudentBar button{margin-left:7px;border:none;border-radius:5px;padding:7px 9px;cursor:pointer}
+#getiStudentMessageBox{
+ display:none;position:fixed;right:18px;bottom:72px;width:340px;max-width:90%;
+ background:#fff;z-index:5001;padding:18px;border-radius:10px;
+ box-shadow:0 10px 28px rgba(0,0,0,.25)
+}
+#getiStudentMessageBox textarea{width:100%;min-height:100px;padding:10px;margin:10px 0}
 
-<div id="loginForm">
+#getiAdminDashboard{
+ display:none;position:fixed;inset:0;z-index:100000;background:#eef3f8;overflow:auto
+}
+.geti-admin-top{
+ background:#071d3a;color:#fff;padding:18px 24px;display:flex;justify-content:space-between;
+ align-items:center;position:sticky;top:0;z-index:20
+}
+.geti-admin-shell{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 68px)}
+.geti-admin-nav{background:#0b2d5c;padding:20px 12px}
+.geti-admin-nav button{
+ width:100%;text-align:left;background:transparent;color:#fff;border:none;padding:13px 14px;
+ border-radius:7px;margin-bottom:7px;font-weight:bold;cursor:pointer
+}
+.geti-admin-nav button.active,.geti-admin-nav button:hover{background:#b38a28}
+.geti-admin-main{padding:25px}
+.geti-admin-panel{display:none}
+.geti-admin-panel.active{display:block}
+.geti-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px}
+.geti-kpi{background:#fff;border-radius:10px;padding:18px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.geti-kpi strong{display:block;font-size:27px;color:#0b2d5c}
+.geti-table-wrap{overflow:auto;background:#fff;border-radius:10px;padding:10px}
+.geti-table{width:100%;border-collapse:collapse}
+.geti-table th,.geti-table td{
+ border-bottom:1px solid #e4e8ee;padding:10px;text-align:left;font-size:13px;vertical-align:top
+}
+.geti-table th{background:#0b2d5c;color:#fff}
+.geti-block{background:#a51e1e;color:#fff}
+.geti-unblock{background:#16833b;color:#fff}
+.geti-cert{background:#b38a28;color:#fff}
+.geti-view{background:#0b2d5c;color:#fff}
+.geti-badge{display:inline-block;padding:4px 8px;border-radius:12px;font-size:11px;font-weight:bold}
+.geti-pass{background:#eaf8ef;color:#176b32}
+.geti-fail{background:#fdecec;color:#a51e1e}
+.geti-black{background:#fdecec;color:#a51e1e}
+.geti-sent{background:#eaf8ef;color:#176b32}
+@media(max-width:900px){
+ .geti-admin-shell{grid-template-columns:1fr}
+ .geti-admin-nav{display:flex;overflow:auto;gap:5px}
+ .geti-admin-nav button{min-width:145px}
+ .geti-kpis{grid-template-columns:repeat(2,1fr)}
+}
 
-<input id="loginEmail" type="email" placeholder="Email address">
-<input id="loginPassword" type="password" placeholder="Password">
+.geti-tools{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+.geti-tools input,.geti-tools select{
+ padding:10px 12px;border:1px solid #ccd4df;border-radius:6px;background:#fff
+}
+.geti-tools input{min-width:240px}
+.geti-danger{background:#a51e1e;color:#fff}
+.geti-good{background:#16833b;color:#fff}
+.geti-muted{background:#687386;color:#fff}
+.geti-card{
+ background:#fff;padding:18px;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.06);
+ margin-bottom:18px
+}
+.geti-card textarea,.geti-card input,.geti-card select{
+ width:100%;padding:10px;border:1px solid #ccd4df;border-radius:6px;margin:6px 0
+}
+.geti-small{font-size:12px;color:#687386}
+.geti-actions{display:flex;gap:6px;flex-wrap:wrap}
 
-<button class="btn btn-gold" onclick="loginUser()">
-LOGIN
-</button>
+</style>
 
-<button class="btn btn-white" onclick="showCreateAccount()">
-CREATE ACCOUNT
-</button>
 
+<div id="getiStudentInstruction" style="
+ display:none;position:fixed;inset:0;z-index:100001;
+ background:linear-gradient(135deg,#071d3a,#0b2d5c);
+ align-items:center;justify-content:center;padding:20px;">
+ <div style="
+  background:#fff;width:720px;max-width:96%;max-height:90vh;overflow:auto;
+  border-radius:14px;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,.35);">
+
+  <div style="text-align:center;margin-bottom:20px;">
+   <div style="font-size:42px;">🎓</div>
+   <h2 style="color:#0b2d5c;margin:8px 0;">Important Information Before Entering GETI</h2>
+   <p style="color:#687386;">Please read these instructions carefully before continuing.</p>
+  </div>
+
+  <div style="background:#f8fafc;border-left:5px solid #b38a28;padding:18px;border-radius:8px;margin-bottom:16px;">
+   <strong style="color:#0b2d5c;">📘 About your examination</strong>
+   <p style="margin-top:8px;color:#4d596a;">
+    Rehefa tafiditra ao amin'ny kaontinao ianao dia afaka mampiasa ireo serivisy natokana ho an'ny mpianatra GETI.
+    Raha manao examen ianao dia vakio tsara ny fanontaniana rehetra ary fenoy araka ny toromarika omena.
+    Ataovy azo antoka fa mampiasa ny anaranao sy ny email mitovy amin'ilay nampiasainao namoronana ny kaonty.
+   </p>
+  </div>
+
+  <div style="background:#eef7f0;border-left:5px solid #16833b;padding:18px;border-radius:8px;margin-bottom:16px;">
+   <strong style="color:#176b32;">✅ Raha PASSED ny examen</strong>
+   <p style="margin-top:8px;color:#4d596a;">
+    Rehefa vita ny examen ary miseho fa <strong>PASSED</strong> ny résultat-nao, dia tsy midika izany fa
+    tonga ho azy avy hatrany ny certificate. Mila mandefa hafatra amin'ny Administrator GETI ianao
+    amin'ny alalan'ny bouton <strong>Message</strong> ao amin'ny kaontinao.
+   </p>
+   <p style="margin-top:8px;color:#4d596a;">
+    Ao amin'ilay hafatra dia azonao soratana fa vita ny examen-nao, efa PASSED ianao, ary mangataka ny
+    certificate mifanaraka amin'ny programme nataonao. Ny Administrator dia hijery ny identité-nao,
+    ny email-nao, ny résultat-nao ary ny antsipirihan'ny examen rehetra alohan'ny handefasana na
+    hanomanana ny certificate.
+   </p>
+  </div>
+
+  <div style="background:#fff7e6;border-left:5px solid #d59b22;padding:18px;border-radius:8px;margin-bottom:16px;">
+   <strong style="color:#7c5a0b;">📩 Message to Administrator</strong>
+   <p style="margin-top:8px;color:#4d596a;">
+    Rehefa mandefa hafatra ianao dia ataovy mazava tsara ny fangatahanao. Ohatra:
+    <em>"Hello Administrator, I have completed my examination and my result is PASSED.
+    Please check my result and assist me with my certificate."</em>
+   </p>
+   <p style="margin-top:8px;color:#4d596a;">
+    Aza mamorona kaonty vaovao na mampiasa email hafa rehefa mangataka certificate,
+    satria ny kaontinao, ny résultat examen ary ny certificate dia mifandray amin'ny email iray ihany.
+   </p>
+  </div>
+
+  <div style="background:#fdecec;border-left:5px solid #a51e1e;padding:18px;border-radius:8px;margin-bottom:20px;">
+   <strong style="color:#a51e1e;">⚠️ Important rules</strong>
+   <p style="margin-top:8px;color:#4d596a;">
+    Email iray dia natao ho an'ny account iray ihany. Aza mizara password-nao amin'olona hafa.
+    Raha misy olana amin'ny kaontinao, examen-nao, résultat-nao na certificate-nao,
+    ampiasao ny Message mba hifandraisana amin'ny Administrator.
+   </p>
+  </div>
+
+  <p style="text-align:center;color:#687386;margin-bottom:15px;">
+   By clicking <strong>NEXT</strong>, you confirm that you have read and understood these instructions.
+  </p>
+
+  <button onclick="getiEnterStudentSite()" style="
+   width:100%;padding:14px;border:none;border-radius:7px;background:#b38a28;color:#fff;
+   font-weight:bold;font-size:16px;cursor:pointer;">
+   NEXT
+  </button>
+ </div>
 </div>
 
-<div id="createForm" style="display:none">
+<div id="getiAuthOverlay">
+ <div class="geti-auth-card" id="getiLoginCard">
+  <h2>GETI Student Login</h2>
+  <p>One email address = one student account.</p>
+  <input id="getiLoginEmail" type="email" placeholder="Email">
+  <input id="getiLoginPassword" type="password" placeholder="Password">
+  <button class="geti-primary" onclick="getiStudentLogin()">LOGIN</button>
+  <div class="geti-link" onclick="getiShowCreate()">Create Account</div>
 
-<input id="createName" placeholder="Full Name">
-<input id="createEmail" type="email" placeholder="Email address">
-<input id="createPassword" type="password" placeholder="Create password">
+  <div class="geti-sep">
+   <p><strong>Special Administrator Account</strong></p>
+   <input id="getiAdminPassword" type="password" placeholder="Administrator password">
+   <button class="geti-secondary" onclick="getiAdministratorLogin()">ADMINISTRATOR LOGIN</button>
+  </div>
+ </div>
 
-<button class="btn btn-gold" onclick="createAccount()">
-CREATE ACCOUNT
-</button>
-
+ <div class="geti-auth-card" id="getiCreateCard" style="display:none">
+  <h2>Create Student Account</h2>
+  <p>Each email can create only one account.</p>
+  <input id="getiCreateName" placeholder="Full Name">
+  <input id="getiCreateEmail" type="email" placeholder="Email">
+  <input id="getiCreatePassword" type="password" placeholder="Password">
+  <input id="getiCreateCode" placeholder="Email confirmation code">
+  <button class="geti-primary" onclick="getiCreateAccount()">CREATE ACCOUNT</button>
+  <div class="geti-link" onclick="getiShowLogin()">Back to Login</div>
+ </div>
 </div>
 
-<div class="login-code" id="codeForm">
-
-<p>A confirmation code has been sent to your email.</p>
-
-<input id="emailCode" placeholder="Confirmation code">
-
-<button class="btn btn-gold" onclick="confirmEmailCode()">
-CONFIRM EMAIL
-</button>
-
+<div id="getiStudentBar">
+ <span id="getiStudentWelcome"></span>
+ <button onclick="getiToggleMessage()">Message</button>
+ <button onclick="getiLogout()">Logout</button>
 </div>
 
-<div class="login-error" id="loginMessage"></div>
+<div id="getiStudentAnnouncement" style="display:none;position:fixed;left:18px;bottom:18px;z-index:4999;background:#fff3cd;color:#6b5500;padding:14px 16px;border-radius:9px;max-width:420px;box-shadow:0 8px 24px rgba(0,0,0,.18)"></div>
 
+<div id="getiStudentMessageBox">
+ <strong>Message Administrator</strong>
+ <textarea id="getiStudentMessage" placeholder="Write your message..."></textarea>
+ <button class="geti-btn geti-secondary" onclick="getiSendMessage()">SEND</button>
 </div>
+
+<div id="getiAdminDashboard">
+ <div class="geti-admin-top">
+  <strong>GETI ADMINISTRATOR</strong>
+  <button class="geti-btn" onclick="getiAdminLogout()">LOGOUT</button>
+ </div>
+
+ <div class="geti-admin-shell">
+  <div class="geti-admin-nav">
+   <button class="active" onclick="getiOpenTab('dashboard',this)">🏠 Dashboard</button>
+   <button onclick="getiOpenTab('students',this)">👨‍🎓 Student List</button>
+   <button onclick="getiOpenTab('blacklist',this)">🚫 Blacklist</button>
+   <button onclick="getiOpenTab('results',this)">📊 Exam Results</button>
+   <button onclick="getiOpenTab('messages',this)">💬 Messages</button>
+   <button onclick="getiOpenTab('certificates',this)">🎓 Send Certificate</button>
+   <button onclick="getiOpenTab('announcements',this)">📢 Announcements</button>
+   <button onclick="getiOpenTab('settings',this)">⚙️ Admin Settings</button>
+  </div>
+
+  <div class="geti-admin-main">
+   <section id="getiTab-dashboard" class="geti-admin-panel active">
+    <h2>Dashboard</h2><br>
+    <div class="geti-kpis">
+     <div class="geti-kpi"><span>Students</span><strong id="kStudents">0</strong></div>
+     <div class="geti-kpi"><span>Blacklist</span><strong id="kBlocked">0</strong></div>
+     <div class="geti-kpi"><span>Passed</span><strong id="kPassed">0</strong></div>
+     <div class="geti-kpi"><span>Failed</span><strong id="kFailed">0</strong></div>
+     <div class="geti-kpi"><span>Messages</span><strong id="kMessages">0</strong></div>
+    </div>
+   </section>
+
+   <section id="getiTab-students" class="geti-admin-panel">
+    <h2>Student List</h2><br>
+    <div class="geti-tools">
+      <input id="getiStudentSearch" placeholder="Search student by name or email" oninput="getiRefreshAdmin()">
+      <select id="getiStudentStatusFilter" onchange="getiRefreshAdmin()">
+        <option value="all">All students</option>
+        <option value="active">Active only</option>
+        <option value="blocked">Blocked only</option>
+      </select>
+    </div>
+    <div class="geti-table-wrap"><table class="geti-table">
+     <thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Created</th><th>Action</th></tr></thead>
+     <tbody id="getiStudentsBody"></tbody>
+    </table></div>
+   </section>
+
+   <section id="getiTab-blacklist" class="geti-admin-panel">
+    <h2>Blacklist</h2><br>
+    <div class="geti-table-wrap"><table class="geti-table">
+     <thead><tr><th>Name</th><th>Email</th><th>Reason</th><th>Action</th></tr></thead>
+     <tbody id="getiBlacklistBody"></tbody>
+    </table></div>
+   </section>
+
+   <section id="getiTab-results" class="geti-admin-panel">
+    <h2>Exam Results</h2><br>
+    <div class="geti-tools">
+      <input id="getiResultSearch" placeholder="Search by candidate, email or ID" oninput="getiRefreshAdmin()">
+      <select id="getiResultFilter" onchange="getiRefreshAdmin()">
+        <option value="all">All results</option>
+        <option value="PASSED">Passed</option>
+        <option value="FAILED">Failed</option>
+      </select>
+    </div>
+    <div class="geti-table-wrap"><table class="geti-table">
+     <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Program</th><th>Score</th><th>Status</th><th>All Subject Results</th></tr></thead>
+     <tbody id="getiResultsBody"></tbody>
+    </table></div>
+   </section>
+
+   <section id="getiTab-messages" class="geti-admin-panel">
+    <h2>Messages</h2><br>
+    <div class="geti-tools">
+      <input id="getiMessageSearch" placeholder="Search message, student or email" oninput="getiRefreshAdmin()">
+      <button class="geti-btn geti-danger" onclick="getiClearMessages()">CLEAR ALL MESSAGES</button>
+    </div>
+    <div class="geti-table-wrap"><table class="geti-table">
+     <thead><tr><th>Date</th><th>Student</th><th>Email</th><th>Message</th></tr></thead>
+     <tbody id="getiMessagesBody"></tbody>
+    </table></div>
+   </section>
+
+   <section id="getiTab-certificates" class="geti-admin-panel">
+    <h2>Send Certificate</h2><br>
+    <div class="geti-table-wrap"><table class="geti-table">
+     <thead><tr><th>Student</th><th>Email</th><th>Program</th><th>Result</th><th>Certificate</th></tr></thead>
+     <tbody id="getiCertificatesBody"></tbody>
+    </table></div>
+   </section>
+
+   <section id="getiTab-announcements" class="geti-admin-panel">
+    <h2>Announcements</h2><br>
+    <div class="geti-card">
+      <p class="geti-small">Create an announcement visible to all students after login.</p>
+      <input id="getiAnnouncementTitle" placeholder="Announcement title">
+      <textarea id="getiAnnouncementText" placeholder="Announcement message"></textarea>
+      <button class="geti-btn geti-secondary" onclick="getiSaveAnnouncement()">PUBLISH ANNOUNCEMENT</button>
+      <button class="geti-btn geti-danger" onclick="getiRemoveAnnouncement()">REMOVE ANNOUNCEMENT</button>
+    </div>
+    <div class="geti-card">
+      <strong>Current announcement</strong>
+      <div id="getiCurrentAnnouncement" style="margin-top:10px"></div>
+    </div>
+   </section>
+
+   <section id="getiTab-settings" class="geti-admin-panel">
+    <h2>Admin Settings</h2><br>
+    <div class="geti-card">
+      <strong>System tools</strong><br><br>
+      <div class="geti-actions">
+        <button class="geti-btn geti-muted" onclick="getiExportData()">EXPORT DATA</button>
+        <button class="geti-btn geti-danger" onclick="getiResetAllData()">RESET ALL LOCAL DATA</button>
+      </div>
+      <p class="geti-small" style="margin-top:12px">
+        Administrator password in this file is currently: global
+      </p>
+    </div>
+   </section>
+  </div>
+ </div>
 </div>
+
+<script>
+document.body.classList.add("geti-locked");
+let GETI_CURRENT_STUDENT=null;
+
+function getiRead(key,fallback){
+ try{return JSON.parse(localStorage.getItem(key))||fallback}catch(e){return fallback}
+}
+function getiWrite(key,value){localStorage.setItem(key,JSON.stringify(value))}
+function getiEsc(v){
+ return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+ .replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+function getiShowCreate(){
+ document.getElementById("getiLoginCard").style.display="none";
+ document.getElementById("getiCreateCard").style.display="block";
+}
+function getiShowLogin(){
+ document.getElementById("getiCreateCard").style.display="none";
+ document.getElementById("getiLoginCard").style.display="block";
+}
+function getiCreateAccount(){
+ let accounts=getiRead("GETI_ACCOUNTS",[]);
+ let name=document.getElementById("getiCreateName").value.trim();
+ let email=document.getElementById("getiCreateEmail").value.trim().toLowerCase();
+ let password=document.getElementById("getiCreatePassword").value;
+ let code=document.getElementById("getiCreateCode").value.trim();
+
+ if(!name||!email||!password||!code){alert("Please complete all fields.");return}
+ if(accounts.some(a=>String(a.email||"").toLowerCase()===email)){
+  alert("This email already has an account.");return
+ }
+
+ accounts.push({
+  id:"STU-"+Date.now(),name,email,password,confirmed:true,
+  blocked:false,blockReason:"",createdAt:new Date().toISOString()
+ });
+ getiWrite("GETI_ACCOUNTS",accounts);
+ alert("Account created successfully.");
+ getiShowLogin();
+}
+function getiStudentLogin(){
+ let email=document.getElementById("getiLoginEmail").value.trim().toLowerCase();
+ let password=document.getElementById("getiLoginPassword").value;
+ let accounts=getiRead("GETI_ACCOUNTS",[]);
+ let user=accounts.find(a=>String(a.email||"").toLowerCase()===email && a.password===password);
+ if(!user){alert("Invalid email or password.");return}
+ if(user.blocked){alert("This account is blocked by administrator.");return}
+
+ GETI_CURRENT_STUDENT=user;
+ document.getElementById("getiAuthOverlay").style.display="none";
+ document.getElementById("getiStudentInstruction").style.display="flex";
+ document.body.classList.add("geti-locked");
+}
+
+function getiEnterStudentSite(){
+ if(!GETI_CURRENT_STUDENT)return;
+ document.getElementById("getiStudentInstruction").style.display="none";
+ document.body.classList.remove("geti-locked");
+ document.getElementById("getiStudentBar").style.display="block";
+ document.getElementById("getiStudentWelcome").textContent="Welcome, "+GETI_CURRENT_STUDENT.name;
+ getiShowStudentAnnouncement();
+}
+
+function getiAdministratorLogin(){
+ let pass=document.getElementById("getiAdminPassword").value;
+ if(pass!=="global"){alert("Incorrect administrator password.");return}
+ document.getElementById("getiAuthOverlay").style.display="none";
+ document.getElementById("getiStudentBar").style.display="none";
+ document.getElementById("getiStudentMessageBox").style.display="none";
+ document.getElementById("getiAdminDashboard").style.display="block";
+ document.body.classList.remove("geti-locked");
+ getiRefreshAdmin();
+}
+function getiLogout(){location.reload()}
+function getiAdminLogout(){location.reload()}
+
+function getiToggleMessage(){
+ let box=document.getElementById("getiStudentMessageBox");
+ box.style.display=box.style.display==="block"?"none":"block";
+}
+function getiSendMessage(){
+ if(!GETI_CURRENT_STUDENT)return;
+ let text=document.getElementById("getiStudentMessage").value.trim();
+ if(!text){alert("Write a message first.");return}
+ let messages=getiRead("GETI_MESSAGES",[]);
+ messages.push({
+  id:"MSG-"+Date.now(),studentId:GETI_CURRENT_STUDENT.id,
+  name:GETI_CURRENT_STUDENT.name,email:GETI_CURRENT_STUDENT.email,
+  message:text,date:new Date().toISOString()
+ });
+ getiWrite("GETI_MESSAGES",messages);
+ document.getElementById("getiStudentMessage").value="";
+ alert("Message sent to administrator.");
+}
+
+function getiOpenTab(name,btn){
+ document.querySelectorAll(".geti-admin-panel").forEach(p=>p.classList.remove("active"));
+ document.querySelectorAll(".geti-admin-nav button").forEach(b=>b.classList.remove("active"));
+ document.getElementById("getiTab-"+name).classList.add("active");
+ if(btn)btn.classList.add("active");
+ getiRefreshAdmin();
+}
+function getiBlockStudent(id){
+ let reason=prompt("Reason for blocking this student:","Blocked by administrator");
+ if(reason===null)return;
+ let accounts=getiRead("GETI_ACCOUNTS",[]);
+ let a=accounts.find(x=>x.id===id);
+ if(a){a.blocked=true;a.blockReason=reason||"Blocked by administrator";getiWrite("GETI_ACCOUNTS",accounts)}
+ getiRefreshAdmin();
+}
+function getiUnblockStudent(id){
+ let accounts=getiRead("GETI_ACCOUNTS",[]);
+ let a=accounts.find(x=>x.id===id);
+ if(a){a.blocked=false;a.blockReason="";getiWrite("GETI_ACCOUNTS",accounts)}
+ getiRefreshAdmin();
+}
+function getiSendCertificate(recordId){
+ let records=getiRead("GETI_EXAM_RECORDS",[]);
+ let r=records.find(x=>x.id===recordId);
+ if(!r)return;
+ r.certificateSent=true;
+ r.certificateSentAt=new Date().toISOString();
+ getiWrite("GETI_EXAM_RECORDS",records);
+ alert("Certificate marked as sent to "+r.email+".");
+ getiRefreshAdmin();
+}
+function getiRefreshAdmin(){
+ let accounts=getiRead("GETI_ACCOUNTS",[]);
+ let records=getiRead("GETI_EXAM_RECORDS",[]);
+ let messages=getiRead("GETI_MESSAGES",[]);
+
+ document.getElementById("kStudents").textContent=accounts.length;
+ document.getElementById("kBlocked").textContent=accounts.filter(a=>a.blocked).length;
+ document.getElementById("kPassed").textContent=records.filter(r=>r.status==="PASSED").length;
+ document.getElementById("kFailed").textContent=records.filter(r=>r.status==="FAILED").length;
+ document.getElementById("kMessages").textContent=messages.length;
+
+ let sSearch=(document.getElementById("getiStudentSearch")?.value||"").toLowerCase();
+ let sFilter=document.getElementById("getiStudentStatusFilter")?.value||"all";
+ let shownAccounts=accounts.filter(a=>{
+   let okText=(String(a.name||"")+" "+String(a.email||"")).toLowerCase().includes(sSearch);
+   let okStatus=sFilter==="all" || (sFilter==="active"&&!a.blocked) || (sFilter==="blocked"&&a.blocked);
+   return okText&&okStatus;
+ });
+ document.getElementById("getiStudentsBody").innerHTML=shownAccounts.length?shownAccounts.map(a=>`
+  <tr>
+   <td>${getiEsc(a.name)}</td>
+   <td>${getiEsc(a.email)}</td>
+   <td>${a.blocked?'<span class="geti-badge geti-black">BLOCKED</span>':'ACTIVE'}</td>
+   <td>${a.createdAt?new Date(a.createdAt).toLocaleString():"-"}</td>
+   <td><div class="geti-actions">
+    ${a.blocked
+      ?`<button class="geti-btn geti-unblock" onclick="getiUnblockStudent('${a.id}')">UNBLOCK</button>`
+      :`<button class="geti-btn geti-block" onclick="getiBlockStudent('${a.id}')">BLOCK</button>`}
+    <button class="geti-btn geti-danger" onclick="getiDeleteStudent('${a.id}')">DELETE</button>
+   </div></td>
+  </tr>`).join(""):'<tr><td colspan="5">No students.</td></tr>';
+
+ let blocked=accounts.filter(a=>a.blocked);
+ document.getElementById("getiBlacklistBody").innerHTML=blocked.length?blocked.map(a=>`
+  <tr>
+   <td>${getiEsc(a.name)}</td><td>${getiEsc(a.email)}</td>
+   <td>${getiEsc(a.blockReason||"Blocked")}</td>
+   <td><button class="geti-btn geti-unblock" onclick="getiUnblockStudent('${a.id}')">UNBLOCK</button></td>
+  </tr>`).join(""):'<tr><td colspan="4">Blacklist empty.</td></tr>';
+
+ let rSearch=(document.getElementById("getiResultSearch")?.value||"").toLowerCase();
+ let rFilter=document.getElementById("getiResultFilter")?.value||"all";
+ let shownRecords=records.filter(r=>{
+   let text=(String(r.id||"")+" "+String(r.name||"")+" "+String(r.email||"")).toLowerCase();
+   return text.includes(rSearch) && (rFilter==="all" || r.status===rFilter);
+ });
+ document.getElementById("getiResultsBody").innerHTML=shownRecords.length?shownRecords.map(r=>{
+  let subjects=(r.subjects||[]).map(s=>
+   `${getiEsc(s.subject)}: ${getiEsc(s.score)}/${getiEsc(s.total)} - ${getiEsc(s.percentage)}% (${getiEsc(s.grade)})`
+  ).join("<br>");
+  return `<tr>
+   <td>${getiEsc(r.id)}</td><td>${getiEsc(r.name)}</td><td>${getiEsc(r.email)}</td>
+   <td>${getiEsc(r.program)}</td><td><strong>${getiEsc(r.percentage)}%</strong></td>
+   <td><span class="geti-badge ${r.status==="PASSED"?"geti-pass":"geti-fail"}">${getiEsc(r.status)}</span></td>
+   <td>${subjects||"No details"}</td>
+  </tr>`;
+ }).join(""):'<tr><td colspan="7">No exam results.</td></tr>';
+
+ let mSearch=(document.getElementById("getiMessageSearch")?.value||"").toLowerCase();
+ let shownMessages=messages.filter(m=>
+   (String(m.name||"")+" "+String(m.email||"")+" "+String(m.message||"")).toLowerCase().includes(mSearch)
+ );
+ document.getElementById("getiMessagesBody").innerHTML=shownMessages.length?shownMessages.slice().reverse().map(m=>`
+  <tr>
+   <td>${new Date(m.date).toLocaleString()}</td>
+   <td>${getiEsc(m.name)}</td>
+   <td>${getiEsc(m.email)}</td>
+   <td>${getiEsc(m.message)}<br><br><button class="geti-btn geti-danger" onclick="getiDeleteMessage('${m.id}')">DELETE</button></td>
+  </tr>`).join(""):'<tr><td colspan="4">No messages.</td></tr>';
+
+ let passed=records.filter(r=>r.status==="PASSED");
+ let ann=getiRead("GETI_ANNOUNCEMENT",null);
+ let annBox=document.getElementById("getiCurrentAnnouncement");
+ if(annBox){
+   annBox.innerHTML=ann
+    ? "<strong>"+getiEsc(ann.title)+"</strong><br>"+getiEsc(ann.text)+"<br><span class='geti-small'>"+new Date(ann.date).toLocaleString()+"</span>"
+    : "No active announcement.";
+ }
+
+ document.getElementById("getiCertificatesBody").innerHTML=passed.length?passed.map(r=>`
+  <tr>
+   <td>${getiEsc(r.name)}</td><td>${getiEsc(r.email)}</td><td>${getiEsc(r.program)}</td>
+   <td><span class="geti-badge geti-pass">PASSED ${getiEsc(r.percentage)}%</span></td>
+   <td>${r.certificateSent
+    ?'<span class="geti-badge geti-sent">SENT</span>'
+    :`<button class="geti-btn geti-cert" onclick="getiSendCertificate('${getiEsc(r.id)}')">SEND CERTIFICATE</button>`}
+   </td>
+  </tr>`).join(""):'<tr><td colspan="5">No passed students yet.</td></tr>';
+
+function getiDeleteStudent(id){
+ if(!confirm("Delete this student account permanently?"))return;
+ let accounts=getiRead("GETI_ACCOUNTS",[]).filter(a=>a.id!==id);
+ getiWrite("GETI_ACCOUNTS",accounts);
+ getiRefreshAdmin();
+}
+
+function getiDeleteMessage(id){
+ let messages=getiRead("GETI_MESSAGES",[]).filter(m=>m.id!==id);
+ getiWrite("GETI_MESSAGES",messages);
+ getiRefreshAdmin();
+}
+
+function getiClearMessages(){
+ if(!confirm("Delete all student messages?"))return;
+ getiWrite("GETI_MESSAGES",[]);
+ getiRefreshAdmin();
+}
+
+function getiSaveAnnouncement(){
+ let title=(document.getElementById("getiAnnouncementTitle").value||"").trim();
+ let text=(document.getElementById("getiAnnouncementText").value||"").trim();
+ if(!title || !text){alert("Enter announcement title and message.");return;}
+ getiWrite("GETI_ANNOUNCEMENT",{title:title,text:text,date:new Date().toISOString()});
+ getiRefreshAdmin();
+ alert("Announcement published.");
+}
+
+function getiRemoveAnnouncement(){
+ localStorage.removeItem("GETI_ANNOUNCEMENT");
+ getiRefreshAdmin();
+}
+
+function getiShowStudentAnnouncement(){
+ let a=getiRead("GETI_ANNOUNCEMENT",null);
+ let box=document.getElementById("getiStudentAnnouncement");
+ if(a && box){
+   box.innerHTML="<strong>"+getiEsc(a.title)+"</strong><br>"+getiEsc(a.text);
+   box.style.display="block";
+ }else if(box){box.style.display="none";}
+}
+
+function getiExportData(){
+ let data={
+   students:getiRead("GETI_ACCOUNTS",[]),
+   examResults:getiRead("GETI_EXAM_RECORDS",[]),
+   messages:getiRead("GETI_MESSAGES",[]),
+   announcement:getiRead("GETI_ANNOUNCEMENT",null),
+   exportedAt:new Date().toISOString()
+ };
+ let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ let url=URL.createObjectURL(blob);
+ let a=document.createElement("a");
+ a.href=url;
+ a.download="GETI_admin_export.json";
+ a.click();
+ URL.revokeObjectURL(url);
+}
+
+function getiResetAllData(){
+ if(!confirm("WARNING: delete all local students, results, messages and announcements?"))return;
+ if(!confirm("Confirm again: this cannot be undone."))return;
+ ["GETI_ACCOUNTS","GETI_EXAM_RECORDS","GETI_MESSAGES","GETI_ANNOUNCEMENT"].forEach(k=>localStorage.removeItem(k));
+ getiRefreshAdmin();
+ alert("All local GETI data was reset.");
+}
+
+}
+</script>
 
 
 <div class="topbar">
@@ -3866,73 +4399,9 @@ document
 
 });
 
-
-let getiUsers = JSON.parse(localStorage.getItem("GETI_USERS") || "[]");
-let pendingCode = "";
-
-function showCreateAccount(){
-document.getElementById("loginForm").style.display="none";
-document.getElementById("createForm").style.display="block";
-}
-
-function createAccount(){
-
-let email=document.getElementById("createEmail").value.trim();
-
-if(!email){
-document.getElementById("loginMessage").innerHTML="Enter email.";
-return;
-}
-
-pendingCode=Math.floor(100000+Math.random()*900000).toString();
-
-localStorage.setItem("GETI_PENDING_CODE",pendingCode);
-
-document.getElementById("createForm").style.display="none";
-document.getElementById("codeForm").style.display="block";
-
-alert("Confirmation code generated. Connect your email service to send it automatically.");
-
-}
-
-function confirmEmailCode(){
-
-let code=document.getElementById("emailCode").value.trim();
-
-if(code===localStorage.getItem("GETI_PENDING_CODE")){
-
-let user={
-name:document.getElementById("createName").value,
-email:document.getElementById("createEmail").value
-};
-
-getiUsers.push(user);
-localStorage.setItem("GETI_USERS",JSON.stringify(getiUsers));
-
-document.getElementById("loginOverlay").style.display="none";
-
-}else{
-document.getElementById("loginMessage").innerHTML="Invalid confirmation code.";
-}
-
-}
-
-function loginUser(){
-
-let email=document.getElementById("loginEmail").value.trim();
-
-let user=getiUsers.find(u=>u.email===email);
-
-if(user){
-document.getElementById("loginOverlay").style.display="none";
-}else{
-document.getElementById("loginMessage").innerHTML="Account not found.";
-}
-
-}
-
 </script>
 
 </body>
 </html>
+
 
