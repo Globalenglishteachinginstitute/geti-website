@@ -2193,20 +2193,6 @@ body.geti-exam-locked #geti30ExamPanel textarea{
 @media(max-width:900px){.geti-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.geti-gallery-grid{grid-template-columns:1fr}.geti-gallery-item{aspect-ratio:4/3}}
 </style>
-
-<style>
-.geti-exam-quality-note{
-margin:20px auto;
-max-width:850px;
-padding:18px;
-background:#f8fafc;
-border-left:4px solid #b38a28;
-border-radius:8px;
-color:#334155;
-line-height:1.7;
-font-size:14px;
-}
-</style>
 </head>
 
 <body>
@@ -3218,7 +3204,7 @@ let examState={
     answers:[],
     subjectScores:[],
     started:false,
-    timeRemaining:3600,
+    timeRemaining:2700,
     timerInterval:null,
     timeExpired:false
 };
@@ -3698,7 +3684,7 @@ function submitRegistration(){
     };
 
     examState.started=true;
-    examState.timeRemaining=3600;
+    examState.timeRemaining=2700;
     examState.timeExpired=false;
     startExamTimer();
 
@@ -3762,7 +3748,7 @@ function startExamTimer(){
 
     clearInterval(examState.timerInterval);
 
-    examState.timeRemaining=3600;
+    examState.timeRemaining=2700;
     updateExamTimer();
 
     examState.timerInterval=setInterval(function(){
@@ -3806,11 +3792,11 @@ function examTimeExpired(){
     clearInterval(examState.timerInterval);
 
     /*
-       60 minutes expired:
+       45 minutes expired:
        - If the candidate has not finished the exam,
          the examination restarts from the beginning.
        - No result is saved.
-       - Candidate must complete the exam within the new 60 minutes period.
+       - Candidate must complete the exam within the new 45 minutes period.
     */
 
     alert(
@@ -3833,7 +3819,7 @@ function examTimeExpired(){
             );
 
         examState.subjectScores=[];
-        examState.timeRemaining=3600;
+        examState.timeRemaining=2700;
         examState.timeExpired=false;
         examState.started=true;
 
@@ -4268,7 +4254,7 @@ function showFinalResult(timeExpired){
         );
 
     let status=
-        percentage>=90
+        percentage>=95
         ? "PASSED"
         : "FAILED";
 
@@ -4392,7 +4378,7 @@ function showFinalResult(timeExpired){
 
         '<div class="exam-fail-message">'+
 
-        'Your final combined score is below the required 90%. Please review the training materials and contact GETI for further information.'+
+        'Your final combined score is below the required 95%. Please review the training materials and contact GETI for further information.'+
 
         '</div>'+
 
@@ -4894,7 +4880,7 @@ let geti30State = {
     answers:[],
     subjectScores:[],
     started:false,
-    timeRemaining:3600,
+    timeRemaining:2700,
     timerInterval:null,
     questionSets:[]
 };
@@ -4926,7 +4912,7 @@ function openGeti30Registration(examName){
         answers:[],
         subjectScores:[],
         started:false,
-        timeRemaining:3600,
+        timeRemaining:2700,
         timerInterval:null,
         questionSets:[]
     };
@@ -4941,7 +4927,7 @@ function openGeti30Registration(examName){
 
     panel.innerHTML=
         '<h2 class="exam-title">'+escapeHTML(examName)+'</h2>'+
-        '<p class="exam-subtitle">Registration before starting the examination. Exam duration: 60 minutes. After completing an examination, your examination email is automatically blocked until the GETI administrator unblocks it.</p>'+
+        '<p class="exam-subtitle">Registration before starting the examination. Exam duration: 45 minutes. After completing an examination, your examination email is automatically blocked until the GETI administrator unblocks it.</p>'+
         '<div style="text-align:center;margin-bottom:22px;">'+chips+'</div>'+
         '<div class="registration-form">'+
         '<input id="g30Name" placeholder="Full Name">'+
@@ -4991,7 +4977,7 @@ function submitGeti30Registration(){
     geti30State.subjectIndex=0;
     geti30State.questionIndex=0;
     geti30State.started=true;
-    geti30State.timeRemaining=3600;
+    geti30State.timeRemaining=2700;
 
     startGeti30Timer();
     showGeti30Question();
@@ -5393,7 +5379,7 @@ function submitGeti30Subject(){
     };
 
     const panel=document.getElementById("geti30ExamPanel");
-    const subjectStatus=percentage>=90 ? "PASSED" : "FAILED";
+    const subjectStatus=percentage>=95 ? "PASSED" : "FAILED";
 
     panel.innerHTML=
         '<div class="result-box">'+
@@ -5426,7 +5412,7 @@ function showGeti30FinalResult(){
     let total=0;
     geti30State.subjectScores.forEach(function(s){ total+=s.score; });
     const percentage=Math.round(total/150*100);
-    const status=percentage>=90?"PASSED":"FAILED";
+    const status=percentage>=95?"PASSED":"FAILED";
 
     const record={
         id:geti30State.student.id,
@@ -5460,8 +5446,8 @@ function showGeti30FinalResult(){
         '<h2 class="'+(status==="PASSED"?"pass":"fail")+'">'+status+'</h2>'+
         '<div class="'+(status==="PASSED"?"exam-message":"exam-fail-message")+'">'+
         (status==="PASSED"
-            ? "Congratulations! Your combined result across all 10 subjects is 90% or higher."
-            : "To pass this examination, the combined result across all 10 subjects must be at least 90%.")+
+            ? "Congratulations! Your combined result across all 10 subjects is 95% or higher."
+            : "To pass this examination, the combined result across all 10 subjects must be at least 95%.")+
         '</div>'+
         '<h3>Subject Results</h3>'+rows+
         '</div>';
@@ -5469,7 +5455,7 @@ function showGeti30FinalResult(){
 
 function startGeti30Timer(){
     clearInterval(geti30State.timerInterval);
-    geti30State.timeRemaining=3600;
+    geti30State.timeRemaining=2700;
     updateGeti30Timer();
 
     geti30State.timerInterval=setInterval(function(){
@@ -5501,7 +5487,7 @@ function resetGeti30ExamAfterTimeout(){
     geti30State.questionIndex=0;
     geti30State.answers=Array.from({length:10},function(){return Array(15).fill(null);});
     geti30State.subjectScores=[];
-    geti30State.timeRemaining=3600;
+    geti30State.timeRemaining=2700;
     geti30State.started=true;
     startGeti30Timer();
     showGeti30Question();
@@ -7685,7 +7671,7 @@ async function submitGeti30Registration(){
         geti30State.subjectIndex=0;
         geti30State.questionIndex=0;
         geti30State.started=true;
-        geti30State.timeRemaining=3600;
+        geti30State.timeRemaining=2700;
 
         getiEnableExamLock();
         buildGeti30QuestionSets();
@@ -7755,7 +7741,7 @@ function showGeti30FinalResult(){
     });
 
     const percentage=Math.round(total/150*100);
-    const status=percentage>=90 ? "PASSED" : "FAILED";
+    const status=percentage>=95 ? "PASSED" : "FAILED";
 
     const record={
         id:geti30State.student.id,
@@ -7791,7 +7777,7 @@ function showGeti30FinalResult(){
     geti30PendingFinalRecord=record;
 
     geti30PendingFinalRows=geti30State.subjectScores.map(function(s){
-        const subjectStatus=Number(s.percentage)>=90 ? "PASSED" : "FAILED";
+        const subjectStatus=Number(s.percentage)>=95 ? "PASSED" : "FAILED";
         return '<div class="subject-result">'+
                '<span>'+escapeHTML(s.subject)+'</span>'+
                '<strong>'+s.percentage+'% — Grade '+escapeHTML(String(s.grade||""))+
@@ -7829,8 +7815,8 @@ function showGeti30ActualResult(){
         '<h2 class="'+(status==="PASSED"?"pass":"fail")+'">'+status+'</h2>'+
         '<div class="'+(status==="PASSED"?"exam-message":"exam-fail-message")+'">'+
         (status==="PASSED"
-            ? "Congratulations! Your combined result across all 10 subjects is 90% or higher."
-            : "To pass this examination, the combined result across all 10 subjects must be at least 90%.")+
+            ? "Congratulations! Your combined result across all 10 subjects is 95% or higher."
+            : "To pass this examination, the combined result across all 10 subjects must be at least 95%.")+
         '</div>'+
         '<h3>Subject Results</h3>'+
         geti30PendingFinalRows+
@@ -7997,14 +7983,5 @@ document.addEventListener("DOMContentLoaded",renderGetiExamButtons);
   </div>
 </div>
 
-
-<div class="geti-exam-quality-note">
-<strong>GETI Advanced Examination System</strong><br>
-• Passing score: 95%<br>
-• Examination duration: 60 minutes<br>
-• Questions use different difficulty levels.<br>
-• Answers are mixed with short, medium and longer sentences.<br>
-• Some choices are intentionally similar to test careful understanding and avoid guessing.
-</div>
 </body>
 </html>
