@@ -2193,6 +2193,65 @@ body.geti-exam-locked #geti30ExamPanel textarea{
 @media(max-width:900px){.geti-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.geti-gallery-grid{grid-template-columns:1fr}.geti-gallery-item{aspect-ratio:4/3}}
 </style>
+
+<style>
+.geti-proficiency-plan{
+padding:40px 20px;
+background:#f8fafc;
+max-width:1000px;
+margin:30px auto;
+border-radius:15px;
+line-height:1.7;
+}
+.geti-proficiency-plan h2,
+.geti-proficiency-plan h3{
+color:#0b2d5c;
+}
+.geti-proficiency-plan li{
+margin-bottom:8px;
+color:#445;
+}
+</style>
+
+
+<style>
+.geti-complete-index-plan{
+max-width:1000px;
+margin:40px auto;
+padding:35px 25px;
+background:#f8fafc;
+border-radius:16px;
+line-height:1.7;
+}
+.geti-complete-index-plan h2,
+.geti-complete-index-plan h3{
+color:#0b2d5c;
+}
+.geti-complete-index-plan li{
+margin-bottom:6px;
+}
+</style>
+
+
+<style>
+.geti-subject-pdf-plan{
+max-width:1000px;
+margin:40px auto;
+padding:35px 25px;
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:16px;
+line-height:1.7;
+}
+.geti-subject-pdf-plan h2,
+.geti-subject-pdf-plan h3{
+color:#0b2d5c;
+}
+.geti-subject-pdf-plan li{
+margin-bottom:7px;
+}
+</style>
+
 </head>
 
 <body>
@@ -4254,7 +4313,7 @@ function showFinalResult(timeExpired){
         );
 
     let status=
-        percentage>=95
+        percentage>=90
         ? "PASSED"
         : "FAILED";
 
@@ -5379,7 +5438,7 @@ function submitGeti30Subject(){
     };
 
     const panel=document.getElementById("geti30ExamPanel");
-    const subjectStatus=percentage>=95 ? "PASSED" : "FAILED";
+    const subjectStatus=percentage>=90 ? "PASSED" : "FAILED";
 
     panel.innerHTML=
         '<div class="result-box">'+
@@ -5412,7 +5471,7 @@ function showGeti30FinalResult(){
     let total=0;
     geti30State.subjectScores.forEach(function(s){ total+=s.score; });
     const percentage=Math.round(total/150*100);
-    const status=percentage>=95?"PASSED":"FAILED";
+    const status=percentage>=90?"PASSED":"FAILED";
 
     const record={
         id:geti30State.student.id,
@@ -7741,7 +7800,7 @@ function showGeti30FinalResult(){
     });
 
     const percentage=Math.round(total/150*100);
-    const status=percentage>=95 ? "PASSED" : "FAILED";
+    const status=percentage>=90 ? "PASSED" : "FAILED";
 
     const record={
         id:geti30State.student.id,
@@ -7777,7 +7836,7 @@ function showGeti30FinalResult(){
     geti30PendingFinalRecord=record;
 
     geti30PendingFinalRows=geti30State.subjectScores.map(function(s){
-        const subjectStatus=Number(s.percentage)>=95 ? "PASSED" : "FAILED";
+        const subjectStatus=Number(s.percentage)>=90 ? "PASSED" : "FAILED";
         return '<div class="subject-result">'+
                '<span>'+escapeHTML(s.subject)+'</span>'+
                '<strong>'+s.percentage+'% — Grade '+escapeHTML(String(s.grade||""))+
@@ -7982,6 +8041,188 @@ document.addEventListener("DOMContentLoaded",renderGetiExamButtons);
     <div id="baamBody" class="baam-body"></div>
   </div>
 </div>
+
+
+<p class="exam-subtitle">
+Questions are randomly generated with mixed difficulty, similar answers, and challenging choices.
+Read carefully before selecting your answer.
+</p>
+
+<script>
+function getiShuffleQuestionOptions(options){
+    return options.sort(function(){ return Math.random() - 0.5; });
+}
+</script>
+
+<section class="geti-proficiency-plan">
+<h2>English Proficiency Exam & Learning Program</h2>
+<p>
+The GETI English Proficiency program follows a high school English learning approach.
+The vocabulary is simple and practical, but the exercises and exams are designed to
+test understanding, grammar accuracy, reading skills, and the ability to choose the
+best answer among similar options.
+</p>
+
+<h3>Lessons</h3>
+<ul>
+<li>Grammar Foundations: tenses, sentence structure, articles, prepositions</li>
+<li>Reading Comprehension: understanding short and long texts</li>
+<li>Vocabulary Development: daily English, school English, and professional vocabulary</li>
+<li>Writing Skills: paragraphs, emails, opinions, and academic basics</li>
+<li>Listening & Communication: understanding conversations and real situations</li>
+<li>Speaking Skills: pronunciation, expressions, and communication practice</li>
+</ul>
+
+<h3>Exam Structure</h3>
+<ul>
+<li>Grammar questions with similar answer choices</li>
+<li>Vocabulary questions using simple but confusing words</li>
+<li>Reading comprehension exercises</li>
+<li>Sentence correction and completion</li>
+<li>Practical English situations</li>
+<li>Critical understanding questions</li>
+</ul>
+
+<p>
+The objective is not to use difficult vocabulary, but to check whether learners can
+understand and use English correctly.
+</p>
+</section>
+
+
+<section class="geti-complete-index-plan">
+<h2>GETI COMPLETE LEARNING INDEX</h2>
+
+<h3>Building Skills for a Global Future</h3>
+<p>
+GETI helps learners develop real knowledge and practical skills. 
+Every programme is designed from the foundations to professional application.
+Students do not only prepare for exams; they learn how to use their knowledge in real life and professional environments.
+</p>
+
+<h3>Learning Method</h3>
+<ul>
+<li>Complete lessons from basic to advanced level</li>
+<li>Clear explanations with practical examples</li>
+<li>Audio and video learning resources</li>
+<li>Practice activities</li>
+<li>Professional vocabulary</li>
+<li>Real-world application</li>
+<li>Assessment and certification</li>
+</ul>
+
+<h3>Computer Science Programme</h3>
+<ul>
+<li>Computer fundamentals</li>
+<li>Hardware and software</li>
+<li>Keyboard skills and shortcuts</li>
+<li>Computer formulas and calculations</li>
+<li>Binary, storage units and data measurement</li>
+<li>Practical computer problem solving</li>
+</ul>
+
+<h3>Technology Programmes</h3>
+<ul>
+<li>Web Development</li>
+<li>Web Design</li>
+<li>Cybersecurity</li>
+<li>Data Science</li>
+<li>Artificial Intelligence</li>
+<li>Information Technology</li>
+<li>Database Management</li>
+<li>Networking</li>
+<li>Programming Fundamentals</li>
+<li>Mobile App Development</li>
+</ul>
+
+<h3>English Programmes</h3>
+<ul>
+<li>A1–C2 English Learning</li>
+<li>English Proficiency</li>
+<li>TEFL</li>
+<li>TESOL</li>
+<li>Academic English</li>
+<li>Professional Communication</li>
+</ul>
+
+<h3>Business and Management Programmes</h3>
+<ul>
+<li>Management</li>
+<li>Leadership</li>
+<li>Entrepreneurship</li>
+<li>Marketing</li>
+<li>Finance</li>
+<li>Accounting</li>
+<li>Human Resources</li>
+<li>Project Management</li>
+</ul>
+
+<h3>Communication and Language Programmes</h3>
+<ul>
+<li>Public Speaking</li>
+<li>Academic Writing</li>
+<li>Creative Writing</li>
+<li>Journalism</li>
+<li>Linguistics</li>
+<li>Translation and Interpretation</li>
+<li>French, Spanish, Chinese, German, Japanese and Korean Languages</li>
+</ul>
+
+<h3>GETI Examination System</h3>
+<ul>
+<li>Professional examination structure</li>
+<li>Practical and understanding-based questions</li>
+<li>Randomized questions</li>
+<li>Subject evaluation</li>
+<li>Certificate verification</li>
+</ul>
+
+<h3>Final Objective</h3>
+<p>
+The goal of GETI is to help every learner understand the subject clearly,
+develop useful skills, and apply their knowledge in education, work, and professional life.
+</p>
+</section>
+
+
+<section class="geti-subject-pdf-plan">
+<h2>SUBJECT LESSON PDF RESOURCE SYSTEM</h2>
+
+<p>
+Each GETI subject includes a complete downloadable PDF lesson.
+The objective is to allow students to study deeply, understand the foundations,
+and apply their knowledge in real professional situations.
+</p>
+
+<h3>Each Subject Includes:</h3>
+<ul>
+<li>Complete lesson PDF</li>
+<li>Detailed explanations from basic to advanced level</li>
+<li>Important definitions and key concepts</li>
+<li>Examples and practical applications</li>
+<li>Professional vocabulary</li>
+<li>Step-by-step learning guidance</li>
+<li>Exercises and practice activities</li>
+<li>Review summary</li>
+</ul>
+
+<h3>PDF Learning Format:</h3>
+<ul>
+<li>Long and complete educational document</li>
+<li>Easy language and clear explanations</li>
+<li>Organized by chapters and topics</li>
+<li>Suitable for independent learning</li>
+<li>Available for download by students</li>
+</ul>
+
+<h3>Practical Objective:</h3>
+<p>
+After studying each PDF lesson, learners should be able to understand the subject,
+use the knowledge in practice, solve real problems, and apply their skills in
+education, professional work, and daily life.
+</p>
+
+</section>
 
 </body>
 </html>
