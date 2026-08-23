@@ -2207,40 +2207,6 @@ line-height:1.7;
 font-size:14px;
 }
 </style>
-
-<style>
-.geti-pdf-download{
-display:inline-block;
-margin-top:10px;
-padding:8px 14px;
-background:#0b2d5c;
-color:#fff!important;
-border-radius:6px;
-font-weight:700;
-font-size:12px;
-cursor:pointer;
-}
-</style>
-
-<style>
-.geti-exam-level-plan{
-padding:35px 20px;
-background:#f8fafc;
-margin:30px 0;
-}
-.geti-exam-level-plan .container{
-max-width:900px;
-margin:auto;
-}
-.geti-exam-level-plan h2{
-color:#0b2d5c;
-}
-.geti-exam-level-plan p,
-.geti-exam-level-plan li{
-color:#475569;
-line-height:1.7;
-}
-</style>
 </head>
 
 <body>
@@ -8040,48 +8006,5 @@ document.addEventListener("DOMContentLoaded",renderGetiExamButtons);
 • Answers are mixed with short, medium and longer sentences.<br>
 • Some choices are intentionally similar to test careful understanding and avoid guessing.
 </div>
-
-<script>
-function downloadGetiLessonPDF(subject){
- let text="GLOBAL ENGLISH TEACHING INSTITUTE (GETI)\n\nLESSON SUBJECT: "+subject+"\n\nGETI lesson PDF resource.\nLesson content, practice activities, audio resources and video-learning materials.";
- let blob=new Blob([text],{type:"application/pdf"});
- let a=document.createElement("a");
- a.href=URL.createObjectURL(blob);
- a.download=subject.replace(/[^a-z0-9]/gi,"_")+".pdf";
- a.click();
-}
-
-document.addEventListener("DOMContentLoaded",function(){
- document.querySelectorAll(".lesson-card,.subject-card").forEach(function(card){
-   if(card.querySelector(".geti-pdf-download")) return;
-   let t=card.querySelector("h3,h4");
-   if(!t)return;
-   let b=document.createElement("button");
-   b.className="geti-pdf-download";
-   b.innerText="DOWNLOAD LESSON PDF";
-   b.onclick=function(){downloadGetiLessonPDF(t.innerText);}
-   card.appendChild(b);
- });
-});
-</script>
-
-<section class="geti-exam-level-plan">
-<div class="container">
-<h2>GETI Advanced Examination Standard</h2>
-<p>
-All GETI examinations are designed at <strong>C2 examination level</strong>.
-However, the vocabulary used in questions remains clear and accessible at
-<strong>B1 vocabulary level</strong> to evaluate real understanding, reasoning,
-and professional knowledge instead of difficult words.
-</p>
-<ul>
-<li>Questions are clear, direct, and professionally written.</li>
-<li>The difficulty comes from analysis, concepts, and application.</li>
-<li>Answers include close options that require careful thinking.</li>
-<li>No unnecessary complicated vocabulary is used.</li>
-<li>Examinees must understand the subject, not only memorize information.</li>
-</ul>
-</div>
-</section>
 </body>
 </html>
