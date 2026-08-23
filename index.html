@@ -2195,63 +2195,52 @@ body.geti-exam-locked #geti30ExamPanel textarea{
 </style>
 
 <style>
-.geti-proficiency-plan{
-padding:40px 20px;
+.geti-exam-quality-note{
+margin:20px auto;
+max-width:850px;
+padding:18px;
 background:#f8fafc;
-max-width:1000px;
-margin:30px auto;
-border-radius:15px;
+border-left:4px solid #b38a28;
+border-radius:8px;
+color:#334155;
 line-height:1.7;
-}
-.geti-proficiency-plan h2,
-.geti-proficiency-plan h3{
-color:#0b2d5c;
-}
-.geti-proficiency-plan li{
-margin-bottom:8px;
-color:#445;
+font-size:14px;
 }
 </style>
-
 
 <style>
-.geti-complete-index-plan{
-max-width:1000px;
-margin:40px auto;
-padding:35px 25px;
-background:#f8fafc;
-border-radius:16px;
-line-height:1.7;
-}
-.geti-complete-index-plan h2,
-.geti-complete-index-plan h3{
-color:#0b2d5c;
-}
-.geti-complete-index-plan li{
-margin-bottom:6px;
+.geti-pdf-download{
+display:inline-block;
+margin-top:10px;
+padding:8px 14px;
+background:#0b2d5c;
+color:#fff!important;
+border-radius:6px;
+font-weight:700;
+font-size:12px;
+cursor:pointer;
 }
 </style>
-
 
 <style>
-.geti-subject-pdf-plan{
-max-width:1000px;
-margin:40px auto;
-padding:35px 25px;
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:16px;
-line-height:1.7;
+.geti-exam-level-plan{
+padding:35px 20px;
+background:#f8fafc;
+margin:30px 0;
 }
-.geti-subject-pdf-plan h2,
-.geti-subject-pdf-plan h3{
+.geti-exam-level-plan .container{
+max-width:900px;
+margin:auto;
+}
+.geti-exam-level-plan h2{
 color:#0b2d5c;
 }
-.geti-subject-pdf-plan li{
-margin-bottom:7px;
+.geti-exam-level-plan p,
+.geti-exam-level-plan li{
+color:#475569;
+line-height:1.7;
 }
 </style>
-
 </head>
 
 <body>
@@ -3263,7 +3252,7 @@ let examState={
     answers:[],
     subjectScores:[],
     started:false,
-    timeRemaining:2700,
+    timeRemaining:3600,
     timerInterval:null,
     timeExpired:false
 };
@@ -3743,7 +3732,7 @@ function submitRegistration(){
     };
 
     examState.started=true;
-    examState.timeRemaining=2700;
+    examState.timeRemaining=3600;
     examState.timeExpired=false;
     startExamTimer();
 
@@ -3807,7 +3796,7 @@ function startExamTimer(){
 
     clearInterval(examState.timerInterval);
 
-    examState.timeRemaining=2700;
+    examState.timeRemaining=3600;
     updateExamTimer();
 
     examState.timerInterval=setInterval(function(){
@@ -3851,11 +3840,11 @@ function examTimeExpired(){
     clearInterval(examState.timerInterval);
 
     /*
-       45 minutes expired:
+       60 minutes expired:
        - If the candidate has not finished the exam,
          the examination restarts from the beginning.
        - No result is saved.
-       - Candidate must complete the exam within the new 45 minutes period.
+       - Candidate must complete the exam within the new 60 minutes period.
     */
 
     alert(
@@ -3878,7 +3867,7 @@ function examTimeExpired(){
             );
 
         examState.subjectScores=[];
-        examState.timeRemaining=2700;
+        examState.timeRemaining=3600;
         examState.timeExpired=false;
         examState.started=true;
 
@@ -4437,7 +4426,7 @@ function showFinalResult(timeExpired){
 
         '<div class="exam-fail-message">'+
 
-        'Your final combined score is below the required 95%. Please review the training materials and contact GETI for further information.'+
+        'Your final combined score is below the required 90%. Please review the training materials and contact GETI for further information.'+
 
         '</div>'+
 
@@ -4939,7 +4928,7 @@ let geti30State = {
     answers:[],
     subjectScores:[],
     started:false,
-    timeRemaining:2700,
+    timeRemaining:3600,
     timerInterval:null,
     questionSets:[]
 };
@@ -4971,7 +4960,7 @@ function openGeti30Registration(examName){
         answers:[],
         subjectScores:[],
         started:false,
-        timeRemaining:2700,
+        timeRemaining:3600,
         timerInterval:null,
         questionSets:[]
     };
@@ -4986,7 +4975,7 @@ function openGeti30Registration(examName){
 
     panel.innerHTML=
         '<h2 class="exam-title">'+escapeHTML(examName)+'</h2>'+
-        '<p class="exam-subtitle">Registration before starting the examination. Exam duration: 45 minutes. After completing an examination, your examination email is automatically blocked until the GETI administrator unblocks it.</p>'+
+        '<p class="exam-subtitle">Registration before starting the examination. Exam duration: 60 minutes. After completing an examination, your examination email is automatically blocked until the GETI administrator unblocks it.</p>'+
         '<div style="text-align:center;margin-bottom:22px;">'+chips+'</div>'+
         '<div class="registration-form">'+
         '<input id="g30Name" placeholder="Full Name">'+
@@ -5036,7 +5025,7 @@ function submitGeti30Registration(){
     geti30State.subjectIndex=0;
     geti30State.questionIndex=0;
     geti30State.started=true;
-    geti30State.timeRemaining=2700;
+    geti30State.timeRemaining=3600;
 
     startGeti30Timer();
     showGeti30Question();
@@ -5505,8 +5494,8 @@ function showGeti30FinalResult(){
         '<h2 class="'+(status==="PASSED"?"pass":"fail")+'">'+status+'</h2>'+
         '<div class="'+(status==="PASSED"?"exam-message":"exam-fail-message")+'">'+
         (status==="PASSED"
-            ? "Congratulations! Your combined result across all 10 subjects is 95% or higher."
-            : "To pass this examination, the combined result across all 10 subjects must be at least 95%.")+
+            ? "Congratulations! Your combined result across all 10 subjects is 90% or higher."
+            : "To pass this examination, the combined result across all 10 subjects must be at least 90%.")+
         '</div>'+
         '<h3>Subject Results</h3>'+rows+
         '</div>';
@@ -5514,7 +5503,7 @@ function showGeti30FinalResult(){
 
 function startGeti30Timer(){
     clearInterval(geti30State.timerInterval);
-    geti30State.timeRemaining=2700;
+    geti30State.timeRemaining=3600;
     updateGeti30Timer();
 
     geti30State.timerInterval=setInterval(function(){
@@ -5546,7 +5535,7 @@ function resetGeti30ExamAfterTimeout(){
     geti30State.questionIndex=0;
     geti30State.answers=Array.from({length:10},function(){return Array(15).fill(null);});
     geti30State.subjectScores=[];
-    geti30State.timeRemaining=2700;
+    geti30State.timeRemaining=3600;
     geti30State.started=true;
     startGeti30Timer();
     showGeti30Question();
@@ -7730,7 +7719,7 @@ async function submitGeti30Registration(){
         geti30State.subjectIndex=0;
         geti30State.questionIndex=0;
         geti30State.started=true;
-        geti30State.timeRemaining=2700;
+        geti30State.timeRemaining=3600;
 
         getiEnableExamLock();
         buildGeti30QuestionSets();
@@ -7874,8 +7863,8 @@ function showGeti30ActualResult(){
         '<h2 class="'+(status==="PASSED"?"pass":"fail")+'">'+status+'</h2>'+
         '<div class="'+(status==="PASSED"?"exam-message":"exam-fail-message")+'">'+
         (status==="PASSED"
-            ? "Congratulations! Your combined result across all 10 subjects is 95% or higher."
-            : "To pass this examination, the combined result across all 10 subjects must be at least 95%.")+
+            ? "Congratulations! Your combined result across all 10 subjects is 90% or higher."
+            : "To pass this examination, the combined result across all 10 subjects must be at least 90%.")+
         '</div>'+
         '<h3>Subject Results</h3>'+
         geti30PendingFinalRows+
@@ -8043,186 +8032,56 @@ document.addEventListener("DOMContentLoaded",renderGetiExamButtons);
 </div>
 
 
-<p class="exam-subtitle">
-Questions are randomly generated with mixed difficulty, similar answers, and challenging choices.
-Read carefully before selecting your answer.
-</p>
+<div class="geti-exam-quality-note">
+<strong>GETI Advanced Examination System</strong><br>
+• Passing score: 95%<br>
+• Examination duration: 60 minutes<br>
+• Questions use different difficulty levels.<br>
+• Answers are mixed with short, medium and longer sentences.<br>
+• Some choices are intentionally similar to test careful understanding and avoid guessing.
+</div>
 
 <script>
-function getiShuffleQuestionOptions(options){
-    return options.sort(function(){ return Math.random() - 0.5; });
+function downloadGetiLessonPDF(subject){
+ let text="GLOBAL ENGLISH TEACHING INSTITUTE (GETI)\n\nLESSON SUBJECT: "+subject+"\n\nGETI lesson PDF resource.\nLesson content, practice activities, audio resources and video-learning materials.";
+ let blob=new Blob([text],{type:"application/pdf"});
+ let a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);
+ a.download=subject.replace(/[^a-z0-9]/gi,"_")+".pdf";
+ a.click();
 }
+
+document.addEventListener("DOMContentLoaded",function(){
+ document.querySelectorAll(".lesson-card,.subject-card").forEach(function(card){
+   if(card.querySelector(".geti-pdf-download")) return;
+   let t=card.querySelector("h3,h4");
+   if(!t)return;
+   let b=document.createElement("button");
+   b.className="geti-pdf-download";
+   b.innerText="DOWNLOAD LESSON PDF";
+   b.onclick=function(){downloadGetiLessonPDF(t.innerText);}
+   card.appendChild(b);
+ });
+});
 </script>
 
-<section class="geti-proficiency-plan">
-<h2>English Proficiency Exam & Learning Program</h2>
+<section class="geti-exam-level-plan">
+<div class="container">
+<h2>GETI Advanced Examination Standard</h2>
 <p>
-The GETI English Proficiency program follows a high school English learning approach.
-The vocabulary is simple and practical, but the exercises and exams are designed to
-test understanding, grammar accuracy, reading skills, and the ability to choose the
-best answer among similar options.
+All GETI examinations are designed at <strong>C2 examination level</strong>.
+However, the vocabulary used in questions remains clear and accessible at
+<strong>B1 vocabulary level</strong> to evaluate real understanding, reasoning,
+and professional knowledge instead of difficult words.
 </p>
-
-<h3>Lessons</h3>
 <ul>
-<li>Grammar Foundations: tenses, sentence structure, articles, prepositions</li>
-<li>Reading Comprehension: understanding short and long texts</li>
-<li>Vocabulary Development: daily English, school English, and professional vocabulary</li>
-<li>Writing Skills: paragraphs, emails, opinions, and academic basics</li>
-<li>Listening & Communication: understanding conversations and real situations</li>
-<li>Speaking Skills: pronunciation, expressions, and communication practice</li>
+<li>Questions are clear, direct, and professionally written.</li>
+<li>The difficulty comes from analysis, concepts, and application.</li>
+<li>Answers include close options that require careful thinking.</li>
+<li>No unnecessary complicated vocabulary is used.</li>
+<li>Examinees must understand the subject, not only memorize information.</li>
 </ul>
-
-<h3>Exam Structure</h3>
-<ul>
-<li>Grammar questions with similar answer choices</li>
-<li>Vocabulary questions using simple but confusing words</li>
-<li>Reading comprehension exercises</li>
-<li>Sentence correction and completion</li>
-<li>Practical English situations</li>
-<li>Critical understanding questions</li>
-</ul>
-
-<p>
-The objective is not to use difficult vocabulary, but to check whether learners can
-understand and use English correctly.
-</p>
+</div>
 </section>
-
-
-<section class="geti-complete-index-plan">
-<h2>GETI COMPLETE LEARNING INDEX</h2>
-
-<h3>Building Skills for a Global Future</h3>
-<p>
-GETI helps learners develop real knowledge and practical skills. 
-Every programme is designed from the foundations to professional application.
-Students do not only prepare for exams; they learn how to use their knowledge in real life and professional environments.
-</p>
-
-<h3>Learning Method</h3>
-<ul>
-<li>Complete lessons from basic to advanced level</li>
-<li>Clear explanations with practical examples</li>
-<li>Audio and video learning resources</li>
-<li>Practice activities</li>
-<li>Professional vocabulary</li>
-<li>Real-world application</li>
-<li>Assessment and certification</li>
-</ul>
-
-<h3>Computer Science Programme</h3>
-<ul>
-<li>Computer fundamentals</li>
-<li>Hardware and software</li>
-<li>Keyboard skills and shortcuts</li>
-<li>Computer formulas and calculations</li>
-<li>Binary, storage units and data measurement</li>
-<li>Practical computer problem solving</li>
-</ul>
-
-<h3>Technology Programmes</h3>
-<ul>
-<li>Web Development</li>
-<li>Web Design</li>
-<li>Cybersecurity</li>
-<li>Data Science</li>
-<li>Artificial Intelligence</li>
-<li>Information Technology</li>
-<li>Database Management</li>
-<li>Networking</li>
-<li>Programming Fundamentals</li>
-<li>Mobile App Development</li>
-</ul>
-
-<h3>English Programmes</h3>
-<ul>
-<li>A1–C2 English Learning</li>
-<li>English Proficiency</li>
-<li>TEFL</li>
-<li>TESOL</li>
-<li>Academic English</li>
-<li>Professional Communication</li>
-</ul>
-
-<h3>Business and Management Programmes</h3>
-<ul>
-<li>Management</li>
-<li>Leadership</li>
-<li>Entrepreneurship</li>
-<li>Marketing</li>
-<li>Finance</li>
-<li>Accounting</li>
-<li>Human Resources</li>
-<li>Project Management</li>
-</ul>
-
-<h3>Communication and Language Programmes</h3>
-<ul>
-<li>Public Speaking</li>
-<li>Academic Writing</li>
-<li>Creative Writing</li>
-<li>Journalism</li>
-<li>Linguistics</li>
-<li>Translation and Interpretation</li>
-<li>French, Spanish, Chinese, German, Japanese and Korean Languages</li>
-</ul>
-
-<h3>GETI Examination System</h3>
-<ul>
-<li>Professional examination structure</li>
-<li>Practical and understanding-based questions</li>
-<li>Randomized questions</li>
-<li>Subject evaluation</li>
-<li>Certificate verification</li>
-</ul>
-
-<h3>Final Objective</h3>
-<p>
-The goal of GETI is to help every learner understand the subject clearly,
-develop useful skills, and apply their knowledge in education, work, and professional life.
-</p>
-</section>
-
-
-<section class="geti-subject-pdf-plan">
-<h2>SUBJECT LESSON PDF RESOURCE SYSTEM</h2>
-
-<p>
-Each GETI subject includes a complete downloadable PDF lesson.
-The objective is to allow students to study deeply, understand the foundations,
-and apply their knowledge in real professional situations.
-</p>
-
-<h3>Each Subject Includes:</h3>
-<ul>
-<li>Complete lesson PDF</li>
-<li>Detailed explanations from basic to advanced level</li>
-<li>Important definitions and key concepts</li>
-<li>Examples and practical applications</li>
-<li>Professional vocabulary</li>
-<li>Step-by-step learning guidance</li>
-<li>Exercises and practice activities</li>
-<li>Review summary</li>
-</ul>
-
-<h3>PDF Learning Format:</h3>
-<ul>
-<li>Long and complete educational document</li>
-<li>Easy language and clear explanations</li>
-<li>Organized by chapters and topics</li>
-<li>Suitable for independent learning</li>
-<li>Available for download by students</li>
-</ul>
-
-<h3>Practical Objective:</h3>
-<p>
-After studying each PDF lesson, learners should be able to understand the subject,
-use the knowledge in practice, solve real problems, and apply their skills in
-education, professional work, and daily life.
-</p>
-
-</section>
-
 </body>
 </html>
