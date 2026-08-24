@@ -1,29 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" translate="no" class="notranslate">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google" content="notranslate">
+<meta http-equiv="Content-Language" content="en">
 
-<title>Global English Teaching Institute | GETI</title>
+<title>Global English Teaching Institute (GETI) | English, TEFL &amp; TESOL</title>
 
 <meta name="description"
-content="Global English Teaching Institute (GETI) provides international English education, TEFL, TESOL and certificate verification.">
+content="Global English Teaching Institute - International English Education, TEFL, TESOL and Certificate Verification.">
 
-<link rel="icon" type="image/png" href="/logo.png">
+<!-- Google site name and favicon -->
+<link rel="icon" type="image/jpeg" sizes="685x685" href="https://globalenglishteachinginstitute.github.io/geti-website/geti-logo.jpg">
+<link rel="shortcut icon" href="https://globalenglishteachinginstitute.github.io/geti-website/geti-logo.jpg">
+<link rel="apple-touch-icon" href="https://globalenglishteachinginstitute.github.io/geti-website/geti-logo.jpg">
+<link rel="canonical" href="https://globalenglishteachinginstitute.github.io/geti-website/">
 
-<meta property="og:site_name"
-content="Global English Teaching Institute">
-
-<link rel="canonical"
-href="https://globalenglishteachinginstitute.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Global English Teaching Institute (GETI)">
+<meta property="og:title" content="Global English Teaching Institute (GETI) | English, TEFL &amp; TESOL">
+<meta property="og:description" content="English courses, TEFL and TESOL programs, proficiency exams, and secure certificate verification.">
+<meta property="og:url" content="https://globalenglishteachinginstitute.github.io/geti-website/">
+<meta property="og:image" content="https://globalenglishteachinginstitute.github.io/geti-website/geti-logo.jpg">
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Global English Teaching Institute",
-  "alternateName": "GETI",
-  "url": "https://globalenglishteachinginstitute.github.io/"
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://globalenglishteachinginstitute.github.io/geti-website/#organization",
+      "name": "Global English Teaching Institute",
+      "alternateName": "GETI",
+      "url": "https://globalenglishteachinginstitute.github.io/geti-website/",
+      "logo": "https://globalenglishteachinginstitute.github.io/geti-website/geti-logo.jpg"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://globalenglishteachinginstitute.github.io/geti-website/#website",
+      "url": "https://globalenglishteachinginstitute.github.io/geti-website/",
+      "name": "Global English Teaching Institute (GETI)",
+      "alternateName": "GETI",
+      "publisher": {
+        "@id": "https://globalenglishteachinginstitute.github.io/geti-website/#organization"
+      }
+    }
+  ]
 }
 </script>
 
@@ -2213,7 +2236,7 @@ body.geti-exam-locked #geti30ExamPanel textarea{
 </style>
 </head>
 
-<body>
+<body translate="no" class="notranslate">
 
 <div class="topbar">
 <div class="container topbar-content">
@@ -5042,6 +5065,80 @@ function geti30Shuffle(array,rnd){
     return a;
 }
 
+/*
+   C2 assessment design:
+   - questions remain clear and use accessible English;
+   - difficulty comes from judgement, comparison and application;
+   - distractors are plausible and similar in length to the best answer;
+   - the correct position is shuffled for every candidate.
+*/
+const GETI_C2_DISTRACTOR_SETS=[
+    [
+        "Use the established procedure first, and consider context only when the expected result is not achieved",
+        "Choose the option supported by the most evidence, even when that evidence addresses a different objective",
+        "Give priority to the immediate target, then deal with wider effects after the decision has been implemented"
+    ],
+    [
+        "Apply the same standard in every case so that consistency is preserved, even when the conditions differ",
+        "Rely on professional experience as the main guide, using formal evidence only to confirm the initial view",
+        "Select the least disruptive response because a practical decision is generally better than a complex one"
+    ],
+    [
+        "Compare the visible results of each option and select the one that produces the clearest short-term gain",
+        "Prefer the approach with fewer stated risks, without examining whether important risks were left unreported",
+        "Treat both approaches as acceptable when each follows a recognized method, even if their outcomes differ"
+    ],
+    [
+        "Keep the original plan because changing it after implementation could make later evaluation less consistent",
+        "Correct the most serious weakness while leaving the original assumptions and success criteria unchanged",
+        "Judge success mainly against the stated target, while recording long-term concerns for a later review"
+    ],
+    [
+        "Measure quality through compliance with the approved process, provided each required step was completed",
+        "Use stakeholder satisfaction as the main measure because users are best placed to define a good result",
+        "Emphasize efficiency and consistency, while treating less measurable effects as secondary considerations"
+    ],
+    [
+        "Present the evidence supporting the decision and omit weaker evidence that might create unnecessary doubt",
+        "Explain that the decision followed accepted practice, so a detailed account of the reasoning is not required",
+        "Revise the decision to address the objection unless doing so would conflict with a written requirement"
+    ],
+    [
+        "Give more weight to the newest evidence because it is most likely to reflect current conditions",
+        "Combine the competing findings into a middle position so that neither source has to be rejected",
+        "Prefer the evidence that best fits established practice unless the alternative is clearly conclusive"
+    ],
+    [
+        "Protect the long-term objective by applying one common plan across teams, even when local needs vary",
+        "Focus resources on the greatest current pressure and review wider objectives after that pressure is reduced",
+        "Set broad goals and allow each activity to develop independently so that the plan remains flexible"
+    ],
+    [
+        "Repeat the approved procedure carefully before questioning whether the procedure suits the situation",
+        "Adapt the procedure immediately to improve the result, then document the reasons after the change succeeds",
+        "Keep the procedure unchanged but adjust the way success is measured to reflect the operating conditions"
+    ],
+    [
+        "Choose the most detailed evidence because greater detail normally makes a recommendation more reliable",
+        "Prefer evidence from a recognized authority even when it was produced for a somewhat different purpose",
+        "Use several consistent sources and give limited attention to evidence that does not fit the main pattern"
+    ],
+    [
+        "Let the person with final responsibility rank the priorities after hearing a brief summary from the team",
+        "Select the priorities that offer the most visible benefit while keeping the remaining options available",
+        "Give each priority equal weight unless a formal rule clearly requires one to be treated differently"
+    ],
+    [
+        "Record the final decision and its expected result, while keeping the internal debate outside the formal record",
+        "Document every available detail so that future reviewers can decide for themselves which information matters",
+        "Focus the record on compliance with procedure because professional reasoning may change between situations"
+    ]
+];
+
+function geti30GetC2Distractors(templateIndex){
+    return GETI_C2_DISTRACTOR_SETS[templateIndex % GETI_C2_DISTRACTOR_SETS.length];
+}
+
 function geti30MakeQuestion(subject,templateIndex,rnd){
     const S=subject;
 
@@ -5259,11 +5356,12 @@ function geti30MakeQuestion(subject,templateIndex,rnd){
     ];
 
     const base=pool[templateIndex % pool.length].slice();
+    const c2Distractors=geti30GetC2Distractors(templateIndex);
     const options=[
         {text:base[1],correct:true},
-        {text:base[2],correct:false},
-        {text:base[3],correct:false},
-        {text:base[4],correct:false}
+        {text:c2Distractors[0],correct:false},
+        {text:c2Distractors[1],correct:false},
+        {text:c2Distractors[2],correct:false}
     ];
 
     const shuffled=geti30Shuffle(options,rnd);
