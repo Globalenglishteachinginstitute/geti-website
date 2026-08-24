@@ -210,6 +210,40 @@ button,input,textarea{
     padding:80px 0;
 }
 
+.hero-take-exam-wrap{
+    margin-bottom:24px;
+}
+
+.hero-take-exam-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    min-width:220px;
+    padding:16px 30px;
+    border:2px solid #f4d47b;
+    border-radius:8px;
+    background:linear-gradient(135deg,#d6ad45,#9d7418);
+    color:#fff;
+    font-size:18px;
+    font-weight:900;
+    letter-spacing:.7px;
+    cursor:pointer;
+    box-shadow:0 10px 28px rgba(0,0,0,.32);
+    transition:transform .2s ease,box-shadow .2s ease,filter .2s ease;
+}
+
+.hero-take-exam-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 34px rgba(0,0,0,.4);
+    filter:brightness(1.08);
+}
+
+.hero-take-exam-btn:focus-visible{
+    outline:3px solid #fff;
+    outline-offset:4px;
+}
+
 .hero-small{
     color:#d6ad45;
     font-size:14px;
@@ -1341,6 +1375,56 @@ button,input,textarea{
     font-weight:800;
     cursor:pointer;
 }
+
+.tefl-course-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+    margin:24px 0;
+}
+.tefl-course-card{
+    border:1px solid #d8e0ea;
+    background:#fff;
+    color:#172033;
+    padding:18px;
+    border-radius:9px;
+    cursor:pointer;
+    text-align:left;
+    transition:.2s ease;
+}
+.tefl-course-card:hover{
+    border-color:#b38a28;
+    box-shadow:0 6px 18px rgba(11,45,92,.12);
+    transform:translateY(-1px);
+}
+.tefl-course-card strong{
+    display:block;
+    color:#0b2d5c;
+    font-size:16px;
+    margin-bottom:5px;
+}
+.tefl-course-card span{
+    display:block;
+    color:#556274;
+    font-size:13px;
+}
+.tefl-level-badge{
+    display:inline-block!important;
+    width:auto;
+    margin-top:9px;
+    padding:3px 9px;
+    border-radius:20px;
+    background:#0b2d5c;
+    color:#fff!important;
+    font-weight:800;
+}
+.tefl-recommended{
+    border-color:#d6ad45;
+    background:#fffdf6;
+}
+@media(max-width:700px){
+    .tefl-course-grid{grid-template-columns:1fr;}
+}
 .lesson-exam-list{
     display:none;
     grid-template-columns:repeat(3,1fr);
@@ -2341,6 +2425,10 @@ Nationality
 
 <div class="hero-content">
 
+<div class="hero-take-exam-wrap">
+<button class="hero-take-exam-btn" onclick="enterGetiPortal('exam')">🎓 TAKE AN EXAM</button>
+</div>
+
 <div class="hero-small">
 GLOBAL ENGLISH TEACHING INSTITUTE
 </div>
@@ -2485,10 +2573,10 @@ TEFL, TESOL and assessment.
 
 
 <div id="geti30ExamList" class="exams30-list">
-<button class="exam30-btn" onclick="openGeti30Registration('TEFL Exam')">🎓 TEFL Exam</button>
-<button class="exam30-btn" onclick="openGeti30Registration('TESOL Exam')">🎓 TESOL Exam</button>
-<button class="exam30-btn" onclick="openGeti30Registration('TEYL Exam')">🎓 TEYL Exam</button>
-<button class="exam30-btn" onclick="openGeti30Registration('English Proficiency Exam')">🎓 English Proficiency Exam</button>
+<button class="exam30-btn" onclick="openTeflCourseSelector()">🎓 TEFL Exam</button>
+<button class="exam30-btn" onclick="openTesolCourseSelector()">🎓 TESOL Exam</button>
+<button class="exam30-btn" onclick="openTeylCourseSelector()">🎓 TEYL Exam</button>
+<button class="exam30-btn" onclick="openEnglishAchievementSelector()">🎓 English Proficiency Exam</button>
 <button class="exam30-btn" onclick="openGeti30Registration('Computer Science Exam')">🎓 Computer Science Exam</button>
 <button class="exam30-btn" onclick="openGeti30Registration('Microsoft Office Exam')">🎓 Microsoft Office Exam</button>
 <button class="exam30-btn" onclick="openGeti30Registration('Management Exam')">🎓 Management Exam</button>
@@ -4911,6 +4999,26 @@ document
 const GETI_30_EXAM_SUBJECTS = {"TEFL Exam": ["TEFL Foundations & Principles", "English Grammar", "Teaching Methodologies", "Lesson Planning", "Classroom Management", "Teaching Listening", "Teaching Speaking", "Teaching Reading", "Teaching Writing", "Assessment & Testing"], "TESOL Exam": ["Introduction to TESOL", "English Grammar for Teachers", "Second Language Acquisition", "Teaching Methodologies", "Lesson Planning", "Classroom Management", "Teaching Listening & Speaking", "Teaching Reading & Writing", "Teaching Vocabulary & Pronunciation", "Assessment & Testing"], "TEYL Exam": ["Introduction to TEYL", "Child Language Development", "Young Learner Psychology", "Teaching Vocabulary to Children", "Teaching Grammar to Children", "Teaching Listening & Speaking", "Teaching Reading & Writing", "Games & Activities", "Classroom Management for Children", "Assessment for Young Learners"], "English Proficiency Exam": ["Grammar", "Vocabulary", "Reading", "Listening", "Speaking", "Writing", "Pronunciation", "Functional English", "Academic English", "Integrated Skills"], "Computer Science Exam": ["Computer Fundamentals", "Programming Fundamentals", "Algorithms", "Data Structures", "Databases", "Operating Systems", "Computer Networks", "Web Technologies", "Cybersecurity", "Software Engineering"], "Microsoft Office Exam": ["Computer Basics", "Microsoft Word", "Microsoft Excel", "Microsoft PowerPoint", "Microsoft Outlook", "Microsoft Access", "File Management", "Office Collaboration", "Document Productivity", "Office Security"], "Management Exam": ["Principles of Management", "Planning", "Organizing", "Staffing", "Leading", "Controlling", "Decision Making", "Operations Management", "Strategic Management", "Business Ethics"], "Leadership Exam": ["Leadership Foundations", "Leadership Styles", "Communication", "Motivation", "Team Leadership", "Conflict Management", "Decision Making", "Emotional Intelligence", "Change Leadership", "Ethical Leadership"], "Entrepreneurship Exam": ["Entrepreneurial Mindset", "Business Ideas", "Market Research", "Business Models", "Business Planning", "Marketing for Startups", "Startup Finance", "Operations", "Innovation", "Growth & Risk Management"], "Tourism Exam": ["Tourism Fundamentals", "Tourism Geography", "Travel Operations", "Tourism Marketing", "Customer Service", "Sustainable Tourism", "Tourism Economics", "Tourism Planning", "Cultural Tourism", "Tourism Management"], "Tour Guide Formation Exam": ["Tour Guiding Fundamentals", "Destination Knowledge", "Communication Skills", "Interpretation Techniques", "Tour Planning", "Group Management", "Safety & First Aid", "Cultural Awareness", "Customer Care", "Professional Ethics"], "Hospitality Management Exam": ["Hospitality Fundamentals", "Front Office Operations", "Housekeeping", "Food & Beverage", "Guest Service", "Hospitality Marketing", "Revenue Management", "Human Resources", "Hospitality Finance", "Quality & Safety"], "Business English Exam": ["Business Vocabulary", "Business Grammar", "Email Writing", "Meetings", "Presentations", "Negotiation", "Telephone English", "Reports", "Cross-cultural Communication", "Professional Communication"], "Marketing Exam": ["Marketing Fundamentals", "Market Research", "Consumer Behavior", "Segmentation & Targeting", "Branding", "Product Strategy", "Pricing", "Promotion", "Digital Marketing", "Marketing Analytics"], "Business Communication Exam": ["Communication Fundamentals", "Business Writing", "Email Communication", "Meetings", "Presentations", "Interpersonal Communication", "Negotiation", "Cross-cultural Communication", "Reports & Proposals", "Communication Ethics"], "Digital Communication Exam": ["Digital Communication Basics", "Online Writing", "Social Media Communication", "Content Strategy", "Digital Branding", "Email Communication", "Visual Communication", "Online Collaboration", "Digital Etiquette", "Digital Analytics"], "Finance Exam": ["Finance Fundamentals", "Financial Statements", "Time Value of Money", "Budgeting", "Investment Basics", "Risk & Return", "Working Capital", "Corporate Finance", "Financial Markets", "Financial Analysis"], "Accounting Exam": ["Accounting Fundamentals", "Double-entry Bookkeeping", "Journals & Ledgers", "Trial Balance", "Financial Statements", "Cash & Bank", "Inventory Accounting", "Cost Accounting", "Budgeting", "Accounting Controls"], "Human Resources Management Exam": ["HR Fundamentals", "Workforce Planning", "Recruitment", "Selection", "Training & Development", "Performance Management", "Compensation", "Employee Relations", "Labor Practices", "Strategic HR"], "Project Management Exam": ["Project Fundamentals", "Project Initiation", "Scope Management", "Schedule Management", "Cost Management", "Quality Management", "Resource Management", "Risk Management", "Communication & Stakeholders", "Project Closing"], "International Business Exam": ["International Business Fundamentals", "Global Markets", "International Trade", "Foreign Market Entry", "Global Strategy", "International Marketing", "International Finance", "Cross-cultural Management", "Global Supply Chains", "International Business Ethics"], "Customer Service Exam": ["Customer Service Fundamentals", "Customer Needs", "Communication", "Service Quality", "Complaint Handling", "Problem Solving", "Customer Experience", "Telephone Service", "Digital Customer Service", "Customer Retention"], "Environmental Science Exam": ["Environmental Fundamentals", "Ecosystems", "Biodiversity", "Water Resources", "Air Pollution", "Waste Management", "Climate Change", "Energy Resources", "Environmental Management", "Sustainability"], "Administrative Law Exam": ["Administrative Law Foundations", "Public Administration", "Administrative Powers", "Rulemaking", "Administrative Decisions", "Public Procedures", "Judicial Review", "Public Accountability", "Public Service Ethics", "Administrative Remedies"], "International Cuisine Exam": ["Culinary Fundamentals", "Food Safety", "Kitchen Organization", "European Cuisine", "Asian Cuisine", "African Cuisine", "American Cuisine", "Middle Eastern Cuisine", "Menu Planning", "International Food Presentation"], "Waiter & Waitress Fundamentals Exam": ["Food Service Fundamentals", "Table Setup", "Menu Knowledge", "Order Taking", "Serving Techniques", "Beverage Service", "Customer Care", "Food Safety", "Billing & Payment", "Professional Conduct"], "Office Administration Exam": ["Office Fundamentals", "Document Management", "Business Correspondence", "Scheduling", "Records Management", "Office Technology", "Meeting Administration", "Customer Reception", "Office Finance Basics", "Professional Ethics"], "Public Relations Exam": ["PR Fundamentals", "Publics & Stakeholders", "Media Relations", "PR Writing", "Campaign Planning", "Corporate Communication", "Crisis Communication", "Digital PR", "Event Communication", "PR Evaluation & Ethics"], "Logistics & Supply Chain Exam": ["Supply Chain Fundamentals", "Procurement", "Inventory Management", "Warehousing", "Transportation", "Distribution", "Demand Planning", "Supplier Management", "Logistics Technology", "Supply Chain Risk & Sustainability"], "Hotel Management Exam": ["Hotel Operations", "Front Office", "Reservations", "Housekeeping", "Food & Beverage", "Guest Relations", "Hotel Marketing", "Revenue Management", "Hotel Finance", "Hotel Safety & Quality"], "Graphic Design Exam": ["Graphic Design Foundations", "Graphic Design Core Concepts", "Graphic Design Principles", "Graphic Design Methods & Techniques", "Graphic Design Tools & Applications", "Graphic Design Planning & Practice", "Graphic Design Analysis & Problem Solving", "Graphic Design Professional Standards & Ethics", "Graphic Design Quality, Risk & Evaluation", "Graphic Design Advanced Applications"], "Web Development Exam": ["Web Development Foundations", "Web Development Core Concepts", "Web Development Principles", "Web Development Methods & Techniques", "Web Development Tools & Applications", "Web Development Planning & Practice", "Web Development Analysis & Problem Solving", "Web Development Professional Standards & Ethics", "Web Development Quality, Risk & Evaluation", "Web Development Advanced Applications"], "Web Design Exam": ["Web Design Foundations", "Web Design Core Concepts", "Web Design Principles", "Web Design Methods & Techniques", "Web Design Tools & Applications", "Web Design Planning & Practice", "Web Design Analysis & Problem Solving", "Web Design Professional Standards & Ethics", "Web Design Quality, Risk & Evaluation", "Web Design Advanced Applications"], "Cybersecurity Exam": ["Cybersecurity Foundations", "Cybersecurity Core Concepts", "Cybersecurity Principles", "Cybersecurity Methods & Techniques", "Cybersecurity Tools & Applications", "Cybersecurity Planning & Practice", "Cybersecurity Analysis & Problem Solving", "Cybersecurity Professional Standards & Ethics", "Cybersecurity Quality, Risk & Evaluation", "Cybersecurity Advanced Applications"], "Data Science Exam": ["Data Science Foundations", "Data Science Core Concepts", "Data Science Principles", "Data Science Methods & Techniques", "Data Science Tools & Applications", "Data Science Planning & Practice", "Data Science Analysis & Problem Solving", "Data Science Professional Standards & Ethics", "Data Science Quality, Risk & Evaluation", "Data Science Advanced Applications"], "Artificial Intelligence Exam": ["Artificial Intelligence Foundations", "Artificial Intelligence Core Concepts", "Artificial Intelligence Principles", "Artificial Intelligence Methods & Techniques", "Artificial Intelligence Tools & Applications", "Artificial Intelligence Planning & Practice", "Artificial Intelligence Analysis & Problem Solving", "Artificial Intelligence Professional Standards & Ethics", "Artificial Intelligence Quality, Risk & Evaluation", "Artificial Intelligence Advanced Applications"], "Information Technology (IT) Exam": ["Information Technology (IT) Foundations", "Information Technology (IT) Core Concepts", "Information Technology (IT) Principles", "Information Technology (IT) Methods & Techniques", "Information Technology (IT) Tools & Applications", "Information Technology (IT) Planning & Practice", "Information Technology (IT) Analysis & Problem Solving", "Information Technology (IT) Professional Standards & Ethics", "Information Technology (IT) Quality, Risk & Evaluation", "Information Technology (IT) Advanced Applications"], "Database Management Exam": ["Database Management Foundations", "Database Management Core Concepts", "Database Management Principles", "Database Management Methods & Techniques", "Database Management Tools & Applications", "Database Management Planning & Practice", "Database Management Analysis & Problem Solving", "Database Management Professional Standards & Ethics", "Database Management Quality, Risk & Evaluation", "Database Management Advanced Applications"], "Networking Exam": ["Networking Foundations", "Networking Core Concepts", "Networking Principles", "Networking Methods & Techniques", "Networking Tools & Applications", "Networking Planning & Practice", "Networking Analysis & Problem Solving", "Networking Professional Standards & Ethics", "Networking Quality, Risk & Evaluation", "Networking Advanced Applications"], "Programming Fundamentals Exam": ["Programming Fundamentals Foundations", "Programming Fundamentals Core Concepts", "Programming Fundamentals Principles", "Programming Fundamentals Methods & Techniques", "Programming Fundamentals Tools & Applications", "Programming Fundamentals Planning & Practice", "Programming Fundamentals Analysis & Problem Solving", "Programming Fundamentals Professional Standards & Ethics", "Programming Fundamentals Quality, Risk & Evaluation", "Programming Fundamentals Advanced Applications"], "Mobile App Development Exam": ["Mobile App Development Foundations", "Mobile App Development Core Concepts", "Mobile App Development Principles", "Mobile App Development Methods & Techniques", "Mobile App Development Tools & Applications", "Mobile App Development Planning & Practice", "Mobile App Development Analysis & Problem Solving", "Mobile App Development Professional Standards & Ethics", "Mobile App Development Quality, Risk & Evaluation", "Mobile App Development Advanced Applications"], "Digital Marketing Exam": ["Digital Marketing Foundations", "Digital Marketing Core Concepts", "Digital Marketing Principles", "Digital Marketing Methods & Techniques", "Digital Marketing Tools & Applications", "Digital Marketing Planning & Practice", "Digital Marketing Analysis & Problem Solving", "Digital Marketing Professional Standards & Ethics", "Digital Marketing Quality, Risk & Evaluation", "Digital Marketing Advanced Applications"], "Social Media Management Exam": ["Social Media Management Foundations", "Social Media Management Core Concepts", "Social Media Management Principles", "Social Media Management Methods & Techniques", "Social Media Management Tools & Applications", "Social Media Management Planning & Practice", "Social Media Management Analysis & Problem Solving", "Social Media Management Professional Standards & Ethics", "Social Media Management Quality, Risk & Evaluation", "Social Media Management Advanced Applications"], "Sales Management Exam": ["Sales Management Foundations", "Sales Management Core Concepts", "Sales Management Principles", "Sales Management Methods & Techniques", "Sales Management Tools & Applications", "Sales Management Planning & Practice", "Sales Management Analysis & Problem Solving", "Sales Management Professional Standards & Ethics", "Sales Management Quality, Risk & Evaluation", "Sales Management Advanced Applications"], "Retail Management Exam": ["Retail Management Foundations", "Retail Management Core Concepts", "Retail Management Principles", "Retail Management Methods & Techniques", "Retail Management Tools & Applications", "Retail Management Planning & Practice", "Retail Management Analysis & Problem Solving", "Retail Management Professional Standards & Ethics", "Retail Management Quality, Risk & Evaluation", "Retail Management Advanced Applications"], "Operations Management Exam": ["Operations Management Foundations", "Operations Management Core Concepts", "Operations Management Principles", "Operations Management Methods & Techniques", "Operations Management Tools & Applications", "Operations Management Planning & Practice", "Operations Management Analysis & Problem Solving", "Operations Management Professional Standards & Ethics", "Operations Management Quality, Risk & Evaluation", "Operations Management Advanced Applications"], "Risk Management Exam": ["Risk Management Foundations", "Risk Management Core Concepts", "Risk Management Principles", "Risk Management Methods & Techniques", "Risk Management Tools & Applications", "Risk Management Planning & Practice", "Risk Management Analysis & Problem Solving", "Risk Management Professional Standards & Ethics", "Risk Management Quality, Risk & Evaluation", "Risk Management Advanced Applications"], "Quality Management Exam": ["Quality Management Foundations", "Quality Management Core Concepts", "Quality Management Principles", "Quality Management Methods & Techniques", "Quality Management Tools & Applications", "Quality Management Planning & Practice", "Quality Management Analysis & Problem Solving", "Quality Management Professional Standards & Ethics", "Quality Management Quality, Risk & Evaluation", "Quality Management Advanced Applications"], "Procurement Management Exam": ["Procurement Management Foundations", "Procurement Management Core Concepts", "Procurement Management Principles", "Procurement Management Methods & Techniques", "Procurement Management Tools & Applications", "Procurement Management Planning & Practice", "Procurement Management Analysis & Problem Solving", "Procurement Management Professional Standards & Ethics", "Procurement Management Quality, Risk & Evaluation", "Procurement Management Advanced Applications"], "Supply Chain Management Exam": ["Supply Chain Management Foundations", "Supply Chain Management Core Concepts", "Supply Chain Management Principles", "Supply Chain Management Methods & Techniques", "Supply Chain Management Tools & Applications", "Supply Chain Management Planning & Practice", "Supply Chain Management Analysis & Problem Solving", "Supply Chain Management Professional Standards & Ethics", "Supply Chain Management Quality, Risk & Evaluation", "Supply Chain Management Advanced Applications"], "Event Management Exam": ["Event Management Foundations", "Event Management Core Concepts", "Event Management Principles", "Event Management Methods & Techniques", "Event Management Tools & Applications", "Event Management Planning & Practice", "Event Management Analysis & Problem Solving", "Event Management Professional Standards & Ethics", "Event Management Quality, Risk & Evaluation", "Event Management Advanced Applications"], "Travel Management Exam": ["Travel Management Foundations", "Travel Management Core Concepts", "Travel Management Principles", "Travel Management Methods & Techniques", "Travel Management Tools & Applications", "Travel Management Planning & Practice", "Travel Management Analysis & Problem Solving", "Travel Management Professional Standards & Ethics", "Travel Management Quality, Risk & Evaluation", "Travel Management Advanced Applications"], "Airline & Airport Operations Exam": ["Airline & Airport Operations Foundations", "Airline & Airport Operations Core Concepts", "Airline & Airport Operations Principles", "Airline & Airport Operations Methods & Techniques", "Airline & Airport Operations Tools & Applications", "Airline & Airport Operations Planning & Practice", "Airline & Airport Operations Analysis & Problem Solving", "Airline & Airport Operations Professional Standards & Ethics", "Airline & Airport Operations Quality, Risk & Evaluation", "Airline & Airport Operations Advanced Applications"], "Restaurant Management Exam": ["Restaurant Management Foundations", "Restaurant Management Core Concepts", "Restaurant Management Principles", "Restaurant Management Methods & Techniques", "Restaurant Management Tools & Applications", "Restaurant Management Planning & Practice", "Restaurant Management Analysis & Problem Solving", "Restaurant Management Professional Standards & Ethics", "Restaurant Management Quality, Risk & Evaluation", "Restaurant Management Advanced Applications"], "Food & Beverage Management Exam": ["Food & Beverage Management Foundations", "Food & Beverage Management Core Concepts", "Food & Beverage Management Principles", "Food & Beverage Management Methods & Techniques", "Food & Beverage Management Tools & Applications", "Food & Beverage Management Planning & Practice", "Food & Beverage Management Analysis & Problem Solving", "Food & Beverage Management Professional Standards & Ethics", "Food & Beverage Management Quality, Risk & Evaluation", "Food & Beverage Management Advanced Applications"], "Early Childhood Education Exam": ["Early Childhood Education Foundations", "Early Childhood Education Core Concepts", "Early Childhood Education Principles", "Early Childhood Education Methods & Techniques", "Early Childhood Education Tools & Applications", "Early Childhood Education Planning & Practice", "Early Childhood Education Analysis & Problem Solving", "Early Childhood Education Professional Standards & Ethics", "Early Childhood Education Quality, Risk & Evaluation", "Early Childhood Education Advanced Applications"], "Teaching Methodology Exam": ["Teaching Methodology Foundations", "Teaching Methodology Core Concepts", "Teaching Methodology Principles", "Teaching Methodology Methods & Techniques", "Teaching Methodology Tools & Applications", "Teaching Methodology Planning & Practice", "Teaching Methodology Analysis & Problem Solving", "Teaching Methodology Professional Standards & Ethics", "Teaching Methodology Quality, Risk & Evaluation", "Teaching Methodology Advanced Applications"], "Educational Psychology Exam": ["Educational Psychology Foundations", "Educational Psychology Core Concepts", "Educational Psychology Principles", "Educational Psychology Methods & Techniques", "Educational Psychology Tools & Applications", "Educational Psychology Planning & Practice", "Educational Psychology Analysis & Problem Solving", "Educational Psychology Professional Standards & Ethics", "Educational Psychology Quality, Risk & Evaluation", "Educational Psychology Advanced Applications"], "Translation & Interpretation Exam": ["Translation & Interpretation Foundations", "Translation & Interpretation Core Concepts", "Translation & Interpretation Principles", "Translation & Interpretation Methods & Techniques", "Translation & Interpretation Tools & Applications", "Translation & Interpretation Planning & Practice", "Translation & Interpretation Analysis & Problem Solving", "Translation & Interpretation Professional Standards & Ethics", "Translation & Interpretation Quality, Risk & Evaluation", "Translation & Interpretation Advanced Applications"], "Professional Communication Exam": ["Professional Communication Foundations", "Professional Communication Core Concepts", "Professional Communication Principles", "Professional Communication Methods & Techniques", "Professional Communication Tools & Applications", "Professional Communication Planning & Practice", "Professional Communication Analysis & Problem Solving", "Professional Communication Professional Standards & Ethics", "Professional Communication Quality, Risk & Evaluation", "Professional Communication Advanced Applications"], "Public Speaking Exam": ["Public Speaking Foundations", "Public Speaking Core Concepts", "Public Speaking Principles", "Public Speaking Methods & Techniques", "Public Speaking Tools & Applications", "Public Speaking Planning & Practice", "Public Speaking Analysis & Problem Solving", "Public Speaking Professional Standards & Ethics", "Public Speaking Quality, Risk & Evaluation", "Public Speaking Advanced Applications"], "Academic Writing Exam": ["Academic Writing Foundations", "Academic Writing Core Concepts", "Academic Writing Principles", "Academic Writing Methods & Techniques", "Academic Writing Tools & Applications", "Academic Writing Planning & Practice", "Academic Writing Analysis & Problem Solving", "Academic Writing Professional Standards & Ethics", "Academic Writing Quality, Risk & Evaluation", "Academic Writing Advanced Applications"], "Creative Writing Exam": ["Creative Writing Foundations", "Creative Writing Core Concepts", "Creative Writing Principles", "Creative Writing Methods & Techniques", "Creative Writing Tools & Applications", "Creative Writing Planning & Practice", "Creative Writing Analysis & Problem Solving", "Creative Writing Professional Standards & Ethics", "Creative Writing Quality, Risk & Evaluation", "Creative Writing Advanced Applications"], "Journalism Exam": ["Journalism Foundations", "Journalism Core Concepts", "Journalism Principles", "Journalism Methods & Techniques", "Journalism Tools & Applications", "Journalism Planning & Practice", "Journalism Analysis & Problem Solving", "Journalism Professional Standards & Ethics", "Journalism Quality, Risk & Evaluation", "Journalism Advanced Applications"], "Mass Communication Exam": ["Mass Communication Foundations", "Mass Communication Core Concepts", "Mass Communication Principles", "Mass Communication Methods & Techniques", "Mass Communication Tools & Applications", "Mass Communication Planning & Practice", "Mass Communication Analysis & Problem Solving", "Mass Communication Professional Standards & Ethics", "Mass Communication Quality, Risk & Evaluation", "Mass Communication Advanced Applications"], "Media Studies Exam": ["Media Studies Foundations", "Media Studies Core Concepts", "Media Studies Principles", "Media Studies Methods & Techniques", "Media Studies Tools & Applications", "Media Studies Planning & Practice", "Media Studies Analysis & Problem Solving", "Media Studies Professional Standards & Ethics", "Media Studies Quality, Risk & Evaluation", "Media Studies Advanced Applications"], "Linguistics Exam": ["Linguistics Foundations", "Linguistics Core Concepts", "Linguistics Principles", "Linguistics Methods & Techniques", "Linguistics Tools & Applications", "Linguistics Planning & Practice", "Linguistics Analysis & Problem Solving", "Linguistics Professional Standards & Ethics", "Linguistics Quality, Risk & Evaluation", "Linguistics Advanced Applications"], "Applied Linguistics Exam": ["Applied Linguistics Foundations", "Applied Linguistics Core Concepts", "Applied Linguistics Principles", "Applied Linguistics Methods & Techniques", "Applied Linguistics Tools & Applications", "Applied Linguistics Planning & Practice", "Applied Linguistics Analysis & Problem Solving", "Applied Linguistics Professional Standards & Ethics", "Applied Linguistics Quality, Risk & Evaluation", "Applied Linguistics Advanced Applications"], "English Literature Exam": ["English Literature Foundations", "English Literature Core Concepts", "English Literature Principles", "English Literature Methods & Techniques", "English Literature Tools & Applications", "English Literature Planning & Practice", "English Literature Analysis & Problem Solving", "English Literature Professional Standards & Ethics", "English Literature Quality, Risk & Evaluation", "English Literature Advanced Applications"], "French Language Exam": ["French Language Foundations", "French Language Core Concepts", "French Language Principles", "French Language Methods & Techniques", "French Language Tools & Applications", "French Language Planning & Practice", "French Language Analysis & Problem Solving", "French Language Professional Standards & Ethics", "French Language Quality, Risk & Evaluation", "French Language Advanced Applications"], "Spanish Language Exam": ["Spanish Language Foundations", "Spanish Language Core Concepts", "Spanish Language Principles", "Spanish Language Methods & Techniques", "Spanish Language Tools & Applications", "Spanish Language Planning & Practice", "Spanish Language Analysis & Problem Solving", "Spanish Language Professional Standards & Ethics", "Spanish Language Quality, Risk & Evaluation", "Spanish Language Advanced Applications"], "Chinese Language Exam": ["Chinese Language Foundations", "Chinese Language Core Concepts", "Chinese Language Principles", "Chinese Language Methods & Techniques", "Chinese Language Tools & Applications", "Chinese Language Planning & Practice", "Chinese Language Analysis & Problem Solving", "Chinese Language Professional Standards & Ethics", "Chinese Language Quality, Risk & Evaluation", "Chinese Language Advanced Applications"], "German Language Exam": ["German Language Foundations", "German Language Core Concepts", "German Language Principles", "German Language Methods & Techniques", "German Language Tools & Applications", "German Language Planning & Practice", "German Language Analysis & Problem Solving", "German Language Professional Standards & Ethics", "German Language Quality, Risk & Evaluation", "German Language Advanced Applications"], "Japanese Language Exam": ["Japanese Language Foundations", "Japanese Language Core Concepts", "Japanese Language Principles", "Japanese Language Methods & Techniques", "Japanese Language Tools & Applications", "Japanese Language Planning & Practice", "Japanese Language Analysis & Problem Solving", "Japanese Language Professional Standards & Ethics", "Japanese Language Quality, Risk & Evaluation", "Japanese Language Advanced Applications"], "Korean Language Exam": ["Korean Language Foundations", "Korean Language Core Concepts", "Korean Language Principles", "Korean Language Methods & Techniques", "Korean Language Tools & Applications", "Korean Language Planning & Practice", "Korean Language Analysis & Problem Solving", "Korean Language Professional Standards & Ethics", "Korean Language Quality, Risk & Evaluation", "Korean Language Advanced Applications"], "Legal English Exam": ["Legal English Foundations", "Legal English Core Concepts", "Legal English Principles", "Legal English Methods & Techniques", "Legal English Tools & Applications", "Legal English Planning & Practice", "Legal English Analysis & Problem Solving", "Legal English Professional Standards & Ethics", "Legal English Quality, Risk & Evaluation", "Legal English Advanced Applications"], "Medical English Exam": ["Medical English Foundations", "Medical English Core Concepts", "Medical English Principles", "Medical English Methods & Techniques", "Medical English Tools & Applications", "Medical English Planning & Practice", "Medical English Analysis & Problem Solving", "Medical English Professional Standards & Ethics", "Medical English Quality, Risk & Evaluation", "Medical English Advanced Applications"], "English for Academic Purposes (EAP) Exam": ["English for Academic Purposes (EAP) Foundations", "English for Academic Purposes (EAP) Core Concepts", "English for Academic Purposes (EAP) Principles", "English for Academic Purposes (EAP) Methods & Techniques", "English for Academic Purposes (EAP) Tools & Applications", "English for Academic Purposes (EAP) Planning & Practice", "English for Academic Purposes (EAP) Analysis & Problem Solving", "English for Academic Purposes (EAP) Professional Standards & Ethics", "English for Academic Purposes (EAP) Quality, Risk & Evaluation", "English for Academic Purposes (EAP) Advanced Applications"], "English for Specific Purposes (ESP) Exam": ["English for Specific Purposes (ESP) Foundations", "English for Specific Purposes (ESP) Core Concepts", "English for Specific Purposes (ESP) Principles", "English for Specific Purposes (ESP) Methods & Techniques", "English for Specific Purposes (ESP) Tools & Applications", "English for Specific Purposes (ESP) Planning & Practice", "English for Specific Purposes (ESP) Analysis & Problem Solving", "English for Specific Purposes (ESP) Professional Standards & Ethics", "English for Specific Purposes (ESP) Quality, Risk & Evaluation", "English for Specific Purposes (ESP) Advanced Applications"], "Call Center English Exam": ["Call Center English Foundations", "Call Center English Core Concepts", "Call Center English Principles", "Call Center English Methods & Techniques", "Call Center English Tools & Applications", "Call Center English Planning & Practice", "Call Center English Analysis & Problem Solving", "Call Center English Professional Standards & Ethics", "Call Center English Quality, Risk & Evaluation", "Call Center English Advanced Applications"], "Medical Terminology Exam": ["Medical Terminology Foundations", "Medical Terminology Core Concepts", "Medical Terminology Principles", "Medical Terminology Methods & Techniques", "Medical Terminology Tools & Applications", "Medical Terminology Planning & Practice", "Medical Terminology Analysis & Problem Solving", "Medical Terminology Professional Standards & Ethics", "Medical Terminology Quality, Risk & Evaluation", "Medical Terminology Advanced Applications"], "Legal Studies Exam": ["Legal Studies Foundations", "Legal Studies Core Concepts", "Legal Studies Principles", "Legal Studies Methods & Techniques", "Legal Studies Tools & Applications", "Legal Studies Planning & Practice", "Legal Studies Analysis & Problem Solving", "Legal Studies Professional Standards & Ethics", "Legal Studies Quality, Risk & Evaluation", "Legal Studies Advanced Applications"], "International Relations Exam": ["International Relations Foundations", "International Relations Core Concepts", "International Relations Principles", "International Relations Methods & Techniques", "International Relations Tools & Applications", "International Relations Planning & Practice", "International Relations Analysis & Problem Solving", "International Relations Professional Standards & Ethics", "International Relations Quality, Risk & Evaluation", "International Relations Advanced Applications"], "Political Science Exam": ["Political Science Foundations", "Political Science Core Concepts", "Political Science Principles", "Political Science Methods & Techniques", "Political Science Tools & Applications", "Political Science Planning & Practice", "Political Science Analysis & Problem Solving", "Political Science Professional Standards & Ethics", "Political Science Quality, Risk & Evaluation", "Political Science Advanced Applications"], "Sociology Exam": ["Sociology Foundations", "Sociology Core Concepts", "Sociology Principles", "Sociology Methods & Techniques", "Sociology Tools & Applications", "Sociology Planning & Practice", "Sociology Analysis & Problem Solving", "Sociology Professional Standards & Ethics", "Sociology Quality, Risk & Evaluation", "Sociology Advanced Applications"], "Psychology Fundamentals Exam": ["Psychology Fundamentals Foundations", "Psychology Fundamentals Core Concepts", "Psychology Fundamentals Principles", "Psychology Fundamentals Methods & Techniques", "Psychology Fundamentals Tools & Applications", "Psychology Fundamentals Planning & Practice", "Psychology Fundamentals Analysis & Problem Solving", "Psychology Fundamentals Professional Standards & Ethics", "Psychology Fundamentals Quality, Risk & Evaluation", "Psychology Fundamentals Advanced Applications"], "Economics Exam": ["Economics Foundations", "Economics Core Concepts", "Economics Principles", "Economics Methods & Techniques", "Economics Tools & Applications", "Economics Planning & Practice", "Economics Analysis & Problem Solving", "Economics Professional Standards & Ethics", "Economics Quality, Risk & Evaluation", "Economics Advanced Applications"], "Business Administration Exam": ["Business Administration Foundations", "Business Administration Core Concepts", "Business Administration Principles", "Business Administration Methods & Techniques", "Business Administration Tools & Applications", "Business Administration Planning & Practice", "Business Administration Analysis & Problem Solving", "Business Administration Professional Standards & Ethics", "Business Administration Quality, Risk & Evaluation", "Business Administration Advanced Applications"], "Banking & Financial Services Exam": ["Banking & Financial Services Foundations", "Banking & Financial Services Core Concepts", "Banking & Financial Services Principles", "Banking & Financial Services Methods & Techniques", "Banking & Financial Services Tools & Applications", "Banking & Financial Services Planning & Practice", "Banking & Financial Services Analysis & Problem Solving", "Banking & Financial Services Professional Standards & Ethics", "Banking & Financial Services Quality, Risk & Evaluation", "Banking & Financial Services Advanced Applications"], "Insurance Management Exam": ["Insurance Management Foundations", "Insurance Management Core Concepts", "Insurance Management Principles", "Insurance Management Methods & Techniques", "Insurance Management Tools & Applications", "Insurance Management Planning & Practice", "Insurance Management Analysis & Problem Solving", "Insurance Management Professional Standards & Ethics", "Insurance Management Quality, Risk & Evaluation", "Insurance Management Advanced Applications"]};
 
 
+const GETI_ENGLISH_TEST_TEACHING_EXAMS={
+    "TESL – Teaching English as a Second Language Exam":["TESL Foundations","Second Language Learning","English Grammar for TESL","Teaching Methodologies","Lesson Planning","Classroom Management","Teaching Language Skills","Vocabulary and Pronunciation","Learner Support","Assessment and Feedback"],
+    "TEAL – Teaching English as an Additional Language Exam":["TEAL Foundations","Multilingual Learning","Language Acquisition","Inclusive Methodologies","Lesson Planning","Classroom Communication","Integrated Language Skills","Vocabulary Development","Learner Diversity","Assessment and Feedback"],
+    "TBE – Teaching Business English Exam":["Business English Foundations","Needs Analysis","Business Vocabulary","Professional Writing","Meetings and Presentations","Negotiation Language","Business Speaking","Course Design","Teaching Resources","Business English Assessment"],
+    "ESP – Teaching English for Specific Purposes Exam":["ESP Foundations","Needs Analysis","Specialist Language","Course Design","Materials Development","Teaching Methodologies","Workplace Communication","Integrated Skills","Program Delivery","ESP Assessment"],
+    "EAP – Teaching English for Academic Purposes Exam":["EAP Foundations","Academic Vocabulary","Academic Reading","Academic Writing","Listening and Note-taking","Seminar Speaking","Research Skills","Course Design","Academic Integrity","EAP Assessment"],
+    "TIELTS – Teaching IELTS Preparation Exam":["IELTS Test Format","IELTS Listening","IELTS Reading","IELTS Writing Task 1","IELTS Writing Task 2","IELTS Speaking","Band Descriptors","Lesson Planning","Feedback Strategies","Mock Tests and Assessment"],
+    "TOEFL Preparation Teaching Certificate Exam":["TOEFL Test Format","Academic Reading","Academic Listening","TOEFL Speaking","TOEFL Writing","Integrated Tasks","Test Strategies","Lesson Planning","Feedback and Scoring","Mock Tests and Assessment"],
+    "Online English Teaching Certificate Exam":["Online Teaching Foundations","Digital Lesson Planning","Virtual Classroom Tools","Online Engagement","Teaching Listening Online","Teaching Speaking Online","Teaching Reading and Writing Online","Digital Materials","Online Assessment","Online Safety and Professionalism"],
+    "English Grammar Teaching Certificate Exam":["Grammar Teaching Foundations","Parts of Speech","Verb Forms and Tenses","Sentence Structure","Modals and Conditionals","Articles and Determiners","Grammar in Context","Error Correction","Grammar Activities","Grammar Assessment"],
+    "English Pronunciation Teaching Certificate Exam":["Pronunciation Foundations","English Sounds","Word Stress","Sentence Stress","Rhythm and Intonation","Connected Speech","Listening Discrimination","Pronunciation Activities","Corrective Feedback","Pronunciation Assessment"],
+    "Classroom Management Certificate Exam":["Classroom Management Foundations","Classroom Rules and Routines","Teacher Presence","Learner Engagement","Grouping Strategies","Managing Behavior","Inclusive Classrooms","Conflict Resolution","Time and Resource Management","Classroom Reflection"],
+    "English Language Assessment Certificate Exam":["Assessment Foundations","Validity and Reliability","Learning Outcomes","Question Design","Listening Assessment","Speaking Assessment","Reading Assessment","Writing Assessment","Scoring and Feedback","Ethics in Assessment"],
+    "Teaching English to Adults Certificate Exam":["Adult Learning Principles","Adult Learner Needs","Course Planning","Practical Grammar","Workplace Communication","Teaching Integrated Skills","Adult Motivation","Inclusive Adult Classes","Materials and Activities","Adult Learner Assessment"],
+    "Teaching English to Teenagers Certificate Exam":["Teenage Learner Development","Motivation and Engagement","Age-appropriate Planning","Teaching Grammar and Vocabulary","Teaching Integrated Skills","Projects and Collaboration","Digital Learning","Classroom Management","Learner Wellbeing","Teen Assessment"],
+    "Inclusive English Language Teaching Certificate Exam":["Inclusive Teaching Foundations","Learner Diversity","Accessible Lesson Planning","Differentiated Instruction","Inclusive Materials","Supporting Learning Needs","Fair Participation","Positive Classroom Culture","Accessible Assessment","Reflective Inclusive Practice"]
+};
+
+Object.assign(GETI_30_EXAM_SUBJECTS,GETI_ENGLISH_TEST_TEACHING_EXAMS);
+const GETI_ENGLISH_TEST_TEACHING_NAMES=Object.keys(GETI_ENGLISH_TEST_TEACHING_EXAMS);
 const GETI_30_EXAMS = Object.keys(GETI_30_EXAM_SUBJECTS);
 
 let geti30State = {
@@ -4944,9 +5052,198 @@ function toggleGeti30Exams(){
     }
 }
 
-function openGeti30Registration(examName){
+const GETI_TEFL_COURSES=[
+    {hours:20,title:"20-Hour TEFL",description:"Short introductory course",level:"B1"},
+    {hours:40,title:"40-Hour TEFL",description:"Basic foundation",level:"B1"},
+    {hours:60,title:"60-Hour TEFL",description:"Introductory teaching skills",level:"B1",recommended:true},
+    {hours:80,title:"80-Hour TEFL",description:"Intermediate preparation",level:"B2"},
+    {hours:100,title:"100-Hour TEFL",description:"Standard foundation course",level:"B2"},
+    {hours:120,title:"120-Hour TEFL",description:"Entry-level professional course",level:"B2",recommended:true},
+    {hours:140,title:"140-Hour TEFL",description:"Extended course with extra practice",level:"B2"},
+    {hours:150,title:"150-Hour TEFL",description:"Advanced preparation",level:"C1"},
+    {hours:168,title:"168-Hour TEFL",description:"Comprehensive training",level:"C1"},
+    {hours:180,title:"180-Hour TEFL",description:"Advanced course with practical modules",level:"C1",recommended:true},
+    {hours:200,title:"200-Hour TEFL",description:"Professional-level training",level:"C1"},
+    {hours:250,title:"250-Hour TEFL",description:"Advanced professional course",level:"C2"},
+    {hours:300,title:"300-Hour TEFL",description:"Diploma-style advanced course",level:"C2",recommended:true},
+    {hours:420,title:"420-Hour TEFL",description:"Comprehensive advanced TEFL program",level:"C2"}
+];
+
+const GETI_TESOL_COURSES=[
+    {hours:20,title:"20-Hour TESOL",description:"Short introductory course",level:"B1"},
+    {hours:40,title:"40-Hour TESOL",description:"Basic foundation",level:"B1"},
+    {hours:60,title:"60-Hour TESOL",description:"Introductory teaching skills",level:"B1",recommended:true},
+    {hours:80,title:"80-Hour TESOL",description:"Intermediate preparation",level:"B2"},
+    {hours:100,title:"100-Hour TESOL",description:"Standard foundation course",level:"B2"},
+    {hours:120,title:"120-Hour TESOL",description:"Entry-level professional course",level:"B2",recommended:true},
+    {hours:140,title:"140-Hour TESOL",description:"Extended course with extra practice",level:"B2"},
+    {hours:150,title:"150-Hour TESOL",description:"Advanced preparation",level:"C1"},
+    {hours:180,title:"180-Hour TESOL",description:"Advanced course with practical modules",level:"C1",recommended:true},
+    {hours:200,title:"200-Hour TESOL",description:"Professional-level training",level:"C1"},
+    {hours:250,title:"250-Hour TESOL",description:"Advanced professional course",level:"C2"},
+    {hours:300,title:"300-Hour TESOL",description:"Diploma-style advanced course",level:"C2",recommended:true},
+    {hours:420,title:"420-Hour TESOL",description:"Comprehensive advanced TESOL program",level:"C2"}
+];
+
+const GETI_TEYL_COURSES=[
+    {hours:20,title:"20-Hour TEYL",description:"Short introductory course",level:"B1"},
+    {hours:30,title:"30-Hour TEYL",description:"Introduction to teaching young learners",level:"B1"},
+    {hours:40,title:"40-Hour TEYL",description:"Basic foundation",level:"B2"},
+    {hours:50,title:"50-Hour TEYL",description:"Developing classroom practice",level:"B2"},
+    {hours:60,title:"60-Hour TEYL",description:"Intermediate teaching skills",level:"C1",recommended:true},
+    {hours:80,title:"80-Hour TEYL",description:"Advanced practical preparation",level:"C1"},
+    {hours:100,title:"100-Hour TEYL",description:"Professional TEYL training",level:"C2"},
+    {hours:120,title:"120-Hour TEYL",description:"Comprehensive professional course",level:"C2",recommended:true}
+];
+
+const GETI_ENGLISH_ACHIEVEMENT_COURSES=[
+    {hours:20,title:"20-Hour English Certificate of Achievement",description:"Introductory English achievement program",level:"B1"},
+    {hours:40,title:"40-Hour English Certificate of Achievement",description:"Foundation English achievement program",level:"B1"},
+    {hours:60,title:"60-Hour English Certificate of Achievement",description:"Developing core English skills",level:"B1"},
+    {hours:80,title:"80-Hour English Certificate of Achievement",description:"Intermediate English preparation",level:"B2"},
+    {hours:100,title:"100-Hour English Certificate of Achievement",description:"Extended intermediate English program",level:"B2"},
+    {hours:120,title:"120-Hour English Certificate of Achievement",description:"Comprehensive intermediate English program",level:"B2",recommended:true},
+    {hours:150,title:"150-Hour English Certificate of Achievement",description:"Advanced English preparation",level:"C1"},
+    {hours:180,title:"180-Hour English Certificate of Achievement",description:"Advanced integrated English skills",level:"C1"},
+    {hours:200,title:"200-Hour English Certificate of Achievement",description:"Professional advanced English program",level:"C1"},
+    {hours:300,title:"300-Hour English Certificate of Achievement",description:"Comprehensive mastery-level English program",level:"C2",recommended:true}
+];
+
+const GETI_GENERAL_EXAM_HOURS=[
+    {hours:20,level:"B1"},
+    {hours:40,level:"B1"},
+    {hours:60,level:"B1"},
+    {hours:80,level:"B2"},
+    {hours:100,level:"B2"},
+    {hours:120,level:"B2"},
+    {hours:150,level:"C1"},
+    {hours:180,level:"C1"},
+    {hours:200,level:"C1"},
+    {hours:300,level:"C2"}
+];
+
+let getiGeneralHourExam=null;
+
+function openGeneralExamHourSelector(examName){
+    getiGeneralHourExam=examName;
+    const panel=document.getElementById("geti30ExamPanel");
+    panel.classList.add("active");
+    const displayName=examName.replace(/ Exam$/,"");
+
+    const cards=GETI_GENERAL_EXAM_HOURS.map(function(option,index){
+        return '<button class="tefl-course-card" onclick="selectGeneralExamHour('+index+')">'+
+            '<strong>'+option.hours+'-Hour '+escapeHTML(displayName)+'</strong>'+
+            '<span>Certificate examination program</span>'+
+            '<span class="tefl-level-badge">Level '+escapeHTML(option.level)+'</span>'+
+            '</button>';
+    }).join("");
+
+    panel.innerHTML=
+        '<h2 class="exam-title">CHOOSE YOUR '+escapeHTML(displayName).toUpperCase()+'</h2>'+
+        '<p class="exam-subtitle">Select the course hours. The examination difficulty increases from B1 to C2. Registration appears after your selection.</p>'+
+        '<div class="tefl-course-grid">'+cards+'</div>';
+
+    panel.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function selectGeneralExamHour(index){
+    const option=GETI_GENERAL_EXAM_HOURS[index];
+    const examName=getiGeneralHourExam;
+    if(!option || !examName)return;
+    const displayName=examName.replace(/ Exam$/,"");
+    openGeti30Registration(examName,{
+        hours:option.hours,
+        level:option.level,
+        title:option.hours+"-Hour "+displayName
+    });
+}
+
+function openLanguageCourseSelector(program,courses){
+    const panel=document.getElementById("geti30ExamPanel");
+    panel.classList.add("active");
+
+    const cards=courses.map(function(course,index){
+        return '<button class="tefl-course-card '+(course.recommended?'tefl-recommended':'')+'" onclick="selectGetiLanguageCourse(\''+program+'\','+index+')">'+
+            '<strong>'+escapeHTML(course.title)+(course.recommended?' ★':'')+'</strong>'+
+            '<span>'+escapeHTML(course.description)+'</span>'+
+            '<span class="tefl-level-badge">Level '+escapeHTML(course.level)+'</span>'+
+            '</button>';
+    }).join("");
+
+    panel.innerHTML=
+        '<h2 class="exam-title">CHOOSE YOUR '+escapeHTML(program)+' EXAM</h2>'+
+        '<p class="exam-subtitle">Select a '+escapeHTML(program)+' course. The examination difficulty increases according to the course hours, from B1 to C2.</p>'+
+        '<div class="tefl-course-grid">'+cards+'</div>';
+
+    panel.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function selectGetiLanguageCourse(program,index){
+    const courseLists={
+        TEFL:GETI_TEFL_COURSES,
+        TESOL:GETI_TESOL_COURSES,
+        TEYL:GETI_TEYL_COURSES,
+        "English Proficiency":GETI_ENGLISH_ACHIEVEMENT_COURSES
+    };
+    const courses=courseLists[program] || [];
+    const course=courses[index];
+    if(!course)return;
+    openGeti30Registration(program+" Exam",course);
+}
+
+function openTeflCourseSelector(){
+    openLanguageCourseSelector("TEFL",GETI_TEFL_COURSES);
+}
+
+function openTesolCourseSelector(){
+    openLanguageCourseSelector("TESOL",GETI_TESOL_COURSES);
+}
+
+function openTeylCourseSelector(){
+    openLanguageCourseSelector("TEYL",GETI_TEYL_COURSES);
+}
+
+function openEnglishAchievementSelector(){
+    openLanguageCourseSelector("English Proficiency",GETI_ENGLISH_ACHIEVEMENT_COURSES);
+}
+
+function openEnglishTestTeachingSelector(){
+    const panel=document.getElementById("geti30ExamPanel");
+    panel.classList.add("active");
+
+    const cards=GETI_ENGLISH_TEST_TEACHING_NAMES.map(function(examName,index){
+        const displayName=examName.replace(/ Exam$/,"");
+        return '<button class="tefl-course-card" onclick="selectEnglishTestTeachingExam('+index+')">'+
+            '<strong>'+escapeHTML(displayName)+'</strong>'+
+            '<span>Professional English teaching certificate examination</span>'+
+            '<span class="tefl-level-badge">20–300 Hours</span>'+
+            '</button>';
+    }).join("");
+
+    panel.innerHTML=
+        '<h2 class="exam-title">ENGLISH TEST AND TEACHING EXAMS</h2>'+
+        '<p class="exam-subtitle">Choose one certificate examination, then complete the registration form to begin.</p>'+
+        '<div class="tefl-course-grid">'+cards+'</div>';
+
+    panel.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function selectEnglishTestTeachingExam(index){
+    const examName=GETI_ENGLISH_TEST_TEACHING_NAMES[index];
+    if(!examName)return;
+    openGeneralExamHourSelector(examName);
+}
+
+function selectGetiTeflCourse(index){
+    selectGetiLanguageCourse("TEFL",index);
+}
+
+function openGeti30Registration(examName,course){
     geti30State={
         exam:examName,
+        examTitle:course ? course.title : examName,
+        examLevel:course ? course.level : "B2",
+        teflHours:course ? course.hours : null,
         student:null,
         subjectIndex:0,
         questionIndex:0,
@@ -4967,8 +5264,8 @@ function openGeti30Registration(examName){
     }).join("");
 
     panel.innerHTML=
-        '<h2 class="exam-title">'+escapeHTML(examName)+'</h2>'+
-        '<p class="exam-subtitle">Registration before starting the examination. Exam duration: 45 minutes. After completing an examination, your examination email is automatically blocked until the GETI administrator unblocks it.</p>'+
+        '<h2 class="exam-title">'+escapeHTML(geti30State.examTitle)+'</h2>'+
+        '<p class="exam-subtitle">Level: '+escapeHTML(geti30State.examLevel)+'. Registration before starting the examination. Exam duration: 45 minutes. After completing an examination, your examination email is automatically blocked until the GETI administrator unblocks it.</p>'+
         '<div style="text-align:center;margin-bottom:22px;">'+chips+'</div>'+
         '<div class="registration-form">'+
         '<input id="g30Name" placeholder="Full Name">'+
@@ -5002,7 +5299,7 @@ function submitGeti30Registration(){
     }
 
     geti30State.student={
-        id:createGeti30CandidateID(geti30State.exam),
+        id:createGeti30CandidateID(geti30State.examTitle||geti30State.exam),
         name:name,
         email:email,
         nationality:nationality,
@@ -5066,13 +5363,13 @@ function geti30Shuffle(array,rnd){
 }
 
 /*
-   C2 assessment design:
+   B2 assessment design:
    - questions remain clear and use accessible English;
    - difficulty comes from judgement, comparison and application;
    - distractors are plausible and similar in length to the best answer;
    - the correct position is shuffled for every candidate.
 */
-const GETI_C2_DISTRACTOR_SETS=[
+const GETI_B2_DISTRACTOR_SETS=[
     [
         "Use the established procedure first, and consider context only when the expected result is not achieved",
         "Choose the option supported by the most evidence, even when that evidence addresses a different objective",
@@ -5135,9 +5432,90 @@ const GETI_C2_DISTRACTOR_SETS=[
     ]
 ];
 
-function geti30GetC2Distractors(templateIndex){
-    return GETI_C2_DISTRACTOR_SETS[templateIndex % GETI_C2_DISTRACTOR_SETS.length];
+function geti30GetB2Distractors(templateIndex){
+    return GETI_B2_DISTRACTOR_SETS[templateIndex % GETI_B2_DISTRACTOR_SETS.length];
 }
+
+const GETI_B1_QUESTION_POOL=[
+    ["What is the main purpose of {S}?","To achieve its stated objective by using suitable knowledge and responsible action"],
+    ["Before starting a task in {S}, what should you do first?","Understand the objective, the instructions, the available resources, and the expected result"],
+    ["A learner or client does not understand an explanation in {S}. What should you do?","Explain it again with clearer words and a relevant example, then check understanding"],
+    ["Why is planning important in {S}?","It helps organize the objective, steps, time, resources, and possible problems"],
+    ["What should you do when you notice a mistake in {S}?","Identify the cause, correct the mistake, and take steps to prevent it from happening again"],
+    ["Which action shows good communication in {S}?","Listening carefully, giving clear information, and checking that the message was understood"],
+    ["Why should results in {S} be checked?","To see whether the objective was reached and whether any improvement is needed"],
+    ["A rule in {S} is not clear. What is the safest response?","Ask for clarification and check the correct guidance before taking an important action"],
+    ["What is useful feedback in {S}?","Clear information about what worked, what needs improvement, and what action to take next"],
+    ["How should limited time be managed in {S}?","Give priority to the most important tasks and use a realistic schedule"],
+    ["What should you do before using information in {S}?","Check that the information is reliable, current, and related to the task"],
+    ["Why is teamwork useful in {S}?","Team members can share information, skills, responsibilities, and possible solutions"],
+    ["What is a professional way to solve a problem in {S}?","Define the problem, collect the main facts, compare solutions, and review the result"],
+    ["How can quality be maintained in {S}?","Follow clear standards, check the work, and correct problems consistently"],
+    ["What should happen after completing an important task in {S}?","Check the result, record necessary information, and note any lesson for future work"]
+];
+
+const GETI_B2_QUESTION_POOL=[
+    ["You need to make a decision about {S}, but some information is missing. What is the best first step?",
+     "Check the available facts, identify what is missing, and compare the safest realistic options"],
+    ["A usual method in {S} does not work well in a new situation. What should you do?",
+     "Review why the situation is different and adapt the method while keeping its main purpose"],
+    ["Two possible solutions in {S} both have advantages. How should you choose between them?",
+     "Compare how well each solution meets the objective, available resources, risks, and user needs"],
+    ["A plan in {S} reaches its target but causes another serious problem. How should it be judged?",
+     "Review both the achieved target and the new problem before deciding whether the plan was successful"],
+    ["Which action is most likely to improve quality in {S}?",
+     "Set clear standards, check actual results, collect useful feedback, and correct repeated weaknesses"],
+    ["A client asks why a decision was made in {S}. What is the most professional response?",
+     "Explain the main facts, criteria, limits, and expected results in language the client can understand"],
+    ["Two reports about {S} give different conclusions. What should be checked first?",
+     "Check the sources, methods, dates, purpose, and evidence used in each report"],
+    ["What shows good planning in {S}?",
+     "Connecting each activity to a clear objective, suitable resources, possible risks, and a review method"],
+    ["A correct procedure in {S} gives poor results. What is the best response?",
+     "Check whether the procedure was applied correctly and whether it suits the actual situation"],
+    ["Which evidence is most useful when making a recommendation in {S}?",
+     "Evidence that is reliable, directly related to the objective, and suitable for the current context"],
+    ["A team cannot agree on priorities in {S}. What should the team do?",
+     "Agree on clear criteria, compare the options against them, and record the reason for the final choice"],
+    ["Why is it important to document an important decision in {S}?",
+     "It creates a clear record for communication, responsibility, later review, and future improvement"],
+    ["Which approach shows responsible practice in {S}?",
+     "Considering the objective, rules, possible harm, fairness, and the people affected before acting"],
+    ["A method was successful elsewhere and will now be used in {S}. What should happen first?",
+     "Check whether the new setting has different needs or limits and test suitable changes before full use"],
+    ["Several users give negative feedback about the same part of {S}. What should be done?",
+     "Look for a repeated cause, confirm it with evidence, make a suitable change, and check the result"],
+    ["A result in {S} looks very positive, but the information was collected badly. What does this mean?",
+     "The result should be treated carefully because weak information can lead to an unreliable conclusion"],
+    ["How can a team reduce risk in {S} without stopping useful work?",
+     "Identify the main risks, judge their likelihood and impact, use suitable controls, and monitor them"],
+    ["A problem in {S} has several possible causes. What is the strongest approach?",
+     "Separate symptoms from causes, check how the causes are connected, and address the most important ones"],
+    ["What makes an evaluation of {S} fair and useful?",
+     "Using clear criteria, relevant evidence, more than one possible explanation, and a reasoned conclusion"],
+    ["A decision in {S} helps one group but creates difficulties for another. What should happen next?",
+     "Compare the benefits and difficulties, review responsibilities, and consider changes that reduce unfair effects"],
+    ["What is a sensible way to introduce a new idea in {S}?",
+     "Test it on a limited scale, define success, collect results, and expand it only when evidence supports it"],
+    ["A report about {S} contains correct facts but a weak conclusion. What may be wrong?",
+     "The conclusion may not follow logically from the facts or may ignore another reasonable explanation"],
+    ["How should a complex issue in {S} be explained to a non-specialist?",
+     "Keep the important facts accurate while using clear terms, relevant examples, and an organized explanation"],
+    ["When should an established procedure in {S} be reviewed?",
+     "When reliable evidence shows that needs, conditions, risks, objectives, or results have significantly changed"],
+    ["Two results in {S} change at the same time. What is needed before saying one caused the other?",
+     "Check the timing, other possible causes, the connection between them, and the strength of the evidence"],
+    ["Resources for {S} are limited. How should they be allocated?",
+     "Protect the most important objectives and duties, compare trade-offs, and fund priorities with clear reasons"],
+    ["What is the proper role of professional judgement in {S}?",
+     "To combine evidence, rules, experience, context, uncertainty, and responsibility when choosing an action"],
+    ["An action in {S} produces an unexpected result. What should be investigated?",
+     "The original assumptions, how the action was carried out, the context, measurement, and outside influences"],
+    ["How should competing recommendations in {S} be compared?",
+     "Compare their evidence, fit with the objective, practical limits, risks, costs, and likely effects"],
+    ["Which process best supports continuous improvement in {S}?",
+     "Set a target, observe performance, study the evidence, make a justified change, and check the new result"]
+];
 
 function geti30MakeQuestion(subject,templateIndex,rnd){
     const S=subject;
@@ -5355,13 +5733,23 @@ function geti30MakeQuestion(subject,templateIndex,rnd){
         ]
     ];
 
-    const base=pool[templateIndex % pool.length].slice();
-    const c2Distractors=geti30GetC2Distractors(templateIndex);
+    const currentLevel=String(geti30State.examLevel||"B2").replace("+","");
+    let base;
+    if(currentLevel==="B1"){
+        const b1Item=GETI_B1_QUESTION_POOL[templateIndex % GETI_B1_QUESTION_POOL.length];
+        base=[b1Item[0].replace(/\{S\}/g,S),b1Item[1],"","",""];
+    }else if(currentLevel==="C1" || currentLevel==="C2"){
+        base=pool[templateIndex % pool.length].slice();
+    }else{
+        const b2Item=GETI_B2_QUESTION_POOL[templateIndex % GETI_B2_QUESTION_POOL.length];
+        base=[b2Item[0].replace(/\{S\}/g,S),b2Item[1],"","",""];
+    }
+    const b2Distractors=geti30GetB2Distractors(templateIndex);
     const options=[
         {text:base[1],correct:true},
-        {text:c2Distractors[0],correct:false},
-        {text:c2Distractors[1],correct:false},
-        {text:c2Distractors[2],correct:false}
+        {text:b2Distractors[0],correct:false},
+        {text:b2Distractors[1],correct:false},
+        {text:b2Distractors[2],correct:false}
     ];
 
     const shuffled=geti30Shuffle(options,rnd);
@@ -5380,7 +5768,8 @@ function geti30MakeQuestion(subject,templateIndex,rnd){
 function buildGeti30QuestionSets(){
     const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam] || [];
     const registrationKey=[
-        geti30State.exam,
+        geti30State.examTitle||geti30State.exam,
+        geti30State.examLevel||"B2",
         geti30State.student ? geti30State.student.id : "",
         Date.now(),
         Math.random()
@@ -5434,7 +5823,7 @@ function showGeti30Question(){
     panel.innerHTML=
         '<div id="geti30Timer" class="exam-timer">TIME REMAINING: 60:00</div>'+
         '<div class="exam-progress">'+
-        '<span>'+escapeHTML(geti30State.exam)+'</span>'+
+        '<span>'+escapeHTML(geti30State.examTitle||geti30State.exam)+' — Level '+escapeHTML(geti30State.examLevel||"B2")+'</span>'+
         '<span>Subject '+(geti30State.subjectIndex+1)+'/10</span>'+
         '<span>Question '+(geti30State.questionIndex+1)+'/15</span>'+
         '</div>'+
@@ -5535,7 +5924,10 @@ function showGeti30FinalResult(){
         name:geti30State.student.name,
         email:geti30State.student.email,
         nationality:geti30State.student.nationality,
-        exam:geti30State.exam,
+        exam:geti30State.examTitle||geti30State.exam,
+        baseExam:geti30State.exam,
+        level:geti30State.examLevel||"B2",
+        hours:geti30State.teflHours||null,
         percentage:percentage,
         status:status,
         date:new Date().toISOString(),
@@ -5557,7 +5949,8 @@ function showGeti30FinalResult(){
         '<h2>FINAL EXAMINATION RESULT</h2>'+
         '<p><strong>'+escapeHTML(geti30State.student.name)+'</strong></p>'+
         '<p>Candidate ID: <strong>'+escapeHTML(geti30State.student.id)+'</strong></p>'+
-        '<p>Exam: <strong>'+escapeHTML(geti30State.exam)+'</strong></p>'+
+        '<p>Exam: <strong>'+escapeHTML(geti30State.examTitle||geti30State.exam)+'</strong></p>'+
+        '<p>Level: <strong>'+escapeHTML(geti30State.examLevel||"B2")+'</strong></p>'+
         '<div class="final-score">'+percentage+'%</div>'+
         '<h2 class="'+(status==="PASSED"?"pass":"fail")+'">'+status+'</h2>'+
         '<div class="'+(status==="PASSED"?"exam-message":"exam-fail-message")+'">'+
@@ -8065,11 +8458,31 @@ function renderGetiExamButtons(){
     const list=document.getElementById("geti30ExamList");
     if(!list || typeof GETI_30_EXAM_SUBJECTS==="undefined")return;
     list.innerHTML="";
+
+    const englishTeachingButton=document.createElement("button");
+    englishTeachingButton.className="exam30-btn";
+    englishTeachingButton.textContent="🎓 English Test and Teaching Exams";
+    englishTeachingButton.onclick=openEnglishTestTeachingSelector;
+    list.appendChild(englishTeachingButton);
+
     Object.keys(GETI_30_EXAM_SUBJECTS).forEach(function(examName){
+        if(GETI_ENGLISH_TEST_TEACHING_NAMES.indexOf(examName)!==-1)return;
         const b=document.createElement("button");
         b.className="exam30-btn";
         b.textContent="🎓 "+examName;
-        b.onclick=function(){openGeti30Registration(examName);};
+        b.onclick=function(){
+            if(examName==="TEFL Exam"){
+                openTeflCourseSelector();
+            }else if(examName==="TESOL Exam"){
+                openTesolCourseSelector();
+            }else if(examName==="TEYL Exam"){
+                openTeylCourseSelector();
+            }else if(examName==="English Proficiency Exam"){
+                openEnglishAchievementSelector();
+            }else{
+                openGeneralExamHourSelector(examName);
+            }
+        };
         list.appendChild(b);
     });
 }
