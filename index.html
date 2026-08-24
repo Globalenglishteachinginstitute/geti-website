@@ -2469,7 +2469,7 @@ TEFL, TESOL professional training and assessment.
 
 <div class="stat">
 <strong>A1–C2</strong>
-<span>English Levels</span>
+<span>English Courses</span>
 </div>
 
 <div class="stat">
@@ -5134,13 +5134,12 @@ function openGeneralExamHourSelector(examName){
         return '<button class="tefl-course-card" onclick="selectGeneralExamHour('+index+')">'+
             '<strong>'+option.hours+'-Hour '+escapeHTML(displayName)+'</strong>'+
             '<span>Certificate examination program</span>'+
-            '<span class="tefl-level-badge">Level '+escapeHTML(option.level)+'</span>'+
             '</button>';
     }).join("");
 
     panel.innerHTML=
         '<h2 class="exam-title">CHOOSE YOUR '+escapeHTML(displayName).toUpperCase()+'</h2>'+
-        '<p class="exam-subtitle">Select the course hours. The examination difficulty increases from B1 to C2. Registration appears after your selection.</p>'+
+        '<p class="exam-subtitle">Select the course hours. Registration appears after your selection.</p>'+
         '<div class="tefl-course-grid">'+cards+'</div>';
 
     panel.scrollIntoView({behavior:"smooth",block:"start"});
@@ -5166,13 +5165,12 @@ function openLanguageCourseSelector(program,courses){
         return '<button class="tefl-course-card '+(course.recommended?'tefl-recommended':'')+'" onclick="selectGetiLanguageCourse(\''+program+'\','+index+')">'+
             '<strong>'+escapeHTML(course.title)+(course.recommended?' ★':'')+'</strong>'+
             '<span>'+escapeHTML(course.description)+'</span>'+
-            '<span class="tefl-level-badge">Level '+escapeHTML(course.level)+'</span>'+
             '</button>';
     }).join("");
 
     panel.innerHTML=
         '<h2 class="exam-title">CHOOSE YOUR '+escapeHTML(program)+' EXAM</h2>'+
-        '<p class="exam-subtitle">Select a '+escapeHTML(program)+' course. The examination difficulty increases according to the course hours, from B1 to C2.</p>'+
+        '<p class="exam-subtitle">Select a '+escapeHTML(program)+' course. Registration appears after your selection.</p>'+
         '<div class="tefl-course-grid">'+cards+'</div>';
 
     panel.scrollIntoView({behavior:"smooth",block:"start"});
@@ -5265,7 +5263,7 @@ function openGeti30Registration(examName,course){
 
     panel.innerHTML=
         '<h2 class="exam-title">'+escapeHTML(geti30State.examTitle)+'</h2>'+
-        '<p class="exam-subtitle">Level: '+escapeHTML(geti30State.examLevel)+'. Registration before starting the examination. Exam duration: 45 minutes. After completing an examination, your examination email is automatically blocked until the GETI administrator unblocks it.</p>'+
+        '<p class="exam-subtitle">Registration before starting the examination. Exam duration: 45 minutes. After completing an examination, your examination email is automatically blocked until the GETI administrator unblocks it.</p>'+
         '<div style="text-align:center;margin-bottom:22px;">'+chips+'</div>'+
         '<div class="registration-form">'+
         '<input id="g30Name" placeholder="Full Name">'+
@@ -5823,7 +5821,7 @@ function showGeti30Question(){
     panel.innerHTML=
         '<div id="geti30Timer" class="exam-timer">TIME REMAINING: 60:00</div>'+
         '<div class="exam-progress">'+
-        '<span>'+escapeHTML(geti30State.examTitle||geti30State.exam)+' — Level '+escapeHTML(geti30State.examLevel||"B2")+'</span>'+
+        '<span>'+escapeHTML(geti30State.examTitle||geti30State.exam)+'</span>'+
         '<span>Subject '+(geti30State.subjectIndex+1)+'/10</span>'+
         '<span>Question '+(geti30State.questionIndex+1)+'/15</span>'+
         '</div>'+
@@ -5950,7 +5948,6 @@ function showGeti30FinalResult(){
         '<p><strong>'+escapeHTML(geti30State.student.name)+'</strong></p>'+
         '<p>Candidate ID: <strong>'+escapeHTML(geti30State.student.id)+'</strong></p>'+
         '<p>Exam: <strong>'+escapeHTML(geti30State.examTitle||geti30State.exam)+'</strong></p>'+
-        '<p>Level: <strong>'+escapeHTML(geti30State.examLevel||"B2")+'</strong></p>'+
         '<div class="final-score">'+percentage+'%</div>'+
         '<h2 class="'+(status==="PASSED"?"pass":"fail")+'">'+status+'</h2>'+
         '<div class="'+(status==="PASSED"?"exam-message":"exam-fail-message")+'">'+
