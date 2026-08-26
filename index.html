@@ -229,6 +229,9 @@ button,input,textarea{
 
 .hero-take-exam-wrap{
     margin-bottom:24px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
 }
 
 .hero-take-exam-btn{
@@ -260,6 +263,14 @@ button,input,textarea{
     outline:3px solid #fff;
     outline-offset:4px;
 }
+.hero-my-result-btn{background:linear-gradient(135deg,#0d65a4,#07376d);border-color:#8bc9f1}
+.myresult-overlay{display:none;position:fixed;inset:0;z-index:10180;background:rgba(3,15,34,.88);overflow:auto;padding:24px 14px}.myresult-overlay.show{display:block}
+.myresult-shell{width:min(820px,96%);margin:30px auto;background:#f5f8fc;border-radius:16px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.38)}
+.myresult-head{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:19px 22px;background:linear-gradient(135deg,#082e5d,#0d65a4);color:#fff}.myresult-head strong{font-size:1.08rem;letter-spacing:.08em}.myresult-head button{border:0;background:transparent;color:#fff;font-size:1.7rem;cursor:pointer}
+.myresult-body{padding:26px}.myresult-private-note{margin:0 0 20px;padding:13px 15px;border-left:4px solid #c99d2d;background:#fff8e5;color:#604c1d;line-height:1.55}
+.myresult-login{max-width:520px;margin:auto;padding:22px;border:1px solid #d5e0eb;border-radius:12px;background:#fff}.myresult-login h2{margin:0 0 8px;color:#082e5d}.myresult-login input{width:100%;margin-top:11px;padding:13px;border:1px solid #c8d5e2;border-radius:8px;font-size:1rem}.myresult-login button,.myresult-refresh{width:100%;margin-top:13px;padding:13px;border:0;border-radius:8px;background:#082e5d;color:#fff;font-weight:900;cursor:pointer}
+.myresult-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding:15px;border-radius:11px;background:#e8f2fb;color:#173f68}.myresult-list{display:grid;gap:13px}.myresult-card{padding:17px 18px;border:1px solid #d8e2ec;border-left:6px solid #71839a;border-radius:11px;background:#fff;box-shadow:0 6px 18px rgba(8,46,93,.06)}.myresult-card.passed{border-left-color:#21864d}.myresult-card.failed{border-left-color:#b62c3b}.myresult-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.myresult-card h3{margin:0;color:#082e5d;font-size:1rem}.myresult-status{padding:6px 10px;border-radius:999px;color:#fff;font-size:.72rem;font-weight:900;white-space:nowrap}.myresult-status.passed{background:#21864d}.myresult-status.failed{background:#b62c3b}.myresult-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:13px}.myresult-meta span{padding:9px;border-radius:7px;background:#f2f6fa;color:#607286;font-size:.72rem}.myresult-meta strong{display:block;margin-top:3px;color:#173b63;font-size:.86rem}.myresult-empty{padding:36px 18px;text-align:center;border:1px dashed #b9c9d8;border-radius:12px;background:#fff;color:#607286}
+@media(max-width:650px){.hero-take-exam-wrap{display:grid}.hero-take-exam-btn{width:100%}.myresult-body{padding:18px 13px}.myresult-meta{grid-template-columns:1fr}.myresult-card-head{display:block}.myresult-status{display:inline-block;margin-top:9px}}
 
 .hero-small{
     color:#d6ad45;
@@ -2975,6 +2986,7 @@ Nationality
 
 <div class="hero-take-exam-wrap">
 <button class="hero-take-exam-btn" onclick="enterGetiPortal('exam')">🎓 TAKE AN EXAM</button>
+<button class="hero-take-exam-btn hero-my-result-btn" onclick="openMyResult()">MY RESULT</button>
 </div>
 
 <div class="hero-small">
@@ -9067,6 +9079,81 @@ async function getiAttachmentSignedUrl(path){
 }
 
 /* =========================================================
+   MY RESULT — PRIVATE AUTHENTICATED STUDENT RESULTS
+========================================================= */
+
+async function openMyResult(){
+    const overlay=document.getElementById("myResultOverlay");
+    const body=document.getElementById("myResultBody");
+    overlay.classList.add("show");
+    body.innerHTML='<div class="myresult-empty">Checking your private GETI account...</div>';
+    try{
+        const {data:{session}}=await GETI_SB.auth.getSession();
+        if(session&&session.user){await loadMyResults(session);return;}
+    }catch(error){}
+    showMyResultLogin();
+}
+
+function closeMyResult(){
+    document.getElementById("myResultOverlay").classList.remove("show");
+}
+
+function showMyResultLogin(message){
+    document.getElementById("myResultBody").innerHTML=
+        '<p class="myresult-private-note"><strong>Private results:</strong> Sign in with your GETI account. Only examination results belonging to this authenticated account can be displayed.</p>'+
+        '<div class="myresult-login"><h2>Student Login</h2><p>Enter the same account used with GETI.</p>'+
+        '<input id="myResultEmail" type="email" autocomplete="email" placeholder="Email address">'+
+        '<input id="myResultPassword" type="password" autocomplete="current-password" placeholder="Password">'+
+        '<button type="button" onclick="loginMyResult()">VIEW MY RESULTS</button>'+
+        '<div id="myResultLoginMessage">'+(message?'<div class="error" style="margin-top:12px">'+escapeHTML(message)+'</div>':'')+'</div></div>';
+}
+
+async function loginMyResult(){
+    const email=document.getElementById("myResultEmail").value.trim().toLowerCase();
+    const password=document.getElementById("myResultPassword").value;
+    const message=document.getElementById("myResultLoginMessage");
+    if(!email||!password){message.innerHTML='<div class="error" style="margin-top:12px">Please enter your email and password.</div>';return;}
+    message.innerHTML='<div class="success" style="margin-top:12px">Signing in securely...</div>';
+    const {data,error}=await GETI_SB.auth.signInWithPassword({email:email,password:password});
+    if(error||!data.session){message.innerHTML='<div class="error" style="margin-top:12px">'+escapeHTML(error?.message||"Unable to sign in.")+'</div>';return;}
+    await loadMyResults(data.session);
+}
+
+async function loadMyResults(session){
+    const body=document.getElementById("myResultBody");
+    body.innerHTML='<div class="myresult-empty">Loading your private examination results...</div>';
+    try{
+        if(!session){const response=await GETI_SB.auth.getSession();session=response.data.session;}
+        if(!session||!session.access_token){showMyResultLogin("Your session has expired. Please sign in again.");return;}
+        const data=await getiFetchJson(GETI_EXAM_FUNCTION,{
+            method:"POST",
+            headers:{"Content-Type":"application/json","apikey":GETI_SUPABASE_KEY,"Authorization":"Bearer "+session.access_token},
+            body:JSON.stringify({action:"get_my_results"})
+        });
+        renderMyResults(data.results||[],session.user);
+    }catch(error){
+        if(/auth|session|jwt|unauthorized/i.test(String(error.message||error))){showMyResultLogin("Please sign in again to view your results.");return;}
+        body.innerHTML='<div class="myresult-empty">Unable to load your results. Please check your internet connection and try again.<button class="myresult-refresh" onclick="openMyResult()">TRY AGAIN</button></div>';
+    }
+}
+
+function renderMyResults(results,user){
+    const body=document.getElementById("myResultBody");
+    const email=escapeHTML(user&&user.email||"");
+    let html='<p class="myresult-private-note"><strong>Private account:</strong> These results are visible only after secure login and are not published on the public website.</p>'+
+        '<div class="myresult-summary"><span>Signed in as <strong>'+email+'</strong></span><span><strong>'+results.length+'</strong> result'+(results.length===1?'':'s')+'</span></div>';
+    if(!results.length){html+='<div class="myresult-empty"><strong>No completed examination result was found for this account.</strong><br>Complete an examination using the same email address, then return here.</div>';body.innerHTML=html;return;}
+    html+='<div class="myresult-list">';
+    results.forEach(function(result){
+        const passed=String(result.status||"").toUpperCase()==="PASSED";
+        const date=result.created_at?new Date(result.created_at).toLocaleDateString("en-GB",{year:"numeric",month:"long",day:"2-digit"}):"Not available";
+        html+='<article class="myresult-card '+(passed?'passed':'failed')+'"><div class="myresult-card-head"><h3>'+escapeHTML(result.program||"GETI Examination")+'</h3><span class="myresult-status '+(passed?'passed':'failed')+'">'+(passed?'PASSED':'NOT PASSED')+'</span></div>'+
+            '<div class="myresult-meta"><span>Final Score<strong>'+escapeHTML(String(result.percentage??0))+'%</strong></span><span>Candidate ID<strong>'+escapeHTML(result.candidate_id||"")+'</strong></span><span>Completion Date<strong>'+escapeHTML(date)+'</strong></span></div></article>';
+    });
+    body.innerHTML=html+'</div>';
+}
+
+/* =========================================================
    GET MY CERTIFICATE — REAL SUPABASE ACCOUNT + CHAT
 ========================================================= */
 
@@ -11458,6 +11545,16 @@ document.addEventListener("DOMContentLoaded",initGetiLibrary);
 document.addEventListener("DOMContentLoaded",renderGetiExamButtons);
 
 </script>
+
+<div id="myResultOverlay" class="myresult-overlay" role="dialog" aria-modal="true" aria-labelledby="myResultTitle">
+  <div class="myresult-shell">
+    <div class="myresult-head">
+      <strong id="myResultTitle">MY RESULT — PRIVATE STUDENT AREA</strong>
+      <button type="button" onclick="closeMyResult()" aria-label="Close my results">×</button>
+    </div>
+    <div id="myResultBody" class="myresult-body"></div>
+  </div>
+</div>
 
 
 <div id="getCertOverlay" class="getcert-overlay">
