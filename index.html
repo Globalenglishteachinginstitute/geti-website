@@ -2901,6 +2901,15 @@ input:focus,select:focus,textarea:focus{
 .partners-showcase-caption{padding:18px 22px;color:#173b66;font-weight:750;text-align:center;letter-spacing:.02em}
 @media(max-width:600px){.partners-showcase{padding:52px 0 18px}.partners-showcase-frame{border-radius:16px}.partners-showcase-caption{padding:14px;font-size:.92rem}}
 </style>
+
+<style id="geti-admin-certificate-register-style">
+.baam-certificate-register{max-width:880px;margin:0 auto;padding:24px;border:1px solid #d8e2ec;border-top:5px solid #c49a35;border-radius:16px;background:linear-gradient(180deg,#fff,#f8fbfe);box-shadow:0 14px 34px rgba(8,46,93,.09)}
+.baam-certificate-register h2{margin:0 0 7px;color:#082e5d;font-family:Georgia,"Times New Roman",serif}.baam-certificate-register>p{margin:0 0 20px;color:#5c6d80;line-height:1.65}
+.baam-certificate-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}.baam-certificate-field{display:flex;flex-direction:column;gap:6px}.baam-certificate-field.full{grid-column:1/-1}.baam-certificate-field label{color:#173d68;font-size:.78rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase}.baam-certificate-field input{width:100%;min-height:49px;padding:12px 14px;border:1px solid #c8d5e2;border-radius:9px;background:#fff;color:#17324f;font-size:.96rem}.baam-certificate-field input[readonly]{background:#eef4f9;color:#425d78;font-weight:800}.baam-certificate-note{grid-column:1/-1;padding:12px 14px;border-left:4px solid #c49a35;border-radius:7px;background:#fff8e5;color:#66501b;font-size:.82rem;line-height:1.55}.baam-certificate-submit{grid-column:1/-1;min-height:50px;border:0;border-radius:9px;padding:12px 18px;background:linear-gradient(135deg,#082e5d,#126cab);color:#fff;font-weight:900;letter-spacing:.04em;cursor:pointer;box-shadow:0 9px 20px rgba(8,46,93,.18)}.baam-certificate-submit:disabled{opacity:.6;cursor:wait;box-shadow:none}.baam-certificate-status{grid-column:1/-1;margin-top:2px}.baam-certificate-success-card{padding:16px 18px;border:1px solid #b9dfc4;border-left:5px solid #21864d;border-radius:10px;background:#effaf2;color:#225b35}.baam-certificate-success-card strong{color:#0f6633}.baam-certificate-id{display:inline-block;margin-top:6px;padding:6px 10px;border-radius:6px;background:#082e5d;color:#fff;font-family:"Courier New",monospace;font-weight:900;letter-spacing:.05em}
+@media(max-width:650px){.baam-certificate-register{padding:18px 14px}.baam-certificate-form{grid-template-columns:1fr}.baam-certificate-field.full,.baam-certificate-note,.baam-certificate-submit,.baam-certificate-status{grid-column:auto}}
+.baam-certificate-register.bulk{max-width:1180px}.baam-certificate-bulk-grid{grid-column:1/-1;display:grid;gap:10px}.baam-certificate-bulk-head,.baam-certificate-bulk-row{display:grid;grid-template-columns:52px 1.35fr 1fr 1.25fr;gap:10px;align-items:center}.baam-certificate-bulk-head{padding:0 10px;color:#52677e;font-size:.72rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase}.baam-certificate-bulk-row{padding:10px;border:1px solid #dce5ee;border-radius:10px;background:#fff}.baam-certificate-row-number{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#082e5d;color:#fff;font-weight:900}.baam-certificate-bulk-row input{width:100%;min-height:45px;padding:10px 12px;border:1px solid #c8d5e2;border-radius:8px;background:#fff;color:#17324f}.baam-certificate-preview-row{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:14px}.baam-certificate-count{grid-column:1/-1;padding:10px 12px;border-radius:8px;background:#edf5fc;color:#174b78;font-size:.82rem;font-weight:800}.baam-certificate-success-list{margin-top:10px;display:grid;gap:6px}.baam-certificate-success-item{padding:8px 10px;border-radius:7px;background:#fff;border:1px solid #cfe6d6;font-size:.82rem}.baam-certificate-success-item code{color:#082e5d;font-weight:900}@media(max-width:800px){.baam-certificate-bulk-head{display:none}.baam-certificate-bulk-row{grid-template-columns:42px 1fr}.baam-certificate-bulk-row input{grid-column:2}.baam-certificate-preview-row{grid-template-columns:1fr}}
+</style>
+
 </head>
 
 <body translate="no" class="notranslate">
@@ -8737,6 +8746,7 @@ function showBaamDashboard(){
         '<div class="baam-tabs">'+
         '<button id="baamTabMessages" class="baam-tab active" onclick="showBaamMessages()">MESSAGES</button>'+
         '<button id="baamTabResults" class="baam-tab" onclick="showBaamResults()">EXAM RESULTS</button>'+
+        '<button id="baamTabCertificateList" class="baam-tab" onclick="showBaamCertificateSender()">SEND IN LISTE CERTIFICATE</button>'+
         '<button id="baamTabRegistrations" class="baam-tab" onclick="showBaamRegistrations()">EXAM REGISTRATIONS</button>'+
         '<button id="baamTabTrash" class="baam-tab" onclick="showBaamRegistrationTrash()">TRASH</button>'+
         '<button id="baamTabPractice" class="baam-tab" onclick="showBaamPracticeGroup()">PRACTICING CONVERSATION</button>'+
@@ -11728,6 +11738,214 @@ function initGetiLibrary(){
 document.addEventListener("DOMContentLoaded",initGetiLibrary);
 
 document.addEventListener("DOMContentLoaded",renderGetiExamButtons);
+
+
+
+/* =========================================================
+   BAAM — SEND IN LISTE CERTIFICATE → GOOGLE SHEET
+   Bulk registration: up to 10 certificates at one time.
+   Uses the same Google Apps Script URL as public verification.
+   The Apps Script must support actions:
+   - next_certificate_id
+   - register_certificate
+   - register_certificates_bulk
+========================================================= */
+var baamCertificateBusy=false;
+
+function baamCertificateLocalDate(){
+    try{
+        return new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"2-digit"});
+    }catch(e){
+        return new Date().toISOString().slice(0,10);
+    }
+}
+
+function baamCertificateJsonp(action,payload){
+    payload=payload||{};
+    return new Promise(function(resolve,reject){
+        var callbackName="getiAdminCertificate_"+Date.now()+"_"+Math.random().toString(36).slice(2);
+        var script=document.createElement("script");
+        var finished=false;
+        var timer=setTimeout(function(){finish(new Error("Google Sheet server did not respond."));},22000);
+
+        function cleanup(){
+            clearTimeout(timer);
+            try{delete window[callbackName];}catch(e){window[callbackName]=undefined;}
+            if(script&&script.parentNode)script.parentNode.removeChild(script);
+        }
+        function finish(error,data){
+            if(finished)return;
+            finished=true;
+            cleanup();
+            if(error)reject(error);else resolve(data);
+        }
+
+        window[callbackName]=function(data){finish(null,data||{});};
+        var params=[
+            "action="+encodeURIComponent(action),
+            "callback="+encodeURIComponent(callbackName),
+            "_="+Date.now()
+        ];
+        Object.keys(payload).forEach(function(key){
+            if(payload[key]!==null && typeof payload[key]!=="undefined")params.push(encodeURIComponent(key)+"="+encodeURIComponent(String(payload[key])));
+        });
+        script.src=API_URL+"?"+params.join("&");
+        script.async=true;
+        script.onerror=function(){finish(new Error("Unable to connect to the GETI Google Sheet registration server."));};
+        document.body.appendChild(script);
+    });
+}
+
+function baamCertificateBulkRowsHTML(){
+    var rows="";
+    for(var i=1;i<=10;i++){
+        rows+=
+            '<div class="baam-certificate-bulk-row">'+
+            '<span class="baam-certificate-row-number">'+i+'</span>'+
+            '<input class="baamCertificateBulkName" data-row="'+i+'" autocomplete="off" placeholder="Full name">'+
+            '<input class="baamCertificateBulkNationality" data-row="'+i+'" autocomplete="off" placeholder="Nationality">'+
+            '<input class="baamCertificateBulkType" data-row="'+i+'" list="getiAdminCertificateTypes" autocomplete="off" placeholder="Certificate type">'+
+            '</div>';
+    }
+    return rows;
+}
+
+function showBaamCertificateSender(){
+    setBaamTab("baamTabCertificateList");
+    if(baamPollTimer){clearInterval(baamPollTimer);baamPollTimer=null;}
+    var content=document.getElementById("baamContent");
+    content.innerHTML=
+        '<section class="baam-certificate-register bulk">'+
+        '<h2>Send in Liste Certificate</h2>'+
+        '<p>You can register <strong>up to 10 certificates at the same time</strong>. Fill only the rows you need. Every saved certificate receives a consecutive automatic Certificate ID and the issue date is generated automatically.</p>'+
+        '<form class="baam-certificate-form" onsubmit="event.preventDefault();registerBaamCertificate();">'+
+        '<datalist id="getiAdminCertificateTypes">'+
+        '<option value="TEFL Certificate"><option value="TESOL Certificate"><option value="TESL Certificate"><option value="Certificate of Proficiency"><option value="English Language Proficiency Certificate"><option value="International English Teaching Certificate"><option value="Certificate of Completion"><option value="CPD Certificate">'+
+        '</datalist>'+
+        '<div class="baam-certificate-preview-row">'+
+        '<div class="baam-certificate-field"><label for="baamCertificateIdPreview">Next Certificate ID — Automatic</label><input id="baamCertificateIdPreview" readonly value="Checking Google Sheet…"></div>'+
+        '<div class="baam-certificate-field"><label for="baamCertificateDatePreview">Date — Automatic</label><input id="baamCertificateDatePreview" readonly value="'+escapeHTML(baamCertificateLocalDate())+'"></div>'+
+        '</div>'+
+        '<div class="baam-certificate-count" id="baamCertificateCount">0 of 10 rows ready to register.</div>'+
+        '<div class="baam-certificate-bulk-grid">'+
+        '<div class="baam-certificate-bulk-head"><span>#</span><span>Name</span><span>Nationality</span><span>Certificate Type</span></div>'+
+        baamCertificateBulkRowsHTML()+
+        '</div>'+
+        '<div class="baam-certificate-note">Only completed rows are sent. If the current highest ID is <strong>GETI-CERT000010</strong> and you register 10 people, they receive <strong>GETI-CERT000011</strong> through <strong>GETI-CERT000020</strong>. The server locks the registration while assigning IDs to prevent duplicates.</div>'+
+        '<button id="baamCertificateSubmit" class="baam-certificate-submit" type="submit">REGISTER UP TO 10 &amp; SEND TO GOOGLE SHEET</button>'+
+        '<div id="baamCertificateStatus" class="baam-certificate-status"></div>'+
+        '</form></section>';
+
+    document.querySelectorAll('.baamCertificateBulkName,.baamCertificateBulkNationality,.baamCertificateBulkType').forEach(function(el){
+        el.addEventListener('input',updateBaamCertificateBulkCount);
+    });
+    refreshBaamCertificateNextId();
+    updateBaamCertificateBulkCount();
+}
+
+function getBaamCertificateBulkRecords(validate){
+    var names=document.querySelectorAll('.baamCertificateBulkName');
+    var nationalities=document.querySelectorAll('.baamCertificateBulkNationality');
+    var types=document.querySelectorAll('.baamCertificateBulkType');
+    var records=[];
+    var incomplete=[];
+
+    for(var i=0;i<Math.min(10,names.length);i++){
+        var name=String(names[i].value||'').trim();
+        var nationality=String((nationalities[i]&&nationalities[i].value)||'').trim();
+        var certificateType=String((types[i]&&types[i].value)||'').trim();
+        var hasAny=!!(name||nationality||certificateType);
+        if(!hasAny)continue;
+        if(!name||!nationality||!certificateType){
+            incomplete.push(i+1);
+            continue;
+        }
+        records.push({name:name,nationality:nationality,certificateType:certificateType});
+    }
+
+    if(validate&&incomplete.length){
+        throw new Error('Complete Name, Nationality and Certificate Type on row'+(incomplete.length>1?'s ':' ')+incomplete.join(', ')+'.');
+    }
+    return records;
+}
+
+function updateBaamCertificateBulkCount(){
+    var box=document.getElementById('baamCertificateCount');
+    if(!box)return;
+    var count=0;
+    try{count=getBaamCertificateBulkRecords(false).length;}catch(e){}
+    box.textContent=count+' of 10 rows ready to register.';
+}
+
+async function refreshBaamCertificateNextId(){
+    var idBox=document.getElementById("baamCertificateIdPreview");
+    var dateBox=document.getElementById("baamCertificateDatePreview");
+    var status=document.getElementById("baamCertificateStatus");
+    if(!idBox)return;
+    idBox.value="Checking Google Sheet…";
+    if(dateBox)dateBox.value=baamCertificateLocalDate();
+    try{
+        var data=await baamCertificateJsonp("next_certificate_id",{});
+        if(!data||data.success===false)throw new Error((data&&data.message)||"Unable to calculate next certificate ID.");
+        idBox.value=data.id||data.next_id||"Generated when registered";
+        if(dateBox&&data.date)dateBox.value=data.date;
+        if(status)status.innerHTML="";
+    }catch(err){
+        idBox.value="Generated when registered";
+        if(status)status.innerHTML='<div class="error">'+escapeHTML(err.message||"Google Sheet registration is not enabled on the current Apps Script deployment.")+'</div>';
+    }
+}
+
+async function registerBaamCertificate(){
+    if(baamCertificateBusy)return;
+
+    var records;
+    try{
+        records=getBaamCertificateBulkRecords(true);
+    }catch(err){
+        alert(err.message||'Please complete the certificate rows.');
+        return;
+    }
+
+    if(!records.length){
+        alert('Please complete at least one certificate row.');
+        return;
+    }
+
+    var button=document.getElementById("baamCertificateSubmit");
+    var status=document.getElementById("baamCertificateStatus");
+    baamCertificateBusy=true;
+    if(button){button.disabled=true;button.textContent="REGISTERING "+records.length+" CERTIFICATE"+(records.length>1?'S':'')+"…";}
+    if(status)status.innerHTML='<div class="success">Saving '+records.length+' certificate'+(records.length>1?'s':'')+' in the official GETI Google Sheet…</div>';
+
+    try{
+        var data=await baamCertificateJsonp("register_certificates_bulk",{
+            recordsJSON:JSON.stringify(records)
+        });
+        if(!data||data.success===false)throw new Error((data&&data.message)||"Certificate registration failed.");
+
+        var saved=data.records||[];
+        var issueDate=data.date||data.issue_date||baamCertificateLocalDate();
+        var list=saved.map(function(item,index){
+            return '<div class="baam-certificate-success-item"><strong>'+(index+1)+'. '+escapeHTML(item.name||'')+'</strong> · '+escapeHTML(item.nationality||'')+' · '+escapeHTML(item.type||item.certificateType||'')+'<br><code>'+escapeHTML(item.id||item.certificate_id||'')+'</code></div>';
+        }).join('');
+
+        if(status)status.innerHTML=
+            '<div class="baam-certificate-success-card"><strong>'+Number(data.count||saved.length||records.length)+' certificate'+((data.count||saved.length||records.length)>1?'s':'')+' registered successfully in Google Sheet.</strong><br>Date: '+escapeHTML(issueDate)+
+            (data.first_id?'<br>IDs: <span class="baam-certificate-id">'+escapeHTML(data.first_id)+(data.last_id&&data.last_id!==data.first_id?' → '+escapeHTML(data.last_id):'')+'</span>':'')+
+            '<div class="baam-certificate-success-list">'+list+'</div></div>';
+
+        document.querySelectorAll('.baamCertificateBulkName,.baamCertificateBulkNationality,.baamCertificateBulkType').forEach(function(el){el.value='';});
+        updateBaamCertificateBulkCount();
+        setTimeout(refreshBaamCertificateNextId,700);
+
+    }catch(err){
+        if(status)status.innerHTML='<div class="error">'+escapeHTML(err.message||"Unable to save the certificates in Google Sheet.")+'</div>';
+    }finally{
+        baamCertificateBusy=false;
+        if(button){button.disabled=false;button.textContent="REGISTER UP TO 10 & SEND TO GOOGLE SHEET";}
+    }
+}
 
 </script>
 
