@@ -11743,7 +11743,7 @@ document.addEventListener("DOMContentLoaded",renderGetiExamButtons);
 
 /* =========================================================
    BAAM — SEND IN LISTE CERTIFICATE → GOOGLE SHEET
-   Bulk registration: up to 10 certificates at one time.
+   Bulk registration: up to 10 certificates at one time. Admin enters Name, Nationality and Certificate only.
    Uses the same Google Apps Script URL as public verification.
    The Apps Script must support actions:
    - next_certificate_id
@@ -11804,7 +11804,7 @@ function baamCertificateBulkRowsHTML(){
             '<span class="baam-certificate-row-number">'+i+'</span>'+
             '<input class="baamCertificateBulkName" data-row="'+i+'" autocomplete="off" placeholder="Full name">'+
             '<input class="baamCertificateBulkNationality" data-row="'+i+'" autocomplete="off" placeholder="Nationality">'+
-            '<input class="baamCertificateBulkType" data-row="'+i+'" list="getiAdminCertificateTypes" autocomplete="off" placeholder="Certificate type">'+
+            '<input class="baamCertificateBulkCertificate" data-row="'+i+'" autocomplete="off" placeholder="Certificate (e.g. TEFL120 hours)">'+
             '</div>';
     }
     return rows;
@@ -11817,26 +11817,23 @@ function showBaamCertificateSender(){
     content.innerHTML=
         '<section class="baam-certificate-register bulk">'+
         '<h2>Send in Liste Certificate</h2>'+
-        '<p>You can register <strong>up to 10 certificates at the same time</strong>. Fill only the rows you need. Every saved certificate receives a consecutive automatic Certificate ID and the issue date is generated automatically.</p>'+
+        '<p>You can register <strong>up to 10 certificates at the same time</strong>. Fill only <strong>Name, Nationality and Certificate</strong>. The server automatically creates the full official certificate description, Certificate Type, consecutive Certificate ID and issue date.</p>'+
         '<form class="baam-certificate-form" onsubmit="event.preventDefault();registerBaamCertificate();">'+
-        '<datalist id="getiAdminCertificateTypes">'+
-        '<option value="TEFL Certificate"><option value="TESOL Certificate"><option value="TESL Certificate"><option value="Certificate of Proficiency"><option value="English Language Proficiency Certificate"><option value="International English Teaching Certificate"><option value="Certificate of Completion"><option value="CPD Certificate">'+
-        '</datalist>'+
         '<div class="baam-certificate-preview-row">'+
         '<div class="baam-certificate-field"><label for="baamCertificateIdPreview">Next Certificate ID — Automatic</label><input id="baamCertificateIdPreview" readonly value="Checking Google Sheet…"></div>'+
         '<div class="baam-certificate-field"><label for="baamCertificateDatePreview">Date — Automatic</label><input id="baamCertificateDatePreview" readonly value="'+escapeHTML(baamCertificateLocalDate())+'"></div>'+
         '</div>'+
         '<div class="baam-certificate-count" id="baamCertificateCount">0 of 10 rows ready to register.</div>'+
         '<div class="baam-certificate-bulk-grid">'+
-        '<div class="baam-certificate-bulk-head"><span>#</span><span>Name</span><span>Nationality</span><span>Certificate Type</span></div>'+
+        '<div class="baam-certificate-bulk-head"><span>#</span><span>Name</span><span>Nationality</span><span>Certificate</span></div>'+
         baamCertificateBulkRowsHTML()+
         '</div>'+
-        '<div class="baam-certificate-note">Only completed rows are sent. If the current highest ID is <strong>GETI-CERT000010</strong> and you register 10 people, they receive <strong>GETI-CERT000011</strong> through <strong>GETI-CERT000020</strong>. The server locks the registration while assigning IDs to prevent duplicates.</div>'+
+        '<div class="baam-certificate-note">Enter a short certificate name such as <strong>TEFL120 hours</strong>, <strong>TESOL180 hours</strong>, <strong>TESL120 hours</strong> or <strong>CEFR B2 180 hours</strong>. The server converts it automatically into the full certificate description and the correct Certificate Type. Only completed rows are sent. Certificate ID and Date are automatic.</div>'+
         '<button id="baamCertificateSubmit" class="baam-certificate-submit" type="submit">REGISTER UP TO 10 &amp; SEND TO GOOGLE SHEET</button>'+
         '<div id="baamCertificateStatus" class="baam-certificate-status"></div>'+
         '</form></section>';
 
-    document.querySelectorAll('.baamCertificateBulkName,.baamCertificateBulkNationality,.baamCertificateBulkType').forEach(function(el){
+    document.querySelectorAll('.baamCertificateBulkName,.baamCertificateBulkNationality,.baamCertificateBulkCertificate').forEach(function(el){
         el.addEventListener('input',updateBaamCertificateBulkCount);
     });
     refreshBaamCertificateNextId();
@@ -11846,25 +11843,25 @@ function showBaamCertificateSender(){
 function getBaamCertificateBulkRecords(validate){
     var names=document.querySelectorAll('.baamCertificateBulkName');
     var nationalities=document.querySelectorAll('.baamCertificateBulkNationality');
-    var types=document.querySelectorAll('.baamCertificateBulkType');
+    var certificates=document.querySelectorAll('.baamCertificateBulkCertificate');
     var records=[];
     var incomplete=[];
 
     for(var i=0;i<Math.min(10,names.length);i++){
         var name=String(names[i].value||'').trim();
         var nationality=String((nationalities[i]&&nationalities[i].value)||'').trim();
-        var certificateType=String((types[i]&&types[i].value)||'').trim();
-        var hasAny=!!(name||nationality||certificateType);
+        var certificate=String((certificates[i]&&certificates[i].value)||'').trim();
+        var hasAny=!!(name||nationality||certificate);
         if(!hasAny)continue;
-        if(!name||!nationality||!certificateType){
+        if(!name||!nationality||!certificate){
             incomplete.push(i+1);
             continue;
         }
-        records.push({name:name,nationality:nationality,certificateType:certificateType});
+        records.push({name:name,nationality:nationality,certificate:certificate});
     }
 
     if(validate&&incomplete.length){
-        throw new Error('Complete Name, Nationality and Certificate Type on row'+(incomplete.length>1?'s ':' ')+incomplete.join(', ')+'.');
+        throw new Error('Complete Name, Nationality and Certificate on row'+(incomplete.length>1?'s ':' ')+incomplete.join(', ')+'.');
     }
     return records;
 }
@@ -11935,7 +11932,7 @@ async function registerBaamCertificate(){
             (data.first_id?'<br>IDs: <span class="baam-certificate-id">'+escapeHTML(data.first_id)+(data.last_id&&data.last_id!==data.first_id?' → '+escapeHTML(data.last_id):'')+'</span>':'')+
             '<div class="baam-certificate-success-list">'+list+'</div></div>';
 
-        document.querySelectorAll('.baamCertificateBulkName,.baamCertificateBulkNationality,.baamCertificateBulkType').forEach(function(el){el.value='';});
+        document.querySelectorAll('.baamCertificateBulkName,.baamCertificateBulkNationality,.baamCertificateBulkCertificate').forEach(function(el){el.value='';});
         updateBaamCertificateBulkCount();
         setTimeout(refreshBaamCertificateNextId,700);
 
