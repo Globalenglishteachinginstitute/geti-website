@@ -3167,6 +3167,37 @@ img{height:auto}
 @media(max-width:760px){.geti-200-resource-row,.geti-200-chapters{grid-template-columns:1fr}.geti-200-book-cover{padding:26px 20px}.geti-200-outline{padding:16px}}
 </style>
 
+
+<style id="geti-inside-all-exams-lessons-fix">
+/* Keep the existing GETI plan. Only fix the inside portal visibility and position. */
+body.geti-portal-mode > main#main-content{
+    display:block !important;
+    margin:0 !important;
+    padding:0 !important;
+}
+body.geti-portal-mode > main#main-content > section{
+    display:none !important;
+}
+body.geti-portal-mode > main#main-content > section.geti-portal-active{
+    display:block !important;
+    min-height:100vh !important;
+    margin:0 !important;
+    padding:20px 0 60px !important;
+}
+body.geti-portal-mode #geti-lessons.geti-portal-active > .container > .lesson-book-cover{
+    display:none !important;
+}
+body.geti-portal-mode #geti-lessons.geti-portal-active #lessonExamList,
+body.geti-portal-mode #geti-30-exams.geti-portal-active #geti30ExamList{
+    display:grid !important;
+    margin-top:0 !important;
+    align-items:stretch;
+}
+body.geti-portal-mode #geti-lessons.geti-portal-active .container,
+body.geti-portal-mode #geti-30-exams.geti-portal-active .container{
+    padding-top:0 !important;
+}
+</style>
 </head>
 
 <body translate="no" class="notranslate">
@@ -11871,6 +11902,81 @@ window.playLessonAudio=function(){const c=cfg(getiLessonState.exam);if(!c)return
 if(document.readyState!=="loading"){try{window.renderGetiExamButtons();}catch(e){}try{window.initGetiLessons();}catch(e){}}
 })();
 
+</script>
+
+<script id="geti-show-all-exams-lessons-inside-fix">
+(function(){
+    const nativeExamNames={
+        "French Language Exam":"Examen de langue française",
+        "Spanish Language Exam":"Examen de lengua española",
+        "German Language Exam":"Prüfung Deutsch",
+        "Japanese Language Exam":"日本語試験",
+        "Chinese Language Exam":"汉语考试",
+        "Korean Language Exam":"한국어 시험"
+    };
+    function displayExamName(examName){
+        return nativeExamNames[examName]||examName;
+    }
+
+    /* Show every exam as its own button: all 90 programmes are visible. */
+    window.renderGetiExamButtons=function(){
+        const list=document.getElementById("geti30ExamList");
+        if(!list || typeof GETI_30_EXAM_SUBJECTS==="undefined") return;
+        list.innerHTML="";
+        Object.keys(GETI_30_EXAM_SUBJECTS).forEach(function(examName){
+            const b=document.createElement("button");
+            b.className="exam30-btn";
+            b.textContent="🎓 "+displayExamName(examName);
+            b.onclick=function(){
+                if(examName==="TEFL Exam" && typeof openTeflCourseSelector==="function"){
+                    openTeflCourseSelector();
+                }else if(examName==="TESOL Exam" && typeof openTesolCourseSelector==="function"){
+                    openTesolCourseSelector();
+                }else if(examName==="TEYL Exam" && typeof openTeylCourseSelector==="function"){
+                    openTeylCourseSelector();
+                }else if(examName==="English Proficiency Exam" && typeof openEnglishAchievementSelector==="function"){
+                    openEnglishAchievementSelector();
+                }else if(typeof openGeneralExamHourSelector==="function"){
+                    openGeneralExamHourSelector(examName);
+                }else if(typeof openGeti30Registration==="function"){
+                    openGeti30Registration(examName);
+                }
+            };
+            list.appendChild(b);
+        });
+    };
+
+    /* LESSON uses the same complete 90-programme source as EXAM. */
+    window.initGetiLessons=function(){
+        const list=document.getElementById("lessonExamList");
+        if(!list || typeof GETI_30_EXAM_SUBJECTS==="undefined") return;
+        list.innerHTML="";
+        Object.keys(GETI_30_EXAM_SUBJECTS).forEach(function(examName){
+            const b=document.createElement("button");
+            b.className="lesson-exam-btn";
+            b.textContent="📚 "+displayExamName(examName);
+            b.onclick=function(){
+                if(typeof openLessonSubjects==="function") openLessonSubjects(examName);
+            };
+            list.appendChild(b);
+        });
+    };
+
+    /* Keep the existing plan; only make the selected portal the visible inside page. */
+    const oldEnter=window.enterGetiPortal;
+    window.enterGetiPortal=function(mode){
+        if(mode==="exam") window.renderGetiExamButtons();
+        if(mode==="lesson") window.initGetiLessons();
+        return oldEnter.apply(this,arguments);
+    };
+
+    function boot(){
+        try{window.renderGetiExamButtons();}catch(e){}
+        try{window.initGetiLessons();}catch(e){}
+    }
+    if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",boot);
+    else boot();
+})();
 </script>
 </body>
 </html>
