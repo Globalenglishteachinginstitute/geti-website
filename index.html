@@ -4709,8 +4709,8 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
           <div class="geti-first-auth-form geti-first-create-form">
             <label class="geti-first-field full"><span>Full Name</span><input id="getiFirstCreateName" type="text" autocomplete="name" placeholder="Your full name"></label>
             <label class="geti-first-field full"><span>Email Address</span><input id="getiFirstCreateEmail" type="email" autocomplete="email" placeholder="name@example.com"></label>
-            <label class="geti-first-field"><span>Password</span><input id="getiFirstCreatePassword" type="password" autocomplete="new-password" placeholder="Minimum 8 characters"></label>
-            <label class="geti-first-field"><span>Confirm Password</span><input id="getiFirstCreateConfirm" type="password" autocomplete="new-password" placeholder="Repeat password" onkeydown="if(event.key==='Enter'){event.preventDefault();getiFirstAreaCreateAccount();}"></label>
+            <label class="geti-first-field"><span>Password</span><input id="getiFirstCreatePassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="6 to 12 characters"></label>
+            <label class="geti-first-field"><span>Confirm Password</span><input id="getiFirstCreateConfirm" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="Repeat password" onkeydown="if(event.key==='Enter'){event.preventDefault();getiFirstAreaCreateAccount();}"></label>
             <button class="geti-first-primary-auth full" type="button" onclick="getiFirstAreaCreateAccount()">CREATE ACCOUNT</button>
           </div>
           <div id="getiFirstCreateStatus" class="geti-first-login-status" aria-live="polite"></div>
@@ -4743,8 +4743,8 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
           <div class="geti-first-forgot-heading"><h3>Reset Password</h3><p>Use the email address linked to your GETI account.</p></div>
           <div class="geti-first-auth-form geti-first-reset-form">
             <label class="geti-first-field full"><span>Email Address</span><input id="getiFirstResetEmail" type="email" autocomplete="email" placeholder="name@example.com"></label>
-            <label class="geti-first-field"><span>New Password</span><input id="getiFirstResetPassword" type="password" autocomplete="new-password" placeholder="Minimum 8 characters"></label>
-            <label class="geti-first-field"><span>Confirm Password</span><input id="getiFirstResetConfirm" type="password" autocomplete="new-password" placeholder="Repeat password"></label>
+            <label class="geti-first-field"><span>New Password</span><input id="getiFirstResetPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="6 to 12 characters"></label>
+            <label class="geti-first-field"><span>Confirm Password</span><input id="getiFirstResetConfirm" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="Repeat password"></label>
             <button class="geti-first-primary-auth full" type="button" onclick="getiFirstAreaResetPasswordInline()">RESET PASSWORD</button>
           </div>
           <div class="geti-first-account-links"><button type="button" onclick="getiSwitchFirstAccount('signin')">← BACK TO SIGN IN</button></div>
@@ -5762,7 +5762,7 @@ window.printVerifiedCertificate=function(){return false;};
     if(!fullName||!address||!password||!confirmPassword){status.innerHTML='<span class="bad">Please complete all fields.</span>';return;}
     if(fullName.length<2){status.innerHTML='<span class="bad">Please enter your real full name.</span>';return;}
     if(!emailSyntaxOk(address)){status.innerHTML='<span class="bad">Please enter a valid email address.</span>';return;}
-    if(password.length<8){status.innerHTML='<span class="bad">Password must contain at least 8 characters.</span>';return;}
+    if(password.length<6 || password.length>12){status.innerHTML='<span class="bad">Password must contain 6 to 12 characters.</span>';return;}
     if(password!==confirmPassword){status.innerHTML='<span class="bad">Passwords do not match.</span>';return;}
     status.innerHTML='<span class="ok">Checking the email and creating your account...</span>';
     try{
@@ -5810,7 +5810,7 @@ window.printVerifiedCertificate=function(){return false;};
     var fullName=name.value.trim().replace(/\s+/g,' '),address=email.value.trim().toLowerCase(),password=pw.value,confirmPassword=confirm.value;
     if(!fullName||!address||!password||!confirmPassword){msg.innerHTML='<div class="error">Please complete all fields.</div>';return;}
     if(!emailSyntaxOk(address)){msg.innerHTML='<div class="error">Please enter a valid email address.</div>';return;}
-    if(password.length<8){msg.innerHTML='<div class="error">Password must contain at least 8 characters.</div>';return;}
+    if(password.length<6 || password.length>12){msg.innerHTML='<div class="error">Password must contain 6 to 12 characters.</div>';return;}
     if(password!==confirmPassword){msg.innerHTML='<div class="error">Passwords do not match.</div>';return;}
     msg.innerHTML='<div class="success">Checking the email and creating your GETI account...</div>';
     try{
@@ -5840,7 +5840,7 @@ window.printVerifiedCertificate=function(){return false;};
   window.getiCompletePasswordRecovery=async function(){
     var pw=el('getiRecoveryNewPassword'),confirm=el('getiRecoveryConfirmPassword'),status=el('getiFirstResetStatus');
     if(!pw||!confirm||!status)return;
-    if(pw.value.length<8){status.innerHTML='<span class="bad">Password must contain at least 8 characters.</span>';return;}
+    if(pw.value.length<6 || pw.value.length>12){status.innerHTML='<span class="bad">Password must contain 6 to 12 characters.</span>';return;}
     if(pw.value!==confirm.value){status.innerHTML='<span class="bad">Passwords do not match.</span>';return;}
     status.innerHTML='<span class="ok">Updating your password...</span>';
     var r=await GETI_SB.auth.updateUser({password:pw.value});
@@ -5858,7 +5858,7 @@ window.printVerifiedCertificate=function(){return false;};
       var intro=document.querySelector('#getiFirstForgotPane .geti-first-forgot-heading p');
       if(heading)heading.textContent='Choose a New Password';
       if(intro)intro.textContent='Your recovery link is verified. Create a new password for your GETI account.';
-      if(form)form.innerHTML='<label class="geti-first-field full"><span>New Password</span><input id="getiRecoveryNewPassword" type="password" autocomplete="new-password" placeholder="Minimum 8 characters"></label><label class="geti-first-field full"><span>Confirm Password</span><input id="getiRecoveryConfirmPassword" type="password" autocomplete="new-password" placeholder="Repeat password"></label><button class="geti-first-primary-auth full" type="button" onclick="getiCompletePasswordRecovery()">UPDATE PASSWORD</button>';
+      if(form)form.innerHTML='<label class="geti-first-field full"><span>New Password</span><input id="getiRecoveryNewPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="6 to 12 characters"></label><label class="geti-first-field full"><span>Confirm Password</span><input id="getiRecoveryConfirmPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="Repeat password"></label><button class="geti-first-primary-auth full" type="button" onclick="getiCompletePasswordRecovery()">UPDATE PASSWORD</button>';
     },120);
   }
 
@@ -10778,7 +10778,6 @@ function showBaamDashboard(){
         '<button id="baamTabPublish" class="baam-tab" onclick="showBaamPublisher()">PUBLISH</button>'+
         '<button id="baamTabRegistrations" class="baam-tab" onclick="showBaamRegistrations()">EXAM REGISTRATIONS</button>'+
         '<button id="baamTabTrash" class="baam-tab" onclick="showBaamRegistrationTrash()">TRASH</button>'+
-        '<button id="baamTabAnalytics" class="baam-tab" onclick="showBaamAnalytics()">VISITOR STATISTICS</button>'+
         '<button id="baamTabBlocks" class="baam-tab" onclick="showBaamBlocks()">BLOCK / UNBLOCK EMAIL</button>'+
         '<button class="baam-tab" style="margin-left:auto;background:#a51e1e;color:#fff;" onclick="baamLogout()">LOG OUT</button>'+
         '</div>'+
@@ -11313,7 +11312,7 @@ function renderMyResults(results,user){
         const passed=String(result.status||"").toUpperCase()==="PASSED";
         const date=result.created_at?new Date(result.created_at).toLocaleDateString("en-GB",{year:"numeric",month:"long",day:"2-digit"}):"Not available";
         html+='<article class="myresult-card '+(passed?'passed':'failed')+'"><div class="myresult-card-head"><h3>'+escapeHTML(result.program||"GETI Examination")+'</h3><span class="myresult-status '+(passed?'passed':'failed')+'">'+(passed?'PASSED':'NOT PASSED')+'</span></div>'+
-            '<div class="myresult-meta"><span>Final Score<strong>'+escapeHTML(String(result.percentage??0))+'%</strong></span><span>Candidate ID<strong>'+escapeHTML(result.candidate_id||"")+'</strong></span><span>Completion Date<strong>'+escapeHTML(date)+'</strong></span></div></article>';
+            '<div class="myresult-meta"><span>Final Score<strong>'+escapeHTML(String(result.percentage??0))+'%</strong></span><span>Candidate ID<strong>'+escapeHTML(result.candidate_id||"")+'</strong></span>'+(result.certificate_id?'<span>Certificate ID<strong>'+escapeHTML(result.certificate_id)+'</strong></span>':'')+'<span>Completion Date<strong>'+escapeHTML(date)+'</strong></span></div></article>';
     });
     body.innerHTML=html+'</div>';
 }
@@ -12296,12 +12295,19 @@ async function submitGeti30Registration(){
     }
 
     try{
-        const check=await getiCheckExamEmail(email);
+        const check=await getiCheckExamEmail(email,geti30State.examTitle);
 
         if(check.blocked){
             alert(
                 "This email has been blocked by the GETI administrator and cannot take an examination."+
                 (check.reason ? "\nReason: "+check.reason : "")
+            );
+            return;
+        }
+        if(check.exam_passed){
+            alert(
+                "You already passed this examination. A passed GETI examination cannot be taken again."+
+                (check.certificate_id ? "\nCertificate ID: "+check.certificate_id : "")
             );
             return;
         }
@@ -12345,7 +12351,7 @@ async function submitGeti30Registration(){
 
     }catch(err){
         console.error("GETI registration error:",err);
-        alert("Registration could not be completed. Please check your internet connection and try again.");
+        alert(err && err.message ? err.message : "Registration could not be completed. Please check your internet connection and try again.");
     }finally{
         if(button && !geti30State.started){
             button.disabled=false;
@@ -13855,6 +13861,40 @@ body.geti-inside-portal-open #geti30ExamPanel,
 body.geti-inside-portal-open #lessonSubjectArea,
 body.geti-inside-portal-open #lessonPanel{scroll-margin-top:18px!important;}
 </style>
+
+<style id="geti-global-button-click-animation">
+/* GETI: subtle press animation for all button-style controls */
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+[role="button"],
+a.btn,
+a.button,
+.btn,
+.button {
+  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease !important;
+  transform-origin: center center;
+  -webkit-tap-highlight-color: transparent;
+}
+button:active,
+input[type="button"]:active,
+input[type="submit"]:active,
+input[type="reset"]:active,
+[role="button"]:active,
+a.btn:active,
+a.button:active,
+.btn:active,
+.button:active {
+  transform: translateY(1px) scale(.97) !important;
+  filter: brightness(.96);
+}
+@media (prefers-reduced-motion: reduce) {
+  button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"], a.btn, a.button, .btn, .button {
+    transition: none !important;
+  }
+}
+</style>
 </head><body>'+pages+'</body></html>';
   w.document.open();w.document.write(html);w.document.close();if(autoPrint)setTimeout(function(){w.focus();w.print();},500);return true;}
 const originalOpenPDF=window.openGetiLessonPDF;
@@ -14677,7 +14717,7 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
     if(!fullName||!address||!password||!confirmPassword){status.innerHTML='<span class="bad">Please complete all fields.</span>';return;}
     if(fullName.length<2){status.innerHTML='<span class="bad">Please enter your real full name.</span>';return;}
     if(!validEmail){status.innerHTML='<span class="bad">Please enter a valid email address.</span>';return;}
-    if(password.length<8){status.innerHTML='<span class="bad">Password must contain at least 8 characters.</span>';return;}
+    if(password.length<6 || password.length>12){status.innerHTML='<span class="bad">Password must contain 6 to 12 characters.</span>';return;}
     if(password!==confirmPassword){status.innerHTML='<span class="bad">Passwords do not match.</span>';return;}
     status.innerHTML='<span class="ok">Creating your secure GETI account...</span>';
     try{
@@ -14854,7 +14894,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     if(!fullName||!address||!password||!confirmPassword){status.innerHTML='<span class="bad">Please complete all fields.</span>';return;}
     if(fullName.length<2){status.innerHTML='<span class="bad">Please enter your real full name.</span>';return;}
     if(!validEmail(address)){status.innerHTML='<span class="bad">Please enter a valid email address.</span>';return;}
-    if(password.length<8){status.innerHTML='<span class="bad">Password must contain at least 8 characters.</span>';return;}
+    if(password.length<6 || password.length>12){status.innerHTML='<span class="bad">Password must contain 6 to 12 characters.</span>';return;}
     if(password!==confirmPassword){status.innerHTML='<span class="bad">Passwords do not match.</span>';return;}
     status.innerHTML='<span class="ok">Creating your secure GETI account and sending confirmation code...</span>';
     try{
@@ -15015,5 +15055,267 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
   };
 })();
 </script>
+
+
+<!-- GETI automatic exam registration + passed certificate issuance + permanent same-exam lock -->
+<script id="geti-auto-sheet-pass-certificate-lock">
+(function(){
+    if(window.__GETI_AUTO_PASS_CERT_LOCK__)return;
+    window.__GETI_AUTO_PASS_CERT_LOCK__=true;
+
+    const issuePromises={};
+
+    function norm(v){return String(v||"").trim();}
+    function certExamName(record){
+        let name=norm(record.exam||record.program||record.subject||"GETI Examination");
+        if(name && !/exam/i.test(name) && !/\bhour/i.test(name))name += " Exam";
+        return name;
+    }
+
+    /* Registration is mirrored immediately to the official ExamResults Google Sheet. */
+    window.saveGetiRegistrationToGoogleSheet=function(registrationResult,registration){
+        try{
+            registrationResult=registrationResult||{};
+            registration=registration||{};
+            const id=norm(registrationResult.candidate_id || (registrationResult.registration&&registrationResult.registration.candidate_id));
+            if(!id||!window.API_URL)return Promise.resolve(false);
+            const params=new URLSearchParams();
+            params.set("action","saveExam");
+            params.set("id",id);
+            params.set("name",norm(registration.full_name));
+            params.set("email",norm(registration.email).toLowerCase());
+            params.set("nationality",norm(registration.nationality));
+            params.set("country",norm(registration.country));
+            params.set("phone",norm(registration.phone));
+            params.set("institution",norm(registration.institution));
+            params.set("program",norm(registration.exam_name||registration.programme));
+            params.set("percentage","0");
+            params.set("totalScore","0");
+            params.set("totalQuestions","0");
+            params.set("status","REGISTERED");
+            params.set("subjectsJSON","[]");
+            params.set("examHours",norm(registration.option_track));
+            params.set("date",new Date().toISOString());
+            return fetch(API_URL,{method:"POST",mode:"no-cors",cache:"no-store",keepalive:true,headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:params.toString()})
+                .then(function(){return true;}).catch(function(){return false;});
+        }catch(e){console.warn("GETI Google Sheet registration sync skipped:",e);return Promise.resolve(false);}
+    };
+
+    /* Wrap the existing Supabase registration so every exam registration also reaches Google Sheet. */
+    const originalRegisterExam=window.getiRegisterExam;
+    if(typeof originalRegisterExam==="function"){
+        window.getiRegisterExam=async function(registration){
+            const result=await originalRegisterExam(registration);
+            try{window.saveGetiRegistrationToGoogleSheet(result,registration);}catch(e){}
+            return result;
+        };
+    }
+
+    /* Server check: manual admin block + permanent lock only for the exact exam already PASSED. */
+    window.getiCheckExamEmail=async function(email,exam){
+        try{
+            return await getiFetchJson(GETI_EXAM_FUNCTION,{
+                method:"POST",
+                headers:{"Content-Type":"application/json","apikey":GETI_SUPABASE_KEY},
+                body:JSON.stringify({action:"check_email",email:norm(email).toLowerCase(),exam:norm(exam)})
+            });
+        }catch(err){return {blocked:false,exam_passed:false,reason:""};}
+    };
+
+    /* Google Sheet final-result sync with Certificate ID when one has been issued. */
+    window.saveGetiResultToGoogleSheet=function(record){
+        try{
+            record=record||{};
+            const subjects=Array.isArray(record.subjects)?record.subjects:[];
+            let totalScore=Number(record.totalScore||0),totalQuestions=Number(record.totalQuestions||0);
+            if(!totalQuestions&&subjects.length){
+                totalScore=0;totalQuestions=0;
+                subjects.forEach(function(s){
+                    if(s&&isFinite(Number(s.score))){
+                        totalScore+=Number(s.score||0);
+                        const q=Number(s.totalQuestions||s.total||s.questions||15);
+                        totalQuestions+=isFinite(q)&&q>0?q:15;
+                    }
+                });
+            }
+            const params=new URLSearchParams();
+            params.set("action","saveExam");
+            params.set("id",norm(record.id||record.candidate_id));
+            params.set("name",norm(record.name));
+            params.set("email",norm(record.email).toLowerCase());
+            params.set("nationality",norm(record.nationality));
+            params.set("country",norm(record.country));
+            params.set("phone",norm(record.phone));
+            params.set("institution",norm(record.institution));
+            params.set("program",norm(record.exam||record.program));
+            params.set("percentage",String(Number(record.percentage||0)));
+            params.set("totalScore",String(totalScore));
+            params.set("totalQuestions",String(totalQuestions));
+            params.set("status",norm(record.status));
+            params.set("subjectsJSON",JSON.stringify(subjects));
+            params.set("examHours",norm(record.hours||record.examHours));
+            params.set("certificateId",norm(record.certificate_id));
+            params.set("certificate_id",norm(record.certificate_id));
+            params.set("date",norm(record.date||new Date().toISOString()));
+            if(!params.get("id")||!window.API_URL)return Promise.resolve(false);
+            return fetch(API_URL,{method:"POST",mode:"no-cors",cache:"no-store",keepalive:true,headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:params.toString()})
+              .then(function(){return true;})
+              .catch(function(){
+                  try{if(navigator.sendBeacon){return navigator.sendBeacon(API_URL,new Blob([params.toString()],{type:"application/x-www-form-urlencoded;charset=UTF-8"}));}}catch(e){}
+                  return false;
+              });
+        }catch(e){console.error("GETI Google Sheet result sync failed:",e);return Promise.resolve(false);}
+    };
+
+    async function rawSaveResult(record){
+        return await getiFetchJson(GETI_EXAM_FUNCTION,{
+            method:"POST",
+            headers:{"Content-Type":"application/json","apikey":GETI_SUPABASE_KEY},
+            body:JSON.stringify({
+                action:"save_result",
+                result:{
+                    candidate_id:record.id||record.candidate_id,
+                    name:record.name,email:record.email,nationality:record.nationality,country:record.country,
+                    phone:record.phone,institution:record.institution,
+                    program:record.exam||record.program,
+                    percentage:record.percentage,
+                    pass_mark:record.passMark||record.pass_mark||95,
+                    status:record.status,
+                    subjects:record.subjects
+                }
+            })
+        });
+    }
+
+    async function attachCertificate(candidateId,certificateId){
+        return await getiFetchJson(GETI_EXAM_FUNCTION,{
+            method:"POST",
+            headers:{"Content-Type":"application/json","apikey":GETI_SUPABASE_KEY},
+            body:JSON.stringify({action:"attach_certificate_id",candidate_id:candidateId,certificate_id:certificateId})
+        });
+    }
+
+    function extractCertificateId(data){
+        data=data||{};
+        const first=Array.isArray(data.records)&&data.records.length?data.records[0]:null;
+        return norm((first&&(first.id||first.certificate_id))||data.first_id||data.id||data.certificate_id);
+    }
+
+    function updateIssuedCertificateUI(record){
+        const id=norm(record&&record.certificate_id);
+        const candidate=norm(record&&(record.id||record.candidate_id));
+        ["examPanel","geti30ExamPanel"].forEach(function(panelId){
+            const panel=document.getElementById(panelId);if(!panel)return;
+            let row=panel.querySelector(".geti-auto-issued-certificate-id");
+            if(!row){
+                const box=panel.querySelector(".result-box");
+                if(!box)return;
+                row=document.createElement("p");
+                row.className="geti-auto-issued-certificate-id";
+                const candidateP=Array.from(box.querySelectorAll("p")).find(function(p){return /Candidate ID/i.test(p.textContent||"");});
+                if(candidateP&&candidateP.parentNode)candidateP.parentNode.insertBefore(row,candidateP.nextSibling);else box.insertBefore(row,box.firstChild);
+            }
+            row.innerHTML=id
+                ? 'Official Certificate ID: <strong>'+escapeHTML(id)+'</strong>'
+                : 'Official Certificate ID: <strong>Assigning automatically…</strong>';
+            if(candidate)row.dataset.candidateId=candidate;
+        });
+    }
+
+    async function issueCertificateForPassed(record,saveResponse){
+        const candidateId=norm(record.id||record.candidate_id);
+        if(!candidateId||String(record.status||"").toUpperCase()!=="PASSED")return null;
+        if(record.certificate_id){updateIssuedCertificateUI(record);return record.certificate_id;}
+        const existing=norm(saveResponse&&((saveResponse.result&&saveResponse.result.certificate_id)||saveResponse.certificate_id));
+        if(existing){record.certificate_id=existing;updateIssuedCertificateUI(record);window.saveGetiResultToGoogleSheet(record);return existing;}
+        if(issuePromises[candidateId])return issuePromises[candidateId];
+
+        updateIssuedCertificateUI(record);
+        issuePromises[candidateId]=(async function(){
+            try{
+                if(typeof baamCertificateJsonp!=="function")throw new Error("Google Sheet certificate service is unavailable.");
+                const certData=await baamCertificateJsonp("register_certificates_bulk",{
+                    recordsJSON:JSON.stringify([{name:norm(record.name),nationality:norm(record.nationality),certificate:certExamName(record)}])
+                });
+                if(!certData||certData.success===false)throw new Error((certData&&certData.message)||"Certificate registration failed.");
+                const certificateId=extractCertificateId(certData);
+                if(!certificateId)throw new Error("Google Sheet did not return a Certificate ID.");
+                record.certificate_id=certificateId;
+                try{await attachCertificate(candidateId,certificateId);}catch(e){console.warn("Certificate ID saved in Google Sheet but Supabase link failed:",e);}
+                try{window.saveGetiResultToGoogleSheet(record);}catch(e){}
+                try{
+                    const lists=["GETI_EXAM_RECORDS","GETI_30_EXAM_RECORDS"];
+                    lists.forEach(function(key){
+                        let arr=[];try{arr=JSON.parse(localStorage.getItem(key)||"[]")||[];}catch(e){}
+                        let changed=false;
+                        arr.forEach(function(x){if(norm(x.id||x.candidate_id)===candidateId){x.certificate_id=certificateId;changed=true;}});
+                        if(changed)localStorage.setItem(key,JSON.stringify(arr));
+                    });
+                }catch(e){}
+                updateIssuedCertificateUI(record);
+                try{if(typeof loadGetiPublicCertificateStats==="function")setTimeout(loadGetiPublicCertificateStats,800);}catch(e){}
+                return certificateId;
+            }catch(err){
+                console.error("GETI automatic certificate issuance failed:",err);
+                const panels=[document.getElementById("examPanel"),document.getElementById("geti30ExamPanel")];
+                panels.forEach(function(panel){
+                    const row=panel&&panel.querySelector(".geti-auto-issued-certificate-id");
+                    if(row)row.innerHTML='Official Certificate ID: <strong>Pending synchronization</strong>';
+                });
+                return null;
+            }finally{delete issuePromises[candidateId];}
+        })();
+        return issuePromises[candidateId];
+    }
+
+    /* Result save now returns server data and, on PASS, automatically issues the next Google Sheet Certificate ID. */
+    window.saveGetiResultToSupabase=async function(record){
+        try{
+            const response=await rawSaveResult(record);
+            if(String(record.status||"").toUpperCase()==="PASSED")issueCertificateForPassed(record,response);
+            return response;
+        }catch(err){console.error("GETI Supabase result sync failed:",err);return false;}
+    };
+
+    /* The older examination engine now also uses Supabase, so permanent same-exam pass locking applies to every exam engine. */
+    const originalSaveExamRecord=window.saveExamRecord;
+    if(typeof originalSaveExamRecord==="function"){
+        window.saveExamRecord=function(record){
+            originalSaveExamRecord(record);
+            try{window.saveGetiResultToSupabase(record);}catch(e){}
+        };
+    }
+
+    /* Render Certificate ID on both final result screens. */
+    const originalOldFinal=window.showFinalResult;
+    if(typeof originalOldFinal==="function"){
+        window.showFinalResult=function(){
+            const r=originalOldFinal.apply(this,arguments);
+            try{
+                if(window.examState&&examState.student){
+                    const recs=typeof getExamRecords==="function"?getExamRecords():[];
+                    const latest=recs.find(function(x){return norm(x.id)===norm(examState.student.id);});
+                    if(latest&&latest.status==="PASSED")updateIssuedCertificateUI(latest);
+                }
+            }catch(e){}
+            return r;
+        };
+    }
+
+    const originalShow30=window.showGeti30ActualResult;
+    if(typeof originalShow30==="function"){
+        window.showGeti30ActualResult=function(){
+            const r=originalShow30.apply(this,arguments);
+            try{if(window.geti30PendingFinalRecord&&geti30PendingFinalRecord.status==="PASSED")updateIssuedCertificateUI(geti30PendingFinalRecord);}catch(e){}
+            return r;
+        };
+    }
+})();
+</script>
+<style id="geti-auto-pass-cert-ui">
+.geti-auto-issued-certificate-id{margin:10px 0;padding:10px 12px;border:1px solid #d8e6f4;border-left:4px solid #c49a35;border-radius:7px;background:#f8fbfe;color:#173b62}
+.geti-auto-issued-certificate-id strong{color:#0b4f8a;letter-spacing:.02em}
+</style>
+
 </body>
 </html>
