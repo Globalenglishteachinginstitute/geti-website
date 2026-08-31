@@ -11142,6 +11142,9 @@ const GETI_SB = window.supabase.createClient(
     }
 );
 
+/* Expose the shared Supabase client for late account/OTP scripts. */
+window.GETI_SB = GETI_SB;
+
 let getiStudentChannel=null;
 let baamPollTimer=null;
 
@@ -14543,14 +14546,25 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
 
   async function getVerifiedSession(){
     try{
-      if(!window.GETI_SB || !GETI_SB.auth || typeof GETI_SB.auth.getSession!=='function') return null;
-      var response=await GETI_SB.auth.getSession();
-      var session=response && response.data ? response.data.session : null;
-      var user=session && session.user ? session.user : null;
-      if(!session || !user) return null;
-      /* GETI sign-in already requires a confirmed email; keep the same requirement here. */
-      if(!user.email_confirmed_at) return null;
-      return session;
+      if(window.GETI_SB && GETI_SB.auth && typeof GETI_SB.auth.getSession==='function'){
+        var response=await GETI_SB.auth.getSession();
+        var session=response && response.data ? response.data.session : null;
+        var user=session && session.user ? session.user : null;
+        if(session && user && user.email_confirmed_at) return session;
+      }
+    }catch(e){}
+    /* Fallback when the Supabase JS CDN is unavailable: validate the REST session directly. */
+    try{
+      var raw=localStorage.getItem('GETI_DIRECT_AUTH_SESSION') || localStorage.getItem('sb-syawyulrelrhjprnxdyn-auth-token');
+      if(!raw) return null;
+      var direct=JSON.parse(raw);
+      if(!direct || !direct.access_token) return null;
+      var rr=await fetch(GETI_SUPABASE_URL+'/auth/v1/user',{headers:{'apikey':GETI_SUPABASE_KEY,'Authorization':'Bearer '+direct.access_token}});
+      if(!rr.ok)return null;
+      var directUser=await rr.json();
+      if(!directUser || !directUser.email_confirmed_at)return null;
+      direct.user=directUser;
+      return direct;
     }catch(e){return null;}
   }
 
@@ -15316,6 +15330,107 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
 .geti-auto-issued-certificate-id{margin:10px 0;padding:10px 12px;border:1px solid #d8e6f4;border-left:4px solid #c49a35;border-radius:7px;background:#f8fbfe;color:#173b62}
 .geti-auto-issued-certificate-id strong{color:#0b4f8a;letter-spacing:.02em}
 </style>
+
+
+<script id="geti-final-confirmation-code-rest-fallback">
+(function(){
+  var confirmBusy=false;
+  function el(id){return document.getElementById(id);}
+  function esc(v){return String(v||'').replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];});}
+  function readPending(){
+    var email=String((el('getiFirstCreateEmail')||{}).value||'').trim().toLowerCase();
+    var password=String((el('getiFirstCreatePassword')||{}).value||'');
+    try{email=email||sessionStorage.getItem('GETI_PENDING_SIGNUP_EMAIL')||'';password=password||sessionStorage.getItem('GETI_PENDING_SIGNUP_PASSWORD')||'';}catch(e){}
+    return {email:email,password:password};
+  }
+  async function accountApi(body){
+    if(typeof getiFetchJson!=='function' || typeof GETI_ACCOUNT_FUNCTION==='undefined')throw new Error('GETI account service is unavailable.');
+    return getiFetchJson(GETI_ACCOUNT_FUNCTION,{method:'POST',headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY},body:JSON.stringify(body)});
+  }
+  function saveDirectSession(data){
+    if(!data||!data.access_token)return;
+    var session={access_token:data.access_token,refresh_token:data.refresh_token||'',token_type:data.token_type||'bearer',expires_in:Number(data.expires_in||3600),expires_at:Math.floor(Date.now()/1000)+Number(data.expires_in||3600),user:data.user||null};
+    try{localStorage.setItem('GETI_DIRECT_AUTH_SESSION',JSON.stringify(session));localStorage.setItem('sb-syawyulrelrhjprnxdyn-auth-token',JSON.stringify(session));localStorage.setItem('GETI_CERT_EVER_CREATED','yes');}catch(e){}
+  }
+  async function restSignIn(email,password){
+    var r=await fetch(GETI_SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY},body:JSON.stringify({email:email,password:password})});
+    var data={};try{data=await r.json();}catch(e){}
+    if(!r.ok)throw new Error(data.msg||data.message||data.error_description||data.error||'Unable to sign in.');
+    saveDirectSession(data);
+    return {data:{session:data,user:data.user},error:null};
+  }
+  async function secureSignIn(email,password){
+    try{
+      if(window.GETI_SB&&GETI_SB.auth&&typeof GETI_SB.auth.signInWithPassword==='function'){
+        var sr=await GETI_SB.auth.signInWithPassword({email:email,password:password});
+        if(!sr.error&&sr.data&&sr.data.session)return sr;
+        if(sr.error)throw sr.error;
+      }
+    }catch(e){
+      /* Continue with REST fallback below. */
+    }
+    return restSignIn(email,password);
+  }
+
+  var previousCreate=window.getiFirstAreaCreateAccount;
+  if(typeof previousCreate==='function'){
+    window.getiFirstAreaCreateAccount=async function(){
+      var email=String((el('getiFirstCreateEmail')||{}).value||'').trim().toLowerCase();
+      var password=String((el('getiFirstCreatePassword')||{}).value||'');
+      try{sessionStorage.setItem('GETI_PENDING_SIGNUP_EMAIL',email);sessionStorage.setItem('GETI_PENDING_SIGNUP_PASSWORD',password);}catch(e){}
+      return previousCreate.apply(this,arguments);
+    };
+  }
+
+  window.getiConfirmSignupCode=async function(){
+    if(confirmBusy)return;
+    var input=el('getiSignupCodeInput'),status=el('getiSignupCodeStatus'),btn=el('getiConfirmCodeBtn');
+    var code=String(input&&input.value||'').replace(/\s+/g,'').trim();
+    var pending=readPending();
+    if(!pending.email||!pending.password){if(status)status.innerHTML='<span class="bad">Please create your account again before entering the confirmation code.</span>';return;}
+    if(!/^\d{6,8}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the confirmation code from your email.</span>';return;}
+    confirmBusy=true;if(btn){btn.disabled=true;btn.textContent='CONFIRMING...';}if(input)input.disabled=true;
+    if(status)status.innerHTML='<span class="ok">Confirming your email...</span>';
+    var verifyError=null;
+    try{
+      try{await accountApi({action:'verify_signup_code',email:pending.email,code:code});}catch(e){verifyError=e;}
+      var signed=await secureSignIn(pending.email,pending.password);
+      if(signed.error)throw signed.error;
+      var user=signed.data&&signed.data.user;
+      if(!user||!user.email_confirmed_at){if(verifyError)throw verifyError;throw new Error('Email confirmation is not complete. Use the newest code sent to your email.');}
+      try{sessionStorage.removeItem('GETI_PENDING_SIGNUP_EMAIL');sessionStorage.removeItem('GETI_PENDING_SIGNUP_PASSWORD');}catch(e){}
+      if(status)status.innerHTML='<span class="ok">✓ Email confirmed. Your GETI account is ready.</span>';
+      var le=el('getiFirstLoginEmail');if(le)le.value=pending.email;
+      var ls=el('getiFirstLoginStatus');if(ls)ls.innerHTML='<span class="ok">✓ Account confirmed and signed in.</span>';
+      window.setTimeout(function(){if(typeof window.getiOpenSecondArea==='function')window.getiOpenSecondArea();},250);
+    }catch(e){
+      var message=String((e&&e.message)||'Invalid or expired confirmation code.');
+      if(status)status.innerHTML='<span class="bad">'+esc(message)+'</span>';
+    }finally{confirmBusy=false;if(btn){btn.disabled=false;btn.textContent='CONTINUE';}if(input)input.disabled=false;}
+  };
+
+  window.getiFirstAreaSignIn=async function(){
+    var email=el('getiFirstLoginEmail'),pw=el('getiFirstLoginPassword'),status=el('getiFirstLoginStatus');
+    if(!email||!pw||!status)return;
+    var address=String(email.value||'').trim().toLowerCase(),password=String(pw.value||'');
+    if(!address||!password){status.innerHTML='<span class="bad">Please enter your email and password.</span>';return;}
+    status.innerHTML='<span class="ok">Signing in securely...</span>';
+    try{
+      var sr=await secureSignIn(address,password);var user=sr.data&&sr.data.user;
+      if(!user||!user.email_confirmed_at)throw new Error('Email not confirmed. Enter the confirmation code sent to your email first.');
+      pw.value='';status.innerHTML='<span class="ok">✓ Signed in successfully.</span>';
+      window.setTimeout(function(){if(typeof window.getiOpenSecondArea==='function')window.getiOpenSecondArea();},250);
+    }catch(e){status.innerHTML='<span class="bad">'+esc(String((e&&e.message)||'Unable to sign in.'))+'</span>';}
+  };
+
+  var previousLogout=window.getiLogoutToFirstArea;
+  window.getiLogoutToFirstArea=async function(){
+    try{localStorage.removeItem('GETI_DIRECT_AUTH_SESSION');localStorage.removeItem('sb-syawyulrelrhjprnxdyn-auth-token');}catch(e){}
+    if(typeof previousLogout==='function')return previousLogout.apply(this,arguments);
+    return true;
+  };
+})();
+</script>
 
 </body>
 </html>
