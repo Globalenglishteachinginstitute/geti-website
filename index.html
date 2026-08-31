@@ -3947,6 +3947,15 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
 <style id="geti-old-verification-method-style">
 /* Restore the original GETI verification method: choose one search type, then use one search field. */
 .geti-home-v2-verify-oldmethod{margin-top:16px}
+.geti-verify-multi-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+.geti-verify-search-card{padding:14px;border:1px solid rgba(255,255,255,.22);border-radius:14px;background:rgba(255,255,255,.10);box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}
+.geti-verify-search-card.active{border-color:rgba(240,189,71,.92);background:rgba(255,255,255,.14);box-shadow:0 0 0 2px rgba(240,189,71,.14)}
+.geti-verify-search-label{display:block;margin:0 0 8px;color:#fff;font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+.geti-verify-search-row{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:10px;align-items:stretch}
+.geti-verify-search-row input{width:100%;height:50px;border:0;border-radius:10px;padding:0 14px;background:#fff;color:#1f3652;font-size:14px;outline:none;box-shadow:inset 0 0 0 1px rgba(8,46,93,.08)}
+.geti-verify-search-row input:focus{box-shadow:0 0 0 3px rgba(255,213,106,.28),inset 0 0 0 1px #f0bd47}
+.geti-verify-search-row .geti-home-v2-verify-btn{width:100%!important;height:50px!important;margin-top:0!important}
+
 .geti-home-v2-verify-caption{margin-bottom:8px;color:#eef5ff;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
 .geti-home-v2-verify-type{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;margin:0!important}
 .geti-home-v2-verify-type button{min-height:42px!important;border:1px solid rgba(255,255,255,.34)!important;border-radius:8px!important;background:rgba(255,255,255,.10)!important;color:#eef5ff!important;font-size:11px!important;font-weight:900!important;letter-spacing:.025em!important;cursor:pointer!important;transition:.18s ease!important}
@@ -3959,8 +3968,8 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
 @media(max-width:640px){
   .geti-home-v2-verify-type{grid-template-columns:1fr!important;gap:7px!important}
   .geti-home-v2-verify-type button{min-height:40px!important;font-size:10px!important}
-  .geti-home-v2-verify-searchrow{grid-template-columns:1fr!important;gap:8px!important}
-  .geti-home-v2-verify-searchrow input,.geti-home-v2-verify-searchrow .geti-home-v2-verify-btn{height:48px!important}
+  .geti-verify-search-row,.geti-home-v2-verify-searchrow{grid-template-columns:1fr!important;gap:8px!important}
+  .geti-verify-search-row input,.geti-verify-search-row .geti-home-v2-verify-btn,.geti-home-v2-verify-searchrow input,.geti-home-v2-verify-searchrow .geti-home-v2-verify-btn{height:48px!important}
 }
 </style>
 
@@ -4641,12 +4650,31 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
         <div><h2>Verify Your GETI Certificate</h2><p>Instant official verification of GETI certificate records.</p></div>
       </div>
       <div class="geti-home-v2-verify-oldmethod geti-auto-verify-box">
-        <div class="geti-auto-verify-intro">Enter a Certificate ID, certificate holder name, or nationality. GETI detects the search automatically.</div>
-        <div class="geti-home-v2-verify-searchrow geti-auto-verify-row">
-          <input id="verifyInput" type="text" autocomplete="off" placeholder="Certificate ID, Name or Nationality" aria-label="Search GETI certificate by ID, name or nationality" oninput="getiLiveCertificateSearch(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();verifyCertificate();}">
-          <button type="button" class="geti-home-v2-verify-btn" onclick="verifyCertificate()">VERIFY CERTIFICATE</button>
+        <div class="geti-auto-verify-intro">Use the correct search box below. Search Certificate ID in the Certificate ID box, search a holder name in the Name box, and search a nationality in the Nationality box.</div>
+        <div class="geti-verify-multi-grid">
+          <div class="geti-verify-search-card active" id="getiVerifyCardId">
+            <label class="geti-verify-search-label" for="verifyIdInput">Certificate ID</label>
+            <div class="geti-verify-search-row">
+              <input id="verifyIdInput" type="text" autocomplete="off" placeholder="Enter certificate ID" aria-label="Search GETI certificate by certificate ID" onfocus="setVerifyType('id')" oninput="getiLiveCertificateSearch(this.value,'id')" onkeydown="if(event.key==='Enter'){event.preventDefault();verifyCertificate('id');}">
+              <button type="button" class="geti-home-v2-verify-btn" onclick="verifyCertificate('id')">SEARCH ID</button>
+            </div>
+          </div>
+          <div class="geti-verify-search-card" id="getiVerifyCardName">
+            <label class="geti-verify-search-label" for="verifyNameInput">Certificate Holder Name</label>
+            <div class="geti-verify-search-row">
+              <input id="verifyNameInput" type="text" autocomplete="off" placeholder="Enter full name" aria-label="Search GETI certificate by certificate holder name" onfocus="setVerifyType('name')" oninput="getiLiveCertificateSearch(this.value,'name')" onkeydown="if(event.key==='Enter'){event.preventDefault();verifyCertificate('name');}">
+              <button type="button" class="geti-home-v2-verify-btn" onclick="verifyCertificate('name')">SEARCH NAME</button>
+            </div>
+          </div>
+          <div class="geti-verify-search-card" id="getiVerifyCardNationality">
+            <label class="geti-verify-search-label" for="verifyNationalityInput">Nationality</label>
+            <div class="geti-verify-search-row">
+              <input id="verifyNationalityInput" type="text" autocomplete="off" placeholder="Enter nationality" aria-label="Search GETI certificate by nationality" onfocus="setVerifyType('nationality')" oninput="getiLiveCertificateSearch(this.value,'nationality')" onkeydown="if(event.key==='Enter'){event.preventDefault();verifyCertificate('nationality');}">
+              <button type="button" class="geti-home-v2-verify-btn" onclick="verifyCertificate('nationality')">SEARCH NATIONALITY</button>
+            </div>
+          </div>
         </div>
-        <div class="geti-auto-verify-help">Automatic search · Results appear directly while you type · View only</div>
+        <div class="geti-auto-verify-help">Each box searches only its own information field.</div>
       </div>
       <div class="geti-home-v2-trust">Secure verification · GETI official record</div>
       <div id="verifyResult" aria-live="polite"></div>
@@ -4698,7 +4726,19 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
             <button class="geti-first-primary-auth full" type="button" onclick="getiFirstAreaCreateAccount()">CREATE ACCOUNT</button>
           </div>
           <div id="getiFirstCreateStatus" class="geti-first-login-status" aria-live="polite"></div>
-            <div class="geti-email-verify-note">A real email address is required. GETI sends a verification email and the account cannot be used until the email is confirmed.</div>
+          <div id="getiSignupCodeStep" class="geti-signup-code-step" hidden>
+            <div class="geti-signup-code-icon">✉</div>
+            <h3>Confirm Your Email</h3>
+            <p id="getiSignupCodeText">We sent a confirmation code to your email.</p>
+            <label class="geti-first-field full"><span>Confirmation Code</span><input id="getiSignupCodeInput" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="Enter confirmation code" onkeydown="if(event.key==='Enter'){event.preventDefault();getiConfirmSignupCode();}"></label>
+            <button class="geti-first-primary-auth full" type="button" onclick="getiConfirmSignupCode()">CONFIRM CODE</button>
+            <div class="geti-signup-code-actions">
+              <button type="button" id="getiResendCodeBtn" onclick="getiResendSignupCode()">RESEND CODE</button>
+              <button type="button" onclick="getiChangeSignupEmail()">CHANGE EMAIL</button>
+            </div>
+            <div id="getiSignupCodeStatus" class="geti-first-login-status" aria-live="polite"></div>
+          </div>
+          <div class="geti-email-verify-note">A real email address is required. GETI sends a confirmation code and the account cannot be used until the code is confirmed.</div>
         </div>
         <div class="geti-first-auth-pane geti-first-forgot-pane" id="getiFirstForgotPane" role="tabpanel" hidden>
           <div class="geti-first-forgot-heading"><h3>Reset Password</h3><p>Use the email address linked to your GETI account.</p></div>
@@ -4789,69 +4829,25 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
   <div class="geti-cert-info-shell">
     <section class="geti-cert-info-hero">
       <span class="geti-cert-info-eyebrow">Global English Teaching Institute</span>
-      <h1>GETI Certificates, TEFL, TESOL &amp; Professional Programs</h1>
-      <p>Learn about all GETI certificate pathways — TEFL, TESOL, TESL, TEYL, English Proficiency, English-specialized certificates and professional certificate programs. This page presents the main GETI certificate families, entry expectations, learning routes, sample certificates and online verification services.</p>
+      <h1>GETI Certificates: TEFL &amp; TESOL</h1>
+      <p>Learn about the main GETI certificate pathways for TEFL and TESOL. This page presents the TEFL and TESOL certificate options, entry expectations, learning routes, sample certificates and online verification services.</p>
       <div class="geti-cert-info-actions"><button type="button" class="primary" onclick="getiCertificateGoToAccount('create')">CREATE ACCOUNT &amp; START</button><button type="button" class="secondary" onclick="getiOpenCertificateVerification()">VERIFY A CERTIFICATE</button></div>
     </section>
     <section class="geti-cert-info-section"><h2>Features of GETI Certificates</h2><ul class="geti-cert-info-list"><li>International-style digital certificates across English teaching, English studies and professional development programs.</li><li>Flexible online study and examination pathways for hour-based certificate programs and program-based assessments.</li><li>Unique Certificate IDs can be issued for official online verification through the GETI verification system.</li><li>Certificate records can be searched by Certificate ID, holder name or nationality.</li><li>GETI certificate services are connected to lessons, examinations, student accounts, results and certificate request services.</li></ul></section>
     <section class="geti-cert-info-section"><h2>General Entry Requirements for GETI Certificates</h2><ul class="geti-cert-info-list"><li>Ability to follow the language of the selected program and complete online study tasks.</li><li>No specific nationality is required to study through the GETI online platform.</li><li>A university degree is not required for general entry unless a specific employer, authority or external destination later requests one.</li><li>An internet-connected phone, tablet or computer is required for lessons, assessments, account access and certificate services.</li></ul></section>
-    <section class="geti-cert-info-section"><h2>Available GETI Certificate Categories</h2>
+    <section class="geti-cert-info-section"><h2>Available GETI Certificates</h2>
       <div class="geti-cert-program-group">
-        <h3>1. English Teaching Certificates</h3>
-        <p>Hour-based and specialist teaching certificates for future English teachers and trainers. Many of these can be followed through pathways such as 20, 40, 60, 80, 100, 120, 140, 150, 180, 200, 250, 300 and 420 hours depending on the program.</p>
+        <h3>English Teaching Certificates</h3>
+        <p>GETI currently highlights two main certificate pathways on this page: TEFL and TESOL. These pathways are designed for future English teachers and trainers and can be followed through hour-based options such as 20, 40, 60, 80, 100, 120, 140, 150, 180, 200, 250, 300 and 420 hours depending on the selected exam option.</p>
         <div class="geti-cert-badge-grid">
           <div class="geti-cert-badge"><span>TEFL<small>Teaching English as a Foreign Language</small></span></div>
           <div class="geti-cert-badge"><span>TESOL<small>Teaching English to Speakers of Other Languages</small></span></div>
-          <div class="geti-cert-badge"><span>TESL<small>Teaching English as a Second Language</small></span></div>
-          <div class="geti-cert-badge"><span>TEYL<small>Teaching English to Young Learners</small></span></div>
-          <div class="geti-cert-badge"><span>TEAL<small>Teaching English as an Additional Language</small></span></div>
-          <div class="geti-cert-badge"><span>TBE<small>Teaching Business English</small></span></div>
-          <div class="geti-cert-badge"><span>TIELTS<small>Teaching IELTS Preparation</small></span></div>
-          <div class="geti-cert-badge"><span>Teaching ESP<small>English for Specific Purposes</small></span></div>
-          <div class="geti-cert-badge"><span>Teaching EAP<small>English for Academic Purposes</small></span></div>
-          <div class="geti-cert-badge"><span>Online English Teaching<small>Virtual teaching practice</small></span></div>
-          <div class="geti-cert-badge"><span>English Grammar Teaching<small>Grammar instruction</small></span></div>
-          <div class="geti-cert-badge"><span>English Pronunciation Teaching<small>Pronunciation instruction</small></span></div>
-          <div class="geti-cert-badge"><span>Classroom Management<small>Teaching management skills</small></span></div>
-          <div class="geti-cert-badge"><span>English Language Assessment<small>Testing and evaluation</small></span></div>
-          <div class="geti-cert-badge"><span>Teaching Adults<small>Adult learner instruction</small></span></div>
-          <div class="geti-cert-badge"><span>Teaching Teenagers<small>Teen learner instruction</small></span></div>
-          <div class="geti-cert-badge"><span>Inclusive English Language Teaching<small>Inclusive classroom practice</small></span></div>
-        </div>
-      </div>
-      <div class="geti-cert-program-group">
-        <h3>2. English Studies &amp; Proficiency Certificates</h3>
-        <p>Certificates designed to strengthen English ability, academic English, professional English and English communication in different contexts.</p>
-        <div class="geti-cert-badge-grid">
-          <div class="geti-cert-badge"><span>English Proficiency<small>CEFR-style language achievement</small></span></div>
-          <div class="geti-cert-badge"><span>Business English<small>English for business settings</small></span></div>
-          <div class="geti-cert-badge"><span>English Literature<small>Literary reading and analysis</small></span></div>
-          <div class="geti-cert-badge"><span>Legal English<small>English for law and legal contexts</small></span></div>
-          <div class="geti-cert-badge"><span>EAP<small>English for Academic Purposes</small></span></div>
-          <div class="geti-cert-badge"><span>ESP<small>English for Specific Purposes</small></span></div>
-          <div class="geti-cert-badge"><span>Call Center English<small>Customer service communication</small></span></div>
-        </div>
-      </div>
-      <div class="geti-cert-program-group">
-        <h3>3. Professional Certificate Programs</h3>
-        <p>Applied professional programs connected to tourism, communication, leadership, entrepreneurship, management, technology and educational studies.</p>
-        <div class="geti-cert-badge-grid">
-          <div class="geti-cert-badge"><span>Tour Guide Formation<small>Tour guide fundamentals</small></span></div>
-          <div class="geti-cert-badge"><span>International Cuisine<small>Culinary and hospitality studies</small></span></div>
-          <div class="geti-cert-badge"><span>Digital Marketing<small>Modern marketing tools and strategy</small></span></div>
-          <div class="geti-cert-badge"><span>Business Communication<small>Professional written and spoken communication</small></span></div>
-          <div class="geti-cert-badge"><span>Tourism<small>Travel and tourism studies</small></span></div>
-          <div class="geti-cert-badge"><span>Management<small>Core management principles</small></span></div>
-          <div class="geti-cert-badge"><span>Computer Science<small>Computing and digital foundations</small></span></div>
-          <div class="geti-cert-badge"><span>Leadership<small>Leadership and team direction</small></span></div>
-          <div class="geti-cert-badge"><span>Entrepreneurship<small>Business creation and innovation</small></span></div>
-          <div class="geti-cert-badge"><span>Educational Psychology<small>Learning behaviour and pedagogy</small></span></div>
         </div>
       </div>
     </section>
-    <section class="geti-cert-info-section"><h2>How should I start a GETI certificate program?</h2><div class="geti-cert-route-grid"><div class="geti-cert-route-step"><strong>Step 1 — Create a Student Account</strong><p>Open a GETI account to access lessons, exams, results and certificate services.</p></div><div class="geti-cert-route-step"><strong>Step 2 — Choose Your Program</strong><p>Select TEFL, TESOL, English Proficiency or another GETI certificate pathway that matches your goal.</p></div><div class="geti-cert-route-step"><strong>Step 3 — Study &amp; Complete Assessments</strong><p>Follow the lessons, complete examinations and submit the required tasks connected to your selected program.</p></div><div class="geti-cert-route-step"><strong>Step 4 — Receive &amp; Verify Your Certificate</strong><p>After passing, use GETI result and certificate services, then verify the issued record online with the Certificate ID.</p></div></div><div class="geti-cert-start-box"><p>Start with any GETI pathway — TEFL, TESOL, TEYL, English Proficiency or one of the professional certificate programs.</p><button type="button" onclick="getiCertificateGoToAccount('create')">CREATE ACCOUNT &amp; START</button></div></section>
-    <section class="geti-cert-info-section"><h2>Program Breakdown</h2><div class="geti-cert-course-grid"><div>Lesson Planning &amp; Teaching Skills</div><div>Listening, Reading, Speaking &amp; Writing</div><div>Grammar, Pronunciation &amp; Communication</div><div>Assessment, Feedback &amp; Classroom Practice</div><div>Professional Skills, Tourism, Management &amp; Leadership</div><div>Computer Science, Digital Tools &amp; Applied Knowledge</div></div></section>
-    <section class="geti-cert-info-section" id="getiCertificateSamples"><div class="geti-cert-sample-intro"><div><h2>What Will GETI Certificates Look Like?</h2><p>Below are small sample views of the certificate formats used across GETI teaching, proficiency and professional certificate programs.</p></div></div><div id="getiCertificateSampleGrid" class="geti-cert-sample-grid" aria-live="polite"></div><p class="geti-cert-sample-note">Samples are shown for reference only. Official issued certificates display the learner's name, certificate title, issue date, Certificate ID and verification data associated with the GETI record.</p></section>
+    <section class="geti-cert-info-section"><h2>How should I start a GETI certificate program?</h2><div class="geti-cert-route-grid"><div class="geti-cert-route-step"><strong>Step 1 — Create a Student Account</strong><p>Open a GETI account to access lessons, exams, results and certificate services.</p></div><div class="geti-cert-route-step"><strong>Step 2 — Choose Your Program</strong><p>Select either the TEFL or TESOL pathway that matches your learning goal.</p></div><div class="geti-cert-route-step"><strong>Step 3 — Study &amp; Complete Assessments</strong><p>Follow the lessons and complete the examinations connected to your selected TEFL or TESOL program.</p></div><div class="geti-cert-route-step"><strong>Step 4 — Receive &amp; Verify Your Certificate</strong><p>After passing, use GETI result and certificate services, then verify the issued record online with the Certificate ID.</p></div></div><div class="geti-cert-start-box"><p>Start with one of the main GETI certificate pathways: TEFL or TESOL.</p><button type="button" onclick="getiCertificateGoToAccount('create')">CREATE ACCOUNT &amp; START</button></div></section>
+    <section class="geti-cert-info-section"><h2>Program Breakdown</h2><div class="geti-cert-course-grid"><div>Lesson Planning &amp; Teaching Skills</div><div>Listening, Reading, Speaking &amp; Writing</div><div>Grammar, Pronunciation &amp; Communication</div><div>Assessment, Feedback &amp; Classroom Practice</div><div>Teaching Methodology &amp; Classroom Strategies</div><div>Practical English Teaching Development</div></div></section>
+    <section class="geti-cert-info-section" id="getiCertificateSamples"><div class="geti-cert-sample-intro"><div><h2>What Will GETI Certificates Look Like?</h2><p>Below are small sample views of the TEFL and TESOL certificate formats used by GETI.</p></div></div><div id="getiCertificateSampleGrid" class="geti-cert-sample-grid" aria-live="polite"></div><p class="geti-cert-sample-note">Samples are shown for reference only. Official issued certificates display the learner's name, certificate title, issue date, Certificate ID and verification data associated with the GETI record.</p></section>
     <section class="geti-cert-info-section"><div class="geti-cert-verify-box"><div><h3>Verify a GETI Certificate</h3><p>Use the official GETI verification form to search any GETI certificate by Certificate ID, holder name or nationality.</p></div><button type="button" onclick="getiOpenCertificateVerification()">CERTIFICATE VERIFICATION</button></div></section>
   </div>
 </section>
@@ -5273,24 +5269,32 @@ document
    CERTIFICATE VERIFICATION TYPE
 ========================================================= */
 
+function getiVerifyTypeToInputId(type){
+if(type==="name")return "verifyNameInput";
+if(type==="nationality")return "verifyNationalityInput";
+return "verifyIdInput";
+}
+
+function getiGetVerifyValue(type){
+var input=document.getElementById(getiVerifyTypeToInputId(type));
+return String(input&&input.value||"").trim();
+}
+
+function getiHighlightVerifyCard(type){
+var cards={id:document.getElementById('getiVerifyCardId'),name:document.getElementById('getiVerifyCardName'),nationality:document.getElementById('getiVerifyCardNationality')};
+Object.keys(cards).forEach(function(key){if(cards[key])cards[key].classList.toggle('active',key===type);});
+}
+
 function setVerifyType(type){
-/* Compatibility for old verification links. The visible selector has been removed. */
-verifyType=type||"auto";
-var input=document.getElementById("verifyInput");
-if(input)input.placeholder="Certificate ID, Name or Nationality";
+verifyType=(type==="name"||type==="nationality"||type==="id")?type:"id";
+getiHighlightVerifyCard(verifyType);
 }
 
 /* =========================================================
-CERTIFICATE VERIFICATION — AUTOMATIC ID / NAME / NATIONALITY
+CERTIFICATE VERIFICATION — SEPARATE ID / NAME / COUNTRY SEARCH
 ========================================================= */
 var getiVerificationSerial=0;
 var getiVerificationLiveTimer=null;
-
-function getiVerificationSearchTypes(value){
-var v=String(value||"").trim();
-if(/^GETI[\s-]*CERT/i.test(v))return ["id"];
-return ["name","nationality","id"];
-}
 
 function getiVerificationRequest(type,value,serial){
 return new Promise(function(resolve,reject){
@@ -5320,41 +5324,45 @@ document.body.appendChild(script);
 });
 }
 
-async function verifyCertificate(){
-var input=document.getElementById("verifyInput");
+function getiDetectVerifyType(){
+var idValue=getiGetVerifyValue('id');
+var nameValue=getiGetVerifyValue('name');
+var countryValue=getiGetVerifyValue('nationality');
+if(idValue)return 'id';
+if(nameValue)return 'name';
+if(countryValue)return 'nationality';
+return verifyType||'id';
+}
+
+async function verifyCertificate(type){
 var box=document.getElementById("verifyResult");
-var value=String(input&&input.value||"").trim();
+var chosenType=(type==="name"||type==="nationality"||type==="id")?type:getiDetectVerifyType();
+var value=getiGetVerifyValue(chosenType);
 var serial=++getiVerificationSerial;
+setVerifyType(chosenType);
 if(!value){if(box)box.innerHTML="";return;}
 if(box)box.innerHTML='<div class="success">⏳ Searching GETI certificate records...</div>';
-var types=getiVerificationSearchTypes(value);
-verifyType="auto";
-var settled=await Promise.allSettled(types.map(function(type){return getiVerificationRequest(type,value,serial);}));
+var settled=await Promise.allSettled([getiVerificationRequest(chosenType,value,serial)]);
 if(serial!==getiVerificationSerial)return;
-var successfulResponses=[];
-var records=[];
-settled.forEach(function(item){
-if(item.status!=="fulfilled")return;
-var response=item.value&&item.value.data;
-if(!response)return;
-successfulResponses.push(response);
-if(response.success&&Array.isArray(response.results))records=records.concat(response.results);
-});
-if(!successfulResponses.length){if(box)box.innerHTML='<div class="error">❌ Unable to connect to GETI verification server.</div>';return;}
+var response=(settled[0]&&settled[0].status==='fulfilled'&&settled[0].value&&settled[0].value.data)||null;
+if(!response){if(box)box.innerHTML='<div class="error">❌ Unable to connect to GETI verification server.</div>';return;}
+var records=(response.success&&Array.isArray(response.results))?response.results.slice():[];
 var seen={};
 records=records.filter(function(record){
 var key=String(record&&record.id||"").trim().toUpperCase();
 if(!key)key=[record&&record.name,record&&record.nationality,record&&record.certificate].join("|").toUpperCase();
 if(seen[key])return false;seen[key]=true;return true;
 }).sort(function(a,b){return String(a&&a.name||"").localeCompare(String(b&&b.name||""),undefined,{sensitivity:"base"});});
-displayVerificationResults({success:true,results:records,automatic:true,query:value});
+displayVerificationResults({success:true,results:records,query:value});
 }
 
-function getiLiveCertificateSearch(value){
+function getiLiveCertificateSearch(value,type){
 clearTimeout(getiVerificationLiveTimer);
 var box=document.getElementById("verifyResult");
+var activeType=(type==="name"||type==="nationality"||type==="id")?type:'id';
+setVerifyType(activeType);
 if(!String(value||"").trim()){++getiVerificationSerial;if(box)box.innerHTML="";return;}
-getiVerificationLiveTimer=setTimeout(function(){verifyCertificate();},420);
+getiVerificationLiveTimer=setTimeout(function(){verifyCertificate(activeType);},420);
 }
 
 function displayVerificationResults(data){
@@ -5402,7 +5410,7 @@ return;
 
 }
 
-var searchValue=String((document.getElementById("verifyInput")||{}).value||"").trim();
+var searchValue=getiGetVerifyValue(verifyType);
 var resultLabel=' certificate(s) found.';
 if(verifyType==="name"){
 resultLabel=' matching certificate holder(s) found for "'+escapeHTML(searchValue)+'".';
@@ -5695,39 +5703,7 @@ win.document.close();
     if(!grid||typeof window.buildVerifiedCertificateSection!=='function')return;
     var samples=[
       {label:'TEFL Certificate',sub:'Teaching English as a Foreign Language',record:{id:'GETI-CERT000001',name:'GETI SAMPLE',certificate:'TEFL 120-Hour Teaching English as a Foreign Language',hours:'120',issue_date:'2026-08-30'}},
-      {label:'TESOL Certificate',sub:'Teaching English to Speakers of Other Languages',record:{id:'GETI-CERT000002',name:'GETI SAMPLE',certificate:'TESOL 120-Hour Teaching English to Speakers of Other Languages',hours:'120',issue_date:'2026-08-30'}},
-      {label:'TESL Certificate',sub:'Teaching English as a Second Language',record:{id:'GETI-CERT000003',name:'GETI SAMPLE',certificate:'TESL 120-Hour Teaching English as a Second Language',hours:'120',issue_date:'2026-08-30'}},
-      {label:'TEYL Certificate',sub:'Teaching English to Young Learners',record:{id:'GETI-CERT000004',name:'GETI SAMPLE',certificate:'TEYL 120-Hour Teaching English to Young Learners',hours:'120',issue_date:'2026-08-30'}},
-      {label:'English Proficiency Certificate',sub:'CEFR English Language Proficiency',record:{id:'GETI-CERT000005',name:'GETI SAMPLE',certificate:'English Language Proficiency Certificate',level:'C1',issue_date:'2026-08-30'}},
-      {label:'Business English Certificate',sub:'Professional English communication',record:{id:'GETI-CERT000006',name:'GETI SAMPLE',certificate:'Business English Certificate',issue_date:'2026-08-30'}},
-      {label:'English Literature Certificate',sub:'Literary studies in English',record:{id:'GETI-CERT000007',name:'GETI SAMPLE',certificate:'English Literature Certificate',issue_date:'2026-08-30'}},
-      {label:'Legal English Certificate',sub:'English for legal contexts',record:{id:'GETI-CERT000008',name:'GETI SAMPLE',certificate:'Legal English Certificate',issue_date:'2026-08-30'}},
-      {label:'EAP Certificate',sub:'English for Academic Purposes',record:{id:'GETI-CERT000009',name:'GETI SAMPLE',certificate:'English for Academic Purposes Certificate',issue_date:'2026-08-30'}},
-      {label:'ESP Certificate',sub:'English for Specific Purposes',record:{id:'GETI-CERT000010',name:'GETI SAMPLE',certificate:'English for Specific Purposes Certificate',issue_date:'2026-08-30'}},
-      {label:'Call Center English Certificate',sub:'Customer service English',record:{id:'GETI-CERT000011',name:'GETI SAMPLE',certificate:'Call Center English Certificate',issue_date:'2026-08-30'}},
-      {label:'TEAL Certificate',sub:'Teaching English as an Additional Language',record:{id:'GETI-CERT000012',name:'GETI SAMPLE',certificate:'TEAL Teaching English as an Additional Language Certificate',issue_date:'2026-08-30'}},
-      {label:'TBE Certificate',sub:'Teaching Business English',record:{id:'GETI-CERT000013',name:'GETI SAMPLE',certificate:'TBE Teaching Business English Certificate',issue_date:'2026-08-30'}},
-      {label:'Teaching ESP Certificate',sub:'Teaching English for Specific Purposes',record:{id:'GETI-CERT000014',name:'GETI SAMPLE',certificate:'Teaching English for Specific Purposes Certificate',issue_date:'2026-08-30'}},
-      {label:'Teaching EAP Certificate',sub:'Teaching English for Academic Purposes',record:{id:'GETI-CERT000015',name:'GETI SAMPLE',certificate:'Teaching English for Academic Purposes Certificate',issue_date:'2026-08-30'}},
-      {label:'TIELTS Certificate',sub:'Teaching IELTS preparation',record:{id:'GETI-CERT000016',name:'GETI SAMPLE',certificate:'Teaching IELTS Preparation Certificate',issue_date:'2026-08-30'}},
-      {label:'Online English Teaching Certificate',sub:'Teaching English online',record:{id:'GETI-CERT000017',name:'GETI SAMPLE',certificate:'Online English Teaching Certificate',issue_date:'2026-08-30'}},
-      {label:'English Grammar Teaching Certificate',sub:'Grammar instruction methods',record:{id:'GETI-CERT000018',name:'GETI SAMPLE',certificate:'English Grammar Teaching Certificate',issue_date:'2026-08-30'}},
-      {label:'English Pronunciation Teaching Certificate',sub:'Pronunciation instruction methods',record:{id:'GETI-CERT000019',name:'GETI SAMPLE',certificate:'English Pronunciation Teaching Certificate',issue_date:'2026-08-30'}},
-      {label:'Classroom Management Certificate',sub:'Managing effective classes',record:{id:'GETI-CERT000020',name:'GETI SAMPLE',certificate:'Classroom Management Certificate',issue_date:'2026-08-30'}},
-      {label:'English Language Assessment Certificate',sub:'Assessment and evaluation',record:{id:'GETI-CERT000021',name:'GETI SAMPLE',certificate:'English Language Assessment Certificate',issue_date:'2026-08-30'}},
-      {label:'Teaching English to Adults Certificate',sub:'Adult learner methodology',record:{id:'GETI-CERT000022',name:'GETI SAMPLE',certificate:'Teaching English to Adults Certificate',issue_date:'2026-08-30'}},
-      {label:'Teaching English to Teenagers Certificate',sub:'Teen learner methodology',record:{id:'GETI-CERT000023',name:'GETI SAMPLE',certificate:'Teaching English to Teenagers Certificate',issue_date:'2026-08-30'}},
-      {label:'Inclusive English Language Teaching Certificate',sub:'Inclusive classroom practice',record:{id:'GETI-CERT000024',name:'GETI SAMPLE',certificate:'Inclusive English Language Teaching Certificate',issue_date:'2026-08-30'}},
-      {label:'Tour Guide Formation Certificate',sub:'Tour guide fundamentals',record:{id:'GETI-CERT000025',name:'GETI SAMPLE',certificate:'Tour Guide Formation Certificate',issue_date:'2026-08-30'}},
-      {label:'International Cuisine Certificate',sub:'Culinary studies',record:{id:'GETI-CERT000026',name:'GETI SAMPLE',certificate:'International Cuisine Certificate',issue_date:'2026-08-30'}},
-      {label:'Digital Marketing Certificate',sub:'Marketing strategy and tools',record:{id:'GETI-CERT000027',name:'GETI SAMPLE',certificate:'Digital Marketing Certificate',issue_date:'2026-08-30'}},
-      {label:'Business Communication Certificate',sub:'Professional communication',record:{id:'GETI-CERT000028',name:'GETI SAMPLE',certificate:'Business Communication Certificate',issue_date:'2026-08-30'}},
-      {label:'Tourism Certificate',sub:'Tourism studies',record:{id:'GETI-CERT000029',name:'GETI SAMPLE',certificate:'Tourism Certificate',issue_date:'2026-08-30'}},
-      {label:'Management Certificate',sub:'Management principles',record:{id:'GETI-CERT000030',name:'GETI SAMPLE',certificate:'Management Certificate',issue_date:'2026-08-30'}},
-      {label:'Computer Science Certificate',sub:'Computing and technology',record:{id:'GETI-CERT000031',name:'GETI SAMPLE',certificate:'Computer Science Certificate',issue_date:'2026-08-30'}},
-      {label:'Leadership Certificate',sub:'Leadership and team direction',record:{id:'GETI-CERT000032',name:'GETI SAMPLE',certificate:'Leadership Certificate',issue_date:'2026-08-30'}},
-      {label:'Entrepreneurship Certificate',sub:'Business creation and innovation',record:{id:'GETI-CERT000033',name:'GETI SAMPLE',certificate:'Entrepreneurship Certificate',issue_date:'2026-08-30'}},
-      {label:'Educational Psychology Certificate',sub:'Learning and pedagogy',record:{id:'GETI-CERT000034',name:'GETI SAMPLE',certificate:'Educational Psychology Certificate',issue_date:'2026-08-30'}}
+      {label:'TESOL Certificate',sub:'Teaching English to Speakers of Other Languages',record:{id:'GETI-CERT000002',name:'GETI SAMPLE',certificate:'TESOL 120-Hour Teaching English to Speakers of Other Languages',hours:'120',issue_date:'2026-08-30'}}
     ];
     grid.innerHTML=samples.map(function(item,index){var preview=window.buildVerifiedCertificateSection(item.record,{title:item.record.certificate,description:''},900+index);return '<article class="geti-cert-sample-card">'+preview+'<h4>'+item.label+'</h4><small>'+item.sub+'</small></article>';}).join('');
     var embeddedLogo=document.querySelector('.geti-new-logo img');
@@ -7882,7 +7858,7 @@ function sendMessage(){
     if(verify){
 
         document
-        .getElementById("verifyInput")
+        .getElementById("verifyIdInput")
         .value=verify;
 
         setVerifyType("id");
@@ -14292,7 +14268,7 @@ if(document.readyState!=="loading"){try{window.renderGetiExamButtons();}catch(e)
     },700);
   };
 
-  function boot(){getiSwitchFirstAccount('signin');}
+  function boot(){getiSwitchFirstAccount('signin'); if(typeof setVerifyType==='function')setVerifyType('id');}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
@@ -14792,6 +14768,105 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
   document.addEventListener('click',function(){setTimeout(hideStalePortalHeads,0);});
   window.addEventListener('popstate',hideStalePortalHeads);
   document.addEventListener('DOMContentLoaded',hideStalePortalHeads);
+})();
+</script>
+
+<style id="geti-facebook-style-signup-code">
+#getiSignupCodeStep{margin-top:14px;padding:20px;border:1px solid #d9e4ef;border-radius:14px;background:linear-gradient(180deg,#fff,#f7fafe);text-align:center;box-shadow:0 8px 22px rgba(8,46,93,.07)}
+#getiSignupCodeStep[hidden]{display:none!important}
+.geti-signup-code-icon{display:grid;place-items:center;width:46px;height:46px;margin:0 auto 9px;border-radius:50%;background:#082e5d;color:#fff;font-size:21px}
+#getiSignupCodeStep h3{margin:0 0 7px;color:#082e5d;font-size:20px}
+#getiSignupCodeStep p{margin:0 0 14px;color:#64758a;font-size:11px;line-height:1.55}
+#getiSignupCodeInput{text-align:center!important;font-size:22px!important;font-weight:900!important;letter-spacing:.18em!important}
+.geti-signup-code-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.geti-signup-code-actions button{border:1px solid #cbd8e5;border-radius:9px;background:#fff;color:#0a356d;padding:9px 12px;font-size:10px;font-weight:900;cursor:pointer}
+.geti-signup-code-actions button:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:640px){#getiSignupCodeStep{padding:16px 11px}.geti-signup-code-actions{display:grid;grid-template-columns:1fr 1fr}.geti-signup-code-actions button{width:100%}}
+</style>
+<script id="geti-facebook-style-signup-code-script">
+(function(){
+  var pendingEmail='';
+  var pendingPassword='';
+  var resendTimer=null;
+  var resendSeconds=0;
+  function el(id){return document.getElementById(id);}
+  function esc(v){return String(v||'').replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];});}
+  function validEmail(address){return /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$/i.test(address) && !/\s/.test(address) && !address.includes('..');}
+  function api(body){
+    if(typeof getiFetchJson!=='function' || typeof GETI_ACCOUNT_FUNCTION==='undefined')return Promise.reject(new Error('GETI account service is unavailable.'));
+    return getiFetchJson(GETI_ACCOUNT_FUNCTION,{method:'POST',headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY},body:JSON.stringify(body)});
+  }
+  function setCodeStep(open,email){
+    var form=document.querySelector('#getiFirstCreatePane .geti-first-create-form');
+    var step=el('getiSignupCodeStep');
+    if(form)form.style.display=open?'none':'';
+    if(step)step.hidden=!open;
+    var note=el('getiSignupCodeText');
+    if(note&&email)note.innerHTML='We sent a confirmation code to <strong>'+esc(email)+'</strong>. Enter the code below to confirm your GETI account.';
+    if(open){var input=el('getiSignupCodeInput');if(input){input.value='';setTimeout(function(){input.focus();},80);}}
+  }
+  function startResendCooldown(seconds){
+    clearInterval(resendTimer);resendSeconds=seconds||60;
+    var btn=el('getiResendCodeBtn');
+    function tick(){if(!btn)return; if(resendSeconds>0){btn.disabled=true;btn.textContent='RESEND CODE ('+resendSeconds+'s)';resendSeconds--;}else{btn.disabled=false;btn.textContent='RESEND CODE';clearInterval(resendTimer);}}
+    tick();resendTimer=setInterval(tick,1000);
+  }
+
+  window.getiFirstAreaCreateAccount=async function(){
+    var name=el('getiFirstCreateName'),email=el('getiFirstCreateEmail'),pw=el('getiFirstCreatePassword'),confirm=el('getiFirstCreateConfirm'),status=el('getiFirstCreateStatus');
+    if(!name||!email||!pw||!confirm||!status)return;
+    var fullName=name.value.trim().replace(/\s+/g,' '),address=email.value.trim().toLowerCase(),password=pw.value,confirmPassword=confirm.value;
+    if(!fullName||!address||!password||!confirmPassword){status.innerHTML='<span class="bad">Please complete all fields.</span>';return;}
+    if(fullName.length<2){status.innerHTML='<span class="bad">Please enter your real full name.</span>';return;}
+    if(!validEmail(address)){status.innerHTML='<span class="bad">Please enter a valid email address.</span>';return;}
+    if(password.length<8){status.innerHTML='<span class="bad">Password must contain at least 8 characters.</span>';return;}
+    if(password!==confirmPassword){status.innerHTML='<span class="bad">Passwords do not match.</span>';return;}
+    status.innerHTML='<span class="ok">Creating your secure GETI account and sending confirmation code...</span>';
+    try{
+      await api({action:'create_account',full_name:fullName,email:address,password:password});
+      pendingEmail=address;pendingPassword=password;
+      try{localStorage.setItem('GETI_CERT_EVER_CREATED','yes');}catch(e){}
+      status.innerHTML='';
+      setCodeStep(true,address);
+      startResendCooldown(60);
+    }catch(err){status.innerHTML='<span class="bad">'+esc(String(err.message||'Unable to create account.'))+'</span>';}
+  };
+
+  window.getiConfirmSignupCode=async function(){
+    var input=el('getiSignupCodeInput'),status=el('getiSignupCodeStatus');
+    var code=String(input&&input.value||'').replace(/\s+/g,'').trim();
+    if(!pendingEmail){if(status)status.innerHTML='<span class="bad">Please create your account first.</span>';return;}
+    if(!/^\d{6,8}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the confirmation code from your email.</span>';return;}
+    if(status)status.innerHTML='<span class="ok">Confirming your account...</span>';
+    try{
+      await api({action:'verify_signup_code',email:pendingEmail,code:code});
+      if(!window.GETI_SB||!GETI_SB.auth)throw new Error('GETI sign-in service is unavailable.');
+      var result=await GETI_SB.auth.signInWithPassword({email:pendingEmail,password:pendingPassword});
+      if(result.error)throw result.error;
+      var confirmedEmail=pendingEmail;
+      pendingEmail='';pendingPassword='';clearInterval(resendTimer);
+      if(status)status.innerHTML='<span class="ok">✓ Account confirmed successfully.</span>';
+      var loginEmail=el('getiFirstLoginEmail');if(loginEmail)loginEmail.value=confirmedEmail;
+      var loginStatus=el('getiFirstLoginStatus');if(loginStatus)loginStatus.innerHTML='<span class="ok">✓ Your GETI account is confirmed and signed in.</span>';
+      if(typeof window.getiOpenSecondArea==='function')setTimeout(function(){window.getiOpenSecondArea();},450);
+      else if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('signin');
+    }catch(err){if(status)status.innerHTML='<span class="bad">'+esc(String(err.message||'Invalid or expired confirmation code.'))+'</span>';}
+  };
+
+  window.getiResendSignupCode=async function(){
+    var status=el('getiSignupCodeStatus'),btn=el('getiResendCodeBtn');
+    if(!pendingEmail){if(status)status.innerHTML='<span class="bad">Please create your account first.</span>';return;}
+    if(btn&&btn.disabled)return;
+    if(status)status.innerHTML='<span class="ok">Sending a new confirmation code...</span>';
+    try{await api({action:'resend_code',email:pendingEmail});if(status)status.innerHTML='<span class="ok">A new confirmation code was sent to your email.</span>';startResendCooldown(60);}catch(err){if(status)status.innerHTML='<span class="bad">'+esc(String(err.message||'Unable to resend confirmation code.'))+'</span>';startResendCooldown(30);}
+  };
+
+  window.getiChangeSignupEmail=function(){
+    pendingEmail='';pendingPassword='';clearInterval(resendTimer);setCodeStep(false,'');
+    var s=el('getiSignupCodeStatus');if(s)s.innerHTML='';
+    var c=el('getiFirstCreateStatus');if(c)c.innerHTML='<span class="ok">Update your email or details, then create the account again.</span>';
+    var e=el('getiFirstCreateEmail');if(e)setTimeout(function(){e.focus();},50);
+  };
 })();
 </script>
 </body>
