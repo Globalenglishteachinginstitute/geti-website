@@ -3955,6 +3955,10 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
 .geti-verify-search-row input{width:100%;height:50px;border:0;border-radius:10px;padding:0 14px;background:#fff;color:#1f3652;font-size:14px;outline:none;box-shadow:inset 0 0 0 1px rgba(8,46,93,.08)}
 .geti-verify-search-row input:focus{box-shadow:0 0 0 3px rgba(255,213,106,.28),inset 0 0 0 1px #f0bd47}
 .geti-verify-search-row .geti-home-v2-verify-btn{width:100%!important;height:50px!important;margin-top:0!important}
+.geti-verify-universal-card{margin-top:12px;padding:15px;border:1px solid rgba(255,255,255,.28);border-radius:14px;background:rgba(255,255,255,.11);box-shadow:0 10px 28px rgba(0,0,0,.08)}
+.geti-verify-universal-card .geti-verify-search-label{margin-bottom:9px}
+.geti-verify-universal-row{grid-template-columns:minmax(0,1fr) 220px}
+@media(max-width:640px){.geti-verify-universal-row{grid-template-columns:1fr!important}.geti-verify-universal-row input,.geti-verify-universal-row button{height:48px!important}}
 
 .geti-home-v2-verify-caption{margin-bottom:8px;color:#eef5ff;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
 .geti-home-v2-verify-type{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;margin:0!important}
@@ -4650,31 +4654,15 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
         <div><h2>Verify Your GETI Certificate</h2><p>Instant official verification of GETI certificate records.</p></div>
       </div>
       <div class="geti-home-v2-verify-oldmethod geti-auto-verify-box">
-        <div class="geti-auto-verify-intro">Use the correct search box below. Search Certificate ID in the Certificate ID box, search a holder name in the Name box, and search a nationality in the Nationality box.</div>
-        <div class="geti-verify-multi-grid">
-          <div class="geti-verify-search-card active" id="getiVerifyCardId">
-            <label class="geti-verify-search-label" for="verifyIdInput">Certificate ID</label>
-            <div class="geti-verify-search-row">
-              <input id="verifyIdInput" type="text" autocomplete="off" placeholder="Enter certificate ID" aria-label="Search GETI certificate by certificate ID" onfocus="setVerifyType('id')" oninput="getiLiveCertificateSearch(this.value,'id')" onkeydown="if(event.key==='Enter'){event.preventDefault();verifyCertificate('id');}">
-              <button type="button" class="geti-home-v2-verify-btn" onclick="verifyCertificate('id')">SEARCH ID</button>
-            </div>
-          </div>
-          <div class="geti-verify-search-card" id="getiVerifyCardName">
-            <label class="geti-verify-search-label" for="verifyNameInput">Certificate Holder Name</label>
-            <div class="geti-verify-search-row">
-              <input id="verifyNameInput" type="text" autocomplete="off" placeholder="Enter full name" aria-label="Search GETI certificate by certificate holder name" onfocus="setVerifyType('name')" oninput="getiLiveCertificateSearch(this.value,'name')" onkeydown="if(event.key==='Enter'){event.preventDefault();verifyCertificate('name');}">
-              <button type="button" class="geti-home-v2-verify-btn" onclick="verifyCertificate('name')">SEARCH NAME</button>
-            </div>
-          </div>
-          <div class="geti-verify-search-card" id="getiVerifyCardNationality">
-            <label class="geti-verify-search-label" for="verifyNationalityInput">Nationality</label>
-            <div class="geti-verify-search-row">
-              <input id="verifyNationalityInput" type="text" autocomplete="off" placeholder="Enter nationality" aria-label="Search GETI certificate by nationality" onfocus="setVerifyType('nationality')" oninput="getiLiveCertificateSearch(this.value,'nationality')" onkeydown="if(event.key==='Enter'){event.preventDefault();verifyCertificate('nationality');}">
-              <button type="button" class="geti-home-v2-verify-btn" onclick="verifyCertificate('nationality')">SEARCH NATIONALITY</button>
-            </div>
+        <div class="geti-auto-verify-intro">Search with a Certificate ID, certificate holder name, or nationality in the same box.</div>
+        <div class="geti-verify-universal-card">
+          <label class="geti-verify-search-label" for="verifyInput">Certificate ID · Name · Nationality</label>
+          <div class="geti-verify-search-row geti-verify-universal-row">
+            <input id="verifyInput" type="text" autocomplete="off" placeholder="Enter Certificate ID, Name or Nationality" aria-label="Search GETI certificate by certificate ID, holder name or nationality" oninput="getiLiveCertificateSearch(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();verifyCertificate();}">
+            <button type="button" class="geti-home-v2-verify-btn" onclick="verifyCertificate()">VERIFY CERTIFICATE</button>
           </div>
         </div>
-        <div class="geti-auto-verify-help">Each box searches only its own information field.</div>
+        <div class="geti-auto-verify-help">One search box · Certificate ID, Name or Nationality · Official Google Sheet record</div>
       </div>
       <div class="geti-home-v2-trust">Secure verification · GETI official record</div>
       <div id="verifyResult" aria-live="polite"></div>
@@ -4727,13 +4715,24 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
           </div>
           <div id="getiFirstCreateStatus" class="geti-first-login-status" aria-live="polite"></div>
           <div id="getiSignupCodeStep" class="geti-signup-code-step" hidden>
+            <div class="geti-signup-progress" aria-hidden="true">
+              <span class="done">✓</span><i></i><span class="active">2</span>
+            </div>
             <div class="geti-signup-code-icon">✉</div>
-            <h3>Confirm Your Email</h3>
-            <p id="getiSignupCodeText">We sent a confirmation code to your email.</p>
-            <label class="geti-first-field full"><span>Confirmation Code</span><input id="getiSignupCodeInput" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="Enter confirmation code" onkeydown="if(event.key==='Enter'){event.preventDefault();getiConfirmSignupCode();}"></label>
-            <button class="geti-first-primary-auth full" type="button" onclick="getiConfirmSignupCode()">CONFIRM CODE</button>
+            <h3>Confirm your email</h3>
+            <p id="getiSignupCodeText">We sent a 6-digit confirmation code to your email.</p>
+            <div class="geti-signup-email-box">
+              <span>Email</span>
+              <strong id="getiSignupCodeEmail">—</strong>
+            </div>
+            <label class="geti-signup-code-field" for="getiSignupCodeInput">
+              <span>Confirmation code</span>
+              <input id="getiSignupCodeInput" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="Enter code" aria-label="Confirmation code" onkeydown="if(event.key==='Enter'){event.preventDefault();getiConfirmSignupCode();}">
+            </label>
+            <button id="getiConfirmCodeBtn" class="geti-first-primary-auth full geti-signup-continue" type="button" onclick="getiConfirmSignupCode()">CONTINUE</button>
+            <p class="geti-signup-help">Enter the code from the email we sent you. The newest code is the one that works.</p>
             <div class="geti-signup-code-actions">
-              <button type="button" id="getiResendCodeBtn" onclick="getiResendSignupCode()">RESEND CODE</button>
+              <button type="button" id="getiResendCodeBtn" onclick="getiResendSignupCode()">SEND CODE AGAIN</button>
               <button type="button" onclick="getiChangeSignupEmail()">CHANGE EMAIL</button>
             </div>
             <div id="getiSignupCodeStatus" class="geti-first-login-status" aria-live="polite"></div>
@@ -7858,7 +7857,7 @@ function sendMessage(){
     if(verify){
 
         document
-        .getElementById("verifyIdInput")
+        .getElementById("verifyInput")
         .value=verify;
 
         setVerifyType("id");
@@ -14772,16 +14771,45 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
 </script>
 
 <style id="geti-facebook-style-signup-code">
-#getiSignupCodeStep{margin-top:14px;padding:20px;border:1px solid #d9e4ef;border-radius:14px;background:linear-gradient(180deg,#fff,#f7fafe);text-align:center;box-shadow:0 8px 22px rgba(8,46,93,.07)}
+/* GETI Create Account -> Confirm your email, familiar social-account flow */
+.geti-home-v2-account-form-shell.geti-confirm-email-mode .geti-first-auth-tabs{display:none!important}
+.geti-home-v2-account-form-shell.geti-confirm-email-mode #getiFirstCreateStatus{display:none!important}
+.geti-home-v2-account-form-shell.geti-confirm-email-mode .geti-email-verify-note{display:none!important}
+.geti-home-v2-account-form-shell.geti-confirm-email-mode{max-width:560px;margin-left:auto;margin-right:auto}
+#getiSignupCodeStep{margin:0;padding:28px 26px 24px;border:1px solid #d9dee7;border-radius:12px;background:#fff;text-align:left;box-shadow:0 8px 28px rgba(16,38,68,.10)}
 #getiSignupCodeStep[hidden]{display:none!important}
-.geti-signup-code-icon{display:grid;place-items:center;width:46px;height:46px;margin:0 auto 9px;border-radius:50%;background:#082e5d;color:#fff;font-size:21px}
-#getiSignupCodeStep h3{margin:0 0 7px;color:#082e5d;font-size:20px}
-#getiSignupCodeStep p{margin:0 0 14px;color:#64758a;font-size:11px;line-height:1.55}
-#getiSignupCodeInput{text-align:center!important;font-size:22px!important;font-weight:900!important;letter-spacing:.18em!important}
-.geti-signup-code-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:10px}
-.geti-signup-code-actions button{border:1px solid #cbd8e5;border-radius:9px;background:#fff;color:#0a356d;padding:9px 12px;font-size:10px;font-weight:900;cursor:pointer}
-.geti-signup-code-actions button:disabled{opacity:.55;cursor:not-allowed}
-@media(max-width:640px){#getiSignupCodeStep{padding:16px 11px}.geti-signup-code-actions{display:grid;grid-template-columns:1fr 1fr}.geti-signup-code-actions button{width:100%}}
+.geti-signup-progress{display:flex;align-items:center;justify-content:center;gap:9px;margin:0 auto 18px;max-width:180px}
+.geti-signup-progress span{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;font-size:12px;font-weight:900}
+.geti-signup-progress span.done{background:#e7f3ff;color:#0866ff;border:1px solid #b8d7ff}
+.geti-signup-progress span.active{background:#0866ff;color:#fff;border:1px solid #0866ff}
+.geti-signup-progress i{display:block;flex:1;height:2px;background:#cfd7e3}
+.geti-signup-code-icon{display:grid;place-items:center;width:52px;height:52px;margin:0 auto 12px;border-radius:50%;background:#e7f3ff;color:#0866ff;font-size:24px}
+#getiSignupCodeStep h3{margin:0 0 8px;text-align:center;color:#1c1e21;font-size:24px;line-height:1.18;font-weight:800}
+#getiSignupCodeStep>p#getiSignupCodeText{margin:0 auto 16px;max-width:430px;text-align:center;color:#606770;font-size:13px;line-height:1.5}
+.geti-signup-email-box{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 14px;padding:11px 13px;border:1px solid #dddfe2;border-radius:8px;background:#f5f6f7}
+.geti-signup-email-box span{color:#606770;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.geti-signup-email-box strong{min-width:0;overflow-wrap:anywhere;text-align:right;color:#1c1e21;font-size:13px}
+.geti-signup-code-field{display:block;margin:0 0 12px}
+.geti-signup-code-field>span{display:block;margin:0 0 6px;color:#1c1e21;font-size:12px;font-weight:800}
+#getiSignupCodeInput{box-sizing:border-box;width:100%!important;height:50px!important;padding:10px 13px!important;border:1px solid #ccd0d5!important;border-radius:8px!important;background:#fff!important;text-align:center!important;font-size:23px!important;font-weight:800!important;letter-spacing:.18em!important;color:#1c1e21!important;outline:none!important}
+#getiSignupCodeInput:focus{border-color:#0866ff!important;box-shadow:0 0 0 2px rgba(8,102,255,.14)!important}
+.geti-signup-continue{width:100%!important;min-height:46px!important;border-radius:7px!important;background:#0866ff!important;border-color:#0866ff!important;font-size:13px!important;font-weight:900!important}
+.geti-signup-continue:hover{filter:brightness(.96)}
+.geti-signup-help{margin:10px 0 0!important;text-align:center!important;color:#8a8d91!important;font-size:11px!important;line-height:1.45!important}
+.geti-signup-code-actions{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid #e4e6eb}
+.geti-signup-code-actions button{border:0;border-radius:6px;background:transparent;color:#0866ff;padding:8px 10px;font-size:11px;font-weight:800;cursor:pointer}
+.geti-signup-code-actions button:hover{background:#f0f2f5}
+.geti-signup-code-actions button:disabled{color:#8a8d91;opacity:.75;cursor:not-allowed;background:transparent}
+#getiSignupCodeStatus{margin-top:10px;text-align:center}
+@media(max-width:640px){
+ .geti-home-v2-account-form-shell.geti-confirm-email-mode{width:100%}
+ #getiSignupCodeStep{padding:22px 14px 18px;border-radius:10px}
+ #getiSignupCodeStep h3{font-size:21px}
+ .geti-signup-email-box{display:block;text-align:center}
+ .geti-signup-email-box strong{display:block;margin-top:4px;text-align:center}
+ .geti-signup-code-actions{display:grid;grid-template-columns:1fr}
+ .geti-signup-code-actions button{width:100%}
+}
 </style>
 <script id="geti-facebook-style-signup-code-script">
 (function(){
@@ -14799,16 +14827,23 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
   function setCodeStep(open,email){
     var form=document.querySelector('#getiFirstCreatePane .geti-first-create-form');
     var step=el('getiSignupCodeStep');
+    var shell=document.querySelector('#getiFirstAccountPanel .geti-home-v2-account-form-shell');
     if(form)form.style.display=open?'none':'';
     if(step)step.hidden=!open;
+    if(shell)shell.classList.toggle('geti-confirm-email-mode',!!open);
     var note=el('getiSignupCodeText');
-    if(note&&email)note.innerHTML='We sent a confirmation code to <strong>'+esc(email)+'</strong>. Enter the code below to confirm your GETI account.';
-    if(open){var input=el('getiSignupCodeInput');if(input){input.value='';setTimeout(function(){input.focus();},80);}}
+    var emailBox=el('getiSignupCodeEmail');
+    if(note&&open)note.textContent='We sent a 6-digit confirmation code to your email. Enter it below to finish creating your GETI account.';
+    if(emailBox)emailBox.textContent=email||'—';
+    if(open){
+      try{step.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}
+      var input=el('getiSignupCodeInput');if(input){input.value='';setTimeout(function(){input.focus();},120);}
+    }
   }
   function startResendCooldown(seconds){
     clearInterval(resendTimer);resendSeconds=seconds||60;
     var btn=el('getiResendCodeBtn');
-    function tick(){if(!btn)return; if(resendSeconds>0){btn.disabled=true;btn.textContent='RESEND CODE ('+resendSeconds+'s)';resendSeconds--;}else{btn.disabled=false;btn.textContent='RESEND CODE';clearInterval(resendTimer);}}
+    function tick(){if(!btn)return; if(resendSeconds>0){btn.disabled=true;btn.textContent='SEND CODE AGAIN ('+resendSeconds+'s)';resendSeconds--;}else{btn.disabled=false;btn.textContent='SEND CODE AGAIN';clearInterval(resendTimer);}}
     tick();resendTimer=setInterval(tick,1000);
   }
 
@@ -14832,17 +14867,39 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     }catch(err){status.innerHTML='<span class="bad">'+esc(String(err.message||'Unable to create account.'))+'</span>';}
   };
 
+  var getiSignupConfirmBusy=false;
   window.getiConfirmSignupCode=async function(){
     var input=el('getiSignupCodeInput'),status=el('getiSignupCodeStatus');
     var code=String(input&&input.value||'').replace(/\s+/g,'').trim();
+    var confirmBtn=el('getiConfirmCodeBtn')||document.querySelector('#getiSignupCodeStep .geti-first-primary-auth');
+    if(getiSignupConfirmBusy)return;
     if(!pendingEmail){if(status)status.innerHTML='<span class="bad">Please create your account first.</span>';return;}
     if(!/^\d{6,8}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the confirmation code from your email.</span>';return;}
+    getiSignupConfirmBusy=true;
+    if(confirmBtn){confirmBtn.disabled=true;confirmBtn.textContent='CONFIRMING...';}
+    if(input)input.disabled=true;
     if(status)status.innerHTML='<span class="ok">Confirming your account...</span>';
     try{
-      await api({action:'verify_signup_code',email:pendingEmail,code:code});
       if(!window.GETI_SB||!GETI_SB.auth)throw new Error('GETI sign-in service is unavailable.');
+      var verifyError=null;
+      try{
+        await api({action:'verify_signup_code',email:pendingEmail,code:code});
+      }catch(e){verifyError=e;}
+
+      /* OTPs are one-time-use. If the first verification already succeeded but
+         a duplicate request reports expired/invalid, a successful password
+         sign-in is authoritative proof that the account is confirmed. */
       var result=await GETI_SB.auth.signInWithPassword({email:pendingEmail,password:pendingPassword});
-      if(result.error)throw result.error;
+      if(result.error){
+        if(verifyError)throw verifyError;
+        throw result.error;
+      }
+      var user=result.data&&result.data.user;
+      if(!user || !user.email_confirmed_at){
+        if(verifyError)throw verifyError;
+        throw new Error('Email confirmation is not complete yet. Please use the newest code from your email.');
+      }
+
       var confirmedEmail=pendingEmail;
       pendingEmail='';pendingPassword='';clearInterval(resendTimer);
       if(status)status.innerHTML='<span class="ok">✓ Account confirmed successfully.</span>';
@@ -14850,7 +14907,13 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
       var loginStatus=el('getiFirstLoginStatus');if(loginStatus)loginStatus.innerHTML='<span class="ok">✓ Your GETI account is confirmed and signed in.</span>';
       if(typeof window.getiOpenSecondArea==='function')setTimeout(function(){window.getiOpenSecondArea();},450);
       else if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('signin');
-    }catch(err){if(status)status.innerHTML='<span class="bad">'+esc(String(err.message||'Invalid or expired confirmation code.'))+'</span>';}
+    }catch(err){
+      if(status)status.innerHTML='<span class="bad">'+esc(String(err.message||'Invalid or expired confirmation code.'))+'</span>';
+    }finally{
+      getiSignupConfirmBusy=false;
+      if(confirmBtn){confirmBtn.disabled=false;confirmBtn.textContent='CONTINUE';}
+      if(input)input.disabled=false;
+    }
   };
 
   window.getiResendSignupCode=async function(){
@@ -14866,6 +14929,89 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     var s=el('getiSignupCodeStatus');if(s)s.innerHTML='';
     var c=el('getiFirstCreateStatus');if(c)c.innerHTML='<span class="ok">Update your email or details, then create the account again.</span>';
     var e=el('getiFirstCreateEmail');if(e)setTimeout(function(){e.focus();},50);
+  };
+})();
+</script>
+
+<style id="geti-universal-certificate-search-final-style">
+#getiVerifyCardId,#getiVerifyCardName,#getiVerifyCardNationality{display:none!important}
+</style>
+<script id="geti-universal-certificate-search-final">
+(function(){
+  var cache={records:null,time:0};
+  var timer=null;
+  var serial=0;
+
+  function clean(v){return String(v==null?'':v).trim().replace(/\s+/g,' ');}
+  function fold(v){var s=clean(v).toLowerCase();try{s=s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');}catch(e){}return s;}
+  function idKey(v){return clean(v).toUpperCase().replace(/[^A-Z0-9]/g,'');}
+  function query(){var el=document.getElementById('verifyInput');return clean(el&&el.value);}
+
+  function requestList(){
+    if(typeof window.baamCertificateJsonp==='function')return window.baamCertificateJsonp('list_certificates',{code:'global'});
+    return new Promise(function(resolve,reject){
+      var cb='getiUniversalVerify_'+Date.now()+'_'+Math.random().toString(36).slice(2),s=document.createElement('script'),done=false;
+      var timeout=setTimeout(function(){finish(new Error('Google Sheet server did not respond.'));},22000);
+      function finish(err,data){if(done)return;done=true;clearTimeout(timeout);try{delete window[cb];}catch(e){window[cb]=undefined;}if(s.parentNode)s.parentNode.removeChild(s);err?reject(err):resolve(data||{});}
+      window[cb]=function(data){finish(null,data);};
+      s.async=true;s.onerror=function(){finish(new Error('Unable to connect to GETI Google Sheet.'));};
+      s.src=window.API_URL+'?action=list_certificates&code=global&callback='+encodeURIComponent(cb)+'&_='+Date.now();
+      document.body.appendChild(s);
+    });
+  }
+
+  async function records(){
+    var now=Date.now();
+    if(cache.records&&now-cache.time<30000)return cache.records;
+    var data=await requestList();
+    if(!data||data.success===false)throw new Error((data&&data.message)||'Unable to read certificate register.');
+    var list=Array.isArray(data.records)?data.records:(Array.isArray(data.results)?data.results:[]);
+    cache={records:list,time:now};return list;
+  }
+
+  function matches(list,q){
+    var fq=fold(q),iq=idKey(q),looksId=/^GETI[\s-]*CERT/i.test(q);
+    var out=list.filter(function(r){
+      var rid=idKey(r&&r.id),name=fold(r&&r.name),nat=fold(r&&r.nationality);
+      if(looksId)return rid===iq;
+      return (rid===iq)||(name.indexOf(fq)!==-1)||(nat.indexOf(fq)!==-1);
+    });
+    var seen={};
+    out=out.filter(function(r){var k=idKey(r&&r.id)||[fold(r&&r.name),fold(r&&r.nationality),fold(r&&r.certificate)].join('|');if(seen[k])return false;seen[k]=1;return true;});
+    out.sort(function(a,b){
+      var aExact=idKey(a&&a.id)===iq?0:(fold(a&&a.name)===fq?1:(fold(a&&a.nationality)===fq?2:3));
+      var bExact=idKey(b&&b.id)===iq?0:(fold(b&&b.name)===fq?1:(fold(b&&b.nationality)===fq?2:3));
+      if(aExact!==bExact)return aExact-bExact;
+      return clean(a&&a.name).localeCompare(clean(b&&b.name),undefined,{sensitivity:'base'});
+    });
+    return out;
+  }
+
+  window.verifyType='auto';
+  window.setVerifyType=function(){window.verifyType='auto';};
+  window.getiGetVerifyValue=function(){return query();};
+
+  window.verifyCertificate=async function(){
+    var q=query(),box=document.getElementById('verifyResult'),my=++serial;
+    window.verifyType='auto';
+    if(!q){if(box)box.innerHTML='<div class="error">Please enter a Certificate ID, certificate holder name, or nationality.</div>';return;}
+    if(box)box.innerHTML='<div class="success">⏳ Searching the official GETI certificate register...</div>';
+    try{
+      var list=await records();if(my!==serial)return;
+      var found=matches(list,q);
+      if(typeof window.displayVerificationResults==='function')window.displayVerificationResults({success:true,results:found,query:q,automatic:true});
+      else if(box)box.innerHTML=found.length?'<div class="success">✅ '+found.length+' certificate(s) found.</div>':'<div class="error">❌ No certificate found.</div>';
+    }catch(err){
+      if(my!==serial)return;console.warn('GETI universal certificate verification error:',err);
+      if(box)box.innerHTML='<div class="error">❌ Certificate verification server is temporarily unavailable. Please try again.</div>';
+    }
+  };
+
+  window.getiLiveCertificateSearch=function(value){
+    clearTimeout(timer);
+    var box=document.getElementById('verifyResult');
+    if(!clean(value)){serial++;if(box)box.innerHTML='';return;}
+    timer=setTimeout(function(){window.verifyCertificate();},500);
   };
 })();
 </script>
