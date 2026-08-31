@@ -5687,7 +5687,224 @@ var clone=certificate.cloneNode(true);
 var originalImages=certificate.querySelectorAll("img"),clonedImages=clone.querySelectorAll("img");
 for(var i=0;i<originalImages.length;i++)clonedImages[i].setAttribute("src",originalImages[i].src);
 win.document.open();
-win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){var images=Array.from(document.images);Promise.all(images.map(function(img){return img.complete?Promise.resolve():new Promise(function(done){img.onload=img.onerror=done})})).then(function(){setTimeout(function(){window.print()},250)})}<\/script></body></html>');
+win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){var images=Array.from(document.images);Promise.all(images.map(function(img){return img.complete?Promise.resolve():new Promise(function(done){img.onload=img.onerror=done})})).then(function(){setTimeout(function(){window.print()},250)})}<\/script>
+<style id="geti-simple-auth-flow-style">
+.geti-password-label{position:relative!important}
+.geti-password-label input{padding-right:82px!important}
+.geti-password-toggle{position:absolute!important;right:8px!important;bottom:7px!important;height:34px!important;min-width:68px!important;padding:0 8px!important;border:1px solid #cbd8e6!important;border-radius:7px!important;background:#fff!important;color:#173b62!important;font-size:10px!important;font-weight:800!important;cursor:pointer!important;z-index:3!important;box-shadow:none!important}
+.geti-password-toggle:active{transform:scale(.96)!important}
+#getiSimpleForgotCodeStep[hidden],#getiSimpleForgotPasswordStep[hidden],#getiSimpleForgotEmailStep[hidden]{display:none!important}
+.geti-simple-forgot-box{display:grid;gap:13px}
+.geti-simple-code-row{display:flex;gap:8px;align-items:center}
+.geti-simple-code-row input{flex:1;min-width:0}
+.geti-simple-mini-btn{min-height:42px;padding:0 13px;border:1px solid #cbd8e6;border-radius:8px;background:#fff;color:#173b62;font-weight:800;cursor:pointer}
+.geti-simple-forgot-email{padding:10px 12px;border:1px solid #dce6f0;border-radius:8px;background:#f7fafe;color:#173b62;font-size:12px;overflow-wrap:anywhere}
+.geti-simple-forgot-email strong{display:block;margin-top:2px;color:#082e5d}
+</style>
+<script id="geti-simple-auth-flow-final">
+(function(){
+  'use strict';
+  function el(id){return document.getElementById(id)}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v||'').trim())}
+  async function accountApi(body){
+    var r=await fetch(GETI_ACCOUNT_FUNCTION,{method:'POST',headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY},body:JSON.stringify(body)});
+    var d={};try{d=await r.json()}catch(e){}
+    if(!r.ok)throw new Error(d.error||d.message||'Request failed.');
+    return d;
+  }
+  function setTextStatus(id,html){var n=el(id);if(n)n.innerHTML=html}
+  function savePending(email){
+    try{sessionStorage.setItem('GETI_PENDING_SIGNUP_EMAIL',email);sessionStorage.removeItem('GETI_PENDING_SIGNUP_PASSWORD')}catch(e){}
+  }
+  function readPending(){
+    var email='';
+    try{email=sessionStorage.getItem('GETI_PENDING_SIGNUP_EMAIL')||''}catch(e){}
+    return {email:email};
+  }
+  function clearPending(){try{sessionStorage.removeItem('GETI_PENDING_SIGNUP_EMAIL');sessionStorage.removeItem('GETI_PENDING_SIGNUP_PASSWORD')}catch(e){}}
+  function saveSessionDirect(session){
+    if(!session||!session.access_token)return;
+    var normalized={access_token:session.access_token,refresh_token:session.refresh_token||'',token_type:session.token_type||'bearer',expires_in:Number(session.expires_in||3600),expires_at:session.expires_at||Math.floor(Date.now()/1000)+Number(session.expires_in||3600),user:session.user||null};
+    try{localStorage.setItem('GETI_DIRECT_AUTH_SESSION',JSON.stringify(normalized));localStorage.setItem('sb-syawyulrelrhjprnxdyn-auth-token',JSON.stringify(normalized));localStorage.setItem('GETI_CERT_EVER_CREATED','yes')}catch(e){}
+  }
+  async function activateSession(session){
+    if(!session||!session.access_token)throw new Error('Secure session was not returned. Please request a new code.');
+    saveSessionDirect(session);
+    if(window.GETI_SB&&GETI_SB.auth&&typeof GETI_SB.auth.setSession==='function'){
+      var sr=await GETI_SB.auth.setSession({access_token:session.access_token,refresh_token:session.refresh_token});
+      if(sr&&sr.error)throw sr.error;
+    }
+    return true;
+  }
+  function addToggle(input){
+    if(!input||input.dataset.getiToggleReady==='1')return;
+    input.dataset.getiToggleReady='1';
+    var label=input.closest('label')||input.parentElement;if(!label)return;
+    label.classList.add('geti-password-label');
+    var b=document.createElement('button');b.type='button';b.className='geti-password-toggle';b.textContent='👁 SHOW';b.setAttribute('aria-label','Show password');
+    b.onclick=function(){var show=input.type==='password';input.type=show?'text':'password';b.textContent=show?'🙈 HIDE':'👁 SHOW';b.setAttribute('aria-label',show?'Hide password':'Show password')};
+    label.appendChild(b);
+  }
+  function initPasswordToggles(){
+    ['getiFirstLoginPassword','getiFirstCreatePassword','getiFirstCreateConfirm','getiSimpleForgotNewPassword','getiSimpleForgotConfirmPassword'].forEach(function(id){addToggle(el(id))});
+  }
+  function showSignupCode(email){
+    var form=document.querySelector('#getiFirstCreatePane .geti-first-create-form');
+    var tabs=document.querySelector('#getiFirstAccountPanel .geti-first-auth-tabs');
+    var step=el('getiSignupCodeStep'),mail=el('getiSignupCodeEmail'),input=el('getiSignupCodeInput');
+    if(form)form.hidden=true;if(tabs)tabs.hidden=true;if(step)step.hidden=false;if(mail)mail.textContent=email;if(input){input.value='';input.disabled=false;setTimeout(function(){input.focus()},80)}
+    setTextStatus('getiFirstCreateStatus','');
+    setTextStatus('getiSignupCodeStatus','<span class="ok">✓ Confirmation code sent. Enter the 6-digit code.</span>');
+  }
+  function showCreateForm(){
+    var form=document.querySelector('#getiFirstCreatePane .geti-first-create-form');
+    var tabs=document.querySelector('#getiFirstAccountPanel .geti-first-auth-tabs');
+    var step=el('getiSignupCodeStep');
+    if(step)step.hidden=true;if(form)form.hidden=false;if(tabs)tabs.hidden=false;
+  }
+
+  var createBusy=false;
+  window.getiFirstAreaCreateAccount=async function(){
+    if(createBusy)return;
+    var name=el('getiFirstCreateName'),email=el('getiFirstCreateEmail'),pw=el('getiFirstCreatePassword'),confirm=el('getiFirstCreateConfirm'),status=el('getiFirstCreateStatus');
+    if(!name||!email||!pw||!confirm||!status)return;
+    var fullName=String(name.value||'').trim().replace(/\s+/g,' '),address=String(email.value||'').trim().toLowerCase(),password=String(pw.value||''),confirmPassword=String(confirm.value||'');
+    if(fullName.length<2){status.innerHTML='<span class="bad">Please enter your full name.</span>';return}
+    if(!validEmail(address)){status.innerHTML='<span class="bad">Please enter a valid email address.</span>';return}
+    if(password.length<6||password.length>12){status.innerHTML='<span class="bad">Password must contain 6 to 12 characters.</span>';return}
+    if(password!==confirmPassword){status.innerHTML='<span class="bad">Passwords do not match.</span>';return}
+    createBusy=true;status.innerHTML='<span class="ok">Creating account...</span>';
+    try{
+      await accountApi({action:'create_account',full_name:fullName,email:address,password:password});
+      savePending(address);
+      pw.value='';confirm.value='';
+      showSignupCode(address);
+    }catch(e){status.innerHTML='<span class="bad">'+esc(e.message||'Unable to create account.')+'</span>'}
+    finally{createBusy=false}
+  };
+
+  var confirmBusy=false;
+  window.getiConfirmSignupCode=async function(){
+    if(confirmBusy)return;
+    var input=el('getiSignupCodeInput'),status=el('getiSignupCodeStatus'),btn=el('getiConfirmCodeBtn'),p=readPending();
+    var code=String(input&&input.value||'').replace(/\s+/g,'').trim();
+    if(!p.email){if(status)status.innerHTML='<span class="bad">Create your account again first.</span>';return}
+    if(!/^\d{6}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the 6-digit confirmation code.</span>';return}
+    confirmBusy=true;if(btn){btn.disabled=true;btn.textContent='CONFIRMING...'}if(input)input.disabled=true;
+    if(status)status.innerHTML='<span class="ok">Confirming...</span>';
+    try{
+      var data=await accountApi({action:'verify_signup_code',email:p.email,code:code});
+      if(!data.session)throw new Error('Confirmation succeeded but the secure session was not returned.');
+      await activateSession(data.session);
+      clearPending();
+      if(status)status.innerHTML='<span class="ok">✓ Email confirmed. Opening Student Area...</span>';
+      var login=el('getiFirstLoginEmail');if(login)login.value=p.email;
+      setTimeout(function(){if(typeof window.getiOpenSecondArea==='function')window.getiOpenSecondArea()},180);
+    }catch(e){
+      var m=String(e.message||'Invalid or expired confirmation code.');
+      if(/expired|invalid|token/i.test(m))m='Invalid or expired code. Tap SEND CODE AGAIN and use the newest 6-digit code.';
+      if(status)status.innerHTML='<span class="bad">'+esc(m)+'</span>';
+    }finally{confirmBusy=false;if(btn){btn.disabled=false;btn.textContent='CONTINUE'}if(input)input.disabled=false}
+  };
+
+  var resendBusy=false,resendTimer=null;
+  window.getiResendSignupCode=async function(){
+    if(resendBusy)return;
+    var p=readPending(),status=el('getiSignupCodeStatus'),btn=el('getiResendCodeBtn'),input=el('getiSignupCodeInput');
+    if(!p.email){if(status)status.innerHTML='<span class="bad">Create your account again first.</span>';return}
+    resendBusy=true;if(btn){btn.disabled=true;btn.textContent='SENDING...'}if(input)input.value='';
+    try{
+      await accountApi({action:'resend_code',email:p.email});
+      if(status)status.innerHTML='<span class="ok">✓ New code sent. Use only the newest code.</span>';
+      var sec=60;clearInterval(resendTimer);resendTimer=setInterval(function(){sec--;if(!btn)return;if(sec<=0){clearInterval(resendTimer);resendBusy=false;btn.disabled=false;btn.textContent='SEND CODE AGAIN'}else btn.textContent='SEND CODE AGAIN ('+sec+'s)'},1000);
+    }catch(e){resendBusy=false;if(btn){btn.disabled=false;btn.textContent='SEND CODE AGAIN'}if(status)status.innerHTML='<span class="bad">'+esc(e.message||'Unable to send code.')+'</span>'}
+  };
+  window.getiChangeSignupEmail=function(){clearPending();showCreateForm();setTextStatus('getiSignupCodeStatus','');var e=el('getiFirstCreateEmail');if(e)setTimeout(function(){e.focus()},50)};
+
+  function buildForgotPane(){
+    var pane=el('getiFirstForgotPane');if(!pane)return;
+    pane.innerHTML=''
+      +'<div class="geti-first-forgot-heading"><h3>Reset Password</h3><p>Enter your email. GETI will send a confirmation code.</p></div>'
+      +'<div class="geti-simple-forgot-box">'
+      +'<div id="getiSimpleForgotEmailStep">'
+      +'<label class="geti-first-field full"><span>Email Address</span><input id="getiSimpleForgotEmail" type="email" autocomplete="email" placeholder="name@example.com"></label>'
+      +'<button id="getiSimpleForgotSendBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotSendCode()">SEND CODE</button>'
+      +'</div>'
+      +'<div id="getiSimpleForgotCodeStep" hidden>'
+      +'<div class="geti-simple-forgot-email"><span>Email</span><strong id="getiSimpleForgotEmailDisplay"></strong></div>'
+      +'<label class="geti-first-field full"><span>Confirmation Code</span><input id="getiSimpleForgotCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6-digit code"></label>'
+      +'<button id="getiSimpleForgotVerifyBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotVerifyCode()">CONTINUE</button>'
+      +'<div class="geti-first-account-links"><button type="button" onclick="getiSimpleForgotSendCode(true)">SEND CODE AGAIN</button></div>'
+      +'</div>'
+      +'<div id="getiSimpleForgotPasswordStep" hidden>'
+      +'<label class="geti-first-field full"><span>New Password</span><input id="getiSimpleForgotNewPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="6 to 12 characters"></label>'
+      +'<label class="geti-first-field full"><span>Confirm New Password</span><input id="getiSimpleForgotConfirmPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="Repeat new password"></label>'
+      +'<button id="getiSimpleForgotSaveBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotSavePassword()">SAVE NEW PASSWORD</button>'
+      +'</div>'
+      +'<div id="getiFirstResetStatus" class="geti-first-login-status" aria-live="polite"></div>'
+      +'<div class="geti-first-account-links"><button type="button" onclick="getiSwitchFirstAccount(\'signin\')">← BACK TO SIGN IN</button></div>'
+      +'</div>';
+    initPasswordToggles();
+  }
+  function forgotEmail(){var e=el('getiSimpleForgotEmail');var v=String(e&&e.value||'').trim().toLowerCase();if(!v){try{v=sessionStorage.getItem('GETI_RESET_EMAIL')||''}catch(x){}}return v}
+  var forgotSendBusy=false;
+  window.getiSimpleForgotSendCode=async function(resend){
+    if(forgotSendBusy)return;
+    var email=forgotEmail(),status=el('getiFirstResetStatus'),btn=el('getiSimpleForgotSendBtn');
+    if(!validEmail(email)){if(status)status.innerHTML='<span class="bad">Enter a valid email address.</span>';return}
+    forgotSendBusy=true;if(btn)btn.disabled=true;if(status)status.innerHTML='<span class="ok">Sending confirmation code...</span>';
+    try{
+      await accountApi({action:'send_password_reset_code',email:email});
+      try{sessionStorage.setItem('GETI_RESET_EMAIL',email);sessionStorage.removeItem('GETI_RESET_TICKET')}catch(e){}
+      var a=el('getiSimpleForgotEmailStep'),b=el('getiSimpleForgotCodeStep'),c=el('getiSimpleForgotPasswordStep'),d=el('getiSimpleForgotEmailDisplay'),code=el('getiSimpleForgotCode');
+      if(a)a.hidden=true;if(b)b.hidden=false;if(c)c.hidden=true;if(d)d.textContent=email;if(code){code.value='';setTimeout(function(){code.focus()},80)}
+      if(status)status.innerHTML='<span class="ok">✓ Code sent. Enter the newest 6-digit code.</span>';
+    }catch(e){if(status)status.innerHTML='<span class="bad">'+esc(e.message||'Unable to send reset code.')+'</span>'}
+    finally{forgotSendBusy=false;if(btn)btn.disabled=false}
+  };
+  var forgotVerifyBusy=false;
+  window.getiSimpleForgotVerifyCode=async function(){
+    if(forgotVerifyBusy)return;
+    var email=forgotEmail(),code=String((el('getiSimpleForgotCode')||{}).value||'').replace(/\s+/g,'').trim(),status=el('getiFirstResetStatus'),btn=el('getiSimpleForgotVerifyBtn');
+    if(!/^\d{6}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the 6-digit confirmation code.</span>';return}
+    forgotVerifyBusy=true;if(btn){btn.disabled=true;btn.textContent='CONFIRMING...'}if(status)status.innerHTML='<span class="ok">Confirming code...</span>';
+    try{
+      var d=await accountApi({action:'verify_password_reset_code',email:email,code:code});
+      if(!d.reset_ticket)throw new Error('Reset authorization was not returned.');
+      try{sessionStorage.setItem('GETI_RESET_TICKET',d.reset_ticket)}catch(e){}
+      var b=el('getiSimpleForgotCodeStep'),c=el('getiSimpleForgotPasswordStep');if(b)b.hidden=true;if(c)c.hidden=false;
+      if(status)status.innerHTML='<span class="ok">✓ Code confirmed. Enter your new password.</span>';
+      initPasswordToggles();var np=el('getiSimpleForgotNewPassword');if(np)setTimeout(function(){np.focus()},80);
+    }catch(e){var m=String(e.message||'Invalid or expired code.');if(/expired|invalid|token/i.test(m))m='Invalid or expired code. Tap SEND CODE AGAIN and use the newest code.';if(status)status.innerHTML='<span class="bad">'+esc(m)+'</span>'}
+    finally{forgotVerifyBusy=false;if(btn){btn.disabled=false;btn.textContent='CONTINUE'}}
+  };
+  var forgotSaveBusy=false;
+  window.getiSimpleForgotSavePassword=async function(){
+    if(forgotSaveBusy)return;
+    var p=String((el('getiSimpleForgotNewPassword')||{}).value||''),c=String((el('getiSimpleForgotConfirmPassword')||{}).value||''),status=el('getiFirstResetStatus'),btn=el('getiSimpleForgotSaveBtn'),ticket='';
+    try{ticket=sessionStorage.getItem('GETI_RESET_TICKET')||''}catch(e){}
+    if(p.length<6||p.length>12){if(status)status.innerHTML='<span class="bad">Password must contain 6 to 12 characters.</span>';return}
+    if(p!==c){if(status)status.innerHTML='<span class="bad">Passwords do not match.</span>';return}
+    if(!ticket){if(status)status.innerHTML='<span class="bad">Request a new reset code first.</span>';return}
+    forgotSaveBusy=true;if(btn){btn.disabled=true;btn.textContent='SAVING...'}if(status)status.innerHTML='<span class="ok">Saving new password...</span>';
+    try{
+      await accountApi({action:'set_new_password',reset_ticket:ticket,password:p});
+      var email=forgotEmail();try{sessionStorage.removeItem('GETI_RESET_TICKET');sessionStorage.removeItem('GETI_RESET_EMAIL')}catch(e){}
+      if(window.GETI_SB&&GETI_SB.auth)try{await GETI_SB.auth.signOut()}catch(e){}
+      var le=el('getiFirstLoginEmail');if(le)le.value=email;
+      if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('signin');
+      setTextStatus('getiFirstLoginStatus','<span class="ok">✓ Password updated. Sign in with your new password.</span>');
+    }catch(e){if(status)status.innerHTML='<span class="bad">'+esc(e.message||'Unable to update password.')+'</span>'}
+    finally{forgotSaveBusy=false;if(btn){btn.disabled=false;btn.textContent='SAVE NEW PASSWORD'}}
+  };
+
+  function boot(){buildForgotPane();initPasswordToggles();showCreateForm()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
+
+</body></html>');
 win.document.close();
 }
 </script>
@@ -13898,7 +14115,224 @@ a.button:active,
   }
 }
 </style>
-</head><body>'+pages+'</body></html>';
+</head><body>'+pages+'
+<style id="geti-simple-auth-flow-style">
+.geti-password-label{position:relative!important}
+.geti-password-label input{padding-right:82px!important}
+.geti-password-toggle{position:absolute!important;right:8px!important;bottom:7px!important;height:34px!important;min-width:68px!important;padding:0 8px!important;border:1px solid #cbd8e6!important;border-radius:7px!important;background:#fff!important;color:#173b62!important;font-size:10px!important;font-weight:800!important;cursor:pointer!important;z-index:3!important;box-shadow:none!important}
+.geti-password-toggle:active{transform:scale(.96)!important}
+#getiSimpleForgotCodeStep[hidden],#getiSimpleForgotPasswordStep[hidden],#getiSimpleForgotEmailStep[hidden]{display:none!important}
+.geti-simple-forgot-box{display:grid;gap:13px}
+.geti-simple-code-row{display:flex;gap:8px;align-items:center}
+.geti-simple-code-row input{flex:1;min-width:0}
+.geti-simple-mini-btn{min-height:42px;padding:0 13px;border:1px solid #cbd8e6;border-radius:8px;background:#fff;color:#173b62;font-weight:800;cursor:pointer}
+.geti-simple-forgot-email{padding:10px 12px;border:1px solid #dce6f0;border-radius:8px;background:#f7fafe;color:#173b62;font-size:12px;overflow-wrap:anywhere}
+.geti-simple-forgot-email strong{display:block;margin-top:2px;color:#082e5d}
+</style>
+<script id="geti-simple-auth-flow-final">
+(function(){
+  'use strict';
+  function el(id){return document.getElementById(id)}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v||'').trim())}
+  async function accountApi(body){
+    var r=await fetch(GETI_ACCOUNT_FUNCTION,{method:'POST',headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY},body:JSON.stringify(body)});
+    var d={};try{d=await r.json()}catch(e){}
+    if(!r.ok)throw new Error(d.error||d.message||'Request failed.');
+    return d;
+  }
+  function setTextStatus(id,html){var n=el(id);if(n)n.innerHTML=html}
+  function savePending(email){
+    try{sessionStorage.setItem('GETI_PENDING_SIGNUP_EMAIL',email);sessionStorage.removeItem('GETI_PENDING_SIGNUP_PASSWORD')}catch(e){}
+  }
+  function readPending(){
+    var email='';
+    try{email=sessionStorage.getItem('GETI_PENDING_SIGNUP_EMAIL')||''}catch(e){}
+    return {email:email};
+  }
+  function clearPending(){try{sessionStorage.removeItem('GETI_PENDING_SIGNUP_EMAIL');sessionStorage.removeItem('GETI_PENDING_SIGNUP_PASSWORD')}catch(e){}}
+  function saveSessionDirect(session){
+    if(!session||!session.access_token)return;
+    var normalized={access_token:session.access_token,refresh_token:session.refresh_token||'',token_type:session.token_type||'bearer',expires_in:Number(session.expires_in||3600),expires_at:session.expires_at||Math.floor(Date.now()/1000)+Number(session.expires_in||3600),user:session.user||null};
+    try{localStorage.setItem('GETI_DIRECT_AUTH_SESSION',JSON.stringify(normalized));localStorage.setItem('sb-syawyulrelrhjprnxdyn-auth-token',JSON.stringify(normalized));localStorage.setItem('GETI_CERT_EVER_CREATED','yes')}catch(e){}
+  }
+  async function activateSession(session){
+    if(!session||!session.access_token)throw new Error('Secure session was not returned. Please request a new code.');
+    saveSessionDirect(session);
+    if(window.GETI_SB&&GETI_SB.auth&&typeof GETI_SB.auth.setSession==='function'){
+      var sr=await GETI_SB.auth.setSession({access_token:session.access_token,refresh_token:session.refresh_token});
+      if(sr&&sr.error)throw sr.error;
+    }
+    return true;
+  }
+  function addToggle(input){
+    if(!input||input.dataset.getiToggleReady==='1')return;
+    input.dataset.getiToggleReady='1';
+    var label=input.closest('label')||input.parentElement;if(!label)return;
+    label.classList.add('geti-password-label');
+    var b=document.createElement('button');b.type='button';b.className='geti-password-toggle';b.textContent='👁 SHOW';b.setAttribute('aria-label','Show password');
+    b.onclick=function(){var show=input.type==='password';input.type=show?'text':'password';b.textContent=show?'🙈 HIDE':'👁 SHOW';b.setAttribute('aria-label',show?'Hide password':'Show password')};
+    label.appendChild(b);
+  }
+  function initPasswordToggles(){
+    ['getiFirstLoginPassword','getiFirstCreatePassword','getiFirstCreateConfirm','getiSimpleForgotNewPassword','getiSimpleForgotConfirmPassword'].forEach(function(id){addToggle(el(id))});
+  }
+  function showSignupCode(email){
+    var form=document.querySelector('#getiFirstCreatePane .geti-first-create-form');
+    var tabs=document.querySelector('#getiFirstAccountPanel .geti-first-auth-tabs');
+    var step=el('getiSignupCodeStep'),mail=el('getiSignupCodeEmail'),input=el('getiSignupCodeInput');
+    if(form)form.hidden=true;if(tabs)tabs.hidden=true;if(step)step.hidden=false;if(mail)mail.textContent=email;if(input){input.value='';input.disabled=false;setTimeout(function(){input.focus()},80)}
+    setTextStatus('getiFirstCreateStatus','');
+    setTextStatus('getiSignupCodeStatus','<span class="ok">✓ Confirmation code sent. Enter the 6-digit code.</span>');
+  }
+  function showCreateForm(){
+    var form=document.querySelector('#getiFirstCreatePane .geti-first-create-form');
+    var tabs=document.querySelector('#getiFirstAccountPanel .geti-first-auth-tabs');
+    var step=el('getiSignupCodeStep');
+    if(step)step.hidden=true;if(form)form.hidden=false;if(tabs)tabs.hidden=false;
+  }
+
+  var createBusy=false;
+  window.getiFirstAreaCreateAccount=async function(){
+    if(createBusy)return;
+    var name=el('getiFirstCreateName'),email=el('getiFirstCreateEmail'),pw=el('getiFirstCreatePassword'),confirm=el('getiFirstCreateConfirm'),status=el('getiFirstCreateStatus');
+    if(!name||!email||!pw||!confirm||!status)return;
+    var fullName=String(name.value||'').trim().replace(/\s+/g,' '),address=String(email.value||'').trim().toLowerCase(),password=String(pw.value||''),confirmPassword=String(confirm.value||'');
+    if(fullName.length<2){status.innerHTML='<span class="bad">Please enter your full name.</span>';return}
+    if(!validEmail(address)){status.innerHTML='<span class="bad">Please enter a valid email address.</span>';return}
+    if(password.length<6||password.length>12){status.innerHTML='<span class="bad">Password must contain 6 to 12 characters.</span>';return}
+    if(password!==confirmPassword){status.innerHTML='<span class="bad">Passwords do not match.</span>';return}
+    createBusy=true;status.innerHTML='<span class="ok">Creating account...</span>';
+    try{
+      await accountApi({action:'create_account',full_name:fullName,email:address,password:password});
+      savePending(address);
+      pw.value='';confirm.value='';
+      showSignupCode(address);
+    }catch(e){status.innerHTML='<span class="bad">'+esc(e.message||'Unable to create account.')+'</span>'}
+    finally{createBusy=false}
+  };
+
+  var confirmBusy=false;
+  window.getiConfirmSignupCode=async function(){
+    if(confirmBusy)return;
+    var input=el('getiSignupCodeInput'),status=el('getiSignupCodeStatus'),btn=el('getiConfirmCodeBtn'),p=readPending();
+    var code=String(input&&input.value||'').replace(/\s+/g,'').trim();
+    if(!p.email){if(status)status.innerHTML='<span class="bad">Create your account again first.</span>';return}
+    if(!/^\d{6}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the 6-digit confirmation code.</span>';return}
+    confirmBusy=true;if(btn){btn.disabled=true;btn.textContent='CONFIRMING...'}if(input)input.disabled=true;
+    if(status)status.innerHTML='<span class="ok">Confirming...</span>';
+    try{
+      var data=await accountApi({action:'verify_signup_code',email:p.email,code:code});
+      if(!data.session)throw new Error('Confirmation succeeded but the secure session was not returned.');
+      await activateSession(data.session);
+      clearPending();
+      if(status)status.innerHTML='<span class="ok">✓ Email confirmed. Opening Student Area...</span>';
+      var login=el('getiFirstLoginEmail');if(login)login.value=p.email;
+      setTimeout(function(){if(typeof window.getiOpenSecondArea==='function')window.getiOpenSecondArea()},180);
+    }catch(e){
+      var m=String(e.message||'Invalid or expired confirmation code.');
+      if(/expired|invalid|token/i.test(m))m='Invalid or expired code. Tap SEND CODE AGAIN and use the newest 6-digit code.';
+      if(status)status.innerHTML='<span class="bad">'+esc(m)+'</span>';
+    }finally{confirmBusy=false;if(btn){btn.disabled=false;btn.textContent='CONTINUE'}if(input)input.disabled=false}
+  };
+
+  var resendBusy=false,resendTimer=null;
+  window.getiResendSignupCode=async function(){
+    if(resendBusy)return;
+    var p=readPending(),status=el('getiSignupCodeStatus'),btn=el('getiResendCodeBtn'),input=el('getiSignupCodeInput');
+    if(!p.email){if(status)status.innerHTML='<span class="bad">Create your account again first.</span>';return}
+    resendBusy=true;if(btn){btn.disabled=true;btn.textContent='SENDING...'}if(input)input.value='';
+    try{
+      await accountApi({action:'resend_code',email:p.email});
+      if(status)status.innerHTML='<span class="ok">✓ New code sent. Use only the newest code.</span>';
+      var sec=60;clearInterval(resendTimer);resendTimer=setInterval(function(){sec--;if(!btn)return;if(sec<=0){clearInterval(resendTimer);resendBusy=false;btn.disabled=false;btn.textContent='SEND CODE AGAIN'}else btn.textContent='SEND CODE AGAIN ('+sec+'s)'},1000);
+    }catch(e){resendBusy=false;if(btn){btn.disabled=false;btn.textContent='SEND CODE AGAIN'}if(status)status.innerHTML='<span class="bad">'+esc(e.message||'Unable to send code.')+'</span>'}
+  };
+  window.getiChangeSignupEmail=function(){clearPending();showCreateForm();setTextStatus('getiSignupCodeStatus','');var e=el('getiFirstCreateEmail');if(e)setTimeout(function(){e.focus()},50)};
+
+  function buildForgotPane(){
+    var pane=el('getiFirstForgotPane');if(!pane)return;
+    pane.innerHTML=''
+      +'<div class="geti-first-forgot-heading"><h3>Reset Password</h3><p>Enter your email. GETI will send a confirmation code.</p></div>'
+      +'<div class="geti-simple-forgot-box">'
+      +'<div id="getiSimpleForgotEmailStep">'
+      +'<label class="geti-first-field full"><span>Email Address</span><input id="getiSimpleForgotEmail" type="email" autocomplete="email" placeholder="name@example.com"></label>'
+      +'<button id="getiSimpleForgotSendBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotSendCode()">SEND CODE</button>'
+      +'</div>'
+      +'<div id="getiSimpleForgotCodeStep" hidden>'
+      +'<div class="geti-simple-forgot-email"><span>Email</span><strong id="getiSimpleForgotEmailDisplay"></strong></div>'
+      +'<label class="geti-first-field full"><span>Confirmation Code</span><input id="getiSimpleForgotCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6-digit code"></label>'
+      +'<button id="getiSimpleForgotVerifyBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotVerifyCode()">CONTINUE</button>'
+      +'<div class="geti-first-account-links"><button type="button" onclick="getiSimpleForgotSendCode(true)">SEND CODE AGAIN</button></div>'
+      +'</div>'
+      +'<div id="getiSimpleForgotPasswordStep" hidden>'
+      +'<label class="geti-first-field full"><span>New Password</span><input id="getiSimpleForgotNewPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="6 to 12 characters"></label>'
+      +'<label class="geti-first-field full"><span>Confirm New Password</span><input id="getiSimpleForgotConfirmPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="Repeat new password"></label>'
+      +'<button id="getiSimpleForgotSaveBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotSavePassword()">SAVE NEW PASSWORD</button>'
+      +'</div>'
+      +'<div id="getiFirstResetStatus" class="geti-first-login-status" aria-live="polite"></div>'
+      +'<div class="geti-first-account-links"><button type="button" onclick="getiSwitchFirstAccount(\'signin\')">← BACK TO SIGN IN</button></div>'
+      +'</div>';
+    initPasswordToggles();
+  }
+  function forgotEmail(){var e=el('getiSimpleForgotEmail');var v=String(e&&e.value||'').trim().toLowerCase();if(!v){try{v=sessionStorage.getItem('GETI_RESET_EMAIL')||''}catch(x){}}return v}
+  var forgotSendBusy=false;
+  window.getiSimpleForgotSendCode=async function(resend){
+    if(forgotSendBusy)return;
+    var email=forgotEmail(),status=el('getiFirstResetStatus'),btn=el('getiSimpleForgotSendBtn');
+    if(!validEmail(email)){if(status)status.innerHTML='<span class="bad">Enter a valid email address.</span>';return}
+    forgotSendBusy=true;if(btn)btn.disabled=true;if(status)status.innerHTML='<span class="ok">Sending confirmation code...</span>';
+    try{
+      await accountApi({action:'send_password_reset_code',email:email});
+      try{sessionStorage.setItem('GETI_RESET_EMAIL',email);sessionStorage.removeItem('GETI_RESET_TICKET')}catch(e){}
+      var a=el('getiSimpleForgotEmailStep'),b=el('getiSimpleForgotCodeStep'),c=el('getiSimpleForgotPasswordStep'),d=el('getiSimpleForgotEmailDisplay'),code=el('getiSimpleForgotCode');
+      if(a)a.hidden=true;if(b)b.hidden=false;if(c)c.hidden=true;if(d)d.textContent=email;if(code){code.value='';setTimeout(function(){code.focus()},80)}
+      if(status)status.innerHTML='<span class="ok">✓ Code sent. Enter the newest 6-digit code.</span>';
+    }catch(e){if(status)status.innerHTML='<span class="bad">'+esc(e.message||'Unable to send reset code.')+'</span>'}
+    finally{forgotSendBusy=false;if(btn)btn.disabled=false}
+  };
+  var forgotVerifyBusy=false;
+  window.getiSimpleForgotVerifyCode=async function(){
+    if(forgotVerifyBusy)return;
+    var email=forgotEmail(),code=String((el('getiSimpleForgotCode')||{}).value||'').replace(/\s+/g,'').trim(),status=el('getiFirstResetStatus'),btn=el('getiSimpleForgotVerifyBtn');
+    if(!/^\d{6}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the 6-digit confirmation code.</span>';return}
+    forgotVerifyBusy=true;if(btn){btn.disabled=true;btn.textContent='CONFIRMING...'}if(status)status.innerHTML='<span class="ok">Confirming code...</span>';
+    try{
+      var d=await accountApi({action:'verify_password_reset_code',email:email,code:code});
+      if(!d.reset_ticket)throw new Error('Reset authorization was not returned.');
+      try{sessionStorage.setItem('GETI_RESET_TICKET',d.reset_ticket)}catch(e){}
+      var b=el('getiSimpleForgotCodeStep'),c=el('getiSimpleForgotPasswordStep');if(b)b.hidden=true;if(c)c.hidden=false;
+      if(status)status.innerHTML='<span class="ok">✓ Code confirmed. Enter your new password.</span>';
+      initPasswordToggles();var np=el('getiSimpleForgotNewPassword');if(np)setTimeout(function(){np.focus()},80);
+    }catch(e){var m=String(e.message||'Invalid or expired code.');if(/expired|invalid|token/i.test(m))m='Invalid or expired code. Tap SEND CODE AGAIN and use the newest code.';if(status)status.innerHTML='<span class="bad">'+esc(m)+'</span>'}
+    finally{forgotVerifyBusy=false;if(btn){btn.disabled=false;btn.textContent='CONTINUE'}}
+  };
+  var forgotSaveBusy=false;
+  window.getiSimpleForgotSavePassword=async function(){
+    if(forgotSaveBusy)return;
+    var p=String((el('getiSimpleForgotNewPassword')||{}).value||''),c=String((el('getiSimpleForgotConfirmPassword')||{}).value||''),status=el('getiFirstResetStatus'),btn=el('getiSimpleForgotSaveBtn'),ticket='';
+    try{ticket=sessionStorage.getItem('GETI_RESET_TICKET')||''}catch(e){}
+    if(p.length<6||p.length>12){if(status)status.innerHTML='<span class="bad">Password must contain 6 to 12 characters.</span>';return}
+    if(p!==c){if(status)status.innerHTML='<span class="bad">Passwords do not match.</span>';return}
+    if(!ticket){if(status)status.innerHTML='<span class="bad">Request a new reset code first.</span>';return}
+    forgotSaveBusy=true;if(btn){btn.disabled=true;btn.textContent='SAVING...'}if(status)status.innerHTML='<span class="ok">Saving new password...</span>';
+    try{
+      await accountApi({action:'set_new_password',reset_ticket:ticket,password:p});
+      var email=forgotEmail();try{sessionStorage.removeItem('GETI_RESET_TICKET');sessionStorage.removeItem('GETI_RESET_EMAIL')}catch(e){}
+      if(window.GETI_SB&&GETI_SB.auth)try{await GETI_SB.auth.signOut()}catch(e){}
+      var le=el('getiFirstLoginEmail');if(le)le.value=email;
+      if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('signin');
+      setTextStatus('getiFirstLoginStatus','<span class="ok">✓ Password updated. Sign in with your new password.</span>');
+    }catch(e){if(status)status.innerHTML='<span class="bad">'+esc(e.message||'Unable to update password.')+'</span>'}
+    finally{forgotSaveBusy=false;if(btn){btn.disabled=false;btn.textContent='SAVE NEW PASSWORD'}}
+  };
+
+  function boot(){buildForgotPane();initPasswordToggles();showCreateForm()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
+
+</body></html>';
   w.document.open();w.document.write(html);w.document.close();if(autoPrint)setTimeout(function(){w.focus();w.print();},500);return true;}
 const originalOpenPDF=window.openGetiLessonPDF;
 window.openGetiLessonPDF=function(){if(cfg(getiLessonState.exam))return nativePrintableBook(getiLessonState.exam,getiLessonState.subject,false);return originalOpenPDF();};
@@ -15429,6 +15863,318 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     if(typeof previousLogout==='function')return previousLogout.apply(this,arguments);
     return true;
   };
+})();
+</script>
+
+
+<script id="geti-confirmation-otp-final-fix">
+(function(){
+  'use strict';
+  function el(id){return document.getElementById(id)}
+  function esc(s){return String(s==null?'':s).replace(/[&<>\"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]})}
+  function pending(){
+    var email=String((el('getiFirstCreateEmail')||{}).value||'').trim().toLowerCase();
+    var password=String((el('getiFirstCreatePassword')||{}).value||'');
+    try{email=email||sessionStorage.getItem('GETI_PENDING_SIGNUP_EMAIL')||'';password=password||sessionStorage.getItem('GETI_PENDING_SIGNUP_PASSWORD')||'';}catch(e){}
+    return {email:email,password:password};
+  }
+  async function api(body){
+    if(typeof getiFetchJson!=='function' || typeof GETI_ACCOUNT_FUNCTION==='undefined')throw new Error('GETI account service is unavailable.');
+    return getiFetchJson(GETI_ACCOUNT_FUNCTION,{method:'POST',headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY},body:JSON.stringify(body)});
+  }
+  function friendlyVerifyError(e){
+    var m=String((e&&e.message)||e||'').trim();
+    if(/expired|invalid|otp_expired|token has expired/i.test(m))return 'This confirmation code is invalid or expired. Tap SEND CODE AGAIN, then enter the newest 6-digit code.';
+    if(/rate limit|security purposes|seconds/i.test(m))return 'Please wait a moment before requesting another confirmation code.';
+    return m||'Unable to confirm this code. Please request a new confirmation code.';
+  }
+  async function signIn(email,password){
+    if(window.GETI_SB&&GETI_SB.auth&&typeof GETI_SB.auth.signInWithPassword==='function'){
+      var r=await GETI_SB.auth.signInWithPassword({email:email,password:password});
+      if(!r.error&&r.data&&r.data.user)return r;
+    }
+    var rr=await fetch(GETI_SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY},body:JSON.stringify({email:email,password:password})});
+    var d={};try{d=await rr.json()}catch(e){}
+    if(!rr.ok)throw new Error(d.msg||d.message||d.error_description||d.error||'Unable to sign in.');
+    var session={access_token:d.access_token,refresh_token:d.refresh_token||'',token_type:d.token_type||'bearer',expires_in:Number(d.expires_in||3600),expires_at:Math.floor(Date.now()/1000)+Number(d.expires_in||3600),user:d.user||null};
+    try{localStorage.setItem('GETI_DIRECT_AUTH_SESSION',JSON.stringify(session));localStorage.setItem('sb-syawyulrelrhjprnxdyn-auth-token',JSON.stringify(session));localStorage.setItem('GETI_CERT_EVER_CREATED','yes');}catch(e){}
+    return {data:{session:session,user:d.user||null},error:null};
+  }
+  var busy=false;
+  window.getiConfirmSignupCode=async function(){
+    if(busy)return;
+    var input=el('getiSignupCodeInput'),status=el('getiSignupCodeStatus'),btn=el('getiConfirmCodeBtn');
+    var code=String(input&&input.value||'').replace(/\s+/g,'').trim();
+    var p=pending();
+    if(!p.email||!p.password){if(status)status.innerHTML='<span class="bad">Please create your account again before entering the confirmation code.</span>';return;}
+    if(!/^\d{6}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the 6-digit confirmation code from the newest email.</span>';return;}
+    busy=true;if(btn){btn.disabled=true;btn.textContent='CONFIRMING...';}if(input)input.disabled=true;
+    if(status)status.innerHTML='<span class="ok">Checking your confirmation code...</span>';
+    try{
+      try{
+        await api({action:'verify_signup_code',email:p.email,code:code});
+      }catch(verifyErr){
+        throw new Error(friendlyVerifyError(verifyErr));
+      }
+      if(status)status.innerHTML='<span class="ok">✓ Email confirmed. Signing you in...</span>';
+      var signed;
+      try{signed=await signIn(p.email,p.password)}catch(first){
+        await new Promise(function(resolve){setTimeout(resolve,500)});
+        signed=await signIn(p.email,p.password);
+      }
+      var user=signed&&signed.data&&signed.data.user;
+      if(!user||!user.email_confirmed_at)throw new Error('Email confirmation succeeded, but sign-in is not ready yet. Please use SIGN IN once with your email and password.');
+      try{sessionStorage.removeItem('GETI_PENDING_SIGNUP_EMAIL');sessionStorage.removeItem('GETI_PENDING_SIGNUP_PASSWORD');}catch(e){}
+      if(status)status.innerHTML='<span class="ok">✓ Email confirmed. Your GETI account is ready.</span>';
+      var le=el('getiFirstLoginEmail');if(le)le.value=p.email;
+      var ls=el('getiFirstLoginStatus');if(ls)ls.innerHTML='<span class="ok">✓ Account confirmed and signed in.</span>';
+      setTimeout(function(){if(typeof window.getiOpenSecondArea==='function')window.getiOpenSecondArea();},250);
+    }catch(e){
+      if(status)status.innerHTML='<span class="bad">'+esc(String((e&&e.message)||'Unable to confirm this code.'))+'</span>';
+    }finally{busy=false;if(btn){btn.disabled=false;btn.textContent='CONTINUE';}if(input)input.disabled=false;}
+  };
+
+  var resendBusy=false,resendTimer=null;
+  window.getiResendSignupCode=async function(){
+    if(resendBusy)return;
+    var p=pending(),status=el('getiSignupCodeStatus'),btn=el('getiResendCodeBtn'),input=el('getiSignupCodeInput');
+    if(!p.email){if(status)status.innerHTML='<span class="bad">Please create your account again first.</span>';return;}
+    resendBusy=true;if(btn){btn.disabled=true;btn.textContent='SENDING...';}
+    if(input){input.value='';input.disabled=true;}
+    if(status)status.innerHTML='<span class="ok">Sending a new confirmation code...</span>';
+    try{
+      await api({action:'resend_code',email:p.email});
+      if(status)status.innerHTML='<span class="ok">✓ New code sent. Enter only the newest 6-digit code from your email.</span>';
+      var sec=60;
+      clearInterval(resendTimer);
+      resendTimer=setInterval(function(){
+        sec--;
+        if(!btn)return;
+        if(sec<=0){clearInterval(resendTimer);resendBusy=false;btn.disabled=false;btn.textContent='SEND CODE AGAIN';}
+        else{btn.disabled=true;btn.textContent='SEND CODE AGAIN ('+sec+'s)';}
+      },1000);
+    }catch(e){
+      resendBusy=false;
+      if(btn){btn.disabled=false;btn.textContent='SEND CODE AGAIN';}
+      if(status)status.innerHTML='<span class="bad">'+esc(friendlyVerifyError(e))+'</span>';
+    }finally{if(input)input.disabled=false;}
+  };
+})();
+</script>
+
+<style id="geti-simple-auth-flow-style">
+.geti-password-label{position:relative!important}
+.geti-password-label input{padding-right:82px!important}
+.geti-password-toggle{position:absolute!important;right:8px!important;bottom:7px!important;height:34px!important;min-width:68px!important;padding:0 8px!important;border:1px solid #cbd8e6!important;border-radius:7px!important;background:#fff!important;color:#173b62!important;font-size:10px!important;font-weight:800!important;cursor:pointer!important;z-index:3!important;box-shadow:none!important}
+.geti-password-toggle:active{transform:scale(.96)!important}
+#getiSimpleForgotCodeStep[hidden],#getiSimpleForgotPasswordStep[hidden],#getiSimpleForgotEmailStep[hidden]{display:none!important}
+.geti-simple-forgot-box{display:grid;gap:13px}
+.geti-simple-code-row{display:flex;gap:8px;align-items:center}
+.geti-simple-code-row input{flex:1;min-width:0}
+.geti-simple-mini-btn{min-height:42px;padding:0 13px;border:1px solid #cbd8e6;border-radius:8px;background:#fff;color:#173b62;font-weight:800;cursor:pointer}
+.geti-simple-forgot-email{padding:10px 12px;border:1px solid #dce6f0;border-radius:8px;background:#f7fafe;color:#173b62;font-size:12px;overflow-wrap:anywhere}
+.geti-simple-forgot-email strong{display:block;margin-top:2px;color:#082e5d}
+</style>
+<script id="geti-simple-auth-flow-final">
+(function(){
+  'use strict';
+  function el(id){return document.getElementById(id)}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v||'').trim())}
+  async function accountApi(body){
+    var r=await fetch(GETI_ACCOUNT_FUNCTION,{method:'POST',headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY},body:JSON.stringify(body)});
+    var d={};try{d=await r.json()}catch(e){}
+    if(!r.ok)throw new Error(d.error||d.message||'Request failed.');
+    return d;
+  }
+  function setTextStatus(id,html){var n=el(id);if(n)n.innerHTML=html}
+  function savePending(email){
+    try{sessionStorage.setItem('GETI_PENDING_SIGNUP_EMAIL',email);sessionStorage.removeItem('GETI_PENDING_SIGNUP_PASSWORD')}catch(e){}
+  }
+  function readPending(){
+    var email='';
+    try{email=sessionStorage.getItem('GETI_PENDING_SIGNUP_EMAIL')||''}catch(e){}
+    return {email:email};
+  }
+  function clearPending(){try{sessionStorage.removeItem('GETI_PENDING_SIGNUP_EMAIL');sessionStorage.removeItem('GETI_PENDING_SIGNUP_PASSWORD')}catch(e){}}
+  function saveSessionDirect(session){
+    if(!session||!session.access_token)return;
+    var normalized={access_token:session.access_token,refresh_token:session.refresh_token||'',token_type:session.token_type||'bearer',expires_in:Number(session.expires_in||3600),expires_at:session.expires_at||Math.floor(Date.now()/1000)+Number(session.expires_in||3600),user:session.user||null};
+    try{localStorage.setItem('GETI_DIRECT_AUTH_SESSION',JSON.stringify(normalized));localStorage.setItem('sb-syawyulrelrhjprnxdyn-auth-token',JSON.stringify(normalized));localStorage.setItem('GETI_CERT_EVER_CREATED','yes')}catch(e){}
+  }
+  async function activateSession(session){
+    if(!session||!session.access_token)throw new Error('Secure session was not returned. Please request a new code.');
+    saveSessionDirect(session);
+    if(window.GETI_SB&&GETI_SB.auth&&typeof GETI_SB.auth.setSession==='function'){
+      var sr=await GETI_SB.auth.setSession({access_token:session.access_token,refresh_token:session.refresh_token});
+      if(sr&&sr.error)throw sr.error;
+    }
+    return true;
+  }
+  function addToggle(input){
+    if(!input||input.dataset.getiToggleReady==='1')return;
+    input.dataset.getiToggleReady='1';
+    var label=input.closest('label')||input.parentElement;if(!label)return;
+    label.classList.add('geti-password-label');
+    var b=document.createElement('button');b.type='button';b.className='geti-password-toggle';b.textContent='👁 SHOW';b.setAttribute('aria-label','Show password');
+    b.onclick=function(){var show=input.type==='password';input.type=show?'text':'password';b.textContent=show?'🙈 HIDE':'👁 SHOW';b.setAttribute('aria-label',show?'Hide password':'Show password')};
+    label.appendChild(b);
+  }
+  function initPasswordToggles(){
+    ['getiFirstLoginPassword','getiFirstCreatePassword','getiFirstCreateConfirm','getiSimpleForgotNewPassword','getiSimpleForgotConfirmPassword'].forEach(function(id){addToggle(el(id))});
+  }
+  function showSignupCode(email){
+    var form=document.querySelector('#getiFirstCreatePane .geti-first-create-form');
+    var tabs=document.querySelector('#getiFirstAccountPanel .geti-first-auth-tabs');
+    var step=el('getiSignupCodeStep'),mail=el('getiSignupCodeEmail'),input=el('getiSignupCodeInput');
+    if(form)form.hidden=true;if(tabs)tabs.hidden=true;if(step)step.hidden=false;if(mail)mail.textContent=email;if(input){input.value='';input.disabled=false;setTimeout(function(){input.focus()},80)}
+    setTextStatus('getiFirstCreateStatus','');
+    setTextStatus('getiSignupCodeStatus','<span class="ok">✓ Confirmation code sent. Enter the 6-digit code.</span>');
+  }
+  function showCreateForm(){
+    var form=document.querySelector('#getiFirstCreatePane .geti-first-create-form');
+    var tabs=document.querySelector('#getiFirstAccountPanel .geti-first-auth-tabs');
+    var step=el('getiSignupCodeStep');
+    if(step)step.hidden=true;if(form)form.hidden=false;if(tabs)tabs.hidden=false;
+  }
+
+  var createBusy=false;
+  window.getiFirstAreaCreateAccount=async function(){
+    if(createBusy)return;
+    var name=el('getiFirstCreateName'),email=el('getiFirstCreateEmail'),pw=el('getiFirstCreatePassword'),confirm=el('getiFirstCreateConfirm'),status=el('getiFirstCreateStatus');
+    if(!name||!email||!pw||!confirm||!status)return;
+    var fullName=String(name.value||'').trim().replace(/\s+/g,' '),address=String(email.value||'').trim().toLowerCase(),password=String(pw.value||''),confirmPassword=String(confirm.value||'');
+    if(fullName.length<2){status.innerHTML='<span class="bad">Please enter your full name.</span>';return}
+    if(!validEmail(address)){status.innerHTML='<span class="bad">Please enter a valid email address.</span>';return}
+    if(password.length<6||password.length>12){status.innerHTML='<span class="bad">Password must contain 6 to 12 characters.</span>';return}
+    if(password!==confirmPassword){status.innerHTML='<span class="bad">Passwords do not match.</span>';return}
+    createBusy=true;status.innerHTML='<span class="ok">Creating account...</span>';
+    try{
+      await accountApi({action:'create_account',full_name:fullName,email:address,password:password});
+      savePending(address);
+      pw.value='';confirm.value='';
+      showSignupCode(address);
+    }catch(e){status.innerHTML='<span class="bad">'+esc(e.message||'Unable to create account.')+'</span>'}
+    finally{createBusy=false}
+  };
+
+  var confirmBusy=false;
+  window.getiConfirmSignupCode=async function(){
+    if(confirmBusy)return;
+    var input=el('getiSignupCodeInput'),status=el('getiSignupCodeStatus'),btn=el('getiConfirmCodeBtn'),p=readPending();
+    var code=String(input&&input.value||'').replace(/\s+/g,'').trim();
+    if(!p.email){if(status)status.innerHTML='<span class="bad">Create your account again first.</span>';return}
+    if(!/^\d{6}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the 6-digit confirmation code.</span>';return}
+    confirmBusy=true;if(btn){btn.disabled=true;btn.textContent='CONFIRMING...'}if(input)input.disabled=true;
+    if(status)status.innerHTML='<span class="ok">Confirming...</span>';
+    try{
+      var data=await accountApi({action:'verify_signup_code',email:p.email,code:code});
+      if(!data.session)throw new Error('Confirmation succeeded but the secure session was not returned.');
+      await activateSession(data.session);
+      clearPending();
+      if(status)status.innerHTML='<span class="ok">✓ Email confirmed. Opening Student Area...</span>';
+      var login=el('getiFirstLoginEmail');if(login)login.value=p.email;
+      setTimeout(function(){if(typeof window.getiOpenSecondArea==='function')window.getiOpenSecondArea()},180);
+    }catch(e){
+      var m=String(e.message||'Invalid or expired confirmation code.');
+      if(/expired|invalid|token/i.test(m))m='Invalid or expired code. Tap SEND CODE AGAIN and use the newest 6-digit code.';
+      if(status)status.innerHTML='<span class="bad">'+esc(m)+'</span>';
+    }finally{confirmBusy=false;if(btn){btn.disabled=false;btn.textContent='CONTINUE'}if(input)input.disabled=false}
+  };
+
+  var resendBusy=false,resendTimer=null;
+  window.getiResendSignupCode=async function(){
+    if(resendBusy)return;
+    var p=readPending(),status=el('getiSignupCodeStatus'),btn=el('getiResendCodeBtn'),input=el('getiSignupCodeInput');
+    if(!p.email){if(status)status.innerHTML='<span class="bad">Create your account again first.</span>';return}
+    resendBusy=true;if(btn){btn.disabled=true;btn.textContent='SENDING...'}if(input)input.value='';
+    try{
+      await accountApi({action:'resend_code',email:p.email});
+      if(status)status.innerHTML='<span class="ok">✓ New code sent. Use only the newest code.</span>';
+      var sec=60;clearInterval(resendTimer);resendTimer=setInterval(function(){sec--;if(!btn)return;if(sec<=0){clearInterval(resendTimer);resendBusy=false;btn.disabled=false;btn.textContent='SEND CODE AGAIN'}else btn.textContent='SEND CODE AGAIN ('+sec+'s)'},1000);
+    }catch(e){resendBusy=false;if(btn){btn.disabled=false;btn.textContent='SEND CODE AGAIN'}if(status)status.innerHTML='<span class="bad">'+esc(e.message||'Unable to send code.')+'</span>'}
+  };
+  window.getiChangeSignupEmail=function(){clearPending();showCreateForm();setTextStatus('getiSignupCodeStatus','');var e=el('getiFirstCreateEmail');if(e)setTimeout(function(){e.focus()},50)};
+
+  function buildForgotPane(){
+    var pane=el('getiFirstForgotPane');if(!pane)return;
+    pane.innerHTML=''
+      +'<div class="geti-first-forgot-heading"><h3>Reset Password</h3><p>Enter your email. GETI will send a confirmation code.</p></div>'
+      +'<div class="geti-simple-forgot-box">'
+      +'<div id="getiSimpleForgotEmailStep">'
+      +'<label class="geti-first-field full"><span>Email Address</span><input id="getiSimpleForgotEmail" type="email" autocomplete="email" placeholder="name@example.com"></label>'
+      +'<button id="getiSimpleForgotSendBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotSendCode()">SEND CODE</button>'
+      +'</div>'
+      +'<div id="getiSimpleForgotCodeStep" hidden>'
+      +'<div class="geti-simple-forgot-email"><span>Email</span><strong id="getiSimpleForgotEmailDisplay"></strong></div>'
+      +'<label class="geti-first-field full"><span>Confirmation Code</span><input id="getiSimpleForgotCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6-digit code"></label>'
+      +'<button id="getiSimpleForgotVerifyBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotVerifyCode()">CONTINUE</button>'
+      +'<div class="geti-first-account-links"><button type="button" onclick="getiSimpleForgotSendCode(true)">SEND CODE AGAIN</button></div>'
+      +'</div>'
+      +'<div id="getiSimpleForgotPasswordStep" hidden>'
+      +'<label class="geti-first-field full"><span>New Password</span><input id="getiSimpleForgotNewPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="6 to 12 characters"></label>'
+      +'<label class="geti-first-field full"><span>Confirm New Password</span><input id="getiSimpleForgotConfirmPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="Repeat new password"></label>'
+      +'<button id="getiSimpleForgotSaveBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotSavePassword()">SAVE NEW PASSWORD</button>'
+      +'</div>'
+      +'<div id="getiFirstResetStatus" class="geti-first-login-status" aria-live="polite"></div>'
+      +'<div class="geti-first-account-links"><button type="button" onclick="getiSwitchFirstAccount(\'signin\')">← BACK TO SIGN IN</button></div>'
+      +'</div>';
+    initPasswordToggles();
+  }
+  function forgotEmail(){var e=el('getiSimpleForgotEmail');var v=String(e&&e.value||'').trim().toLowerCase();if(!v){try{v=sessionStorage.getItem('GETI_RESET_EMAIL')||''}catch(x){}}return v}
+  var forgotSendBusy=false;
+  window.getiSimpleForgotSendCode=async function(resend){
+    if(forgotSendBusy)return;
+    var email=forgotEmail(),status=el('getiFirstResetStatus'),btn=el('getiSimpleForgotSendBtn');
+    if(!validEmail(email)){if(status)status.innerHTML='<span class="bad">Enter a valid email address.</span>';return}
+    forgotSendBusy=true;if(btn)btn.disabled=true;if(status)status.innerHTML='<span class="ok">Sending confirmation code...</span>';
+    try{
+      await accountApi({action:'send_password_reset_code',email:email});
+      try{sessionStorage.setItem('GETI_RESET_EMAIL',email);sessionStorage.removeItem('GETI_RESET_TICKET')}catch(e){}
+      var a=el('getiSimpleForgotEmailStep'),b=el('getiSimpleForgotCodeStep'),c=el('getiSimpleForgotPasswordStep'),d=el('getiSimpleForgotEmailDisplay'),code=el('getiSimpleForgotCode');
+      if(a)a.hidden=true;if(b)b.hidden=false;if(c)c.hidden=true;if(d)d.textContent=email;if(code){code.value='';setTimeout(function(){code.focus()},80)}
+      if(status)status.innerHTML='<span class="ok">✓ Code sent. Enter the newest 6-digit code.</span>';
+    }catch(e){if(status)status.innerHTML='<span class="bad">'+esc(e.message||'Unable to send reset code.')+'</span>'}
+    finally{forgotSendBusy=false;if(btn)btn.disabled=false}
+  };
+  var forgotVerifyBusy=false;
+  window.getiSimpleForgotVerifyCode=async function(){
+    if(forgotVerifyBusy)return;
+    var email=forgotEmail(),code=String((el('getiSimpleForgotCode')||{}).value||'').replace(/\s+/g,'').trim(),status=el('getiFirstResetStatus'),btn=el('getiSimpleForgotVerifyBtn');
+    if(!/^\d{6}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the 6-digit confirmation code.</span>';return}
+    forgotVerifyBusy=true;if(btn){btn.disabled=true;btn.textContent='CONFIRMING...'}if(status)status.innerHTML='<span class="ok">Confirming code...</span>';
+    try{
+      var d=await accountApi({action:'verify_password_reset_code',email:email,code:code});
+      if(!d.reset_ticket)throw new Error('Reset authorization was not returned.');
+      try{sessionStorage.setItem('GETI_RESET_TICKET',d.reset_ticket)}catch(e){}
+      var b=el('getiSimpleForgotCodeStep'),c=el('getiSimpleForgotPasswordStep');if(b)b.hidden=true;if(c)c.hidden=false;
+      if(status)status.innerHTML='<span class="ok">✓ Code confirmed. Enter your new password.</span>';
+      initPasswordToggles();var np=el('getiSimpleForgotNewPassword');if(np)setTimeout(function(){np.focus()},80);
+    }catch(e){var m=String(e.message||'Invalid or expired code.');if(/expired|invalid|token/i.test(m))m='Invalid or expired code. Tap SEND CODE AGAIN and use the newest code.';if(status)status.innerHTML='<span class="bad">'+esc(m)+'</span>'}
+    finally{forgotVerifyBusy=false;if(btn){btn.disabled=false;btn.textContent='CONTINUE'}}
+  };
+  var forgotSaveBusy=false;
+  window.getiSimpleForgotSavePassword=async function(){
+    if(forgotSaveBusy)return;
+    var p=String((el('getiSimpleForgotNewPassword')||{}).value||''),c=String((el('getiSimpleForgotConfirmPassword')||{}).value||''),status=el('getiFirstResetStatus'),btn=el('getiSimpleForgotSaveBtn'),ticket='';
+    try{ticket=sessionStorage.getItem('GETI_RESET_TICKET')||''}catch(e){}
+    if(p.length<6||p.length>12){if(status)status.innerHTML='<span class="bad">Password must contain 6 to 12 characters.</span>';return}
+    if(p!==c){if(status)status.innerHTML='<span class="bad">Passwords do not match.</span>';return}
+    if(!ticket){if(status)status.innerHTML='<span class="bad">Request a new reset code first.</span>';return}
+    forgotSaveBusy=true;if(btn){btn.disabled=true;btn.textContent='SAVING...'}if(status)status.innerHTML='<span class="ok">Saving new password...</span>';
+    try{
+      await accountApi({action:'set_new_password',reset_ticket:ticket,password:p});
+      var email=forgotEmail();try{sessionStorage.removeItem('GETI_RESET_TICKET');sessionStorage.removeItem('GETI_RESET_EMAIL')}catch(e){}
+      if(window.GETI_SB&&GETI_SB.auth)try{await GETI_SB.auth.signOut()}catch(e){}
+      var le=el('getiFirstLoginEmail');if(le)le.value=email;
+      if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('signin');
+      setTextStatus('getiFirstLoginStatus','<span class="ok">✓ Password updated. Sign in with your new password.</span>');
+    }catch(e){if(status)status.innerHTML='<span class="bad">'+esc(e.message||'Unable to update password.')+'</span>'}
+    finally{forgotSaveBusy=false;if(btn){btn.disabled=false;btn.textContent='SAVE NEW PASSWORD'}}
+  };
+
+  function boot(){buildForgotPane();initPasswordToggles();showCreateForm()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
 
