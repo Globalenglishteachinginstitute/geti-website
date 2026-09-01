@@ -419,6 +419,17 @@ img.thumb{
 }
 </style>
 
+
+<style id="geti-admin-pdf-certificate-delivery-style">
+.geti-admin-pdf-send{display:grid;grid-template-columns:minmax(180px,1fr) auto;gap:7px;align-items:center;min-width:330px}
+.geti-admin-pdf-send input[type=file]{font-size:9px;padding:7px;background:#f8fbff!important;border:1px dashed #91add0!important}
+.geti-admin-pdf-send .status{grid-column:1/-1;font-size:9px;min-height:12px}
+@media(max-width:720px){
+  .geti-admin-pdf-send{grid-template-columns:1fr;min-width:230px}
+  .geti-admin-pdf-send .status{grid-column:auto}
+}
+</style>
+
 </head>
 <body>
 <div id="login" class="login-screen">
@@ -466,6 +477,7 @@ const APIKEY="sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8";
 const ADMIN_FN=BASE+"geti-admin";
 const COMMUNITY_FN=BASE+"geti-community-admin";
 const PUBLISH_FN=BASE+"geti-publish";
+const CERTPDF_FN=BASE+"geti-certificate-files";
 const SHEET_API="https://script.google.com/macros/s/AKfycbzQ_YczGnSdh4GJZ73XTt8LfrUtdjJFAlUZGUx3Chhlk-0Es3rskQkun5LgrZYhkKRF/exec";
 const TOKEN_KEY="GETI_BAAM_TOKEN"; // GETI admin backend v5+ includes Google Sheet proxy
 let token=localStorage.getItem(TOKEN_KEY)||"";
@@ -478,6 +490,7 @@ const pages=[
   ["students","STUDENTS","03"],
   ["results","EXAM RESULTS","04"],
   ["certificates","CERTIFICATE QUEUE","05"],
+  ["pdfcerts","PDF CERTIFICATES","PDF"],
   ["sendcert","SEND CERTIFICATE","06"],
   ["sheetstudents","SHEET STUDENTS","07"],
   ["registrations","REGISTRATIONS","08"],
@@ -511,6 +524,7 @@ async function call(url,body,withToken=true){
 const admin=(action,extra={})=>call(ADMIN_FN,{action,...extra});
 const community=(action,extra={})=>call(COMMUNITY_FN,{action,...extra});
 const publishApi=(action,extra={})=>call(PUBLISH_FN,{action,...extra});
+const certPdfApi=(action,extra={})=>call(CERTPDF_FN,{action,...extra});
 
 async function login(){
   const p=document.getElementById("password").value;
@@ -539,7 +553,7 @@ function renderNav(){
 }
 function openPage(id){
   setActive(id);
-  const f={overview, messages, students, results, certificates, sendcert:sendCertificate, sheetstudents:sheetStudents, registrations, analytics, blocks, publish:publishPage, trash}[id];
+  const f={overview, messages, students, results, certificates, pdfcerts:pdfCertificates, sendcert:sendCertificate, sheetstudents:sheetStudents, registrations, analytics, blocks, publish:publishPage, trash}[id];
   if(f)f();
 }
 
@@ -792,6 +806,76 @@ async function publishImage(){
 }
 async function deletePub(id){if(!confirm("Delete this publication?"))return;try{await publishApi("delete_published_image",{id});publishPage()}catch(e){alert(e.message)}}
 
+
+
+/* ===== PASSED EXAM → ADMIN-ONLY PDF CERTIFICATE DELIVERY ===== */
+let getiPdfCertificateRows=[];
+
+async function pdfCertificates(){
+  setActive("pdfcerts");
+  content(notice("Loading PASSED examination candidates..."));
+  try{
+    const r=await certPdfApi("admin_list_passed");
+    getiPdfCertificateRows=Array.isArray(r.results)?r.results:[];
+    content(
+      pageHead("PDF Certificates","Every PASSED examination has an administrator-only PDF delivery area.",'<button class="btn" onclick="pdfCertificates()">REFRESH</button>')+
+      '<div class="notice success-note"><b>Administrator only:</b> select the final PDF certificate for a PASSED candidate and send it. After upload, the PDF appears automatically in that student’s GETI Second Area and can be viewed and downloaded.</div>'+
+      '<div class="search-row"><input class="search" id="pdfCertQ" placeholder="Search Candidate ID, student, email or exam..." oninput="renderPdfCertificates()"><span class="count" id="pdfCertCount"></span></div>'+
+      '<div class="table-wrap"><table><thead><tr><th>Candidate ID</th><th>Student</th><th>Exam / Score</th><th>PDF Status</th><th>Administrator PDF</th></tr></thead><tbody id="pdfCertRows"></tbody></table></div>'
+    );
+    renderPdfCertificates();
+  }catch(e){content(notice(e.message,"error"))}
+}
+
+function renderPdfCertificates(){
+  const q=(document.getElementById("pdfCertQ")?.value||"").trim().toLowerCase();
+  const rows=getiPdfCertificateRows.filter(r=>!q||[r.candidate_id,r.name,r.email,r.program].join(" ").toLowerCase().includes(q));
+  const count=document.getElementById("pdfCertCount");
+  const body=document.getElementById("pdfCertRows");
+  if(count)count.textContent=rows.length+" PASSED candidate(s)";
+  if(!body)return;
+  body.innerHTML=rows.length?rows.map(r=>{
+    const cid=String(r.candidate_id||"");
+    const sent=!!r.certificate_pdf;
+    const fileName=sent?String(r.certificate_pdf.file_name||"Certificate.pdf"):"";
+    const size=sent&&r.certificate_pdf.file_size?Math.max(1,Math.round(Number(r.certificate_pdf.file_size)/1024))+" KB":"";
+    return '<tr>'+
+      '<td><b>'+esc(cid||"—")+'</b></td>'+
+      '<td><b>'+esc(r.name||"Student")+'</b><br><span class="count">'+esc(r.email||"")+'</span></td>'+
+      '<td>'+esc(r.program||"—")+'<br><b>'+Math.round(Number(r.percentage||0))+'%</b> <span class="badge pass">PASSED</span></td>'+
+      '<td>'+(sent?
+        '<span class="badge active">PDF SENT</span><br><span class="count">'+esc(fileName)+(size?' · '+esc(size):'')+'<br>'+esc(d(r.certificate_pdf.updated_at||r.certificate_pdf.uploaded_at))+'</span>':
+        '<span class="badge pending">WAITING FOR PDF</span>')+
+      '</td>'+
+      '<td><div class="geti-admin-pdf-send">'+
+        '<input type="file" accept="application/pdf,.pdf" data-cert-pdf="'+esc(cid)+'">'+
+        '<button class="btn primary" onclick="uploadPassedPdf(\''+esc(cid)+'\')">'+(sent?'REPLACE PDF':'SEND PDF')+'</button>'+
+        '<div class="status" data-cert-status="'+esc(cid)+'"></div>'+
+      '</div></td>'+
+    '</tr>';
+  }).join(""):'<tr><td colspan="5" class="empty">No PASSED candidates found.</td></tr>';
+}
+
+async function uploadPassedPdf(candidateId){
+  const input=document.querySelector('[data-cert-pdf="'+candidateId+'"]');
+  const status=document.querySelector('[data-cert-status="'+candidateId+'"]');
+  const file=input?.files?.[0];
+  if(!file){if(status)status.innerHTML='<span style="color:#b42318">Choose a PDF first.</span>';return}
+  if(file.type && file.type!=="application/pdf" && !file.name.toLowerCase().endsWith(".pdf")){
+    if(status)status.innerHTML='<span style="color:#b42318">Only PDF is allowed.</span>';return;
+  }
+  if(file.size>10*1024*1024){if(status)status.innerHTML='<span style="color:#b42318">PDF exceeds 10 MB.</span>';return}
+  if(status)status.innerHTML='<span style="color:#124a8a">Uploading certificate PDF...</span>';
+  try{
+    const data=await fileData(file);
+    await certPdfApi("admin_upload_pdf",{candidate_id:candidateId,file:{name:file.name,type:"application/pdf",data}});
+    if(status)status.innerHTML='<span style="color:#16865c;font-weight:900">✓ PDF SENT TO STUDENT AREA</span>';
+    setTimeout(pdfCertificates,700);
+  }catch(e){
+    if(status)status.innerHTML='<span style="color:#b42318">'+esc(e.message||"Unable to upload PDF.")+'</span>';
+  }
+}
+/* ===== END PDF CERTIFICATE DELIVERY ===== */
 
 /* ===== Restored: SEND CERTIFICATE + SHEET STUDENTS ===== */
 let certBusy=false;
