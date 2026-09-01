@@ -4811,7 +4811,7 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
       <details><summary>How do I verify a GETI certificate?</summary><p>Use the certificate verification form above and search by certificate ID, full name, or nationality.</p></details>
       <details><summary>How do I access lessons and examinations?</summary><p>Sign in or create a student account, then open the GETI student area.</p></details>
       <details><summary>Can I use GETI on my mobile device?</summary><p>Yes. The first area, student area, lessons and examinations are designed to work on phones, tablets and computers.</p></details>
-      <details><summary>How do I get my certificate?</summary><p>After completing the required examination, use the GET MY CERTIFICATE service available in the GETI student area.</p></details>
+      <details><summary>How do I get my certificate?</summary><p>After you pass an examination, GETI Administration can send your official certificate PDF directly to My Certificate PDF in the Student Area. Use SEND MESSAGE TO ADMINISTRATOR if you need assistance.</p></details>
     </section>
 
     <footer class="geti-home-v2-footer" id="getiHomeContact">
@@ -4894,6 +4894,21 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
       </div>
     </div>
   </div>
+
+<section id="getiMyCertificatePdfSection" class="geti-my-certificate-pdf-section" aria-live="polite">
+  <div class="container">
+    <div class="geti-my-certificate-pdf-head">
+      <div>
+        <span>OFFICIAL GETI DOCUMENTS</span>
+        <h2>My Certificate PDF</h2>
+        <p>When GETI Administration sends your certificate after a PASSED examination, it appears here automatically.</p>
+      </div>
+      <div id="getiCertificatePdfLiveStatus" class="geti-certificate-pdf-live-status">Checking your certificates…</div>
+    </div>
+    <div id="getiMyCertificatePdfList" class="geti-my-certificate-pdf-list"></div>
+  </div>
+</section>
+
 <section class="stats">
 
 <div class="container stats-grid">
@@ -4930,8 +4945,8 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
 <div class="container geti-about-certificate-cta">
   <button type="button" id="getiAboutCertificateRequestBtn"
           class="btn btn-gold geti-about-certificate-btn"
-          onclick="getiRequestCertificateFromAdmin(this)">
-    GET MY CERTIFICATE
+          onclick="getiOpenAdministratorChat(this)">
+    SEND MESSAGE TO ADMINISTRATOR
   </button>
   <div id="getiAboutCertificateRequestStatus" class="geti-about-certificate-status" aria-live="polite"></div>
 </div>
@@ -10603,7 +10618,7 @@ function showGetCertAdminChat(){
         '<div class="getcert-chat">'+
         '<div class="getcert-admin-card">'+
         '<div class="getcert-admin-avatar">A</div>'+
-        '<div><strong>Administrator</strong><br><small>GETI Certificate Support</small></div>'+
+        '<div><strong>Administrator</strong><br><small>GETI Student Support · Messages · Images · PDF</small></div>'+
         '<div class="getcert-chat-actions">'+
         '<button class="getcert-mini-btn back" onclick="backToGetiMenu()">BACK TO MENU</button>'+
         '<button class="getcert-mini-btn logout" onclick="logoutGetCertAccount()">LOG OUT</button>'+
@@ -10611,7 +10626,7 @@ function showGetCertAdminChat(){
         '</div>'+
         '<div id="getCertMessages" class="getcert-messages"></div>'+
         '<div class="getcert-file-row">'+
-        '<label class="getcert-file-label">📎 IMAGE / PDF'+
+        '<label class="getcert-file-label">📎 SEND IMAGE / PDF'+
         '<input id="getCertFileInput" type="file" accept="image/*,.pdf,application/pdf" style="display:none;" onchange="selectGetCertAttachment(this)">'+
         '</label>'+
         '<span id="getCertFileName" class="getcert-file-name">No file selected</span>'+
@@ -10881,7 +10896,7 @@ function openBaamConversation(email){
         '<div class="baam-compose">'+
         '<textarea id="baamReplyText" placeholder="Write a reply to the candidate..."></textarea>'+
         '<div class="baam-file-row">'+
-        '<label class="getcert-file-label">📎 IMAGE / PDF'+
+        '<label class="getcert-file-label">📎 SEND IMAGE / PDF'+
         '<input id="baamFileInput" type="file" accept="image/*,.pdf,application/pdf" style="display:none;" onchange="selectBaamFile(this)">'+
         '</label>'+
         '<span id="baamFileName" class="getcert-file-name">No file selected</span>'+
@@ -11514,7 +11529,7 @@ async function showGetCertAdminChat(){
         '<div class="getcert-chat">'+
         '<div class="getcert-admin-card">'+
         '<div class="getcert-admin-avatar">A</div>'+
-        '<div><strong>Administrator</strong><br><small>GETI Certificate Support</small></div>'+
+        '<div><strong>Administrator</strong><br><small>GETI Student Support · Messages · Images · PDF</small></div>'+
         '<div class="getcert-chat-actions">'+
         '<button class="getcert-mini-btn back" onclick="backToGetiMenu()">BACK TO MENU</button>'+
         '<button class="getcert-mini-btn logout" onclick="logoutGetCertAccount()">LOG OUT</button>'+
@@ -11522,7 +11537,7 @@ async function showGetCertAdminChat(){
         '</div>'+
         '<div id="getCertMessages" class="getcert-messages"></div>'+
         '<div class="getcert-file-row">'+
-        '<label class="getcert-file-label">📎 IMAGE / PDF'+
+        '<label class="getcert-file-label">📎 SEND IMAGE / PDF'+
         '<input id="getCertFileInput" type="file" accept="image/*,.pdf,application/pdf" style="display:none;" onchange="selectGetCertAttachment(this)">'+
         '</label>'+
         '<span id="getCertFileName" class="getcert-file-name">No file selected</span>'+
@@ -11890,7 +11905,7 @@ async function openBaamConversation(userId,email,name){
         '<div class="baam-compose">'+
         '<textarea id="baamReplyText" placeholder="Write a reply to the student..."></textarea>'+
         '<div class="baam-file-row">'+
-        '<label class="getcert-file-label">📎 IMAGE / PDF'+
+        '<label class="getcert-file-label">📎 SEND IMAGE / PDF'+
         '<input id="baamFileInput" type="file" accept="image/*,.pdf,application/pdf" style="display:none;" onchange="selectBaamFile(this)">'+
         '</label>'+
         '<span id="baamFileName" class="getcert-file-name">No file selected</span>'+
@@ -12584,7 +12599,7 @@ function showGeti30ActualResult(){
         ? GETI_THIRD_FAILURE_MESSAGE
         : "You have not yet reached the required score. Your correct answers are protected. Select RETRY INCORRECT ANSWERS to answer only the questions you missed; the full examination will not restart.";
     const action=status==="PASSED"
-        ? '<div class="geti-final-certificate-action"><button class="btn btn-gold geti-result-cert-btn" onclick="getiRequestCertificateFromAdmin(this)">GET MY CERTIFICATE</button></div>'
+        ? '<div class="geti-final-certificate-action"><button class="btn btn-gold geti-result-cert-btn" onclick="getiOpenAdministratorChat(this)">SEND MESSAGE TO ADMINISTRATOR</button></div>'
         : '<div class="geti-final-certificate-action"><button class="btn btn-gold geti-result-cert-btn" onclick="'+(failedThird?'restartGetiExamRegistration()':'startGetiFailedQuestionRetry(false)')+'">'+(failedThird?'START AGAIN FROM REGISTRATION':'RETRY INCORRECT ANSWERS')+'</button></div>';
     const syncNote=(status==="PASSED" || failedThird)
         ? '<div class="geti-sync-note">This completed result is synchronized with the GETI online administration system.</div>'
@@ -13551,7 +13566,7 @@ document.addEventListener("DOMContentLoaded",function(){setTimeout(loadGetiPubli
 <div id="getCertOverlay" class="getcert-overlay">
   <div class="getcert-modal">
     <div class="getcert-head">
-      <strong>GET MY CERTIFICATE</strong>
+      <strong>MESSAGE ADMINISTRATOR</strong>
       <button class="getcert-close" onclick="closeGetCertPortal()">×</button>
     </div>
     <div id="getCertBody" class="getcert-body"></div>
@@ -13854,7 +13869,62 @@ const originalOpenLesson=window.openGetiLesson;
 window.openGetiLesson=function(exam,subject){const c=cfg(exam);if(!c)return originalOpenLesson(exam,subject);getiLessonState.exam=exam;getiLessonState.subject=subject;const panel=document.getElementById("lessonPanel"),nativeSubject=window.getLocalizedCourseSubject(exam,subject),level=window.getGeti200SubjectLevel(exam,subject);panel.classList.add("active");panel.innerHTML='<div class="geti-200-book-shell"><div class="geti-200-book-cover"><span class="geti-200-kicker">GETI · '+escapeHTML(c.ui.textbook)+'</span><h2>'+escapeHTML(nativeSubject)+'</h2><p>'+escapeHTML(c.ui.bookDesc)+'</p><div class="geti-200-meta"><span>'+escapeHTML(level)+'</span><span>'+escapeHTML(c.ui.chaptersLabel)+'</span><span>'+escapeHTML(c.ui.pagesLabel)+'</span><span>'+escapeHTML(c.ui.pagesPer)+'</span></div></div><div class="geti-200-resource-row"><button class="geti-200-resource" onclick="openGetiLessonPDF()"><strong>'+escapeHTML(c.ui.openPdf)+'</strong><span>'+escapeHTML(c.ui.openPdfSub)+'</span><em>'+escapeHTML(c.ui.openPdf)+'</em></button><button class="geti-200-resource" onclick="downloadLessonPDF()"><strong>'+escapeHTML(c.ui.downloadPdf)+'</strong><span>'+escapeHTML(c.ui.downloadPdfSub)+'</span><em>'+escapeHTML(c.ui.downloadPdf)+'</em></button></div>'+window.getGeti200OutlineHTML(exam,subject)+'</div>';panel.scrollIntoView({behavior:"smooth",block:"start"});};
 
 function nativePrintableBook(exam,subject,autoPrint){const c=cfg(exam);if(!c)return false;const w=window.open("","_blank");if(!w){alert("Popup blocked");return true;}const nativeSubject=window.getLocalizedCourseSubject(exam,subject);let pages="";for(let n=1;n<=200;n++){const d=nativePageText(exam,subject,n);pages+='<section class="pdfpage"><header>'+escapeHTML(c.ui.bookHeader)+'</header><h1>'+escapeHTML(nativeSubject)+'</h1><div class="meta">'+escapeHTML(c.exam)+' · '+escapeHTML(d.level)+' · '+escapeHTML(d.stage)+'</div><h2>'+escapeHTML(c.ui.chapter+' '+d.chapter+' · '+d.role)+'</h2>'+d.paragraphs.map(function(x){return '<p>'+escapeHTML(x)+'</p>';}).join("")+'<footer>'+escapeHTML(c.ui.page)+' '+n+' / 200</footer></section>';}
-  const html='<!doctype html><html lang="'+c.code+'"><head><meta charset="utf-8"><title>'+escapeHTML(nativeSubject)+' · 200</title><style>@page{size:A4;margin:0}*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans",sans-serif;color:#18283b}.pdfpage{width:210mm;height:297mm;padding:15mm 16mm 13mm;page-break-after:always;position:relative;overflow:hidden;background:#fff}.pdfpage:last-child{page-break-after:auto}header{background:#0b2d5c;color:#fff;padding:8px 10px;font-size:9pt;font-weight:700;letter-spacing:.03em}h1{font-size:18pt;margin:12px 0 3px;color:#0b2d5c}h2{font-size:12pt;color:#294d73;border-bottom:1px solid #d7e0ea;padding-bottom:5px;margin:12px 0 8px}.meta{font-size:8.5pt;color:#5b6c7d}p{font-size:9.7pt;line-height:1.48;margin:7px 0;text-align:justify}footer{position:absolute;bottom:6mm;left:16mm;right:16mm;border-top:1px solid #d7e0ea;padding-top:4px;font-size:8pt;color:#5c6b78;text-align:right}@media print{body{background:#fff}.pdfpage{box-shadow:none}}</style></head><body>'+pages+'</body></html>';
+  const html='<!doctype html><html lang="'+c.code+'"><head><meta charset="utf-8"><title>'+escapeHTML(nativeSubject)+' · 200</title><style>@page{size:A4;margin:0}*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans",sans-serif;color:#18283b}.pdfpage{width:210mm;height:297mm;padding:15mm 16mm 13mm;page-break-after:always;position:relative;overflow:hidden;background:#fff}.pdfpage:last-child{page-break-after:auto}header{background:#0b2d5c;color:#fff;padding:8px 10px;font-size:9pt;font-weight:700;letter-spacing:.03em}h1{font-size:18pt;margin:12px 0 3px;color:#0b2d5c}h2{font-size:12pt;color:#294d73;border-bottom:1px solid #d7e0ea;padding-bottom:5px;margin:12px 0 8px}.meta{font-size:8.5pt;color:#5b6c7d}p{font-size:9.7pt;line-height:1.48;margin:7px 0;text-align:justify}footer{position:absolute;bottom:6mm;left:16mm;right:16mm;border-top:1px solid #d7e0ea;padding-top:4px;font-size:8pt;color:#5c6b78;text-align:right}@media print{body{background:#fff}.pdfpage{box-shadow:none}}</style>
+<style id="geti-student-auto-certificate-pdf-style">
+.geti-my-certificate-pdf-section{
+  background:linear-gradient(180deg,#f5f8fc,#fff);
+  padding:26px 0 30px;
+  border-bottom:1px solid #e4e9ef;
+}
+.geti-my-certificate-pdf-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:15px;
+}
+.geti-my-certificate-pdf-head span{
+  color:#b68b2b;font-size:10px;font-weight:950;letter-spacing:.12em;
+}
+.geti-my-certificate-pdf-head h2{
+  margin:5px 0 4px;color:#082e5d;font-family:Georgia,"Times New Roman",serif;font-size:25px;
+}
+.geti-my-certificate-pdf-head p{margin:0;color:#607086;font-size:12px;line-height:1.5}
+.geti-certificate-pdf-live-status{
+  flex:0 0 auto;border:1px solid #d7e2ed;background:#fff;color:#52657c;border-radius:999px;
+  padding:8px 11px;font-size:9px;font-weight:850;
+}
+.geti-my-certificate-pdf-list{display:grid;gap:16px}
+.geti-certificate-pdf-empty{
+  border:1px dashed #cbd7e4;background:#fff;border-radius:12px;padding:20px;color:#66788f;font-size:11px;
+}
+.geti-certificate-pdf-card{
+  overflow:hidden;border:1px solid #d6e0ea;border-top:4px solid #b68b2b;border-radius:13px;
+  background:#fff;box-shadow:0 10px 26px rgba(8,46,93,.08);
+}
+.geti-certificate-pdf-card-head{
+  padding:13px 15px;background:linear-gradient(90deg,#082e5d,#124a8a);color:#fff;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.geti-certificate-pdf-card-head strong{font-size:12px}
+.geti-certificate-pdf-card-head small{display:block;color:#d6e1ee;font-size:9px;margin-top:3px}
+.geti-certificate-pdf-download{
+  display:inline-flex;align-items:center;justify-content:center;text-decoration:none!important;
+  background:#d5a536;color:#fff!important;border:1px solid #e6c368;border-radius:8px;
+  padding:9px 12px;font-size:9px;font-weight:950;white-space:nowrap;
+}
+.geti-certificate-pdf-frame-wrap{background:#eef2f6;padding:10px}
+.geti-certificate-pdf-frame{
+  display:block;width:100%;height:660px;border:0;border-radius:8px;background:#fff;
+}
+.geti-certificate-pdf-meta{
+  padding:10px 15px;border-top:1px solid #e5e9ef;color:#68788c;font-size:9px;
+}
+@media(max-width:720px){
+  .geti-my-certificate-pdf-head{align-items:flex-start;flex-direction:column}
+  .geti-certificate-pdf-card-head{align-items:flex-start;flex-direction:column}
+  .geti-certificate-pdf-frame{height:520px}
+}
+@media(max-width:480px){.geti-certificate-pdf-frame{height:430px}}
+</style>
+
+</head><body>'+pages+'</body></html>';
   w.document.open();w.document.write(html);w.document.close();if(autoPrint)setTimeout(function(){w.focus();w.print();},500);return true;}
 const originalOpenPDF=window.openGetiLessonPDF;
 window.openGetiLessonPDF=function(){if(cfg(getiLessonState.exam))return nativePrintableBook(getiLessonState.exam,getiLessonState.subject,false);return originalOpenPDF();};
@@ -15878,26 +15948,32 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
 (function(){
   'use strict';
 
-  const GETI_CERTIFICATE_REQUEST_MESSAGE =
-    "Hello Administrator, I have passed my examination and I would like to request my GETI certificate. Please review my examination result and assist me with the certificate process.";
-
-  function setRequestStatus(message, ok){
+  function setAdminChatStatus(message, ok){
     var box=document.getElementById("getiAboutCertificateRequestStatus");
     if(!box)return;
     box.textContent=message || "";
     box.className="geti-about-certificate-status "+(ok?"ok":"bad");
   }
 
-  window.getiRequestCertificateFromAdmin=async function(button){
-    if(button && button.dataset.getiSending==="1")return;
+  /*
+   * SEND MESSAGE TO ADMINISTRATOR
+   * Opens the real GETI administrator/student chat.
+   * It does NOT create or send an automatic certificate-request message.
+   * The existing chat supports text, images and PDF attachments.
+   */
+  window.getiOpenAdministratorChat=async function(button){
+    if(button && button.dataset.getiOpening==="1")return;
+
+    var originalText=button ? button.textContent : "";
 
     try{
       if(button){
-        button.dataset.getiSending="1";
+        button.dataset.getiOpening="1";
         button.disabled=true;
-        button.textContent="SENDING REQUEST...";
+        button.textContent="OPENING ADMINISTRATOR CHAT...";
       }
-      setRequestStatus("Sending your certificate request to the administrator...",true);
+
+      setAdminChatStatus("Opening your secure conversation with the GETI Administrator...",true);
 
       if(typeof getiGetCurrentStudent!=="function"){
         throw new Error("Student account service is unavailable.");
@@ -15906,89 +15982,44 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
       const student=await getiGetCurrentStudent();
 
       if(!student || !student.id){
-        setRequestStatus("Please sign in to your GETI student account first.",false);
+        setAdminChatStatus("Please sign in to your GETI student account first.",false);
         if(typeof getiFocusFirstAccount==="function"){
           setTimeout(function(){ getiFocusFirstAccount("signin"); },250);
         }
         return;
       }
 
-      if(!window.GETI_SB){
-        throw new Error("GETI messaging service is unavailable.");
-      }
-
-      /*
-       * Avoid accidental duplicate messages from double-clicking:
-       * if the exact same request was sent very recently, simply open chat.
-       */
-      let alreadySent=false;
-      try{
-        const since=new Date(Date.now()-5*60*1000).toISOString();
-        const recent=await GETI_SB
-          .from("messages")
-          .select("id,message,created_at")
-          .eq("user_id",student.id)
-          .eq("sender_role","student")
-          .gte("created_at",since)
-          .order("created_at",{ascending:false})
-          .limit(10);
-
-        if(!recent.error){
-          alreadySent=(recent.data||[]).some(function(row){
-            return String(row.message||"").trim()===GETI_CERTIFICATE_REQUEST_MESSAGE;
-          });
-        }
-      }catch(e){}
-
-      if(!alreadySent){
-        const inserted=await GETI_SB
-          .from("messages")
-          .insert({
-            user_id:student.id,
-            sender_role:"student",
-            message:GETI_CERTIFICATE_REQUEST_MESSAGE
-          });
-
-        if(inserted.error)throw inserted.error;
-      }
-
-      /*
-       * Open the certificate/admin chat immediately after the request,
-       * so the student can see the conversation and the admin response.
-       */
       try{
         getCertCurrentUser=student;
       }catch(e){}
-
-      setRequestStatus(
-        alreadySent
-          ? "Your certificate request was already sent. Opening the administrator chat..."
-          : "✓ Certificate request sent to the administrator.",
-        true
-      );
 
       if(typeof openGetMyCertificate==="function"){
         await openGetMyCertificate();
       }else if(typeof showGetCertAdminChat==="function"){
         await showGetCertAdminChat();
+      }else{
+        throw new Error("Administrator messaging service is unavailable.");
       }
 
+      setAdminChatStatus("Administrator chat opened. You can send messages, images and PDF files.",true);
+
     }catch(err){
-      console.error("GETI certificate request error:",err);
-      setRequestStatus("Unable to send the request: "+String(err && err.message ? err.message : err),false);
-      if(button){
-        button.textContent="GET MY CERTIFICATE";
-      }
+      console.error("GETI administrator chat error:",err);
+      setAdminChatStatus(
+        "Unable to open administrator chat: "+String(err && err.message ? err.message : err),
+        false
+      );
     }finally{
       if(button){
-        button.dataset.getiSending="0";
+        button.dataset.getiOpening="0";
         button.disabled=false;
-        if(button.textContent==="SENDING REQUEST..."){
-          button.textContent="GET MY CERTIFICATE";
-        }
+        button.textContent=originalText || "SEND MESSAGE TO ADMINISTRATOR";
       }
     }
   };
+
+  /* Backward-compatible alias: old calls, if any, now open chat only. */
+  window.getiRequestCertificateFromAdmin=window.getiOpenAdministratorChat;
 })();
 </script>
 
@@ -16056,6 +16087,110 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
 
     return q;
   };
+})();
+</script>
+
+
+<script id="geti-student-auto-certificate-pdf-script">
+(function(){
+  "use strict";
+  const ENDPOINT="https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-certificate-files";
+  const APIKEY="sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8";
+  let pollTimer=null;
+  let lastSignature="";
+
+  function esc(v){
+    return String(v==null?"":v).replace(/[&<>"']/g,function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function dateText(v){try{return v?new Date(v).toLocaleString():""}catch(e){return String(v||"")}}
+  function sizeText(v){
+    const b=Number(v||0);if(!b)return "";
+    if(b>=1048576)return (b/1048576).toFixed(1)+" MB";
+    return Math.max(1,Math.round(b/1024))+" KB";
+  }
+
+  window.getiLoadMyCertificatePdfs=async function(silent){
+    const list=document.getElementById("getiMyCertificatePdfList");
+    const status=document.getElementById("getiCertificatePdfLiveStatus");
+    if(!list||!window.GETI_SB)return;
+    try{
+      const res=await window.GETI_SB.auth.getSession();
+      const session=res?.data?.session;
+      if(!session?.access_token){
+        list.innerHTML='<div class="geti-certificate-pdf-empty">Sign in to your GETI Student Area to see certificate PDFs sent by the administrator.</div>';
+        if(status)status.textContent="Sign in required";
+        return;
+      }
+      if(!silent&&status)status.textContent="Checking your certificates…";
+      const response=await fetch(ENDPOINT,{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "apikey":APIKEY,
+          "Authorization":"Bearer "+session.access_token
+        },
+        body:JSON.stringify({action:"get_my_certificates"})
+      });
+      let data={};try{data=await response.json()}catch(e){}
+      if(!response.ok)throw new Error(data.error||"Unable to load certificate PDFs.");
+      const certs=Array.isArray(data.certificates)?data.certificates:[];
+      const signature=certs.map(c=>[c.id,c.updated_at,c.download_url].join("|")).join(";");
+      if(signature===lastSignature&&silent){if(status)status.textContent=certs.length?certs.length+" PDF certificate(s) available":"Waiting for administrator PDF";return}
+      lastSignature=signature;
+
+      if(!certs.length){
+        list.innerHTML='<div class="geti-certificate-pdf-empty"><b>No certificate PDF has been sent yet.</b><br>After you PASS an examination, GETI Administration can send the official PDF here. It will appear automatically.</div>';
+        if(status)status.textContent="Waiting for administrator PDF";
+        return;
+      }
+
+      list.innerHTML=certs.map(function(c){
+        const url=String(c.download_url||"");
+        const file=String(c.file_name||"GETI-Certificate.pdf");
+        return '<article class="geti-certificate-pdf-card">'+
+          '<div class="geti-certificate-pdf-card-head">'+
+            '<div><strong>'+esc(c.program||"GETI Certificate")+'</strong><small>Candidate ID: '+esc(c.candidate_id||"")+'</small></div>'+
+            '<a class="geti-certificate-pdf-download" href="'+esc(url)+'" target="_blank" rel="noopener" download="'+esc(file)+'">DOWNLOAD PDF</a>'+
+          '</div>'+
+          '<div class="geti-certificate-pdf-frame-wrap">'+
+            '<iframe class="geti-certificate-pdf-frame" src="'+esc(url)+'#toolbar=1&navpanes=0" title="'+esc(file)+'"></iframe>'+
+          '</div>'+
+          '<div class="geti-certificate-pdf-meta">'+esc(file)+(c.file_size?' · '+esc(sizeText(c.file_size)):'')+(c.uploaded_at?' · Sent '+esc(dateText(c.uploaded_at)):'')+'</div>'+
+        '</article>';
+      }).join("");
+      if(status)status.textContent=certs.length+" PDF certificate(s) available";
+    }catch(e){
+      if(!silent){
+        list.innerHTML='<div class="geti-certificate-pdf-empty" style="color:#a13a31">'+esc(e.message||"Unable to load certificate PDFs.")+'</div>';
+      }
+      if(status)status.textContent="Certificate service";
+    }
+  };
+
+  function updatePolling(){
+    const open=document.body.classList.contains("geti-second-area-open");
+    if(open){
+      window.getiLoadMyCertificatePdfs(false);
+      if(!pollTimer)pollTimer=setInterval(function(){
+        if(document.body.classList.contains("geti-second-area-open"))window.getiLoadMyCertificatePdfs(true);
+      },90000);
+    }else if(pollTimer){
+      clearInterval(pollTimer);pollTimer=null;
+    }
+  }
+
+  function boot(){
+    updatePolling();
+    const obs=new MutationObserver(updatePolling);
+    obs.observe(document.body,{attributes:true,attributeFilter:["class"]});
+    document.addEventListener("visibilitychange",function(){
+      if(!document.hidden&&document.body.classList.contains("geti-second-area-open"))window.getiLoadMyCertificatePdfs(true);
+    });
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);
+  else boot();
 })();
 </script>
 
