@@ -9,7 +9,7 @@
 <meta name="google-site-verification" content="Q9XSAvaFZGmYaubXKIuOOCjvRccSfti9xpz7c3DRVKw" />
 <meta http-equiv="Content-Language" content="en">
 
-<title>GETI | TEFL, TESOL, English Courses &amp; Certificate Verification</title>
+<title>Global English Teaching Institute (GETI) | TEFL, TESOL & English Courses</title>
 <!-- GETI 2026-08-29: SEO, accessibility and performance hardening. Existing site functions are preserved. -->
 <meta name="author" content="Global English Teaching Institute (GETI)">
 <meta name="theme-color" content="#082e5d">
@@ -19,7 +19,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image:alt" content="Global English Teaching Institute (GETI) logo">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="GETI | TEFL, TESOL, English Courses &amp; Certificate Verification">
+<meta name="twitter:title" content="Global English Teaching Institute (GETI) | TEFL, TESOL & English Courses">
 <meta name="twitter:description" content="Global English Teaching Institute (GETI) offers online English learning, TEFL and TESOL training, proficiency assessment, online exams, certificates and official certificate verification.">
 <meta name="twitter:image" content="https://getienglish.com/geti-logo.png">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -42,15 +42,16 @@ content="Global English Teaching Institute (GETI) offers online English learning
 <link rel="sitemap" type="application/xml" title="Sitemap" href="https://getienglish.com/sitemap.xml">
 <link rel="alternate" hreflang="en" href="https://getienglish.com/">
 <link rel="alternate" hreflang="x-default" href="https://getienglish.com/">
-<link rel="icon" type="image/png" sizes="48x48" href="https://getienglish.com/geti-logo.png">
-<link rel="shortcut icon" href="https://getienglish.com/geti-logo.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://getienglish.com/geti-logo.png">
-<meta name="application-name" content="Global English Teaching Institute">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="application-name" content="Global English Teaching Institute (GETI)">
 <meta name="apple-mobile-web-app-title" content="GETI">
 
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Global English Teaching Institute">
-<meta property="og:title" content="GETI | TEFL, TESOL, English Courses &amp; Certificate Verification">
+<meta property="og:site_name" content="Global English Teaching Institute (GETI)">
+<meta property="og:title" content="Global English Teaching Institute (GETI) | TEFL, TESOL & English Courses">
 <meta property="og:description" content="Global English Teaching Institute (GETI) offers online English learning, TEFL and TESOL training, proficiency assessment, online exams, certificates and official certificate verification.">
 <meta property="og:url" content="https://getienglish.com/">
 <meta property="og:image" content="https://getienglish.com/geti-logo.png">
@@ -62,7 +63,7 @@ content="Global English Teaching Institute (GETI) offers online English learning
     {
       "@type": "Organization",
       "@id": "https://getienglish.com/#organization",
-      "name": "Global English Teaching Institute",
+      "name": "Global English Teaching Institute (GETI)",
       "alternateName": "GETI",
       "description": "Global English Teaching Institute (GETI) provides English learning, free TEFL and TESOL courses, teaching exams, proficiency tests, certificates and certificate verification.",
       "knowsAbout": [
@@ -85,7 +86,7 @@ content="Global English Teaching Institute (GETI) offers online English learning
       "@type": "WebSite",
       "@id": "https://getienglish.com/#website",
       "url": "https://getienglish.com/",
-      "name": "Global English Teaching Institute",
+      "name": "Global English Teaching Institute (GETI)",
       "alternateName": "GETI",
       "publisher": {
         "@id": "https://getienglish.com/#organization"
@@ -15745,6 +15746,111 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ensureGetiVerificationVisible);else ensureGetiVerificationVisible();
   window.addEventListener('pageshow',ensureGetiVerificationVisible);
+})();
+</script>
+
+
+<script id="geti-direct-account-no-email-confirmation-final">
+(function(){
+  'use strict';
+  function el(id){return document.getElementById(id)}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)}
+
+  async function accountApiDirect(body){
+    if(typeof getiFetchJson!=='function'||typeof GETI_ACCOUNT_FUNCTION==='undefined')throw new Error('GETI account service is unavailable.');
+    return getiFetchJson(GETI_ACCOUNT_FUNCTION,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY},
+      body:JSON.stringify(body)
+    });
+  }
+
+  async function activateDirectSession(session){
+    if(!session||!session.access_token)throw new Error('Secure session was not returned.');
+    try{
+      localStorage.setItem('GETI_DIRECT_AUTH_SESSION',JSON.stringify(session));
+      localStorage.setItem('sb-syawyulrelrhjprnxdyn-auth-token',JSON.stringify(session));
+      localStorage.setItem('GETI_CERT_EVER_CREATED','yes');
+      sessionStorage.removeItem('GETI_PENDING_SIGNUP_EMAIL');
+      sessionStorage.removeItem('GETI_PENDING_SIGNUP_PASSWORD');
+    }catch(e){}
+    if(window.GETI_SB&&GETI_SB.auth&&typeof GETI_SB.auth.setSession==='function'){
+      var r=await GETI_SB.auth.setSession({
+        access_token:session.access_token,
+        refresh_token:session.refresh_token
+      });
+      if(r&&r.error)throw r.error;
+    }
+  }
+
+  function hideOldCodeStep(){
+    var step=el('getiSignupCodeStep');
+    if(step)step.style.display='none';
+  }
+
+  var createDirectBusy=false;
+  window.getiFirstAreaCreateAccount=async function(){
+    if(createDirectBusy)return;
+    var name=el('getiFirstCreateName'),email=el('getiFirstCreateEmail'),
+        pw=el('getiFirstCreatePassword'),confirm=el('getiFirstCreateConfirm'),
+        status=el('getiFirstCreateStatus');
+    if(!name||!email||!pw||!confirm||!status)return;
+
+    var fullName=String(name.value||'').trim().replace(/\s+/g,' ');
+    var address=String(email.value||'').trim().toLowerCase();
+    var password=String(pw.value||'');
+    var confirmPassword=String(confirm.value||'');
+
+    if(fullName.length<2){status.innerHTML='<span class="bad">Please enter your full name.</span>';return}
+    if(!validEmail(address)){status.innerHTML='<span class="bad">Please enter a valid email address.</span>';return}
+    if(password.length<6||password.length>12){status.innerHTML='<span class="bad">Password must contain 6 to 12 characters.</span>';return}
+    if(password!==confirmPassword){status.innerHTML='<span class="bad">Passwords do not match.</span>';return}
+
+    createDirectBusy=true;
+    status.innerHTML='<span class="ok">Creating your GETI account...</span>';
+    try{
+      var data=await accountApiDirect({
+        action:'create_account',
+        full_name:fullName,
+        email:address,
+        password:password
+      });
+      if(!data||!data.session)throw new Error((data&&data.error)||'Secure sign-in did not complete.');
+      await activateDirectSession(data.session);
+
+      pw.value='';
+      confirm.value='';
+      status.innerHTML='<span class="ok">✓ Account created successfully. Opening Student Area...</span>';
+      hideOldCodeStep();
+
+      var loginEmail=el('getiFirstLoginEmail');if(loginEmail)loginEmail.value=address;
+      var loginStatus=el('getiFirstLoginStatus');if(loginStatus)loginStatus.innerHTML='<span class="ok">✓ Account active and signed in.</span>';
+
+      setTimeout(function(){
+        if(typeof window.getiOpenSecondArea==='function')window.getiOpenSecondArea();
+        else document.body.classList.add('geti-second-area-open');
+      },180);
+    }catch(e){
+      status.innerHTML='<span class="bad">'+esc((e&&e.message)||'Unable to create account.')+'</span>';
+    }finally{
+      createDirectBusy=false;
+    }
+  };
+
+  window.getiConfirmSignupCode=function(){
+    var s=el('getiSignupCodeStatus');
+    if(s)s.innerHTML='<span class="ok">Confirmation code is no longer required.</span>';
+    hideOldCodeStep();
+  };
+  window.getiResendSignupCode=function(){
+    var s=el('getiSignupCodeStatus');
+    if(s)s.innerHTML='<span class="ok">Confirmation code is no longer required.</span>';
+    hideOldCodeStep();
+  };
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',hideOldCodeStep);
+  else hideOldCodeStep();
 })();
 </script>
 
