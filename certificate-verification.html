@@ -460,6 +460,22 @@ body > *:not(.topbar):not(main):not(script):not(style){
 }
 </style>
 
+
+<style id="geti-show-all-verification-results">
+#verifyResult{
+  max-height:none !important;
+  overflow:visible !important;
+}
+#verifyResult .result{
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+#verifyResult .result + .result{
+  margin-top:16px !important;
+}
+</style>
+
 </head>
 <body>
 
@@ -479,7 +495,7 @@ body > *:not(.topbar):not(main):not(script):not(style){
   <section class="hero">
     <span class="eyebrow">Official GETI Register</span>
     <h1>GETI Certificate Verification</h1>
-    <p>Global English Teaching Institute Verification: verify a GETI certificate directly against the official certificate register. Search using the Certificate ID, certificate holder name, or nationality.</p>
+    <p>Global English Teaching Institute Verification: verify a GETI certificate directly against the official certificate register. Search using the Certificate ID, certificate holder name, or nationality. All matching certificate records will be displayed.</p>
   </section>
 
   <section class="verify-shell" id="verify">
@@ -499,7 +515,7 @@ body > *:not(.topbar):not(main):not(script):not(style){
                  onkeydown="if(event.key==='Enter'){event.preventDefault();verifyCertificate();}">
           <button class="verify-btn" type="button" onclick="verifyCertificate()">VERIFY CERTIFICATE</button>
         </div>
-        <div class="help">Example: GETI-CERT000001 · Maria Smith · Malagasy</div>
+        <div class="help">Example: GETI-CERT000001 · Maria Smith · Malagasy<br><strong>When you search by holder name or nationality, every matching GETI certificate is shown below.</strong></div>
         <div id="verifyResult" aria-live="polite"></div>
       </div>
     </div>
@@ -657,7 +673,7 @@ function certificateVisual(c,cert,dateText){
   '</div>';
 }
 
-function resultCard(c){
+function resultCard(c,index){
   var cert=splitCertificate(c&&c.certificate);
   var date=c&&(
     c.issue_date||c.date_of_issue||c.issueDate||c.issued_date||
@@ -684,7 +700,7 @@ function resultCard(c){
 
   return '<article class="result">'+
     '<div class="result-top">'+
-      '<strong>Official Certificate Verification</strong>'+
+      '<strong>Official Certificate Verification'+(Number.isInteger(index)?' · Record '+(index+1):'')+'</strong>'+
       '<span class="verified">✓ CERTIFICATE VERIFIED</span>'+
     '</div>'+
     '<div class="details">'+
@@ -712,8 +728,10 @@ function render(found,q){
     box.innerHTML='<div class="status bad">❌ No certificate found for “'+esc(q)+'”.</div>';
     return;
   }
-  box.innerHTML='<div class="status ok">✅ '+found.length+' verified certificate record(s) found.</div>'+
-    found.map(resultCard).join("");
+  box.innerHTML='<div class="status ok">✅ '+found.length+' verified certificate record(s) found. All matching certificates are displayed below.</div>'+
+    found.map(function(record,index){
+      return resultCard(record,index);
+    }).join("");
 }
 
 window.verifyCertificate=async function(){
