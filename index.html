@@ -4926,6 +4926,16 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
 </div>
 </section>
 
+
+<div class="container geti-about-certificate-cta">
+  <button type="button" id="getiAboutCertificateRequestBtn"
+          class="btn btn-gold geti-about-certificate-btn"
+          onclick="getiRequestCertificateFromAdmin(this)">
+    GET MY CERTIFICATE
+  </button>
+  <div id="getiAboutCertificateRequestStatus" class="geti-about-certificate-status" aria-live="polite"></div>
+</div>
+
 <section class="section" id="about">
 
 <div class="container about-grid">
@@ -5247,9 +5257,6 @@ Professional Training.
 All rights reserved.
 
 <br><br>
-
-<button type="button" class="geti-footer-baam-btn" onclick="openBaamAdmin()">BAAM</button>
-
 </div>
 
 </div>
@@ -12577,7 +12584,7 @@ function showGeti30ActualResult(){
         ? GETI_THIRD_FAILURE_MESSAGE
         : "You have not yet reached the required score. Your correct answers are protected. Select RETRY INCORRECT ANSWERS to answer only the questions you missed; the full examination will not restart.";
     const action=status==="PASSED"
-        ? '<div class="geti-final-certificate-action"><button class="btn btn-gold geti-result-cert-btn" onclick="openGetMyCertificate()">GET MY CERTIFICATE</button></div>'
+        ? '<div class="geti-final-certificate-action"><button class="btn btn-gold geti-result-cert-btn" onclick="getiRequestCertificateFromAdmin(this)">GET MY CERTIFICATE</button></div>'
         : '<div class="geti-final-certificate-action"><button class="btn btn-gold geti-result-cert-btn" onclick="'+(failedThird?'restartGetiExamRegistration()':'startGetiFailedQuestionRetry(false)')+'">'+(failedThird?'START AGAIN FROM REGISTRATION':'RETRY INCORRECT ANSWERS')+'</button></div>';
     const syncNote=(status==="PASSED" || failedThird)
         ? '<div class="geti-sync-note">This completed result is synchronized with the GETI online administration system.</div>'
@@ -13550,18 +13557,6 @@ document.addEventListener("DOMContentLoaded",function(){setTimeout(loadGetiPubli
     <div id="getCertBody" class="getcert-body"></div>
   </div>
 </div>
-
-
-<div id="baamOverlay" class="baam-overlay">
-  <div class="baam-shell">
-    <div class="baam-head">
-      <strong>BAAM — GETI ADMINISTRATOR</strong>
-      <button class="baam-close" onclick="closeBaamAdmin()">×</button>
-    </div>
-    <div id="baamBody" class="baam-body"></div>
-  </div>
-</div>
-
 <script id="geti-runtime-accessibility-enhancements">
 (function(){
   function enhanceGetiDocument(){
@@ -15851,6 +15846,216 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',hideOldCodeStep);
   else hideOldCodeStep();
+})();
+</script>
+
+
+<style id="geti-certificate-direct-admin-request-style">
+.geti-about-certificate-cta{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:28px 18px 6px;
+}
+.geti-about-certificate-btn{
+  min-width:min(360px,100%);
+  font-weight:900;
+  letter-spacing:.04em;
+}
+.geti-about-certificate-status{
+  min-height:22px;
+  font-size:.92rem;
+  font-weight:700;
+  text-align:center;
+}
+.geti-about-certificate-status.ok{color:#167447}
+.geti-about-certificate-status.bad{color:#b42318}
+</style>
+
+<script id="geti-certificate-direct-admin-request-script">
+(function(){
+  'use strict';
+
+  const GETI_CERTIFICATE_REQUEST_MESSAGE =
+    "Hello Administrator, I have passed my examination and I would like to request my GETI certificate. Please review my examination result and assist me with the certificate process.";
+
+  function setRequestStatus(message, ok){
+    var box=document.getElementById("getiAboutCertificateRequestStatus");
+    if(!box)return;
+    box.textContent=message || "";
+    box.className="geti-about-certificate-status "+(ok?"ok":"bad");
+  }
+
+  window.getiRequestCertificateFromAdmin=async function(button){
+    if(button && button.dataset.getiSending==="1")return;
+
+    try{
+      if(button){
+        button.dataset.getiSending="1";
+        button.disabled=true;
+        button.textContent="SENDING REQUEST...";
+      }
+      setRequestStatus("Sending your certificate request to the administrator...",true);
+
+      if(typeof getiGetCurrentStudent!=="function"){
+        throw new Error("Student account service is unavailable.");
+      }
+
+      const student=await getiGetCurrentStudent();
+
+      if(!student || !student.id){
+        setRequestStatus("Please sign in to your GETI student account first.",false);
+        if(typeof getiFocusFirstAccount==="function"){
+          setTimeout(function(){ getiFocusFirstAccount("signin"); },250);
+        }
+        return;
+      }
+
+      if(!window.GETI_SB){
+        throw new Error("GETI messaging service is unavailable.");
+      }
+
+      /*
+       * Avoid accidental duplicate messages from double-clicking:
+       * if the exact same request was sent very recently, simply open chat.
+       */
+      let alreadySent=false;
+      try{
+        const since=new Date(Date.now()-5*60*1000).toISOString();
+        const recent=await GETI_SB
+          .from("messages")
+          .select("id,message,created_at")
+          .eq("user_id",student.id)
+          .eq("sender_role","student")
+          .gte("created_at",since)
+          .order("created_at",{ascending:false})
+          .limit(10);
+
+        if(!recent.error){
+          alreadySent=(recent.data||[]).some(function(row){
+            return String(row.message||"").trim()===GETI_CERTIFICATE_REQUEST_MESSAGE;
+          });
+        }
+      }catch(e){}
+
+      if(!alreadySent){
+        const inserted=await GETI_SB
+          .from("messages")
+          .insert({
+            user_id:student.id,
+            sender_role:"student",
+            message:GETI_CERTIFICATE_REQUEST_MESSAGE
+          });
+
+        if(inserted.error)throw inserted.error;
+      }
+
+      /*
+       * Open the certificate/admin chat immediately after the request,
+       * so the student can see the conversation and the admin response.
+       */
+      try{
+        getCertCurrentUser=student;
+      }catch(e){}
+
+      setRequestStatus(
+        alreadySent
+          ? "Your certificate request was already sent. Opening the administrator chat..."
+          : "✓ Certificate request sent to the administrator.",
+        true
+      );
+
+      if(typeof openGetMyCertificate==="function"){
+        await openGetMyCertificate();
+      }else if(typeof showGetCertAdminChat==="function"){
+        await showGetCertAdminChat();
+      }
+
+    }catch(err){
+      console.error("GETI certificate request error:",err);
+      setRequestStatus("Unable to send the request: "+String(err && err.message ? err.message : err),false);
+      if(button){
+        button.textContent="GET MY CERTIFICATE";
+      }
+    }finally{
+      if(button){
+        button.dataset.getiSending="0";
+        button.disabled=false;
+        if(button.textContent==="SENDING REQUEST..."){
+          button.textContent="GET MY CERTIFICATE";
+        }
+      }
+    }
+  };
+})();
+</script>
+
+
+<style id="geti-public-no-admin-dashboard">
+#getiSecondArea .admin-section,
+#getiSecondArea [id^="admin"],
+#getiSecondArea [class*="baam-"],
+.geti-footer-baam-btn,
+#baamOverlay{
+  display:none !important;
+  visibility:hidden !important;
+}
+</style>
+<script id="geti-public-admin-separation-guard">
+(function(){
+  /* Admin dashboard lives only at /admin.html.
+     Student-to-admin certificate messaging remains available. */
+  window.openBaamAdmin=function(){
+    window.location.href="/admin.html";
+  };
+})();
+</script>
+
+
+<script id="geti-tefl-40-fixed-answer-a">
+(function(){
+  "use strict";
+
+  if(typeof window.getGeti30Question!=="function") return;
+
+  const originalGetGeti30Question = window.getGeti30Question;
+
+  window.getGeti30Question = function(examName, subject, qIndex){
+    const q = originalGetGeti30Question.apply(this, arguments);
+
+    /* TEFL 40-Hour ONLY:
+       The correct answer is always option A (index 0).
+       Other TEFL hour programs and every other examination stay unchanged.
+    */
+    if(
+      String(examName||"")==="TEFL Exam" &&
+      window.geti30State &&
+      Number(window.geti30State.teflHours)===40 &&
+      Array.isArray(q) &&
+      q.length>=6
+    ){
+      const oldCorrect = Number(q[5]);
+
+      if(Number.isInteger(oldCorrect) && oldCorrect>=0 && oldCorrect<=3){
+        const options = [q[1], q[2], q[3], q[4]];
+        const correctText = options[oldCorrect];
+        const otherOptions = options.filter(function(_,i){ return i!==oldCorrect; });
+
+        return [
+          q[0],
+          correctText,
+          otherOptions[0],
+          otherOptions[1],
+          otherOptions[2],
+          0
+        ];
+      }
+    }
+
+    return q;
+  };
 })();
 </script>
 
