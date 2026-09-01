@@ -7314,10 +7314,9 @@ function continueExam(){
 
 
 function getGetiCertificateFeeInfo(hours){
-    const order=[20,40,60,80,100,120,140,150,168,180,200,250,300,420];
     const h=Number(hours)||0;
 
-    if([20,40,60,80].includes(h)){
+    if(h>0 && h<100){
         return {
             free:true,
             price:0,
@@ -7326,37 +7325,83 @@ function getGetiCertificateFeeInfo(hours){
         };
     }
 
-    const paidOrder=order.filter(function(x){return x>=100});
-    const idx=paidOrder.indexOf(h);
-    const price=idx>=0 ? 6+idx : 6;
+    const paidPrices={
+        100:6,
+        120:7,
+        140:8,
+        150:9,
+        168:10,
+        180:11,
+        200:12,
+        250:13,
+        300:14,
+        420:15
+    };
+
+    if(Object.prototype.hasOwnProperty.call(paidPrices,h)){
+        const price=paidPrices[h];
+        return {
+            free:false,
+            price:price,
+            title:"PAID CERTIFICATE — $"+price,
+            message:"Your official GETI certificate fee for this examination is $"+price+". Payment is simple, and GETI can provide a payment method available in your location."
+        };
+    }
 
     return {
         free:false,
-        price:price,
-        title:"PAID CERTIFICATE — $"+price,
-        message:"Your official GETI certificate fee for this examination is $"+price+". Payment is simple, and GETI can provide a payment method available in your location."
+        price:null,
+        title:"CERTIFICATE INFORMATION",
+        message:"Please contact GETI Administration for certificate information and available payment methods in your country or location."
     };
 }
 
-function buildGetiCertificateFeeNotice(hours){
+
+function getiAdminMessageIconHTML(){
+    const unread=Math.max(0,Number(window.getiLastAdminUnreadCount)||0);
+    return '<button type="button" class="geti-admin-message-icon-btn" '+
+        'onclick="getiOpenAdministratorChatFromIcon()" '+
+        'aria-label="Open messages with GETI Administrator" title="Messages with Administrator">'+
+        '<span class="geti-admin-message-logo" aria-hidden="true">'+
+            '<svg viewBox="0 0 64 64" role="img" focusable="false">'+
+                '<circle cx="32" cy="32" r="30" fill="#56a8ea"></circle>'+
+                '<path d="M20 22c-6.2 0-11 4.3-11 9.9 0 3.4 1.8 6.4 4.9 8.2L12 48l10.7-4.6c1.2.2 2.2.3 3.3.3h18c6.2 0 11-4.3 11-9.8S50.2 24 44 24H20z" fill="#ffffff"></path>'+
+                '<circle cx="24" cy="34" r="2.1" fill="#56a8ea"></circle>'+
+                '<circle cx="32" cy="34" r="2.1" fill="#56a8ea"></circle>'+
+                '<circle cx="40" cy="34" r="2.1" fill="#56a8ea"></circle>'+
+            '</svg>'+
+        '</span>'+
+        '<span class="geti-admin-unread-badge'+(unread>0?' geti-has-unread':'')+'" '+
+              'aria-label="'+unread+' unread administrator messages" '+
+              'style="display:'+(unread>0?'flex':'none')+'">'+(unread>99?'99+':unread)+'</span>'+
+    '</button>';
+}
+
+function buildGetiCertificateFeeNotice(hours,showButton){
     const info=getGetiCertificateFeeInfo(hours);
+    if(typeof showButton==="undefined")showButton=true;
 
     const priceExample='<div class="geti-cert-price-example">'+
         '<strong>Certificate pricing:</strong> '+
-        '20-Hour, 40-Hour, 60-Hour and 80-Hour certificates are FREE. '+
+        'All GETI certificates below 100 Hours are FREE. This includes 20-Hour, 30-Hour, 40-Hour, 50-Hour, 60-Hour and 80-Hour certificates. '+
         '100-Hour: $6 · 120-Hour: $7 · 140-Hour: $8 · 150-Hour: $9 · 168-Hour: $10 · 180-Hour: $11 · 200-Hour: $12 · 250-Hour: $13 · 300-Hour: $14 · 420-Hour: $15.'+
     '</div>';
+
+    const help='<div class="geti-cert-payment-note">'+
+        'Payment is easy. GETI can guide you to a payment method that works in your country or location. '+
+        'If you need more information, send a message to the GETI Administrator.'+
+    '</div>';
+
+    const button=showButton
+        ? '<button type="button" class="btn btn-gold geti-cert-admin-help-btn" onclick="getiOpenAdministratorChat(this)">SEND MESSAGE TO GETI ADMINISTRATOR</button>'
+        : '';
 
     return '<div class="geti-certificate-fee-notice '+(info.free?"free":"paid")+'">'+
         '<div class="geti-cert-fee-title">'+escapeHTML(info.title)+'</div>'+
         '<div class="geti-cert-fee-message">'+escapeHTML(info.message)+'</div>'+
         priceExample+
-        '<div class="geti-cert-payment-note">'+
-            'Payment is easy. GETI can guide you to a payment method that works in your country or location.'+
-        '</div>'+
-        '<button type="button" class="btn btn-gold geti-cert-admin-help-btn" onclick="getiOpenAdministratorChat(this)">'+
-            'SEND MESSAGE TO GETI ADMINISTRATOR'+
-        '</button>'+
+        help+
+        button+
     '</div>';
 }
 
@@ -8178,6 +8223,7 @@ const GETI_TESOL_COURSES=[
     {hours:120,title:"120-Hour TESOL",description:"Entry-level professional course",level:"B1",recommended:true},
     {hours:140,title:"140-Hour TESOL",description:"Extended course with extra practice",level:"B1"},
     {hours:150,title:"150-Hour TESOL",description:"Advanced preparation",level:"B2"},
+    {hours:168,title:"168-Hour TESOL",description:"Comprehensive training",level:"B2"},
     {hours:180,title:"180-Hour TESOL",description:"Advanced course with practical modules",level:"B2",recommended:true},
     {hours:200,title:"200-Hour TESOL",description:"Professional-level training",level:"C1"},
     {hours:250,title:"250-Hour TESOL",description:"Advanced professional course",level:"C1"},
@@ -8225,7 +8271,7 @@ const GETI_GENERAL_EXAM_HOURS=[
     {hours:420,level:"C2"}
 ];
 
-const GETI_REGISTRATION_EXAM_HOURS=[20,30,40,50,60,80,100,120,140,150,180,200,250,300,420];
+const GETI_REGISTRATION_EXAM_HOURS=[20,30,40,50,60,80,100,120,140,150,168,180,200,250,300,420];
 
 let getiGeneralHourExam=null;
 
@@ -12655,14 +12701,15 @@ function showGeti30FinalResult(){
 
     geti30PendingFinalRecord=record;
 
-    geti30PendingFinalRows=geti30State.subjectScores.map(function(s){
-        const subjectStatus=Number(s.percentage)>=policy.passMark ? "PASSED" : "FAILED";
-        return '<div class="subject-result">'+
-               '<span>'+escapeHTML(s.subject)+'</span>'+
-               '<strong>'+s.percentage+'% — Grade '+escapeHTML(String(s.grade||""))+
-               ' — <span class="'+(subjectStatus==="PASSED"?"pass":"fail")+'">'+subjectStatus+'</span></strong>'+
-               '</div>';
-    }).join("");
+    geti30PendingFinalRows='<div class="geti-final-subject-grid">'+
+        geti30State.subjectScores.map(function(s){
+            return buildGetiSubjectGradeCard(
+                s.subject,
+                s.percentage,
+                s.grade
+            );
+        }).join("")+
+    '</div>';
 
     if(status==="PASSED"){
         document.getElementById("geti30ExamPanel").innerHTML=
@@ -12690,7 +12737,7 @@ function showGeti30ActualResult(){
         ? GETI_THIRD_FAILURE_MESSAGE
         : "You have not yet reached the required score. Your correct answers are protected. Select RETRY INCORRECT ANSWERS to answer only the questions you missed; the full examination will not restart.";
     const action=status==="PASSED"
-        ? '<div class="geti-final-certificate-action"><button class="btn btn-gold geti-result-cert-btn" onclick="getiOpenAdministratorChat(this)">SEND MESSAGE TO ADMINISTRATOR</button></div>'
+        ? '<div class="geti-final-certificate-action"><button class="btn btn-gold geti-result-cert-btn" onclick="getiOpenAdministratorChat(this)">SEND MESSAGE TO GETI ADMINISTRATOR</button></div>'
         : '<div class="geti-final-certificate-action"><button class="btn btn-gold geti-result-cert-btn" onclick="'+(failedThird?'restartGetiExamRegistration()':'startGetiFailedQuestionRetry(false)')+'">'+(failedThird?'START AGAIN FROM REGISTRATION':'RETRY INCORRECT ANSWERS')+'</button></div>';
     const syncNote=(status==="PASSED" || failedThird)
         ? '<div class="geti-sync-note">This completed result is synchronized with the GETI online administration system.</div>'
@@ -12710,6 +12757,7 @@ function showGeti30ActualResult(){
             ? "Congratulations! You reached the required passing score of "+passMark+"%."
             : escapeHTML(failureText))+
         '</div>'+
+        (status==="PASSED" ? buildGetiCertificateFeeNotice(record.hours,false) : "")+
         '<h3>Subject Results</h3>'+
         geti30PendingFinalRows+
         syncNote+action+
@@ -14291,6 +14339,61 @@ button.geti-certificate-pdf-download:hover{
 }
 @media(max-width:600px){
   .geti-certificate-fee-notice{padding:14px}
+}
+</style>
+
+
+<style id="geti-message-icon-student-area-only-final">
+#getiSecondArea .geti-about-certificate-cta .geti-admin-contact-actions{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:9px !important;
+  flex-wrap:wrap !important;
+}
+
+#getiSecondArea #getiAdminMessageIconBtn{
+  display:inline-flex !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  position:relative !important;
+  width:44px !important;
+  height:44px !important;
+  flex:0 0 44px !important;
+  z-index:5 !important;
+}
+
+#getiSecondArea #getiAdminMessageIconBtn .geti-admin-message-logo,
+#getiSecondArea #getiAdminMessageIconBtn .geti-admin-message-logo svg{
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  width:44px !important;
+  height:44px !important;
+}
+
+#getiSecondArea #getiAdminMessageIconBtn .geti-admin-unread-badge{
+  background:#e11d2e !important;
+  color:#fff !important;
+  font-weight:1000 !important;
+}
+
+@media(max-width:520px){
+  #getiSecondArea #getiAdminMessageIconBtn,
+  #getiSecondArea #getiAdminMessageIconBtn .geti-admin-message-logo,
+  #getiSecondArea #getiAdminMessageIconBtn .geti-admin-message-logo svg{
+    width:40px !important;
+    height:40px !important;
+  }
+}
+</style>
+
+
+<style id="geti-no-message-icon-final-result">
+#geti30ExamPanel .geti-admin-message-icon-btn,
+.result-box .geti-admin-message-icon-btn,
+.geti-certificate-fee-notice .geti-admin-message-icon-btn{
+  display:none !important;
 }
 </style>
 
@@ -16564,30 +16667,31 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
   let unreadUserId=null;
   let unreadPollTimer=null;
 
-  function badgeElement(){
-    return document.getElementById("getiAdminUnreadBadge");
+  function badgeElements(){
+    return Array.from(document.querySelectorAll(".geti-admin-unread-badge"));
   }
 
   function setUnreadBadge(count){
-    const badge=badgeElement();
-    if(!badge)return;
-
     const n=Math.max(0,Number(count)||0);
-    if(n<=0){
-      badge.textContent="0";
-      badge.style.display="none";
-      badge.classList.remove("geti-has-unread");
-      badge.setAttribute("aria-label","No unread administrator messages");
-      return;
-    }
+    window.getiLastAdminUnreadCount=n;
 
-    badge.textContent=n>99?"99+":String(n);
-    badge.style.display="flex";
-    badge.classList.add("geti-has-unread");
-    badge.setAttribute(
-      "aria-label",
-      n+" unread administrator message"+(n===1?"":"s")
-    );
+    badgeElements().forEach(function(badge){
+      if(n<=0){
+        badge.textContent="0";
+        badge.style.display="none";
+        badge.classList.remove("geti-has-unread");
+        badge.setAttribute("aria-label","No unread administrator messages");
+        return;
+      }
+
+      badge.textContent=n>99?"99+":String(n);
+      badge.style.display="flex";
+      badge.classList.add("geti-has-unread");
+      badge.setAttribute(
+        "aria-label",
+        n+" unread administrator message"+(n===1?"":"s")
+      );
+    });
   }
 
   async function currentSession(){
@@ -16705,6 +16809,9 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
   window.getiOpenAdministratorChatFromIcon=async function(){
     if(typeof window.getiOpenAdministratorChat==="function"){
       await window.getiOpenAdministratorChat(null);
+      if(typeof window.getiRefreshAdminUnreadCount==="function"){
+        await window.getiRefreshAdminUnreadCount();
+      }
     }
   };
 
