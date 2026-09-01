@@ -671,6 +671,69 @@ button,input,textarea{
     margin-bottom:18px;
 }
 
+.geti-about-heading-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:8px;
+}
+
+.geti-about-heading-row .section-label{
+    margin-bottom:0;
+}
+
+.geti-about-message-icon-btn{
+    position:relative;
+    width:38px;
+    height:38px;
+    flex:0 0 38px;
+    padding:0;
+    border:0;
+    background:transparent;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform .14s ease, filter .14s ease;
+}
+
+.geti-about-message-icon-btn:hover{
+    transform:translateY(-1px) scale(1.03);
+    filter:brightness(1.03);
+}
+
+.geti-about-message-icon-btn:active{
+    transform:scale(.96);
+}
+
+.geti-about-message-logo{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 6px 14px rgba(25,226,13,.22);
+}
+
+.geti-about-message-logo svg{
+    display:block;
+    width:38px;
+    height:38px;
+}
+
+.geti-about-message-icon-btn .geti-admin-unread-badge{
+    top:-4px;
+    right:-7px;
+    min-width:21px;
+    height:21px;
+    padding:0 5px;
+    font-size:11px;
+    border-width:2px;
+}
+
 .check-list{
     list-style:none;
     margin-top:25px;
@@ -997,8 +1060,7 @@ button,input,textarea{
 
 .exam-question{
     background:#f8fafc;
-    border:1px solid #dde4ed;
-    padding:25px;
+    border:1px solid #dde4ed;padding:25px;
     border-radius:8px;
 }
 
@@ -1997,8 +2059,7 @@ body.geti-portal-mode > section.geti-portal-active{
 }
 
 
-/* =========================================================
-   GET MY CERTIFICATE PORTAL
+/* =========================================================GET MY CERTIFICATE PORTAL
 ========================================================= */
 .getcert-overlay{
     display:none;
@@ -2997,8 +3058,7 @@ input:focus,select:focus,textarea:focus{
           "@type": "ListItem",
           "position": 3,
           "name": "TEYL Exam"
-        },
-        {
+        },{
           "@type": "ListItem",
           "position": 4,
           "name": "English Proficiency Exam"
@@ -3997,8 +4057,7 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
   padding:2px!important;
   background:#ffffff!important;
   border:2px solid #d9ad43!important;
-  box-shadow:0 5px 14px rgba(3,24,54,.22)!important;
-  display:flex!important;
+  box-shadow:0 5px 14px rgba(3,24,54,.22)!important;display:flex!important;
   align-items:center!important;
   justify-content:center!important;
 }
@@ -4870,7 +4929,10 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
   <div class="geti-second-area-entrybar">
     <div class="container geti-second-area-entrybar-inner">
       <strong>GETI STUDENT AREA</strong>
-      <button type="button" class="geti-student-logout-btn" onclick="getiLogoutToFirstArea()">LOG OUT</button>
+      <div class="geti-second-area-entry-actions">
+        <a class="geti-certificate-verification-small-btn" href="https://getienglish.com/certificate-verification.html">CERTIFICATE VERIFICATION</a>
+        <button type="button" class="geti-student-logout-btn" onclick="getiLogoutToFirstArea()">LOG OUT</button>
+      </div>
     </div>
   </div>
   <div class="geti-second-area-quicklinks">
@@ -4985,7 +5047,31 @@ alt="International students learning together">
 
 <div class="about-content">
 
-<div class="section-label">ABOUT GETI</div>
+<div class="geti-about-heading-row">
+  <div class="section-label">ABOUT GETI</div>
+  <button type="button"
+          id="getiAboutSectionMessageIconBtn"
+          class="geti-about-message-icon-btn"
+          onclick="getiOpenAdministratorChatFromIcon()"
+          aria-label="Open messages with GETI Administrator"
+          title="Messages with Administrator">
+    <span class="geti-about-message-logo" aria-hidden="true">
+      <svg viewBox="0 0 64 64" role="img" focusable="false">
+        <defs>
+          <linearGradient id="getiAboutMsgGreen" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#84f36a"></stop>
+            <stop offset="100%" stop-color="#19e20d"></stop>
+          </linearGradient>
+        </defs>
+        <rect x="7" y="7" width="50" height="50" rx="12" ry="12" fill="url(#getiAboutMsgGreen)"></rect>
+        <path d="M22 22c-6.7 0-12 5.1-12 11.3 0 3.9 2 7.4 5.5 9.5L14 50l10.8-4.4c1.1.2 2.3.3 3.5.3h12.8c7.5 0 13.6-5.6 13.6-12.5S48.6 20.9 41.1 20.9H22z" fill="#111111"></path>
+      </svg>
+    </span>
+    <span class="geti-admin-unread-badge"
+          aria-label="Unread administrator messages"
+          style="display:none">0</span>
+  </button>
+</div>
 
 <h2>Building Skills for a Global Future</h2>
 
@@ -4997,8 +5083,7 @@ practical English language and teaching skills.
 </p>
 
 <p>
-Our approach combines structured learning,
-practical communication, professional development,
+Our approach combines structured learning,practical communication, professional development,
 TEFL, TESOL and assessment.
 </p>
 
@@ -5997,8 +6082,7 @@ const TEFL_DATA={
 ["What is scaffolding?","Temporary support for learning","Punishment","Final examination","Classroom decoration",0],
 ["What is differentiation?","Adapting instruction to learner needs","Giving everyone identical tasks","Avoiding assessment","Removing activities",0],
 ["Why is feedback important?","It helps learners improve","It replaces teaching","It stops learning","It prevents practice",0],
-["What is an authentic material?","A real-world language resource","A grammar rule","A teacher's attendance sheet","A classroom chair",0],
-["What is learner autonomy?","Learners taking responsibility for learning","Teacher doing all work","Students avoiding study","Only studying in class",0],
+["What is an authentic material?","A real-world language resource","A grammar rule","A teacher's attendance sheet","A classroom chair",0],["What is learner autonomy?","Learners taking responsibility for learning","Teacher doing all work","Students avoiding study","Only studying in class",0],
 ["What is a good TEFL environment?","Supportive and interactive","Fear-based","Silent all the time","Teacher-only",0]
 ],
 
@@ -6997,8 +7081,7 @@ function showQuestion(){
     '<span>'+
     'Question '+
     (examState.questionIndex+1)+
-    '/15'+
-    '</span>'+
+    '/15'+'</span>'+
 
     '</div>'+
 
@@ -7997,8 +8080,7 @@ function sendMessage(){
     }
 
     alert(
-        "Thank you for contacting Global English Teaching Institute."
-    );
+        "Thank you for contacting Global English Teaching Institute.");
 
 }
 
@@ -8997,8 +9079,7 @@ const GETI_CHINESE_EXAM_BANK=[
  ["“你喜欢喝茶吗？”最自然的肯定回答是：","喜欢，我喜欢喝茶。","茶喝你。","吗喜欢。","我不茶。",0],
  ["哪个词表示“明天”？","明天","昨天","现在","以前",0],
  ["“请打开书”是一种什么表达？","礼貌的指令","自我介绍","时间说明","比较句",0],
- ["声调在普通话中为什么重要？","它可以改变词义","它只影响书写","它表示复数","它可以省略",0],
- ["“我比他高”表达的是什么关系？","比较","因果","所属","地点",0],
+ ["声调在普通话中为什么重要？","它可以改变词义","它只影响书写","它表示复数","它可以省略",0],["“我比他高”表达的是什么关系？","比较","因果","所属","地点",0],
  ["“正在”通常表示什么？","动作正在进行","动作已经结束","将来一定发生","表示数量",0],
  ["“因为下雨，所以我没去”中，“所以”引出什么？","结果","原因","地点","人物",0],
  ["在正式场合初次见面，哪句话最合适？","您好，很高兴认识您。","喂，你谁？","快走。","不用说话。",0],
@@ -9997,8 +10078,7 @@ function getLessonPlateProfile(examName,subject){
             ["Fact and opinion","Fact","Claim","Source","Separate verified evidence from interpretation."],
             ["Authority pathway","Rule","Policy","Procedure","Use the correct level of authority for the decision."],
             ["Case analysis","Facts","Rule","Application","Connect each conclusion to evidence and authority."],
-            ["Fair procedure","Notice","Hearing","Record","Give affected people an appropriate opportunity to respond."],
-            ["Public communication","Audience","Message","Channel","Make information clear, accurate and accountable."],
+            ["Fair procedure","Notice","Hearing","Record","Give affected people an appropriate opportunity to respond."],["Public communication","Audience","Message","Channel","Make information clear, accurate and accountable."],
             ["Confidentiality","Collect","Protect","Disclose","Use personal information only with proper authority."],
             ["Decision record","Reason","Decision","Action","Document who decided, why and what happens next."],
             ["Review mechanism","Check","Appeal","Correct","Provide a lawful route for reconsideration."],
@@ -10997,8 +11077,7 @@ function showBaamMessages(){
     }
     users+='</div>';
 
-    content.innerHTML=
-        '<div class="baam-grid">'+
+    content.innerHTML='<div class="baam-grid">'+
         users+
         '<div id="baamConversation" class="baam-chatbox">'+
         '<div style="padding:30px;color:#687386;">Select a candidate to view messages.</div>'+
@@ -11997,8 +12076,7 @@ async function showBaamMessages(){
                     String(u.id).replace(/'/g,"\\'")+
                     '\',\''+
                     String(u.email||"").replace(/'/g,"\\'")+
-                    '\',\''+
-                    String(u.full_name||"").replace(/'/g,"\\'")+
+                    '\',\''+String(u.full_name||"").replace(/'/g,"\\'")+
                     '\')">'+
                     '<strong>'+escapeHTML(u.full_name||"Student")+'</strong>'+
                     '<small>'+escapeHTML(u.email||"")+'</small>'+
@@ -12997,8 +13075,7 @@ function renderGetiExamButtons(){
     list.appendChild(englishTeachingButton);
 
     Object.keys(GETI_30_EXAM_SUBJECTS).forEach(function(examName){
-        if(GETI_ENGLISH_TEST_TEACHING_NAMES.indexOf(examName)!==-1)return;
-        const b=document.createElement("button");
+        if(GETI_ENGLISH_TEST_TEACHING_NAMES.indexOf(examName)!==-1)return;const b=document.createElement("button");
         b.className="exam30-btn";
         b.textContent="🎓 "+examName;
         b.onclick=function(){
@@ -13997,8 +14074,7 @@ window.showGeti30FinalResult=function(){const r=originalShowFinal();translateFin
 const originalShowActual=window.showGeti30ActualResult;
 window.showGeti30ActualResult=function(){const r=originalShowActual();translateFinalPanel();return r;};
 
-// Any legacy lesson renderer also receives native-language content.
-const originalBuildLessonText=window.buildLessonText;
+// Any legacy lesson renderer also receives native-language content.const originalBuildLessonText=window.buildLessonText;
 window.buildLessonText=function(exam,subject){if(!cfg(exam))return originalBuildLessonText(exam,subject);let out=[];for(let n=1;n<=10;n++){const d=nativePageText(exam,subject,n);out.push(d.role+"\n"+d.paragraphs.join("\n\n"));}return out.join("\n\n");};
 
 // Native lesson browser for the six language programmes.
@@ -14151,6 +14227,23 @@ function nativePrintableBook(exam,subject,autoPrint){const c=cfg(exam);if(!c)ret
 }
 </style>
 
+
+@media(max-width:520px){
+  .geti-about-message-icon-btn,
+  .geti-about-message-logo,
+  .geti-about-message-logo svg{
+    width:34px;
+    height:34px;
+  }
+  .geti-about-message-icon-btn{flex-basis:34px}
+  .geti-about-message-icon-btn .geti-admin-unread-badge{
+    min-width:19px;
+    height:19px;
+    font-size:10px;
+    right:-5px;
+    top:-4px;
+  }
+}
 
 <style id="geti-final-subject-grade-cards-style">
 .geti-final-subject-grid{
@@ -14997,8 +15090,7 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
       var r=previousBack.apply(this,arguments);
       setTimeout(function(){
         syncStages();
-        if(!document.body.classList.contains('geti-portal-mode')) document.body.classList.remove('geti-inside-portal-open');
-        else if(wasPortal) document.body.classList.add('geti-inside-portal-open');
+        if(!document.body.classList.contains('geti-portal-mode')) document.body.classList.remove('geti-inside-portal-open');else if(wasPortal) document.body.classList.add('geti-inside-portal-open');
       },0);
       return r;
     };
@@ -15031,7 +15123,23 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
   border:1px solid #f0c3c7;background:#fff2f3;color:#9b2431;
   font-size:12px;font-weight:800;line-height:1.5;
 }
-@media(max-width:640px){.geti-student-logout-btn{padding:8px 11px!important;font-size:.7rem!important}}
+.geti-second-area-entry-actions{
+  margin-left:auto;display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap;
+}
+.geti-certificate-verification-small-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:34px;padding:7px 11px;border:1px solid rgba(255,255,255,.48);
+  border-radius:8px;background:#fff;color:#082e5d!important;
+  font-size:.7rem;font-weight:950;letter-spacing:.035em;line-height:1.15;
+  text-decoration:none!important;white-space:nowrap;
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+.geti-certificate-verification-small-btn:hover{background:#f5e7bd;color:#082e5d!important}
+@media(max-width:640px){
+  .geti-student-logout-btn{padding:8px 11px!important;font-size:.7rem!important}
+  .geti-second-area-entry-actions{gap:6px;flex-wrap:nowrap}
+  .geti-certificate-verification-small-btn{min-height:31px;padding:6px 8px;font-size:.61rem;letter-spacing:.015em}
+}
 </style>
 
 <script id="geti-student-area-account-lock-script">
@@ -15275,10 +15383,16 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
   }
 
   async function boot(){
-    /* No remembered class state may expose Student Area without a real Supabase session. */
-    if(document.body.classList.contains('geti-second-area-open')){
-      var session=await getVerifiedSession();
-      if(!session)showLoginRequired('Please sign in to enter the GETI Student Area.');
+    /* A verified signed-in student stays inside the Student Area, including after refresh.
+       The First Area becomes available again only after the student uses LOG OUT. */
+    var session=await getVerifiedSession();
+    if(session){
+      var area=secondArea();
+      if(area)area.setAttribute('aria-hidden','false');
+      document.body.classList.add('geti-second-area-open');
+      document.body.classList.remove('geti-portal-mode','geti-inside-portal-open');
+      document.querySelectorAll('.geti-portal-active').forEach(function(node){node.classList.remove('geti-portal-active');});
+      try{window.scrollTo({top:0,behavior:'auto'});}catch(e){window.scrollTo(0,0);}
     }else{
       closeStudentUiImmediately();
     }
@@ -15997,9 +16111,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     }catch(e){
       if(status)status.innerHTML='<span class="bad">'+esc(String((e&&e.message)||'Unable to confirm this code.'))+'</span>';
     }finally{busy=false;if(btn){btn.disabled=false;btn.textContent='CONTINUE';}if(input)input.disabled=false;}
-  };
-
-  var resendBusy=false,resendTimer=null;
+  };var resendBusy=false,resendTimer=null;
   window.getiResendSignupCode=async function(){
     if(resendBusy)return;
     var p=pending(),status=el('getiSignupCodeStatus'),btn=el('getiResendCodeBtn'),input=el('getiSignupCodeInput');
