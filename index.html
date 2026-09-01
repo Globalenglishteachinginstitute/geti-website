@@ -16798,6 +16798,8 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
 
       badge.textContent=n>99?"99+":String(n);
       badge.style.display="flex";
+      badge.style.visibility="visible";
+      badge.style.opacity="1";
       badge.classList.add("geti-has-unread");
       badge.setAttribute(
         "aria-label",
@@ -16816,6 +16818,39 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
     }
   }
 
+  function seenStorageKey(userId){
+    return "GETI_ADMIN_SEEN_MESSAGE_IDS_"+String(userId||"");
+  }
+
+  function getSeenAdminMessageIds(userId){
+    try{
+      const raw=localStorage.getItem(seenStorageKey(userId));
+      const parsed=raw?JSON.parse(raw):[];
+      return new Set(Array.isArray(parsed)?parsed.map(String):[]);
+    }catch(e){
+      return new Set();
+    }
+  }
+
+  function saveSeenAdminMessageIds(userId,ids){
+    try{
+      const clean=Array.from(new Set((ids||[]).map(String))).slice(-1000);
+      localStorage.setItem(seenStorageKey(userId),JSON.stringify(clean));
+    }catch(e){}
+  }
+
+  async function getAdminMessagesForUnread(userId){
+    const {data,error}=await window.GETI_SB
+      .from("messages")
+      .select("id,created_at,sender_role")
+      .eq("user_id",userId)
+      .eq("sender_role","admin")
+      .order("created_at",{ascending:true});
+
+    if(error)throw error;
+    return Array.isArray(data)?data:[];
+  }
+
   window.getiRefreshAdminUnreadCount=async function(){
     const session=await currentSession();
     const user=session?.user;
@@ -16826,18 +16861,15 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
     }
 
     try{
-      const {count,error}=await window.GETI_SB
-        .from("messages")
-        .select("id",{count:"exact",head:true})
-        .eq("user_id",user.id)
-        .eq("sender_role","admin")
-        .is("read_at",null);
+      const messages=await getAdminMessagesForUnread(user.id);
+      const seen=getSeenAdminMessageIds(user.id);
+      const unread=messages.reduce(function(total,m){
+        return total+(seen.has(String(m.id))?0:1);
+      },0);
 
-      if(error)throw error;
-
-      setUnreadBadge(count||0);
+      setUnreadBadge(unread);
       ensureUnreadRealtime(user.id);
-      return count||0;
+      return unread;
     }catch(e){
       console.warn("GETI unread message count:",e);
       return 0;
@@ -16850,18 +16882,11 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
     if(!user?.id)return;
 
     try{
-      const {error}=await window.GETI_SB
-        .from("messages")
-        .update({read_at:new Date().toISOString()})
-        .eq("user_id",user.id)
-        .eq("sender_role","admin")
-        .is("read_at",null);
-
-      if(error)throw error;
+      const messages=await getAdminMessagesForUnread(user.id);
+      saveSeenAdminMessageIds(user.id,messages.map(function(m){return m.id;}));
       setUnreadBadge(0);
     }catch(e){
       console.warn("GETI mark administrator messages read:",e);
-      await window.getiRefreshAdminUnreadCount();
     }
   };
 
@@ -16879,29 +16904,15 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
       .channel("geti-admin-unread-"+userId)
       .on(
         "postgres_changes",
-        {
-          event:"INSERT",
-          schema:"public",
-          table:"messages",
-          filter:"user_id=eq."+userId
-        },
+        {event:"INSERT",schema:"public",table:"messages",filter:"user_id=eq."+userId},
         function(payload){
-          if(payload?.new?.sender_role==="admin"){
-            window.getiRefreshAdminUnreadCount();
-          }
+          if(payload?.new?.sender_role==="admin")window.getiRefreshAdminUnreadCount();
         }
       )
       .on(
         "postgres_changes",
-        {
-          event:"UPDATE",
-          schema:"public",
-          table:"messages",
-          filter:"user_id=eq."+userId
-        },
-        function(){
-          window.getiRefreshAdminUnreadCount();
-        }
+        {event:"UPDATE",schema:"public",table:"messages",filter:"user_id=eq."+userId},
+        function(){window.getiRefreshAdminUnreadCount();}
       )
       .subscribe();
   }
@@ -16912,18 +16923,13 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
     }
     unreadChannel=null;
     unreadUserId=null;
-    if(unreadPollTimer){
-      clearInterval(unreadPollTimer);
-      unreadPollTimer=null;
-    }
+    if(unreadPollTimer){clearInterval(unreadPollTimer);unreadPollTimer=null;}
   }
 
   window.getiOpenAdministratorChatFromIcon=async function(){
     if(typeof window.getiOpenAdministratorChat==="function"){
       await window.getiOpenAdministratorChat(null);
-      if(typeof window.getiRefreshAdminUnreadCount==="function"){
-        await window.getiRefreshAdminUnreadCount();
-      }
+      if(typeof window.getiMarkAdminMessagesRead==="function")await window.getiMarkAdminMessagesRead();
     }
   };
 
@@ -16932,10 +16938,8 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
 
     if(!unreadPollTimer){
       unreadPollTimer=setInterval(function(){
-        if(!document.hidden){
-          window.getiRefreshAdminUnreadCount();
-        }
-      },45000);
+        if(!document.hidden)window.getiRefreshAdminUnreadCount();
+      },15000);
     }
 
     if(window.GETI_SB?.auth?.onAuthStateChange){
@@ -16945,26 +16949,24 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
           setUnreadBadge(0);
           return;
         }
-        setTimeout(function(){
-          window.getiRefreshAdminUnreadCount();
-        },100);
+        setTimeout(function(){window.getiRefreshAdminUnreadCount();},100);
       });
     }
 
     document.addEventListener("visibilitychange",function(){
-      if(!document.hidden){
-        window.getiRefreshAdminUnreadCount();
-      }
+      if(!document.hidden)window.getiRefreshAdminUnreadCount();
     });
   }
 
-  if(document.readyState==="loading"){
-    document.addEventListener("DOMContentLoaded",bootUnreadBadge);
-  }else{
-    bootUnreadBadge();
-  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bootUnreadBadge);
+  else bootUnreadBadge();
 })();
 </script>
 
+
+<style id="geti-unread-badge-visibility-fix">
+.geti-admin-message-icon-btn,.geti-about-message-icon-btn{position:relative!important;overflow:visible!important}
+.geti-admin-unread-badge.geti-has-unread{display:flex!important;visibility:visible!important;opacity:1!important;background:#ef2028!important;color:#fff!important;border:2px solid #fff!important;z-index:9999!important}
+</style>
 </body>
 </html>
