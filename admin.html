@@ -430,6 +430,14 @@ img.thumb{
 }
 </style>
 
+
+<style id="geti-admin-two-pdf-final-style">
+.geti-admin-pdf-existing{display:grid;gap:6px;min-width:260px}
+.geti-admin-pdf-file{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 9px;border:1px solid #dce4ec;border-left:4px solid #16865c;border-radius:8px;background:#fbfdfc}
+.geti-admin-pdf-file b{color:#082e5d;font-size:10px}
+.geti-admin-pdf-send button:disabled,.geti-admin-pdf-send input:disabled{opacity:.52;cursor:not-allowed}
+</style>
+
 </head>
 <body>
 <div id="login" class="login-screen">
@@ -477,7 +485,7 @@ const APIKEY="sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8";
 const ADMIN_FN=BASE+"geti-admin";
 const COMMUNITY_FN=BASE+"geti-community-admin";
 const PUBLISH_FN=BASE+"geti-publish";
-const CERTPDF_FN=BASE+"geti-certificate-files";
+const CERTPDF_FN=BASE+"geti-certificate-files-v2";
 const SHEET_API="https://script.google.com/macros/s/AKfycbzQ_YczGnSdh4GJZ73XTt8LfrUtdjJFAlUZGUx3Chhlk-0Es3rskQkun5LgrZYhkKRF/exec";
 const TOKEN_KEY="GETI_BAAM_TOKEN"; // GETI admin backend v5+ includes Google Sheet proxy
 let token=localStorage.getItem(TOKEN_KEY)||"";
@@ -818,10 +826,10 @@ async function pdfCertificates(){
     const r=await certPdfApi("admin_list_passed");
     getiPdfCertificateRows=Array.isArray(r.results)?r.results:[];
     content(
-      pageHead("PDF Certificates","Every PASSED examination has an administrator-only PDF delivery area.",'<button class="btn" onclick="pdfCertificates()">REFRESH</button>')+
-      '<div class="notice success-note"><b>Administrator only:</b> select the final PDF certificate for a PASSED candidate and send it. After upload, the PDF appears automatically in that student’s GETI Second Area and can be viewed and downloaded.</div>'+
+      pageHead("PDF Certificates","Administrator-only certificate delivery for PASSED examinations.",'<button class="btn" onclick="pdfCertificates()">REFRESH</button>')+
+      '<div class="notice success-note"><b>2 PDF maximum per PASSED exam.</b> Only the Administrator can send or delete certificate PDFs.</div>'+
       '<div class="search-row"><input class="search" id="pdfCertQ" placeholder="Search Candidate ID, student, email or exam..." oninput="renderPdfCertificates()"><span class="count" id="pdfCertCount"></span></div>'+
-      '<div class="table-wrap"><table><thead><tr><th>Candidate ID</th><th>Student</th><th>Exam / Score</th><th>PDF Status</th><th>Administrator PDF</th></tr></thead><tbody id="pdfCertRows"></tbody></table></div>'
+      '<div class="table-wrap"><table><thead><tr><th>Candidate ID</th><th>Student</th><th>Exam / Score</th><th>PDF Certificates</th><th>Send PDF</th></tr></thead><tbody id="pdfCertRows"></tbody></table></div>'
     );
     renderPdfCertificates();
   }catch(e){content(notice(e.message,"error"))}
@@ -834,23 +842,31 @@ function renderPdfCertificates(){
   const body=document.getElementById("pdfCertRows");
   if(count)count.textContent=rows.length+" PASSED candidate(s)";
   if(!body)return;
+
   body.innerHTML=rows.length?rows.map(r=>{
     const cid=String(r.candidate_id||"");
-    const sent=!!r.certificate_pdf;
-    const fileName=sent?String(r.certificate_pdf.file_name||"Certificate.pdf"):"";
-    const size=sent&&r.certificate_pdf.file_size?Math.max(1,Math.round(Number(r.certificate_pdf.file_size)/1024))+" KB":"";
+    const files=Array.isArray(r.certificate_pdfs)?r.certificate_pdfs:[];
+    const atMax=files.length>=2;
+
+    const fileList=files.length
+      ? '<div class="geti-admin-pdf-existing">'+files.map((f,i)=>
+          '<div class="geti-admin-pdf-file">'+
+            '<div><b>PDF '+(i+1)+'</b><br><span class="count">'+esc(f.file_name||"Certificate.pdf")+
+            (f.file_size?' · '+Math.max(1,Math.round(Number(f.file_size)/1024))+' KB':'')+'</span></div>'+
+            '<button class="btn danger" onclick="deletePassedPdf('+Number(f.id)+',\''+esc(cid)+'\')">DELETE</button>'+
+          '</div>'
+        ).join("")+'</div>'
+      : '<span class="badge pending">NO PDF SENT</span>';
+
     return '<tr>'+
       '<td><b>'+esc(cid||"—")+'</b></td>'+
       '<td><b>'+esc(r.name||"Student")+'</b><br><span class="count">'+esc(r.email||"")+'</span></td>'+
       '<td>'+esc(r.program||"—")+'<br><b>'+Math.round(Number(r.percentage||0))+'%</b> <span class="badge pass">PASSED</span></td>'+
-      '<td>'+(sent?
-        '<span class="badge active">PDF SENT</span><br><span class="count">'+esc(fileName)+(size?' · '+esc(size):'')+'<br>'+esc(d(r.certificate_pdf.updated_at||r.certificate_pdf.uploaded_at))+'</span>':
-        '<span class="badge pending">WAITING FOR PDF</span>')+
-      '</td>'+
+      '<td>'+fileList+'<div class="count" style="margin-top:6px">'+files.length+' / 2 PDF sent</div></td>'+
       '<td><div class="geti-admin-pdf-send">'+
-        '<input type="file" accept="application/pdf,.pdf" data-cert-pdf="'+esc(cid)+'">'+
-        '<button class="btn primary" onclick="uploadPassedPdf(\''+esc(cid)+'\')">'+(sent?'REPLACE PDF':'SEND PDF')+'</button>'+
-        '<div class="status" data-cert-status="'+esc(cid)+'"></div>'+
+        '<input type="file" accept="application/pdf,.pdf" data-cert-pdf="'+esc(cid)+'" '+(atMax?'disabled':'')+'>'+
+        '<button class="btn primary" onclick="uploadPassedPdf(\''+esc(cid)+'\')" '+(atMax?'disabled':'')+'>'+(files.length===1?'SEND SECOND PDF':'SEND PDF')+'</button>'+
+        '<div class="status" data-cert-status="'+esc(cid)+'">'+(atMax?'<span style="color:#16865c;font-weight:900">Maximum 2 PDFs reached.</span>':'')+'</div>'+
       '</div></td>'+
     '</tr>';
   }).join(""):'<tr><td colspan="5" class="empty">No PASSED candidates found.</td></tr>';
@@ -869,11 +885,19 @@ async function uploadPassedPdf(candidateId){
   try{
     const data=await fileData(file);
     await certPdfApi("admin_upload_pdf",{candidate_id:candidateId,file:{name:file.name,type:"application/pdf",data}});
-    if(status)status.innerHTML='<span style="color:#16865c;font-weight:900">✓ PDF SENT TO STUDENT AREA</span>';
-    setTimeout(pdfCertificates,700);
+    if(status)status.innerHTML='<span style="color:#16865c;font-weight:900">✓ PDF SENT</span>';
+    setTimeout(pdfCertificates,500);
   }catch(e){
     if(status)status.innerHTML='<span style="color:#b42318">'+esc(e.message||"Unable to upload PDF.")+'</span>';
   }
+}
+
+async function deletePassedPdf(fileId,candidateId){
+  if(!confirm("Delete this certificate PDF from the student area?"))return;
+  try{
+    await certPdfApi("admin_delete_pdf",{file_id:fileId,candidate_id:candidateId});
+    pdfCertificates();
+  }catch(e){alert(e.message||"Unable to delete PDF.")}
 }
 /* ===== END PDF CERTIFICATE DELIVERY ===== */
 
