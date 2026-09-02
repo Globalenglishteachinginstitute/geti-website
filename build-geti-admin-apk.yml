@@ -1,0 +1,39 @@
+name: Build GETI Admin APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'android-admin-app/**'
+      - '.github/workflows/build-geti-admin-apk.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Build APK
+        working-directory: android-admin-app
+        run: gradle assembleDebug --no-daemon
+
+      - name: Upload GETI Admin APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: GETI-Admin-APK
+          path: android-admin-app/app/build/outputs/apk/debug/app-debug.apk
