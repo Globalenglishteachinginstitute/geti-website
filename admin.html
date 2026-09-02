@@ -455,6 +455,17 @@ img.thumb{
 }
 </style>
 
+
+<!-- GETI ADMIN PWA / WINDOWS APP -->
+<meta name="theme-color" content="#08264d">
+<meta name="application-name" content="GETI Admin">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="GETI Admin">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./geti-admin-192.png">
+<link rel="apple-touch-icon" href="./geti-admin-192.png">
+
 </head>
 <body>
 <div id="login" class="login-screen">
@@ -1267,5 +1278,16 @@ async function saveSheetStudent(row){
 document.getElementById("password").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
 if(token)start();
 </script>
+
+<script>
+/* GETI Admin PWA registration — isolated to /admin/ so it does not replace the student app service worker. */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./service-worker.js", {scope:"./"})
+      .catch(function (err) { console.warn("GETI Admin service worker:", err); });
+  });
+}
+</script>
+
 </body>
 </html>
