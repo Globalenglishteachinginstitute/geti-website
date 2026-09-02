@@ -4688,6 +4688,7 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
       <li><a href="#getiProgramTESOL" onclick="document.getElementById('navMenu').classList.remove('show')">TESOL</a></li>
       <li><a href="#getiProgramEnglish" onclick="document.getElementById('navMenu').classList.remove('show')">English Programs</a></li>
       <li><a href="#getiProgramExams" onclick="document.getElementById('navMenu').classList.remove('show')">Exams</a></li>
+      <li><a href="#getiCareerPublic" onclick="document.getElementById('navMenu').classList.remove('show')">Career &amp; Jobs</a></li>
       <li><button type="button" onclick="document.getElementById('navMenu').classList.remove('show');openGetiCertificateInfo()">Certificate</button></li>
       <li><a href="#verify" onclick="document.getElementById('navMenu').classList.remove('show')">Certificate Verification</a></li>
       <li><a href="#getiHomeContact" onclick="document.getElementById('navMenu').classList.remove('show')">Contact</a></li>
@@ -4859,6 +4860,31 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
       </div>
     </section>
 
+
+    <section class="geti-career-public" id="getiCareerPublic" aria-labelledby="getiCareerPublicTitle">
+      <div class="geti-career-public-head">
+        <div>
+          <span class="geti-career-kicker">GETI CAREER &amp; RECRUITMENT</span>
+          <h2 id="getiCareerPublicTitle">Turn learning and qualifications into career opportunities.</h2>
+          <p>Discover approved teaching opportunities, build a professional career profile, connect qualifications to applications, and give verified employers a structured recruitment workspace.</p>
+        </div>
+        <div class="geti-career-public-actions">
+          <button type="button" class="geti-career-primary" onclick="getiOpenCareerHub('public')">EXPLORE CAREER HUB</button>
+          <button type="button" class="geti-career-secondary" onclick="getiCareerOpenStudent()">MY CAREER AREA</button>
+        </div>
+      </div>
+      <div class="geti-career-public-grid">
+        <article><span>⌕</span><strong>Find Teaching Jobs</strong><small>Search approved opportunities by role, location, work mode and qualification.</small></article>
+        <article><span>◎</span><strong>Professional Career Profile</strong><small>Build one reusable profile with experience, skills, CV, video and career preferences.</small></article>
+        <article><span>◆</span><strong>Verified Qualifications</strong><small>Connect GETI certificate information with career applications and employer review.</small></article>
+        <article><span>▣</span><strong>Employer Recruitment</strong><small>Organizations can create a profile, submit jobs and manage candidate applications.</small></article>
+      </div>
+      <div class="geti-career-flow" aria-label="GETI Career Hub workflow">
+        <span><b>1</b>Create Profile</span><i>→</i><span><b>2</b>Find a Match</span><i>→</i><span><b>3</b>Apply &amp; Interview</span><i>→</i><span><b>4</b>Offer &amp; Career Growth</span>
+      </div>
+      <p class="geti-career-safety-note"><strong>GETI Career Safety:</strong> candidates should never be asked to pay money simply to submit a job application. Suspicious opportunities should be reported before sharing sensitive information.</p>
+    </section>
+
     <section class="geti-home-v2-cta">
       <div><span>YOUR FUTURE STARTS WITH GETI</span><h2>Build stronger English skills and professional teaching knowledge.</h2></div>
       <button type="button" class="geti-home-v2-gold" onclick="getiFocusFirstAccount('create')">Start Your Journey</button>
@@ -4878,7 +4904,7 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
     <footer class="geti-home-v2-footer" id="getiHomeContact">
       <div class="geti-home-v2-footer-grid">
         <div><div class="geti-home-v2-footer-brand">GETI</div><p>Global English Teaching Institute<br>International English Education &amp; Professional Training</p></div>
-        <div><h3>Quick Links</h3><a href="#getiHomePrograms">Programs</a><a href="#verify">Verify Certificate</a><button onclick="getiFocusFirstAccount('signin')">Student Account</button></div>
+        <div><h3>Quick Links</h3><a href="#getiHomePrograms">Programs</a><a href="#getiCareerPublic">Career &amp; Jobs</a><a href="#verify">Verify Certificate</a><button onclick="getiFocusFirstAccount('signin')">Student Account</button></div>
         <div><h3>Student Services</h3><button onclick="enterGetiPortal('lesson')">Lessons</button><button onclick="enterGetiPortal('exam')">Take an Exam</button><button onclick="openMyResult()">My Result</button></div>
         <div><h3>Contact GETI</h3><a href="mailto:globallearningteachinginstitut@gmail.com">globallearningteachinginstitut@gmail.com</a><span>English · TEFL · TESOL · Exams · Certificates</span></div>
       </div>
@@ -4953,6 +4979,11 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
         <button type="button" class="geti-first-quick-card" onclick="openMyResult()">
           <span class="geti-first-quick-icon">A+</span>
           <span><strong>My Result</strong><small>Check your examination result</small></span>
+          <b>›</b>
+        </button>
+        <button type="button" class="geti-first-quick-card geti-career-student-card" onclick="getiOpenCareerHub('student')">
+          <span class="geti-first-quick-icon">★</span>
+          <span><strong>My Career</strong><small>Profile, jobs, applications and interviews</small></span>
           <b>›</b>
         </button>
       </div>
@@ -5297,6 +5328,186 @@ employment and global communication.
 
 
 </div><!-- /#getiSecondArea -->
+
+<!-- =========================================================
+     GETI CAREER HUB — ADDITIVE MODULE
+     Public opportunities + authenticated student career area + employer workspace.
+     Existing GETI lessons, exams, results, certificates and messaging remain untouched.
+========================================================= -->
+<section id="getiCareerHub" class="geti-career-hub" aria-hidden="true" aria-label="GETI Career Hub">
+  <header class="geti-career-hub-topbar">
+    <div class="geti-career-hub-brand">
+      <span class="geti-career-hub-logo">G</span>
+      <span><strong>GETI CAREER HUB</strong><small>Career &amp; Recruitment Center</small></span>
+    </div>
+    <div class="geti-career-hub-top-actions">
+      <span id="getiCareerDbStatus" class="geti-career-db-status">Career data ready</span>
+      <a class="geti-career-admin-link" href="/admin.html">ADMIN REVIEW</a>
+      <button type="button" onclick="getiCloseCareerHub()">CLOSE ✕</button>
+    </div>
+  </header>
+
+  <div class="geti-career-hub-layout">
+    <aside class="geti-career-sidebar" aria-label="Career navigation">
+      <div class="geti-career-user-mini">
+        <div class="geti-career-avatar" id="getiCareerAvatar">G</div>
+        <div><strong id="getiCareerMiniName">GETI Career</strong><small id="getiCareerMiniLine">Professional opportunities</small></div>
+      </div>
+      <nav>
+        <button type="button" class="active" data-career-tab="opportunities" onclick="getiCareerTab('opportunities')"><b>⌕</b><span>Opportunities</span></button>
+        <button type="button" data-career-tab="profile" onclick="getiCareerProtectedTab('profile')"><b>◎</b><span>My Career Profile</span></button>
+        <button type="button" data-career-tab="applications" onclick="getiCareerProtectedTab('applications')"><b>✓</b><span>Applications</span></button>
+        <button type="button" data-career-tab="saved" onclick="getiCareerProtectedTab('saved')"><b>♡</b><span>Saved Jobs</span></button>
+        <button type="button" data-career-tab="qualifications" onclick="getiCareerProtectedTab('qualifications')"><b>◆</b><span>Qualifications</span></button>
+        <button type="button" data-career-tab="interviews" onclick="getiCareerProtectedTab('interviews')"><b>◷</b><span>Interviews</span></button>
+        <button type="button" data-career-tab="alerts" onclick="getiCareerProtectedTab('alerts')"><b>◉</b><span>Job Alerts</span></button>
+        <button type="button" data-career-tab="messages" onclick="getiCareerProtectedTab('messages')"><b>✉</b><span>Career Messages</span></button>
+        <hr>
+        <button type="button" data-career-tab="employer" onclick="getiCareerTab('employer')"><b>▣</b><span>Employer Workspace</span></button>
+        <button type="button" data-career-tab="postjob" onclick="getiCareerTab('postjob')"><b>＋</b><span>Post a Job</span></button>
+        <button type="button" data-career-tab="safety" onclick="getiCareerTab('safety')"><b>⚑</b><span>Trust &amp; Safety</span></button>
+      </nav>
+    </aside>
+
+    <main class="geti-career-main">
+      <section class="geti-career-panel active" data-career-panel="opportunities">
+        <div class="geti-career-panel-head">
+          <div><span class="geti-career-kicker">OPPORTUNITY MARKETPLACE</span><h2>Find teaching opportunities</h2><p>Only approved jobs are displayed in the public marketplace.</p></div>
+          <button type="button" class="geti-career-primary small" onclick="getiCareerOpenStudent()">BUILD MY CAREER PROFILE</button>
+        </div>
+        <div class="geti-career-filter-grid">
+          <input id="getiCareerSearch" type="search" placeholder="Search role, employer or skill" oninput="getiCareerRenderJobs()">
+          <select id="getiCareerLocation" onchange="getiCareerRenderJobs()"><option value="">All locations</option></select>
+          <select id="getiCareerMode" onchange="getiCareerRenderJobs()"><option value="">All work modes</option><option>Online</option><option>On-site</option><option>Hybrid</option></select>
+          <select id="getiCareerEmployment" onchange="getiCareerRenderJobs()"><option value="">All job types</option><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Freelance</option></select>
+        </div>
+        <div class="geti-career-market-summary"><strong id="getiCareerJobCount">0 approved jobs</strong><span>Real-employer opportunities appear after GETI review.</span></div>
+        <div id="getiCareerJobGrid" class="geti-career-job-grid"></div>
+      </section>
+
+      <section class="geti-career-panel" data-career-panel="profile">
+        <div class="geti-career-panel-head"><div><span class="geti-career-kicker">MY CAREER</span><h2>Professional Career Profile</h2><p>A reusable career identity for GETI job applications.</p></div><span id="getiCareerProfilePercent" class="geti-career-score-pill">0% complete</span></div>
+        <div class="geti-career-profile-top">
+          <div class="geti-career-profile-card">
+            <div class="geti-career-profile-person"><div class="geti-career-avatar large" id="getiCareerProfileAvatar">G</div><div><h3 id="getiCareerProfileName">GETI Candidate</h3><p id="getiCareerProfileHeadline">Teaching professional</p><div><span id="getiCareerProfileQual" class="geti-career-badge">Qualification not added</span><span id="getiCareerProfileLevel" class="geti-career-badge blue">Level not set</span></div></div></div>
+            <div class="geti-career-progress"><i id="getiCareerProfileBar"></i></div>
+          </div>
+          <div class="geti-career-readiness-card">
+            <h3>Career Readiness</h3>
+            <div><span>CV / Résumé</span><b id="getiCareerReadyCv">Missing</b></div>
+            <div><span>Introduction / Demo Video</span><b id="getiCareerReadyVideo">Missing</b></div>
+            <div><span>Qualification</span><b id="getiCareerReadyQual">Missing</b></div>
+            <div><span>Career Preferences</span><b id="getiCareerReadyPref">Missing</b></div>
+          </div>
+        </div>
+        <form id="getiCareerProfileForm" class="geti-career-form" onsubmit="return getiCareerSaveProfile(event)">
+          <label><span>Full Name</span><input name="name" autocomplete="name" placeholder="Your full name"></label>
+          <label><span>Email Address</span><input name="email" type="email" autocomplete="email" placeholder="name@example.com" readonly></label>
+          <label><span>Nationality</span><input name="nationality" placeholder="e.g. British"></label>
+          <label><span>Country of Residence</span><input name="country" placeholder="e.g. United Kingdom"></label>
+          <label><span>Professional Headline</span><input name="headline" placeholder="English Teacher / ESL Tutor"></label>
+          <label><span>Primary Qualification</span><input name="qualification" placeholder="e.g. TEFL 168 Hours"></label>
+          <label><span>Certificate ID</span><input name="certificateId" placeholder="GETI Certificate ID"></label>
+          <label><span>English Level</span><select name="level"><option value="">Select level</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option></select></label>
+          <label><span>Teaching Experience (years)</span><input name="experience" type="number" min="0" placeholder="0"></label>
+          <label><span>Preferred Work Mode</span><select name="workMode"><option value="">Select</option><option>Online</option><option>On-site</option><option>Hybrid</option></select></label>
+          <label><span>Preferred Location</span><input name="preferredLocation" placeholder="Remote / Country"></label>
+          <label><span>Availability</span><input name="availability" placeholder="Immediate / Date"></label>
+          <label class="full"><span>Teaching Skills</span><input name="skills" placeholder="Conversation, Grammar, Young Learners, Business English"></label>
+          <label class="full"><span>Languages</span><input name="languages" placeholder="English, French, Malagasy..."></label>
+          <label class="full"><span>Professional Bio</span><textarea name="bio" placeholder="Describe your teaching background, strengths and career goals."></textarea></label>
+          <label><span>CV Link</span><input name="cv" type="url" placeholder="https://..."></label>
+          <label><span>Introduction / Demo Video</span><input name="video" type="url" placeholder="https://..."></label>
+          <label><span>LinkedIn / Portfolio</span><input name="portfolio" type="url" placeholder="https://..."></label>
+          <label><span>Profile Visibility</span><select name="visibility"><option>Employers I apply to</option><option>Verified employers</option><option>Private</option></select></label>
+          <div class="geti-career-form-actions full"><button class="geti-career-primary" type="submit">SAVE CAREER PROFILE</button></div>
+        </form>
+      </section>
+
+      <section class="geti-career-panel" data-career-panel="applications">
+        <div class="geti-career-panel-head"><div><span class="geti-career-kicker">APPLICATION CENTER</span><h2>My Applications</h2><p>Track each application from submission through the recruitment process.</p></div></div>
+        <div id="getiCareerPipeline" class="geti-career-pipeline"></div>
+        <div id="getiCareerApplications" class="geti-career-table-wrap"></div>
+      </section>
+
+      <section class="geti-career-panel" data-career-panel="saved">
+        <div class="geti-career-panel-head"><div><span class="geti-career-kicker">SHORTLIST</span><h2>Saved Jobs</h2><p>Keep promising opportunities in one place.</p></div></div>
+        <div id="getiCareerSavedGrid" class="geti-career-job-grid"></div>
+      </section>
+
+      <section class="geti-career-panel" data-career-panel="qualifications">
+        <div class="geti-career-panel-head"><div><span class="geti-career-kicker">QUALIFICATION WALLET</span><h2>Connect learning to career evidence</h2><p>Use official GETI certificate verification before presenting qualifications as verified.</p></div></div>
+        <div class="geti-career-two-col">
+          <article class="geti-career-info-card"><h3>Primary Qualification</h3><div id="getiCareerQualificationCard" class="geti-career-inline-note">No qualification added yet.</div><button type="button" class="geti-career-secondary" onclick="getiCareerTab('profile')">UPDATE PROFILE</button></article>
+          <article class="geti-career-info-card"><h3>Official Verification</h3><p>Search the official GETI certificate record by Certificate ID, holder name or nationality.</p><a class="geti-career-primary link" href="/certificate-verification.html">OPEN CERTIFICATE VERIFICATION</a></article>
+        </div>
+      </section>
+
+      <section class="geti-career-panel" data-career-panel="interviews">
+        <div class="geti-career-panel-head"><div><span class="geti-career-kicker">INTERVIEW CENTER</span><h2>Interview Readiness</h2><p>Keep interview details and career materials organized.</p></div></div>
+        <div class="geti-career-two-col"><article class="geti-career-info-card"><h3>Upcoming Interviews</h3><div id="getiCareerInterviewList" class="geti-career-inline-note">No interviews scheduled.</div></article><article class="geti-career-info-card"><h3>Readiness Checklist</h3><div id="getiCareerInterviewReady" class="geti-career-checklist"></div></article></div>
+      </section>
+
+      <section class="geti-career-panel" data-career-panel="alerts">
+        <div class="geti-career-panel-head"><div><span class="geti-career-kicker">SMART ALERTS</span><h2>Job Alerts</h2><p>Save job-search preferences for future notifications.</p></div></div>
+        <div class="geti-career-two-col">
+          <form id="getiCareerAlertForm" class="geti-career-info-card geti-career-form single" onsubmit="return getiCareerSaveAlert(event)"><h3>Create Alert</h3><label><span>Alert Name</span><input name="name" placeholder="Remote English Teaching" required></label><label><span>Keyword</span><input name="keyword" placeholder="English Teacher / TEFL"></label><label><span>Location</span><input name="location" placeholder="Remote / Country"></label><label><span>Frequency</span><select name="frequency"><option>Daily</option><option>Weekly</option></select></label><button class="geti-career-primary" type="submit">CREATE ALERT</button></form>
+          <article class="geti-career-info-card"><h3>My Alerts</h3><div id="getiCareerAlertsList"></div></article>
+        </div>
+      </section>
+
+      <section class="geti-career-panel" data-career-panel="messages">
+        <div class="geti-career-panel-head"><div><span class="geti-career-kicker">CAREER COMMUNICATION</span><h2>Messages</h2><p>Keep recruitment communication organized and private.</p></div></div>
+        <div class="geti-career-two-col"><article class="geti-career-info-card"><div id="getiCareerChat" class="geti-career-chat"></div><div class="geti-career-chat-send"><input id="getiCareerChatInput" placeholder="Write a career message"><button type="button" class="geti-career-primary" onclick="getiCareerSendMessage()">SEND</button></div></article><article class="geti-career-info-card"><h3>Privacy</h3><p>Candidate phone numbers, private email addresses and documents should not be exposed publicly. Production messaging should use authenticated accounts and role-based access.</p><button type="button" class="geti-career-secondary" onclick="if(typeof getiOpenAdministratorChatFromIcon==='function')getiOpenAdministratorChatFromIcon()">MESSAGE GETI ADMINISTRATOR</button></article></div>
+      </section>
+
+      <section class="geti-career-panel" data-career-panel="employer">
+        <div class="geti-career-panel-head"><div><span class="geti-career-kicker">EMPLOYER WORKSPACE</span><h2>Build a trusted employer profile</h2><p>Employer identity and transparent job information improve candidate safety and recruitment quality.</p></div><span id="getiCareerEmployerTrust" class="geti-career-score-pill gold">Trust Score: 0</span></div>
+        <form id="getiCareerEmployerForm" class="geti-career-form" onsubmit="return getiCareerSaveEmployer(event)">
+          <label><span>Organization Name</span><input name="company" required></label><label><span>Country</span><input name="country" required></label>
+          <label><span>Official Website</span><input name="website" type="url" placeholder="https://..."></label><label><span>Official Email</span><input name="email" type="email" placeholder="hr@organization.org"></label>
+          <label><span>Registration / License Reference</span><input name="license" placeholder="Registration number"></label><label><span>Hiring Contact</span><input name="contact" placeholder="Recruiter / HR name"></label>
+          <label><span>Organization Type</span><select name="type"><option>School</option><option>Language Center</option><option>University</option><option>Online Education Company</option><option>NGO / Training Organization</option><option>Other</option></select></label>
+          <label><span>Recruitment Contact Policy</span><select name="contactPolicy"><option>GETI Career messages</option><option>Official website</option></select></label>
+          <label class="full"><span>About Organization</span><textarea name="about"></textarea></label>
+          <div class="geti-career-form-actions full"><button class="geti-career-primary" type="submit">SAVE EMPLOYER PROFILE</button><button class="geti-career-secondary" type="button" onclick="getiCareerRequestEmployerVerification()">REQUEST VERIFICATION</button><span id="getiCareerEmployerState" class="geti-career-badge">Not verified</span></div>
+        </form>
+        <div class="geti-career-info-card geti-career-employer-submissions"><h3>Submitted Jobs</h3><div id="getiCareerEmployerJobs"></div></div>
+      </section>
+
+      <section class="geti-career-panel" data-career-panel="postjob">
+        <div class="geti-career-panel-head"><div><span class="geti-career-kicker">EMPLOYER RECRUITMENT</span><h2>Post a Job</h2><p>New jobs remain Pending Review until approved by GETI Administration.</p></div></div>
+        <div id="getiCareerPostGate" class="geti-career-inline-note warning">Create an Employer Profile before posting a job.</div>
+        <form id="getiCareerJobForm" class="geti-career-form" onsubmit="return getiCareerSubmitJob(event)">
+          <label><span>Job Title</span><input name="title" required placeholder="English Teacher"></label><label><span>Employer</span><input name="company" required></label>
+          <label><span>Location</span><input name="location" required placeholder="City / Country / Remote"></label><label><span>Work Mode</span><select name="mode"><option>Online</option><option>On-site</option><option>Hybrid</option></select></label>
+          <label><span>Employment Type</span><select name="employment"><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Freelance</option></select></label><label><span>Salary / Compensation</span><input name="salary" placeholder="Transparent compensation preferred"></label>
+          <label><span>Minimum Qualification</span><input name="qualification" placeholder="e.g. TEFL 120h+"></label><label><span>English Level</span><select name="level"><option>B2+</option><option>C1+</option><option>C2</option><option>Not specified</option></select></label>
+          <label><span>Experience Required</span><input name="experience" placeholder="0 / 1 year / 2+ years"></label><label><span>Vacancies</span><input name="vacancies" type="number" min="1" value="1"></label>
+          <label><span>Application Deadline</span><input name="deadline" type="date"></label><label><span>Start Date</span><input name="startDate" type="date"></label>
+          <label class="full"><span>Required Skills</span><input name="skills" placeholder="Conversation, Grammar, Young Learners"></label>
+          <label class="full"><span>Job Description</span><textarea name="description" required></textarea></label>
+          <label class="full"><span>Requirements — one per line</span><textarea name="requirements"></textarea></label>
+          <label class="full"><span>Benefits — one per line</span><textarea name="benefits"></textarea></label>
+          <label class="full"><span>Screening Questions — one per line</span><textarea name="questions"></textarea></label>
+          <div class="geti-career-form-actions full"><button class="geti-career-primary" type="submit">SUBMIT FOR GETI REVIEW</button></div>
+        </form>
+      </section>
+
+      <section class="geti-career-panel" data-career-panel="safety">
+        <div class="geti-career-panel-head"><div><span class="geti-career-kicker">TRUST &amp; SAFETY</span><h2>Professional recruitment standards</h2><p>Protect candidates, employers and GETI's career marketplace.</p></div></div>
+        <div class="geti-career-safety-grid">
+          <article><b>✓</b><strong>Employer Verification</strong><p>Use official organization details, website, email and registration evidence.</p></article>
+          <article><b>✓</b><strong>Job Review</strong><p>Jobs should be reviewed before publication and removed if misleading or suspicious.</p></article>
+          <article><b>✓</b><strong>Candidate Privacy</strong><p>Private contact details and documents should be visible only to authorized recipients.</p></article>
+          <article><b>✓</b><strong>No Application Fees</strong><p>GETI Career Hub should not normalize paying money simply to apply for a job.</p></article>
+        </div>
+        <div class="geti-career-info-card"><h3>Career Data &amp; Administration</h3><p>This index is prepared to read approved jobs from GETI's Supabase <code>career_jobs</code> table when that table is configured. Until then, the interface falls back safely to browser storage. Employer submissions stay Pending Review and are not shown publicly unless approved.</p><div class="geti-career-form-actions"><a class="geti-career-primary link" href="/admin.html">OPEN GETI ADMIN</a><button type="button" class="geti-career-secondary" onclick="getiCareerExportData()">EXPORT CAREER DATA</button></div></div>
+      </section>
+    </main>
+  </div>
+</section>
+
 </main>
 <footer class="footer" id="contact">
 
@@ -16973,5 +17184,207 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
 
 <!-- GETI PWA APP -->
 <script src="/pwa-loader.js" defer></script>
+
+
+<style id="geti-career-hub-module-style">
+/* GETI Career Hub: additive styles only. */
+#getiCareerPublic{scroll-margin-top:92px!important}
+.geti-career-public{grid-column:1/-1;margin:0;padding:38px;border:1px solid #d9e3ed;border-radius:18px;background:linear-gradient(135deg,#f8fbff,#eef5fc);box-shadow:0 14px 36px rgba(8,46,93,.08)}
+.geti-career-public-head{display:flex;align-items:flex-start;justify-content:space-between;gap:28px}.geti-career-public-head>div:first-child{max-width:760px}.geti-career-kicker{display:block;margin-bottom:8px;color:#a57916;font-size:11px;font-weight:950;letter-spacing:.14em;text-transform:uppercase}.geti-career-public h2{margin:0 0 10px;color:#082e5d;font:800 clamp(27px,4vw,40px)/1.12 Georgia,"Times New Roman",serif}.geti-career-public p{margin:0;color:#62758a;line-height:1.65}.geti-career-public-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.geti-career-primary,.geti-career-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:42px;border-radius:9px;padding:10px 15px;font-size:11px;font-weight:950;letter-spacing:.035em;cursor:pointer;text-decoration:none!important}.geti-career-primary{border:1px solid #b58b25;background:linear-gradient(135deg,#d3aa45,#a57819);color:#fff!important;box-shadow:0 8px 18px rgba(165,120,25,.18)}.geti-career-secondary{border:1px solid #193f69;background:#fff;color:#082e5d!important}.geti-career-primary.small{min-height:36px;padding:8px 11px;font-size:10px}.geti-career-primary.link{width:max-content}.geti-career-public-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-top:26px}.geti-career-public-grid article{padding:17px;border:1px solid #dbe5ef;border-radius:14px;background:#fff;box-shadow:0 7px 18px rgba(8,46,93,.05)}.geti-career-public-grid article>span{display:grid;place-items:center;width:40px;height:40px;border-radius:11px;background:#eaf3fc;color:#0b5793;font-weight:900}.geti-career-public-grid strong{display:block;margin:11px 0 5px;color:#082e5d}.geti-career-public-grid small{display:block;color:#6b7d90;line-height:1.5}.geti-career-flow{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:24px 0 0;padding:16px;border-radius:13px;background:#082e5d;color:#fff}.geti-career-flow span{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:850}.geti-career-flow span b{display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#c89b32;color:#fff}.geti-career-flow i{color:#d8bd75;font-style:normal}.geti-career-safety-note{margin-top:14px!important;padding:12px 14px;border-left:4px solid #c6972b;border-radius:8px;background:#fff8e8!important;color:#6e5722!important;font-size:12px!important}
+
+/* Four Student Area cards when Career is added. */
+#getiSecondArea .geti-second-area-quicklinks .geti-first-quick-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+#getiSecondArea .geti-career-student-card{border-color:#d8c07b!important;background:linear-gradient(145deg,#fffdf6,#fff8e7)!important}
+#getiSecondArea .geti-career-student-card .geti-first-quick-icon{background:linear-gradient(145deg,#d4aa43,#9b7219)!important;color:#fff!important}
+
+.geti-career-hub{display:none;position:fixed;inset:0;z-index:100300;background:#f3f6fa;color:#1c2f43;overflow:hidden}.geti-career-hub.show{display:block}.geti-career-hub-topbar{height:68px;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:10px 18px;background:linear-gradient(135deg,#061f43,#0b4d85);border-bottom:3px solid #c79a32;color:#fff}.geti-career-hub-brand{display:flex;align-items:center;gap:10px}.geti-career-hub-logo{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;border:2px solid #d7b55d;background:#fff;color:#082e5d;font-weight:1000}.geti-career-hub-brand strong{display:block;font-size:14px;letter-spacing:.06em}.geti-career-hub-brand small{display:block;margin-top:2px;color:#d9e7f5;font-size:10px}.geti-career-hub-top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.geti-career-hub-top-actions>button,.geti-career-admin-link{border:1px solid rgba(255,255,255,.45);border-radius:8px;background:rgba(255,255,255,.1);color:#fff!important;padding:8px 10px;font-size:10px;font-weight:900;cursor:pointer;text-decoration:none}.geti-career-db-status{padding:7px 9px;border-radius:999px;background:rgba(255,255,255,.12);font-size:9px;font-weight:850}.geti-career-db-status.online{background:#187a4a}.geti-career-db-status.local{background:#8a6518}
+.geti-career-hub-layout{display:grid;grid-template-columns:235px minmax(0,1fr);height:calc(100dvh - 68px)}.geti-career-sidebar{overflow-y:auto;padding:15px 11px;border-right:1px solid #d8e2ec;background:#071d3a;color:#fff}.geti-career-user-mini{display:flex;gap:9px;align-items:center;margin:0 5px 14px;padding:11px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.05)}.geti-career-user-mini strong{display:block;font-size:12px}.geti-career-user-mini small{display:block;margin-top:2px;color:#aebfd2;font-size:9px}.geti-career-avatar{display:grid;place-items:center;width:36px;height:36px;flex:0 0 36px;border-radius:11px;background:linear-gradient(135deg,#d1a744,#8f6817);color:#fff;font-weight:950}.geti-career-avatar.large{width:66px;height:66px;flex-basis:66px;border-radius:17px;font-size:22px}.geti-career-sidebar nav{display:grid;gap:4px}.geti-career-sidebar nav button{display:grid;grid-template-columns:22px 1fr;align-items:center;gap:8px;width:100%;min-height:40px;padding:8px 9px;border:1px solid transparent;border-radius:9px;background:transparent;color:#c4d3e1;text-align:left;font-size:11px;font-weight:800;cursor:pointer}.geti-career-sidebar nav button:hover,.geti-career-sidebar nav button.active{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.08);color:#fff}.geti-career-sidebar nav button b{text-align:center;color:#e2c36e}.geti-career-sidebar nav hr{width:100%;border:0;border-top:1px solid rgba(255,255,255,.1);margin:7px 0}
+.geti-career-main{overflow-y:auto;padding:23px 24px 60px}.geti-career-panel{display:none;max-width:1180px;margin:0 auto}.geti-career-panel.active{display:block}.geti-career-panel-head{display:flex;align-items:flex-end;justify-content:space-between;gap:15px;margin-bottom:16px}.geti-career-panel-head h2{margin:0;color:#082e5d;font:800 clamp(25px,4vw,36px)/1.12 Georgia,"Times New Roman",serif}.geti-career-panel-head p{margin:6px 0 0;color:#6a7c8f;font-size:12px;line-height:1.5}.geti-career-score-pill{display:inline-flex;padding:7px 10px;border-radius:999px;border:1px solid #b7d3e8;background:#edf6fd;color:#0b5793;font-size:10px;font-weight:900;white-space:nowrap}.geti-career-score-pill.gold{border-color:#ead391;background:#fff7df;color:#80600e}
+.geti-career-filter-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:9px;margin-bottom:12px}.geti-career-filter-grid input,.geti-career-filter-grid select,.geti-career-form input,.geti-career-form select,.geti-career-form textarea,.geti-career-chat-send input{width:100%;min-height:43px;border:1px solid #cbd8e5;border-radius:9px;background:#fff;color:#18344f;padding:10px 11px;font-size:12px;outline:none}.geti-career-filter-grid input:focus,.geti-career-filter-grid select:focus,.geti-career-form input:focus,.geti-career-form select:focus,.geti-career-form textarea:focus,.geti-career-chat-send input:focus{border-color:#6b9cc7;box-shadow:0 0 0 3px rgba(13,87,151,.08)}.geti-career-market-summary{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:10px 0 14px;color:#6a7d8f;font-size:10px}.geti-career-market-summary strong{color:#143b62}.geti-career-job-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.geti-career-job-card{padding:16px;border:1px solid #d7e2ec;border-radius:14px;background:#fff;box-shadow:0 8px 20px rgba(8,46,93,.06)}.geti-career-job-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.geti-career-job-card h3{margin:11px 0 4px;color:#082e5d;font-size:17px;line-height:1.25}.geti-career-job-card .company{color:#344f6b;font-size:11px;font-weight:800}.geti-career-job-meta{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;color:#6c7f92;font-size:10px}.geti-career-job-card p{margin:8px 0;color:#65788b;font-size:11px;line-height:1.55}.geti-career-job-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.geti-career-job-actions button{min-height:34px;border-radius:8px;padding:7px 9px;font-size:9px;font-weight:900;cursor:pointer}.geti-career-job-actions .view{border:1px solid #082e5d;background:#082e5d;color:#fff}.geti-career-job-actions .save{border:1px solid #cbd8e5;background:#fff;color:#183b5e}.geti-career-job-actions .apply{border:1px solid #b58b25;background:#c99c31;color:#fff}.geti-career-match{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#edf7f3;border:1px solid #bfe3d4;color:#19734f;font-size:11px;font-weight:950}.geti-career-badge{display:inline-flex;align-items:center;margin:2px 4px 2px 0;padding:5px 8px;border-radius:999px;border:1px solid #d5e0ea;background:#f7f9fb;color:#536b82;font-size:9px;font-weight:900}.geti-career-badge.blue{border-color:#bfdaef;background:#edf6fd;color:#0b5793}.geti-career-badge.verified{border-color:#b9dfcb;background:#edf8f2;color:#187448}.geti-career-empty{grid-column:1/-1;padding:34px 18px;border:1px dashed #bdccda;border-radius:14px;background:#fff;text-align:center}.geti-career-empty strong{display:block;color:#082e5d;font-size:16px}.geti-career-empty p{max-width:620px;margin:7px auto 0;color:#6b7d8f;font-size:11px;line-height:1.55}
+.geti-career-profile-top,.geti-career-two-col{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:14px}.geti-career-profile-card,.geti-career-readiness-card,.geti-career-info-card{padding:16px;border:1px solid #d7e2ec;border-radius:14px;background:#fff;box-shadow:0 7px 18px rgba(8,46,93,.05)}.geti-career-profile-person{display:flex;gap:13px;align-items:center}.geti-career-profile-person h3{margin:0;color:#082e5d;font-size:18px}.geti-career-profile-person p{margin:4px 0 7px;color:#6d7f91;font-size:11px}.geti-career-progress{height:8px;margin-top:14px;border-radius:999px;background:#e8eef4;overflow:hidden}.geti-career-progress i{display:block;width:0;height:100%;background:linear-gradient(90deg,#0d65a4,#c99c31)}.geti-career-readiness-card h3,.geti-career-info-card h3{margin:0 0 10px;color:#082e5d}.geti-career-readiness-card>div{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #edf1f5;color:#617487;font-size:11px}.geti-career-readiness-card>div:last-child{border-bottom:0}.geti-career-readiness-card b{color:#9a312f}.geti-career-readiness-card b.ready{color:#19734f}.geti-career-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:17px;border:1px solid #d7e2ec;border-radius:14px;background:#fff}.geti-career-form.single{display:grid;grid-template-columns:1fr;padding:0;border:0;box-shadow:none}.geti-career-form label>span{display:block;margin-bottom:5px;color:#344d65;font-size:10px;font-weight:900}.geti-career-form label.full,.geti-career-form .full{grid-column:1/-1}.geti-career-form textarea{min-height:100px;resize:vertical}.geti-career-form-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.geti-career-inline-note{margin:10px 0 12px;padding:11px 12px;border:1px solid #d6e2ed;border-radius:9px;background:#f7fafc;color:#5a6f83;font-size:11px;line-height:1.55}.geti-career-inline-note.warning{border-color:#ead497;background:#fff8e6;color:#765c1c}
+.geti-career-pipeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}.geti-career-pipeline article{padding:14px;border:1px solid #d7e2ec;border-radius:12px;background:#fff}.geti-career-pipeline b{display:block;color:#082e5d;font-size:22px}.geti-career-pipeline span{color:#687b8e;font-size:10px}.geti-career-table-wrap{overflow:auto;border:1px solid #d7e2ec;border-radius:13px;background:#fff}.geti-career-table{width:100%;min-width:740px;border-collapse:collapse}.geti-career-table th,.geti-career-table td{padding:11px 12px;border-bottom:1px solid #e6edf3;text-align:left;font-size:10px}.geti-career-table th{background:#f5f8fb;color:#60758a;font-size:9px;text-transform:uppercase;letter-spacing:.07em}.geti-career-status{display:inline-flex;padding:5px 7px;border-radius:999px;background:#eef4fa;color:#325b7d;font-size:9px;font-weight:900}.geti-career-status.pending{background:#fff5d9;color:#81610f}.geti-career-status.interview{background:#f0ecff;color:#6045a4}.geti-career-status.offer{background:#eaf8f0;color:#19734f}.geti-career-info-card p{color:#677a8d;font-size:11px;line-height:1.6}.geti-career-checklist{display:grid;gap:8px}.geti-career-checklist div{display:flex;justify-content:space-between;padding:9px;border-radius:8px;background:#f6f9fb;color:#607487;font-size:11px}.geti-career-checklist b.ok{color:#19734f}.geti-career-chat{height:280px;overflow:auto;padding:10px;border:1px solid #d5e1ec;border-radius:10px;background:#f7fafc}.geti-career-chat-message{max-width:78%;margin:0 0 8px;padding:9px 10px;border-radius:11px;background:#eaf2f9;color:#38536c;font-size:10px}.geti-career-chat-message.me{margin-left:auto;background:#e9f7f1;color:#235a43}.geti-career-chat-send{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:8px}.geti-career-employer-submissions{margin-top:14px}.geti-career-employer-job{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px;border-bottom:1px solid #e7edf3;font-size:10px}.geti-career-employer-job:last-child{border-bottom:0}.geti-career-safety-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}.geti-career-safety-grid article{padding:16px;border:1px solid #d7e2ec;border-radius:13px;background:#fff}.geti-career-safety-grid article>b{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#e9f7f1;color:#19734f}.geti-career-safety-grid strong{display:block;margin:10px 0 5px;color:#082e5d}.geti-career-safety-grid p{margin:0;color:#697c8f;font-size:10px;line-height:1.55}.geti-career-hub code{padding:2px 5px;border-radius:5px;background:#eef2f6;color:#153b61}
+@media(max-width:1050px){.geti-career-public-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.geti-career-hub-layout{grid-template-columns:78px minmax(0,1fr)}.geti-career-user-mini>div:last-child,.geti-career-sidebar nav button span{display:none}.geti-career-user-mini{justify-content:center;padding:8px}.geti-career-sidebar nav button{display:flex;justify-content:center}.geti-career-sidebar nav button b{font-size:16px}.geti-career-job-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.geti-career-safety-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:860px){#getiSecondArea .geti-second-area-quicklinks .geti-first-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.geti-career-public-head{display:block}.geti-career-public-actions{justify-content:flex-start;margin-top:15px}.geti-career-filter-grid{grid-template-columns:1fr 1fr}.geti-career-profile-top,.geti-career-two-col{grid-template-columns:1fr}.geti-career-safety-grid{grid-template-columns:1fr 1fr}.geti-career-pipeline{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.geti-career-public{padding:22px 15px}.geti-career-public-grid{grid-template-columns:1fr}.geti-career-flow{justify-content:flex-start}.geti-career-flow i{display:none}.geti-career-hub-topbar{height:auto;min-height:64px;align-items:flex-start;padding:9px 10px}.geti-career-hub-brand small,.geti-career-db-status,.geti-career-admin-link{display:none}.geti-career-hub-top-actions{margin-left:auto}.geti-career-hub-layout{display:block;height:calc(100dvh - 64px)}.geti-career-sidebar{height:56px;overflow-x:auto;overflow-y:hidden;padding:7px;background:#071d3a;border-right:0;border-bottom:1px solid #1b4065}.geti-career-user-mini{display:none}.geti-career-sidebar nav{display:flex;gap:4px;width:max-content}.geti-career-sidebar nav hr{display:none}.geti-career-sidebar nav button{width:52px;min-width:52px;height:42px;padding:5px;display:flex}.geti-career-main{height:calc(100dvh - 120px);padding:16px 10px 45px}.geti-career-panel-head{align-items:flex-start;flex-direction:column}.geti-career-filter-grid,.geti-career-job-grid,.geti-career-form,.geti-career-safety-grid{grid-template-columns:1fr}.geti-career-form label.full,.geti-career-form .full{grid-column:auto}.geti-career-pipeline{grid-template-columns:1fr 1fr}.geti-career-chat-send{grid-template-columns:1fr}.geti-career-public-actions button{width:100%}#getiSecondArea .geti-second-area-quicklinks .geti-first-quick-grid{grid-template-columns:1fr!important}}
+</style>
+
+<script id="geti-career-hub-module-script">
+(function(){
+  'use strict';
+  var PREFIX='GETI_CAREER_V1_';
+  var remoteJobs=[];
+  var remoteOnline=false;
+  var currentMode='public';
+  function el(id){return document.getElementById(id);}
+  function q(sel,root){return (root||document).querySelector(sel);}
+  function qa(sel,root){return Array.prototype.slice.call((root||document).querySelectorAll(sel));}
+  function load(key,fallback){try{var v=localStorage.getItem(PREFIX+key);return v?JSON.parse(v):fallback;}catch(e){return fallback;}}
+  function save(key,val){try{localStorage.setItem(PREFIX+key,JSON.stringify(val));}catch(e){}}
+  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function uid(prefix){return prefix+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);}
+  function profile(){return load('PROFILE',{});} function employer(){return load('EMPLOYER',{});} function localJobs(){return load('JOBS',[]);} function apps(){return load('APPLICATIONS',[]);} function savedJobs(){return load('SAVED',[]);} function alerts(){return load('ALERTS',[]);} function interviews(){return load('INTERVIEWS',[]);} function messages(){return load('MESSAGES',[]);}
+  function approvedJobs(){
+    var local=localJobs().filter(function(j){return j.status==='approved';});
+    var all=remoteOnline?remoteJobs.concat(local):local;
+    var seen={};return all.filter(function(j){var k=String(j.id||j.job_id||j.title+'|'+j.company);if(seen[k])return false;seen[k]=1;return true;});
+  }
+  function profileCompletion(p){var fields=['name','nationality','country','headline','qualification','certificateId','level','experience','workMode','preferredLocation','skills','languages','bio','cv','video','portfolio'];var n=fields.filter(function(k){return String(p[k]||'').trim()!=='';}).length;return Math.round(n/fields.length*100);}
+  function jobMatch(j,p){var s=45;if(p.workMode&&j.mode===p.workMode)s+=12;if(p.preferredLocation&&j.location&&(String(j.location).toLowerCase().indexOf(String(p.preferredLocation).toLowerCase())>=0||String(p.preferredLocation).toLowerCase().indexOf(String(j.location).toLowerCase())>=0))s+=10;var lvl={A2:1,B1:2,B2:3,C1:4,C2:5};var jl=String(j.level||'').replace('+','');if(p.level&&lvl[p.level]&&lvl[jl]&&lvl[p.level]>=lvl[jl])s+=12;if(p.qualification&&j.qualification&&/(TEFL|TESOL)/i.test(p.qualification)&&/(TEFL|TESOL)/i.test(j.qualification))s+=10;var ps=String(p.skills||'').toLowerCase().split(',').map(function(x){return x.trim();}).filter(Boolean);var js=Array.isArray(j.skills)?j.skills:String(j.skills||'').split(',');if(ps.some(function(sk){return js.some(function(x){x=String(x).toLowerCase();return x.indexOf(sk)>=0||sk.indexOf(x)>=0;});}))s+=8;if(j.employer_verified||j.employerVerified)s+=5;return Math.max(30,Math.min(99,s));}
+  async function session(){try{if(window.GETI_SB&&GETI_SB.auth&&GETI_SB.auth.getSession){var r=await GETI_SB.auth.getSession();return r&&r.data?r.data.session:null;}}catch(e){}return null;}
+  async function requireStudent(){var s=await session();if(s&&s.user)return s;window.getiCloseCareerHub();if(typeof window.getiFocusFirstAccount==='function')window.getiFocusFirstAccount('signin');alert('Please sign in to your GETI Student Account to use My Career.');return null;}
+  async function hydrateStudent(){var s=await session();if(!s||!s.user)return;var p=profile();var meta=s.user.user_metadata||{};if(!p.name)p.name=meta.full_name||meta.name||'';p.email=s.user.email||p.email||'';save('PROFILE',p);}
+  async function loadRemoteJobs(){remoteJobs=[];remoteOnline=false;try{if(window.GETI_SB&&typeof GETI_SB.from==='function'){var r=await GETI_SB.from('career_jobs').select('*').eq('status','approved').order('created_at',{ascending:false}).limit(100);if(!r.error&&Array.isArray(r.data)){remoteJobs=r.data.map(function(j){return {id:j.id,title:j.title,company:j.company||j.employer_name,location:j.location,mode:j.mode||j.work_mode,employment:j.employment||j.employment_type,salary:j.salary,qualification:j.qualification,level:j.level,experience:j.experience,vacancies:j.vacancies,deadline:j.deadline,startDate:j.start_date,skills:j.skills||[],description:j.description,requirements:j.requirements||[],benefits:j.benefits||[],questions:j.screening_questions||[],status:'approved',employerVerified:!!(j.employer_verified||j.verified_employer)};});remoteOnline=true;}}}catch(e){}var st=el('getiCareerDbStatus');if(st){st.textContent=remoteOnline?'Online career database connected':'Career database fallback active';st.classList.toggle('online',remoteOnline);st.classList.toggle('local',!remoteOnline);} }
+  window.getiOpenCareerHub=async function(mode){currentMode=mode||'public';if(currentMode==='student'){var s=await requireStudent();if(!s)return;await hydrateStudent();}var hub=el('getiCareerHub');if(!hub)return;hub.classList.add('show');hub.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';await loadRemoteJobs();getiCareerRenderAll();getiCareerTab(currentMode==='employer'?'employer':'opportunities');};
+  window.getiCloseCareerHub=function(){var hub=el('getiCareerHub');if(hub){hub.classList.remove('show');hub.setAttribute('aria-hidden','true');}document.body.style.overflow='';};
+  window.getiCareerOpenStudent=async function(){var s=await requireStudent();if(!s)return;await window.getiOpenCareerHub('student');getiCareerTab('profile');};
+  window.getiCareerProtectedTab=async function(tab){var s=await requireStudent();if(!s)return;await hydrateStudent();getiCareerTab(tab);getiCareerRenderAll();};
+  window.getiCareerTab=function(tab){qa('.geti-career-panel',el('getiCareerHub')).forEach(function(p){p.classList.toggle('active',p.getAttribute('data-career-panel')===tab);});qa('.geti-career-sidebar [data-career-tab]',el('getiCareerHub')).forEach(function(b){b.classList.toggle('active',b.getAttribute('data-career-tab')===tab);});var main=q('.geti-career-main',el('getiCareerHub'));if(main)main.scrollTop=0;};
+  function renderUser(){var p=profile();var name=p.name||'GETI Career';var initials=name.split(/\s+/).filter(Boolean).slice(0,2).map(function(x){return x[0];}).join('').toUpperCase()||'G';['getiCareerAvatar','getiCareerProfileAvatar'].forEach(function(id){if(el(id))el(id).textContent=initials;});if(el('getiCareerMiniName'))el('getiCareerMiniName').textContent=name;if(el('getiCareerMiniLine'))el('getiCareerMiniLine').textContent=p.qualification||'Professional opportunities';}
+  function fillForm(formId,data){var form=el(formId);if(!form)return;Object.keys(data||{}).forEach(function(k){var f=form.elements[k];if(f&&String(f.value||'')==='')f.value=data[k]||'';});}
+  function renderProfile(){var p=profile(),pc=profileCompletion(p);if(el('getiCareerProfilePercent'))el('getiCareerProfilePercent').textContent=pc+'% complete';if(el('getiCareerProfileBar'))el('getiCareerProfileBar').style.width=pc+'%';if(el('getiCareerProfileName'))el('getiCareerProfileName').textContent=p.name||'GETI Candidate';if(el('getiCareerProfileHeadline'))el('getiCareerProfileHeadline').textContent=p.headline||'Teaching professional';if(el('getiCareerProfileQual'))el('getiCareerProfileQual').textContent=p.qualification||'Qualification not added';if(el('getiCareerProfileLevel'))el('getiCareerProfileLevel').textContent=p.level||'Level not set';[['getiCareerReadyCv',p.cv],['getiCareerReadyVideo',p.video],['getiCareerReadyQual',p.qualification],['getiCareerReadyPref',p.workMode&&p.preferredLocation]].forEach(function(x){var n=el(x[0]);if(n){n.textContent=x[1]?'Ready':'Missing';n.classList.toggle('ready',!!x[1]);}});fillForm('getiCareerProfileForm',p);renderUser();}
+  window.getiCareerSaveProfile=function(ev){ev.preventDefault();var data=Object.fromEntries(new FormData(ev.target).entries());save('PROFILE',data);renderProfile();renderQualifications();alert('GETI Career Profile saved.');return false;};
+  function renderQualifications(){var p=profile();var box=el('getiCareerQualificationCard');if(!box)return;box.innerHTML=p.qualification?'<strong>'+esc(p.qualification)+'</strong><br><span>'+esc(p.name||'GETI Candidate')+(p.certificateId?' · Certificate ID: '+esc(p.certificateId):'')+'</span>':'No qualification added yet.';}
+  function normalizeArray(v){if(Array.isArray(v))return v;return String(v||'').split(/\n|,/).map(function(x){return x.trim();}).filter(Boolean);}
+  function jobCard(j){var p=profile(),m=jobMatch(j,p),id=String(j.id),isSaved=savedJobs().indexOf(id)>=0,verified=!!(j.employerVerified||j.employer_verified);return '<article class="geti-career-job-card"><div class="geti-career-job-card-top"><div><span class="geti-career-badge '+(verified?'verified':'')+'">'+(verified?'✓ Verified Employer':'Employer')+'</span><span class="geti-career-badge blue">'+esc(j.mode||'')+'</span></div><span class="geti-career-match">'+m+'%</span></div><h3>'+esc(j.title)+'</h3><div class="company">'+esc(j.company||'')+'</div><div class="geti-career-job-meta"><span>📍 '+esc(j.location||'')+'</span><span>• '+esc(j.employment||'')+'</span><span>• '+esc(j.salary||'Compensation not listed')+'</span></div><p>'+esc(String(j.description||'').slice(0,155))+(String(j.description||'').length>155?'…':'')+'</p><div class="geti-career-job-actions"><button class="view" type="button" onclick="getiCareerViewJob(\''+esc(id)+'\')">VIEW JOB</button><button class="apply" type="button" onclick="getiCareerApply(\''+esc(id)+'\')">APPLY</button><button class="save" type="button" onclick="getiCareerToggleSave(\''+esc(id)+'\')">'+(isSaved?'♥ SAVED':'♡ SAVE')+'</button></div></article>';}
+  window.getiCareerRenderJobs=function(){var jobs=approvedJobs(),search=String(el('getiCareerSearch')&&el('getiCareerSearch').value||'').toLowerCase(),loc=el('getiCareerLocation')?el('getiCareerLocation').value:'',mode=el('getiCareerMode')?el('getiCareerMode').value:'',employment=el('getiCareerEmployment')?el('getiCareerEmployment').value:'';var locs=[].concat.apply([],jobs.map(function(j){return j.location?[j.location]:[];})).filter(function(v,i,a){return a.indexOf(v)===i;}).sort();var locSel=el('getiCareerLocation');if(locSel){var old=locSel.value;locSel.innerHTML='<option value="">All locations</option>'+locs.map(function(x){return '<option>'+esc(x)+'</option>';}).join('');if(locs.indexOf(old)>=0)locSel.value=old;loc=locSel.value;}var filtered=jobs.filter(function(j){var hay=[j.title,j.company,j.location,j.description,j.qualification,normalizeArray(j.skills).join(' ')].join(' ').toLowerCase();return (!search||hay.indexOf(search)>=0)&&(!loc||j.location===loc)&&(!mode||j.mode===mode)&&(!employment||j.employment===employment);}).sort(function(a,b){return jobMatch(b,profile())-jobMatch(a,profile());});if(el('getiCareerJobCount'))el('getiCareerJobCount').textContent=filtered.length+' approved job'+(filtered.length===1?'':'s');var grid=el('getiCareerJobGrid');if(grid)grid.innerHTML=filtered.length?filtered.map(jobCard).join(''):'<div class="geti-career-empty"><strong>No approved opportunities are available yet.</strong><p>Real employer jobs will appear here after they are submitted and approved by GETI Administration. No fake companies or sample job listings are inserted.</p></div>';};
+  window.getiCareerViewJob=function(id){var j=approvedJobs().find(function(x){return String(x.id)===String(id);});if(!j)return;var req=normalizeArray(j.requirements),ben=normalizeArray(j.benefits);alert(j.title+'\n\nEmployer: '+(j.company||'')+'\nLocation: '+(j.location||'')+'\nWork mode: '+(j.mode||'')+'\nEmployment: '+(j.employment||'')+'\nCompensation: '+(j.salary||'Not listed')+'\nQualification: '+(j.qualification||'Not specified')+'\n\n'+(j.description||'')+(req.length?'\n\nRequirements:\n• '+req.join('\n• '):'')+(ben.length?'\n\nBenefits:\n• '+ben.join('\n• '):''));};
+  window.getiCareerToggleSave=async function(id){var s=await requireStudent();if(!s)return;var list=savedJobs();id=String(id);list=list.indexOf(id)>=0?list.filter(function(x){return x!==id;}):[id].concat(list);save('SAVED',list);getiCareerRenderAll();};
+  function renderSaved(){var ids=savedJobs(),list=approvedJobs().filter(function(j){return ids.indexOf(String(j.id))>=0;});var grid=el('getiCareerSavedGrid');if(grid)grid.innerHTML=list.length?list.map(jobCard).join(''):'<div class="geti-career-empty"><strong>No saved jobs yet.</strong><p>Save approved opportunities from the marketplace to build your shortlist.</p></div>';}
+  window.getiCareerApply=async function(id){var s=await requireStudent();if(!s)return;await hydrateStudent();var p=profile();if(profileCompletion(p)<30){alert('Complete at least 30% of your Career Profile before applying.');getiCareerTab('profile');return;}var j=approvedJobs().find(function(x){return String(x.id)===String(id);});if(!j)return;var a=apps();if(a.some(function(x){return String(x.jobId)===String(id); })){alert('You already applied to this opportunity.');return;}var questions=normalizeArray(j.questions);var answers=[];for(var i=0;i<questions.length;i++){var ans=prompt(questions[i]);if(ans===null)return;answers.push({question:questions[i],answer:ans});}var application={id:uid('app'),jobId:String(id),title:j.title,company:j.company,location:j.location,status:'Under Review',match:jobMatch(j,p),date:new Date().toLocaleDateString(),answers:answers,userId:s.user.id,email:s.user.email||p.email||''};a.unshift(application);save('APPLICATIONS',a);try{if(remoteOnline&&window.GETI_SB&&GETI_SB.from){await GETI_SB.from('career_applications').insert({job_id:j.id,user_id:s.user.id,applicant_name:p.name||'',applicant_email:s.user.email||'',status:'Under Review',match_score:application.match,profile_data:p,screening_answers:answers});}}catch(e){}alert('Application submitted.');getiCareerRenderAll();getiCareerTab('applications');};
+  function statusClass(s){s=String(s||'').toLowerCase();if(s.indexOf('interview')>=0)return'interview';if(s.indexOf('offer')>=0||s.indexOf('hired')>=0)return'offer';if(s.indexOf('pending')>=0)return'pending';return'';}
+  function renderApplications(){var a=apps(),counts={'Under Review':0,'Shortlisted':0,'Interview':0,'Offer':0};a.forEach(function(x){if(counts[x.status]!=null)counts[x.status]++;});var pipe=el('getiCareerPipeline');if(pipe)pipe.innerHTML=Object.keys(counts).map(function(k){return '<article><b>'+counts[k]+'</b><span>'+k+'</span></article>';}).join('');var box=el('getiCareerApplications');if(!box)return;if(!a.length){box.innerHTML='<div class="geti-career-empty"><strong>No applications yet.</strong><p>Apply to an approved opportunity and your recruitment progress will appear here.</p></div>';return;}box.innerHTML='<table class="geti-career-table"><thead><tr><th>Role</th><th>Employer</th><th>Match</th><th>Applied</th><th>Status</th></tr></thead><tbody>'+a.map(function(x){return '<tr><td>'+esc(x.title)+'</td><td>'+esc(x.company)+'</td><td>'+esc(x.match)+'%</td><td>'+esc(x.date)+'</td><td><span class="geti-career-status '+statusClass(x.status)+'">'+esc(x.status)+'</span></td></tr>';}).join('')+'</tbody></table>';}
+  window.getiCareerSaveAlert=function(ev){ev.preventDefault();var list=alerts();list.unshift(Object.assign({id:uid('alert')},Object.fromEntries(new FormData(ev.target).entries())));save('ALERTS',list);ev.target.reset();renderAlerts();return false;};
+  window.getiCareerDeleteAlert=function(id){save('ALERTS',alerts().filter(function(x){return x.id!==id;}));renderAlerts();};
+  function renderAlerts(){var list=alerts(),box=el('getiCareerAlertsList');if(!box)return;box.innerHTML=list.length?list.map(function(x){return '<div class="geti-career-employer-job"><span><strong>'+esc(x.name)+'</strong><br><small>'+esc(x.keyword||'Any keyword')+' · '+esc(x.location||'Any location')+' · '+esc(x.frequency)+'</small></span><button class="geti-career-secondary" type="button" onclick="getiCareerDeleteAlert(\''+esc(x.id)+'\')">DELETE</button></div>';}).join(''):'<div class="geti-career-inline-note">No alerts created yet.</div>';}
+  function renderInterviews(){var list=interviews(),box=el('getiCareerInterviewList');if(box)box.innerHTML=list.length?list.map(function(x){return '<div class="geti-career-inline-note"><strong>'+esc(x.title)+'</strong><br>'+esc(x.company||'')+' · '+esc(x.date||'')+' '+esc(x.time||'')+'</div>';}).join(''):'No interviews scheduled.';var p=profile(),ready=el('getiCareerInterviewReady');if(ready)ready.innerHTML=[['Career Profile',profileCompletion(p)>=70],['CV / Résumé',!!p.cv],['Demo Video',!!p.video],['Qualification',!!p.qualification]].map(function(x){return '<div><span>'+x[0]+'</span><b class="'+(x[1]?'ok':'')+'">'+(x[1]?'Ready':'Missing')+'</b></div>';}).join('');}
+  function renderMessages(){var list=messages(),box=el('getiCareerChat');if(!box)return;box.innerHTML=list.length?list.map(function(x){return '<div class="geti-career-chat-message '+(x.from==='me'?'me':'')+'">'+esc(x.text)+'<br><small>'+esc(x.date||'')+'</small></div>';}).join(''):'<div class="geti-career-inline-note">No career messages yet.</div>';box.scrollTop=box.scrollHeight;}
+  window.getiCareerSendMessage=async function(){var s=await requireStudent();if(!s)return;var inp=el('getiCareerChatInput');if(!inp||!inp.value.trim())return;var list=messages();list.push({id:uid('msg'),from:'me',text:inp.value.trim(),date:new Date().toLocaleString()});save('MESSAGES',list);inp.value='';renderMessages();};
+  function employerTrust(e){var score=0;if(e.company)score+=15;if(e.country)score+=10;if(e.website)score+=15;if(e.email)score+=15;if(e.license)score+=20;if(e.contact)score+=10;if(e.about)score+=10;if(e.type)score+=5;return score;}
+  window.getiCareerSaveEmployer=async function(ev){ev.preventDefault();var old=employer(),data=Object.assign({},old,Object.fromEntries(new FormData(ev.target).entries()));if(!data.status)data.status='not_requested';save('EMPLOYER',data);try{if(window.GETI_SB&&GETI_SB.from){await GETI_SB.from('career_employers').upsert({organization_name:data.company,country:data.country,website:data.website,email:data.email,license_reference:data.license,hiring_contact:data.contact,organization_type:data.type,about:data.about,status:data.status},{onConflict:'email'});}}catch(e){}renderEmployer();alert('Employer profile saved.');return false;};
+  window.getiCareerRequestEmployerVerification=function(){var e=employer();if(!e.company||!e.country||!e.email){alert('Save Organization Name, Country and Official Email first.');return;}e.status='pending';save('EMPLOYER',e);renderEmployer();alert('Employer verification request marked Pending Review. GETI Administration should verify the organization before awarding a verified badge.');};
+  function renderEmployer(){var e=employer(),score=employerTrust(e);fillForm('getiCareerEmployerForm',e);if(el('getiCareerEmployerTrust'))el('getiCareerEmployerTrust').textContent='Trust Score: '+score;if(el('getiCareerEmployerState')){el('getiCareerEmployerState').textContent=e.status==='verified'?'✓ Verified Employer':e.status==='pending'?'Pending Verification':'Not verified';el('getiCareerEmployerState').classList.toggle('verified',e.status==='verified');}if(el('getiCareerPostGate'))el('getiCareerPostGate').textContent=e.company?'Posting as '+e.company+'. New jobs remain Pending Review until GETI Administration approves them.':'Create an Employer Profile before posting a job.';var jf=el('getiCareerJobForm');if(jf&&e.company&&!jf.elements.company.value)jf.elements.company.value=e.company;var own=localJobs().filter(function(j){return !e.company||j.company===e.company;}),box=el('getiCareerEmployerJobs');if(box)box.innerHTML=own.length?own.map(function(j){return '<div class="geti-career-employer-job"><span><strong>'+esc(j.title)+'</strong><br><small>'+esc(j.location)+' · '+esc(j.mode)+'</small></span><span class="geti-career-status '+statusClass(j.status)+'">'+esc(j.status)+'</span></div>';}).join(''):'<div class="geti-career-inline-note">No jobs submitted from this browser yet.</div>';}
+  window.getiCareerSubmitJob=async function(ev){ev.preventDefault();var e=employer();if(!e.company){alert('Create an Employer Profile before posting a job.');getiCareerTab('employer');return false;}var d=Object.fromEntries(new FormData(ev.target).entries());var job={id:uid('job'),title:d.title,company:d.company||e.company,location:d.location,mode:d.mode,employment:d.employment,salary:d.salary,qualification:d.qualification,level:d.level,experience:d.experience,vacancies:d.vacancies||1,deadline:d.deadline,startDate:d.startDate,skills:normalizeArray(d.skills),description:d.description,requirements:normalizeArray(d.requirements),benefits:normalizeArray(d.benefits),questions:normalizeArray(d.questions),status:'pending',employerVerified:e.status==='verified',createdAt:new Date().toISOString()};var list=localJobs();list.unshift(job);save('JOBS',list);try{if(window.GETI_SB&&GETI_SB.from){var s=await session();await GETI_SB.from('career_jobs').insert({title:job.title,company:job.company,location:job.location,work_mode:job.mode,employment_type:job.employment,salary:job.salary,qualification:job.qualification,level:job.level,experience:job.experience,vacancies:Number(job.vacancies)||1,deadline:job.deadline||null,start_date:job.startDate||null,skills:job.skills,description:job.description,requirements:job.requirements,benefits:job.benefits,screening_questions:job.questions,status:'pending',employer_verified:job.employerVerified,created_by:s&&s.user?s.user.id:null});}}catch(err){}ev.target.reset();renderEmployer();getiCareerRenderJobs();alert('Job submitted as Pending Review. It will not appear publicly until GETI Administration approves it.');return false;};
+  window.getiCareerExportData=function(){var data={profile:profile(),employer:employer(),jobs:localJobs(),applications:apps(),saved:savedJobs(),alerts:alerts(),interviews:interviews(),messages:messages(),exportedAt:new Date().toISOString()};var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});var url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='GETI-Career-Data.json';a.click();setTimeout(function(){URL.revokeObjectURL(url);},500);};
+  window.getiCareerRenderAll=function(){renderUser();renderProfile();renderQualifications();getiCareerRenderJobs();renderSaved();renderApplications();renderAlerts();renderInterviews();renderMessages();renderEmployer();};
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&el('getiCareerHub')&&el('getiCareerHub').classList.contains('show'))getiCloseCareerHub();});
+  document.addEventListener('DOMContentLoaded',function(){getiCareerRenderAll();});
+})();
+</script>
+
+
+
+<!-- GETI CAREER HUB — SUPABASE PRODUCTION SYNC -->
+<script id="geti-career-supabase-production-sync">
+(function(){
+  'use strict';
+  var P='GETI_CAREER_V1_';
+  function get(k,f){try{var v=localStorage.getItem(P+k);return v?JSON.parse(v):f}catch(e){return f}}
+  function put(k,v){try{localStorage.setItem(P+k,JSON.stringify(v))}catch(e){}}
+  function split(v){return String(v||'').split(/[,\n]/).map(function(x){return x.trim()}).filter(Boolean)}
+  async function getSession(){try{if(window.GETI_SB&&GETI_SB.auth){var r=await GETI_SB.auth.getSession();return r&&r.data?r.data.session:null}}catch(e){}return null}
+  async function needSession(){var s=await getSession();if(!s||!s.user){alert('Sign in to your GETI account to use this Career feature.');return null}return s}
+  function profileToRow(p,userId){return {
+    user_id:userId,full_name:p.name||'',nationality:p.nationality||'',country:p.country||'',headline:p.headline||'',qualification:p.qualification||'',certificate_id:p.certificateId||'',level:p.level||'',experience:Number(p.experience)||0,work_mode:p.workMode||'',preferred_location:p.preferredLocation||'',salary:p.salary||'',availability:p.availability||'',skills:split(p.skills),languages:split(p.languages),bio:p.bio||'',cv_url:p.cv||'',video_url:p.video||'',portfolio_url:p.portfolio||'',visibility:p.visibility||'applied_employers',updated_at:new Date().toISOString()
+  }}
+  function rowToProfile(r){return {
+    name:r.full_name||'',nationality:r.nationality||'',country:r.country||'',headline:r.headline||'',qualification:r.qualification||'',certificateId:r.certificate_id||'',level:r.level||'',experience:r.experience==null?'':String(r.experience),workMode:r.work_mode||'',preferredLocation:r.preferred_location||'',salary:r.salary||'',availability:r.availability||'',skills:(r.skills||[]).join(', '),languages:(r.languages||[]).join(', '),bio:r.bio||'',cv:r.cv_url||'',video:r.video_url||'',portfolio:r.portfolio_url||'',visibility:r.visibility||'Employers I apply to'
+  }}
+  function rowToEmployer(r){return {id:r.id,company:r.organization_name||'',country:r.country||'',website:r.website||'',email:r.email||'',license:r.license_reference||'',contact:r.hiring_contact||'',type:r.organization_type||'',about:r.about||'',status:r.status||'not_requested'} }
+  function rowToJob(j){return {id:j.id,title:j.title||'',company:j.company||'',location:j.location||'',mode:j.work_mode||'',employment:j.employment_type||'',salary:j.salary||'',qualification:j.qualification||'',level:j.level||'',experience:j.experience||'',vacancies:j.vacancies||1,deadline:j.deadline||'',startDate:j.start_date||'',skills:j.skills||[],description:j.description||'',requirements:j.requirements||[],benefits:j.benefits||[],questions:j.screening_questions||[],status:j.status||'pending',employerVerified:!!j.employer_verified,createdAt:j.created_at||''}}
+  function rowToApp(a){var j=a.career_jobs||{};return {id:a.id,jobId:String(a.job_id||''),title:j.title||a.title||'',company:j.company||a.company||'',location:j.location||'',status:a.status||'Under Review',match:a.match_score||0,date:a.created_at?new Date(a.created_at).toLocaleDateString():'',answers:a.screening_answers||[],userId:a.user_id||'',email:a.applicant_email||''}}
+  async function syncFromSupabase(){
+    var s=await getSession();if(!s||!s.user||!window.GETI_SB||!GETI_SB.from)return false;
+    try{
+      var uid=s.user.id;
+      var results=await Promise.all([
+        GETI_SB.from('career_profiles').select('*').eq('user_id',uid).maybeSingle(),
+        GETI_SB.from('career_employers').select('*').eq('owner_id',uid).maybeSingle(),
+        GETI_SB.from('career_jobs').select('*').eq('owner_id',uid).order('created_at',{ascending:false}),
+        GETI_SB.from('career_applications').select('*,career_jobs(title,company,location)').eq('user_id',uid).order('created_at',{ascending:false}),
+        GETI_SB.from('career_saved_jobs').select('job_id').eq('user_id',uid),
+        GETI_SB.from('career_alerts').select('*').eq('user_id',uid).order('created_at',{ascending:false})
+      ]);
+      if(results[0]&&!results[0].error&&results[0].data)put('PROFILE',rowToProfile(results[0].data));
+      if(results[1]&&!results[1].error&&results[1].data)put('EMPLOYER',rowToEmployer(results[1].data));
+      if(results[2]&&!results[2].error&&Array.isArray(results[2].data))put('JOBS',results[2].data.map(rowToJob));
+      if(results[3]&&!results[3].error&&Array.isArray(results[3].data))put('APPLICATIONS',results[3].data.map(rowToApp));
+      if(results[4]&&!results[4].error&&Array.isArray(results[4].data))put('SAVED',results[4].data.map(function(x){return String(x.job_id)}));
+      if(results[5]&&!results[5].error&&Array.isArray(results[5].data))put('ALERTS',results[5].data.map(function(x){return {id:x.id,name:x.name,keyword:x.keyword||'',location:x.location||'',frequency:x.frequency||'Weekly'}}));
+      if(typeof window.getiCareerRenderAll==='function')window.getiCareerRenderAll();
+      return true;
+    }catch(e){console.warn('GETI Career sync:',e);return false}
+  }
+  window.getiCareerSyncFromSupabase=syncFromSupabase;
+
+  var originalOpen=window.getiOpenCareerHub;
+  if(typeof originalOpen==='function')window.getiOpenCareerHub=async function(mode){var r=await originalOpen.apply(this,arguments);if(mode==='student'||mode==='employer'){await syncFromSupabase()}return r};
+
+  window.getiCareerSaveProfile=async function(ev){
+    ev.preventDefault();var s=await needSession();if(!s)return false;
+    var data=Object.fromEntries(new FormData(ev.target).entries());put('PROFILE',data);
+    if(window.GETI_SB&&GETI_SB.from){var r=await GETI_SB.from('career_profiles').upsert(profileToRow(data,s.user.id),{onConflict:'user_id'}).select().single();if(r.error){alert('Career Profile could not be saved online: '+r.error.message);return false}}
+    if(typeof window.getiCareerRenderAll==='function')window.getiCareerRenderAll();alert('GETI Career Profile saved online.');return false;
+  };
+
+  window.getiCareerToggleSave=async function(id){
+    var s=await needSession();if(!s)return;id=String(id);var list=get('SAVED',[]),has=list.indexOf(id)>=0;
+    try{if(window.GETI_SB&&GETI_SB.from){var r=has?await GETI_SB.from('career_saved_jobs').delete().eq('user_id',s.user.id).eq('job_id',id):await GETI_SB.from('career_saved_jobs').insert({user_id:s.user.id,job_id:id});if(r.error)throw r.error}}
+    catch(e){alert('Unable to update Saved Jobs online: '+(e.message||e));return}
+    list=has?list.filter(function(x){return x!==id}):[id].concat(list);put('SAVED',list);if(typeof window.getiCareerRenderAll==='function')window.getiCareerRenderAll();
+  };
+
+  window.getiCareerSaveAlert=async function(ev){
+    ev.preventDefault();var s=await needSession();if(!s)return false;var d=Object.fromEntries(new FormData(ev.target).entries());
+    if(window.GETI_SB&&GETI_SB.from){var r=await GETI_SB.from('career_alerts').insert({user_id:s.user.id,name:d.name,keyword:d.keyword||'',location:d.location||'',frequency:d.frequency||'Weekly'}).select().single();if(r.error){alert('Unable to create Job Alert: '+r.error.message);return false}var list=get('ALERTS',[]);list.unshift({id:r.data.id,name:r.data.name,keyword:r.data.keyword||'',location:r.data.location||'',frequency:r.data.frequency});put('ALERTS',list)}
+    ev.target.reset();if(typeof window.getiCareerRenderAll==='function')window.getiCareerRenderAll();return false;
+  };
+
+  window.getiCareerDeleteAlert=async function(id){
+    var s=await needSession();if(!s)return;try{var r=await GETI_SB.from('career_alerts').delete().eq('id',id).eq('user_id',s.user.id);if(r.error)throw r.error}catch(e){alert('Unable to delete alert: '+(e.message||e));return}put('ALERTS',get('ALERTS',[]).filter(function(x){return String(x.id)!==String(id)}));if(typeof window.getiCareerRenderAll==='function')window.getiCareerRenderAll();
+  };
+
+  window.getiCareerSaveEmployer=async function(ev){
+    ev.preventDefault();var s=await needSession();if(!s)return false;var old=get('EMPLOYER',{}),d=Object.assign({},old,Object.fromEntries(new FormData(ev.target).entries()));
+    if(!d.company||!d.email){alert('Organization Name and Official Email are required.');return false}
+    try{
+      var existing=await GETI_SB.from('career_employers').select('*').eq('owner_id',s.user.id).maybeSingle();if(existing.error)throw existing.error;
+      var payload={organization_name:d.company,country:d.country||'',website:d.website||'',email:d.email,hiring_contact:d.contact||'',license_reference:d.license||'',organization_type:d.type||'',about:d.about||'',updated_at:new Date().toISOString()};
+      var result;if(existing.data)result=await GETI_SB.from('career_employers').update(payload).eq('owner_id',s.user.id).select().single();else result=await GETI_SB.from('career_employers').insert(Object.assign({owner_id:s.user.id,status:'not_requested',trust_score:0},payload)).select().single();
+      if(result.error)throw result.error;put('EMPLOYER',rowToEmployer(result.data));
+    }catch(e){alert('Employer Profile could not be saved online: '+(e.message||e));return false}
+    if(typeof window.getiCareerRenderAll==='function')window.getiCareerRenderAll();alert('Employer Profile saved online.');return false;
+  };
+
+  window.getiCareerRequestEmployerVerification=async function(){
+    var s=await needSession();if(!s)return;var e=get('EMPLOYER',{});if(!e.company||!e.country||!e.email){alert('Save Organization Name, Country and Official Email first.');return}
+    try{
+      var r=await GETI_SB.functions.invoke('geti-career',{body:{action:'request_employer_verification'}});if(r.error)throw r.error;if(r.data&&r.data.error)throw new Error(r.data.error);e.status=(r.data&&r.data.status)||'pending';put('EMPLOYER',e);if(typeof window.getiCareerRenderAll==='function')window.getiCareerRenderAll();alert(e.status==='verified'?'Employer is already verified.':'Employer verification request sent to GETI Administration.');
+    }catch(err){alert('Unable to request verification: '+(err.message||err))}
+  };
+
+  window.getiCareerSubmitJob=async function(ev){
+    ev.preventDefault();var s=await needSession();if(!s)return false;var e=get('EMPLOYER',{});if(!e.company){alert('Create an Employer Profile before posting a job.');if(typeof window.getiCareerTab==='function')window.getiCareerTab('employer');return false}
+    var d=Object.fromEntries(new FormData(ev.target).entries());
+    try{
+      var er=await GETI_SB.from('career_employers').select('id,organization_name,status').eq('owner_id',s.user.id).maybeSingle();if(er.error)throw er.error;if(!er.data)throw new Error('Save your Employer Profile online first.');
+      var payload={owner_id:s.user.id,employer_id:er.data.id,title:d.title,company:er.data.organization_name||d.company||e.company,location:d.location||'',work_mode:d.mode||'',employment_type:d.employment||'',salary:d.salary||'',qualification:d.qualification||'',level:d.level||'',experience:d.experience||'',vacancies:Number(d.vacancies)||1,deadline:d.deadline||null,start_date:d.startDate||null,skills:split(d.skills),description:d.description||'',requirements:split(d.requirements),benefits:split(d.benefits),screening_questions:split(d.questions),status:'pending',employer_verified:false};
+      var jr=await GETI_SB.from('career_jobs').insert(payload).select().single();if(jr.error)throw jr.error;var list=get('JOBS',[]);list.unshift(rowToJob(jr.data));put('JOBS',list);
+    }catch(err){alert('Job could not be submitted online: '+(err.message||err));return false}
+    ev.target.reset();if(typeof window.getiCareerRenderAll==='function')window.getiCareerRenderAll();alert('Job submitted to GETI Administration for review. It is not public until approved.');return false;
+  };
+
+  window.getiCareerApply=async function(id){
+    var s=await needSession();if(!s)return;await syncFromSupabase();var p=get('PROFILE',{});var required=['name','nationality','country','headline','qualification','level','skills','bio'];var filled=required.filter(function(k){return String(p[k]||'').trim()}).length;if(filled<3){alert('Complete your Career Profile before applying.');if(typeof window.getiCareerTab==='function')window.getiCareerTab('profile');return}
+    var jobs=[];try{var rj=await GETI_SB.from('career_jobs').select('*').eq('id',id).eq('status','approved').maybeSingle();if(rj.error)throw rj.error;if(!rj.data)throw new Error('This job is not available.');jobs=[rowToJob(rj.data)]}catch(e){alert(e.message||e);return}var j=jobs[0];
+    var questions=j.questions||[],answers=[];for(var i=0;i<questions.length;i++){var ans=prompt(questions[i]);if(ans===null)return;answers.push({question:questions[i],answer:ans})}
+    var match=70;try{var existing=await GETI_SB.from('career_applications').select('id').eq('job_id',id).eq('user_id',s.user.id).maybeSingle();if(existing.data){alert('You already applied to this opportunity.');return}var ar=await GETI_SB.from('career_applications').insert({job_id:id,user_id:s.user.id,applicant_name:p.name||'',applicant_email:s.user.email||'',status:'Under Review',match_score:match,profile_data:p,screening_answers:answers}).select('*,career_jobs(title,company,location)').single();if(ar.error)throw ar.error;var list=get('APPLICATIONS',[]);list.unshift(rowToApp(ar.data));put('APPLICATIONS',list)}catch(err){alert('Application could not be submitted: '+(err.message||err));return}
+    if(typeof window.getiCareerRenderAll==='function')window.getiCareerRenderAll();if(typeof window.getiCareerTab==='function')window.getiCareerTab('applications');alert('Application submitted successfully.');
+  };
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){getSession().then(function(s){if(s&&s.user)syncFromSupabase()})});else getSession().then(function(s){if(s&&s.user)syncFromSupabase()});
+})();
+</script>
+
 </body>
 </html>
