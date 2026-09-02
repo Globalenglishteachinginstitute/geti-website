@@ -1,0 +1,28 @@
+GETI ADMIN VERIFIED FINAL
+=========================
+
+Verified:
+- HTML/JavaScript structure
+- No duplicate JavaScript function declarations
+- Admin login uses GETI Supabase Edge Function
+- Protected API calls send x-admin-token
+- 401 responses expire the admin session
+- Main modules remain present:
+  Overview, Messages, Students, Exam Results, Certificate Queue,
+  PDF Certificates, Send Certificate, Sheet Students, Registrations,
+  Analytics, Block/Unblock, Publish, Trash
+- Admin page remains noindex/nofollow
+- Admin PWA remains scoped to /admin/
+- Student/mobile GETI PWA is not replaced
+
+Security corrections included:
+1. Removed direct Google Apps Script JSONP fallback.
+   Google Sheet administration now goes only through authenticated GETI admin backend sheet_proxy.
+2. Removed client-side code:"global" from Google Sheet calls.
+3. Added safe JavaScript argument encoding for dynamic admin action buttons,
+   preventing names/emails with apostrophes or special characters from breaking handlers.
+
+Remaining architecture note:
+- Admin token is stored in localStorage by the current backend design.
+  Stronger future security would use a Secure + HttpOnly server session cookie.
+  This cannot be changed safely from HTML alone without updating the backend.
