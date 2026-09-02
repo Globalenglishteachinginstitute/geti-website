@@ -1,67 +1,39 @@
-const GETI_CACHE = 'geti-pwa-v1';
-const CORE_ASSETS = [
-  '/',
-  '/site.webmanifest',
-  '/geti-icon-192.png',
-  '/geti-icon-512.png',
-  '/offline.html'
+const CACHE_NAME = "geti-admin-shell-v1";
+const STATIC_ASSETS = [
+  "./offline.html",
+  "./manifest.webmanifest",
+  "./geti-admin-192.png",
+  "./geti-admin-512.png"
 ];
 
-self.addEventListener('install', event => {
+self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(GETI_CACHE)
-      .then(cache => cache.addAll(CORE_ASSETS))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
   );
+  self.skipWaiting();
 });
 
-self.addEventListener('activate', event => {
+self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys
-          .filter(key => key !== GETI_CACHE)
-          .map(key => caches.delete(key))
-      )
-    ).then(() => self.clients.claim())
+    caches.keys().then(keys => Promise.all(
+      keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+    ))
   );
+  self.clients.claim();
 });
 
-self.addEventListener('fetch', event => {
-  const request = event.request;
+self.addEventListener("fetch", event => {
+  if (event.request.method !== "GET") return;
 
-  // Only handle normal GET requests.
-  if (request.method !== 'GET') return;
-
-  // Navigation: prefer network so login/results/exams stay current.
-  if (request.mode === 'navigate') {
+  // Admin navigation stays network-first and is not stored as a long-lived cached admin page.
+  if (event.request.mode === "navigate") {
     event.respondWith(
-      fetch(request)
-        .then(response => {
-          const copy = response.clone();
-          caches.open(GETI_CACHE).then(cache => cache.put(request, copy));
-          return response;
-        })
-        .catch(async () => {
-          const cached = await caches.match(request);
-          return cached || caches.match('/offline.html');
-        })
+      fetch(event.request).catch(() => caches.match("./offline.html"))
     );
     return;
   }
 
-  // Static assets: cache-first, then network.
   event.respondWith(
-    caches.match(request).then(cached => {
-      if (cached) return cached;
-      return fetch(request).then(response => {
-        if (!response || response.status !== 200 || response.type === 'opaque') {
-          return response;
-        }
-        const copy = response.clone();
-        caches.open(GETI_CACHE).then(cache => cache.put(request, copy));
-        return response;
-      });
-    })
+    caches.match(event.request).then(cached => cached || fetch(event.request))
   );
 });
