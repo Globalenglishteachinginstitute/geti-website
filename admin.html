@@ -1,7 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="uta
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<title>GETI Administration Center</title>
+<style>
 :root{
   --navy:#08264d;--navy2:#0d376c;--gold:#b88b2b;--text:#182230;--muted:#667085;
   --line:#e4e7ec;--soft:#f8fafc;--green:#157347;--red:#b42318;--amber:#8a681e;
@@ -462,6 +466,25 @@ img.thumb{
 <link rel="icon" type="image/png" sizes="192x192" href="./geti-admin-192.png">
 <link rel="apple-touch-icon" href="./geti-admin-192.png">
 
+
+<style id="geti-career-admin-style">
+/* GETI Career & Jobs Administration — additive module */
+.career-admin-source{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid #d7e1ec;border-radius:999px;background:#f8fbff;color:#35597c;font-size:8px;font-weight:900}
+.career-admin-source.online{border-color:#c6e5d2;background:#f2fbf5;color:#16865c}
+.career-admin-source.local{border-color:#eadcb7;background:#fffaf0;color:#8a681e}
+.career-admin-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.career-admin-toolbar .search{margin:0;flex:1;min-width:220px}
+.career-admin-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.career-trust{font-weight:900;color:#082e5d}
+.career-company{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.career-company b{color:#082e5d}
+.career-detail{font-size:9px;color:#667085;line-height:1.45;margin-top:3px}
+.career-admin-note{border-left:4px solid #1976c9!important}
+.career-admin-kpi-jobs{border-top-color:#1976c9!important}.career-admin-kpi-employers{border-top-color:#0f8b8d!important}.career-admin-kpi-apps{border-top-color:#7a59b6!important}.career-admin-kpi-reports{border-top-color:#d75c4a!important}
+.career-admin-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.career-admin-tabs button{border:1px solid #d8e2ec;background:#fff;color:#35516f;padding:7px 9px;border-radius:8px;font-size:9px;font-weight:900}.career-admin-tabs button:hover{background:#f4f8fc}
+.career-admin-empty{padding:28px;text-align:center;border:1px dashed #d6e0ea;border-radius:9px;background:#fbfcfe;color:#667085;font-size:10px}
+@media(max-width:720px){.career-admin-toolbar{align-items:stretch;flex-direction:column}.career-admin-actions{width:100%}.career-admin-actions .btn{flex:1}.career-admin-toolbar .search{width:100%}}
+</style>
+
 </head>
 <body>
 <div id="login" class="login-screen">
@@ -494,7 +517,7 @@ img.thumb{
     </aside>
     <main class="main">
       <div class="toolbar">
-        <div><strong>Administrator Workspace</strong><small>Students, exams, certificates and communication</small></div>
+        <div><strong>Administrator Workspace</strong><small>Students, exams, certificates, communication and careers</small></div>
         <div class="online">SYSTEM ONLINE</div>
       </div>
       <section class="content" id="content"></section>
@@ -511,6 +534,9 @@ const COMMUNITY_FN=BASE+"geti-community-admin";
 const PUBLISH_FN=BASE+"geti-publish";
 const DELETE_FN=BASE+"geti-admin-delete";
 const CERTPDF_FN=BASE+"geti-certificate-files-v2";
+const CAREER_ADMIN_FN=BASE+"geti-career-admin";
+const CAREER_REST="https://"+PROJECT+".supabase.co/rest/v1/";
+const CAREER_LOCAL_PREFIX="GETI_CAREER_V1_";
 const SHEET_API="https://script.google.com/macros/s/AKfycbzQ_YczGnSdh4GJZ73XTt8LfrUtdjJFAlUZGUx3Chhlk-0Es3rskQkun5LgrZYhkKRF/exec";
 const TOKEN_KEY="GETI_BAAM_TOKEN"; // GETI admin backend v5+ includes Google Sheet proxy
 let token=localStorage.getItem(TOKEN_KEY)||"";
@@ -528,6 +554,11 @@ const pages=[
   ["sheetstudents","SHEET STUDENTS","07"],
   ["registrations","REGISTRATIONS","08"],
   ["analytics","ANALYTICS","09"],
+  ["career","CAREER OVERVIEW","CJ"],
+  ["careeremployers","CAREER EMPLOYERS","CE"],
+  ["careerjobs","CAREER JOBS","JB"],
+  ["careerapps","CAREER APPLICATIONS","AP"],
+  ["careerreports","CAREER REPORTS","RP"],
   ["blocks","BLOCK / UNBLOCK","10"],
   ["publish","PUBLISH","11"],
   ["trash","TRASH","12"]
@@ -588,7 +619,7 @@ function renderNav(){
 }
 function openPage(id){
   setActive(id);
-  const f={overview, messages, students, results, certificates, pdfcerts:pdfCertificates, sendcert:sendCertificate, sheetstudents:sheetStudents, registrations, analytics, blocks, publish:publishPage, trash}[id];
+  const f={overview, messages, students, results, certificates, pdfcerts:pdfCertificates, sendcert:sendCertificate, sheetstudents:sheetStudents, registrations, analytics, career:careerOverview, careeremployers:careerEmployers, careerjobs:careerJobs, careerapps:careerApplications, careerreports:careerReports, blocks, publish:publishPage, trash}[id];
   if(f)f();
 }
 
@@ -822,6 +853,131 @@ async function trash(){
 }
 async function restoreReg(id){try{await community("restore_registration",{id});cache.regs=null;trash()}catch(e){alert(e.message)}}
 async function purgeReg(id){if(!confirm("Permanently delete this registration?"))return;try{await community("purge_registration",{id});trash()}catch(e){alert(e.message)}}
+
+
+/* =========================================================
+   GETI CAREER & JOBS ADMINISTRATION
+   Uses geti-career-admin Edge Function when available,
+   then Supabase REST, then same-origin browser fallback.
+   Existing GETI admin modules are not replaced.
+========================================================= */
+let careerCache={data:null,t:0,source:""};
+function careerLocalRead(key,fallback){try{const v=localStorage.getItem(CAREER_LOCAL_PREFIX+key);return v?JSON.parse(v):fallback}catch{return fallback}}
+function careerLocalWrite(key,val){try{localStorage.setItem(CAREER_LOCAL_PREFIX+key,JSON.stringify(val))}catch{}}
+function careerStatusClass(v){v=String(v||"").toLowerCase();if(v.includes("approve")||v.includes("verified")||v.includes("offer")||v.includes("hired")||v.includes("resolved"))return "pass";if(v.includes("reject")||v.includes("blocked"))return "fail";return "pending"}
+function careerSourceBadge(source){const online=source==="edge"||source==="rest";return '<span class="career-admin-source '+(online?'online':'local')+'">'+(source==="edge"?'CAREER BACKEND':source==="rest"?'SUPABASE TABLES':'LOCAL FALLBACK')+'</span>'}
+function careerNormalizeJob(j){return {id:j.id,title:j.title||"",company:j.company||j.employer_name||"",location:j.location||"",mode:j.mode||j.work_mode||"",employment:j.employment||j.employment_type||"",salary:j.salary||"",qualification:j.qualification||"",level:j.level||"",experience:j.experience||"",vacancies:j.vacancies||1,deadline:j.deadline||"",start_date:j.start_date||j.startDate||"",skills:j.skills||[],description:j.description||"",requirements:j.requirements||[],benefits:j.benefits||[],screening_questions:j.screening_questions||j.questions||[],status:j.status||"pending",employer_verified:!!(j.employer_verified||j.employerVerified),created_at:j.created_at||j.createdAt||""}}
+function careerNormalizeEmployer(e){return {id:e.id||e.email||"local-employer",organization_name:e.organization_name||e.company||"",country:e.country||"",website:e.website||"",email:e.email||"",license_reference:e.license_reference||e.license||"",hiring_contact:e.hiring_contact||e.contact||"",organization_type:e.organization_type||e.type||"",about:e.about||"",status:e.status||"not_requested",created_at:e.created_at||""}}
+function careerNormalizeApplication(a){return {id:a.id,job_id:a.job_id||a.jobId,title:a.title||"",company:a.company||"",applicant_name:a.applicant_name||a.name||"",applicant_email:a.applicant_email||a.email||"",status:a.status||"Under Review",match_score:a.match_score||a.match||0,created_at:a.created_at||a.date||"",profile_data:a.profile_data||{},screening_answers:a.screening_answers||a.answers||[]}}
+
+async function careerEdge(action,extra={}){return call(CAREER_ADMIN_FN,{action,...extra})}
+async function careerRest(table,opts={}){
+  const method=opts.method||"GET";let url=CAREER_REST+table+(opts.query||"");
+  const headers={apikey:APIKEY,Authorization:"Bearer "+APIKEY,Accept:"application/json",Prefer:"return=representation"};
+  if(opts.body!==undefined)headers["Content-Type"]="application/json";
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),16000);
+  try{const r=await fetch(url,{method,headers,body:opts.body===undefined?undefined:JSON.stringify(opts.body),signal:controller.signal});let data=null;try{data=await r.json()}catch{data=null}if(!r.ok)throw new Error((data&&data.message)||("Career table request failed: "+r.status));return data}catch(e){throw e}finally{clearTimeout(timer)}
+}
+async function getCareerData(force=false){
+  if(!force&&careerCache.data&&Date.now()-careerCache.t<15000)return careerCache.data;
+  let data=null,source="";
+  try{
+    const r=await careerEdge("dashboard");
+    data={jobs:(r.jobs||[]).map(careerNormalizeJob),employers:(r.employers||[]).map(careerNormalizeEmployer),applications:(r.applications||[]).map(careerNormalizeApplication),reports:r.reports||[]};source="edge";
+  }catch(edgeErr){
+    try{
+      const [j,e,a,r]=await Promise.all([
+        careerRest("career_jobs",{query:"?select=*&order=created_at.desc&limit=500"}),
+        careerRest("career_employers",{query:"?select=*&order=created_at.desc&limit=500"}),
+        careerRest("career_applications",{query:"?select=*&order=created_at.desc&limit=1000"}),
+        careerRest("career_reports",{query:"?select=*&order=created_at.desc&limit=500"}).catch(()=>[])
+      ]);
+      data={jobs:(j||[]).map(careerNormalizeJob),employers:(e||[]).map(careerNormalizeEmployer),applications:(a||[]).map(careerNormalizeApplication),reports:r||[]};source="rest";
+    }catch(restErr){
+      const le=careerLocalRead("EMPLOYER",{}),lj=careerLocalRead("JOBS",[]),la=careerLocalRead("APPLICATIONS",[]),lr=careerLocalRead("REPORTS",[]);
+      data={jobs:(Array.isArray(lj)?lj:[]).map(careerNormalizeJob),employers:le&&Object.keys(le).length?[careerNormalizeEmployer(le)]:[],applications:(Array.isArray(la)?la:[]).map(careerNormalizeApplication),reports:Array.isArray(lr)?lr:[]};source="local";
+    }
+  }
+  data.source=source;careerCache={data,t:Date.now(),source};return data;
+}
+function careerClearCache(){careerCache={data:null,t:0,source:""}}
+async function careerPatch(table,id,body,localKey){
+  let ok=false;
+  try{await careerEdge("update_"+table.replace("career_",""),{id,...body});ok=true}catch{}
+  if(!ok){try{await careerRest(table,{method:"PATCH",query:"?id=eq."+encodeURIComponent(id),body});ok=true}catch{}}
+  if(!ok&&localKey){
+    if(localKey==="EMPLOYER"){const e=careerLocalRead("EMPLOYER",{});careerLocalWrite("EMPLOYER",Object.assign({},e,body));ok=true}
+    else{let rows=careerLocalRead(localKey,[]);if(Array.isArray(rows)){rows=rows.map(x=>String(x.id)===String(id)?Object.assign({},x,body):x);careerLocalWrite(localKey,rows);ok=true}}
+  }
+  careerClearCache();return ok
+}
+async function careerDelete(table,id,localKey){
+  let ok=false;try{await careerEdge("delete_"+table.replace("career_",""),{id});ok=true}catch{}
+  if(!ok){try{await careerRest(table,{method:"DELETE",query:"?id=eq."+encodeURIComponent(id)});ok=true}catch{}}
+  if(!ok&&localKey){let rows=careerLocalRead(localKey,[]);if(Array.isArray(rows)){careerLocalWrite(localKey,rows.filter(x=>String(x.id)!==String(id)));ok=true}}
+  careerClearCache();return ok
+}
+function careerKpi(label,value,sub,cls=""){return '<div class="card kpi '+cls+'"><span class="kpi-label">'+esc(label)+'</span><span class="kpi-value">'+n(value)+'</span><small>'+esc(sub)+'</small></div>'}
+function careerNavTabs(){return '<div class="career-admin-tabs"><button onclick="openPage(\'career\')">Overview</button><button onclick="openPage(\'careeremployers\')">Employers</button><button onclick="openPage(\'careerjobs\')">Jobs</button><button onclick="openPage(\'careerapps\')">Applications</button><button onclick="openPage(\'careerreports\')">Reports</button></div>'}
+
+async function careerOverview(){
+  content(notice("Loading Career & Jobs administration..."));
+  try{const dta=await getCareerData(true),jobs=dta.jobs,emps=dta.employers,apps=dta.applications,reps=dta.reports||[];
+    const pendingJobs=jobs.filter(x=>x.status==="pending").length,approved=jobs.filter(x=>x.status==="approved").length,pendingEmp=emps.filter(x=>x.status==="pending").length,verified=emps.filter(x=>x.status==="verified").length,openReports=reps.filter(x=>String(x.status||"Open").toLowerCase()!=="resolved").length;
+    content(pageHead("Career & Jobs","GETI recruitment, employers and applications.",'<div class="career-admin-actions">'+careerSourceBadge(dta.source)+'<button class="btn" onclick="careerOverview()">REFRESH</button></div>')+careerNavTabs()+
+      '<div class="grid4">'+careerKpi("Approved jobs",approved,"Visible to candidates","career-admin-kpi-jobs")+careerKpi("Pending jobs",pendingJobs,"Awaiting GETI review")+careerKpi("Verified employers",verified,"Trusted employer profiles","career-admin-kpi-employers")+careerKpi("Employer requests",pendingEmp,"Verification pending")+careerKpi("Applications",apps.length,"Candidate submissions","career-admin-kpi-apps")+careerKpi("Interviews",apps.filter(x=>x.status==="Interview").length,"Interview stage")+careerKpi("Offers / Hired",apps.filter(x=>x.status==="Offer"||x.status==="Hired").length,"Advanced candidates")+careerKpi("Open reports",openReports,"Trust & safety","career-admin-kpi-reports")+'</div>'+
+      '<div class="two-col"><div class="card"><div class="panel-head"><strong>PENDING JOB REVIEWS</strong><button class="btn" onclick="openPage(\'careerjobs\')">VIEW ALL</button></div><div class="table-wrap" style="border:0;border-radius:0"><table><thead><tr><th>Job</th><th>Employer</th><th>Location</th><th>Action</th></tr></thead><tbody>'+((jobs.filter(x=>x.status==="pending").slice(0,8)).length?jobs.filter(x=>x.status==="pending").slice(0,8).map(x=>'<tr><td><b>'+esc(x.title)+'</b></td><td>'+esc(x.company)+'</td><td>'+esc(x.location)+'</td><td><button class="btn success" onclick="careerSetJobStatus('+jsArg(x.id)+',\'approved\')">APPROVE</button></td></tr>').join(''):'<tr><td colspan="4" class="empty">No pending jobs.</td></tr>')+'</tbody></table></div></div>'+
+      '<div class="card"><div class="panel-head"><strong>CAREER QUICK ACTIONS</strong></div><div class="panel-body quick"><button onclick="openPage(\'careeremployers\')"><b>Verify employers</b><span>Review identity and trust information</span></button><button onclick="openPage(\'careerjobs\')"><b>Moderate jobs</b><span>Approve, reject or remove jobs</span></button><button onclick="openPage(\'careerapps\')"><b>Applications</b><span>Track recruitment stages</span></button><button onclick="openPage(\'careerreports\')"><b>Trust & Safety</b><span>Review candidate reports</span></button></div></div></div>');
+  }catch(e){content(notice(e.message,"error"))}
+}
+
+async function careerEmployers(){
+  content(notice("Loading career employers..."));
+  try{const dta=await getCareerData(true),rows=dta.employers;
+    content(pageHead("Career Employers","Verify organizations before awarding the GETI Verified Employer badge.",'<div class="career-admin-actions">'+careerSourceBadge(dta.source)+'<button class="btn" onclick="careerEmployers()">REFRESH</button></div>')+careerNavTabs()+
+      '<div class="career-admin-toolbar"><input class="search" id="careerEmpQ" placeholder="Search employer, country or email..." oninput="careerFilterEmployers()"><span class="count" id="careerEmpCount">'+rows.length+' employers</span></div><div id="careerEmpTable"></div>');
+    window.__careerEmployers=rows;careerRenderEmployerRows(rows)
+  }catch(e){content(notice(e.message,"error"))}
+}
+function careerFilterEmployers(){const q=(document.getElementById("careerEmpQ")?.value||"").toLowerCase();const rows=(window.__careerEmployers||[]).filter(x=>!q||[x.organization_name,x.country,x.email,x.website,x.status].some(v=>String(v||"").toLowerCase().includes(q)));careerRenderEmployerRows(rows)}
+function careerRenderEmployerRows(rows){const box=document.getElementById("careerEmpTable"),cnt=document.getElementById("careerEmpCount");if(cnt)cnt.textContent=rows.length+" shown";if(!box)return;box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Employer</th><th>Country</th><th>Official Contact</th><th>License / Type</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+(rows.length?rows.map(e=>'<tr><td><div class="career-company"><b>'+esc(e.organization_name||"Unnamed employer")+'</b></div><div class="career-detail">'+esc(e.website||"No website")+'</div></td><td>'+esc(e.country||"—")+'</td><td>'+esc(e.email||"—")+'<div class="career-detail">'+esc(e.hiring_contact||"")+'</div></td><td>'+esc(e.license_reference||"—")+'<div class="career-detail">'+esc(e.organization_type||"")+'</div></td><td><span class="badge '+careerStatusClass(e.status)+'">'+esc(e.status||"not_requested")+'</span></td><td><div class="geti-action-row"><button class="btn success" onclick="careerVerifyEmployer('+jsArg(e.id)+')">VERIFY</button><button class="btn" onclick="careerPendingEmployer('+jsArg(e.id)+')">PENDING</button><button class="btn danger" onclick="careerRejectEmployer('+jsArg(e.id)+')">REJECT</button></div></td></tr>').join(''):'<tr><td colspan="6" class="empty">No employer profiles found.</td></tr>')+'</tbody></table></div>'}
+async function careerVerifyEmployer(id){if(!confirm("Verify this employer for GETI Career Hub?"))return;await careerPatch("career_employers",id,{status:"verified"},"EMPLOYER");/* propagate verified badge to matching jobs when backend supports it */try{const dta=await getCareerData(true),emp=dta.employers.find(x=>String(x.id)===String(id));if(emp){for(const j of dta.jobs.filter(x=>x.company===emp.organization_name))await careerPatch("career_jobs",j.id,{employer_verified:true},"JOBS")}}catch{}careerEmployers()}
+async function careerPendingEmployer(id){await careerPatch("career_employers",id,{status:"pending"},"EMPLOYER");careerEmployers()}
+async function careerRejectEmployer(id){if(!confirm("Reject this employer verification request?"))return;await careerPatch("career_employers",id,{status:"rejected"},"EMPLOYER");careerEmployers()}
+
+async function careerJobs(){
+  content(notice("Loading career jobs..."));
+  try{const dta=await getCareerData(true),rows=dta.jobs;
+    content(pageHead("Career Jobs","Approve only genuine, transparent employer opportunities.",'<div class="career-admin-actions">'+careerSourceBadge(dta.source)+'<button class="btn" onclick="careerJobs()">REFRESH</button></div>')+careerNavTabs()+
+      '<div class="career-admin-toolbar"><input class="search" id="careerJobQ" placeholder="Search job, employer, location..." oninput="careerFilterJobs()"><select id="careerJobStatus" onchange="careerFilterJobs()"><option value="">All statuses</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select><span class="count" id="careerJobCount">'+rows.length+' jobs</span></div><div id="careerJobTable"></div>');
+    window.__careerJobs=rows;careerRenderJobRows(rows)
+  }catch(e){content(notice(e.message,"error"))}
+}
+function careerFilterJobs(){const q=(document.getElementById("careerJobQ")?.value||"").toLowerCase(),st=document.getElementById("careerJobStatus")?.value||"";const rows=(window.__careerJobs||[]).filter(x=>(!q||[x.title,x.company,x.location,x.mode,x.employment].some(v=>String(v||"").toLowerCase().includes(q)))&&(!st||x.status===st));careerRenderJobRows(rows)}
+function careerRenderJobRows(rows){const box=document.getElementById("careerJobTable"),cnt=document.getElementById("careerJobCount");if(cnt)cnt.textContent=rows.length+" shown";if(!box)return;box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Job</th><th>Employer</th><th>Location / Mode</th><th>Compensation</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead><tbody>'+(rows.length?rows.map(j=>'<tr><td><b>'+esc(j.title||"Untitled")+'</b><div class="career-detail">'+esc(j.qualification||"No qualification specified")+' · '+esc(j.level||"Level not specified")+'</div></td><td>'+esc(j.company||"—")+(j.employer_verified?' <span class="badge pass">VERIFIED</span>':'')+'</td><td>'+esc(j.location||"—")+'<div class="career-detail">'+esc(j.mode||"")+' · '+esc(j.employment||"")+'</div></td><td>'+esc(j.salary||"Not listed")+'</td><td><span class="badge '+careerStatusClass(j.status)+'">'+esc(j.status||"pending")+'</span></td><td>'+esc(d(j.created_at))+'</td><td><div class="geti-action-row"><button class="btn success" onclick="careerSetJobStatus('+jsArg(j.id)+',\'approved\')">APPROVE</button><button class="btn" onclick="careerSetJobStatus('+jsArg(j.id)+',\'rejected\')">REJECT</button><button class="btn danger" onclick="careerRemoveJob('+jsArg(j.id)+')">DELETE</button></div></td></tr>').join(''):'<tr><td colspan="7" class="empty">No career jobs found.</td></tr>')+'</tbody></table></div>'}
+async function careerSetJobStatus(id,status){if(status==="approved"&&!confirm("Approve this job and make it visible in GETI Career Hub?"))return;await careerPatch("career_jobs",id,{status},"JOBS");careerJobs()}
+async function careerRemoveJob(id){if(!confirm("Permanently remove this career job?"))return;await careerDelete("career_jobs",id,"JOBS");careerJobs()}
+
+async function careerApplications(){
+  content(notice("Loading career applications..."));
+  try{const dta=await getCareerData(true),rows=dta.applications;
+    content(pageHead("Career Applications","Monitor candidate recruitment progress without exposing private data publicly.",'<div class="career-admin-actions">'+careerSourceBadge(dta.source)+'<button class="btn" onclick="careerApplications()">REFRESH</button></div>')+careerNavTabs()+
+      '<div class="career-admin-toolbar"><input class="search" id="careerAppQ" placeholder="Search candidate, job or employer..." oninput="careerFilterApplications()"><select id="careerAppStatus" onchange="careerFilterApplications()"><option value="">All stages</option><option>Under Review</option><option>Shortlisted</option><option>Interview</option><option>Offer</option><option>Hired</option><option>Rejected</option></select><span class="count" id="careerAppCount">'+rows.length+' applications</span></div><div id="careerAppTable"></div>');
+    window.__careerApps=rows;careerRenderApplicationRows(rows)
+  }catch(e){content(notice(e.message,"error"))}
+}
+function careerFilterApplications(){const q=(document.getElementById("careerAppQ")?.value||"").toLowerCase(),st=document.getElementById("careerAppStatus")?.value||"";const rows=(window.__careerApps||[]).filter(x=>(!q||[x.applicant_name,x.applicant_email,x.title,x.company].some(v=>String(v||"").toLowerCase().includes(q)))&&(!st||x.status===st));careerRenderApplicationRows(rows)}
+function careerRenderApplicationRows(rows){const box=document.getElementById("careerAppTable"),cnt=document.getElementById("careerAppCount");if(cnt)cnt.textContent=rows.length+" shown";if(!box)return;box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Candidate</th><th>Job / Employer</th><th>Match</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>'+(rows.length?rows.map(a=>'<tr><td><b>'+esc(a.applicant_name||"Candidate")+'</b><div class="career-detail">'+esc(a.applicant_email||"")+'</div></td><td>'+esc(a.title||a.job_id||"Job")+'<div class="career-detail">'+esc(a.company||"")+'</div></td><td><b>'+esc(a.match_score||0)+'%</b></td><td><span class="badge '+careerStatusClass(a.status)+'">'+esc(a.status)+'</span></td><td>'+esc(d(a.created_at))+'</td><td><select onchange="careerSetApplicationStatus('+jsArg(a.id)+',this.value)"><option value="">Change stage...</option><option>Under Review</option><option>Shortlisted</option><option>Interview</option><option>Offer</option><option>Hired</option><option>Rejected</option></select></td></tr>').join(''):'<tr><td colspan="6" class="empty">No career applications found.</td></tr>')+'</tbody></table></div>'}
+async function careerSetApplicationStatus(id,status){if(!status)return;await careerPatch("career_applications",id,{status},"APPLICATIONS");careerApplications()}
+
+async function careerReports(){
+  content(notice("Loading career trust & safety reports..."));
+  try{const dta=await getCareerData(true),rows=dta.reports||[];
+    content(pageHead("Career Reports","Review suspicious jobs or employer concerns.",'<div class="career-admin-actions">'+careerSourceBadge(dta.source)+'<button class="btn" onclick="careerReports()">REFRESH</button></div>')+careerNavTabs()+
+      '<div class="table-wrap"><table><thead><tr><th>Job</th><th>Reason</th><th>Details</th><th>Date</th><th>Status</th><th>Action</th></tr></thead><tbody>'+(rows.length?rows.map(r=>'<tr><td>'+esc(r.job_title||r.jobTitle||r.job_id||"—")+'</td><td><b>'+esc(r.reason||"Report")+'</b></td><td>'+esc(r.details||"—")+'</td><td>'+esc(d(r.created_at||r.date))+'</td><td><span class="badge '+careerStatusClass(r.status||"Open")+'">'+esc(r.status||"Open")+'</span></td><td><button class="btn success" onclick="careerResolveReport('+jsArg(r.id)+')">RESOLVE</button></td></tr>').join(''):'<tr><td colspan="6" class="empty">No career reports found.</td></tr>')+'</tbody></table></div>');
+  }catch(e){content(notice(e.message,"error"))}
+}
+async function careerResolveReport(id){await careerPatch("career_reports",id,{status:"Resolved"},"REPORTS");careerReports()}
 
 async function blocks(){
   content(notice("Loading blocked emails..."));
@@ -1242,6 +1398,50 @@ if ("serviceWorker" in navigator) {
       .catch(function (err) { console.warn("GETI Admin service worker:", err); });
   });
 }
+</script>
+
+
+<style id="geti-admin-career-media-style">
+.career-media-cell{display:flex;align-items:center;gap:10px;min-width:200px}
+.career-media-cell img{width:44px;height:44px;object-fit:cover;border-radius:12px;border:1px solid #d7e2ec;background:#fff}
+.career-media-cell img.logo{object-fit:contain;padding:4px;border-radius:50%;border:2px solid #d5b45e}
+.career-media-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
+.career-media-links a{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid #d7e2ec;border-radius:999px;background:#f8fbff;color:#0a4c84;font-size:10px;font-weight:800;text-decoration:none}
+.career-doc-mini{display:block;margin-top:4px;color:#61758a;font-size:10px;line-height:1.35}
+</style>
+<script id="geti-admin-career-media-script">
+(function(){
+  'use strict';
+  var GETI_LOGO='https://getienglish.com/geti-logo.png';
+  function escLocal(v){return String(v==null?'':v).replace(/[&<>"']/g,function(m){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]})}
+  function mediaLinks(items){items=items.filter(Boolean);return items.length?'<div class="career-media-links">'+items.join('')+'</div>':''}
+  function linkBtn(url,label){return url?'<a href="'+escLocal(url)+'" target="_blank" rel="noopener">'+label+'</a>':''}
+
+  careerNormalizeEmployer=function(e){return {id:e.id||e.email||'local-employer',organization_name:e.organization_name||e.company||'',country:e.country||'',website:e.website||'',email:e.email||'',license_reference:e.license_reference||e.license||'',hiring_contact:e.hiring_contact||e.contact||'',organization_type:e.organization_type||e.type||'',about:e.about||'',status:e.status||'not_requested',created_at:e.created_at||'',logo_url:e.logo_url||e.logo||GETI_LOGO,photo_url:e.photo_url||e.photo||''}}
+  careerNormalizeJob=function(j){return {id:j.id,title:j.title||'',company:j.company||j.employer_name||'',location:j.location||'',mode:j.mode||j.work_mode||'',employment:j.employment||j.employment_type||'',salary:j.salary||'',qualification:j.qualification||'',level:j.level||'',experience:j.experience||'',vacancies:j.vacancies||1,deadline:j.deadline||'',start_date:j.start_date||j.startDate||'',skills:j.skills||[],description:j.description||'',requirements:j.requirements||[],benefits:j.benefits||[],screening_questions:j.screening_questions||j.questions||[],status:j.status||'pending',employer_verified:!!(j.employer_verified||j.employerVerified),created_at:j.created_at||j.createdAt||'',logo_url:j.logo_url||j.logo||GETI_LOGO,photo_url:j.photo_url||j.photo||'',pdf_url:j.pdf_url||j.pdf||''}}
+  careerNormalizeApplication=function(a){return {id:a.id,job_id:a.job_id||a.jobId,title:a.title||'',company:a.company||'',applicant_name:a.applicant_name||a.name||'',applicant_email:a.applicant_email||a.email||'',status:a.status||'Under Review',match_score:a.match_score||a.match||0,created_at:a.created_at||a.date||'',profile_data:a.profile_data||{},screening_answers:a.screening_answers||a.answers||[]}}
+
+  careerRenderEmployerRows=function(rows){
+    const box=document.getElementById('careerEmpTable'),cnt=document.getElementById('careerEmpCount');
+    if(cnt)cnt.textContent=rows.length+' shown'; if(!box)return;
+    box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Employer</th><th>Country</th><th>Official Contact</th><th>Media</th><th>License / Type</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+
+      (rows.length?rows.map(e=>'<tr><td><div class="career-media-cell"><img class="logo" src="'+esc(e.logo_url||GETI_LOGO)+'" alt="Logo"><div><b>'+esc(e.organization_name||'Unnamed employer')+'</b><div class="career-detail">'+esc(e.website||'No website')+'</div></div></div></td><td>'+esc(e.country||'—')+'</td><td>'+esc(e.email||'—')+'<div class="career-detail">'+esc(e.hiring_contact||'')+'</div></td><td>'+(e.photo_url?'<div class="career-media-cell"><img src="'+esc(e.photo_url)+'" alt="Photo"><div><span class="career-doc-mini">Real organization photo connected.</span>' + mediaLinks([linkBtn(e.photo_url,'PHOTO'),linkBtn(e.website,'SITE')]) + '</div></div>':'<div class="career-doc-mini">No organization photo yet.<br>Default GETI logo is available.</div>')+'</td><td>'+esc(e.license_reference||'—')+'<div class="career-detail">'+esc(e.organization_type||'')+'</div></td><td><span class="badge '+careerStatusClass(e.status)+'">'+esc(e.status||'not_requested')+'</span></td><td><div class="geti-action-row"><button class="btn success" onclick="careerVerifyEmployer('+jsArg(e.id)+')">VERIFY</button><button class="btn" onclick="careerPendingEmployer('+jsArg(e.id)+')">PENDING</button><button class="btn danger" onclick="careerRejectEmployer('+jsArg(e.id)+')">REJECT</button></div></td></tr>').join(''):'<tr><td colspan="7" class="empty">No employer profiles found.</td></tr>')+'</tbody></table></div>'
+  }
+
+  careerRenderJobRows=function(rows){
+    const box=document.getElementById('careerJobTable'),cnt=document.getElementById('careerJobCount');
+    if(cnt)cnt.textContent=rows.length+' shown'; if(!box)return;
+    box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Job</th><th>Employer</th><th>Media</th><th>Location / Mode</th><th>Compensation</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead><tbody>'+
+      (rows.length?rows.map(j=>'<tr><td><b>'+esc(j.title||'Untitled')+'</b><div class="career-detail">'+esc(j.qualification||'No qualification specified')+' · '+esc(j.level||'Level not specified')+'</div><div class="career-doc-mini">'+esc(String(j.description||'').slice(0,110))+(String(j.description||'').length>110?'…':'')+'</div></td><td><div class="career-media-cell"><img class="logo" src="'+esc(j.logo_url||GETI_LOGO)+'" alt="Logo"><div>'+esc(j.company||'—')+(j.employer_verified?' <span class="badge pass">VERIFIED</span>':'')+'</div></div></td><td>'+(j.photo_url?'<div class="career-media-cell"><img src="'+esc(j.photo_url)+'" alt="Photo"><div>'+mediaLinks([linkBtn(j.photo_url,'PHOTO'),linkBtn(j.pdf_url,'PDF')])+'</div></div>':mediaLinks([linkBtn(j.pdf_url,'PDF')])||'<span class="career-doc-mini">No photo or PDF added.</span>')+'</td><td>'+esc(j.location||'—')+'<div class="career-detail">'+esc(j.mode||'')+' · '+esc(j.employment||'')+'</div></td><td>'+esc(j.salary||'Not listed')+'</td><td><span class="badge '+careerStatusClass(j.status)+'">'+esc(j.status||'pending')+'</span></td><td>'+esc(d(j.created_at))+'</td><td><div class="geti-action-row"><button class="btn success" onclick="careerSetJobStatus('+jsArg(j.id)+',\'approved\')">APPROVE</button><button class="btn" onclick="careerSetJobStatus('+jsArg(j.id)+',\'rejected\')">REJECT</button><button class="btn danger" onclick="careerRemoveJob('+jsArg(j.id)+')">DELETE</button></div></td></tr>').join(''):'<tr><td colspan="8" class="empty">No career jobs found.</td></tr>')+'</tbody></table></div>'
+  }
+
+  careerRenderApplicationRows=function(rows){
+    const box=document.getElementById('careerAppTable'),cnt=document.getElementById('careerAppCount');
+    if(cnt)cnt.textContent=rows.length+' shown'; if(!box)return;
+    box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Candidate</th><th>Photo / Documents</th><th>Job / Employer</th><th>Match</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>'+
+      (rows.length?rows.map(a=>{ const p=a.profile_data||{}; const photo=p.photo||GETI_LOGO; const links=mediaLinks([linkBtn(p.cvPdf||p.cv,'CV'),linkBtn(p.video,'VIDEO'),linkBtn(p.portfolio,'PORTFOLIO')]); return '<tr><td><div class="career-media-cell"><img src="'+esc(photo)+'" alt="Candidate"><div><b>'+esc(a.applicant_name||'Candidate')+'</b><div class="career-detail">'+esc(a.applicant_email||'')+'</div><div class="career-doc-mini">'+esc(p.headline||'Teaching professional')+'</div></div></div></td><td>'+(links||'<span class="career-doc-mini">No document links attached.</span>')+'</td><td>'+esc(a.title||a.job_id||'Job')+'<div class="career-detail">'+esc(a.company||'')+'</div></td><td><b>'+esc(a.match_score||0)+'%</b></td><td><span class="badge '+careerStatusClass(a.status)+'">'+esc(a.status)+'</span></td><td>'+esc(d(a.created_at))+'</td><td><select onchange="careerSetApplicationStatus('+jsArg(a.id)+',this.value)"><option value="">Change stage...</option><option>Under Review</option><option>Shortlisted</option><option>Interview</option><option>Offer</option><option>Hired</option><option>Rejected</option></select></td></tr>'; }).join(''):'<tr><td colspan="7" class="empty">No career applications found.</td></tr>')+'</tbody></table></div>'
+  }
+})();
 </script>
 
 </body>
