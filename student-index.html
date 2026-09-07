@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GETI Student Area</title><style>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="/geti-logo.png">
+<link rel="apple-touch-icon" href="/geti-logo.png"><title>GETI Student Area</title><style>
 :root{
   --wa:#00a884;--wa-dark:#008069;--green:#25d366;--bg:#efeae2;--panel:#fff;
   --line:#e9edef;--text:#111b21;--muted:#667781;--header:#f0f2f5;--me:#d9fdd3;
@@ -177,11 +179,180 @@ button{cursor:pointer}
 .side-request-link .new{background:var(--wa);color:#fff}
 .side-request-link .mine{background:#eef1f2;color:#37474f}
 
+
+/* SEND MONEY */
+.money-modal{position:fixed;inset:0;background:rgba(17,27,33,.48);display:none;align-items:center;justify-content:center;padding:20px;z-index:130}
+.money-modal.open{display:flex}
+.money-box{width:min(500px,100%);background:#fff;border-radius:16px;padding:20px;box-shadow:0 25px 70px rgba(0,0,0,.28)}
+.money-box h3{margin:0 0 6px}.money-box p{margin:0 0 14px;color:var(--muted);font-size:13px}
+.money-total{background:#ecfdf3;color:#067647;border:1px solid #abefc6;border-radius:10px;padding:11px 12px;font-weight:900}
+
+
+/* STUDENT PAYMENTS + LESSONS */
+.student-tools{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  padding:8px 12px;
+  border-bottom:1px solid var(--line);
+  background:#fff;
+}
+.student-tools button{
+  border:0;
+  border-radius:8px;
+  padding:9px 8px;
+  font-size:11px;
+  font-weight:800;
+}
+.tool-green{background:var(--wa);color:#fff}
+.tool-light{background:#eef1f2;color:#37474f}
+.tool-blue{background:#eaf1ff;color:#123a8c}
+.tool-orange{background:#fff4e5;color:#9a5b00}
+
+.payment-method-note{
+  font-size:11px;
+  color:var(--muted);
+  line-height:1.4;
+}
+.payments-panel,.lessons-panel{
+  position:fixed;
+  inset:0;
+  background:rgba(17,27,33,.45);
+  display:none;
+  z-index:118;
+}
+.payments-panel.open,.lessons-panel.open{display:block}
+.side-drawer{
+  width:min(460px,100%);
+  height:100%;
+  background:#fff;
+  overflow:auto;
+  box-shadow:8px 0 24px rgba(0,0,0,.18);
+}
+.side-drawer-head{
+  height:100px;
+  background:var(--wa-dark);
+  color:#fff;
+  padding:18px;
+  display:flex;
+  align-items:flex-end;
+  gap:14px;
+}
+.side-drawer-head button{
+  border:0;background:transparent;color:#fff;font-size:22px
+}
+.drawer-body{padding:14px}
+.money-summary{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:14px;
+}
+.money-summary-card{
+  border:1px solid var(--line);
+  border-radius:11px;
+  padding:12px;
+  background:#fff;
+}
+.money-summary-card b{
+  display:block;
+  font-size:20px;
+  color:var(--wa-dark);
+  margin-bottom:3px;
+}
+.money-summary-card span{font-size:10px;color:var(--muted)}
+.payment-card,.lesson-card{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:10px;
+  background:#fff;
+}
+.payment-top,.lesson-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+.payment-card h4,.lesson-card h4{margin:0 0 4px;font-size:14px}
+.payment-card small,.lesson-card small{
+  color:var(--muted);
+  line-height:1.5;
+}
+.payment-amount{
+  font-weight:900;
+  color:var(--wa-dark);
+  white-space:nowrap;
+}
+.payment-status{
+  display:inline-block;
+  margin-top:7px;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#e9fbf3;
+  color:#087a4d;
+  font-size:10px;
+  font-weight:900;
+}
+.receipt-btn,.join-class-btn{
+  margin-top:9px;
+  border:0;
+  border-radius:8px;
+  padding:8px 10px;
+  font-size:11px;
+  font-weight:800;
+}
+.receipt-btn{background:#eef1f2;color:#37474f}
+.join-class-btn{background:var(--wa);color:#fff}
+.money-box .field{margin:0}
+.money-help{
+  padding:9px 10px;
+  border-radius:9px;
+  background:#f7f9fa;
+  border:1px solid var(--line);
+  font-size:11px;
+  color:var(--muted);
+  line-height:1.45;
+}
+@media(max-width:520px){
+  .student-tools{grid-template-columns:1fr 1fr}
+  .money-summary{grid-template-columns:1fr}
+}
+
+
+/* GETI OFFICIAL LOGO */
+.geti-official-logo{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;
+  border-radius:50%;
+  background:#fff;
+}
+.logo,.auth-logo,.empty-logo{
+  overflow:hidden!important;
+  background:#fff!important;
+  border:2px solid #e7c768!important;
+  padding:3px!important;
+  color:transparent!important;
+}
+.empty-logo{
+  width:84px!important;
+  height:84px!important;
+}
+.logo img,.auth-logo img,.empty-logo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  border-radius:50%;
+  display:block;
+}
+
 </style></head>
 <body>
 <section class="auth" id="authGate">
   <div class="auth-left">
-    <div class="auth-brand"><div class="auth-logo">GETI</div><span>GETI STUDENT</span></div>
+    <div class="auth-brand"><div class="auth-logo"><img class="geti-official-logo" src="/geti-logo.png" alt="GETI logo"></div><span>GETI STUDENT</span></div>
     <h1>Create your student account and connect with one teacher</h1>
     <p>After registration, your account appears in the Teacher Area. One teacher can accept you. Once accepted, other teachers cannot take over that student account.</p>
     <div class="auth-points"><div class="auth-point">✓ Personal student profile</div><div class="auth-point">✓ Course and level</div><div class="auth-point">✓ One assigned teacher at a time</div></div>
@@ -220,14 +391,17 @@ button{cursor:pointer}
       <div style="display:flex"><button class="icon-btn" onclick="openProfile()">👤</button><button class="icon-btn" onclick="openProfile()">⋮</button></div>
     </div>
     <div class="search-wrap"><div class="search"><span>⌕</span><input id="searchInput" placeholder="Search"></div></div>
-    <div class="side-request-link">
-      <button class="new" type="button" onclick="openLearningRequest()">+ Send Learning Request</button>
-      <button class="mine" type="button" onclick="openMyRequests()">My Requests</button>
+    <div class="student-tools">
+      <button class="tool-green" type="button" onclick="openLearningRequest()">+ Learning Request</button>
+      <button class="tool-light" type="button" onclick="openMyRequests()">My Requests</button>
+      <button class="tool-orange" type="button" onclick="openSendMoney()">Send Money</button>
+      <button class="tool-light" type="button" onclick="openMyPayments()">My Payments</button>
+      <button class="tool-blue" style="grid-column:1/-1" type="button" onclick="openMyLessons()">My Lessons</button>
     </div>
     <div class="list" id="chatList"></div>
   </aside>
   <main class="main">
-    <div id="chatEmpty" class="empty"><div class="box"><div class="empty-logo">GETI</div><h2>Student Messages</h2><p id="teacherStateText">Waiting for a teacher to accept your account.</p></div></div>
+    <div id="chatEmpty" class="empty"><div class="box"><div class="empty-logo"><img class="geti-official-logo" src="/geti-logo.png" alt="GETI logo"></div><h2>Student Messages</h2><p id="teacherStateText">Waiting for a teacher to accept your account.</p></div></div>
     <div id="chatView" class="hidden" style="height:100%;display:flex;flex-direction:column">
       <div class="chat-header"><div class="contact"><button class="icon-btn mobile-back" onclick="goBackMobile()">←</button><div class="avatar" id="contactAvatar">TR</div><div><b id="contactName">Teacher</b><span id="contactStatus">online</span></div></div>
       <div class="actions"><button class="icon-btn" onclick="startVoiceCall()">☎</button><button class="icon-btn" onclick="startVideoCall()">🎥</button><button class="icon-btn" onclick="openProfile()">⋮</button></div></div>
@@ -311,6 +485,77 @@ button{cursor:pointer}
       </div>
     </div>
     <div class="requests-list" id="myRequestsList"></div>
+  </div>
+</div>
+
+
+<!-- SEND MONEY MODAL -->
+<div class="money-modal" id="sendMoneyModal">
+  <div class="money-box">
+    <h3>Send Money to Teacher</h3>
+    <p id="moneyTeacherLabel">Assigned teacher required.</p>
+
+    <form class="request-form" id="sendMoneyForm">
+      <input class="field" id="moneyAmount" type="number" min="0.01" step="0.01" placeholder="Amount in USD" required>
+
+      <select class="field" id="moneyMethod" required>
+        <option value="">Payment method</option>
+        <option>MVola</option>
+        <option>Orange Money</option>
+        <option>Airtel Money</option>
+        <option>Bank Transfer</option>
+        <option>Other</option>
+      </select>
+
+      <input class="field" id="moneyReference" placeholder="Transaction / reference number (optional)">
+
+      <textarea class="field" id="moneyNote" rows="3" placeholder="Payment note (course, lesson, certificate...)"></textarea>
+
+      <div class="money-total" id="studentTotalPaid">Total sent: $0.00</div>
+
+      <div class="money-help">
+        This payment form records the transaction inside the GETI demo platform. It does not directly transfer real money through MVola, Orange Money, Airtel Money or a bank.
+      </div>
+
+      <div class="request-actions">
+        <button type="button" class="request-secondary" onclick="closeSendMoney()">Cancel</button>
+        <button type="submit" class="request-submit">Send Money</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MY PAYMENTS -->
+<div class="payments-panel" id="myPaymentsPanel" onclick="if(event.target===myPaymentsPanel)closeMyPayments()">
+  <div class="side-drawer">
+    <div class="side-drawer-head">
+      <button type="button" onclick="closeMyPayments()">←</button>
+      <div>
+        <div style="font-size:18px;font-weight:800">My Payments</div>
+        <div style="font-size:12px;opacity:.9">Payment history and receipts</div>
+      </div>
+    </div>
+    <div class="drawer-body">
+      <div class="money-summary">
+        <div class="money-summary-card"><b id="paymentsTotal">0 Ar</b><span>Total sent</span></div>
+        <div class="money-summary-card"><b id="paymentsCount">0</b><span>Payments</span></div>
+      </div>
+      <div id="myPaymentsList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MY LESSONS -->
+<div class="lessons-panel" id="myLessonsPanel" onclick="if(event.target===myLessonsPanel)closeMyLessons()">
+  <div class="side-drawer">
+    <div class="side-drawer-head">
+      <button type="button" onclick="closeMyLessons()">←</button>
+      <div>
+        <div style="font-size:18px;font-weight:800">My Lessons</div>
+        <div style="font-size:12px;opacity:.9">Scheduled classes</div>
+      </div>
+    </div>
+    <div class="drawer-body" id="myLessonsList"></div>
   </div>
 </div>
 
@@ -489,6 +734,251 @@ if(learningRequestFormEl){
     alert("Learning request sent successfully.");
   });
 }
+
+
+
+const STUDENT_PAYMENTS_KEY="geti_student_payments_v16";
+const STUDENT_LESSONS_KEY="geti_teacher_schedule_v15";
+
+function getStudentPayments(){
+  try{return JSON.parse(localStorage.getItem(STUDENT_PAYMENTS_KEY)||"[]")}catch(e){return[]}
+}
+function saveStudentPayments(a){
+  localStorage.setItem(STUDENT_PAYMENTS_KEY,JSON.stringify(a));
+}
+function getStudentLessons(){
+  try{return JSON.parse(localStorage.getItem(STUDENT_LESSONS_KEY)||"[]")}catch(e){return[]}
+}
+function moneyUSD(n){
+  return new Intl.NumberFormat("fr-FR").format(Math.max(0,Number(n)||0))+" Ar";
+}
+function currentStudentPayments(){
+  const u=freshStudent();
+  if(!u)return[];
+  return getStudentPayments().filter(p=>p.studentId===u.id && p.status!=="Cancelled");
+}
+function openSendMoney(){
+  const u=freshStudent();
+  if(!u)return;
+
+  if(!u.teacherId){
+    alert("You do not have an assigned teacher yet.");
+    return;
+  }
+
+  document.getElementById("moneyTeacherLabel").textContent=
+    "Teacher: "+(u.teacherName||"Assigned Teacher");
+
+  const total=currentStudentPayments().reduce((sum,p)=>sum+(Number(p.amount)||0),0);
+  document.getElementById("studentTotalPaid").textContent="Total sent: "+moneyUSD(total);
+
+  document.getElementById("sendMoneyModal").classList.add("open");
+}
+function closeSendMoney(){
+  document.getElementById("sendMoneyModal").classList.remove("open");
+}
+
+function renderMyPayments(){
+  const rows=currentStudentPayments().slice().reverse();
+  const total=rows.reduce((sum,p)=>sum+(Number(p.amount)||0),0);
+
+  document.getElementById("paymentsTotal").textContent=moneyUSD(total);
+  document.getElementById("paymentsCount").textContent=rows.length;
+
+  const box=document.getElementById("myPaymentsList");
+  if(!rows.length){
+    box.innerHTML='<div style="padding:28px 10px;text-align:center;color:#667781;font-size:13px">No payment recorded yet.</div>';
+    return;
+  }
+
+  box.innerHTML=rows.map(p=>`
+    <div class="payment-card">
+      <div class="payment-top">
+        <div>
+          <h4>${esc(p.teacherName||"Teacher")}</h4>
+          <small>
+            ${esc(p.method||"Payment")}<br>
+            ${new Date(p.createdAt).toLocaleString()}<br>
+            ID: ${esc(p.id)}
+            ${p.reference?`<br>Reference: ${esc(p.reference)}`:""}
+            ${p.note?`<br>Note: ${esc(p.note)}`:""}
+          </small>
+        </div>
+        <div class="payment-amount">${moneyUSD(p.amount)}</div>
+      </div>
+      <span class="payment-status">${esc(p.status||"Completed")}</span><br>
+      <button class="receipt-btn" type="button" onclick="printPaymentReceipt('${esc(p.id)}')">Print Receipt</button>
+    </div>
+  `).join("");
+}
+function openMyPayments(){
+  renderMyPayments();
+  document.getElementById("myPaymentsPanel").classList.add("open");
+}
+function closeMyPayments(){
+  document.getElementById("myPaymentsPanel").classList.remove("open");
+}
+
+function printPaymentReceipt(id){
+  const p=getStudentPayments().find(x=>x.id===id);
+  const u=freshStudent();
+  if(!p||!u)return;
+
+  const receipt=`
+  <!doctype html>
+  <html><head><meta charset="utf-8"><title>GETI Payment Receipt</title>
+  <style>
+    body{font-family:Arial,sans-serif;padding:35px;color:#172033}
+    .card{max-width:650px;margin:auto;border:1px solid #dfe5ec;border-radius:14px;padding:26px}
+    h1{color:#008069;margin:0 0 6px}.muted{color:#667085}
+    table{width:100%;border-collapse:collapse;margin-top:22px}
+    td{padding:10px;border-bottom:1px solid #edf1f5}
+    td:first-child{font-weight:700;width:42%}
+    .amount{font-size:24px;font-weight:900;color:#008069}
+  </style></head><body>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><img src="https://getienglish.com/geti-logo.png" alt="GETI logo" style="width:58px;height:58px;border-radius:50%;object-fit:contain;border:2px solid #e7c768;padding:3px"><h1 style="margin:0">GETI Payment Receipt</h1></div>
+    <div class="muted">Global English Teaching Institute</div>
+    <table>
+      <tr><td>Payment ID</td><td>${esc(p.id)}</td></tr>
+      <tr><td>Student</td><td>${esc(u.name)}</td></tr>
+      <tr><td>Teacher</td><td>${esc(p.teacherName||"Teacher")}</td></tr>
+      <tr><td>Amount</td><td class="amount">${moneyUSD(p.amount)}</td></tr>
+      <tr><td>Payment method</td><td>${esc(p.method||"")}</td></tr>
+      <tr><td>Reference</td><td>${esc(p.reference||"-")}</td></tr>
+      <tr><td>Note</td><td>${esc(p.note||"-")}</td></tr>
+      <tr><td>Status</td><td>${esc(p.status||"Completed")}</td></tr>
+      <tr><td>Date</td><td>${new Date(p.createdAt).toLocaleString()}</td></tr>
+    </table>
+  </div>
+  <script>window.onload=()=>window.print();<\/script>
+  </body></html>`;
+
+  const w=window.open("","_blank");
+  if(!w){alert("Please allow pop-ups to print the receipt.");return}
+  w.document.open();
+  w.document.write(receipt);
+  w.document.close();
+}
+
+function renderMyLessons(){
+  const u=freshStudent();
+  const box=document.getElementById("myLessonsList");
+  if(!u||!box)return;
+
+  const rows=getStudentLessons()
+    .filter(x=>x.studentId===u.id)
+    .sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+
+  if(!rows.length){
+    box.innerHTML='<div style="padding:28px 10px;text-align:center;color:#667781;font-size:13px">No lesson scheduled yet.</div>';
+    return;
+  }
+
+  box.innerHTML=rows.map(x=>`
+    <div class="lesson-card">
+      <div class="lesson-top">
+        <div>
+          <h4>${esc(x.course||"GETI Lesson")}</h4>
+          <small>
+            Teacher: ${esc(x.teacherName||u.teacherName||"Teacher")}<br>
+            ${esc(x.date)} • ${esc(x.time)} • ${esc(x.duration)}
+            ${x.note?`<br>${esc(x.note)}`:""}
+          </small>
+        </div>
+      </div>
+      <button class="join-class-btn" type="button" onclick="joinScheduledClass()">Join Video Class</button>
+    </div>
+  `).join("");
+}
+function openMyLessons(){
+  renderMyLessons();
+  document.getElementById("myLessonsPanel").classList.add("open");
+}
+function closeMyLessons(){
+  document.getElementById("myLessonsPanel").classList.remove("open");
+}
+function joinScheduledClass(){
+  const u=freshStudent();
+  if(!u||!u.teacherId){
+    alert("No assigned teacher.");
+    return;
+  }
+  window.open(
+    "https://meet.jit.si/"+encodeURIComponent("GETI-"+u.id),
+    "_blank",
+    "noopener"
+  );
+}
+
+const sendMoneyFormEl=document.getElementById("sendMoneyForm");
+if(sendMoneyFormEl){
+  sendMoneyFormEl.addEventListener("submit",function(e){
+    e.preventDefault();
+
+    const u=freshStudent();
+    if(!u||!u.teacherId){
+      alert("No assigned teacher.");
+      return;
+    }
+
+    const amount=Number(document.getElementById("moneyAmount").value);
+    const method=document.getElementById("moneyMethod").value;
+    const reference=document.getElementById("moneyReference").value.trim();
+    const note=document.getElementById("moneyNote").value.trim();
+
+    if(!Number.isFinite(amount)||amount<=0){
+      alert("Enter a valid amount.");
+      return;
+    }
+    if(!method){
+      alert("Choose a payment method.");
+      return;
+    }
+
+    const rows=getStudentPayments();
+    rows.push({
+      id:"PAY-"+Date.now(),
+      studentId:u.id,
+      studentName:u.name,
+      studentEmail:u.email,
+      teacherId:u.teacherId,
+      teacherName:u.teacherName,
+      amount,
+      currency:"USD",
+      method,
+      reference,
+      note,
+      status:"Completed",
+      createdAt:new Date().toISOString()
+    });
+
+    try{
+      saveStudentPayments(rows);
+    }catch(err){
+      console.error(err);
+      alert("Could not save the payment in this browser.");
+      return;
+    }
+
+    e.target.reset();
+    closeSendMoney();
+    alert("Payment recorded successfully.");
+  });
+}
+
+window.addEventListener("storage",function(e){
+  if(e.key===STUDENT_PAYMENTS_KEY &&
+     document.getElementById("myPaymentsPanel") &&
+     document.getElementById("myPaymentsPanel").classList.contains("open")){
+    renderMyPayments();
+  }
+  if(e.key===STUDENT_LESSONS_KEY &&
+     document.getElementById("myLessonsPanel") &&
+     document.getElementById("myLessonsPanel").classList.contains("open")){
+    renderMyLessons();
+  }
+});
 
 </script>
 </body></html>
