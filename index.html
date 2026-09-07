@@ -5212,7 +5212,7 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
       </button>
       <div id="getiFindJobOptions" class="geti-find-job-options">
         <a class="geti-teaching-online-btn"
-           href="https://getienglish.com/teacher-index.html">
+           href="https://getienglish.com/teacher-index.html" target="_self">
           Teaching English Online
         </a>
       </div>
@@ -6086,19 +6086,18 @@ var clone=certificate.cloneNode(true);
 var originalImages=certificate.querySelectorAll("img"),clonedImages=clone.querySelectorAll("img");
 for(var i=0;i<originalImages.length;i++)clonedImages[i].setAttribute("src",originalImages[i].src);
 win.document.open();
-win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){var images=Array.from(document.images);Promise.all(images.map(function(img){return img.complete?Promise.resolve():new Promise(function(done){img.onload=img.onerror=done})})).then(function(){setTimeout(function(){window.print()},250)})}<\/script>
+win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){var images=Array.from(document.images);Promise.all(images.map(function(img){return img.complete?Promise.resolve():new Promise(function(done){img.onload=img.onerror=done})})).then(function(){setTimeout(function(){window.print()},250)})}<\/script></body></html>');
+win.document.close();
+}
+</script>
 <script id="geti-second-area-find-job-script">
 function getiToggleFindJobOptions(){
   var options=document.getElementById('getiFindJobOptions');
   var button=document.getElementById('getiFindJobBtn');
-  if(!options||!button) return;
+  if(!options||!button) return false;
   var open=options.classList.toggle('show');
   button.setAttribute('aria-expanded', open ? 'true' : 'false');
-}
-</script>
-
-</body></html>');
-win.document.close();
+  return false;
 }
 </script>
 <script id="geti-certificate-info-page-script">
