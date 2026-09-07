@@ -1,984 +1,384 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="icon" type="image/png" href="/geti-logo.png">
-<link rel="apple-touch-icon" href="/geti-logo.png"><title>GETI Student Area</title><style>
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GETI Student Area</title>
+<link rel="icon" href="/geti-logo.png">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
 :root{
-  --wa:#00a884;--wa-dark:#008069;--green:#25d366;--bg:#efeae2;--panel:#fff;
-  --line:#e9edef;--text:#111b21;--muted:#667781;--header:#f0f2f5;--me:#d9fdd3;
-  --warn:#fff4e5;--danger:#d92d20;--blue:#123a8c
+  --blue:#123a8c;--green:#008069;--green2:#00a884;--orange:#f28c28;
+  --bg:#f5f7fb;--panel:#fff;--line:#e5eaf0;--text:#172033;--muted:#667085;
+  --ok:#067647;--bad:#b42318;--warn:#9a5b00;
 }
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:#dfe5e7}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
-.auth{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr;background:linear-gradient(135deg,#006b5a,#00a884)}
-.auth-left{color:#fff;display:flex;flex-direction:column;justify-content:center;padding:70px 8vw}
-.auth-brand{display:flex;align-items:center;gap:14px;font-weight:900;font-size:22px;margin-bottom:26px}
-.auth-logo{width:58px;height:58px;border-radius:50%;background:#fff;color:var(--wa-dark);display:grid;place-items:center;font-weight:900;font-size:15px}
-.auth-left h1{font-size:48px;line-height:1.05;margin:0 0 18px;max-width:670px}
-.auth-left p{color:#e7fff9;font-size:17px;line-height:1.65;max-width:660px}
-.auth-points{margin-top:24px;display:grid;gap:10px;max-width:620px}
-.auth-point{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.09);padding:12px 14px;border-radius:12px}
-.auth-right{background:#f4f6f7;display:flex;align-items:center;justify-content:center;padding:30px}
-.auth-card{width:min(520px,100%);background:#fff;border-radius:18px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.16)}
-.auth-card h2{margin:0 0 6px;color:#1f2c33}.sub{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.5}
-.tabs{display:grid;grid-template-columns:1fr 1fr;background:#eef1f2;padding:4px;border-radius:10px;margin-bottom:16px}
-.tab{border:0;background:transparent;padding:10px;border-radius:8px;font-weight:800;color:#667781}
-.tab.active{background:#fff;color:var(--wa-dark);box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.form{display:grid;gap:11px}.field{width:100%;border:1px solid #d5dadd;background:#fff;border-radius:9px;padding:12px 13px;outline:none}
-.field:focus{border-color:var(--wa);box-shadow:0 0 0 3px rgba(0,168,132,.09)}
-.primary{border:0;background:var(--wa);color:#fff;border-radius:9px;padding:12px 15px;font-weight:800}
-.auth-msg{display:none;border-radius:9px;padding:10px 12px;font-size:13px;margin-bottom:10px}
-.auth-msg.error{display:block;background:#fff1f0;color:#b42318;border:1px solid #fecaca}
-.auth-msg.success{display:block;background:#ecfdf3;color:#067647;border:1px solid #abefc6}
-.demo-note{margin-top:14px;padding:10px 12px;border:1px solid #f5d08a;background:#fff8e8;color:#7b5515;border-radius:9px;font-size:11px;line-height:1.45}
-
-.app{width:min(1540px,100%);height:100vh;margin:auto;display:grid;grid-template-columns:400px 1fr;background:#fff;box-shadow:0 0 40px rgba(0,0,0,.08)}
-.sidebar{border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
-.side-header{height:64px;background:var(--header);display:flex;align-items:center;justify-content:space-between;padding:0 14px}
-.me-row{display:flex;align-items:center;gap:10px;min-width:0}.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(145deg,var(--wa-dark),var(--wa));color:#fff;display:grid;place-items:center;font-weight:800;overflow:hidden;flex:0 0 auto}
-.avatar img{width:100%;height:100%;object-fit:cover}.me-text{min-width:0}.me-text b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.me-text span{font-size:11px;color:var(--muted)}
-.icon-btn{width:38px;height:38px;border:0;border-radius:50%;background:transparent;color:#54656f;display:grid;place-items:center;font-size:18px}.icon-btn:hover{background:#e4e8ea}
-.nav-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line);background:#fff}
-.nav-tab{border:0;background:#fff;padding:11px 6px;font-weight:800;font-size:12px;color:var(--muted);border-bottom:3px solid transparent}
-.nav-tab.active{color:var(--wa-dark);border-bottom-color:var(--wa)}
-.search-wrap{padding:8px 12px;border-bottom:1px solid var(--line)}.search{background:#f0f2f5;border-radius:8px;display:flex;align-items:center;gap:8px;padding:0 12px}
-.search input{border:0;outline:0;background:transparent;width:100%;padding:10px 0;font-size:13px}
-.list{overflow:auto;flex:1}.chat-item{display:grid;grid-template-columns:52px 1fr auto;gap:11px;align-items:center;padding:10px 12px;border-bottom:1px solid #f2f3f4;cursor:pointer}
-.chat-item:hover,.chat-item.active{background:#f0f2f5}.chat-item .avatar{width:48px;height:48px}.chat-main{min-width:0}.chat-top{display:flex;justify-content:space-between;gap:8px}
-.chat-name{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-time{font-size:11px;color:var(--muted)}.chat-preview{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px}
-.badge{background:var(--green);color:#fff;min-width:20px;height:20px;border-radius:10px;display:grid;place-items:center;font-size:11px;font-weight:700;padding:0 6px}
-.status-pill{display:inline-block;padding:4px 7px;border-radius:999px;font-size:10px;font-weight:800}
-.available{background:#e9fbf3;color:#087a4d}.taken{background:#fff1f0;color:#b42318}.mine-pill{background:#eaf1ff;color:#123a8c}
-.main{min-width:0;display:flex;flex-direction:column;background:var(--bg)}.empty{height:100%;display:flex;align-items:center;justify-content:center;text-align:center;color:#667781;padding:30px}
-.empty .box{max-width:560px}.empty-logo{width:84px;height:84px;border-radius:50%;background:var(--wa);color:#fff;display:grid;place-items:center;margin:0 auto 18px;font-size:28px;font-weight:900}.empty h2{font-weight:400;color:#41525d;font-size:28px;margin:0 0 10px}.empty p{font-size:13px;line-height:1.6}
-.chat-header{height:64px;background:var(--header);display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #dde1e3}.contact{display:flex;align-items:center;gap:10px}.contact b{display:block;font-size:14px}.contact span{font-size:11px;color:var(--muted)}.actions{display:flex;gap:4px}
-.messages{flex:1;overflow:auto;padding:24px 6%;background-color:var(--bg);background-image:radial-gradient(rgba(0,0,0,.025) 1px,transparent 1px);background-size:20px 20px}
-.day{width:max-content;max-width:90%;margin:0 auto 16px;background:#fff;color:#54656f;padding:6px 10px;border-radius:7px;font-size:11px;box-shadow:0 1px 1px rgba(0,0,0,.06)}
-.row{display:flex;margin:5px 0}.row.me{justify-content:flex-end}.bubble{max-width:min(72%,650px);padding:7px 9px 6px;border-radius:7px;box-shadow:0 1px 1px rgba(0,0,0,.08);position:relative}
-.row.me .bubble{background:var(--me)}.row.other .bubble{background:#fff}.sender{font-size:11px;color:var(--wa-dark);font-weight:700;margin-bottom:3px}.text{font-size:14px;line-height:1.4;white-space:pre-wrap;word-break:break-word;padding-right:46px}.time{font-size:10px;color:#667781;position:absolute;right:7px;bottom:4px}
-.composer{min-height:62px;background:var(--header);display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:6px;padding:9px 12px}.composer input{border:0;outline:0;background:#fff;border-radius:9px;padding:12px 14px;width:100%}.send{width:42px;height:42px;border-radius:50%;border:0;background:var(--wa);color:#fff;font-size:18px;font-weight:700}
-.student-panel{height:100%;overflow:auto;background:#f6f8f8;padding:24px}.student-card{background:#fff;border-radius:14px;padding:18px;border:1px solid var(--line);box-shadow:0 6px 20px rgba(0,0,0,.05);max-width:850px;margin:0 auto}
-.student-head{display:flex;gap:16px;align-items:center}.student-head .avatar{width:72px;height:72px;font-size:22px}.student-info h2{margin:0 0 5px;font-size:22px}.student-info p{margin:0;color:var(--muted);font-size:13px}
-.detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}.detail{border:1px solid var(--line);border-radius:10px;padding:12px}.detail label{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:800;margin-bottom:4px}.detail div{font-size:14px}
-.cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.cta{border:0;border-radius:9px;padding:11px 14px;font-weight:800}.cta-green{background:var(--wa);color:#fff}.cta-light{background:#eef1f2;color:#37474f}.cta-danger{background:#fff1f0;color:#b42318}.cta[disabled]{opacity:.5;cursor:not-allowed}
-.mobile-back{display:none}
-
-.drawer{position:fixed;inset:0;background:rgba(17,27,33,.38);display:none;z-index:100}.drawer.open{display:block}.profile-panel{width:min(440px,100%);height:100%;background:#fff;box-shadow:8px 0 24px rgba(0,0,0,.18);overflow:auto}
-.profile-head{height:108px;background:var(--wa-dark);color:#fff;display:flex;align-items:flex-end;gap:16px;padding:18px}.profile-head button{border:0;background:transparent;color:#fff;font-size:24px}.profile-head h3{margin:0 0 3px;font-size:18px}
-.photo-area{padding:28px 20px;display:flex;justify-content:center}.big-avatar{width:150px;height:150px;border-radius:50%;background:linear-gradient(145deg,var(--wa-dark),var(--wa));color:#fff;display:grid;place-items:center;font-size:42px;font-weight:900;overflow:hidden;position:relative}.big-avatar img{width:100%;height:100%;object-fit:cover}
-.photo-edit{position:absolute;right:7px;bottom:8px;width:42px;height:42px;border-radius:50%;background:var(--wa);color:#fff;border:3px solid #fff;display:grid;place-items:center;font-size:16px}.profile-section{padding:14px 20px;border-top:8px solid #f0f2f5}.profile-label{color:var(--wa-dark);font-size:12px;font-weight:700;margin-bottom:8px}.profile-value{font-size:14px;line-height:1.45}.edit-line{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.edit-line input,.edit-line textarea{border:0;border-bottom:2px solid var(--wa);outline:0;padding:8px 0;resize:vertical;width:100%}.save-mini{border:0;background:var(--wa);color:#fff;padding:8px 10px;border-radius:8px;font-weight:700}.doc{background:#f6f8f8;border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin-top:7px;font-size:12px}.logout{width:calc(100% - 40px);margin:22px 20px;border:1px solid #f0b9b5;background:#fff1f0;color:#b42318;border-radius:9px;padding:11px;font-weight:800}
-
-@media(max-width:900px){.auth{grid-template-columns:1fr}.auth-left{padding:46px 24px 28px}.auth-left h1{font-size:36px}.auth-right{padding:20px 16px 36px}}
-@media(max-width:850px){.app{grid-template-columns:1fr}.sidebar,.main{grid-column:1;grid-row:1}.main{display:none}body.chat-open .sidebar{display:none}body.chat-open .main{display:flex}.mobile-back{display:grid}.detail-grid{grid-template-columns:1fr}}
-
-/* LEARNING REQUEST */
-.request-btn{
-  border:0;
-  background:var(--wa);
-  color:#fff;
-  border-radius:9px;
-  padding:9px 12px;
-  font-weight:800;
-  font-size:12px;
-}
-.request-modal{
-  position:fixed;
-  inset:0;
-  background:rgba(17,27,33,.48);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  z-index:120;
-}
-.request-modal.open{display:flex}
-.request-box{
-  width:min(540px,100%);
-  background:#fff;
-  border-radius:16px;
-  padding:20px;
-  box-shadow:0 25px 70px rgba(0,0,0,.28);
-}
-.request-box h3{margin:0 0 6px;color:#1f2c33}
-.request-box p{margin:0 0 16px;color:var(--muted);font-size:13px;line-height:1.5}
-.request-form{display:grid;gap:11px}
-.request-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}
-.request-secondary{
-  border:0;background:#eef1f2;color:#37474f;border-radius:9px;padding:10px 13px;font-weight:800
-}
-.request-submit{
-  border:0;background:var(--wa);color:#fff;border-radius:9px;padding:10px 13px;font-weight:800
-}
-.requests-panel{
-  position:fixed;
-  inset:0;
-  background:rgba(17,27,33,.45);
-  display:none;
-  z-index:115;
-}
-.requests-panel.open{display:block}
-.requests-drawer{
-  width:min(430px,100%);
-  height:100%;
-  background:#fff;
-  overflow:auto;
-  box-shadow:8px 0 24px rgba(0,0,0,.18);
-}
-.requests-head{
-  height:96px;
-  background:var(--wa-dark);
-  color:#fff;
-  padding:18px;
-  display:flex;
-  align-items:flex-end;
-  gap:14px;
-}
-.requests-head button{
-  border:0;background:transparent;color:#fff;font-size:22px
-}
-.requests-list{padding:14px}
-.request-card{
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:13px;
-  margin-bottom:10px;
-  background:#fff;
-}
-.request-card h4{margin:0 0 6px;font-size:15px}
-.request-card .rq-meta{font-size:12px;color:var(--muted);line-height:1.55}
-.request-card .rq-status{
-  display:inline-block;
-  margin-top:8px;
-  padding:4px 8px;
-  border-radius:999px;
-  background:#fff4e5;
-  color:#9a5b00;
-  font-size:10px;
-  font-weight:900;
-}
-.side-request-link{
-  border-top:1px solid var(--line);
-  border-bottom:1px solid var(--line);
-  padding:10px 12px;
-  background:#fff;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-}
-.side-request-link button{
-  border:0;
-  border-radius:8px;
-  padding:9px 8px;
-  font-size:11px;
-  font-weight:800;
-}
-.side-request-link .new{background:var(--wa);color:#fff}
-.side-request-link .mine{background:#eef1f2;color:#37474f}
-
-
-/* SEND MONEY */
-.money-modal{position:fixed;inset:0;background:rgba(17,27,33,.48);display:none;align-items:center;justify-content:center;padding:20px;z-index:130}
-.money-modal.open{display:flex}
-.money-box{width:min(500px,100%);background:#fff;border-radius:16px;padding:20px;box-shadow:0 25px 70px rgba(0,0,0,.28)}
-.money-box h3{margin:0 0 6px}.money-box p{margin:0 0 14px;color:var(--muted);font-size:13px}
-.money-total{background:#ecfdf3;color:#067647;border:1px solid #abefc6;border-radius:10px;padding:11px 12px;font-weight:900}
-
-
-/* STUDENT PAYMENTS + LESSONS */
-.student-tools{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:8px;
-  padding:8px 12px;
-  border-bottom:1px solid var(--line);
-  background:#fff;
-}
-.student-tools button{
-  border:0;
-  border-radius:8px;
-  padding:9px 8px;
-  font-size:11px;
-  font-weight:800;
-}
-.tool-green{background:var(--wa);color:#fff}
-.tool-light{background:#eef1f2;color:#37474f}
-.tool-blue{background:#eaf1ff;color:#123a8c}
-.tool-orange{background:#fff4e5;color:#9a5b00}
-
-.payment-method-note{
-  font-size:11px;
-  color:var(--muted);
-  line-height:1.4;
-}
-.payments-panel,.lessons-panel{
-  position:fixed;
-  inset:0;
-  background:rgba(17,27,33,.45);
-  display:none;
-  z-index:118;
-}
-.payments-panel.open,.lessons-panel.open{display:block}
-.side-drawer{
-  width:min(460px,100%);
-  height:100%;
-  background:#fff;
-  overflow:auto;
-  box-shadow:8px 0 24px rgba(0,0,0,.18);
-}
-.side-drawer-head{
-  height:100px;
-  background:var(--wa-dark);
-  color:#fff;
-  padding:18px;
-  display:flex;
-  align-items:flex-end;
-  gap:14px;
-}
-.side-drawer-head button{
-  border:0;background:transparent;color:#fff;font-size:22px
-}
-.drawer-body{padding:14px}
-.money-summary{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-bottom:14px;
-}
-.money-summary-card{
-  border:1px solid var(--line);
-  border-radius:11px;
-  padding:12px;
-  background:#fff;
-}
-.money-summary-card b{
-  display:block;
-  font-size:20px;
-  color:var(--wa-dark);
-  margin-bottom:3px;
-}
-.money-summary-card span{font-size:10px;color:var(--muted)}
-.payment-card,.lesson-card{
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:12px;
-  margin-bottom:10px;
-  background:#fff;
-}
-.payment-top,.lesson-top{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:flex-start;
-}
-.payment-card h4,.lesson-card h4{margin:0 0 4px;font-size:14px}
-.payment-card small,.lesson-card small{
-  color:var(--muted);
-  line-height:1.5;
-}
-.payment-amount{
-  font-weight:900;
-  color:var(--wa-dark);
-  white-space:nowrap;
-}
-.payment-status{
-  display:inline-block;
-  margin-top:7px;
-  padding:4px 8px;
-  border-radius:999px;
-  background:#e9fbf3;
-  color:#087a4d;
-  font-size:10px;
-  font-weight:900;
-}
-.receipt-btn,.join-class-btn{
-  margin-top:9px;
-  border:0;
-  border-radius:8px;
-  padding:8px 10px;
-  font-size:11px;
-  font-weight:800;
-}
-.receipt-btn{background:#eef1f2;color:#37474f}
-.join-class-btn{background:var(--wa);color:#fff}
-.money-box .field{margin:0}
-.money-help{
-  padding:9px 10px;
-  border-radius:9px;
-  background:#f7f9fa;
-  border:1px solid var(--line);
-  font-size:11px;
-  color:var(--muted);
-  line-height:1.45;
-}
-@media(max-width:520px){
-  .student-tools{grid-template-columns:1fr 1fr}
-  .money-summary{grid-template-columns:1fr}
-}
-
-
-/* GETI OFFICIAL LOGO */
-.geti-official-logo{
-  width:100%;
-  height:100%;
-  display:block;
-  object-fit:contain;
-  border-radius:50%;
-  background:#fff;
-}
-.logo,.auth-logo,.empty-logo{
-  overflow:hidden!important;
-  background:#fff!important;
-  border:2px solid #e7c768!important;
-  padding:3px!important;
-  color:transparent!important;
-}
-.empty-logo{
-  width:84px!important;
-  height:84px!important;
-}
-.logo img,.auth-logo img,.empty-logo img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  border-radius:50%;
-  display:block;
-}
-
-</style></head>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.topbar{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.topbar-in{max-width:1250px;margin:auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:10px}.brand img{width:48px;height:48px;border-radius:50%;object-fit:contain;border:2px solid #e4c666;padding:2px;background:#fff}
+.brand b{color:var(--blue)}.brand small{display:block;color:var(--muted);margin-top:2px}
+.wrap{max-width:1250px;margin:24px auto;padding:0 18px 40px}
+.auth-wrap{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr;background:linear-gradient(135deg,#006b5a,#00a884)}
+.auth-left{padding:64px 7vw;color:#fff;display:flex;flex-direction:column;justify-content:center}.auth-left img{width:82px;height:82px;border-radius:50%;background:#fff;border:3px solid #e4c666;padding:4px;margin-bottom:18px}
+.auth-left h1{font-size:44px;line-height:1.06;margin:0 0 14px}.auth-left p{max-width:650px;line-height:1.65;color:#e8fff9}
+.auth-right{display:flex;align-items:center;justify-content:center;padding:24px;background:#f5f7f7}
+.auth-card{width:min(560px,100%);background:#fff;border-radius:18px;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.16)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:#eef1f2;padding:4px;border-radius:10px;margin:14px 0}
+.tabs button{border:0;background:transparent;padding:10px;border-radius:8px;font-weight:800;color:var(--muted)}
+.tabs button.active{background:#fff;color:var(--green);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.form{display:grid;gap:10px}.field{width:100%;border:1px solid #d5dbe3;border-radius:10px;padding:11px 12px;outline:none;background:#fff}
+.field:focus{border-color:var(--green2);box-shadow:0 0 0 3px rgba(0,168,132,.08)}
+.btn{border:0;border-radius:9px;padding:10px 13px;font-weight:800}.btn-primary{background:var(--green2);color:#fff}.btn-blue{background:#eaf1ff;color:var(--blue)}.btn-light{background:#eef1f2;color:#37474f}.btn-red{background:#fff1f0;color:var(--bad)}.btn-orange{background:#fff4e5;color:var(--warn)}
+.msg{display:none;padding:10px 12px;border-radius:9px;margin-bottom:10px;font-size:13px}.msg.ok{display:block;background:#ecfdf3;border:1px solid #abefc6;color:var(--ok)}.msg.bad{display:block;background:#fff1f0;border:1px solid #fecaca;color:var(--bad)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 6px 20px rgba(16,24,40,.04)}
+.card h3{margin:0 0 10px}.muted{color:var(--muted);font-size:12px;line-height:1.5}
+.stat b{display:block;font-size:27px;color:var(--green);margin-bottom:2px}.stat span{font-size:11px;color:var(--muted)}
+.nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}.nav button{border:0;background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-weight:800;color:#475467}.nav button.active{background:var(--green);color:#fff;border-color:var(--green)}
+.section{display:none}.section.active{display:block}
+.list{display:grid;gap:9px}.row{border:1px solid var(--line);border-radius:11px;padding:12px;background:#fff}.row-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.row h4{margin:0 0 5px}.pill{display:inline-block;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900}.pill-ok{background:#ecfdf3;color:var(--ok)}.pill-bad{background:#fff1f0;color:var(--bad)}.pill-warn{background:#fff4e5;color:var(--warn)}.pill-blue{background:#eaf1ff;color:var(--blue)}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.avatar{width:64px;height:64px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;display:grid;place-items:center;font-weight:900;font-size:20px}.avatar img{width:100%;height:100%;object-fit:cover}
+.profile-line{display:flex;align-items:center;gap:12px}
+.chatbox{height:420px;overflow:auto;background:#efeae2;border:1px solid var(--line);border-radius:12px;padding:12px}.bubble{max-width:78%;padding:8px 10px;border-radius:10px;background:#fff;margin:6px 0;box-shadow:0 1px 1px rgba(0,0,0,.05)}.bubble.me{margin-left:auto;background:#d9fdd3}.bubble small{display:block;color:var(--muted);margin-top:4px}
+.chat-compose{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:8px}
+.money{font-weight:900;color:var(--green);font-variant-numeric:tabular-nums}
+.note{padding:10px;border:1px solid #f2cf8e;background:#fff8e8;color:#7a5412;border-radius:9px;font-size:11px;line-height:1.45}
+.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:760px}.table th,.table td{text-align:left;padding:10px;border-bottom:1px solid var(--line);font-size:12px;vertical-align:top}.table th{color:var(--muted);font-size:10px;text-transform:uppercase}
+dialog{border:0;border-radius:15px;padding:0;box-shadow:0 30px 90px rgba(0,0,0,.28);width:min(600px,calc(100% - 28px))}dialog::backdrop{background:rgba(17,27,33,.48)}.dialog-body{padding:20px}
+@media(max-width:850px){.auth-wrap{grid-template-columns:1fr}.auth-left{padding:38px 22px 22px}.auth-left h1{font-size:34px}.auth-right{padding:18px 14px 35px}.two,.three{grid-template-columns:1fr}.grid{display:block}.grid>.card{margin-bottom:12px}}
+</style>
+</head>
 <body>
-<section class="auth" id="authGate">
+
+<section id="authView" class="auth-wrap">
   <div class="auth-left">
-    <div class="auth-brand"><div class="auth-logo"><img class="geti-official-logo" src="/geti-logo.png" alt="GETI logo"></div><span>GETI STUDENT</span></div>
-    <h1>Create your student account and connect with one teacher</h1>
-    <p>After registration, your account appears in the Teacher Area. One teacher can accept you. Once accepted, other teachers cannot take over that student account.</p>
-    <div class="auth-points"><div class="auth-point">✓ Personal student profile</div><div class="auth-point">✓ Course and level</div><div class="auth-point">✓ One assigned teacher at a time</div></div>
+    <img src="/geti-logo.png" alt="GETI logo">
+    <h1>GETI Student Area</h1>
+    <p>Learn with your assigned teacher, send learning requests, chat, join lessons, manage payments and keep your profile synchronized securely across devices.</p>
   </div>
   <div class="auth-right">
     <div class="auth-card">
-      <h2>GETI Student Account</h2><div class="sub">Sign in or create a student account.</div>
-      <div class="tabs"><button class="tab active" id="loginTab" onclick="showLogin()">Sign In</button><button class="tab" id="registerTab" onclick="showRegister()">Create Account</button></div>
-      <div id="authMessage" class="auth-msg"></div>
-      <form id="loginForm" class="form" onsubmit="loginStudent(event)">
-        <input class="field" id="loginEmail" type="email" placeholder="Email address" required>
-        <input class="field" id="loginPassword" type="password" placeholder="Password" minlength="6" required>
-        <button class="primary" type="submit">Sign In</button>
+      <h2>Student Account</h2>
+      <div class="muted">Supabase Auth + secure shared database</div>
+      <div class="tabs"><button id="loginTab" class="active">Sign In</button><button id="signupTab">Create Account</button></div>
+      <div id="authMsg" class="msg"></div>
+
+      <form id="loginForm" class="form">
+        <input id="loginEmail" class="field" type="email" placeholder="Email" required>
+        <input id="loginPassword" class="field" type="password" placeholder="Password" minlength="6" required>
+        <button class="btn btn-primary">Sign In</button>
       </form>
-      <form id="registerForm" class="form hidden" onsubmit="createStudent(event)">
-        <input class="field" id="regName" placeholder="Full name" required>
-        <input class="field" id="regEmail" type="email" placeholder="Email address" required>
-        <select class="field" id="regCourse" required><option value="">Choose course</option><option>General English</option><option>English Conversation</option><option>Business English</option><option>168-Hour TEFL</option><option>200-Hour TESOL</option><option>TEYL</option></select>
-        <select class="field" id="regLevel" required><option value="">Choose level</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option><option>Teacher Training</option></select>
-        <input class="field" id="regPassword" type="password" placeholder="Password" minlength="6" required>
-        <input class="field" id="regConfirm" type="password" placeholder="Confirm password" minlength="6" required>
-        <button class="primary" type="submit">Create Student Account</button>
+
+      <form id="signupForm" class="form hidden">
+        <input id="signupName" class="field" placeholder="Full name" required>
+        <input id="signupEmail" class="field" type="email" placeholder="Email" required>
+        <input id="signupCourse" class="field" placeholder="Course" required>
+        <input id="signupLevel" class="field" placeholder="Level" required>
+        <input id="signupPassword" class="field" type="password" placeholder="Password" minlength="6" required>
+        <input id="signupConfirm" class="field" type="password" placeholder="Confirm password" minlength="6" required>
+        <button class="btn btn-primary">Create Student Account</button>
       </form>
-      <div class="demo-note">Demo: browser storage only. Production should use Supabase Auth + Database + Realtime.</div>
     </div>
   </div>
 </section>
 
-<div class="app hidden" id="studentApp">
-  <aside class="sidebar">
-    <div class="side-header">
-      <div class="me-row" onclick="openProfile()" style="cursor:pointer">
-        <div class="avatar" id="sideAvatar">ST</div>
-        <div class="me-text"><b id="sideName">Student</b><span id="sideBio">Learning with GETI</span></div>
+<div id="appView" class="hidden">
+  <header class="topbar">
+    <div class="topbar-in">
+      <div class="brand"><img src="/geti-logo.png" alt=""><div><b>GETI Student</b><small id="topName">Student Area</small></div></div>
+      <button id="logoutBtn" class="btn btn-light">Log out</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="nav">
+      <button data-sec="home" class="active">Home</button>
+      <button data-sec="requests">Learning Requests</button>
+      <button data-sec="chat">Message Teacher</button>
+      <button data-sec="payments">Send Money</button>
+      <button data-sec="lessons">My Lessons</button>
+      <button data-sec="profile">Profile</button>
+    </div>
+
+    <section id="sec-home" class="section active">
+      <div class="grid">
+        <div class="card" style="grid-column:span 5">
+          <h3>My Teacher</h3>
+          <div id="teacherCard"></div>
+        </div>
+        <div class="card stat" style="grid-column:span 3"><b id="homePaid">$0.00</b><span>Total recorded payments</span></div>
+        <div class="card stat" style="grid-column:span 2"><b id="homeReq">0</b><span>Requests</span></div>
+        <div class="card stat" style="grid-column:span 2"><b id="homeLessons">0</b><span>Lessons</span></div>
       </div>
-      <div style="display:flex"><button class="icon-btn" onclick="openProfile()">👤</button><button class="icon-btn" onclick="openProfile()">⋮</button></div>
-    </div>
-    <div class="search-wrap"><div class="search"><span>⌕</span><input id="searchInput" placeholder="Search"></div></div>
-    <div class="student-tools">
-      <button class="tool-green" type="button" onclick="openLearningRequest()">+ Learning Request</button>
-      <button class="tool-light" type="button" onclick="openMyRequests()">My Requests</button>
-      <button class="tool-orange" type="button" onclick="openSendMoney()">Send Money</button>
-      <button class="tool-light" type="button" onclick="openMyPayments()">My Payments</button>
-      <button class="tool-blue" style="grid-column:1/-1" type="button" onclick="openMyLessons()">My Lessons</button>
-    </div>
-    <div class="list" id="chatList"></div>
-  </aside>
-  <main class="main">
-    <div id="chatEmpty" class="empty"><div class="box"><div class="empty-logo"><img class="geti-official-logo" src="/geti-logo.png" alt="GETI logo"></div><h2>Student Messages</h2><p id="teacherStateText">Waiting for a teacher to accept your account.</p></div></div>
-    <div id="chatView" class="hidden" style="height:100%;display:flex;flex-direction:column">
-      <div class="chat-header"><div class="contact"><button class="icon-btn mobile-back" onclick="goBackMobile()">←</button><div class="avatar" id="contactAvatar">TR</div><div><b id="contactName">Teacher</b><span id="contactStatus">online</span></div></div>
-      <div class="actions"><button class="icon-btn" onclick="startVoiceCall()">☎</button><button class="icon-btn" onclick="startVideoCall()">🎥</button><button class="icon-btn" onclick="openProfile()">⋮</button></div></div>
-      <div class="messages" id="messages"></div>
-      <form class="composer" onsubmit="sendMessage(event)"><button type="button" class="icon-btn">☺</button><button type="button" class="icon-btn">📎</button><input id="messageInput" placeholder="Type a message"><button class="send" type="submit">➤</button></form>
-    </div>
+    </section>
+
+    <section id="sec-requests" class="section">
+      <div class="grid">
+        <div class="card" style="grid-column:span 5">
+          <h3>Send Learning Request</h3>
+          <form id="requestForm" class="form">
+            <input id="reqName" class="field" placeholder="Full name" required>
+            <input id="reqCourse" class="field" placeholder="Course" required>
+            <select id="reqTeacher" class="field"><option value="">Choose preferred teacher</option></select>
+            <select id="reqCertificate" class="field" required><option value="">Need Certificate?</option><option value="yes">Yes</option><option value="no">No</option></select>
+            <input id="reqDuration" class="field" placeholder="Duration (example: 3 months)" required>
+            <textarea id="reqNote" class="field" rows="3" placeholder="Optional note"></textarea>
+            <button class="btn btn-primary">Send Request</button>
+          </form>
+        </div>
+        <div class="card" style="grid-column:span 7">
+          <h3>My Requests</h3><div id="requestList" class="list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-chat" class="section">
+      <div class="card">
+        <div class="row-top"><div><h3 style="margin:0">Teacher Chat</h3><div id="chatTeacher" class="muted"></div></div><div class="actions" style="margin:0"><button id="voiceBtn" class="btn btn-light">Voice Call</button><button id="videoBtn" class="btn btn-blue">Video Class</button></div></div>
+        <div id="chatBox" class="chatbox" style="margin-top:12px"></div>
+        <form id="chatForm" class="chat-compose"><input id="chatInput" class="field" placeholder="Type a message"><button class="btn btn-primary">Send</button></form>
+      </div>
+    </section>
+
+    <section id="sec-payments" class="section">
+      <div class="grid">
+        <div class="card" style="grid-column:span 5">
+          <h3>Send Money to Teacher</h3>
+          <form id="paymentForm" class="form">
+            <div id="payTeacher" class="muted"></div>
+            <input id="payAmount" class="field" type="number" min="0.01" step="0.01" placeholder="Amount in USD" required>
+            <textarea id="payNote" class="field" rows="3" placeholder="Payment note / course / lesson"></textarea>
+            <button id="payNowBtn" class="btn btn-primary">Pay Securely in USD</button>
+          </form>
+          <div class="note" style="margin-top:10px">You will be redirected to the secure payment provider checkout. GETI credits the teacher wallet only after the provider confirms the payment.</div>
+        </div>
+        <div class="card" style="grid-column:span 7">
+          <div class="row-top"><h3>My Payments</h3><div class="money" id="paymentsTotal">$0.00</div></div>
+          <div id="paymentList" class="list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-lessons" class="section">
+      <div class="card"><h3>My Scheduled Lessons</h3><div id="lessonList" class="list"></div></div>
+    </section>
+
+    <section id="sec-profile" class="section">
+      <div class="grid">
+        <div class="card" style="grid-column:span 4">
+          <div class="profile-line"><div id="profileAvatar" class="avatar">ST</div><div><h3 id="profileTitle">Student</h3><div class="muted" id="profileEmail"></div></div></div>
+          <div style="margin-top:14px"><input id="avatarFile" type="file" accept="image/*"></div>
+        </div>
+        <div class="card" style="grid-column:span 8">
+          <h3>Edit Profile</h3>
+          <form id="profileForm" class="form">
+            <input id="profileName" class="field" placeholder="Full name">
+            <input id="profileCourse" class="field" placeholder="Course">
+            <input id="profileLevel" class="field" placeholder="Level">
+            <textarea id="profileBio" class="field" rows="4" placeholder="Bio / About"></textarea>
+            <button class="btn btn-primary">Save Profile</button>
+          </form>
+        </div>
+      </div>
+    </section>
   </main>
 </div>
 
-<div class="drawer" id="profileDrawer" onclick="if(event.target===profileDrawer)closeProfile()">
-  <div class="profile-panel">
-    <div class="profile-head"><button onclick="closeProfile()">←</button><div><h3>Profile</h3><div style="font-size:12px;opacity:.9">Student account</div></div></div>
-    <div class="photo-area"><div class="big-avatar" id="bigAvatar">ST<label class="photo-edit">📷<input type="file" accept="image/*" hidden onchange="changePhoto(event)"></label></div></div>
-    <div class="profile-section"><div class="profile-label">Your name</div><div class="edit-line"><input id="profileName"><button class="save-mini" onclick="saveProfile()">Save</button></div></div>
-    <div class="profile-section"><div class="profile-label">Bio / About</div><div class="edit-line"><textarea id="profileBio" rows="3"></textarea><button class="save-mini" onclick="saveProfile()">Save</button></div></div>
-    <div class="profile-section"><div class="profile-label">Email</div><div class="profile-value" id="profileEmail"></div></div>
-    <div class="profile-section"><div class="profile-label">Course & level</div><div class="profile-value"><span id="profileCourse"></span> • <span id="profileLevel"></span></div></div>
-    <div class="profile-section"><div class="profile-label">Assigned teacher</div><div class="profile-value" id="profileTeacher">Waiting for teacher</div></div>
-    <button class="logout" onclick="logoutStudent()">Log out</button>
-  </div>
-</div>
-
-
-<!-- LEARNING REQUEST MODAL -->
-<div class="request-modal" id="learningRequestModal">
-  <div class="request-box">
-    <h3>Send Learning Request</h3>
-    <p>Send your request to learn with GETI and choose your preferred teacher.</p>
-    <form class="request-form" id="learningRequestForm">
-      <input class="field" id="requestFullName" placeholder="Full name" required>
-
-      <select class="field" id="requestCourse" required>
-        <option value="">Choose course</option>
-        <option>General English</option>
-        <option>English Conversation</option>
-        <option>Business English</option>
-        <option>168-Hour TEFL</option>
-        <option>200-Hour TESOL</option>
-        <option>TEYL</option>
-      </select>
-
-      <select class="field" id="requestTeacher" required>
-        <option value="">Choose preferred teacher</option>
-      </select>
-
-      <select class="field" id="requestCertificate" required>
-        <option value="">Need certificate?</option>
-        <option value="Yes">Yes, I need a certificate</option>
-        <option value="No">No certificate needed</option>
-      </select>
-
-      <select class="field" id="requestDuration" required>
-        <option value="">Choose duration</option>
-        <option>1 week</option>
-        <option>2 weeks</option>
-        <option>1 month</option>
-        <option>2 months</option>
-        <option>3 months</option>
-        <option>6 months</option>
-        <option>Flexible</option>
-      </select>
-
-      <textarea class="field" id="requestNote" rows="3" placeholder="Optional note"></textarea>
-
-      <div class="request-actions">
-        <button type="button" class="request-secondary" onclick="closeLearningRequest()">Cancel</button>
-        <button type="submit" class="request-submit">Send Request</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- MY REQUESTS -->
-<div class="requests-panel" id="myRequestsPanel" onclick="if(event.target===myRequestsPanel)closeMyRequests()">
-  <div class="requests-drawer">
-    <div class="requests-head">
-      <button type="button" onclick="closeMyRequests()">←</button>
-      <div>
-        <div style="font-size:18px;font-weight:800">My Learning Requests</div>
-        <div style="font-size:12px;opacity:.9">Requests sent to GETI</div>
-      </div>
-    </div>
-    <div class="requests-list" id="myRequestsList"></div>
-  </div>
-</div>
-
-
-<!-- SEND MONEY MODAL -->
-<div class="money-modal" id="sendMoneyModal">
-  <div class="money-box">
-    <h3>Send Money to Teacher</h3>
-    <p id="moneyTeacherLabel">Assigned teacher required.</p>
-
-    <form class="request-form" id="sendMoneyForm">
-      <input class="field" id="moneyAmount" type="number" min="0.01" step="0.01" placeholder="Amount in USD" required>
-
-      <select class="field" id="moneyMethod" required>
-        <option value="">Payment method</option>
-        <option>MVola</option>
-        <option>Orange Money</option>
-        <option>Airtel Money</option>
-        <option>Bank Transfer</option>
-        <option>Other</option>
-      </select>
-
-      <input class="field" id="moneyReference" placeholder="Transaction / reference number (optional)">
-
-      <textarea class="field" id="moneyNote" rows="3" placeholder="Payment note (course, lesson, certificate...)"></textarea>
-
-      <div class="money-total" id="studentTotalPaid">Total sent: $0.00</div>
-
-      <div class="money-help">
-        This payment form records the transaction inside the GETI demo platform. It does not directly transfer real money through MVola, Orange Money, Airtel Money or a bank.
-      </div>
-
-      <div class="request-actions">
-        <button type="button" class="request-secondary" onclick="closeSendMoney()">Cancel</button>
-        <button type="submit" class="request-submit">Send Money</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- MY PAYMENTS -->
-<div class="payments-panel" id="myPaymentsPanel" onclick="if(event.target===myPaymentsPanel)closeMyPayments()">
-  <div class="side-drawer">
-    <div class="side-drawer-head">
-      <button type="button" onclick="closeMyPayments()">←</button>
-      <div>
-        <div style="font-size:18px;font-weight:800">My Payments</div>
-        <div style="font-size:12px;opacity:.9">Payment history and receipts</div>
-      </div>
-    </div>
-    <div class="drawer-body">
-      <div class="money-summary">
-        <div class="money-summary-card"><b id="paymentsTotal">0 Ar</b><span>Total sent</span></div>
-        <div class="money-summary-card"><b id="paymentsCount">0</b><span>Payments</span></div>
-      </div>
-      <div id="myPaymentsList"></div>
-    </div>
-  </div>
-</div>
-
-<!-- MY LESSONS -->
-<div class="lessons-panel" id="myLessonsPanel" onclick="if(event.target===myLessonsPanel)closeMyLessons()">
-  <div class="side-drawer">
-    <div class="side-drawer-head">
-      <button type="button" onclick="closeMyLessons()">←</button>
-      <div>
-        <div style="font-size:18px;font-weight:800">My Lessons</div>
-        <div style="font-size:12px;opacity:.9">Scheduled classes</div>
-      </div>
-    </div>
-    <div class="drawer-body" id="myLessonsList"></div>
-  </div>
-</div>
-
 <script>
-const STUDENTS_KEY="geti_students_v5", STUDENT_SESSION="geti_student_session_v5", CHAT_PREFIX="geti_relation_chat_v5_";
-function getStudents(){try{return JSON.parse(localStorage.getItem(STUDENTS_KEY)||"[]")}catch(e){return[]}}
-function saveStudents(a){localStorage.setItem(STUDENTS_KEY,JSON.stringify(a))}
-function currentStudent(){try{return JSON.parse(localStorage.getItem(STUDENT_SESSION)||"null")}catch(e){return null}}
-function setStudentSession(s){localStorage.setItem(STUDENT_SESSION,JSON.stringify(s))}
-function initials(n){return String(n||"ST").split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"ST"}
-function avatarMarkup(p,n){return p?`<img src="${p}" alt="">`:initials(n)}
-function setMsg(t,type="error"){authMessage.textContent=t;authMessage.className="auth-msg "+type}
-function clearMsg(){authMessage.textContent="";authMessage.className="auth-msg"}
-function showLogin(){clearMsg();loginForm.classList.remove("hidden");registerForm.classList.add("hidden");loginTab.classList.add("active");registerTab.classList.remove("active")}
-function showRegister(){clearMsg();registerForm.classList.remove("hidden");loginForm.classList.add("hidden");registerTab.classList.add("active");loginTab.classList.remove("active")}
-function createStudent(e){
- e.preventDefault();clearMsg();
- const name=regName.value.trim(),email=regEmail.value.trim().toLowerCase(),course=regCourse.value,level=regLevel.value,p=regPassword.value,c=regConfirm.value;
- if(p!==c){setMsg("Passwords do not match.");return}
- let a=getStudents();if(a.some(x=>x.email===email)){setMsg("An account already exists with this email.");return}
- const s={id:"GETI-ST-"+Date.now(),name,email,course,level,password:p,bio:"Hey there! I am learning with GETI.",photo:"",teacherId:"",teacherName:"",createdAt:new Date().toISOString()};
- a.push(s);saveStudents(a);setStudentSession({id:s.id});openApp();
-}
-function loginStudent(e){
- e.preventDefault();clearMsg();const email=loginEmail.value.trim().toLowerCase(),p=loginPassword.value;const s=getStudents().find(x=>x.email===email&&x.password===p);
- if(!s){setMsg("Incorrect email or password.");return}setStudentSession({id:s.id});openApp();
-}
-function logoutStudent(){localStorage.removeItem(STUDENT_SESSION);location.reload()}
-function freshStudent(){const ses=currentStudent();return ses?getStudents().find(x=>x.id===ses.id):null}
-function openApp(){
- const s=freshStudent();if(!s)return;authGate.classList.add("hidden");studentApp.classList.remove("hidden");
- sideName.textContent=s.name;sideBio.textContent=s.bio||"Learning with GETI";sideAvatar.innerHTML=avatarMarkup(s.photo,s.name);
- profileName.value=s.name;profileBio.value=s.bio||"";profileEmail.textContent=s.email;profileCourse.textContent=s.course;profileLevel.textContent=s.level;profileTeacher.textContent=s.teacherName||"Waiting for teacher";
- bigAvatar.innerHTML=avatarMarkup(s.photo,s.name)+`<label class="photo-edit">📷<input type="file" accept="image/*" hidden onchange="changePhoto(event)"></label>`;
- renderContacts();
-}
-function renderContacts(){
- const s=freshStudent();if(!s)return;
- let contacts=[];
- if(s.teacherId) contacts.push({id:s.id,name:s.teacherName,initials:initials(s.teacherName),status:"Assigned teacher",preview:s.course+" • "+s.level});
- contacts.push({id:"support-"+s.id,name:"GETI Student Support",initials:"GS",status:"online",preview:"Student support"});
- chatList.innerHTML=contacts.map(c=>`<div class="chat-item" onclick='selectContact(${JSON.stringify(c)})'><div class="avatar">${c.initials}</div><div class="chat-main"><div class="chat-name">${c.name}</div><div class="chat-preview">${c.preview}</div></div><div></div></div>`).join("");
- teacherStateText.textContent=s.teacherId?("Your teacher is "+s.teacherName+". Select the conversation to start learning."):"Waiting for a teacher to accept your account.";
-}
-let currentContact=null;
-function selectContact(c){currentContact=c;contactName.textContent=c.name;contactStatus.textContent=c.status;contactAvatar.textContent=c.initials;chatEmpty.classList.add("hidden");chatView.classList.remove("hidden");document.body.classList.add("chat-open");renderMessages()}
-function roomKey(){const s=freshStudent();return CHAT_PREFIX+(currentContact?.id==="support-"+s.id?"support-"+s.id:s.id)}
-function getMessages(){try{return JSON.parse(localStorage.getItem(roomKey())||"[]")}catch(e){return[]}}
-function saveMessages(a){localStorage.setItem(roomKey(),JSON.stringify(a))}
-function esc(x){return String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-function fmt(t){try{return new Date(t).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})}catch(e){return""}}
-function renderMessages(){
- const s=freshStudent(),a=getMessages();messages.innerHTML='<div class="day">Today</div>'+ (a.length?a.map(m=>`<div class="row ${m.senderId===s.id?"me":"other"}"><div class="bubble">${m.senderId!==s.id?`<div class="sender">${esc(m.name)}</div>`:""}<div class="text">${esc(m.text)}</div><div class="time">${fmt(m.time)}</div></div></div>`).join(""):`<div class="row other"><div class="bubble"><div class="sender">${esc(currentContact.name)}</div><div class="text">Hello ${esc(s.name)} 👋</div><div class="time">now</div></div></div>`);
- messages.scrollTop=messages.scrollHeight;
-}
-function sendMessage(e){e.preventDefault();const s=freshStudent(),t=messageInput.value.trim();if(!t||!currentContact)return;const a=getMessages();a.push({senderId:s.id,name:s.name,text:t,time:new Date().toISOString()});saveMessages(a);messageInput.value="";renderMessages()}
-function startVoiceCall(){const s=freshStudent();if(!s.teacherId&&currentContact.id===s.id)return;window.open("https://meet.jit.si/"+encodeURIComponent("GETI-AUDIO-"+roomKey()),"_blank","noopener")}
-function startVideoCall(){window.open("https://meet.jit.si/"+encodeURIComponent("GETI-"+roomKey()),"_blank","noopener")}
-function goBackMobile(){document.body.classList.remove("chat-open")}
-function openProfile(){profileDrawer.classList.add("open")}function closeProfile(){profileDrawer.classList.remove("open")}
-function saveProfile(){
- const s=freshStudent();let a=getStudents(),i=a.findIndex(x=>x.id===s.id);a[i].name=profileName.value.trim()||s.name;a[i].bio=profileBio.value.trim();saveStudents(a);openApp();alert("Profile updated.");
-}
-function changePhoto(e){const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{const s=freshStudent();let a=getStudents(),i=a.findIndex(x=>x.id===s.id);a[i].photo=r.result;saveStudents(a);openApp()};r.readAsDataURL(f)}
-window.addEventListener("storage",e=>{if(e.key===STUDENTS_KEY)openApp();if(e.key?.startsWith(CHAT_PREFIX)&&currentContact)renderMessages()});
-if(currentStudent())openApp();
+const SUPABASE_URL="https://syawyulrelrhjprnxdyn.supabase.co", SUPABASE_KEY="sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8";
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+let session=null, me=null, assignment=null, teacher=null, channel=null;
 
-const LEARNING_REQUESTS_KEY="geti_learning_requests_v10";
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function money(v){return "$"+Number(v||0).toFixed(2)}
+function initials(v){return String(v||"ST").trim().split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase()}
+function msg(text,ok=false){$("authMsg").textContent=text;$("authMsg").className="msg "+(ok?"ok":"bad")}
+function showTab(signup){$("signupForm").classList.toggle("hidden",!signup);$("loginForm").classList.toggle("hidden",signup);$("signupTab").classList.toggle("active",signup);$("loginTab").classList.toggle("active",!signup);$("authMsg").className="msg"}
 
-const REQUEST_TEACHERS_KEY="geti_teachers_v5";
+$("loginTab").onclick=()=>showTab(false);$("signupTab").onclick=()=>showTab(true);
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));$("sec-"+b.dataset.sec).classList.add("active")});
 
-function getRequestTeachers(){
-  try{return JSON.parse(localStorage.getItem(REQUEST_TEACHERS_KEY)||"[]")}catch(e){return[]}
-}
-function populateRequestTeachers(){
-  const select=document.getElementById("requestTeacher");
-  if(!select)return;
-  const teachers=getRequestTeachers().filter(t=>t.approved!==false);
-  select.innerHTML='<option value="">Choose preferred teacher</option>'+
-    teachers.map(t=>`<option value="${esc(t.id)}">${esc(t.name)}${t.certificate?` — ${esc(t.certificate)}`:""}</option>`).join("");
-  if(!teachers.length){
-    select.innerHTML='<option value="">No teacher available yet</option>';
-  }
-}
-
-
-function getLearningRequests(){
-  try{return JSON.parse(localStorage.getItem(LEARNING_REQUESTS_KEY)||"[]")}catch(e){return[]}
-}
-function saveLearningRequests(a){
-  localStorage.setItem(LEARNING_REQUESTS_KEY,JSON.stringify(a));
-}
-function openLearningRequest(){
-  const u=freshStudent();
-  if(!u)return;
-  populateRequestTeachers();
-  document.getElementById("requestFullName").value=u.name||"";
-  document.getElementById("requestCourse").value=u.course||"";
-  document.getElementById("learningRequestModal").classList.add("open");
-}
-function closeLearningRequest(){
-  document.getElementById("learningRequestModal").classList.remove("open");
-}
-function openMyRequests(){
-  renderMyRequests();
-  document.getElementById("myRequestsPanel").classList.add("open");
-}
-function closeMyRequests(){
-  document.getElementById("myRequestsPanel").classList.remove("open");
-}
-function renderMyRequests(){
-  const u=freshStudent();
-  const box=document.getElementById("myRequestsList");
-  if(!u||!box)return;
-  const rows=getLearningRequests().filter(r=>r.studentId===u.id).slice().reverse();
-  if(!rows.length){
-    box.innerHTML='<div style="padding:28px 10px;text-align:center;color:#667781;font-size:13px">No learning request sent yet.</div>';
-    return;
-  }
-  box.innerHTML=rows.map(r=>`
-    <div class="request-card">
-      <h4>${esc(r.course)}</h4>
-      <div class="rq-meta">
-        <b>Full name:</b> ${esc(r.fullName)}<br>
-        <b>Preferred teacher:</b> ${esc(r.preferredTeacherName||"Not selected")}<br>
-        <b>Certificate:</b> ${esc(r.needCertificate)}<br>
-        <b>Duration:</b> ${esc(r.duration)}
-        ${r.note?`<br><b>Note:</b> ${esc(r.note)}`:""}
-      </div>
-      <span class="rq-status">${esc(r.status||"Pending")}</span>
-    </div>
-  `).join("");
-}
-const learningRequestFormEl=document.getElementById("learningRequestForm");
-populateRequestTeachers();
-
-if(learningRequestFormEl){
-  learningRequestFormEl.addEventListener("submit",function(e){
-    e.preventDefault();
-    const u=freshStudent();
-    if(!u)return;
-
-    const fullName=document.getElementById("requestFullName").value.trim();
-    const course=document.getElementById("requestCourse").value;
-    const teacherId=document.getElementById("requestTeacher").value;
-    const teacherObj=getRequestTeachers().find(t=>t.id===teacherId);
-    const teacherName=teacherObj?teacherObj.name:"";
-    const needCertificate=document.getElementById("requestCertificate").value;
-    const duration=document.getElementById("requestDuration").value;
-    const note=document.getElementById("requestNote").value.trim();
-
-    if(!fullName||!course||!teacherId||!needCertificate||!duration){
-      alert("Please complete all required fields, including preferred teacher.");
-      return;
-    }
-
-    const rows=getLearningRequests();
-    rows.push({
-      id:"GETI-REQ-"+Date.now(),
-      studentId:u.id,
-      studentEmail:u.email,
-      fullName,
-      course,
-      preferredTeacherId:teacherId,
-      preferredTeacherName:teacherName,
-      needCertificate,
-      duration,
-      note,
-      status:"Pending",
-      createdAt:new Date().toISOString()
-    });
-    saveLearningRequests(rows);
-
-    e.target.reset();
-    closeLearningRequest();
-    alert("Learning request sent successfully.");
+$("signupForm").onsubmit=async e=>{
+  e.preventDefault();
+  if($("signupPassword").value!==$("signupConfirm").value){msg("Passwords do not match.");return}
+  const {data,error}=await sb.auth.signUp({
+    email:$("signupEmail").value.trim(),
+    password:$("signupPassword").value,
+    options:{data:{role:"student",full_name:$("signupName").value.trim(),course:$("signupCourse").value.trim(),level:$("signupLevel").value.trim()}}
   });
+  if(error){msg(error.message);return}
+  if(data.session){await init()}else msg("Account created. Confirm your email, then sign in.",true);
+};
+
+$("loginForm").onsubmit=async e=>{
+  e.preventDefault();
+  const {error}=await sb.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});
+  if(error){msg(error.message);return}
+  await init();
+};
+
+$("logoutBtn").onclick=async()=>{await sb.auth.signOut();location.reload()};
+
+async function init(){
+  const {data:{session:s}}=await sb.auth.getSession();session=s;
+  if(!session){$("authView").classList.remove("hidden");$("appView").classList.add("hidden");return}
+  const {data:p,error}=await sb.from("geti_profiles").select("*").eq("id",session.user.id).single();
+  if(error||!p){msg("Profile not ready yet. Please try again.");return}
+  if(p.role!=="student"){await sb.auth.signOut();msg("This account is not a student account.");return}
+  me=p;
+  $("authView").classList.add("hidden");$("appView").classList.remove("hidden");
+  await refreshAll();
+  await verifyReturnedPayment();
+  startRealtime();
 }
 
+async function refreshAll(){
+  await Promise.all([loadAssignment(),loadTeachers(),loadRequests(),loadPayments(),loadLessons()]);
+  renderProfile();renderHome();await loadMessages();
+}
 
-
-const STUDENT_PAYMENTS_KEY="geti_student_payments_v16";
-const STUDENT_LESSONS_KEY="geti_teacher_schedule_v15";
-
-function getStudentPayments(){
-  try{return JSON.parse(localStorage.getItem(STUDENT_PAYMENTS_KEY)||"[]")}catch(e){return[]}
-}
-function saveStudentPayments(a){
-  localStorage.setItem(STUDENT_PAYMENTS_KEY,JSON.stringify(a));
-}
-function getStudentLessons(){
-  try{return JSON.parse(localStorage.getItem(STUDENT_LESSONS_KEY)||"[]")}catch(e){return[]}
-}
-function moneyUSD(n){
-  return new Intl.NumberFormat("fr-FR").format(Math.max(0,Number(n)||0))+" Ar";
-}
-function currentStudentPayments(){
-  const u=freshStudent();
-  if(!u)return[];
-  return getStudentPayments().filter(p=>p.studentId===u.id && p.status!=="Cancelled");
-}
-function openSendMoney(){
-  const u=freshStudent();
-  if(!u)return;
-
-  if(!u.teacherId){
-    alert("You do not have an assigned teacher yet.");
-    return;
+async function loadAssignment(){
+  const {data}=await sb.from("geti_assignments").select("*").eq("student_id",me.id).maybeSingle();
+  assignment=data||null;teacher=null;
+  if(assignment){
+    const {data:t}=await sb.from("geti_profiles").select("*").eq("id",assignment.teacher_id).maybeSingle();teacher=t||null;
   }
-
-  document.getElementById("moneyTeacherLabel").textContent=
-    "Teacher: "+(u.teacherName||"Assigned Teacher");
-
-  const total=currentStudentPayments().reduce((sum,p)=>sum+(Number(p.amount)||0),0);
-  document.getElementById("studentTotalPaid").textContent="Total sent: "+moneyUSD(total);
-
-  document.getElementById("sendMoneyModal").classList.add("open");
-}
-function closeSendMoney(){
-  document.getElementById("sendMoneyModal").classList.remove("open");
+  renderTeacher();
 }
 
-function renderMyPayments(){
-  const rows=currentStudentPayments().slice().reverse();
-  const total=rows.reduce((sum,p)=>sum+(Number(p.amount)||0),0);
-
-  document.getElementById("paymentsTotal").textContent=moneyUSD(total);
-  document.getElementById("paymentsCount").textContent=rows.length;
-
-  const box=document.getElementById("myPaymentsList");
-  if(!rows.length){
-    box.innerHTML='<div style="padding:28px 10px;text-align:center;color:#667781;font-size:13px">No payment recorded yet.</div>';
-    return;
-  }
-
-  box.innerHTML=rows.map(p=>`
-    <div class="payment-card">
-      <div class="payment-top">
-        <div>
-          <h4>${esc(p.teacherName||"Teacher")}</h4>
-          <small>
-            ${esc(p.method||"Payment")}<br>
-            ${new Date(p.createdAt).toLocaleString()}<br>
-            ID: ${esc(p.id)}
-            ${p.reference?`<br>Reference: ${esc(p.reference)}`:""}
-            ${p.note?`<br>Note: ${esc(p.note)}`:""}
-          </small>
-        </div>
-        <div class="payment-amount">${moneyUSD(p.amount)}</div>
-      </div>
-      <span class="payment-status">${esc(p.status||"Completed")}</span><br>
-      <button class="receipt-btn" type="button" onclick="printPaymentReceipt('${esc(p.id)}')">Print Receipt</button>
-    </div>
-  `).join("");
-}
-function openMyPayments(){
-  renderMyPayments();
-  document.getElementById("myPaymentsPanel").classList.add("open");
-}
-function closeMyPayments(){
-  document.getElementById("myPaymentsPanel").classList.remove("open");
+function renderTeacher(){
+  if(!teacher){$("teacherCard").innerHTML='<div class="muted">No teacher assigned yet.</div>';$("chatTeacher").textContent="No assigned teacher";$("payTeacher").textContent="No assigned teacher";return}
+  $("teacherCard").innerHTML=`<div class="profile-line"><div class="avatar">${teacher.avatar_url?`<img src="${esc(teacher.avatar_url)}">`:esc(initials(teacher.full_name))}</div><div><b>${esc(teacher.full_name)}</b><div class="muted">${esc(teacher.qualification||"GETI Teacher")} • ${esc(teacher.availability||"Available")}</div></div></div>`;
+  $("chatTeacher").textContent=teacher.full_name+" • "+(teacher.availability||"Available");
+  $("payTeacher").textContent="Teacher: "+teacher.full_name;
 }
 
-function printPaymentReceipt(id){
-  const p=getStudentPayments().find(x=>x.id===id);
-  const u=freshStudent();
-  if(!p||!u)return;
-
-  const receipt=`
-  <!doctype html>
-  <html><head><meta charset="utf-8"><title>GETI Payment Receipt</title>
-  <style>
-    body{font-family:Arial,sans-serif;padding:35px;color:#172033}
-    .card{max-width:650px;margin:auto;border:1px solid #dfe5ec;border-radius:14px;padding:26px}
-    h1{color:#008069;margin:0 0 6px}.muted{color:#667085}
-    table{width:100%;border-collapse:collapse;margin-top:22px}
-    td{padding:10px;border-bottom:1px solid #edf1f5}
-    td:first-child{font-weight:700;width:42%}
-    .amount{font-size:24px;font-weight:900;color:#008069}
-  </style></head><body>
-  <div class="card">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><img src="https://getienglish.com/geti-logo.png" alt="GETI logo" style="width:58px;height:58px;border-radius:50%;object-fit:contain;border:2px solid #e7c768;padding:3px"><h1 style="margin:0">GETI Payment Receipt</h1></div>
-    <div class="muted">Global English Teaching Institute</div>
-    <table>
-      <tr><td>Payment ID</td><td>${esc(p.id)}</td></tr>
-      <tr><td>Student</td><td>${esc(u.name)}</td></tr>
-      <tr><td>Teacher</td><td>${esc(p.teacherName||"Teacher")}</td></tr>
-      <tr><td>Amount</td><td class="amount">${moneyUSD(p.amount)}</td></tr>
-      <tr><td>Payment method</td><td>${esc(p.method||"")}</td></tr>
-      <tr><td>Reference</td><td>${esc(p.reference||"-")}</td></tr>
-      <tr><td>Note</td><td>${esc(p.note||"-")}</td></tr>
-      <tr><td>Status</td><td>${esc(p.status||"Completed")}</td></tr>
-      <tr><td>Date</td><td>${new Date(p.createdAt).toLocaleString()}</td></tr>
-    </table>
-  </div>
-  <script>window.onload=()=>window.print();<\/script>
-  </body></html>`;
-
-  const w=window.open("","_blank");
-  if(!w){alert("Please allow pop-ups to print the receipt.");return}
-  w.document.open();
-  w.document.write(receipt);
-  w.document.close();
+async function loadTeachers(){
+  const {data}=await sb.from("geti_profiles").select("id,full_name,qualification,availability").eq("role","teacher").eq("approved",true).order("full_name");
+  $("reqTeacher").innerHTML='<option value="">Choose preferred teacher</option>'+(data||[]).map(t=>`<option value="${t.id}">${esc(t.full_name)}${t.qualification?" — "+esc(t.qualification):""}</option>`).join("");
+  $("reqName").value=me.full_name||"";$("reqCourse").value=me.course||"";
 }
 
-function renderMyLessons(){
-  const u=freshStudent();
-  const box=document.getElementById("myLessonsList");
-  if(!u||!box)return;
+$("requestForm").onsubmit=async e=>{
+  e.preventDefault();
+  const payload={
+    student_id:me.id,
+    preferred_teacher_id:$("reqTeacher").value||null,
+    full_name:$("reqName").value.trim(),
+    course:$("reqCourse").value.trim(),
+    need_certificate:$("reqCertificate").value==="yes",
+    duration:$("reqDuration").value.trim(),
+    note:$("reqNote").value.trim()
+  };
+  const {error}=await sb.from("geti_learning_requests").insert(payload);
+  if(error){alert(error.message);return}
+  e.target.reset();$("reqName").value=me.full_name;$("reqCourse").value=me.course;await loadRequests();renderHome();
+};
 
-  const rows=getStudentLessons()
-    .filter(x=>x.studentId===u.id)
-    .sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
-
-  if(!rows.length){
-    box.innerHTML='<div style="padding:28px 10px;text-align:center;color:#667781;font-size:13px">No lesson scheduled yet.</div>';
-    return;
-  }
-
-  box.innerHTML=rows.map(x=>`
-    <div class="lesson-card">
-      <div class="lesson-top">
-        <div>
-          <h4>${esc(x.course||"GETI Lesson")}</h4>
-          <small>
-            Teacher: ${esc(x.teacherName||u.teacherName||"Teacher")}<br>
-            ${esc(x.date)} • ${esc(x.time)} • ${esc(x.duration)}
-            ${x.note?`<br>${esc(x.note)}`:""}
-          </small>
-        </div>
-      </div>
-      <button class="join-class-btn" type="button" onclick="joinScheduledClass()">Join Video Class</button>
-    </div>
-  `).join("");
-}
-function openMyLessons(){
-  renderMyLessons();
-  document.getElementById("myLessonsPanel").classList.add("open");
-}
-function closeMyLessons(){
-  document.getElementById("myLessonsPanel").classList.remove("open");
-}
-function joinScheduledClass(){
-  const u=freshStudent();
-  if(!u||!u.teacherId){
-    alert("No assigned teacher.");
-    return;
-  }
-  window.open(
-    "https://meet.jit.si/"+encodeURIComponent("GETI-"+u.id),
-    "_blank",
-    "noopener"
-  );
+async function loadRequests(){
+  const {data}=await sb.from("geti_learning_requests").select("*").eq("student_id",me.id).order("created_at",{ascending:false});
+  window._reqs=data||[];
+  $("requestList").innerHTML=window._reqs.length?window._reqs.map(r=>`<div class="row"><div class="row-top"><div><h4>${esc(r.course)}</h4><div class="muted">${esc(r.duration)} • Certificate: ${r.need_certificate?"Yes":"No"}${r.note?"<br>"+esc(r.note):""}</div></div><span class="pill ${r.status==="Accepted"?"pill-ok":r.status==="Rejected"?"pill-bad":"pill-warn"}">${esc(r.status)}</span></div></div>`).join(""):'<div class="muted">No requests yet.</div>';
 }
 
-const sendMoneyFormEl=document.getElementById("sendMoneyForm");
-if(sendMoneyFormEl){
-  sendMoneyFormEl.addEventListener("submit",function(e){
-    e.preventDefault();
+$("paymentForm").onsubmit=async e=>{
+  e.preventDefault();
+  if(!teacher||!assignment){alert("You need an assigned teacher first.");return}
+  const amount=Number($("payAmount").value);
+  if(!amount||amount<=0){alert("Enter a valid USD amount.");return}
+  const btn=$("payNowBtn");btn.disabled=true;btn.textContent="Opening secure checkout...";
+  const {data,error}=await sb.functions.invoke("geti-real-payment",{body:{action:"create",amount_usd:amount,note:$("payNote").value.trim()}});
+  btn.disabled=false;btn.textContent="Pay Securely in USD";
+  if(error){alert(error.message||"Could not start payment.");return}
+  if(data?.error){alert(data.error);return}
+  if(!data?.checkout_url){alert("Payment gateway did not return a checkout URL.");return}
+  location.href=data.checkout_url;
+};
 
-    const u=freshStudent();
-    if(!u||!u.teacherId){
-      alert("No assigned teacher.");
-      return;
-    }
-
-    const amount=Number(document.getElementById("moneyAmount").value);
-    const method=document.getElementById("moneyMethod").value;
-    const reference=document.getElementById("moneyReference").value.trim();
-    const note=document.getElementById("moneyNote").value.trim();
-
-    if(!Number.isFinite(amount)||amount<=0){
-      alert("Enter a valid amount.");
-      return;
-    }
-    if(!method){
-      alert("Choose a payment method.");
-      return;
-    }
-
-    const rows=getStudentPayments();
-    rows.push({
-      id:"PAY-"+Date.now(),
-      studentId:u.id,
-      studentName:u.name,
-      studentEmail:u.email,
-      teacherId:u.teacherId,
-      teacherName:u.teacherName,
-      amount,
-      currency:"USD",
-      method,
-      reference,
-      note,
-      status:"Completed",
-      createdAt:new Date().toISOString()
-    });
-
-    try{
-      saveStudentPayments(rows);
-    }catch(err){
-      console.error(err);
-      alert("Could not save the payment in this browser.");
-      return;
-    }
-
-    e.target.reset();
-    closeSendMoney();
-    alert("Payment recorded successfully.");
-  });
+async function verifyReturnedPayment(){
+  const params=new URLSearchParams(location.search);
+  const paymentId=params.get("payment_id");
+  if(params.get("payment_return")!=="1"||!paymentId)return;
+  const {data,error}=await sb.functions.invoke("geti-real-payment",{body:{action:"verify",payment_id:paymentId}});
+  if(error)alert(error.message||"Could not verify payment.");
+  else if(data?.status==="Paid")alert("Payment confirmed successfully.");
+  else if(data?.status==="Pending")alert("Payment is still pending. You can verify it again from My Payments.");
+  else if(data?.status==="Review")alert("Payment received but requires GETI review.");
+  else if(data?.status==="Failed")alert("Payment was not completed.");
+  history.replaceState({},document.title,location.pathname);
 }
 
-window.addEventListener("storage",function(e){
-  if(e.key===STUDENT_PAYMENTS_KEY &&
-     document.getElementById("myPaymentsPanel") &&
-     document.getElementById("myPaymentsPanel").classList.contains("open")){
-    renderMyPayments();
-  }
-  if(e.key===STUDENT_LESSONS_KEY &&
-     document.getElementById("myLessonsPanel") &&
-     document.getElementById("myLessonsPanel").classList.contains("open")){
-    renderMyLessons();
-  }
-});
+async function verifyPayment(paymentId){
+  const {data,error}=await sb.functions.invoke("geti-real-payment",{body:{action:"verify",payment_id:paymentId}});
+  if(error){alert(error.message||"Verification failed.");return}
+  alert("Payment status: "+(data?.status||"Unknown"));
+  await loadPayments();renderHome();
+}
+window.verifyPayment=verifyPayment;
 
+async function loadPayments(){
+  const {data}=await sb.from("geti_payments").select("*").eq("student_id",me.id).order("created_at",{ascending:false});
+  window._payments=data||[];const total=window._payments.filter(x=>x.status==="Paid").reduce((s,x)=>s+Number(x.amount_usd),0);
+  $("paymentsTotal").textContent=money(total);
+  $("paymentList").innerHTML=window._payments.length?window._payments.map(p=>`<div class="row"><div class="row-top"><div><h4>${esc(p.method)}</h4><div class="muted">${new Date(p.created_at).toLocaleString()}${p.provider_ref?"<br>Provider ref: "+esc(p.provider_ref):""}${p.note?"<br>"+esc(p.note):""}</div></div><div class="money">${money(p.amount_usd)}</div></div><span class="pill ${p.status==="Paid"?"pill-ok":p.status==="Failed"?"pill-bad":"pill-warn"}">${esc(p.status)}</span>${p.status==="Pending"?`<div class="actions"><button class="btn btn-blue" onclick="verifyPayment('${p.id}')">Verify Payment</button></div>`:""}</div>`).join(""):'<div class="muted">No payments yet.</div>';
+}
+
+async function loadLessons(){
+  const {data}=await sb.from("geti_lessons").select("*").eq("student_id",me.id).order("starts_at",{ascending:true});
+  window._lessons=data||[];
+  $("lessonList").innerHTML=window._lessons.length?window._lessons.map(l=>`<div class="row"><div class="row-top"><div><h4>${new Date(l.starts_at).toLocaleString()}</h4><div class="muted">${l.duration_minutes} minutes${l.note?"<br>"+esc(l.note):""}</div></div><button class="btn btn-primary" onclick="joinLesson('${esc(l.room_name)}')">Join Video Class</button></div></div>`).join(""):'<div class="muted">No lessons scheduled yet.</div>';
+}
+window.joinLesson=room=>window.open("https://meet.jit.si/"+encodeURIComponent(room),"_blank","noopener");
+
+async function loadMessages(){
+  if(!assignment||!teacher){$("chatBox").innerHTML='<div class="muted">No assigned teacher yet.</div>';return}
+  const {data}=await sb.from("geti_messages").select("*").eq("student_id",me.id).eq("teacher_id",teacher.id).order("created_at");
+  const rows=data||[];$("chatBox").innerHTML=rows.length?rows.map(m=>`<div class="bubble ${m.sender_id===me.id?"me":""}">${esc(m.body)}<small>${new Date(m.created_at).toLocaleString()}</small></div>`).join(""):'<div class="muted">No messages yet.</div>';$("chatBox").scrollTop=$("chatBox").scrollHeight;
+}
+
+$("chatForm").onsubmit=async e=>{
+  e.preventDefault();const body=$("chatInput").value.trim();if(!body)return;if(!assignment||!teacher){alert("No assigned teacher.");return}
+  const {error}=await sb.from("geti_messages").insert({student_id:me.id,teacher_id:teacher.id,sender_id:me.id,body});
+  if(error){alert(error.message);return}$("chatInput").value="";await loadMessages();
+};
+$("voiceBtn").onclick=()=>{if(!teacher)return alert("No assigned teacher.");window.open("https://meet.jit.si/"+encodeURIComponent("GETI-AUDIO-"+me.id)+"#config.startWithVideoMuted=true","_blank","noopener")};
+$("videoBtn").onclick=()=>{if(!teacher)return alert("No assigned teacher.");window.open("https://meet.jit.si/"+encodeURIComponent("GETI-"+me.id),"_blank","noopener")};
+
+function renderProfile(){
+  $("topName").textContent=me.full_name;$("profileTitle").textContent=me.full_name;$("profileEmail").textContent=me.email;
+  $("profileAvatar").innerHTML=me.avatar_url?`<img src="${esc(me.avatar_url)}">`:esc(initials(me.full_name));
+  $("profileName").value=me.full_name||"";$("profileCourse").value=me.course||"";$("profileLevel").value=me.level||"";$("profileBio").value=me.bio||"";
+}
+$("profileForm").onsubmit=async e=>{
+  e.preventDefault();const updates={full_name:$("profileName").value.trim(),course:$("profileCourse").value.trim(),level:$("profileLevel").value.trim(),bio:$("profileBio").value.trim()};
+  const {data,error}=await sb.from("geti_profiles").update(updates).eq("id",me.id).select().single();if(error){alert(error.message);return}me=data;renderProfile();renderHome();alert("Profile updated.");
+};
+$("avatarFile").onchange=async e=>{
+  const file=e.target.files[0];if(!file)return;const ext=(file.name.split(".").pop()||"jpg").toLowerCase();const path=`${me.id}/avatar-${Date.now()}.${ext}`;
+  const {error}=await sb.storage.from("geti-avatars").upload(path,file,{upsert:true});if(error){alert(error.message);return}
+  const {data}=sb.storage.from("geti-avatars").getPublicUrl(path);const url=data.publicUrl;
+  const r=await sb.from("geti_profiles").update({avatar_url:url}).eq("id",me.id).select().single();if(r.error){alert(r.error.message);return}me=r.data;renderProfile();renderTeacher();
+};
+
+function renderHome(){
+  const total=(window._payments||[]).filter(x=>x.status==="Paid").reduce((s,x)=>s+Number(x.amount_usd),0);
+  $("homePaid").textContent=money(total);$("homeReq").textContent=(window._reqs||[]).length;$("homeLessons").textContent=(window._lessons||[]).length;
+}
+
+function startRealtime(){
+  if(channel)sb.removeChannel(channel);
+  channel=sb.channel("student-"+me.id)
+    .on("postgres_changes",{event:"*",schema:"public",table:"geti_assignments"},async()=>{await loadAssignment();await loadMessages()})
+    .on("postgres_changes",{event:"*",schema:"public",table:"geti_learning_requests"},async()=>{await loadRequests();renderHome()})
+    .on("postgres_changes",{event:"*",schema:"public",table:"geti_messages"},async()=>{await loadMessages()})
+    .on("postgres_changes",{event:"*",schema:"public",table:"geti_payments"},async()=>{await loadPayments();renderHome()})
+    .on("postgres_changes",{event:"*",schema:"public",table:"geti_lessons"},async()=>{await loadLessons();renderHome()})
+    .subscribe();
+}
+
+sb.auth.onAuthStateChange((_e,s)=>{if(!s){$("authView").classList.remove("hidden");$("appView").classList.add("hidden")}});
+init();
 </script>
 </body></html>
