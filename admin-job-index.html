@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="/geti-logo.png">
+<link rel="apple-touch-icon" href="/geti-logo.png">
 <title>GETI Teacher Administration</title>
 <style>
 :root{
@@ -135,6 +137,35 @@ textarea.field{resize:vertical}
   .mobile-menu{display:inline-flex}.stats{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.course-grid{grid-template-columns:1fr}
 }
 @media(max-width:520px){.stats{grid-template-columns:1fr}.toolbar{width:100%}.toolbar .field{width:100%}}
+
+/* GETI OFFICIAL LOGO */
+.geti-official-logo{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;
+  border-radius:50%;
+  background:#fff;
+}
+.logo,.auth-logo,.empty-logo{
+  overflow:hidden!important;
+  background:#fff!important;
+  border:2px solid #e7c768!important;
+  padding:3px!important;
+  color:transparent!important;
+}
+.empty-logo{
+  width:84px!important;
+  height:84px!important;
+}
+.logo img,.auth-logo img,.empty-logo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  border-radius:50%;
+  display:block;
+}
+
 </style>
 </head>
 <body>
@@ -142,7 +173,7 @@ textarea.field{resize:vertical}
 <!-- GLOBAL PASSWORD LOGIN -->
 <section class="login-screen" id="loginScreen">
   <div class="login-left">
-    <div class="brand"><div class="logo">GETI</div><span>TEACHER ADMIN</span></div>
+    <div class="brand"><div class="logo"><img class="geti-official-logo" src="/geti-logo.png" alt="GETI logo"></div><span>TEACHER ADMIN</span></div>
     <h1>Global Teacher Administration</h1>
     <p>
       Manage teacher accounts, student accounts, teacher–student assignments, courses,
@@ -176,7 +207,7 @@ textarea.field{resize:vertical}
 <div class="admin hidden" id="adminApp">
   <aside class="sidebar" id="sidebar">
     <div class="side-brand">
-      <div class="brand"><div class="logo">GETI</div><span>ADMIN</span></div>
+      <div class="brand"><div class="logo"><img class="geti-official-logo" src="/geti-logo.png" alt="GETI logo"></div><span>ADMIN</span></div>
       <div class="admin-label">TEACHER MANAGEMENT</div>
     </div>
     <div class="menu">
@@ -185,6 +216,7 @@ textarea.field{resize:vertical}
       <button data-view="students" onclick="showView('students',this)">🎓 Students</button>
       <button data-view="assignments" onclick="showView('assignments',this)">⇄ Assignments</button>
       <button data-view="courses" onclick="showView('courses',this)">📚 Courses</button>
+      <button data-view="withdrawals" onclick="showView('withdrawals',this)">💰 Withdrawals</button>
       <button data-view="announcements" onclick="showView('announcements',this)">📢 Announcements</button>
       <button data-view="settings" onclick="showView('settings',this)">⚙ Settings</button>
     </div>
@@ -266,6 +298,18 @@ textarea.field{resize:vertical}
           <div class="table-wrap"><table>
             <thead><tr><th>Student</th><th>Course</th><th>Level</th><th>Assigned Teacher</th><th>Actions</th></tr></thead>
             <tbody id="assignmentTable"></tbody>
+          </table></div>
+        </div>
+      </section>
+
+
+      <!-- WITHDRAWALS -->
+      <section id="view-withdrawals" class="view hidden">
+        <div class="panel">
+          <div class="panel-head"><h3>Teacher Withdrawal Requests</h3></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Teacher</th><th>Amount</th><th>Method</th><th>Account</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="withdrawalTable"></tbody>
           </table></div>
         </div>
       </section>
@@ -390,6 +434,7 @@ const ANN_KEY="geti_announcements_v6";
 const ADMIN_PASS_KEY="geti_admin_global_password_v6";
 const ADMIN_SESSION="geti_admin_session_v6";
 const SETTINGS_KEY="geti_admin_settings_v6";
+const WITHDRAWALS_KEY="geti_teacher_withdrawals_v16";
 
 function getTeachers(){try{return JSON.parse(localStorage.getItem(TEACHERS_KEY)||"[]")}catch(e){return[]}}
 function saveTeachers(a){localStorage.setItem(TEACHERS_KEY,JSON.stringify(a))}
@@ -413,6 +458,8 @@ function getCourses(){
 function saveCourses(a){localStorage.setItem(COURSES_KEY,JSON.stringify(a))}
 function getAnnouncements(){try{return JSON.parse(localStorage.getItem(ANN_KEY)||"[]")}catch(e){return[]}}
 function saveAnnouncements(a){localStorage.setItem(ANN_KEY,JSON.stringify(a))}
+function getWithdrawals(){try{return JSON.parse(localStorage.getItem(WITHDRAWALS_KEY)||"[]")}catch(e){return[]}}
+function saveWithdrawals(a){localStorage.setItem(WITHDRAWALS_KEY,JSON.stringify(a))}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 
 function currentAdminPassword(){return localStorage.getItem(ADMIN_PASS_KEY)||"global"}
@@ -442,7 +489,7 @@ function openModal(id){document.getElementById(id).classList.add("open");populat
 function closeModal(id){document.getElementById(id).classList.remove("open")}
 
 function renderAll(){
-  renderStats();renderTeachers();renderStudents();renderAssignments();renderCourses();renderAnnouncements();renderDashboard();populateSelects();loadSettings();
+  renderStats();renderTeachers();renderStudents();renderAssignments();renderCourses();renderAnnouncements();renderWithdrawals();renderDashboard();populateSelects();loadSettings();
 }
 function renderStats(){
   const t=getTeachers(),s=getStudents();
@@ -501,6 +548,25 @@ function renderAssignments(){
     <td><div class="actions"><button class="btn-light" onclick="quickAssign('${s.id}')">${s.teacherId?"Change":"Assign"}</button>${s.teacherId?`<button class="btn-red" onclick="releaseStudent('${s.id}')">Release</button>`:""}</div></td>
   </tr>`).join(""):`<tr><td colspan="5" class="empty">No students.</td></tr>`;
 }
+
+function renderWithdrawals(){
+  const rows=getWithdrawals().slice().reverse();
+  withdrawalTable.innerHTML=rows.length?rows.map(w=>`<tr>
+    <td><b>${esc(w.teacherName)}</b><br><small>${esc(w.teacherEmail||"")}</small></td>
+    <td><b>${"$"+(Number(w.amount)||0).toFixed(2)}</b></td>
+    <td>${esc(w.method)}</td>
+    <td>${esc(w.accountName)}<br><small>${esc(w.accountNumber)}</small></td>
+    <td><span class="pill ${w.status==="Approved"?"pill-green":w.status==="Rejected"?"pill-red":"pill-orange"}">${esc(w.status||"Pending")}</span></td>
+    <td><div class="actions">
+      ${w.status==="Pending"?`<button class="btn-green" onclick="setWithdrawalStatus('${w.id}','Approved')">Approve</button><button class="btn-red" onclick="setWithdrawalStatus('${w.id}','Rejected')">Reject</button>`:""}
+    </div></td>
+  </tr>`).join(""):`<tr><td colspan="6" class="empty">No withdrawal requests.</td></tr>`;
+}
+function setWithdrawalStatus(id,status){
+  const rows=getWithdrawals(),i=rows.findIndex(x=>x.id===id);if(i<0)return;
+  rows[i].status=status;rows[i].reviewedAt=new Date().toISOString();saveWithdrawals(rows);renderAll();
+}
+
 function renderCourses(){
   const c=getCourses();
   courseGrid.innerHTML=c.length?c.map(x=>`<div class="course-card">
@@ -583,7 +649,7 @@ function saveSettings(){
 function loadSettings(){
   try{const s=JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}");if(s.platformName)platformName.value=s.platformName;if(s.adminNote)adminNote.value=s.adminNote}catch(e){}
 }
-window.addEventListener("storage",e=>{if([TEACHERS_KEY,STUDENTS_KEY,COURSES_KEY,ANN_KEY].includes(e.key))renderAll()});
+window.addEventListener("storage",e=>{if([TEACHERS_KEY,STUDENTS_KEY,COURSES_KEY,ANN_KEY,WITHDRAWALS_KEY].includes(e.key))renderAll()});
 if(sessionStorage.getItem(ADMIN_SESSION)==="1")openAdmin();
 </script>
 </body>
