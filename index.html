@@ -24,6 +24,7 @@
 <meta name="twitter:image" content="https://getienglish.com/geti-logo.png">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://geti-api.rakotonantenainajuldiano49-690.workers.dev" crossorigin>
 <link rel="preconnect" href="https://syawyulrelrhjprnxdyn.supabase.co" crossorigin>
 <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
 <link rel="dns-prefetch" href="//api.qrserver.com">
@@ -5688,6 +5689,11 @@ All rights reserved.
 var API_URL =
 "https://script.google.com/macros/s/AKfycbzQ_YczGnSdh4GJZ73XTt8LfrUtdjJFAlUZGUx3Chhlk-0Es3rskQkun5LgrZYhkKRF/exec";
 
+/* Cloudflare D1 API — primary certificate lookup.
+   Google Sheet remains unchanged and is used as fallback. */
+var GETI_D1_API =
+"https://geti-api.rakotonantenainajuldiano49-690.workers.dev";
+
 var verifyType="id";
 
 /* =========================================================
@@ -5732,6 +5738,9 @@ CERTIFICATE VERIFICATION — ID / NAME SEARCH
 var getiVerificationSerial=0;
 var getiVerificationLiveTimer=null;
 
+/* =========================================================
+   GOOGLE SHEET LOOKUP — preserved exactly as fallback
+========================================================= */
 function getiVerificationRequest(type,value,serial){
 return new Promise(function(resolve,reject){
 var callbackName="getiVerificationAuto_"+Date.now()+"_"+Math.random().toString(36).slice(2);
@@ -5747,16 +5756,73 @@ window[callbackName]=function(data){
 if(finished)return;finished=true;clearTimeout(timer);
 try{delete window[callbackName];}catch(e){}
 if(script.parentNode)script.parentNode.removeChild(script);
-resolve({type:type,data:data,serial:serial});
+resolve({type:type,data:data,serial:serial,source:"google-sheet"});
 };
 script.onerror=function(){
 if(finished)return;finished=true;clearTimeout(timer);
 try{delete window[callbackName];}catch(e){}
 if(script.parentNode)script.parentNode.removeChild(script);
-reject(new Error("Unable to connect to GETI verification server"));
+reject(new Error("Unable to connect to GETI Google Sheet verification server"));
 };
 script.src=API_URL+"?type="+encodeURIComponent(type)+"&value="+encodeURIComponent(value)+"&callback="+encodeURIComponent(callbackName);
 document.body.appendChild(script);
+});
+}
+
+/* =========================================================
+   CLOUDFLARE D1 LOOKUP — primary source
+========================================================= */
+async function getiD1VerificationRequest(type,value,serial){
+var controller=(typeof AbortController!=="undefined")?new AbortController():null;
+var timeout=setTimeout(function(){if(controller)controller.abort();},7000);
+try{
+var response=await fetch(
+GETI_D1_API+"/api/certificate/verify?q="+encodeURIComponent(value),
+{method:"GET",headers:{"Accept":"application/json"},signal:controller?controller.signal:undefined}
+);
+if(!response.ok)throw new Error("D1 verification returned HTTP "+response.status);
+var data=await response.json();
+return {type:type,data:data,serial:serial,source:"cloudflare-d1"};
+}finally{
+clearTimeout(timeout);
+}
+}
+
+function getiNormalizeD1CertificateRecords(data){
+var rows=(data&&data.success&&Array.isArray(data.records))?data.records:[];
+return rows.filter(function(record){
+/* Only an issued certificate ID is treated as a verified certificate. */
+return record&&String(record.certificate_id||"").trim()!=="";
+}).map(function(record){
+var program=String(record.program||"GETI Certificate").trim()||"GETI Certificate";
+return {
+id:String(record.certificate_id||"").trim(),
+name:String(record.holder_name||"").trim(),
+nationality:String(record.nationality||"").trim(),
+country:String(record.country||"").trim(),
+certificate:program,
+type:program,
+program:program,
+candidate_id:String(record.candidate_id||"").trim(),
+institution:String(record.institution||"").trim(),
+percentage:record.score,
+score:record.score,
+status:String(record.result_status||"").trim(),
+date:String(record.record_date||"").trim(),
+created_at:String(record.record_date||"").trim(),
+source:"cloudflare-d1"
+};
+});
+}
+
+function getiCleanVerificationRecords(records){
+var seen={};
+return (records||[]).filter(function(record){
+var key=String(record&&record.id||"").trim().toUpperCase();
+if(!key)key=[record&&record.name,record&&record.nationality,record&&record.certificate].join("|").toUpperCase();
+if(seen[key])return false;seen[key]=true;return true;
+}).sort(function(a,b){
+return String(a&&a.name||"").localeCompare(String(b&&b.name||""),undefined,{sensitivity:"base"});
 });
 }
 
@@ -5774,20 +5840,47 @@ var chosenType=(type==="name"||type==="id")?type:getiDetectVerifyType();
 var value=getiGetVerifyValue(chosenType);
 var serial=++getiVerificationSerial;
 setVerifyType(chosenType);
+
 if(!value){if(box)box.innerHTML="";return;}
-if(box)box.innerHTML='<div class="success">⏳ Searching GETI certificate records...</div>';
-var settled=await Promise.allSettled([getiVerificationRequest(chosenType,value,serial)]);
+if(box)box.innerHTML='<div class="success">⏳ Searching official GETI certificate records...</div>';
+
+/* 1) Cloudflare D1 first */
+try{
+var d1Response=await getiD1VerificationRequest(chosenType,value,serial);
 if(serial!==getiVerificationSerial)return;
-var response=(settled[0]&&settled[0].status==='fulfilled'&&settled[0].value&&settled[0].value.data)||null;
-if(!response){if(box)box.innerHTML='<div class="error">❌ Unable to connect to GETI verification server.</div>';return;}
-var records=(response.success&&Array.isArray(response.results))?response.results.slice():[];
-var seen={};
-records=records.filter(function(record){
-var key=String(record&&record.id||"").trim().toUpperCase();
-if(!key)key=[record&&record.name,record&&record.nationality,record&&record.certificate].join("|").toUpperCase();
-if(seen[key])return false;seen[key]=true;return true;
-}).sort(function(a,b){return String(a&&a.name||"").localeCompare(String(b&&b.name||""),undefined,{sensitivity:"base"});});
-displayVerificationResults({success:true,results:records,query:value});
+var d1Records=getiCleanVerificationRecords(getiNormalizeD1CertificateRecords(d1Response&&d1Response.data));
+if(d1Records.length>0){
+displayVerificationResults({success:true,results:d1Records,query:value,source:"cloudflare-d1"});
+return;
+}
+}catch(d1Error){
+console.info("GETI D1 verification unavailable; trying Google Sheet fallback.",d1Error);
+}
+
+/* 2) Google Sheet fallback — no Sheet student or record is removed */
+try{
+if(box)box.innerHTML='<div class="success">⏳ Checking the GETI certificate register...</div>';
+var sheetResponse=await getiVerificationRequest(chosenType,value,serial);
+if(serial!==getiVerificationSerial)return;
+var response=sheetResponse&&sheetResponse.data;
+if(!response){
+if(box)box.innerHTML='<div class="error">❌ Unable to connect to GETI verification services.</div>';
+return;
+}
+var sheetRecords=(response.success&&Array.isArray(response.results))?response.results.slice():[];
+sheetRecords=getiCleanVerificationRecords(sheetRecords);
+displayVerificationResults({
+success:response.success!==false,
+message:response.message||"",
+results:sheetRecords,
+query:value,
+source:"google-sheet"
+});
+}catch(sheetError){
+console.error("GETI Google Sheet fallback failed.",sheetError);
+if(serial!==getiVerificationSerial)return;
+if(box)box.innerHTML='<div class="error">❌ Unable to connect to GETI verification services.</div>';
+}
 }
 
 function getiLiveCertificateSearch(value,type){
