@@ -18082,5 +18082,153 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
 .geti-email-link:hover{opacity:.82}
 </style>
 
+<script id="geti-google-sheet-verification-restored">
+(function(){
+  if(window.__GETI_GOOGLE_SHEET_VERIFY_RESTORED__)return;
+  window.__GETI_GOOGLE_SHEET_VERIFY_RESTORED__=true;
+
+  var liveTimer=null;
+  var serial=0;
+
+  function clean(v){return String(v==null?'':v).trim().replace(/\s+/g,' ');}
+  function query(){var el=document.getElementById('verifyInput');return clean(el&&el.value);}
+  function lower(v){return clean(v).toLocaleLowerCase();}
+  function pick(obj,keys){
+    obj=obj||{};
+    for(var i=0;i<keys.length;i++){
+      var k=keys[i];
+      if(Object.prototype.hasOwnProperty.call(obj,k) && clean(obj[k]))return obj[k];
+    }
+    return '';
+  }
+  function normalizeRecord(r){
+    if(!r)return null;
+    if(Array.isArray(r)){
+      return {name:clean(r[0]),nationality:clean(r[1]),certificate:clean(r[2]),id:clean(r[3]),type:clean(r[4]),date:clean(r[5]),row:r[6]||''};
+    }
+    var rec={
+      name:clean(pick(r,['name','Name','full_name','Full Name','holder','Holder','certificate_holder','Certificate Holder'])),
+      nationality:clean(pick(r,['nationality','Nationality','country','Country'])),
+      certificate:clean(pick(r,['certificate','Certificate','program','Program','course','Course','qualification','Qualification'])),
+      id:clean(pick(r,['id','ID','certificate_id','certificateId','Certificate ID','CertificateID'])),
+      type:clean(pick(r,['type','Type','certificate_type','certificateType','Certificate Type'])),
+      date:clean(pick(r,['date','Date','issue_date','issueDate','Issue Date','Date of Issue','date_of_issue'])),
+      hours:clean(pick(r,['hours','Hours','training_hours','Training Hours'])),
+      level:clean(pick(r,['level','Level','cefr_level','CEFR Level'])),
+      row:r.row||r.Row||''
+    };
+    if(!rec.type && rec.certificate){
+      var m=rec.certificate.match(/\b(TEFL|TESOL|TESL|TEYL|TOUR GUIDE|ENGLISH PROFICIENCY)\b/i);
+      if(m)rec.type=m[1].toUpperCase();
+    }
+    return rec;
+  }
+  function normalizeList(data){
+    var arr=[];
+    if(data){
+      if(Array.isArray(data.records))arr=data.records;
+      else if(Array.isArray(data.results))arr=data.results;
+      else if(Array.isArray(data.data))arr=data.data;
+      else if(data.record)arr=[data.record];
+      else if(data.result)arr=[data.result];
+    }
+    return arr.map(normalizeRecord).filter(function(r){return r&&(r.id||r.name);});
+  }
+  function matches(r,q){
+    var ql=lower(q),idl=lower(r.id),nl=lower(r.name);
+    if(!ql)return false;
+    if(idl===ql)return true;
+    if(idl&&idl.indexOf(ql)!==-1)return true;
+    if(nl===ql)return true;
+    if(nl&&nl.indexOf(ql)!==-1)return true;
+    var words=ql.split(' ').filter(Boolean);
+    return words.length>1&&words.every(function(w){return nl.indexOf(w)!==-1;});
+  }
+  function dedupe(records){
+    var seen={};
+    return (records||[]).filter(function(r){
+      var key=(r.id||[r.name,r.certificate,r.date].join('|')).toUpperCase();
+      if(seen[key])return false;
+      seen[key]=1;
+      return true;
+    });
+  }
+  function sheetRequest(){
+    if(typeof window.baamCertificateJsonp==='function')return window.baamCertificateJsonp('list_certificates',{code:'global'});
+    return new Promise(function(resolve,reject){
+      if(!window.API_URL){reject(new Error('Certificate Google Sheet URL is not configured.'));return;}
+      var cb='getiSheetVerify_'+Date.now()+'_'+Math.random().toString(36).slice(2),s=document.createElement('script'),done=false;
+      var t=setTimeout(function(){finish(new Error('Google Sheet verification timed out.'));},18000);
+      function finish(err,data){if(done)return;done=true;clearTimeout(t);try{delete window[cb];}catch(e){}if(s.parentNode)s.parentNode.removeChild(s);err?reject(err):resolve(data||{});}
+      window[cb]=function(data){finish(null,data);};
+      s.onerror=function(){finish(new Error('Unable to connect to the GETI Google Sheet.'));};
+      s.src=window.API_URL+'?action=list_certificates&code=global&callback='+encodeURIComponent(cb)+'&_='+Date.now();
+      document.body.appendChild(s);
+    });
+  }
+  function directRequest(type,value){
+    return new Promise(function(resolve,reject){
+      if(!window.API_URL){reject(new Error('GETI verification URL is not configured.'));return;}
+      var cb='getiDirectFallback_'+Date.now()+'_'+Math.random().toString(36).slice(2),s=document.createElement('script'),done=false;
+      var t=setTimeout(function(){finish(new Error('Direct verification timed out.'));},12000);
+      function finish(err,data){if(done)return;done=true;clearTimeout(t);try{delete window[cb];}catch(e){}if(s.parentNode)s.parentNode.removeChild(s);err?reject(err):resolve(data||{});}
+      window[cb]=function(data){finish(null,data);};
+      s.onerror=function(){finish(new Error('Unable to connect to GETI verification server.'));};
+      s.src=window.API_URL+'?type='+encodeURIComponent(type)+'&value='+encodeURIComponent(value)+'&callback='+encodeURIComponent(cb)+'&_='+Date.now();
+      document.body.appendChild(s);
+    });
+  }
+
+  window.verifyType='auto';
+  window.setVerifyType=function(){window.verifyType='auto';};
+  window.getiGetVerifyValue=function(){return query();};
+
+  window.verifyCertificate=async function(){
+    var q=query(),box=document.getElementById('verifyResult'),my=++serial;
+    if(!q){if(box)box.innerHTML='<div class="error">Please enter a Certificate ID or certificate holder name.</div>';return;}
+    if(box)box.innerHTML='<div class="success">⏳ Searching GETI certificate records...</div>';
+
+    var found=[];
+    var sheetLoaded=false;
+    try{
+      var sheetData=await sheetRequest();
+      if(my!==serial)return;
+      if(sheetData&&sheetData.success===false)throw new Error(sheetData.message||'Unable to read Google Sheet.');
+      var all=normalizeList(sheetData);
+      sheetLoaded=true;
+      found=all.filter(function(r){return matches(r,q);});
+    }catch(sheetErr){console.warn('GETI Google Sheet verification fallback:',sheetErr);}
+
+    if(!found.length){
+      try{
+        var primary=/^GETI/i.test(q)?'id':'name';
+        var d1=await directRequest(primary,q);
+        if(my!==serial)return;
+        found=found.concat(normalizeList(d1));
+        if(!found.length){
+          var d2=await directRequest(primary==='id'?'name':'id',q);
+          if(my!==serial)return;
+          found=found.concat(normalizeList(d2));
+        }
+      }catch(directErr){console.warn('GETI direct verification fallback:',directErr);}
+    }
+
+    found=dedupe(found);
+    if(typeof window.displayVerificationResults==='function'){
+      window.verifyType=/^GETI/i.test(q)?'id':'name';
+      window.displayVerificationResults({success:true,results:found,query:q,googleSheet:sheetLoaded});
+    }else if(box){
+      box.innerHTML=found.length?'<div class="success">✅ '+found.length+' certificate(s) found.</div>':'<div class="error">❌ No certificate found.</div>';
+    }
+  };
+
+  window.getiLiveCertificateSearch=function(value){
+    clearTimeout(liveTimer);
+    var box=document.getElementById('verifyResult');
+    if(!clean(value)){serial++;if(box)box.innerHTML='';return;}
+    liveTimer=setTimeout(function(){window.verifyCertificate();},500);
+  };
+})();
+</script>
 </body>
 </html>
