@@ -7174,9 +7174,15 @@ async function submitRegistration(){
         });
         id=registration.candidate_id;
     }catch(err){
-        alert(err.message||"Registration could not be completed.");
-        if(button){button.disabled=false;button.textContent="REGISTER & START "+examState.program+" EXAM";}
-        return;
+        const status=Number(err && err.status || 0);
+        if(!status || status>=500){
+            console.warn("Legacy registration API unavailable; continuing with local candidate ID.",err);
+            id=createCandidateID(examState.program);
+        }else{
+            alert(err.message||"Registration could not be completed.");
+            if(button){button.disabled=false;button.textContent="REGISTER & START "+examState.program+" EXAM";}
+            return;
+        }
     }
 
     examState.student={
@@ -8689,7 +8695,7 @@ function openGeneralExamHourSelector(examName){
 
     panel.innerHTML=
         '<h2 class="exam-title">CHOOSE YOUR '+escapeHTML(displayName).toUpperCase()+'</h2>'+
-        '<p class="exam-subtitle">Select the course hours. Registration appears after your selection.</p>'+
+        '<p class="exam-subtitle">Select the course hours. Registration appears after your selection. If the registration service is temporarily unavailable, the exam can still start after your information is validated.</p>'+
         '<div class="tefl-course-grid">'+cards+'</div>';
 
     panel.scrollIntoView({behavior:"smooth",block:"start"});
@@ -11752,11 +11758,24 @@ async function getiFetchJson(url, options){
 }
 
 async function getiRegisterExam(registration){
-    return await getiFetchJson(GETI_EXAM_FUNCTION,{
-        method:"POST",
-        headers:{"Content-Type":"application/json","apikey":GETI_SUPABASE_KEY},
-        body:JSON.stringify({action:"register_exam",registration:registration})
-    });
+    try{
+        const response=await fetch(GETI_EXAM_FUNCTION,{
+            method:"POST",
+            headers:{"Content-Type":"application/json","apikey":GETI_SUPABASE_KEY},
+            body:JSON.stringify({action:"register_exam",registration:registration})
+        });
+        let data={};
+        try{data=await response.json();}catch(e){}
+        if(!response.ok){
+            const err=new Error(data.error || data.message || "Registration service unavailable");
+            err.status=response.status;
+            err.data=data;
+            throw err;
+        }
+        return data;
+    }catch(err){
+        throw err;
+    }
 }
 
 function getiAnalyticsIdentifier(storage,key){
@@ -12915,16 +12934,27 @@ async function submitGeti30Registration(){
         }
 
         if(button)button.textContent="SAVING REGISTRATION...";
-        const registration=await getiRegisterExam({
-            full_name:name,email:email,nationality:nationality,country:country,
-            address:address,postal_code:postalCode,city:city,country_code:countryCode,
-            phone:phone,occupation:occupation,institution:institution,exam_name:geti30State.examTitle,
-            exam_category:"GETI Professional Examination",programme:geti30State.exam,
-            option_track:examHours+" Hours",subject:geti30State.examTitle
-        });
+        let registration;
+        try{
+            registration=await getiRegisterExam({
+                full_name:name,email:email,nationality:nationality,country:country,
+                address:address,postal_code:postalCode,city:city,country_code:countryCode,
+                phone:phone,occupation:occupation,institution:institution,exam_name:geti30State.examTitle,
+                exam_category:"GETI Professional Examination",programme:geti30State.exam,
+                option_track:examHours+" Hours",subject:geti30State.examTitle
+            });
+        }catch(regErr){
+            const status=Number(regErr && regErr.status || 0);
+            if(!status || status>=500){
+                console.warn("GETI registration API unavailable; continuing with local candidate ID.",regErr);
+                registration={candidate_id:createGeti30CandidateID(geti30State.examTitle)};
+            }else{
+                throw regErr;
+            }
+        }
 
         geti30State.student={
-            id:registration.candidate_id,
+            id:registration.candidate_id || createGeti30CandidateID(geti30State.examTitle),
             name:name,
             email:email,
             nationality:nationality,
@@ -12959,7 +12989,7 @@ async function submitGeti30Registration(){
 
     }catch(err){
         console.error("GETI registration error:",err);
-        alert(err && err.message ? err.message : "Registration could not be completed. Please check your internet connection and try again.");
+        alert(err && err.message ? err.message : "Registration could not be completed. Please check your information and try again.");
     }finally{
         if(button && !geti30State.started){
             button.disabled=false;
