@@ -1,0 +1,46 @@
+GETI COMPLETE VERIFICATION REPORT
+=================================
+
+Index: GETI-index-VERIFIED-ALL.html
+Worker: GETI-worker-BREVO-VERIFIED-FINAL.js
+
+[PASS] HTML closes correctly
+[PASS] All GETI admin emails standardized
+[PASS] Cookie banner present once
+[PASS] Cookie script present once
+[PASS] A2 exam present
+[PASS] A2 has exactly 2-question configuration
+[PASS] A2 has one subject
+[PASS] Full exam registration contains address
+[PASS] Full exam registration contains city
+[PASS] Full exam registration contains postal code
+[PASS] Full exam registration contains country code
+[PASS] Full exam registration contains occupation
+[PASS] Passed result fee notice removed
+[PASS] Passed result admin button removed
+[PASS] Premium 20–168 = $25
+[PASS] Premium 180–420 = $40
+[PASS] Certificate PDF fee $16–$25
+[PASS] Stats fallback holder value
+[PASS] Stats fallback country value
+[PASS] Automatic pass email endpoint
+[PASS] Pass email message exactly 30 words
+[PASS] Worker Brevo endpoint
+[PASS] Worker sender
+[PASS] Worker secret name
+[PASS] Worker duplicate prevention
+[PASS] Worker blocks non-PASSED sending
+[PASS] Worker JavaScript syntax
+
+Passed: 27/27
+
+Important external items that cannot be confirmed from local files:
+- Brevo sender admin@getienglish.com must show Verified in the Brevo account.
+- BREVO_API_KEY must be added as a Secret in the deployed Cloudflare geti-api Worker.
+- The verified Worker must actually be deployed to api.getienglish.com.
+- A real end-to-end email test requires one PASSED exam using a real student email.
+
+Correction made during verification:
+- Repaired misplaced HTML/CSS/scripts that had been inserted inside JavaScript document.write strings.
+- Standardized the GETI admin address to admin@getienglish.com to match getienglish.com and the Brevo sender.
+- Inline JavaScript was rechecked after repair with no syntax errors.
