@@ -4930,6 +4930,7 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
 
     <section class="geti-home-v2-account" id="getiFirstAccountPanel">
       <div class="geti-live-stats-head">
+        <span class="geti-live-stats-kicker">GETI GLOBAL CERTIFICATE NETWORK</span>
       </div>
       <div class="geti-live-stats-grid" id="getiLiveCertificateStats" aria-live="polite">
         <article class="geti-live-stat-card">
@@ -5400,6 +5401,7 @@ TEFL, TESOL and assessment.
 <button class="exam30-btn" onclick='openTesolCourseSelector()'>🎓 TESOL Exam</button>
 <button class="exam30-btn" onclick='openTeylCourseSelector()'>🎓 TEYL Exam</button>
 <button class="exam30-btn" onclick='openEnglishAchievementSelector()'>🎓 English Proficiency Exam</button>
+<button class="exam30-btn" onclick='openB1Exam()'>🎓 B1 Exam</button>
 <button class="exam30-btn" onclick='openGeneralExamHourSelector("Business English Exam")'>🎓 Business English Exam</button>
 <button class="exam30-btn" onclick='openGeneralExamHourSelector("English Literature Exam")'>🎓 English Literature Exam</button>
 <button class="exam30-btn" onclick='openGeneralExamHourSelector("Legal English Exam")'>🎓 Legal English Exam</button>
@@ -8450,6 +8452,8 @@ delete GETI_30_EXAM_SUBJECTS["Medical English Exam"];
 delete GETI_30_EXAM_SUBJECTS["Medical Terminology Exam"];
 
 const GETI_ENGLISH_TEST_TEACHING_NAMES=Object.keys(GETI_ENGLISH_TEST_TEACHING_EXAMS);
+GETI_30_EXAM_SUBJECTS["B1 Exam"]=["English Grammar"];
+
 const GETI_30_EXAMS = Object.keys(GETI_30_EXAM_SUBJECTS);
 
 let geti30State = {
@@ -8684,6 +8688,10 @@ function selectGetiLanguageCourse(program,index){
     const course=courses[index];
     if(!course)return;
     openGeti30Registration(program+" Exam",course);
+}
+
+function openB1Exam(){
+    openGeti30Registration("B1 Exam",{hours:100,level:"B1",title:"B1 English Exam"});
 }
 
 function openTeflCourseSelector(){
@@ -9301,10 +9309,11 @@ function buildGeti30QuestionSets(){
             ((subjectIndex+1)*2654435761)
         );
 
+        const questionCount=geti30State.exam==="B1 Exam" ? 3 : 15;
         const indexes=geti30Shuffle(
             Array.from({length:30},function(_,i){return i;}),
             rnd
-        ).slice(0,15);
+        ).slice(0,questionCount);
 
         return indexes.map(function(templateIndex){
             return geti30MakeQuestion(subject,templateIndex,rnd);
@@ -9387,7 +9396,8 @@ function getGetiActiveQuestionIndexes(subjectIndex){
     if(geti30State.retryMode && Array.isArray(geti30State.retryQuestionIndexes)){
         return geti30State.retryQuestionIndexes[subjectIndex] || [];
     }
-    return Array.from({length:15},function(_,i){return i;});
+    const totalQuestions=geti30State.exam==="B1 Exam" ? 3 : 15;
+    return Array.from({length:totalQuestions},function(_,i){return i;});
 }
 
 function getGetiNextRetrySubject(fromIndex){
@@ -9413,7 +9423,7 @@ function showGeti30Question(){
         '<div id="geti30Timer" class="exam-timer"></div>'+
         '<div class="exam-progress">'+
         '<span>'+escapeHTML(geti30State.examTitle||geti30State.exam)+'</span>'+
-        '<span>'+ui.subject+' '+(geti30State.subjectIndex+1)+'/10</span>'+
+        '<span>'+ui.subject+' '+(geti30State.subjectIndex+1)+'/'+((GETI_30_EXAM_SUBJECTS[geti30State.exam]||[]).length)+'</span>'+
         '<span>'+(geti30State.retryMode?ui.correction:ui.question)+(activePosition+1)+'/'+activeIndexes.length+'</span>'+
         '</div>'+
         '<h2 class="exam-title">'+escapeHTML(getLocalizedCourseSubject(geti30State.exam,subject))+'</h2>'+
@@ -9468,13 +9478,14 @@ function submitGeti30Subject(){
     const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam];
     const subject=subjects[geti30State.subjectIndex];
     let score=0;
-    for(let i=0;i<15;i++){
+    const questionTotal=geti30State.exam==="B1 Exam" ? 3 : 15;
+    for(let i=0;i<questionTotal;i++){
         const q=getGeti30Question(geti30State.exam,subject,i);
         if(geti30State.answers[geti30State.subjectIndex][i]===q[5]) score++;
     }
-    const percentage=Math.round(score/15*100);
+    const percentage=Math.round(score/questionTotal*100);
     geti30State.subjectScores[geti30State.subjectIndex]={
-        subject:subject,score:score,total:15,percentage:percentage,grade:calculateGrade(percentage)
+        subject:subject,score:score,total:questionTotal,percentage:percentage,grade:calculateGrade(percentage)
     };
     saveGeti30Session("subjectComplete");
 
@@ -9486,7 +9497,7 @@ function submitGeti30Subject(){
         '<div class="result-box">'+
         '<h2>'+escapeHTML(subject)+'</h2>'+
         '<div class="final-score">'+percentage+'%</div>'+
-        '<p>'+score+' / 15 correct answers</p>'+
+        '<p>'+score+' / '+questionTotal+' correct answers</p>'+
         '<div class="subject-result"><span>Grade</span><strong>'+calculateGrade(percentage)+'</strong></div>'+
         '<div class="subject-result"><span>Status</span><strong class="'+
         (subjectStatus==="PASSED"?"pass":"fail")+'">'+subjectStatus+'</strong></div><br>'+
@@ -9805,14 +9816,15 @@ function finalizeGeti30TimedOut(){
     clearInterval(geti30State.timerInterval);
     geti30State.timeRemaining=0;
     const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam]||[];
+    const questionTotal=geti30State.exam==="B1 Exam" ? 3 : 15;
     geti30State.subjectScores=subjects.map(function(subject,subjectIndex){
         let score=0;
-        for(let i=0;i<15;i++){
+        for(let i=0;i<questionTotal;i++){
             const q=getGeti30Question(geti30State.exam,subject,i);
             if(geti30State.answers[subjectIndex]&&geti30State.answers[subjectIndex][i]===q[5])score++;
         }
-        const percentage=Math.round(score/15*100);
-        return {subject:subject,score:score,total:15,percentage:percentage,grade:calculateGrade(percentage)};
+        const percentage=Math.round(score/questionTotal*100);
+        return {subject:subject,score:score,total:questionTotal,percentage:percentage,grade:calculateGrade(percentage)};
     });
     geti30State.timedOut=true;
     alert("TIME EXPIRED. Your current answers have been submitted automatically. Every unanswered question is counted as incorrect.");
@@ -14324,11 +14336,11 @@ window.submitGeti30Registration=function(){return withNativeAlert(geti30State.ex
 const originalNextQ=window.nextGeti30Question;
 window.nextGeti30Question=function(){return withNativeAlert(geti30State.exam,function(){return originalNextQ();});};
 
-function translateQuestion(){const c=cfg(geti30State.exam);if(!c)return;const p=document.getElementById("geti30ExamPanel");if(!p)return;const spans=p.querySelectorAll(".exam-progress span");if(spans[0])spans[0].textContent=nativeDisplayTitle(geti30State.exam,geti30State.examTitle);if(spans[1])spans[1].textContent=c.ui.subject+" "+(geti30State.subjectIndex+1)+"/10";if(spans[2]){const active=getGetiActiveQuestionIndexes(geti30State.subjectIndex),pos=Math.max(0,active.indexOf(geti30State.questionIndex));spans[2].textContent=(geti30State.retryMode?c.ui.correction:c.ui.question)+(pos+1)+"/"+active.length;}const active=getGetiActiveQuestionIndexes(geti30State.subjectIndex),pos=Math.max(0,active.indexOf(geti30State.questionIndex));const btn=p.querySelector(".next-btn");if(btn)btn.textContent=pos===active.length-1?c.ui.submit:c.ui.next;}
+function translateQuestion(){const c=cfg(geti30State.exam);if(!c)return;const p=document.getElementById("geti30ExamPanel");if(!p)return;const spans=p.querySelectorAll(".exam-progress span");if(spans[0])spans[0].textContent=nativeDisplayTitle(geti30State.exam,geti30State.examTitle);if(spans[1])spans[1].textContent=c.ui.subject+" "+(geti30State.subjectIndex+1)+"/"+((GETI_30_EXAM_SUBJECTS[geti30State.exam]||[]).length);if(spans[2]){const active=getGetiActiveQuestionIndexes(geti30State.subjectIndex),pos=Math.max(0,active.indexOf(geti30State.questionIndex));spans[2].textContent=(geti30State.retryMode?c.ui.correction:c.ui.question)+(pos+1)+"/"+active.length;}const active=getGetiActiveQuestionIndexes(geti30State.subjectIndex),pos=Math.max(0,active.indexOf(geti30State.questionIndex));const btn=p.querySelector(".next-btn");if(btn)btn.textContent=pos===active.length-1?c.ui.submit:c.ui.next;}
 const originalShowQ=window.showGeti30Question;
 window.showGeti30Question=function(){const r=originalShowQ();translateQuestion();return r;};
 
-function translateSubjectResult(){const c=cfg(geti30State.exam);if(!c)return;const p=document.getElementById("geti30ExamPanel"),box=p&&p.querySelector(".result-box");if(!box)return;const subj=(GETI_30_EXAM_SUBJECTS[geti30State.exam]||[])[geti30State.subjectIndex],h=box.querySelector("h2");if(h)h.textContent=window.getLocalizedCourseSubject(geti30State.exam,subj);const ps=box.querySelectorAll("p");ps.forEach(function(x){if(/\/ 15 correct answers/i.test(x.textContent)){const m=x.textContent.match(/(\d+)\s*\/\s*15/);x.textContent=(m?m[1]:"0")+" / 15 "+c.ui.correct;}});const rows=box.querySelectorAll(".subject-result");if(rows[0])rows[0].querySelector("span").textContent=c.ui.grade;if(rows[1]){rows[1].querySelector("span").textContent=c.ui.status;const st=rows[1].querySelector("strong");if(st)st.textContent=st.classList.contains("pass")?c.ui.passed:c.ui.failed;}const btn=box.querySelector("button");if(btn){const next=getGetiNextRetrySubject(geti30State.subjectIndex+1)!==-1;btn.textContent=next?c.ui.nextSubject:c.ui.finalResult;}}
+function translateSubjectResult(){const c=cfg(geti30State.exam);if(!c)return;const p=document.getElementById("geti30ExamPanel"),box=p&&p.querySelector(".result-box");if(!box)return;const subj=(GETI_30_EXAM_SUBJECTS[geti30State.exam]||[])[geti30State.subjectIndex],h=box.querySelector("h2");if(h)h.textContent=window.getLocalizedCourseSubject(geti30State.exam,subj);const ps=box.querySelectorAll("p");ps.forEach(function(x){if(/\/ (?:15|3) correct answers/i.test(x.textContent)){const m=x.textContent.match(/(\d+)\s*\/\s*(15|3)/);const total=m?m[2]:(geti30State.exam==="B1 Exam"?"3":"15");x.textContent=(m?m[1]:"0")+" / "+total+" "+c.ui.correct;}});const rows=box.querySelectorAll(".subject-result");if(rows[0])rows[0].querySelector("span").textContent=c.ui.grade;if(rows[1]){rows[1].querySelector("span").textContent=c.ui.status;const st=rows[1].querySelector("strong");if(st)st.textContent=st.classList.contains("pass")?c.ui.passed:c.ui.failed;}const btn=box.querySelector("button");if(btn){const next=getGetiNextRetrySubject(geti30State.subjectIndex+1)!==-1;btn.textContent=next?c.ui.nextSubject:c.ui.finalResult;}}
 const originalSubmitSubject=window.submitGeti30Subject;
 window.submitGeti30Subject=function(){const r=originalSubmitSubject();translateSubjectResult();return r;};
 
