@@ -7051,17 +7051,27 @@ function openExamRegistration(program){
 
     '<div class="registration-form">'+
 
-    '<input id="regName" placeholder="Full Name">'+
+    '<input id="regName" placeholder="Full Name" autocomplete="name">'+
 
-    '<input id="regEmail" type="email" placeholder="Email Address">'+
+    '<input id="regEmail" type="email" placeholder="Email Address" autocomplete="email">'+
 
-    '<input id="regNationality" placeholder="Nationality">'+
+    '<input id="regAddress" placeholder="Address" autocomplete="street-address">'+
 
-    '<input id="regCountry" placeholder="Country">'+
+    '<input id="regNationality" placeholder="Nationality" autocomplete="country-name">'+
 
-    '<input id="regPhone" placeholder="Phone Number">'+
+    '<input id="regCountryCode" placeholder="Country Code (example: +23)" autocomplete="tel-country-code">'+
 
-    '<input id="regInstitution" placeholder="Institution / School">'+
+    '<input id="regCountry" placeholder="Country" autocomplete="country-name">'+
+
+    '<input id="regPostalCode" placeholder="Postal Code" autocomplete="postal-code">'+
+
+    '<input id="regCity" placeholder="City" autocomplete="address-level2">'+
+
+    '<input id="regPhone" placeholder="Phone Number" autocomplete="tel">'+
+
+    '<input id="regOccupation" placeholder="Job / Occupation" autocomplete="organization-title">'+
+
+    '<input id="regInstitution" placeholder="School / Center / Company" autocomplete="organization">'+
 
     '<button class="btn btn-gold" onclick="submitRegistration()">'+
     'REGISTER & START '+program+' EXAM'+
@@ -7083,15 +7093,20 @@ async function submitRegistration(){
 
     let name=document.getElementById("regName").value.trim();
     let email=document.getElementById("regEmail").value.trim();
+    let address=document.getElementById("regAddress").value.trim();
     let nationality=document.getElementById("regNationality").value.trim();
+    let countryCode=document.getElementById("regCountryCode").value.trim();
     let country=document.getElementById("regCountry").value.trim();
+    let postalCode=document.getElementById("regPostalCode").value.trim();
+    let city=document.getElementById("regCity").value.trim();
     let phone=document.getElementById("regPhone").value.trim();
+    let occupation=document.getElementById("regOccupation").value.trim();
     let institution=document.getElementById("regInstitution").value.trim();
 
-    if(!name || !email || !nationality){
+    if(!name || !email || !address || !nationality || !countryCode || !country || !postalCode || !city || !phone || !occupation || !institution){
 
         alert(
-            "Please complete Name, Email and Nationality."
+            "Please complete all registration fields."
         );
 
         return;
@@ -7124,8 +7139,10 @@ async function submitRegistration(){
     let id;
     try{
         const registration=await getiRegisterExam({
-            full_name:name,email:email,nationality:nationality,country:country,
-            phone:phone,institution:institution,exam_name:examState.program+" Exam",
+            full_name:name,email:email,address:address,nationality:nationality,
+            country_code:countryCode,country:country,postal_code:postalCode,city:city,
+            phone:phone,occupation:occupation,institution:institution,
+            exam_name:examState.program+" Exam",
             exam_category:"GETI Qualification",programme:examState.program
         });
         id=registration.candidate_id;
@@ -7141,8 +7158,13 @@ async function submitRegistration(){
         name:name,
         email:email,
         nationality:nationality,
+        address:address,
+        countryCode:countryCode,
         country:country,
+        postalCode:postalCode,
+        city:city,
         phone:phone,
+        occupation:occupation,
         institution:institution,
         program:examState.program
 
