@@ -5506,7 +5506,7 @@ async function verifyCertificate(){
     return;
   }
 
-  if(box)box.innerHTML='<div class="error">❌ Unable to connect to GETI verification server.</div>';
+  if(box)box.innerHTML='<div class="error">❌ No certificate found. Please check the Certificate ID or Name.</div>';
 }
 
 function getiLiveCertificateSearch(value){
@@ -15645,90 +15645,6 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
   };
 })();
 </script>
-
-<style id="geti-universal-certificate-search-final-style">
-#getiVerifyCardId,#getiVerifyCardName,#getiVerifyCardNationality{display:none!important}
-</style>
-<script id="geti-universal-certificate-search-final">
-(function(){
-  var cache={records:null,time:0};
-  var timer=null;
-  var serial=0;
-
-  function clean(v){return String(v==null?'':v).trim().replace(/\s+/g,' ');}
-  function fold(v){var s=clean(v).toLowerCase();try{s=s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');}catch(e){}return s;}
-  function idKey(v){return clean(v).toUpperCase().replace(/[^A-Z0-9]/g,'');}
-  function query(){var el=document.getElementById('verifyInput');return clean(el&&el.value);}
-
-  function requestList(){
-    if(typeof window.baamCertificateJsonp==='function')return window.baamCertificateJsonp('list_certificates',{code:'global'});
-    return new Promise(function(resolve,reject){
-      var cb='getiUniversalVerify_'+Date.now()+'_'+Math.random().toString(36).slice(2),s=document.createElement('script'),done=false;
-      var timeout=setTimeout(function(){finish(new Error('Google Sheet server did not respond.'));},22000);
-      function finish(err,data){if(done)return;done=true;clearTimeout(timeout);try{delete window[cb];}catch(e){window[cb]=undefined;}if(s.parentNode)s.parentNode.removeChild(s);err?reject(err):resolve(data||{});}
-      window[cb]=function(data){finish(null,data);};
-      s.async=true;s.onerror=function(){finish(new Error('Unable to connect to GETI Google Sheet.'));};
-      s.src=window.API_URL+'?action=list_certificates&code=global&callback='+encodeURIComponent(cb)+'&_='+Date.now();
-      document.body.appendChild(s);
-    });
-  }
-
-  async function records(){
-    var now=Date.now();
-    if(cache.records&&now-cache.time<30000)return cache.records;
-    var data=await requestList();
-    if(!data||data.success===false)throw new Error((data&&data.message)||'Unable to read certificate register.');
-    var list=Array.isArray(data.records)?data.records:(Array.isArray(data.results)?data.results:[]);
-    cache={records:list,time:now};return list;
-  }
-
-  function matches(list,q){
-    var fq=fold(q),iq=idKey(q),looksId=/^GETI[\s-]*CERT/i.test(q);
-    var out=list.filter(function(r){
-      var rid=idKey(r&&r.id),name=fold(r&&r.name),nat=fold(r&&r.nationality);
-      if(looksId)return rid===iq;
-      return (rid===iq)||(name.indexOf(fq)!==-1)||(nat.indexOf(fq)!==-1);
-    });
-    var seen={};
-    out=out.filter(function(r){var k=idKey(r&&r.id)||[fold(r&&r.name),fold(r&&r.nationality),fold(r&&r.certificate)].join('|');if(seen[k])return false;seen[k]=1;return true;});
-    out.sort(function(a,b){
-      var aExact=idKey(a&&a.id)===iq?0:(fold(a&&a.name)===fq?1:(fold(a&&a.nationality)===fq?2:3));
-      var bExact=idKey(b&&b.id)===iq?0:(fold(b&&b.name)===fq?1:(fold(b&&b.nationality)===fq?2:3));
-      if(aExact!==bExact)return aExact-bExact;
-      return clean(a&&a.name).localeCompare(clean(b&&b.name),undefined,{sensitivity:'base'});
-    });
-    return out;
-  }
-
-  window.verifyType='auto';
-  window.setVerifyType=function(){window.verifyType='auto';};
-  window.getiGetVerifyValue=function(){return query();};
-
-  window.verifyCertificate=async function(){
-    var q=query(),box=document.getElementById('verifyResult'),my=++serial;
-    window.verifyType='auto';
-    if(!q){if(box)box.innerHTML='<div class="error">Please enter a Certificate ID, certificate holder name, or nationality.</div>';return;}
-    if(box)box.innerHTML='<div class="success">⏳ Searching the official GETI certificate register...</div>';
-    try{
-      var list=await records();if(my!==serial)return;
-      var found=matches(list,q);
-      if(typeof window.displayVerificationResults==='function')window.displayVerificationResults({success:true,results:found,query:q,automatic:true});
-      else if(box)box.innerHTML=found.length?'<div class="success">✅ '+found.length+' certificate(s) found.</div>':'<div class="error">❌ No certificate found.</div>';
-    }catch(err){
-      if(my!==serial)return;console.warn('GETI universal certificate verification error:',err);
-      if(box)box.innerHTML='<div class="error">❌ Certificate verification server is temporarily unavailable. Please try again.</div>';
-    }
-  };
-
-  window.getiLiveCertificateSearch=function(value){
-    clearTimeout(timer);
-    var box=document.getElementById('verifyResult');
-    if(!clean(value)){serial++;if(box)box.innerHTML='';return;}
-    timer=setTimeout(function(){window.verifyCertificate();},500);
-  };
-})();
-</script>
-
 
 <!-- GETI automatic exam registration + passed certificate issuance + permanent same-exam lock -->
 <script id="geti-auto-sheet-pass-certificate-lock">
