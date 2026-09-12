@@ -4853,6 +4853,31 @@ body:not(.geti-second-area-open) .footer{display:none!important;}
 }
 </style>
 
+
+<style id="geti-exam-registration-fields">
+.registration-form .phone-row{grid-column:1/-1;}
+@media(max-width:600px){.registration-form .phone-row{grid-template-columns:1fr!important;}}
+</style>
+<style id="geti-conditional-payment-demo">
+.geti-payment-overlay{position:fixed;inset:0;z-index:100000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(5,22,42,.72);backdrop-filter:blur(5px)}
+.geti-payment-overlay.show{display:flex}
+.geti-payment-card{width:min(620px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:14px;box-shadow:0 24px 70px rgba(0,0,0,.3);padding:24px;color:#1c2b3a}
+.geti-payment-head{border-bottom:1px solid #e3e8ee;padding-bottom:14px;margin-bottom:16px}
+.geti-payment-head h2{margin:0;color:#0b2d5c;font-size:22px}
+.geti-payment-head p{margin:7px 0 0;color:#687789;font-size:13px;line-height:1.5}
+.geti-payment-badge{display:inline-block;margin-bottom:9px;padding:5px 9px;border-radius:999px;background:#eef5fb;color:#0b4b82;font-size:10px;font-weight:900;letter-spacing:.06em}
+.geti-payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.geti-payment-grid label{font-size:11px;font-weight:800;color:#53687c}
+.geti-payment-grid input,.geti-payment-grid select{width:100%;box-sizing:border-box;margin-top:5px;padding:11px;border:1px solid #cbd6e1;border-radius:6px;font-size:13px}
+.geti-payment-full{grid-column:1/-1}
+.geti-payment-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:17px}
+.geti-payment-actions button{border:0;border-radius:6px;padding:11px 17px;font-weight:900;cursor:pointer}
+.geti-payment-close{background:#edf2f6;color:#29435e}
+.geti-payment-continue{background:#0b2d5c;color:#fff}
+.geti-payment-note{margin-top:13px;padding:10px 12px;background:#fff8e7;border-left:4px solid #c49a35;color:#68531b;font-size:11px;line-height:1.5}
+.geti-payment-demo-warning{margin-top:10px;color:#8a4b00;font-size:10.5px}
+@media(max-width:600px){.geti-payment-grid{grid-template-columns:1fr}.geti-payment-full{grid-column:auto}.geti-payment-card{padding:18px}.geti-payment-actions{flex-direction:column}.geti-payment-actions button{width:100%}}
+</style>
 </head>
 
 <body translate="no" class="notranslate">
@@ -6085,7 +6110,8 @@ var clone=certificate.cloneNode(true);
 var originalImages=certificate.querySelectorAll("img"),clonedImages=clone.querySelectorAll("img");
 for(var i=0;i<originalImages.length;i++)clonedImages[i].setAttribute("src",originalImages[i].src);
 win.document.open();
-win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){var images=Array.from(document.images);Promise.all(images.map(function(img){return img.complete?Promise.resolve():new Promise(function(done){img.onload=img.onerror=done})})).then(function(){setTimeout(function(){window.print()},250)})}<\/script></body></html>');
+win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){var images=Array.from(document.images);Promise.all(images.map(function(img){return img.complete?Promise.resolve():new Promise(function(done){img.onload=img.onerror=done})})).then(function(){setTimeout(function(){window.print()},250)})}<\/script>
+</body></html>');
 win.document.close();
 }
 </script>
@@ -7055,19 +7081,20 @@ function openExamRegistration(program){
 
     '<input id="regEmail" type="email" placeholder="Email Address" autocomplete="email">'+
 
+    '<input id="regCountry" placeholder="Country" autocomplete="country-name">'+
+
     '<input id="regAddress" placeholder="Address" autocomplete="street-address">'+
 
     '<input id="regNationality" placeholder="Nationality" autocomplete="country-name">'+
-
-    '<input id="regCountryCode" placeholder="Country Code (example: +23)" autocomplete="tel-country-code">'+
-
-    '<input id="regCountry" placeholder="Country" autocomplete="country-name">'+
 
     '<input id="regPostalCode" placeholder="Postal Code" autocomplete="postal-code">'+
 
     '<input id="regCity" placeholder="City" autocomplete="address-level2">'+
 
-    '<input id="regPhone" placeholder="Phone Number" autocomplete="tel">'+
+    '<div class="phone-row" style="display:grid;grid-template-columns:110px 1fr;gap:10px;width:100%;">'+
+    '<input id="regCountryCode" placeholder="Country Code (+23)" inputmode="tel" autocomplete="tel-country-code">'+
+    '<input id="regPhone" placeholder="Phone Number" inputmode="tel" autocomplete="tel">'+
+    '</div>'+
 
     '<input id="regOccupation" placeholder="Job / Occupation" autocomplete="organization-title">'+
 
@@ -7093,17 +7120,17 @@ async function submitRegistration(){
 
     let name=document.getElementById("regName").value.trim();
     let email=document.getElementById("regEmail").value.trim();
-    let address=document.getElementById("regAddress").value.trim();
     let nationality=document.getElementById("regNationality").value.trim();
-    let countryCode=document.getElementById("regCountryCode").value.trim();
     let country=document.getElementById("regCountry").value.trim();
+    let address=document.getElementById("regAddress").value.trim();
     let postalCode=document.getElementById("regPostalCode").value.trim();
     let city=document.getElementById("regCity").value.trim();
+    let countryCode=document.getElementById("regCountryCode").value.trim();
     let phone=document.getElementById("regPhone").value.trim();
     let occupation=document.getElementById("regOccupation").value.trim();
     let institution=document.getElementById("regInstitution").value.trim();
 
-    if(!name || !email || !address || !nationality || !countryCode || !country || !postalCode || !city || !phone || !occupation || !institution){
+    if(!name || !email || !country || !address || !nationality || !postalCode || !city || !countryCode || !phone || !occupation || !institution){
 
         alert(
             "Please complete all registration fields."
@@ -7139,10 +7166,10 @@ async function submitRegistration(){
     let id;
     try{
         const registration=await getiRegisterExam({
-            full_name:name,email:email,address:address,nationality:nationality,
-            country_code:countryCode,country:country,postal_code:postalCode,city:city,
+            full_name:name,email:email,nationality:nationality,country:country,
+            address:address,postal_code:postalCode,city:city,country_code:countryCode,
             phone:phone,occupation:occupation,institution:institution,
-            exam_name:examState.program+" Exam",
+            school_center_company:institution,exam_name:examState.program+" Exam",
             exam_category:"GETI Qualification",programme:examState.program
         });
         id=registration.candidate_id;
@@ -7158,11 +7185,11 @@ async function submitRegistration(){
         name:name,
         email:email,
         nationality:nationality,
-        address:address,
-        countryCode:countryCode,
         country:country,
+        address:address,
         postalCode:postalCode,
         city:city,
+        countryCode:countryCode,
         phone:phone,
         occupation:occupation,
         institution:institution,
@@ -8812,10 +8839,15 @@ function openGeti30Registration(examName,course){
         '<div class="registration-form">'+
         '<input id="g30Name" placeholder="Full Name">'+
         '<input id="g30Email" type="email" placeholder="Email Address">'+
-        '<input id="g30Nationality" placeholder="Nationality">'+
         '<input id="g30Country" placeholder="Country">'+
+        '<input id="g30Address" placeholder="Address">'+
+        '<input id="g30Nationality" placeholder="Nationality">'+
+        '<input id="g30PostalCode" placeholder="Postal Code">'+
+        '<input id="g30City" placeholder="City">'+
+        '<input id="g30CountryCode" placeholder="Country Code (e.g. +23)">'+
         '<input id="g30Phone" placeholder="Phone Number">'+
-        '<input id="g30Institution" placeholder="Institution / School">'+
+        '<input id="g30Occupation" placeholder="Job / Occupation">'+
+        '<input id="g30Institution" placeholder="School / Center / Company">'+
         '<label for="g30Hours" style="display:block;margin:2px 0 -8px;color:#173b61;font-size:.78rem;font-weight:850;letter-spacing:.045em;text-transform:uppercase">Exam Hours <span style="color:#b4232f">*</span></label>'+
         '<select id="g30Hours" required aria-required="true">'+
         '<option value="">Select the exam hours — required</option>'+hourOptions+
@@ -8835,8 +8867,8 @@ function submitGeti30Registration(){
     const phone=document.getElementById("g30Phone").value.trim();
     const institution=document.getElementById("g30Institution").value.trim();
 
-    if(!name || !email || !nationality){
-        alert("Please complete Name, Email and Nationality.");
+    if(!name || !email || !country || !address || !nationality || !postalCode || !city || !countryCode || !phone || !occupation || !institution){
+        alert("Please complete all registration fields before starting the examination.");
         return;
     }
 
@@ -9756,6 +9788,14 @@ function showGeti30FinalResult(){
         name:geti30State.student.name,
         email:geti30State.student.email,
         nationality:geti30State.student.nationality,
+        country:geti30State.student.country,
+        address:geti30State.student.address,
+        postalCode:geti30State.student.postalCode,
+        city:geti30State.student.city,
+        countryCode:geti30State.student.countryCode,
+        phone:geti30State.student.phone,
+        occupation:geti30State.student.occupation,
+        institution:geti30State.student.institution,
         exam:geti30State.examTitle||geti30State.exam,
         baseExam:geti30State.exam,
         level:geti30State.examLevel||"B2",
@@ -9798,6 +9838,10 @@ function showGeti30FinalResult(){
         (status==="PASSED" ? buildGetiCertificateFeeNotice(geti30State.teflHours||getGetiExamHoursFromTitle(geti30State.examTitle||"")) : "")+
         '<h3>Subject Results</h3>'+rows+
         '</div>';
+
+    if(status==="PASSED" && typeof window.getiShouldShowConditionalPayment==="function" && window.getiShouldShowConditionalPayment()){
+        window.setTimeout(function(){ if(typeof window.openGetiConditionalPayment==="function") window.openGetiConditionalPayment(); },250);
+    }
 }
 
 function startGeti30Timer(){
@@ -12808,7 +12852,12 @@ async function submitGeti30Registration(){
     const email=document.getElementById("g30Email").value.trim().toLowerCase();
     const nationality=document.getElementById("g30Nationality").value.trim();
     const country=document.getElementById("g30Country").value.trim();
+    const address=document.getElementById("g30Address").value.trim();
+    const postalCode=document.getElementById("g30PostalCode").value.trim();
+    const city=document.getElementById("g30City").value.trim();
+    const countryCode=document.getElementById("g30CountryCode").value.trim();
     const phone=document.getElementById("g30Phone").value.trim();
+    const occupation=document.getElementById("g30Occupation").value.trim();
     const institution=document.getElementById("g30Institution").value.trim();
     const hoursElement=document.getElementById("g30Hours");
     const examHours=hoursElement ? Number(hoursElement.value) : 0;
@@ -12868,7 +12917,8 @@ async function submitGeti30Registration(){
         if(button)button.textContent="SAVING REGISTRATION...";
         const registration=await getiRegisterExam({
             full_name:name,email:email,nationality:nationality,country:country,
-            phone:phone,institution:institution,exam_name:geti30State.examTitle,
+            address:address,postal_code:postalCode,city:city,country_code:countryCode,
+            phone:phone,occupation:occupation,institution:institution,exam_name:geti30State.examTitle,
             exam_category:"GETI Professional Examination",programme:geti30State.exam,
             option_track:examHours+" Hours",subject:geti30State.examTitle
         });
@@ -12879,7 +12929,12 @@ async function submitGeti30Registration(){
             email:email,
             nationality:nationality,
             country:country,
+            address:address,
+            postalCode:postalCode,
+            city:city,
+            countryCode:countryCode,
             phone:phone,
+            occupation:occupation,
             institution:institution,
             examHours:examHours
         };
@@ -14348,7 +14403,7 @@ window.initGetiLessons=function(){const list=document.getElementById("lessonExam
 const originalHourSelector=window.openGeneralExamHourSelector;
 window.openGeneralExamHourSelector=function(exam){const c=cfg(exam);if(!c)return originalHourSelector(exam);getiGeneralHourExam=exam;const panel=document.getElementById("geti30ExamPanel");panel.classList.add("active");const cards=GETI_GENERAL_EXAM_HOURS.map(function(o,i){return '<button class="tefl-course-card" onclick="selectGeneralExamHour('+i+')"><strong>'+o.hours+' '+escapeHTML(c.ui.hours)+' · '+escapeHTML(c.exam)+'</strong><span>'+escapeHTML(c.course)+'</span></button>';}).join("");panel.innerHTML='<h2 class="exam-title">'+escapeHTML(c.ui.chooseHours)+'</h2><p class="exam-subtitle">'+escapeHTML(c.ui.chooseHoursSub)+'</p><div class="tefl-course-grid">'+cards+'</div>';panel.scrollIntoView({behavior:"smooth",block:"start"});};
 
-function translateRegistration(exam){const c=cfg(exam);if(!c)return;const p=document.getElementById("geti30ExamPanel");if(!p||!document.getElementById("g30Name"))return;const h=p.querySelector(".exam-title");if(h)h.textContent=nativeDisplayTitle(exam,geti30State.examTitle);const sub=p.querySelector(".exam-subtitle");if(sub)sub.textContent=c.ui.registerSub;const chips=p.querySelectorAll(".exam30-subject-chip");chips.forEach(function(x,i){x.textContent=c.subjects[i]||x.textContent;});const ids=["g30Name","g30Email","g30Nationality","g30Country","g30Phone","g30Institution"],vals=[c.ui.fullName,c.ui.email,c.ui.nationality,c.ui.country,c.ui.phone,c.ui.institution];ids.forEach(function(id,i){const el=document.getElementById(id);if(el)el.placeholder=vals[i];});const label=p.querySelector('label[for="g30Hours"]');if(label)label.innerHTML=escapeHTML(c.ui.examHours)+' <span style="color:#b4232f">*</span>';const sel=document.getElementById("g30Hours");if(sel&&sel.options[0])sel.options[0].textContent=c.ui.selectHours;const note=sel&&sel.nextElementSibling;if(note)note.textContent=c.ui.hoursNote;const btn=p.querySelector(".registration-form .btn");if(btn)btn.textContent=c.ui.register;}
+function translateRegistration(exam){const c=cfg(exam);if(!c)return;const p=document.getElementById("geti30ExamPanel");if(!p||!document.getElementById("g30Name"))return;const h=p.querySelector(".exam-title");if(h)h.textContent=nativeDisplayTitle(exam,geti30State.examTitle);const sub=p.querySelector(".exam-subtitle");if(sub)sub.textContent=c.ui.registerSub;const chips=p.querySelectorAll(".exam30-subject-chip");chips.forEach(function(x,i){x.textContent=c.subjects[i]||x.textContent;});const ids=["g30Name","g30Email","g30Country","g30Address","g30Nationality","g30PostalCode","g30City","g30CountryCode","g30Phone","g30Occupation","g30Institution"],vals=[c.ui.fullName,c.ui.email,c.ui.country,"Address",c.ui.nationality,"Postal Code","City","Country Code (e.g. +23)",c.ui.phone,"Job / Occupation",c.ui.institution];ids.forEach(function(id,i){const el=document.getElementById(id);if(el)el.placeholder=vals[i];});const label=p.querySelector('label[for="g30Hours"]');if(label)label.innerHTML=escapeHTML(c.ui.examHours)+' <span style="color:#b4232f">*</span>';const sel=document.getElementById("g30Hours");if(sel&&sel.options[0])sel.options[0].textContent=c.ui.selectHours;const note=sel&&sel.nextElementSibling;if(note)note.textContent=c.ui.hoursNote;const btn=p.querySelector(".registration-form .btn");if(btn)btn.textContent=c.ui.register;}
 const originalRegistration=window.openGeti30Registration;
 window.openGeti30Registration=function(exam,course){const result=withNativeAlert(exam,function(){return originalRegistration(exam,course);});translateRegistration(exam);return result;};
 
@@ -17335,5 +17390,50 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
 .geti-email-link:hover{opacity:.82}
 </style>
 
+
+<div id="getiConditionalPayment" class="geti-payment-overlay" role="dialog" aria-modal="true" aria-labelledby="getiPaymentTitle">
+  <div class="geti-payment-card">
+    <div class="geti-payment-head">
+      <span class="geti-payment-badge">PAYMENT REQUIRED</span>
+      <h2 id="getiPaymentTitle">GETI Certificate Payment</h2>
+      <p id="getiPaymentDescription">Your examination result is marked PASSED. Certificate payment information is shown for this registration.</p>
+    </div>
+    <div class="geti-payment-grid">
+      <label>Country<select id="getiPayCountry"><option>Madagascar</option><option>France</option><option>Other</option></select></label>
+      <label>First Name<input id="getiPayFirstName" autocomplete="given-name"></label>
+      <label>Last Name<input id="getiPayLastName" autocomplete="family-name"></label>
+      <label>Billing Email<input id="getiPayEmail" type="email" autocomplete="email"></label>
+      <label class="geti-payment-full">Billing Address<input id="getiPayAddress" autocomplete="street-address"></label>
+      <label>Postal Code<input id="getiPayPostal" autocomplete="postal-code"></label>
+      <label>City<input id="getiPayCity" autocomplete="address-level2"></label>
+    </div>
+    <div class="geti-payment-note">This screen is a payment-step interface only. It does not confirm or simulate a successful bank-card transaction. A real payment gateway must be connected before money can be charged.</div>
+    <div class="geti-payment-demo-warning">For the special location rule, this payment screen is triggered when the registration city is <strong>Maroantsetra</strong> or the postal code is <strong>512</strong>.</div>
+    <div class="geti-payment-actions">
+      <button type="button" class="geti-payment-close" onclick="closeGetiConditionalPayment()">Close</button>
+      <button type="button" class="geti-payment-continue" onclick="showGetiPaymentGatewayNotice()">Continue to secure payment</button>
+    </div>
+  </div>
+</div>
+<script id="geti-conditional-payment-script">
+(function(){
+  function value(id){var x=document.getElementById(id);return x?x.value.trim():"";}
+  window.getiShouldShowConditionalPayment=function(){
+    var city=value("g30City").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+    var postal=value("g30PostalCode").replace(/\s+/g,"");
+    return city==="maroantsetra" || postal==="512";
+  };
+  window.openGetiConditionalPayment=function(){
+    var overlay=document.getElementById("getiConditionalPayment");if(!overlay)return;
+    var name=value("g30Name").split(/\s+/), email=value("g30Email"), city=value("g30City"), postal=value("g30PostalCode"), address=value("g30Address");
+    var fn=document.getElementById("getiPayFirstName"),ln=document.getElementById("getiPayLastName"),em=document.getElementById("getiPayEmail"),pc=document.getElementById("getiPayPostal"),ct=document.getElementById("getiPayCity"),ad=document.getElementById("getiPayAddress");
+    if(fn)fn.value=name.shift()||"";if(ln)ln.value=name.join(" ");if(em)em.value=email;if(pc)pc.value=postal;if(ct)ct.value=city;if(ad)ad.value=address;
+    overlay.classList.add("show");document.body.style.overflow="hidden";
+  };
+  window.closeGetiConditionalPayment=function(){var x=document.getElementById("getiConditionalPayment");if(x)x.classList.remove("show");document.body.style.overflow="";};
+  window.showGetiPaymentGatewayNotice=function(){alert("The secure payment gateway is not connected yet. This page does not confirm a payment.");};
+  window.addEventListener("keydown",function(e){if(e.key==="Escape")window.closeGetiConditionalPayment();});
+})();
+</script>
 </body>
 </html>
