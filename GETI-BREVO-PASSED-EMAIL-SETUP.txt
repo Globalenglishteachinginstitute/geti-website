@@ -1,0 +1,44 @@
+GETI — BREVO AUTOMATIC PASSED EMAIL
+
+Files
+-----
+1. GETI-index-PASSED-AUTO-BREVO-EMAIL.html
+2. GETI-brevo-passed-email-worker.js
+
+What it does
+------------
+- Only a PASSED examination triggers the automatic email.
+- Recipient = the email entered during GETI exam registration.
+- Sender = admin@getienglish.com
+- The congratulations paragraph is exactly 60 words.
+- The existing certificate template image is read from the current Certificate Verification renderer and sent to Brevo as an image attachment when that certificate type has an embedded template.
+- No new certificate image is generated.
+- A local browser guard and optional D1 sent-log prevent duplicate emails.
+
+Brevo / Cloudflare setup
+------------------------
+1. In Brevo, verify admin@getienglish.com as an authorized sender.
+2. Create/copy your Brevo API key.
+3. Deploy GETI-brevo-passed-email-worker.js as a Cloudflare Worker.
+4. Add Worker secret:
+      BREVO_API_KEY = your Brevo API key
+   Keep this secret ONLY in Cloudflare; never place it in the HTML.
+5. Recommended: bind Cloudflare D1 database "geti-db" to the Worker with binding name:
+      DB
+6. Route ONLY this path to the Worker:
+      getienglish.com/api/brevo/passed-email*
+7. Publish GETI-index-PASSED-AUTO-BREVO-EMAIL.html as the GETI site index.
+
+Protected systems
+-----------------
+The HTML modification does NOT edit:
+- Certificate Verification section
+- QR verification
+- Certificate ID functions
+- verification functions
+- automatic Certificate ID issuance function
+
+Brevo API
+---------
+The Worker sends transactional email using:
+POST https://api.brevo.com/v3/smtp/email
