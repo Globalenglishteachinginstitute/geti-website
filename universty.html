@@ -853,9 +853,9 @@
 
     .stats-entry{
       position:relative;
-      z-index:5;
-      margin-top:-58px;
-      margin-bottom:28px;
+      z-index:1;
+      margin-top:0;
+      margin-bottom:0;
     }
     .stats-entry-grid{
       display:grid;
@@ -957,6 +957,411 @@
       .second-area-box h2{font-size:30px}
     }
 
+
+    /* Clean separation: second area must not show first-area elements */
+    .geti-first-hero{
+      min-height:600px;
+      margin:0;
+      overflow:hidden;
+    }
+    .geti-first-hero .container{
+      min-height:600px;
+      padding:72px 0;
+    }
+    .stats-entry{
+      position:relative;
+      z-index:1;
+      margin-top:0 !important;
+      margin-bottom:0 !important;
+      padding:28px 0;
+      background:#fff;
+      border-bottom:1px solid #e5edf5;
+      clear:both;
+    }
+    .second-area-boundary{
+      width:100%;
+      height:1px;
+      background:#dfe8f1;
+      clear:both;
+    }
+    .second-area-intro{
+      position:relative;
+      z-index:1;
+      margin:0 !important;
+      padding:54px 0 24px;
+      background:#f6f9fc;
+      clear:both;
+    }
+    .degree-levels{
+      position:relative;
+      z-index:1;
+      margin:0 !important;
+      padding-top:34px;
+      background:#f6f9fc;
+      clear:both;
+    }
+    #levels{scroll-margin-top:82px}
+    @media(max-width:700px){
+      .geti-first-hero{
+        min-height:620px;
+      }
+      .geti-first-hero .container{
+        min-height:620px;
+        padding:56px 0 64px;
+      }
+      .stats-entry{padding:22px 0}
+      .second-area-intro{padding-top:40px}
+    }
+
+
+    /* Student portal hamburger drawer */
+    .portal-menu-button{
+      position:fixed;
+      top:18px;
+      left:18px;
+      z-index:120;
+      width:46px;
+      height:46px;
+      border:1px solid #d7e0ea;
+      border-radius:8px;
+      background:#fff;
+      box-shadow:0 8px 22px rgba(8,46,93,.12);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      padding:0;
+    }
+    .portal-menu-button span{
+      display:block;
+      width:22px;
+      height:2px;
+      background:#082e5d;
+      margin:4px 0;
+      border-radius:2px;
+      transition:.2s ease;
+    }
+    .app-page.active .portal-menu-button{display:flex}
+    .portal-menu-button-inner{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .app-shell{
+      display:block;
+      min-height:100vh;
+    }
+    .sidebar{
+      position:fixed;
+      top:0;
+      left:0;
+      width:270px;
+      height:100vh;
+      z-index:130;
+      transform:translateX(-105%);
+      transition:transform .25s ease;
+      box-shadow:18px 0 35px rgba(4,23,43,.18);
+      overflow-y:auto;
+    }
+    .sidebar.open{
+      transform:translateX(0);
+    }
+    .sidebar-close{
+      position:absolute;
+      top:16px;
+      right:14px;
+      width:36px;
+      height:36px;
+      border:1px solid rgba(255,255,255,.22);
+      border-radius:7px;
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      cursor:pointer;
+      font-size:20px;
+      line-height:1;
+    }
+    .portal-overlay{
+      position:fixed;
+      inset:0;
+      z-index:125;
+      background:rgba(3,20,39,.46);
+      opacity:0;
+      visibility:hidden;
+      transition:.2s ease;
+    }
+    .portal-overlay.show{
+      opacity:1;
+      visibility:visible;
+    }
+    .app-main{
+      min-height:100vh;
+      padding:28px 28px 28px 86px;
+    }
+    .sidebar .geti-brand{
+      padding-right:34px;
+    }
+    @media(max-width:700px){
+      .portal-menu-button{
+        top:12px;
+        left:12px;
+        width:42px;
+        height:42px;
+      }
+      .sidebar{
+        width:min(290px,86vw);
+      }
+      .app-main{
+        padding:72px 16px 20px;
+      }
+      .app-top{
+        align-items:flex-start;
+      }
+    }
+
+
+    #studentSidebar{
+      padding-top:68px;
+    }
+
+
+    .geti-school-button{
+      position:fixed;
+      top:18px;
+      right:18px;
+      z-index:120;
+      min-width:128px;
+      height:46px;
+      padding:0 18px;
+      border:1px solid #0b4b88;
+      border-radius:8px;
+      background:#0b4b88;
+      color:#fff;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      cursor:pointer;
+      box-shadow:0 8px 22px rgba(8,46,93,.12);
+      display:none;
+      align-items:center;
+      justify-content:center;
+    }
+    .geti-school-button:hover{background:#082e5d}
+    .app-page.active .geti-school-button{display:flex}
+    @media(max-width:700px){
+      .geti-school-button{
+        top:12px;
+        right:12px;
+        height:42px;
+        min-width:112px;
+        padding:0 14px;
+        font-size:11px;
+      }
+    }
+
+
+    .school-choice-wrap{
+      min-height:72vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .school-choice-card{
+      width:min(720px,100%);
+      text-align:center;
+    }
+    .school-choice-card h2{
+      margin:0 0 10px;
+      color:#082e5d;
+      font-size:34px;
+    }
+    .school-choice-card p{
+      margin:0 0 28px;
+      color:#667085;
+      font-size:14px;
+    }
+    .school-choice-buttons{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:18px;
+    }
+    .school-choice-button{
+      min-height:118px;
+      border:1px solid #dce5ee;
+      border-radius:12px;
+      background:#fff;
+      color:#082e5d;
+      font-size:18px;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 10px 26px rgba(8,46,93,.08);
+      transition:.2s ease;
+    }
+    .school-choice-button:hover{
+      transform:translateY(-2px);
+      border-color:#0b4b88;
+      box-shadow:0 14px 30px rgba(8,46,93,.12);
+    }
+    @media(max-width:620px){
+      .school-choice-buttons{grid-template-columns:1fr}
+    }
+
+
+    .bacc-stream-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:18px;
+      margin-top:26px;
+    }
+    .bacc-stream-button{
+      min-height:110px;
+      border:1px solid #dce5ee;
+      border-radius:12px;
+      background:#fff;
+      color:#082e5d;
+      font-size:17px;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 10px 26px rgba(8,46,93,.08);
+      transition:.2s ease;
+      padding:18px;
+      text-align:left;
+    }
+    .bacc-stream-button:hover{
+      transform:translateY(-2px);
+      border-color:#0b4b88;
+      box-shadow:0 14px 30px rgba(8,46,93,.12);
+    }
+    .bacc-stream-button small{
+      display:block;
+      margin-top:6px;
+      color:#6c7e90;
+      font-size:12px;
+      font-weight:700;
+    }
+    @media(max-width:620px){
+      .bacc-stream-grid{grid-template-columns:1fr}
+    }
+
+
+    .subject-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+      margin-top:24px;
+    }
+    .subject-button{
+      min-height:72px;
+      border:1px solid #dce5ee;
+      border-radius:10px;
+      background:#fff;
+      color:#082e5d;
+      font-size:15px;
+      font-weight:850;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(8,46,93,.06);
+      transition:.2s ease;
+      padding:14px 16px;
+      text-align:left;
+    }
+    .subject-button:hover{
+      border-color:#0b4b88;
+      transform:translateY(-1px);
+      box-shadow:0 12px 24px rgba(8,46,93,.10);
+    }
+    @media(max-width:620px){
+      .subject-grid{grid-template-columns:1fr}
+    }
+
+
+    .english-resource{
+      margin-top:24px;
+      padding:22px;
+      border:1px solid #dce5ee;
+      border-radius:12px;
+      background:#f8fbfe;
+    }
+    .english-resource h3{
+      margin:0 0 8px;
+      color:#082e5d;
+      font-size:20px;
+    }
+    .english-resource p{
+      margin:0 0 16px;
+      color:#667085;
+      font-size:13px;
+      line-height:1.6;
+    }
+    .english-resource-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .english-resource-actions a{
+      text-decoration:none;
+    }
+    .pdf-viewer{
+      width:100%;
+      height:520px;
+      border:1px solid #dce5ee;
+      border-radius:10px;
+      background:#fff;
+      margin-top:18px;
+    }
+    @media(max-width:700px){
+      .pdf-viewer{height:420px}
+    }
+
+
+    .literary-resource{
+      margin-top:24px;
+      padding:22px;
+      border:1px solid #dce5ee;
+      border-radius:12px;
+      background:#f8fbfe;
+    }
+    .literary-resource h3{
+      margin:0 0 8px;
+      color:#082e5d;
+      font-size:20px;
+    }
+    .literary-resource p{
+      margin:0 0 16px;
+      color:#667085;
+      font-size:13px;
+      line-height:1.6;
+    }
+    .literary-resource-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+    .literary-resource-actions a{text-decoration:none}
+    .literary-pdf-viewer{
+      width:100%;
+      height:520px;
+      border:1px solid #dce5ee;
+      border-radius:10px;
+      background:#fff;
+    }
+    @media(max-width:700px){
+      .literary-pdf-viewer{height:420px}
+    }
+    
+
+    .coursebook-resource{
+      margin-top:24px;padding:22px;border:1px solid #dce5ee;border-radius:12px;background:#f8fbfe;
+    }
+    .coursebook-resource h3{margin:0 0 8px;color:#082e5d;font-size:20px}
+    .coursebook-resource p{margin:0 0 16px;color:#667085;font-size:13px;line-height:1.6}
+    .coursebook-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+    .coursebook-actions a{text-decoration:none}
+    .coursebook-viewer{width:100%;height:520px;border:1px solid #dce5ee;border-radius:10px;background:#fff}
+    @media(max-width:700px){.coursebook-viewer{height:420px}}
+    
 </style>
 </head>
 <body>
@@ -973,7 +1378,7 @@
 
   <nav class="nav">
     <div class="container nav-inner">
-      <a class="geti-brand" href="#home">
+      <a class="geti-brand" href="#home" onclick="return goHomeIfLoggedOut()">
         <img class="geti-brand-logo" src="https://getienglish.com/geti-logo.png" alt="GETI official logo">
         <span class="geti-brand-info">
           <strong>Global English Teaching Institute</strong>
@@ -1035,6 +1440,7 @@
     </div>
   </section>
 
+  <div class="second-area-boundary"></div>
   <section class="second-area-intro">
     <div class="container">
       <div class="second-area-box">
@@ -1221,55 +1627,724 @@
   </section>
 
   <section class="app-page" id="studentApp">
+    <button class="geti-school-button" type="button" onclick="showScreen('schoolScreen')">GETI School</button>
+    <button class="portal-menu-button" id="portalMenuButton" type="button" aria-label="Open student menu" onclick="togglePortalMenu()">
+      <span class="portal-menu-button-inner">
+        
+      </span>
+    </button>
+    <div class="portal-overlay" id="portalOverlay" onclick="closePortalMenu()"></div>
     <div class="app-shell">
-      <aside class="sidebar">
+      <aside class="sidebar" id="studentSidebar">
+        <button class="sidebar-close" type="button" aria-label="Close student menu" onclick="closePortalMenu()">×</button>
         
 
-<div class="geti-brand" style="min-width:0;margin-bottom:28px">
-          <img class="geti-brand-logo" src="https://getienglish.com/geti-logo.png" alt="GETI official logo">
-          <span class="geti-brand-info">
-            <strong>GETI Diploma Student Portal</strong>
-            <small>Diploma Student Portal</small>
-          </span>
-        </div>
-        <a href="#" class="active" onclick="showScreen('dashboardScreen',this);return false;">Dashboard</a>
-        <a href="#" onclick="showScreen('lessonsScreen',this);return false;">My Lessons</a>
-        <a href="#" onclick="showScreen('examScreen',this);return false;">Exam</a>
-        <a href="#" onclick="showScreen('resultsScreen',this);return false;">Results</a>
-        <a href="#" onclick="showScreen('diplomaScreen',this);return false;">Diploma / Diploma</a>
+
+        <a href="#" class="active" onclick="showScreen('dashboardScreen',this);closePortalMenu();return false;">Dashboard</a>
+        <a href="#" onclick="showScreen('lessonsScreen',this);closePortalMenu();return false;">My Lessons</a>
+        <a href="#" onclick="showScreen('examScreen',this);closePortalMenu();return false;">Exam</a>
+        <a href="#" onclick="showScreen('resultsScreen',this);closePortalMenu();return false;">Results</a>
+        <a href="#" onclick="showScreen('diplomaScreen',this);return false;">Diploma</a>
         <a href="#" onclick="logoutStudent();return false;">Sign Out</a>
       </aside>
       <main class="app-main">
-        <div class="app-top">
-          <div><div class="kicker">GETI Diploma Student Portal</div><h2 style="margin:3px 0;color:var(--navy)">Welcome, <span id="portalStudentName">Student</span></h2></div>
-          <span class="pill">Online Student</span>
+        <div id="dashboardScreen" class="screen active">
+          <div class="panel" style="min-height:72vh"></div>
         </div>
 
-        <div id="dashboardScreen" class="screen active">
-          <div class="dashboard-grid">
-            <div class="dash-card"><strong id="dashProgress">35%</strong><span>COURSE PROGRESS</span></div>
-            <div class="dash-card"><strong id="dashLessons">3/5</strong><span>LESSONS COMPLETED</span></div>
-            <div class="dash-card"><strong>1</strong><span>EXAM AVAILABLE</span></div>
-            <div class="dash-card"><strong id="dashDocs">0</strong><span>DIPLOMAS READY</span></div>
-          </div>
-          <div class="learning-layout">
-            <div class="panel">
-              <img class="dashboard-photo" alt="University students in class"
-                   src="https://loremflickr.com/1200/700/university,class?lock=104">
-              <div class="kicker">Current Program</div>
-              <h2 id="portalProgram" style="color:var(--navy);margin-top:5px">Diploma in English Language Studies</h2>
-              <p style="color:var(--muted)">Continue your learning from your latest lesson.</p>
-              <div class="progress"><span id="progressBar"></span></div>
-              <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
-                <button class="btn btn-primary" onclick="showScreen('lessonsScreen')">Continue Lessons</button>
-                <button class="btn btn-outline" onclick="showScreen('examScreen')">Go to Exam</button>
+        <div id="schoolScreen" class="screen">
+          <div class="panel school-choice-wrap">
+            <div class="school-choice-card">
+              <div class="kicker">GETI School</div>
+              <h2>Choose Your GETI School</h2>
+              <p>Select the school you want to enter.</p>
+              <div class="school-choice-buttons">
+                <button class="school-choice-button" onclick="showScreen('baccalaureatScreen')">GETI Baccalaureat</button>
+                <button class="school-choice-button" onclick="showScreen('universityScreen')">GETI University</button>
               </div>
             </div>
-            <div class="panel">
-              <div class="kicker">Learning Flow</div>
-              <h3 style="color:var(--navy)">Lessons  Exam  Result</h3>
-              <p style="color:var(--muted)">Students study the lessons first, then take the final exam and receive a result.</p>
+          </div>
+        </div>
+
+        <div id="baccalaureatScreen" class="screen">
+          <div class="panel" style="min-height:72vh">
+            <div class="kicker">GETI Baccalaureat</div>
+            <h2 style="color:#082e5d;margin-top:6px">Choose Your Baccalaureat Stream</h2>
+
+            <div class="bacc-stream-grid">
+              <button class="bacc-stream-button" onclick="showScreen('literaryScreen')">
+                Literary
+                <small>Languages, literature and humanities</small>
+              </button>
+
+              <button class="bacc-stream-button" onclick="showScreen('scientificScreen')">
+                Scientific
+                <small>Mathematics, science and analytical studies</small>
+              </button>
+
+              <button class="bacc-stream-button" onclick="showScreen('economicsScreen')">
+                Economics and Society
+                <small>Economics, social studies and business foundations</small>
+              </button>
+
+              <button class="bacc-stream-button" onclick="showScreen('itScreen')">
+                IT and Computer Science
+                <small>Computing, digital systems and technology</small>
+              </button>
             </div>
+
+            <div style="margin-top:24px">
+              <button class="btn btn-outline" onclick="showScreen('schoolScreen')">Back to GETI School</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="literaryScreen" class="screen">
+          <div class="panel" style="min-height:72vh">
+            <div class="kicker">GETI Baccalaureat</div>
+            <h2 style="color:#082e5d;margin-top:6px">Literary Subjects</h2>
+
+            <div class="subject-grid">
+              <button class="subject-button" onclick="showScreen('englishLanguageScreen')">English Language</button>
+              <button class="subject-button" onclick="showScreen('englishLiteratureScreen')">English Literature</button>
+              <button class="subject-button" onclick="showScreen('literaryEnglishScreen')">English</button>
+              <button class="subject-button" onclick="showScreen('literaryGermanScreen')">German</button>
+              <button class="subject-button" onclick="showScreen('italianScreen')">Italian</button>
+              <button class="subject-button" onclick="showScreen('literaryFrenchScreen')">French</button>
+              <button class="subject-button" onclick="showScreen('historyScreen')">History</button>
+              <button class="subject-button" onclick="showScreen('geographyScreen')">Geography</button>
+              <button class="subject-button" onclick="showScreen('philosophyScreen')">Philosophy</button>
+              <button class="subject-button" onclick="showScreen('sociologyScreen')">Sociology</button>
+              
+              
+              
+            </div>
+
+            <div style="margin-top:24px">
+              <button class="btn btn-outline" onclick="showScreen('baccalaureatScreen')">Back to Streams</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="englishLanguageScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">English Language</h2>
+
+            
+    
+            <div class="coursebook-resource">
+              <h3>Complete English Grammar</h3>
+              <p>English grammar coursebook for upper-secondary study.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_English_Grammar_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_English_Grammar_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_English_Grammar_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('literaryScreen')">Back to Literary Subjects</button></div></div>
+        <div id="englishLiteratureScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">English Literature</h2>
+
+            
+
+            <div class="coursebook-resource">
+              <h3>Complete English Literature</h3>
+              <p>Literary analysis, poetry, prose, drama and essay writing.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_English_Literature_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_English_Literature_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_English_Literature_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('literaryScreen')">Back to Literary Subjects</button></div></div>
+        <div id="literaryEnglishScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">English</h2>
+
+            
+    
+            <div class="coursebook-resource">
+              <h3>Complete English Grammar</h3>
+              <p>English grammar and usage coursebook.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_English_Grammar_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_English_Grammar_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_English_Grammar_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('literaryScreen')">Back to Literary Subjects</button></div></div>
+        <div id="literaryGermanScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">German</h2>
+            
+    
+            <div class="coursebook-resource">
+              <h3>Complete German Course</h3>
+              <p>German grammar, vocabulary, examples and practice.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_German_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_German_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_German_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('literaryScreen')">Back to Literary Subjects</button></div></div>
+        <div id="italianScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Italian</h2>
+            
+    
+            <div class="coursebook-resource">
+              <h3>Complete Italian Course</h3>
+              <p>Italian grammar, vocabulary, examples and practice.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Italian_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Italian_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Italian_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('literaryScreen')">Back to Literary Subjects</button></div></div>
+        <div id="literaryFrenchScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">French</h2>
+            
+    
+            <div class="coursebook-resource">
+              <h3>French Language & Grammar</h3>
+              <p>French grammar, pronunciation, vocabulary and conjugation.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_French_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_French_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_French_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('literaryScreen')">Back to Literary Subjects</button></div></div>
+        <div id="historyScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">History</h2>
+            
+    
+            <div class="coursebook-resource">
+              <h3>Complete History Coursebook</h3>
+              <p>Colonisation and decolonisation in world history.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_History_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_History_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_History_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('literaryScreen')">Back to Literary Subjects</button></div></div>
+        <div id="geographyScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Geography</h2>
+            
+    
+            <div class="coursebook-resource">
+              <h3>Complete Geography Coursebook</h3>
+              <p>Tourism, forests, wildlife and world regions.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Geography_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Geography_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Geography_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('literaryScreen')">Back to Literary Subjects</button></div></div>
+        <div id="philosophyScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Philosophy</h2>
+            
+    
+            <div class="coursebook-resource">
+              <h3>Complete Philosophy Coursebook</h3>
+              <p>General philosophy, science, society, human person, God and doubt.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Philosophy_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Philosophy_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Philosophy_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('literaryScreen')">Back to Literary Subjects</button></div></div>
+        <div id="sociologyScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Sociology</h2>
+            
+    
+            <div class="coursebook-resource">
+              <h3>Complete Sociology Coursebook</h3>
+              <p>Sociological theory, methods, institutions, inequality and social change.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Sociology_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Sociology_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Sociology_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('literaryScreen')">Back to Literary Subjects</button></div></div>
+        
+        
+        
+
+        <div id="scientificScreen" class="screen">
+          <div class="panel" style="min-height:72vh">
+            <div class="kicker">GETI Baccalaureat</div>
+            <h2 style="color:#082e5d;margin-top:6px">Scientific Subjects</h2>
+
+            <div class="subject-grid">
+              <button class="subject-button" onclick="showScreen('mathScreen')">Mathematics</button>
+              <button class="subject-button" onclick="showScreen('furtherMathScreen')">Further Mathematics</button>
+              <button class="subject-button" onclick="showScreen('physicsScreen')">Physics</button>
+              <button class="subject-button" onclick="showScreen('chemistryScreen')">Chemistry</button>
+              <button class="subject-button" onclick="showScreen('biologyScreen')">Biology</button>
+              <button class="subject-button" onclick="showScreen('computerScienceScreen')">Computer Science</button>
+              <button class="subject-button" onclick="showScreen('environmentalScienceScreen')">Environmental Science</button>
+              <button class="subject-button" onclick="showScreen('englishScreen')">English</button>
+              <button class="subject-button" onclick="showScreen('frenchScreen')">French</button>
+              <button class="subject-button" onclick="showScreen('germanScreen')">German</button>
+            </div>
+
+            <div style="margin-top:24px">
+              <button class="btn btn-outline" onclick="showScreen('baccalaureatScreen')">Back to Streams</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="mathScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Mathematics</h2>
+            <div class="coursebook-resource">
+              <h3>Mathematics Scientific Stream</h3>
+              <p>Upper-secondary mathematics with methods, examples and revision.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Mathematics_Scientific_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Mathematics_Scientific_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Mathematics_Scientific_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('scientificScreen')">Back to Scientific Subjects</button></div></div>
+        <div id="furtherMathScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Further Mathematics</h2>
+            <div class="coursebook-resource">
+              <h3>Further Mathematics</h3>
+              <p>Advanced mathematics coursebook.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Further_Mathematics_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Further_Mathematics_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Further_Mathematics_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('scientificScreen')">Back to Scientific Subjects</button></div></div>
+        <div id="physicsScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Physics</h2>
+            <div class="coursebook-resource">
+              <h3>Complete Physics</h3>
+              <p>Mechanics, waves, thermal physics, electricity and modern physics.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Physics_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Physics_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Physics_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('scientificScreen')">Back to Scientific Subjects</button></div></div>
+        <div id="chemistryScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Chemistry</h2>
+            <div class="coursebook-resource">
+              <h3>Complete Chemistry</h3>
+              <p>Atomic structure, bonding, reactions, equilibrium and organic chemistry.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Chemistry_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Chemistry_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Chemistry_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('scientificScreen')">Back to Scientific Subjects</button></div></div>
+        <div id="biologyScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Biology</h2>
+            <div class="coursebook-resource">
+              <h3>Complete Biology</h3>
+              <p>Cells, human biology, genetics, ecology and conservation.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Biology_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Biology_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Biology_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('scientificScreen')">Back to Scientific Subjects</button></div></div>
+        <div id="computerScienceScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Computer Science</h2>
+            <div class="coursebook-resource">
+              <h3>Computer Science</h3>
+              <p>Systems, programming, data, networks, security and AI.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Computer_Science_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Computer_Science_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Computer_Science_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('scientificScreen')">Back to Scientific Subjects</button></div></div>
+        <div id="environmentalScienceScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Environmental Science</h2>
+            <div class="coursebook-resource">
+              <h3>Environmental Science</h3>
+              <p>Ecology, resources, pollution, climate and sustainability.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Environmental_Science_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Environmental_Science_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Environmental_Science_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('scientificScreen')">Back to Scientific Subjects</button></div></div>
+        <div id="englishScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">English</h2>
+
+
+            <div class="coursebook-resource">
+              <h3>Complete English Grammar</h3>
+              <p>English grammar and academic language support.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_English_Grammar_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_English_Grammar_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_English_Grammar_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('scientificScreen')">Back to Scientific Subjects</button></div></div>
+        <div id="frenchScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">French</h2>
+            <div class="coursebook-resource">
+              <h3>French Language & Grammar</h3>
+              <p>French coursebook with English explanations.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_French_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_French_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_French_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('scientificScreen')">Back to Scientific Subjects</button></div></div>
+        <div id="germanScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">German</h2>
+            <div class="coursebook-resource">
+              <h3>Complete German Course</h3>
+              <p>German coursebook with English explanations.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_German_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_German_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_German_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('scientificScreen')">Back to Scientific Subjects</button></div></div>
+
+        <div id="economicsScreen" class="screen">
+          <div class="panel" style="min-height:72vh">
+            <div class="kicker">GETI Baccalaureat</div>
+            <h2 style="color:#082e5d;margin-top:6px">Economics and Society Subjects</h2>
+
+            <div class="subject-grid">
+              <button class="subject-button" onclick="showScreen('economicsSubjectScreen')">Economics</button>
+              <button class="subject-button" onclick="showScreen('economicsSociologyScreen')">Sociology</button>
+              <button class="subject-button" onclick="showScreen('economicsMathScreen')">Mathematics</button>
+              <button class="subject-button" onclick="showScreen('statisticsScreen')">Statistics</button>
+              <button class="subject-button" onclick="showScreen('economicsGeographyScreen')">Geography</button>
+              <button class="subject-button" onclick="showScreen('economicsHistoryScreen')">History</button>
+              <button class="subject-button" onclick="showScreen('businessStudiesScreen')">Business Studies</button>
+              <button class="subject-button" onclick="showScreen('politicalScienceScreen')">Political Science</button>
+              <button class="subject-button" onclick="showScreen('socialStudiesScreen')">Social Studies</button>
+              <button class="subject-button" onclick="showScreen('economicsEnglishScreen')">English</button>
+              <button class="subject-button" onclick="showScreen('economicsGermanScreen')">German</button>
+              <button class="subject-button" onclick="showScreen('accountingScreen')">Comptabilité</button>
+              <button class="subject-button" onclick="showScreen('financialMathScreen')">Mathématiques financières</button>
+              <button class="subject-button" onclick="showScreen('managementScreen')">Gestion</button>
+            </div>
+
+            <div style="margin-top:24px">
+              <button class="btn btn-outline" onclick="showScreen('baccalaureatScreen')">Back to Streams</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="economicsSubjectScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Economics</h2>
+            <div class="coursebook-resource">
+              <h3>Complete Economics</h3>
+              <p>Microeconomics, macroeconomics, trade and development.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Economics_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Economics_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Economics_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('economicsScreen')">Back to Economics and Society Subjects</button></div></div>
+        <div id="economicsSociologyScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Sociology</h2>
+            <div class="coursebook-resource">
+              <h3>Complete Sociology Coursebook</h3>
+              <p>Sociology for Economics and Society.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Sociology_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Sociology_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Sociology_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('economicsScreen')">Back to Economics and Society Subjects</button></div></div>
+        <div id="economicsMathScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Mathematics</h2>
+            <div class="coursebook-resource">
+              <h3>Mathematics</h3>
+              <p>Mathematics support for Economics and Society.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Mathematics_Scientific_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Mathematics_Scientific_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Mathematics_Scientific_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('economicsScreen')">Back to Economics and Society Subjects</button></div></div>
+        <div id="statisticsScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Statistics</h2>
+            <div class="coursebook-resource">
+              <h3>Statistics</h3>
+              <p>Descriptive statistics, probability, inference and regression.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Statistics_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Statistics_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Statistics_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('economicsScreen')">Back to Economics and Society Subjects</button></div></div>
+        <div id="economicsGeographyScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Geography</h2>
+            <div class="coursebook-resource">
+              <h3>Complete Geography Coursebook</h3>
+              <p>Geography support for Economics and Society.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Geography_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Geography_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Geography_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('economicsScreen')">Back to Economics and Society Subjects</button></div></div>
+        <div id="economicsHistoryScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">History</h2>
+            <div class="coursebook-resource">
+              <h3>Complete History Coursebook</h3>
+              <p>World history coursebook.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_History_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_History_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_History_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('economicsScreen')">Back to Economics and Society Subjects</button></div></div>
+        <div id="businessStudiesScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Business Studies</h2>
+            <div class="coursebook-resource">
+              <h3>Business Studies</h3>
+              <p>Business organization, marketing, operations, finance and strategy.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Business_Studies_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Business_Studies_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Business_Studies_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('economicsScreen')">Back to Economics and Society Subjects</button></div></div>
+        <div id="politicalScienceScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Political Science</h2>
+            <div class="coursebook-resource">
+              <h3>Political Science</h3>
+              <p>Neutral study of institutions, representation, policy and comparative politics.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Political_Science_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Political_Science_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Political_Science_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('economicsScreen')">Back to Economics and Society Subjects</button></div></div>
+        <div id="socialStudiesScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Social Studies</h2>
+            <div class="coursebook-resource">
+              <h3>Social Studies</h3>
+              <p>Society, citizenship, community, economy, environment and development.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Social_Studies_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Social_Studies_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Social_Studies_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('economicsScreen')">Back to Economics and Society Subjects</button></div></div>
+        <div id="economicsEnglishScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">English</h2>
+
+
+            <div class="coursebook-resource">
+              <h3>Complete English Grammar</h3>
+              <p>English support coursebook.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_English_Grammar_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_English_Grammar_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_English_Grammar_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('economicsScreen')">Back to Economics and Society Subjects</button></div></div>
+        <div id="economicsGermanScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">German</h2>
+            <div class="coursebook-resource">
+              <h3>Complete German Course</h3>
+              <p>German language coursebook.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_German_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_German_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_German_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('economicsScreen')">Back to Economics and Society Subjects</button></div></div>
+        <div id="accountingScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Comptabilité</h2>
+            <div class="coursebook-resource">
+              <h3>Accounting / Comptabilité</h3>
+              <p>Bookkeeping, statements, costing, budgets and ratios.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Accounting_Comptabilite_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Accounting_Comptabilite_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Accounting_Comptabilite_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('economicsScreen')">Back to Economics and Society Subjects</button></div></div>
+        <div id="financialMathScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Mathématiques financières</h2>
+            <div class="coursebook-resource">
+              <h3>Financial Mathematics</h3>
+              <p>Percentages, interest, annuities, loans and investments.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Financial_Mathematics_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Financial_Mathematics_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Financial_Mathematics_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('economicsScreen')">Back to Economics and Society Subjects</button></div></div>
+        <div id="managementScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Gestion</h2>
+            <div class="coursebook-resource">
+              <h3>Management / Gestion</h3>
+              <p>Business and organizational management coursebook.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Management_Gestion_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Management_Gestion_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Management_Gestion_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('economicsScreen')">Back to Economics and Society Subjects</button></div></div>
+
+        <div id="itScreen" class="screen">
+          <div class="panel" style="min-height:72vh">
+            <div class="kicker">GETI Baccalaureat</div>
+            <h2 style="color:#082e5d;margin-top:6px">IT and Computer Science Subjects</h2>
+
+            <div class="subject-grid">
+              <button class="subject-button" onclick="showScreen('itComputerScienceScreen')">Computer Science</button>
+              <button class="subject-button" onclick="showScreen('informationTechnologyScreen')">Information Technology</button>
+              <button class="subject-button" onclick="showScreen('programmingScreen')">Programming</button>
+              <button class="subject-button" onclick="showScreen('webDevelopmentScreen')">Web Development</button>
+              <button class="subject-button" onclick="showScreen('databaseSystemsScreen')">Database Systems</button>
+              <button class="subject-button" onclick="showScreen('networkingScreen')">Networking</button>
+              <button class="subject-button" onclick="showScreen('cybersecurityScreen')">Cybersecurity</button>
+              
+              
+              
+              <button class="subject-button" onclick="showScreen('mathInformatiqueScreen')">Mathematics Informatique</button>
+              <button class="subject-button" onclick="showScreen('itFrenchScreen')">French</button>
+              <button class="subject-button" onclick="showScreen('itGermanScreen')">German</button>
+              <button class="subject-button" onclick="showScreen('itEnglishScreen')">English</button>
+            </div>
+
+            <div style="margin-top:24px">
+              <button class="btn btn-outline" onclick="showScreen('baccalaureatScreen')">Back to Streams</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="itComputerScienceScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Computer Science</h2>
+            <div class="coursebook-resource">
+              <h3>Computer Science</h3>
+              <p>Computer science scientific coursebook.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Computer_Science_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Computer_Science_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Computer_Science_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('itScreen')">Back to IT Subjects</button></div></div>
+        <div id="informationTechnologyScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Information Technology</h2>
+            <div class="coursebook-resource">
+              <h3>Information Technology</h3>
+              <p>Hardware, software, office, databases, networks, security and cloud.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Information_Technology_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Information_Technology_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Information_Technology_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('itScreen')">Back to IT Subjects</button></div></div>
+        <div id="programmingScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Programming</h2>
+            <div class="coursebook-resource">
+              <h3>Programming</h3>
+              <p>Programming concepts, Python examples and algorithms.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Programming_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Programming_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Programming_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('itScreen')">Back to IT Subjects</button></div></div>
+        <div id="webDevelopmentScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Web Development</h2>
+            <div class="coursebook-resource">
+              <h3>Web Development</h3>
+              <p>HTML, CSS, JavaScript, responsive design and projects.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Web_Development_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Web_Development_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Web_Development_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('itScreen')">Back to IT Subjects</button></div></div>
+        <div id="databaseSystemsScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Database Systems</h2>
+            <div class="coursebook-resource">
+              <h3>Database Systems</h3>
+              <p>Databases, SQL, design, transactions and security.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Database_Systems_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Database_Systems_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Database_Systems_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('itScreen')">Back to IT Subjects</button></div></div>
+        <div id="networkingScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Networking</h2>
+            <div class="coursebook-resource">
+              <h3>Networking</h3>
+              <p>Protocols, switching, routing, services, wireless and security.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Networking_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Networking_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Networking_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('itScreen')">Back to IT Subjects</button></div></div>
+        <div id="cybersecurityScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Cybersecurity</h2>
+            <div class="coursebook-resource">
+              <h3>Cybersecurity</h3>
+              <p>Defensive cybersecurity, risk, access control, encryption and incident response.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Cybersecurity_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Cybersecurity_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Cybersecurity_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('itScreen')">Back to IT Subjects</button></div></div>
+        
+        
+        
+        <div id="mathInformatiqueScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">Mathematics Informatique</h2>
+            <div class="coursebook-resource">
+              <h3>Mathematics Informatique</h3>
+              <p>Discrete mathematics, numerical methods and computing mathematics.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_Mathematics_Informatique_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_Mathematics_Informatique_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_Mathematics_Informatique_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('itScreen')">Back to IT Subjects</button></div></div>
+        <div id="itFrenchScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">French</h2>
+            <div class="coursebook-resource">
+              <h3>French Language & Grammar</h3>
+              <p>French language coursebook.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_French_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_French_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_French_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('itScreen')">Back to IT Subjects</button></div></div>
+        <div id="itGermanScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">German</h2>
+            <div class="coursebook-resource">
+              <h3>Complete German Course</h3>
+              <p>German language coursebook.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_German_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_German_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_German_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('itScreen')">Back to IT Subjects</button></div></div>
+        <div id="itEnglishScreen" class="screen"><div class="panel" style="min-height:72vh"><h2 style="color:#082e5d">English</h2>
+
+
+            <div class="coursebook-resource">
+              <h3>Complete English Grammar</h3>
+              <p>English grammar coursebook.</p>
+              <div class="coursebook-actions">
+                <a class="btn btn-primary" href="GETI_English_Grammar_80_Pages.pdf" target="_blank">View PDF</a>
+                <a class="btn btn-outline" href="GETI_English_Grammar_80_Pages.pdf" download>Download PDF</a>
+              </div>
+              <iframe class="coursebook-viewer" src="GETI_English_Grammar_80_Pages.pdf#page=1"></iframe>
+            </div>
+    <button class="btn btn-outline" onclick="showScreen('itScreen')">Back to IT Subjects</button></div></div>
+
+        <div id="universityScreen" class="screen">
+          <div class="panel" style="min-height:72vh">
+            <div class="kicker">GETI School</div>
+            <h2 style="color:#082e5d;margin-top:6px">GETI University</h2>
+            <button class="btn btn-outline" onclick="showScreen('schoolScreen')">Back to GETI School</button>
           </div>
         </div>
 
@@ -1356,8 +2431,8 @@
       <div class="modal-head">
         <div>
           <div class="kicker" id="modalFaculty"></div>
-          <h2 id="modalTitle" style="color:var(--navy);margin:4px 0 7px"></h2>
-          <p id="modalDescription" style="color:var(--muted);margin:0"></p>
+          
+          
         </div>
         <button class="close" onclick="closeModal()">Close</button>
       </div>
@@ -1560,6 +2635,36 @@
 
     renderPrograms(programs);
 
+    
+    function goHomeIfLoggedOut(){
+      if(localStorage.getItem("geti_logged_in") === "true"){
+        document.getElementById("studentApp").classList.add("active");
+        hideMainSite(true);
+        showScreen("dashboardScreen");
+        return false;
+      }
+      return true;
+    }
+
+
+    function togglePortalMenu(){
+      const sidebar = document.getElementById("studentSidebar");
+      const overlay = document.getElementById("portalOverlay");
+      if(!sidebar || !overlay) return;
+      const willOpen = !sidebar.classList.contains("open");
+      sidebar.classList.toggle("open", willOpen);
+      overlay.classList.toggle("show", willOpen);
+      document.body.style.overflow = willOpen ? "hidden" : "";
+    }
+
+    function closePortalMenu(){
+      const sidebar = document.getElementById("studentSidebar");
+      const overlay = document.getElementById("portalOverlay");
+      if(sidebar) sidebar.classList.remove("open");
+      if(overlay) overlay.classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
     function hideMainSite(hide){
       document.querySelectorAll("body > .topbar, body > nav.nav, body > header.hero, body > .search-panel, body > section:not(.auth-page):not(.app-page), body > footer")
         .forEach(el => el.style.display = hide ? "none" : "");
@@ -1595,6 +2700,7 @@
       }
       localStorage.setItem("geti_student_name", name);
       localStorage.setItem("geti_student_program", program);
+      localStorage.setItem("geti_logged_in", "true");
       document.getElementById("portalStudentName").textContent = name;
       document.getElementById("portalProgram").textContent = program;
       document.getElementById("authPage").classList.remove("active");
@@ -1604,7 +2710,10 @@
       window.scrollTo(0,0);
     }
     function logoutStudent(){
+      closePortalMenu();
+      localStorage.removeItem("geti_logged_in");
       document.getElementById("studentApp").classList.remove("active");
+      document.getElementById("authPage").classList.remove("active");
       hideMainSite(false);
       window.scrollTo(0,0);
     }
@@ -1673,11 +2782,30 @@
           "Congratulations. Your course requirements are complete. This area can connect to the official GETI diploma/diploma issuance and verification system.";
       }
     }
+    
+    document.addEventListener("keydown", (event)=>{
+      if(event.key === "Escape") closePortalMenu();
+    });
+
     window.addEventListener("DOMContentLoaded",()=>{
       const savedName = localStorage.getItem("geti_student_name");
       const savedProgram = localStorage.getItem("geti_student_program");
+      const loggedIn = localStorage.getItem("geti_logged_in") === "true";
+
       if(savedName) document.getElementById("portalStudentName").textContent = savedName;
       if(savedProgram) document.getElementById("portalProgram").textContent = savedProgram;
+
+      if(loggedIn){
+        hideMainSite(true);
+        document.getElementById("authPage").classList.remove("active");
+        document.getElementById("studentApp").classList.add("active");
+        showScreen("dashboardScreen");
+        window.scrollTo(0,0);
+      } else {
+        document.getElementById("studentApp").classList.remove("active");
+        document.getElementById("authPage").classList.remove("active");
+        hideMainSite(false);
+      }
     });
 
   </script>
