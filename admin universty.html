@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GETI University Admin</title>
+<style>
+:root{
+  --navy:#082e5d;--navy2:#061d3a;--blue:#0b4b88;--green:#176d63;
+  --bg:#f4f7fa;--card:#fff;--line:#dce5ee;--text:#263b50;--muted:#687b8f;
+  --danger:#a23939;--warning:#966a08;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+.admin-shell{min-height:100vh;display:grid;grid-template-columns:250px 1fr}
+.sidebar{position:sticky;top:0;height:100vh;background:var(--navy2);color:#fff;padding:16px 12px;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:11px;padding:5px 8px 18px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:10px}
+.brand img{width:48px;height:48px;object-fit:contain;border-radius:50%;background:#fff;padding:5px;border:1px solid rgba(255,255,255,.4)}
+.brand strong{display:block;font-size:14px}
+.brand span{display:block;font-size:10px;color:#afc2d5;margin-top:4px}
+.nav-title{font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#718ba4;padding:14px 10px 6px}
+.sidebar button.nav{width:100%;border:0;background:transparent;color:#dbe7f2;text-align:left;padding:10px 11px;border-radius:8px;font-size:12px;font-weight:700}
+.sidebar button.nav:hover,.sidebar button.nav.active{background:#123f6e;color:#fff}
+.admin-main{min-width:0}
+.topbar{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:20}
+.topbar h1{font-size:18px;color:var(--navy);margin:0}
+.topbar-right{display:flex;gap:8px;align-items:center}
+.badge{display:inline-block;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:900;background:#eaf2f9;color:var(--blue)}
+.badge.ok{background:#e8f6ef;color:var(--green)}
+.badge.warn{background:#fff7df;color:var(--warning)}
+.badge.danger{background:#fff0f0;color:var(--danger)}
+.btn{border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:#fff;color:var(--navy);font-weight:800;font-size:11px}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.green{background:var(--green);border-color:var(--green);color:#fff}
+.btn.danger{background:#fff;border-color:#efcaca;color:var(--danger)}
+.content{padding:24px}
+.screen{display:none}
+.screen.active{display:block}
+.page-head{margin-bottom:18px}
+.page-head .kicker{font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--blue)}
+.page-head h2{margin:5px 0 7px;color:var(--navy);font-size:26px}
+.page-head p{margin:0;color:var(--muted);line-height:1.6;font-size:13px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:0 7px 18px rgba(8,46,93,.04)}
+.card h3{margin:0 0 12px;color:var(--navy);font-size:16px}
+.kpi b{display:block;font-size:26px;color:var(--navy)}
+.kpi span{font-size:11px;color:var(--muted)}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1/-1}
+.field label{font-size:10px;font-weight:900;color:#43596f}
+.field input,.field select,.field textarea{width:100%;border:1px solid #d6e0e9;border-radius:8px;padding:10px 11px;background:#fff;color:#2b4055;outline:none}
+.field textarea{min-height:100px;resize:vertical}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:#fff}
+table{width:100%;border-collapse:collapse;min-width:800px}
+th{background:var(--navy);color:#fff;text-align:left;padding:10px;font-size:10px}
+td{padding:10px;border-top:1px solid #e7edf3;font-size:11px;color:#445a6f;vertical-align:top}
+tr:nth-child(even) td{background:#fafcfe}
+.empty{padding:20px;color:var(--muted);text-align:center}
+.notice{padding:12px 14px;border-left:4px solid var(--blue);border-radius:8px;background:#f5f9fd;color:#52677b;font-size:12px;line-height:1.6}
+.notice.warn{border-color:#c58d15;background:#fff8e7;color:#70550c}
+.notice.ok{border-color:var(--green);background:#eef9f4;color:#245e4c}
+.subject-editor{display:grid;gap:9px}
+.subject-row{display:grid;grid-template-columns:90px 1.4fr 80px 1fr 1.2fr auto;gap:8px;align-items:center}
+.subject-row input{border:1px solid #d8e2eb;border-radius:7px;padding:8px;font-size:11px}
+.list-item{padding:12px 0;border-bottom:1px solid #e9eef3}
+.list-item:last-child{border-bottom:0}
+.list-item strong{color:var(--navy)}
+.small{font-size:11px;color:var(--muted);line-height:1.5}
+.searchbar{display:flex;gap:9px;margin-bottom:14px}
+.searchbar input{flex:1;border:1px solid #d6e0e9;border-radius:8px;padding:10px}
+.audit{padding:11px;border-left:3px solid var(--blue);background:#f8fbfe;border-radius:7px;margin-bottom:8px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#22a06b;display:inline-block;margin-right:6px}
+.login-cover{position:fixed;inset:0;background:linear-gradient(135deg,#061d3a,#0b4b88);display:grid;place-items:center;z-index:999}
+.login-card{width:min(430px,92vw);background:#fff;border-radius:16px;padding:26px;box-shadow:0 25px 60px rgba(0,0,0,.25)}
+.login-brand{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.login-brand img{width:58px;height:58px;border-radius:50%;background:#fff;padding:6px;border:1px solid var(--line)}
+.login-brand h2{margin:0;color:var(--navy)}
+.login-brand p{margin:3px 0 0;color:var(--muted);font-size:11px}
+.mobile-menu{display:none}
+@media(max-width:1000px){
+  .admin-shell{grid-template-columns:1fr}
+  .sidebar{position:fixed;left:-270px;width:250px;z-index:200;transition:.2s}
+  .sidebar.open{left:0}
+  .mobile-menu{display:inline-flex}
+  .grid4{grid-template-columns:repeat(2,1fr)}
+  .grid3{grid-template-columns:1fr 1fr}
+}
+@media(max-width:700px){
+  .content{padding:15px}
+  .grid4,.grid3,.grid2,.form-grid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  .subject-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="adminLogin" class="login-cover">
+  <div class="login-card">
+    <div class="login-brand">
+      <img src="https://getienglish.com/geti-logo.png" alt="GETI logo">
+      <div><h2>GETI University Admin</h2><p>University Academic Administration</p></div>
+    </div>
+    <div class="notice warn" style="margin-bottom:14px">
+      Prototype admin access. On production, protect this page with Cloudflare Workers authentication, role checks and 2FA.
+    </div>
+    <div class="field"><label>Admin Email</label><input id="adminLoginEmail" type="email" value="admin@getienglish.com" placeholder="admin@getienglish.com"></div>
+    <div class="field" style="margin-top:10px"><label>Password</label><input id="adminLoginPassword" type="password"></div>
+    <button class="btn primary" style="width:100%;margin-top:15px" onclick="adminPrototypeLogin()">Sign In to Admin</button>
+  </div>
+</div>
+
+<div class="admin-shell">
+  <aside class="sidebar" id="adminSidebar">
+    <div class="brand">
+      <img src="https://getienglish.com/geti-logo.png" alt="GETI logo">
+      <div><strong>GETI University</strong><span>Administration System</span></div>
+    </div>
+
+    <div class="nav-title">Overview</div>
+    <button class="nav active" data-screen="dashboard" onclick="showAdminScreen('dashboard',this)">Dashboard</button>
+    <button class="nav" data-screen="students" onclick="showAdminScreen('students',this)">Students</button>
+    <button class="nav" data-screen="teachers" onclick="showAdminScreen('teachers',this)">Teachers</button>
+
+    <div class="nav-title">Academic Structure</div>
+    <button class="nav" data-screen="programmes" onclick="showAdminScreen('programmes',this)">Faculties & Filières</button>
+    <button class="nav" data-screen="curriculum" onclick="showAdminScreen('curriculum',this)">Curriculum / Subjects</button>
+    <button class="nav" data-screen="assessments" onclick="showAdminScreen('assessments',this)">Quiz / Exams</button>
+    <button class="nav" data-screen="grades" onclick="showAdminScreen('grades',this)">Grades & Attendance</button>
+
+    <div class="nav-title">Student Administration</div>
+    <button class="nav" data-screen="payments" onclick="showAdminScreen('payments',this)">Enrollment & Payments</button>
+    <button class="nav" data-screen="research" onclick="showAdminScreen('research',this)">Research & Internship</button>
+    <button class="nav" data-screen="diplomas" onclick="showAdminScreen('diplomas',this)">Diplomas & Verification</button>
+
+    <div class="nav-title">Communication</div>
+    <button class="nav" data-screen="announcements" onclick="showAdminScreen('announcements',this)">Announcements</button>
+    <button class="nav" data-screen="reports" onclick="showAdminScreen('reports',this)">Analytics & Reports</button>
+
+    <div class="nav-title">System</div>
+    <button class="nav" data-screen="audit" onclick="showAdminScreen('audit',this)">Audit Logs</button>
+    <button class="nav" data-screen="backup" onclick="showAdminScreen('backup',this)">Backup & Sync</button>
+    <button class="nav" data-screen="settings" onclick="showAdminScreen('settings',this)">Settings</button>
+  </aside>
+
+  <main class="admin-main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn mobile-menu" onclick="document.getElementById('adminSidebar').classList.toggle('open')">Menu</button>
+        <div><h1 id="adminPageTitle">University Admin Dashboard</h1><span class="small"><span class="status-dot"></span>Connected to GETI University state</span></div>
+      </div>
+      <div class="topbar-right">
+        <a class="btn" href="geti_university_system_admin_connected.html" target="_blank">Open University System</a>
+        <button class="btn danger" onclick="adminLogout()">Sign Out</button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <section id="screen-dashboard" class="screen active">
+        <div class="page-head"><div class="kicker">Overview</div><h2>University Admin Dashboard</h2><p>Live overview of the academic state shared with the GETI University system.</p></div>
+        <div id="dashboardKpis" class="grid4"></div>
+        <div class="grid2" style="margin-top:16px">
+          <div class="card"><h3>Academic Structure</h3><div id="dashboardAcademic"></div></div>
+          <div class="card"><h3>Recent Administrative Activity</h3><div id="dashboardAudit"></div></div>
+        </div>
+      </section>
+
+      <section id="screen-students" class="screen">
+        <div class="page-head"><div class="kicker">Registry</div><h2>Students</h2><p>Manage student identity, filière, level and academic status. The connected current student is synchronized with the Student Portal.</p></div>
+        <div class="grid2">
+          <div class="card">
+            <h3>Add / Update Student</h3>
+            <div class="form-grid">
+              <div class="field"><label>Student ID</label><input id="stuId" placeholder="GETI-STU-0001"></div>
+              <div class="field"><label>Name</label><input id="stuName"></div>
+              <div class="field"><label>Email</label><input id="stuEmail" type="email"></div>
+              <div class="field"><label>Country</label><input id="stuCountry"></div>
+              <div class="field"><label>Phone</label><input id="stuPhone"></div>
+              <div class="field"><label>Status</label><select id="stuStatus"><option>Active</option><option>Pending</option><option>Suspended</option><option>Withdrawn</option><option>Graduated</option></select></div><div class="field"><label>GETI Baccalaureat Status</label><select id="stuBaccStatus"><option value="not-passed">Not Passed</option><option value="passed">Passed</option></select></div>
+              <div class="field"><label>Level</label><select id="stuLevel"><option>L1</option><option>L2</option><option>L3</option><option>M1</option><option>M2</option></select></div>
+              <div class="field"><label>Filière</label><select id="stuFiliere"></select></div>
+            </div>
+            <div class="actions"><button class="btn primary" onclick="saveStudent()">Save Student</button><button class="btn" onclick="clearStudentForm()">Clear</button></div>
+          </div>
+          <div class="card"><h3>Student Registry</h3><div class="searchbar"><input id="studentSearch" placeholder="Search student..." oninput="renderStudents()"></div><div id="studentList"></div></div><div class="card" style="grid-column:1/-1"><h3>Bachelor Exam Eligibility</h3><div id="adminBachelorEligibility"></div></div>
+        </div>
+      </section>
+
+      <section id="screen-teachers" class="screen">
+        <div class="page-head"><div class="kicker">Academic Staff</div><h2>Teachers</h2><p>Maintain lecturers, qualifications, departments and subjects taught.</p></div>
+        <div class="grid2">
+          <div class="card">
+            <h3>Add Teacher</h3>
+            <div class="form-grid">
+              <div class="field"><label>Name</label><input id="teacherName"></div>
+              <div class="field"><label>Email</label><input id="teacherEmail" type="email"></div>
+              <div class="field"><label>Qualification</label><input id="teacherQualification" placeholder="MA, MSc, PhD..."></div>
+              <div class="field"><label>Faculty</label><select id="teacherFaculty"><option>Faculty of Arts & Humanities</option><option>Faculty of Science & Engineering</option><option>Faculty of Economics, Business & Social Sciences</option><option>Faculty of IT & Computer Science</option></select></div>
+              <div class="field full"><label>Subjects Taught</label><input id="teacherSubjects" placeholder="Comma-separated subjects"></div>
+            </div>
+            <div class="actions"><button class="btn primary" onclick="saveTeacher()">Save Teacher</button></div>
+          </div>
+          <div class="card"><h3>Teacher Directory</h3><div id="teacherList"></div></div>
+        </div>
+      </section>
+
+      <section id="screen-programmes" class="screen">
+        <div class="page-head"><div class="kicker">Academic Structure</div><h2>Faculties & Filières</h2><p>60 University filières grouped across the four GETI academic faculty groups, with five M1 specialization choices per filière.</p></div>
+        <div id="programmeStats" class="grid4"></div>
+        <div id="programmeList" style="margin-top:16px"></div>
+      </section>
+
+      <section id="screen-curriculum" class="screen">
+        <div class="page-head"><div class="kicker">Curriculum Management</div><h2>Levels, Semesters & Subjects</h2><p>Edit the curriculum used by the connected University system. Saved overrides are read directly by the Student Portal.</p></div>
+        <div class="card">
+          <div class="form-grid">
+            <div class="field"><label>Level</label><select id="curLevel" onchange="refreshCurriculumSelectors()"><option>L1</option><option>L2</option><option>L3</option><option>M1</option><option>M2</option></select></div>
+            <div class="field"><label>Filière</label><select id="curFiliere" onchange="refreshCurriculumSelectors()"></select></div>
+            <div class="field"><label>Specialisation</label><select id="curSpec" onchange="refreshCurriculumSelectors()"></select></div>
+            <div class="field"><label>Semester</label><select id="curSemester" onchange="renderCurriculumEditor()"></select></div>
+          </div>
+          <div class="notice" style="margin-top:14px">Semester total should remain <strong>30 ECTS</strong>. Year total should remain <strong>60 ECTS</strong>.</div>
+          <div id="curriculumEditor" class="subject-editor" style="margin-top:15px"></div>
+          <div class="actions"><button class="btn primary" onclick="saveCurriculumOverride()">Save Curriculum</button><button class="btn" onclick="resetCurriculumOverride()">Reset to Default</button></div>
+          <div id="curriculumStatus" style="margin-top:12px"></div>
+        </div>
+      </section>
+
+      <section id="screen-assessments" class="screen">
+        <div class="page-head"><div class="kicker">Assessment</div><h2>Quiz & Exam Management</h2><p>Create questions for a specific University subject. Questions are saved in the same structure used by the Student Portal.</p></div>
+        <div class="grid2">
+          <div class="card">
+            <h3>Select Subject</h3>
+            <div class="form-grid">
+              <div class="field"><label>Level</label><select id="assLevel" onchange="refreshAssessmentSelectors()"><option>L1</option><option>L2</option><option>L3</option><option>M1</option><option>M2</option></select></div>
+              <div class="field"><label>Filière</label><select id="assFiliere" onchange="refreshAssessmentSelectors()"></select></div>
+              <div class="field"><label>Specialisation</label><select id="assSpec" onchange="refreshAssessmentSelectors()"></select></div>
+              <div class="field"><label>Semester</label><select id="assSemester" onchange="refreshAssessmentSelectors()"></select></div>
+              <div class="field full"><label>Subject</label><select id="assSubject" onchange="renderAssessmentQuestions()"></select></div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Add Question</h3>
+            <div class="field"><label>Type</label><select id="assType"><option value="quiz">Quiz</option><option value="exam">Exam</option></select></div>
+            <div class="field"><label>Question</label><textarea id="assQuestion"></textarea></div>
+            <div class="field"><label>Option A</label><input id="assA"></div>
+            <div class="field"><label>Option B</label><input id="assB"></div>
+            <div class="field"><label>Option C</label><input id="assC"></div>
+            <div class="field"><label>Correct</label><select id="assCorrect"><option value="0">A</option><option value="1">B</option><option value="2">C</option></select></div>
+            <div class="actions"><button class="btn primary" onclick="addAssessmentQuestion()">Add Question</button></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px"><h3>Saved Questions</h3><div id="assessmentQuestionList"></div></div>
+      </section>
+
+      <section id="screen-grades" class="screen">
+        <div class="page-head"><div class="kicker">Academic Records</div><h2>Grades & Attendance</h2><p>Manage the connected student's quiz, assignment, exam and attendance record by subject.</p></div>
+        <div class="card">
+          <div class="form-grid">
+            <div class="field"><label>Student</label><select id="gradeStudent" onchange="refreshGradeSelectors()"></select></div>
+            <div class="field"><label>Level</label><select id="gradeLevel" onchange="refreshGradeSelectors()"><option>L1</option><option>L2</option><option>L3</option><option>M1</option><option>M2</option></select></div>
+            <div class="field"><label>Filière</label><select id="gradeFiliere" onchange="refreshGradeSelectors()"></select></div>
+            <div class="field"><label>Specialisation</label><select id="gradeSpec" onchange="refreshGradeSelectors()"></select></div>
+            <div class="field"><label>Semester</label><select id="gradeSemester" onchange="refreshGradeSelectors()"></select></div>
+            <div class="field"><label>Subject</label><select id="gradeSubject" onchange="loadGradeRecord()"></select></div>
+          </div>
+          <div class="grid4" style="margin-top:15px">
+            <div class="field"><label>Quiz /100</label><input id="gradeQuiz" type="number" min="0" max="100"></div>
+            <div class="field"><label>Assignment /100</label><input id="gradeAssignment" type="number" min="0" max="100"></div>
+            <div class="field"><label>Exam /100</label><input id="gradeExam" type="number" min="0" max="100"></div>
+            <div class="field"><label>Exam Attempts</label><input id="gradeAttempts" type="number" min="0"></div>
+          </div>
+          <div class="grid3" style="margin-top:12px">
+            <div class="field"><label>Present</label><input id="attPresent" type="number" min="0"></div>
+            <div class="field"><label>Absent</label><input id="attAbsent" type="number" min="0"></div>
+            <div class="field"><label>Total Sessions</label><input id="attTotal" type="number" min="0"></div>
+          </div>
+          <div class="actions"><button class="btn primary" onclick="saveGradeRecord()">Save Academic Record</button></div>
+          <div id="gradeSummary" style="margin-top:12px"></div>
+        </div>
+      </section>
+
+      <section id="screen-payments" class="screen">
+        <div class="page-head"><div class="kicker">Finance & Registrar</div><h2>Enrollment & Payments</h2><p>Update registration status, fees and payment history shared with the Student Portal.</p></div>
+        <div class="grid2">
+          <div class="card">
+            <h3>Current Enrollment</h3>
+            <div class="field"><label>Registration Status</label><select id="payRegStatus"><option>Pending</option><option>Registered</option><option>Suspended</option><option>Graduated</option></select></div>
+            <div class="field"><label>Fee Amount / Description</label><input id="payFeeAmount"></div>
+            <div class="field"><label>Fee Status</label><select id="payFeeStatus"><option>Pending</option><option>Paid</option><option>Partial</option><option>Waived</option></select></div>
+            <div class="actions"><button class="btn primary" onclick="saveEnrollmentPayment()">Save Status</button></div>
+          </div>
+          <div class="card">
+            <h3>Add Payment / Receipt</h3>
+            <div class="field"><label>Reference</label><input id="paymentRef"></div>
+            <div class="field"><label>Amount</label><input id="paymentAmount"></div>
+            <div class="field"><label>Status</label><select id="paymentStatus"><option>Paid</option><option>Pending</option><option>Refunded</option></select></div>
+            <div class="actions"><button class="btn green" onclick="addPaymentHistory()">Add Payment</button></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px"><h3>Payment History</h3><div id="paymentHistoryAdmin"></div></div>
+      </section>
+
+      <section id="screen-research" class="screen">
+        <div class="page-head"><div class="kicker">Research & Professional Experience</div><h2>Research, Thesis & Internship</h2><p>Review saved L3 final project, M2 thesis and internship records from the connected system.</p></div>
+        <div class="grid2">
+          <div class="card"><h3>Research Records</h3><div id="adminResearchList"></div></div>
+          <div class="card"><h3>Internship Records</h3><div id="adminInternshipList"></div></div>
+        </div>
+      </section>
+
+      <section id="screen-diplomas" class="screen">
+        <div class="page-head"><div class="kicker">Registrar</div><h2>Diplomas & Verification</h2><p>Manage issued University diplomas and verify records by Diploma ID, Student ID or Name.</p></div>
+        <div class="grid2">
+          <div class="card">
+            <h3>Issue Diploma</h3>
+            <div class="field"><label>Student</label><select id="dipStudent"></select></div>
+            <div class="field"><label>Award</label><select id="dipType"><option>Bachelor / Licence</option><option>Master Degree</option></select></div>
+            <div class="field"><label>Classification</label><select id="dipClassification"><option>Pass</option><option>Merit</option><option>Distinction</option></select></div>
+            <div class="actions"><button class="btn primary" onclick="issueDiploma()">Issue Diploma</button></div>
+          </div>
+          <div class="card">
+            <h3>Verify Record</h3>
+            <div class="searchbar"><input id="verifyQuery" placeholder="Diploma ID / Student ID / Name"><button class="btn" onclick="verifyAdminDiploma()">Verify</button></div>
+            <div id="adminVerificationResult"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px"><h3>Diploma Registry</h3><div id="adminDiplomaList"></div></div>
+      </section>
+
+      <section id="screen-announcements" class="screen">
+        <div class="page-head"><div class="kicker">Communication</div><h2>Announcements & Notifications</h2><p>Publish student announcements or public academic news to the connected platform.</p></div>
+        <div class="grid2">
+          <div class="card">
+            <h3>Create Announcement</h3>
+            <div class="field"><label>Audience</label><select id="annAudience"><option value="student">Student Portal</option><option value="public">Public News</option><option value="both">Both</option></select></div>
+            <div class="field"><label>Title</label><input id="annTitle"></div>
+            <div class="field"><label>Message</label><textarea id="annMessage"></textarea></div>
+            <div class="actions"><button class="btn primary" onclick="publishAnnouncement()">Publish</button></div>
+          </div>
+          <div class="card"><h3>Recent Announcements</h3><div id="adminAnnouncementList"></div></div>
+        </div>
+      </section>
+
+      <section id="screen-reports" class="screen">
+        <div class="page-head"><div class="kicker">Analytics</div><h2>University Analytics & Reports</h2><p>Summary indicators from the current University state.</p></div>
+        <div id="reportKpis" class="grid4"></div>
+        <div class="grid2" style="margin-top:16px">
+          <div class="card"><h3>Academic Completion</h3><div id="reportAcademic"></div></div>
+          <div class="card"><h3>System Records</h3><div id="reportRecords"></div></div>
+        </div>
+      </section>
+
+      <section id="screen-audit" class="screen">
+        <div class="page-head"><div class="kicker">Governance</div><h2>Audit Logs</h2><p>Administrative changes are recorded with action, role, time and detail.</p></div>
+        <div class="card"><div id="auditList"></div></div>
+      </section>
+
+      <section id="screen-backup" class="screen">
+        <div class="page-head"><div class="kicker">System</div><h2>Backup & Synchronization</h2><p>Export/import the shared University state. Production should use Cloudflare D1/R2 backup and restore workflows.</p></div>
+        <div class="grid2">
+          <div class="card">
+            <h3>Local Backup</h3>
+            <p class="small">Exports the complete shared <code>geti_lms_state</code> used by this admin and the University student system.</p>
+            <div class="actions"><button class="btn primary" onclick="exportAdminBackup()">Export JSON Backup</button><label class="btn">Import JSON<input type="file" accept="application/json" style="display:none" onchange="importAdminBackup(event)"></label></div>
+          </div>
+          <div class="card">
+            <h3>Connection Status</h3>
+            <div class="notice ok"><strong>Same-origin sync ready.</strong><br>When both pages are hosted under the same GETI domain, they share the same local storage state and BroadcastChannel updates.</div>
+            <p class="small">Production architecture: Cloudflare Workers API + D1 academic records + R2 lesson/document files + authenticated role permissions.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-settings" class="screen">
+        <div class="page-head"><div class="kicker">System Configuration</div><h2>University Settings</h2><p>Academic rules used by the Admin interface.</p></div>
+        <div class="grid4">
+          <div class="card"><h3>University Entry Rule</h3><p><strong>GETI Baccalaureat Passed</strong> is mandatory before L1 University access.</p></div><div class="card"><h3>Bachelor Exam Rule</h3><p><strong>L1 + L2 Passed</strong> is mandatory before Bachelor Exam registration.</p></div><div class="card"><h3>Passing Rule</h3><p><strong>50%</strong> minimum final average and exam pass requirement.</p></div>
+          <div class="card"><h3>Attendance Rule</h3><p><strong>75%</strong> minimum attendance.</p></div>
+          <div class="card"><h3>Credits</h3><p><strong>30 ECTS</strong> per semester • <strong>60 ECTS</strong> per year.</p></div>
+        </div>
+        <div class="notice warn" style="margin-top:16px">For production, Admin and Super Admin access must be enforced server-side. Do not rely on this HTML login alone for security.</div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+const GETI_LEVELS = {"L1": {"year": "First Year", "yearNumber": "Year 1", "semesters": ["S1", "S2"], "counts": [8, 8], "credits": 60, "result": "First Year"}, "L2": {"year": "Second Year", "yearNumber": "Year 2", "semesters": ["S3", "S4"], "counts": [10, 10], "credits": 60, "result": "Second Year"}, "L3": {"year": "Third Year", "yearNumber": "Year 3", "semesters": ["S5", "S6"], "counts": [12, 12], "credits": 60, "result": "Bachelor / Licence"}, "M1": {"year": "Fourth Year", "yearNumber": "Year 4", "semesters": ["S7", "S8"], "counts": [14, 14], "credits": 60, "result": "Master Year 1"}, "M2": {"year": "Fifth Year", "yearNumber": "Year 5", "semesters": ["S9", "S10"], "counts": [16, 16], "credits": 60, "result": "Master Degree"}};
+const GETI_FILIERES = [{"id": "lit01", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Anglophone Studies", "fr": "Études anglophones", "specialisations": ["Applied Linguistics", "English Literature", "TESOL & English Language Teaching", "Translation & Interpreting", "Anglophone Culture & Civilization"]}, {"id": "lit02", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Francophone Studies", "fr": "Études françaises et francophones", "specialisations": ["French Linguistics", "French & Francophone Literature", "French as a Foreign Language (FLE)", "Translation & Interpretation", "Francophone Culture & Civilization"]}, {"id": "lit03", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Tourism Studies", "fr": "Science du tourisme", "specialisations": ["Tourism Management", "Ecotourism", "Cultural & Heritage Tourism", "Destination & Travel Management", "Sustainable Tourism"]}, {"id": "lit04", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Hospitality Management", "fr": "Hôtellerie et restauration", "specialisations": ["Hotel Management", "Food & Beverage Management", "Resort Management", "Events & Hospitality Management", "Hospitality Marketing & Revenue Management"]}, {"id": "lit05", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Philosophy", "fr": "Philosophie", "specialisations": ["Ethics & Applied Philosophy", "Political Philosophy", "Philosophy of Science", "Metaphysics & Epistemology", "Social & Contemporary Philosophy"]}, {"id": "lit06", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Communication and Media Studies", "fr": "Communication et médias", "specialisations": ["Journalism", "Digital Communication", "Corporate Communication", "Public Relations", "Media Production"]}, {"id": "lit07", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "History", "fr": "Histoire", "specialisations": ["African History", "World History", "Colonial & Postcolonial History", "Heritage & Archival Studies", "Political & Social History"]}, {"id": "lit08", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Geography", "fr": "Géographie", "specialisations": ["Human Geography", "Physical Geography", "GIS & Remote Sensing", "Urban & Regional Planning", "Environmental Geography"]}, {"id": "lit09", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Sociology", "fr": "Sociologie", "specialisations": ["Development Sociology", "Sociology of Organizations", "Urban Sociology", "Population & Social Studies", "Social Research"]}, {"id": "lit10", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Political Science", "fr": "Science politique", "specialisations": ["International Relations", "Public Policy", "Governance", "Political Economy", "Diplomacy & Strategic Studies"]}, {"id": "lit11", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Law", "fr": "Droit", "specialisations": ["Public Law", "Private Law", "International Law", "Business Law", "Human Rights Law"]}, {"id": "lit12", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Foreign Languages", "fr": "Langues étrangères", "specialisations": ["Modern Languages", "Applied Linguistics", "Language Teaching", "Translation Studies", "Intercultural Communication"]}, {"id": "lit13", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Translation and Intercultural Studies", "fr": "Traduction et études interculturelles", "specialisations": ["Professional Translation", "Conference Interpreting", "Legal & Technical Translation", "Localization & Digital Translation", "Intercultural Communication"]}, {"id": "lit14", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Anthropology", "fr": "Anthropologie", "specialisations": ["Social & Cultural Anthropology", "Development Anthropology", "Archaeology & Heritage", "Environmental Anthropology", "Applied Anthropology"]}, {"id": "lit15", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Civilization and Cultural Studies", "fr": "Ci", "specialisations": ["African Studies", "European Studies", "American Studies", "Asian Studies", "Cultural Heritage Studies"]}, {"id": "sci16", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Mathematics", "fr": "Mathématiques", "specialisations": ["Pure Mathematics", "Applied Mathematics", "Probability & Statistics", "Mathematical Modelling", "Operations Research"]}, {"id": "sci17", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Computer Science", "fr": "Informatique", "specialisations": ["Artificial Intelligence", "Software Engineering", "Data Science", "Cybersecurity", "Computer Systems & Networks"]}, {"id": "sci18", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Physics", "fr": "Physique", "specialisations": ["Theoretical Physics", "Applied Physics", "Materials Physics", "Energy Physics", "Instrumentation & Electronics"]}, {"id": "sci19", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Chemistry", "fr": "Chimie", "specialisations": ["Organic Chemistry", "Inorganic Chemistry", "Analytical Chemistry", "Physical Chemistry", "Industrial & Environmental Chemistry"]}, {"id": "sci20", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Biology", "fr": "Biologie", "specialisations": ["Molecular & Cellular Biology", "Ecology & Evolution", "Microbiology", "Genetics & Biotechnology", "Plant & Animal Biology"]}, {"id": "sci21", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Biochemistry and Molecular Biology", "fr": "Biochimie et biologie moléculaire", "specialisations": ["Molecular Biotechnology", "Genetics & Genomics", "Protein & Enzyme Science", "Molecular Diagnostics", "Bioinformatics"]}, {"id": "sci22", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Environmental Science", "fr": "Sciences de l’environnement", "specialisations": ["Environmental Management", "Climate Change Studies", "Biodiversity & Conservation", "Pollution Control", "Natural Resources Management"]}, {"id": "sci23", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Geology and Geosciences", "fr": "Géologie et géosciences", "specialisations": ["Economic Geology", "Structural Geology & Tectonics", "Geophysics", "Mineral Resources", "Geological Hazards"]}, {"id": "sci24", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Hydrogeology", "fr": "Hydrogéologie", "specialisations": ["Groundwater Resources", "Groundwater Modelling", "Contaminant Hydrogeology", "Water Resources Management", "Hydrogeophysics"]}, {"id": "sci25", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Geotechnical Engineering", "fr": "Géotechnique", "specialisations": ["Soil Mechanics & Foundations", "Rock Mechanics", "Engineering Geology", "Geotechnical Structures", "Geoenvironmental Engineering"]}, {"id": "sci26", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Applied Mathematics and Statistics", "fr": "Mathématiques appliquées et statistiques", "specialisations": ["Data Analytics", "Actuarial Mathematics", "Financial Mathematics", "Mathematical Modelling", "Biostatistics"]}, {"id": "sci27", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Water Science and Technology", "fr": "Sciences et techniques de l’eau", "specialisations": ["Hydrology", "Water & Wastewater Treatment", "Integrated Water Resources Management", "Hydraulics", "Water Quality Management"]}, {"id": "sci28", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Agricultural Science", "fr": "Sciences agronomiques", "specialisations": ["Crop Science", "Animal Science", "Soil Science", "Agribusiness", "Agroecology"]}, {"id": "sci29", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Medical and Health Sciences", "fr": "Sciences médicales et santé", "specialisations": ["Public Health", "Biomedical Sciences", "Epidemiology", "Health Management", "Clinical Research"]}, {"id": "sci30", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Engineering Sciences", "fr": "Sciences de l’ingénieur / Polytechnique", "specialisations": ["Civil Engineering", "Mechanical Engineering", "Electrical Engineering", "Industrial Engineering", "Energy Engineering"]}, {"id": "ose31", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Economics", "fr": "Économie", "specialisations": ["Development Economics", "International Economics", "Public Economics", "Econometrics", "Monetary & Financial Economics"]}, {"id": "ose32", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Business Management", "fr": "Gestion d’entreprise", "specialisations": ["Strategic Management", "Operations Management", "Project Management", "International Management", "Entrepreneurship"]}, {"id": "ose33", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Finance", "fr": "Finance", "specialisations": ["Corporate Finance", "Banking & Finance", "Investment Management", "Financial Risk Management", "FinTech & Digital Finance"]}, {"id": "ose34", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Accounting", "fr": "Comptabilité", "specialisations": ["Financial Accounting", "Audit & Assurance", "Management Accounting", "Taxation", "Accounting & Financial Control"]}, {"id": "ose35", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Banking and Insurance", "fr": "Banque et assurance", "specialisations": ["Banking Management", "Insurance Management", "Risk Management", "Microfinance", "Digital Banking"]}, {"id": "ose36", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Marketing", "fr": "Marketing", "specialisations": ["Digital Marketing", "Brand Management", "Consumer Behaviour", "Marketing Analytics", "International Marketing"]}, {"id": "ose37", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "International Business", "fr": "Commerce international", "specialisations": ["International Trade", "Logistics & Supply Chain", "International Finance", "Global Business Strategy", "Import–Export Management"]}, {"id": "ose38", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Human Resource Management", "fr": "Gestion des ressources humaines", "specialisations": ["Talent Management", "Labour Relations", "Training & Development", "Compensation & Benefits", "HR Analytics"]}, {"id": "ose39", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Sociology", "fr": "Sociologie", "specialisations": ["Economic Sociology", "Sociology of Work", "Development Sociology", "Social Policy", "Population Studies"]}, {"id": "ose40", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Political Science", "fr": "Science politique", "specialisations": ["Public Policy", "Governance", "International Relations", "Political Economy", "Public Administration"]}, {"id": "ose41", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Law", "fr": "Droit", "specialisations": ["Business Law", "Tax Law", "Labour Law", "Administrative Law", "International Trade Law"]}, {"id": "ose42", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Public Administration", "fr": "Administration publique", "specialisations": ["Public Management", "Public Policy & Evaluation", "Local Government Administration", "Public Finance", "Digital Government"]}, {"id": "ose43", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Development Economics", "fr": "Économie du développement", "specialisations": ["Poverty & Development", "Agricultural Economics", "Environmental Economics", "Development Finance", "Project & Programme Evaluation"]}, {"id": "ose44", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Statistics and Economic Analysis", "fr": "Statistiques et analyse économique", "specialisations": ["Econometrics", "Business Data Analytics", "Economic Forecasting", "Survey Statistics", "Financial Statistics"]}, {"id": "ose45", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Entrepreneurship and Business Development", "fr": "Entrepreneuriat et développement", "specialisations": ["Startup & Innovation Management", "SME Management", "Social Entrepreneurship", "Business Development", "E-Commerce Entrepreneurship"]}, {"id": "it46", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Computer Science", "fr": "Informatique", "specialisations": ["Artificial Intelligence", "Data Science", "Software Engineering", "Cybersecurity", "Systems & Networks"]}, {"id": "it47", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Software Engineering", "fr": "Génie logiciel", "specialisations": ["Enterprise Software Engineering", "Mobile Software Engineering", "DevOps Engineering", "Software Quality Assurance", "Software Architecture"]}, {"id": "it48", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Web and Mobile Development", "fr": "Développement web et mobile", "specialisations": ["Full-Stack Web Development", "Mobile Application Development", "Cloud-Native Development", "Front-End & UX Engineering", "E-Commerce Development"]}, {"id": "it49", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Database Systems", "fr": "Bases de données", "specialisations": ["Database Administration", "Big Data Systems", "Distributed Databases", "Data Warehousing & Business Intelligence", "Database Security"]}, {"id": "it50", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Computer Networks and Systems", "fr": "Réseaux et systèmes informatiques", "specialisations": ["Network Engineering", "Systems Administration", "Cloud Networking", "Network Security", "Wireless Networks"]}, {"id": "it51", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Cybersecurity", "fr": "Cybersécurité", "specialisations": ["Network Security", "Application Security", "Digital Forensics", "Cryptography", "Cybersecurity Governance & Risk"]}, {"id": "it52", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Artificial Intelligence", "fr": "Intelligence artificielle", "specialisations": ["Machine Learning", "Natural Language Processing", "Computer Vision", "Robotics & Intelligent Systems", "Deep Learning"]}, {"id": "it53", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Data Science", "fr": "Science des données", "specialisations": ["Machine Learning & Analytics", "Big Data Analytics", "Data Engineering", "Business Intelligence", "Applied Statistics"]}, {"id": "it54", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Cloud Computing", "fr": "Informatique en nuage", "specialisations": ["Cloud Architecture", "DevOps & Site Reliability Engineering", "Cloud Security", "Distributed Systems", "Cloud Platform Engineering"]}, {"id": "it55", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Information Systems", "fr": "Systèmes d’information", "specialisations": ["Management Information Systems", "Enterprise Resource Planning", "Business Analysis", "IT Governance", "Digital Transformation"]}, {"id": "it56", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Computer Systems and Architecture", "fr": "Systèmes et architecture informatique", "specialisations": ["Advanced Computer Architecture", "Operating Systems", "High-Performance Computing", "Hardware–Software Integration", "Computer Engineering"]}, {"id": "it57", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Internet of Things (IoT)", "fr": "Internet des objets", "specialisations": ["Smart Systems", "Industrial IoT", "Wireless Sensor Networks", "Edge Computing", "IoT Security"]}, {"id": "it58", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Embedded Systems", "fr": "Systèmes embarqués", "specialisations": ["Embedded Linux", "Real-Time Systems", "Microcontroller Systems", "Robotics & Automation", "Embedded Hardware Design"]}, {"id": "it59", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Multimedia and Digital Technology", "fr": "Multimédia et technologies numériques", "specialisations": ["Digital Media Production", "Animation & Motion Design", "Game Development", "Audio & Video Technology", "UI/UX & Interactive Media"]}, {"id": "it60", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Telecommunications and Network Engineering", "fr": "Télécommunications et ingénierie réseau", "specialisations": ["Mobile & Wireless Communications", "Fiber-Optic Communications", "Advanced Network Engineering", "Digital Signal Processing", "Satellite & IoT Communications"]}];
+const GETI_SEEDS = {"Anglophone Studies": ["English Grammar", "English Linguistics", "Phonetics and Phonology", "Academic Writing", "English Literature", "British Civilization", "American Civilization", "Discourse Analysis", "Sociolinguistics", "Translation Studies", "TESOL Methodology", "Research Methods"], "Francophone Studies": ["French Grammar", "French Linguistics", "Phonetics and Phonology", "Academic Writing in French", "French Literature", "Francophone Literature", "Francophone Civilization", "Discourse Analysis", "Sociolinguistics", "Translation Studies", "FLE Methodology", "Research Methods"], "Tourism Studies": ["Tourism Geography", "Tourism Economics", "Destination Management", "Travel Operations", "Tourism Marketing", "Ecotourism", "Cultural Tourism", "Heritage Tourism", "Sustainable Tourism", "Tourism Policy", "Tourism Planning", "Research Methods"], "Hospitality Management": ["Hotel Operations", "Food and Beverage Management", "Front Office Management", "Housekeeping Management", "Hospitality Accounting", "Hospitality Marketing", "Revenue Management", "Events Management", "Resort Management", "Customer Experience", "Hospitality Law", "Research Methods"], "Philosophy": ["History of Philosophy", "Logic", "Ethics", "Epistemology", "Metaphysics", "Political Philosophy", "Philosophy of Science", "Social Philosophy", "Aesthetics", "Philosophy of Religion", "Contemporary Philosophy", "Research Methods"], "Communication and Media Studies": ["Communication Theory", "Journalism", "Media Writing", "Digital Communication", "Public Relations", "Corporate Communication", "Media Production", "Media Law and Ethics", "Audience Studies", "Social Media", "Visual Communication", "Research Methods"], "History": ["World History", "African History", "Madagascar History", "Ancient History", "Modern History", "Colonial History", "Postcolonial History", "Political History", "Social History", "Economic History", "Heritage and Archives", "Historical Research Methods"], "Geography": ["Physical Geography", "Human Geography", "Cartography", "GIS", "Remote Sensing", "Climatology", "Geomorphology", "Population Geography", "Urban Geography", "Regional Planning", "Environmental Geography", "Geographical Research Methods"], "Sociology": ["Sociological Theory", "Social Institutions", "Social Stratification", "Sociology of Family", "Sociology of Education", "Urban Sociology", "Development Sociology", "Population Studies", "Sociology of Work", "Social Policy", "Social Research Methods", "Statistics for Sociology"], "Political Science": ["Political Theory", "Comparative Politics", "International Relations", "Public Policy", "Governance", "Political Economy", "Public Administration", "Diplomacy", "Political Institutions", "Constitutional Studies", "Research Methods", "Policy Analysis"], "Law": ["Constitutional Law", "Civil Law", "Criminal Law", "Administrative Law", "Commercial Law", "International Law", "Human Rights Law", "Labour Law", "Contract Law", "Legal Research", "Legal Writing", "Jurisprudence"], "Foreign Languages": ["Applied Linguistics", "Language Structure", "Phonetics", "Language Teaching", "Translation", "Intercultural Communication", "Academic Writing", "Oral Communication", "Literature", "Civilization Studies", "Language Assessment", "Research Methods"], "Translation and Intercultural Studies": ["Translation Theory", "General Translation", "Technical Translation", "Legal Translation", "Conference Interpreting", "Consecutive Interpreting", "Localization", "Terminology Management", "Intercultural Communication", "Corpus Tools", "Translation Technology", "Research Methods"], "Anthropology": ["Cultural Anthropology", "Social Anthropology", "Biological Anthropology", "Archaeology", "Ethnography", "Kinship Studies", "Economic Anthropology", "Political Anthropology", "Environmental Anthropology", "Development Anthropology", "Heritage Studies", "Research Methods"], "Civilization and Cultural Studies": ["Cultural Theory", "African Studies", "European Studies", "American Studies", "Asian Studies", "Cultural Heritage", "Popular Culture", "Identity Studies", "Postcolonial Studies", "Globalization and Culture", "Comparative Civilization", "Research Methods"], "Mathematics": ["Algebra", "Calculus", "Linear Algebra", "Geometry", "Differential Equations", "Real Analysis", "Complex Analysis", "Probability", "Statistics", "Numerical Methods", "Mathematical Modelling", "Research Methods"], "Computer Science": ["Programming", "Algorithms", "Data Structures", "Computer Architecture", "Operating Systems", "Databases", "Computer Networks", "Software Engineering", "Artificial Intelligence", "Cybersecurity", "Cloud Computing", "Research Methods"], "Physics": ["Mechanics", "Electromagnetism", "Thermodynamics", "Waves and Optics", "Modern Physics", "Quantum Physics", "Solid State Physics", "Electronics", "Materials Physics", "Energy Physics", "Instrumentation", "Research Methods"], "Chemistry": ["General Chemistry", "Organic Chemistry", "Inorganic Chemistry", "Physical Chemistry", "Analytical Chemistry", "Biochemistry", "Industrial Chemistry", "Environmental Chemistry", "Polymer Chemistry", "Spectroscopy", "Chemical Thermodynamics", "Research Methods"], "Biology": ["Cell Biology", "Genetics", "Molecular Biology", "Microbiology", "Ecology", "Evolution", "Plant Biology", "Animal Biology", "Physiology", "Biotechnology", "Biodiversity", "Research Methods"], "Biochemistry and Molecular Biology": ["Biochemistry", "Molecular Biology", "Genetics", "Genomics", "Proteomics", "Enzymology", "Molecular Biotechnology", "Bioinformatics", "Molecular Diagnostics", "Cell Signalling", "Metabolism", "Research Methods"], "Environmental Science": ["Ecology", "Environmental Chemistry", "Environmental Management", "Climate Change", "Biodiversity Conservation", "Pollution Control", "Natural Resources", "Environmental Impact Assessment", "Waste Management", "Sustainability", "Environmental Policy", "Research Methods"], "Geology and Geosciences": ["Mineralogy", "Petrology", "Structural Geology", "Sedimentology", "Stratigraphy", "Geomorphology", "Geophysics", "Economic Geology", "Hydrogeology", "Geological Mapping", "Geological Hazards", "Research Methods"], "Hydrogeology": ["Groundwater Hydrology", "Aquifer Mechanics", "Groundwater Flow", "Groundwater Modelling", "Hydrochemistry", "Contaminant Hydrogeology", "Well Hydraulics", "Hydrogeophysics", "Water Resources Management", "Groundwater Monitoring", "GIS for Hydrogeology", "Research Methods"], "Geotechnical Engineering": ["Engineering Geology", "Soil Mechanics", "Rock Mechanics", "Foundation Engineering", "Slope Stability", "Geotechnical Investigation", "Geotechnical Structures", "Soil Improvement", "Geoenvironmental Engineering", "Geotechnical Modelling", "Construction Materials", "Research Methods"], "Applied Mathematics and Statistics": ["Applied Calculus", "Linear Algebra", "Probability", "Mathematical Statistics", "Regression Analysis", "Time Series", "Numerical Analysis", "Optimization", "Stochastic Processes", "Data Analytics", "Mathematical Modelling", "Research Methods"], "Water Science and Technology": ["Hydrology", "Hydraulics", "Water Chemistry", "Water Treatment", "Wastewater Treatment", "Water Quality", "Water Resources Management", "Catchment Management", "Water Supply Systems", "Irrigation", "Environmental Hydraulics", "Research Methods"], "Agricultural Science": ["Crop Science", "Animal Science", "Soil Science", "Plant Nutrition", "Agricultural Economics", "Agronomy", "Plant Protection", "Irrigation", "Agroecology", "Farm Management", "Agricultural Extension", "Research Methods"], "Medical and Health Sciences": ["Human Anatomy", "Physiology", "Biochemistry", "Microbiology", "Pathology", "Public Health", "Epidemiology", "Pharmacology", "Health Management", "Biostatistics", "Clinical Research", "Research Methods"], "Engineering Sciences": ["Engineering Mathematics", "Engineering Mechanics", "Materials Science", "Thermodynamics", "Electrical Systems", "Fluid Mechanics", "Engineering Design", "Control Systems", "Manufacturing", "Project Management", "Engineering Economics", "Research Methods"], "Economics": ["Microeconomics", "Macroeconomics", "Econometrics", "Development Economics", "Public Economics", "International Economics", "Monetary Economics", "Financial Economics", "Labour Economics", "Environmental Economics", "Economic Policy", "Research Methods"], "Business Management": ["Principles of Management", "Organizational Behaviour", "Operations Management", "Strategic Management", "Marketing", "Human Resource Management", "Accounting", "Finance", "Project Management", "Entrepreneurship", "Business Law", "Research Methods"], "Finance": ["Corporate Finance", "Financial Markets", "Investment Analysis", "Banking", "Risk Management", "Financial Modelling", "Portfolio Management", "International Finance", "Derivatives", "FinTech", "Financial Econometrics", "Research Methods"], "Accounting": ["Financial Accounting", "Management Accounting", "Cost Accounting", "Auditing", "Taxation", "Corporate Reporting", "Accounting Information Systems", "Public Sector Accounting", "Financial Analysis", "Internal Control", "Accounting Ethics", "Research Methods"], "Banking and Insurance": ["Banking Operations", "Insurance Principles", "Risk Management", "Credit Management", "Financial Markets", "Microfinance", "Insurance Law", "Actuarial Foundations", "Bank Regulation", "Digital Banking", "Investment Services", "Research Methods"], "Marketing": ["Marketing Principles", "Consumer Behaviour", "Digital Marketing", "Brand Management", "Marketing Research", "Sales Management", "International Marketing", "Services Marketing", "Advertising", "Marketing Analytics", "Strategic Marketing", "Research Methods"], "International Business": ["International Trade", "Global Business Strategy", "International Finance", "International Marketing", "Supply Chain Management", "Import Export Management", "Cross-Cultural Management", "International Business Law", "Global Economics", "Trade Policy", "Negotiation", "Research Methods"], "Human Resource Management": ["Human Resource Management", "Organizational Behaviour", "Recruitment", "Training and Development", "Performance Management", "Compensation", "Labour Relations", "HR Law", "Talent Management", "HR Analytics", "Strategic HRM", "Research Methods"], "Public Administration": ["Public Management", "Public Policy", "Administrative Law", "Public Finance", "Local Government", "Governance", "Public Sector HRM", "Policy Evaluation", "Public Procurement", "Digital Government", "Ethics in Public Service", "Research Methods"], "Development Economics": ["Development Theory", "Poverty Analysis", "Agricultural Economics", "Development Finance", "Environmental Economics", "Project Evaluation", "Public Policy", "International Development", "Rural Development", "Social Protection", "Development Statistics", "Research Methods"], "Statistics and Economic Analysis": ["Descriptive Statistics", "Probability", "Econometrics", "Regression Analysis", "Time Series", "Economic Forecasting", "Survey Statistics", "Financial Statistics", "Business Analytics", "Data Visualization", "Statistical Software", "Research Methods"], "Entrepreneurship and Business Development": ["Entrepreneurship", "Innovation Management", "Startup Management", "SME Management", "Business Planning", "Business Development", "E-Commerce", "Social Entrepreneurship", "Entrepreneurial Finance", "Market Validation", "Growth Strategy", "Research Methods"], "Software Engineering": ["Software Design", "Programming", "Algorithms", "Software Architecture", "Requirements Engineering", "Software Testing", "DevOps", "Mobile Development", "Web Engineering", "Software Quality", "Project Management", "Research Methods"], "Web and Mobile Development": ["HTML and CSS", "JavaScript", "Web Architecture", "Front-End Development", "Back-End Development", "Mobile Application Development", "API Development", "Cloud-Native Development", "UI UX Design", "E-Commerce Development", "Web Security", "Research Methods"], "Database Systems": ["Database Design", "SQL", "Data Modelling", "Database Administration", "Distributed Databases", "Data Warehousing", "Big Data Systems", "Database Security", "Query Optimization", "NoSQL Databases", "Business Intelligence", "Research Methods"], "Computer Networks and Systems": ["Computer Networks", "Routing and Switching", "Network Services", "Systems Administration", "Linux Administration", "Cloud Networking", "Wireless Networks", "Network Security", "Virtualization", "Network Automation", "Systems Monitoring", "Research Methods"], "Cybersecurity": ["Cybersecurity Fundamentals", "Network Security", "Application Security", "Cryptography", "Digital Forensics", "Ethical Hacking", "Security Operations", "Identity and Access Management", "Cloud Security", "Governance Risk and Compliance", "Incident Response", "Research Methods"], "Artificial Intelligence": ["Artificial Intelligence", "Machine Learning", "Deep Learning", "Natural Language Processing", "Computer Vision", "Robotics", "Knowledge Representation", "Reinforcement Learning", "AI Ethics", "Data Mining", "Intelligent Systems", "Research Methods"], "Data Science": ["Statistics for Data Science", "Python for Data Science", "Data Mining", "Machine Learning", "Data Engineering", "Big Data Analytics", "Data Visualization", "Databases", "Business Intelligence", "Cloud Data Platforms", "Applied Statistics", "Research Methods"], "Cloud Computing": ["Cloud Foundations", "Cloud Architecture", "Virtualization", "Distributed Systems", "DevOps", "Site Reliability Engineering", "Cloud Security", "Containers and Orchestration", "Cloud Networking", "Cloud Storage", "Platform Engineering", "Research Methods"], "Information Systems": ["Information Systems", "Business Analysis", "Systems Analysis and Design", "Database Systems", "Enterprise Resource Planning", "IT Governance", "Digital Transformation", "Project Management", "Business Intelligence", "Information Security", "IT Service Management", "Research Methods"], "Computer Systems and Architecture": ["Computer Architecture", "Digital Logic", "Operating Systems", "Microprocessors", "Computer Organization", "Embedded Computing", "Parallel Computing", "High Performance Computing", "Hardware Software Integration", "Systems Programming", "Computer Engineering", "Research Methods"], "Internet of Things (IoT)": ["IoT Foundations", "Sensors and Actuators", "Embedded Systems", "Wireless Sensor Networks", "IoT Networking", "Edge Computing", "Cloud IoT", "IoT Security", "Industrial IoT", "Smart Systems", "IoT Data Analytics", "Research Methods"], "Embedded Systems": ["Embedded Systems", "Microcontrollers", "Embedded C", "Real-Time Systems", "Embedded Linux", "Digital Electronics", "Sensors and Interfaces", "Robotics", "Control Systems", "Embedded Hardware Design", "IoT Integration", "Research Methods"], "Multimedia and Digital Technology": ["Digital Media", "Graphic Design", "Audio Technology", "Video Production", "Animation", "Motion Design", "Game Development", "Interactive Media", "UI UX Design", "Web Multimedia", "Digital Storytelling", "Research Methods"], "Telecommunications and Network Engineering": ["Telecommunication Systems", "Digital Communications", "Wireless Communications", "Mobile Networks", "Fiber Optics", "Network Engineering", "Signal Processing", "Satellite Communications", "RF Engineering", "Network Security", "IoT Communications", "Research Methods"]};
+
+const LEVEL_TEMPLATES = {
+  L1:["Introduction to {x}","Foundations of {x}","Principles of {x}","{x}: Concepts and Applications","Basic {x}","{x} Skills and Practice","Academic {x}","{x} Workshop","Understanding {x}","{x} in Context","Essential {x}","{x} Methods"],
+  L2:["Intermediate {x}","Applied {x}","{x} Analysis","{x} Methods","{x} Practice","{x} Systems and Applications","{x} Techniques","{x} Project","Professional {x}","{x} Case Studies","{x} Laboratory","{x} Fieldwork"],
+  L3:["Advanced {x}","{x} Seminar","{x} Research","{x} Project","Contemporary {x}","Critical Issues in {x}","{x} Policy and Practice","{x} Capstone","{x} Research Methods","Special Topics in {x}","{x} Professional Practice","{x} Dissertation Preparation"]
+};
+
+const MASTER_TEMPLATES = {
+  M1A:["Advanced {s}","Theory of {s}","Methods in {s}","Applied {s}","{s} Research Design","{s} Professional Practice","{s} Analysis","{s} Seminar","Contemporary Issues in {s}","{s} Project Design","{s} Data and Evidence","{s} Policy and Practice","{s} Case Studies","{s} Evaluation","{s} Technology and Innovation","{s} Research Methods"],
+  M1B:["Strategic {s}","{s} Applications","{s} Research Seminar","{s} Project Management","{s} Ethics and Professional Standards","{s} Quality and Evaluation","{s} Advanced Practice","{s} Analytics","{s} Systems","{s} Innovation","{s} Comparative Studies","{s} Field Practice","{s} Capstone Project","{s} Academic Writing","{s} Research Proposal","{s} Specialist Workshop"],
+  M2A:["Advanced Topics in {s}","Current Research in {s}","{s} Research Seminar I","{s} Applied Research I","{s} Professional Seminar","{s} Research Methods II","{s} Evidence and Evaluation","{s} Innovation Lab","{s} Policy Seminar","{s} Advanced Analytics","{s} Research Project I","{s} Thesis Design","{s} Literature Review","{s} Research Ethics","{s} Data Collection","{s} Thesis Proposal"],
+  M2B:["Frontiers of {s}","{s} Research Seminar II","{s} Applied Research II","{s} Advanced Practice II","{s} Research Project II","{s} Data Analysis","{s} Scientific Communication","{s} Professional Development","{s} Strategic Issues","{s} Specialist Colloquium","{s} Thesis Methodology","{s} Thesis Analysis","{s} Thesis Writing","{s} Thesis Presentation","{s} Thesis Defense Preparation","Master Thesis / Mémoire in {s}"]
+};
+
+let syncChannel = null;
+try{ if("BroadcastChannel" in window) syncChannel = new BroadcastChannel("geti-university-sync"); }catch(e){}
+
+function loadState(){
+  let state;
+  try{ state = JSON.parse(localStorage.getItem("geti_lms_state") || "null"); }catch(e){}
+  if(!state) state={};
+  state.student = state.student || {
+    id:localStorage.getItem("geti_student_id") || "GETI-STU-"+String(Date.now()).slice(-8),
+    name:localStorage.getItem("geti_student_name") || "Student",
+    email:"",baccOption:"",admittedFiliereId:localStorage.getItem("geti_university_principal_filiere")||"",
+    activeLevel:"L1",specialization:"",admitted:false
+  };
+  state.activities = state.activities || {};
+  state.customAssessments = state.customAssessments || {};
+  state.teacherLessons = state.teacherLessons || [];
+  state.announcements = state.announcements || [];
+  state.diplomas = state.diplomas || [];
+  state.internships = state.internships || [];
+  state.researchRecords = state.researchRecords || [];
+  state.enrollment = state.enrollment || {registrationStatus:"Pending",feeAmount:"Not configured",feeStatus:"Pending",email:"",country:"",phone:""};
+  state.professional = state.professional || {payments:[],news:[],notifications:[],auditLogs:[],documents:[],tickets:[],qualityRecords:[],examLogs:[],academicStatus:"Active"};
+  state.professional.payments = state.professional.payments || [];
+  state.professional.news = state.professional.news || [];
+  state.professional.notifications = state.professional.notifications || [];
+  state.professional.auditLogs = state.professional.auditLogs || [];
+  state.universityAdmin = state.universityAdmin || {students:[],teachers:[],curriculumOverrides:{},settings:{}};
+  state.universityAdmin.students = state.universityAdmin.students || [];
+  state.universityAdmin.teachers = state.universityAdmin.teachers || [];
+  state.universityAdmin.curriculumOverrides = state.universityAdmin.curriculumOverrides || {};
+  syncCurrentStudentToRegistry(state);
+  return state;
+}
+
+function saveState(state, action, detail){
+  if(action){
+    state.professional = state.professional || {auditLogs:[]};
+    state.professional.auditLogs = state.professional.auditLogs || [];
+    state.professional.auditLogs.push({
+      id:"AUD-"+Date.now()+"-"+Math.random().toString(36).slice(2,5),
+      date:new Date().toISOString(),role:"University Admin",action,detail:detail||""
+    });
+  }
+  localStorage.setItem("geti_lms_state", JSON.stringify(state));
+  try{ if(syncChannel) syncChannel.postMessage({type:"state-updated",at:Date.now()}); }catch(e){}
+  refreshAllAdminData();
+}
+
+function syncCurrentStudentToRegistry(state){
+  const s = state.student;
+  if(!s || !s.id) return;
+  let rec = state.universityAdmin.students.find(x=>x.id===s.id);
+  if(!rec){
+    rec={id:s.id,name:s.name||"Student",email:state.enrollment.email||"",country:state.enrollment.country||"",phone:state.enrollment.phone||"",status:state.professional.academicStatus||"Active",baccalaureatPassed:s.getiBaccalaureatPassed===true,level:s.activeLevel||"L1",filiereId:s.admittedFiliereId||"",isPortalStudent:true};
+    state.universityAdmin.students.push(rec);
+  }else{
+    rec.name=s.name||rec.name;
+    rec.level=s.activeLevel||rec.level;
+    rec.filiereId=s.admittedFiliereId||rec.filiereId;
+    rec.status=state.professional.academicStatus||rec.status;
+    rec.baccalaureatPassed=s.getiBaccalaureatPassed===true;
+    rec.isPortalStudent=true;
+  }
+}
+
+function escapeHtml(v){
+  return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+function filiere(id){ return GETI_FILIERES.find(f=>f.id===id)||null; }
+function levelMeta(level){ return GETI_LEVELS[level]||null; }
+function creditDistribution(count){
+  const base=Math.floor(30/count), rem=30-base*count;
+  return Array.from({length:count},(_,i)=>base+(i<rem?1:0));
+}
+function subjectKey(ctx){ return [ctx.level,ctx.filiereId,ctx.specialisation||"",ctx.semester,ctx.subjectName].join("|"); }
+function curriculumKey(level,fid,spec,sem){ return [level,fid,spec||"",sem].join("|"); }
+
+function defaultSubjectNames(f,level,semester,spec,count){
+  if(level==="M1" || level==="M2"){
+    let key="M1A";
+    if(level==="M1"&&semester==="S8") key="M1B";
+    if(level==="M2"&&semester==="S9") key="M2A";
+    if(level==="M2"&&semester==="S10") key="M2B";
+    const templates=MASTER_TEMPLATES[key], s=spec||f.en;
+    return Array.from({length:count},(_,i)=>templates[i%templates.length].replaceAll("{s}",s));
+  }
+  const seeds=GETI_SEEDS[f.en]||[f.en], templates=LEVEL_TEMPLATES[level]||LEVEL_TEMPLATES.L1;
+  const semNum=parseInt(String(semester).replace(/\D/g,""),10)||1;
+  const offset=((semNum-1)*count)%seeds.length;
+  const out=[];
+  for(let i=0;i<count;i++){
+    const seed=seeds[(offset+i)%seeds.length];
+    const t=templates[(i+semNum)%templates.length];
+    out.push(t.replace("{x}",seed));
+  }
+  if(level==="L3"&&semester==="S6"&&out.length>=2){
+    out[out.length-2]="Professional Internship / Stage";
+    out[out.length-1]="Bachelor Final Project in "+f.en;
+  }
+  if(level==="M1"&&semester==="S8"&&out.length) out[out.length-1]="Professional Internship / Stage in "+(spec||f.en);
+  if(level==="M2"&&semester==="S9"&&out.length) out[out.length-1]="Professional Internship / Stage in "+(spec||f.en);
+  if(level==="M2"&&semester==="S10"&&out.length) out[out.length-1]="Master Thesis / Mémoire in "+(spec||f.en);
+  return out;
+}
+
+function semesterSubjects(level,fid,spec,sem){
+  const state=loadState();
+  const override=state.universityAdmin.curriculumOverrides[curriculumKey(level,fid,spec,sem)];
+  if(Array.isArray(override)&&override.length) return override;
+  const f=filiere(fid), meta=levelMeta(level);
+  if(!f||!meta) return [];
+  const idx=meta.semesters.indexOf(sem);
+  if(idx<0) return [];
+  const count=meta.counts[idx], names=defaultSubjectNames(f,level,sem,spec,count), credits=creditDistribution(names.length);
+  return names.map((name,i)=>({name,credits:credits[i],code:"GETI-"+level+"-"+sem+"-"+f.id.toUpperCase()+"-"+String(i+1).padStart(2,"0"),lecturer:"",description:""}));
+}
+
+function adminPrototypeLogin(){
+  const email=document.getElementById("adminLoginEmail").value.trim();
+  const pass=document.getElementById("adminLoginPassword").value;
+
+  if(!email || !pass){
+    alert("Enter admin email and password.");
+    return;
+  }
+
+  if(pass !== "geti123"){
+    alert("Incorrect admin password.");
+    document.getElementById("adminLoginPassword").value = "";
+    document.getElementById("adminLoginPassword").focus();
+    return;
+  }
+
+  sessionStorage.setItem("geti_admin_session", email);
+  document.getElementById("adminLogin").style.display="none";
+  refreshAllAdminData();
+}
+function adminLogout(){
+  sessionStorage.removeItem("geti_admin_session");
+  document.getElementById("adminLogin").style.display="grid";
+}
+function showAdminScreen(name,btn){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  const target=document.getElementById("screen-"+name); if(target) target.classList.add("active");
+  document.querySelectorAll(".sidebar .nav").forEach(b=>b.classList.remove("active"));
+  if(btn)btn.classList.add("active");
+  document.getElementById("adminPageTitle").textContent=(btn?btn.textContent:"GETI University Admin");
+  document.getElementById("adminSidebar").classList.remove("open");
+  refreshScreen(name);
+}
+
+function fillFiliereSelect(id){
+  const sel=document.getElementById(id); if(!sel)return;
+  const old=sel.value; sel.innerHTML="";
+  GETI_FILIERES.forEach(f=>{const o=document.createElement("option");o.value=f.id;o.textContent=f.en+" — "+f.fr;sel.appendChild(o);});
+  if([...sel.options].some(o=>o.value===old))sel.value=old;
+}
+function fillStudentSelect(id){
+  const state=loadState(), sel=document.getElementById(id);if(!sel)return;
+  const old=sel.value; sel.innerHTML="";
+  state.universityAdmin.students.forEach(s=>{const o=document.createElement("option");o.value=s.id;o.textContent=s.name+" — "+s.id;sel.appendChild(o);});
+  if([...sel.options].some(o=>o.value===old))sel.value=old;
+}
+
+function refreshAllAdminData(){
+  fillFiliereSelect("stuFiliere");
+  ["curFiliere","assFiliere","gradeFiliere"].forEach(fillFiliereSelect);
+  ["gradeStudent","dipStudent"].forEach(fillStudentSelect);
+  renderDashboard();renderStudents();renderAdminBachelorEligibility();renderTeachers();renderProgrammes();renderPaymentsAdmin();renderResearchAdmin();renderDiplomas();renderAnnouncementsAdmin();renderReports();renderAudit();
+}
+
+function refreshScreen(name){
+  const map={dashboard:renderDashboard,students:renderStudents,teachers:renderTeachers,programmes:renderProgrammes,curriculum:refreshCurriculumSelectors,assessments:refreshAssessmentSelectors,grades:refreshGradeSelectors,payments:renderPaymentsAdmin,research:renderResearchAdmin,diplomas:renderDiplomas,announcements:renderAnnouncementsAdmin,reports:renderReports,audit:renderAudit};
+  if(map[name])map[name]();
+}
+
+
+function adminBachelorEligibilityForStudent(studentId){
+  const st = loadState();
+  const s = st.universityAdmin.students.find(x=>x.id===studentId);
+  if(!s) return {eligible:false,l1:false,l2:false,reason:"Student not found."};
+
+  if(s.baccalaureatPassed !== true){
+    return {eligible:false,l1:false,l2:false,reason:"GETI Baccalaureat not passed."};
+  }
+
+  const fid = s.filiereId || "";
+  if(!fid){
+    return {eligible:false,l1:false,l2:false,reason:"No University filière selected."};
+  }
+
+  function levelPassed(level){
+    const meta = levelMeta(level);
+    if(!meta) return false;
+    let rows = [];
+
+    meta.semesters.forEach(sem=>{
+      semesterSubjects(level,fid,"",sem).forEach(sub=>{
+        const key = [level,fid,"",sem,sub.name].join("|");
+        const a = st.activities[key] || {};
+        const complete = a.quizScore != null && a.assignmentGrade != null && a.examScore != null;
+        if(!complete){
+          rows.push(false);
+          return;
+        }
+        const avg = Math.round(Number(a.quizScore)*0.20 + Number(a.assignmentGrade)*0.30 + Number(a.examScore)*0.50);
+        const total = Number(a.attendanceTotal||0);
+        const att = total ? Math.round(Number(a.attendancePresent||0)/total*100) : 0;
+        rows.push(avg >= 50 && Number(a.examScore) >= 50 && att >= 75);
+      });
+    });
+
+    return rows.length > 0 && rows.every(Boolean);
+  }
+
+  const l1 = levelPassed("L1");
+  const l2 = levelPassed("L2");
+
+  return {
+    eligible:l1 && l2,
+    l1,
+    l2,
+    reason:(l1 && l2)
+      ? "Eligible for Bachelor Exam."
+      : ((!l1 && !l2) ? "L1 and L2 are not yet passed." : (!l1 ? "L1 not yet passed." : "L2 not yet passed."))
+  };
+}
+
+function renderAdminBachelorEligibility(){
+  const root = document.getElementById("adminBachelorEligibility");
+  if(!root) return;
+
+  const st = loadState();
+  root.innerHTML = st.universityAdmin.students.length
+    ? st.universityAdmin.students.map(s=>{
+        const e = adminBachelorEligibilityForStudent(s.id);
+        return `<div class="list-item">
+          <strong>${escapeHtml(s.name)}</strong>
+          <span class="badge ${e.eligible?'ok':'warn'}">${e.eligible?'Bachelor Exam Eligible':'Locked'}</span><br>
+          <span class="small">${escapeHtml(s.id)} • L1: ${e.l1?'Passed':'Not Passed'} • L2: ${e.l2?'Passed':'Not Passed'}<br>${escapeHtml(e.reason)}</span>
+        </div>`;
+      }).join("")
+    : '<p class="small">No students available.</p>';
+}
+
+function renderDashboard(){
+  const st=loadState();
+  const graded=Object.values(st.activities).filter(a=>a.quizScore!=null&&a.assignmentGrade!=null&&a.examScore!=null);
+  const passed=graded.filter(a=>((a.quizScore*.2+a.assignmentGrade*.3+a.examScore*.5)>=50 && a.examScore>=50)).length;
+  const passRate=graded.length?Math.round(passed/graded.length*100):0;
+  document.getElementById("dashboardKpis").innerHTML=`
+    <div class="card kpi"><b>${st.universityAdmin.students.length}</b><span>Students</span></div>
+    <div class="card kpi"><b>${st.universityAdmin.teachers.length}</b><span>Teachers</span></div>
+    <div class="card kpi"><b>${GETI_FILIERES.length}</b><span>University Filières</span></div>
+    <div class="card kpi"><b>${passRate}%</b><span>Recorded Pass Rate</span></div>`;
+  document.getElementById("dashboardAcademic").innerHTML=`<p><strong>Levels:</strong> L1, L2, L3, M1, M2<br><strong>Semesters:</strong> S1–S10<br><strong>Credits:</strong> 30 ECTS/semester • 60 ECTS/year<br><strong>Diplomas:</strong> ${st.diplomas.length} issued</p>`;
+  const logs=(st.professional.auditLogs||[]).slice().reverse().slice(0,6);
+  document.getElementById("dashboardAudit").innerHTML=logs.length?logs.map(x=>`<div class="list-item"><strong>${escapeHtml(x.action)}</strong><br><span class="small">${new Date(x.date).toLocaleString()} • ${escapeHtml(x.detail||"")}</span></div>`).join(""):'<p class="small">No administrative activity yet.</p>';
+}
+
+function clearStudentForm(){
+  ["stuId","stuName","stuEmail","stuCountry","stuPhone"].forEach(id=>document.getElementById(id).value="");
+}
+function saveStudent(){
+  const st=loadState();
+  let id=document.getElementById("stuId").value.trim()||("GETI-STU-"+String(Date.now()).slice(-8));
+  const data={id,name:document.getElementById("stuName").value.trim()||"Student",email:document.getElementById("stuEmail").value.trim(),country:document.getElementById("stuCountry").value.trim(),phone:document.getElementById("stuPhone").value.trim(),status:document.getElementById("stuStatus").value,baccalaureatPassed:document.getElementById("stuBaccStatus").value==="passed",level:document.getElementById("stuLevel").value,filiereId:document.getElementById("stuFiliere").value,isPortalStudent:id===st.student.id};
+  const idx=st.universityAdmin.students.findIndex(x=>x.id===id);
+  if(idx>=0)st.universityAdmin.students[idx]=Object.assign(st.universityAdmin.students[idx],data); else st.universityAdmin.students.push(data);
+  if(id===st.student.id){
+    st.student.name=data.name;st.student.activeLevel=data.level;st.student.admittedFiliereId=data.filiereId;st.student.getiBaccalaureatPassed=data.baccalaureatPassed===true;st.student.admitted=(data.baccalaureatPassed===true && !!data.filiereId);
+    st.enrollment.email=data.email;st.enrollment.country=data.country;st.enrollment.phone=data.phone;
+    st.professional.academicStatus=data.status;
+    localStorage.setItem("geti_student_name",data.name);
+    localStorage.setItem("geti_university_principal_filiere",data.filiereId||"");
+  }
+  saveState(st,"Student Record Saved",id+" • "+data.name);
+  clearStudentForm();
+}
+function editStudent(id){
+  const s=loadState().universityAdmin.students.find(x=>x.id===id);if(!s)return;
+  document.getElementById("stuId").value=s.id;document.getElementById("stuName").value=s.name;document.getElementById("stuEmail").value=s.email||"";document.getElementById("stuCountry").value=s.country||"";document.getElementById("stuPhone").value=s.phone||"";document.getElementById("stuStatus").value=s.status||"Active";document.getElementById("stuBaccStatus").value=s.baccalaureatPassed===true?"passed":"not-passed";document.getElementById("stuLevel").value=s.level||"L1";document.getElementById("stuFiliere").value=s.filiereId||GETI_FILIERES[0].id;
+}
+function renderStudents(){
+  const st=loadState(),q=(document.getElementById("studentSearch")?.value||"").toLowerCase();
+  const rows=st.universityAdmin.students.filter(s=>(s.name+" "+s.id+" "+s.email).toLowerCase().includes(q));
+  document.getElementById("studentList").innerHTML=rows.length?rows.map(s=>`<div class="list-item"><strong>${escapeHtml(s.name)}</strong> ${s.isPortalStudent?'<span class="badge ok">Portal Student</span>':''}<br><span class="small">${escapeHtml(s.id)} • ${escapeHtml(s.level||"L1")} • ${escapeHtml((filiere(s.filiereId)||{en:"No filière"}).en)} • ${escapeHtml(s.status||"Active")}</span><div class="actions"><button class="btn" onclick="editStudent('${s.id}')">Edit</button></div></div>`).join(""):'<div class="empty">No student found.</div>';
+}
+
+function saveTeacher(){
+  const st=loadState(),teacher={id:"TCH-"+Date.now(),name:document.getElementById("teacherName").value.trim(),email:document.getElementById("teacherEmail").value.trim(),qualification:document.getElementById("teacherQualification").value.trim(),faculty:document.getElementById("teacherFaculty").value,subjects:document.getElementById("teacherSubjects").value.trim()};
+  if(!teacher.name){alert("Teacher name required.");return}
+  st.universityAdmin.teachers.push(teacher);
+  if(!st.teacherProfile||!st.teacherProfile.name) st.teacherProfile={name:teacher.name,qualification:teacher.qualification,department:teacher.faculty,subjects:teacher.subjects};
+  saveState(st,"Teacher Added",teacher.name);
+  ["teacherName","teacherEmail","teacherQualification","teacherSubjects"].forEach(id=>document.getElementById(id).value="");
+}
+function renderTeachers(){
+  const rows=loadState().universityAdmin.teachers;
+  document.getElementById("teacherList").innerHTML=rows.length?rows.map(t=>`<div class="list-item"><strong>${escapeHtml(t.name)}</strong><br><span class="small">${escapeHtml(t.qualification||"")} • ${escapeHtml(t.faculty||"")}<br>${escapeHtml(t.subjects||"")}</span></div>`).join(""):'<p class="small">No teachers added yet.</p>';
+}
+
+function renderProgrammes(){
+  const counts={literary:0,scientific:0,ose:0,it:0};GETI_FILIERES.forEach(f=>counts[f.group]++);
+  document.getElementById("programmeStats").innerHTML=`<div class="card kpi"><b>${counts.literary}</b><span>Arts & Humanities</span></div><div class="card kpi"><b>${counts.scientific}</b><span>Science & Engineering</span></div><div class="card kpi"><b>${counts.ose}</b><span>Business & Social Sciences</span></div><div class="card kpi"><b>${counts.it}</b><span>IT & Computer Science</span></div>`;
+  const groups=[["literary","Faculty of Arts & Humanities"],["scientific","Faculty of Science & Engineering"],["ose","Faculty of Economics, Business & Social Sciences"],["it","Faculty of IT & Computer Science"]];
+  document.getElementById("programmeList").innerHTML=groups.map(([id,title])=>`<div class="card" style="margin-bottom:14px"><h3>${title}</h3><div class="grid3">${GETI_FILIERES.filter(f=>f.group===id).map(f=>`<div class="list-item"><strong>${escapeHtml(f.en)}</strong><br><span class="small">${escapeHtml(f.fr)}<br>M1: ${f.specialisations.map(escapeHtml).join(" • ")}</span></div>`).join("")}</div></div>`).join("");
+}
+
+function refreshCurriculumSelectors(){
+  fillFiliereSelect("curFiliere");
+  const level=document.getElementById("curLevel").value,f=filiere(document.getElementById("curFiliere").value),specSel=document.getElementById("curSpec"),semSel=document.getElementById("curSemester");
+  if(!f)return;
+  const oldSpec=specSel.value;specSel.innerHTML='<option value="">Principal Filière</option>';
+  if(level==="M1"||level==="M2")f.specialisations.forEach(s=>{const o=document.createElement("option");o.value=s;o.textContent=s;specSel.appendChild(o)});
+  specSel.disabled=!(level==="M1"||level==="M2"); if([...specSel.options].some(o=>o.value===oldSpec))specSel.value=oldSpec;
+  const meta=levelMeta(level),oldSem=semSel.value;semSel.innerHTML="";meta.semesters.forEach(s=>{const o=document.createElement("option");o.value=s;o.textContent=s;semSel.appendChild(o)});if(meta.semesters.includes(oldSem))semSel.value=oldSem;
+  renderCurriculumEditor();
+}
+function renderCurriculumEditor(){
+  const level=document.getElementById("curLevel").value,fid=document.getElementById("curFiliere").value,spec=document.getElementById("curSpec").value,sem=document.getElementById("curSemester").value;
+  const subs=semesterSubjects(level,fid,spec,sem),root=document.getElementById("curriculumEditor");
+  root.innerHTML='<div class="subject-row" style="font-weight:900;color:#50677e"><span>Code</span><span>Subject Title</span><span>ECTS</span><span>Lecturer</span><span>Description</span><span></span></div>'+
+  subs.map((s,i)=>`<div class="subject-row" data-i="${i}"><input class="curCode" value="${escapeHtml(s.code||"")}"><input class="curName" value="${escapeHtml(s.name)}"><input class="curCredits" type="number" min="0" step="0.5" value="${s.credits}"><input class="curLecturer" value="${escapeHtml(s.lecturer||"")}"><input class="curDescription" value="${escapeHtml(s.description||"")}"><button class="btn danger" onclick="this.closest('.subject-row').remove()">Remove</button></div>`).join("")+
+  '<button class="btn" style="margin-top:8px" onclick="addCurriculumRow()">Add Subject</button>';
+  updateCurriculumTotal();
+}
+function addCurriculumRow(){
+  const root=document.getElementById("curriculumEditor"),row=document.createElement("div");row.className="subject-row";row.innerHTML='<input class="curCode"><input class="curName" placeholder="Subject title"><input class="curCredits" type="number" min="0" step="0.5" value="0"><input class="curLecturer"><input class="curDescription"><button class="btn danger" onclick="this.closest(\'.subject-row\').remove()">Remove</button>';root.insertBefore(row,root.lastElementChild);
+}
+function updateCurriculumTotal(){
+  const vals=[...document.querySelectorAll("#curriculumEditor .curCredits")].map(x=>Number(x.value||0));
+  const total=vals.reduce((a,b)=>a+b,0),box=document.getElementById("curriculumStatus");if(box)box.innerHTML='<span class="badge '+(Math.abs(total-30)<.001?'ok':'warn')+'">Semester ECTS: '+total+' / 30</span>';
+}
+document.addEventListener("input",e=>{if(e.target.classList.contains("curCredits"))updateCurriculumTotal()});
+function saveCurriculumOverride(){
+  const level=document.getElementById("curLevel").value,fid=document.getElementById("curFiliere").value,spec=document.getElementById("curSpec").value,sem=document.getElementById("curSemester").value;
+  const rows=[...document.querySelectorAll("#curriculumEditor .subject-row")].filter(r=>r.querySelector(".curName")).map(r=>({code:r.querySelector(".curCode").value.trim(),name:r.querySelector(".curName").value.trim(),credits:Number(r.querySelector(".curCredits").value||0),lecturer:r.querySelector(".curLecturer").value.trim(),description:r.querySelector(".curDescription").value.trim()})).filter(x=>x.name);
+  const total=rows.reduce((s,x)=>s+x.credits,0);if(Math.abs(total-30)>.001&&!confirm("Semester total is "+total+" ECTS, not 30. Save anyway?"))return;
+  const st=loadState();st.universityAdmin.curriculumOverrides[curriculumKey(level,fid,spec,sem)]=rows;saveState(st,"Curriculum Updated",curriculumKey(level,fid,spec,sem)+" • "+rows.length+" subjects");
+}
+function resetCurriculumOverride(){
+  const level=document.getElementById("curLevel").value,fid=document.getElementById("curFiliere").value,spec=document.getElementById("curSpec").value,sem=document.getElementById("curSemester").value,st=loadState();delete st.universityAdmin.curriculumOverrides[curriculumKey(level,fid,spec,sem)];saveState(st,"Curriculum Reset",curriculumKey(level,fid,spec,sem));renderCurriculumEditor();
+}
+
+function refreshAssessmentSelectors(){
+  fillFiliereSelect("assFiliere");
+  const level=document.getElementById("assLevel").value,f=filiere(document.getElementById("assFiliere").value),specSel=document.getElementById("assSpec"),semSel=document.getElementById("assSemester"),subSel=document.getElementById("assSubject");if(!f)return;
+  const oldSpec=specSel.value;specSel.innerHTML='<option value="">Principal Filière</option>';if(level==="M1"||level==="M2")f.specialisations.forEach(s=>{const o=document.createElement("option");o.value=s;o.textContent=s;specSel.appendChild(o)});specSel.disabled=!(level==="M1"||level==="M2");if([...specSel.options].some(o=>o.value===oldSpec))specSel.value=oldSpec;
+  const meta=levelMeta(level),oldSem=semSel.value;semSel.innerHTML="";meta.semesters.forEach(s=>{const o=document.createElement("option");o.value=s;o.textContent=s;semSel.appendChild(o)});if(meta.semesters.includes(oldSem))semSel.value=oldSem;
+  const subs=semesterSubjects(level,document.getElementById("assFiliere").value,specSel.value,semSel.value);subSel.innerHTML="";subs.forEach(s=>{const o=document.createElement("option");o.value=s.name;o.textContent=s.name;subSel.appendChild(o)});renderAssessmentQuestions();
+}
+function assessmentContext(){
+  const level=document.getElementById("assLevel").value,fid=document.getElementById("assFiliere").value,spec=document.getElementById("assSpec").value,semester=document.getElementById("assSemester").value,subjectName=document.getElementById("assSubject").value;return {level,filiereId:fid,specialisation:spec||"",semester,subjectName};
+}
+function addAssessmentQuestion(){
+  const c=assessmentContext(),type=document.getElementById("assType").value,q=document.getElementById("assQuestion").value.trim(),a=[document.getElementById("assA").value.trim(),document.getElementById("assB").value.trim(),document.getElementById("assC").value.trim()],correct=Number(document.getElementById("assCorrect").value);if(!c.subjectName||!q||a.some(x=>!x)){alert("Complete subject, question and all options.");return}
+  const st=loadState(),key=subjectKey(c);st.customAssessments[key]=st.customAssessments[key]||{quiz:[],exam:[]};st.customAssessments[key][type]=st.customAssessments[key][type]||[];st.customAssessments[key][type].push({q,a,c:correct});saveState(st,"Assessment Question Added",type+" • "+c.subjectName);["assQuestion","assA","assB","assC"].forEach(id=>document.getElementById(id).value="");renderAssessmentQuestions();
+}
+function renderAssessmentQuestions(){
+  const c=assessmentContext(),st=loadState(),key=subjectKey(c),data=st.customAssessments[key]||{quiz:[],exam:[]},root=document.getElementById("assessmentQuestionList");root.innerHTML=['quiz','exam'].map(type=>`<h3>${type.toUpperCase()}</h3>${(data[type]||[]).map((q,i)=>`<div class="list-item"><strong>${i+1}. ${escapeHtml(q.q)}</strong><br><span class="small">${q.a.map((x,j)=>String.fromCharCode(65+j)+". "+escapeHtml(x)+(j===q.c?" ✓":"")).join("<br>")}</span></div>`).join("")||'<p class="small">No custom questions.</p>'}`).join("");
+}
+
+function refreshGradeSelectors(){
+  ["gradeStudent"].forEach(fillStudentSelect);fillFiliereSelect("gradeFiliere");
+  const level=document.getElementById("gradeLevel").value,f=filiere(document.getElementById("gradeFiliere").value),specSel=document.getElementById("gradeSpec"),semSel=document.getElementById("gradeSemester"),subSel=document.getElementById("gradeSubject");if(!f)return;
+  const oldSpec=specSel.value;specSel.innerHTML='<option value="">Principal Filière</option>';if(level==="M1"||level==="M2")f.specialisations.forEach(s=>{const o=document.createElement("option");o.value=s;o.textContent=s;specSel.appendChild(o)});specSel.disabled=!(level==="M1"||level==="M2");if([...specSel.options].some(o=>o.value===oldSpec))specSel.value=oldSpec;
+  const meta=levelMeta(level),oldSem=semSel.value;semSel.innerHTML="";meta.semesters.forEach(s=>{const o=document.createElement("option");o.value=s;o.textContent=s;semSel.appendChild(o)});if(meta.semesters.includes(oldSem))semSel.value=oldSem;
+  const subs=semesterSubjects(level,document.getElementById("gradeFiliere").value,specSel.value,semSel.value);subSel.innerHTML="";subs.forEach(s=>{const o=document.createElement("option");o.value=s.name;o.textContent=s.name;subSel.appendChild(o)});loadGradeRecord();
+}
+function gradeContext(){
+  return {level:document.getElementById("gradeLevel").value,filiereId:document.getElementById("gradeFiliere").value,specialisation:document.getElementById("gradeSpec").value||"",semester:document.getElementById("gradeSemester").value,subjectName:document.getElementById("gradeSubject").value};
+}
+function loadGradeRecord(){
+  const c=gradeContext(),st=loadState(),a=st.activities[subjectKey(c)]||{};document.getElementById("gradeQuiz").value=a.quizScore??"";document.getElementById("gradeAssignment").value=a.assignmentGrade??"";document.getElementById("gradeExam").value=a.examScore??"";document.getElementById("gradeAttempts").value=a.examAttempts??0;document.getElementById("attPresent").value=a.attendancePresent??0;document.getElementById("attAbsent").value=a.attendanceAbsent??0;document.getElementById("attTotal").value=a.attendanceTotal??0;renderGradeSummary();
+}
+function renderGradeSummary(){
+  const q=Number(document.getElementById("gradeQuiz").value||0),a=Number(document.getElementById("gradeAssignment").value||0),e=Number(document.getElementById("gradeExam").value||0),total=Number(document.getElementById("attTotal").value||0),present=Number(document.getElementById("attPresent").value||0),avg=Math.round(q*.2+a*.3+e*.5),att=total?Math.round(present/total*100):0,passed=avg>=50&&e>=50&&att>=75;document.getElementById("gradeSummary").innerHTML=`<span class="badge ${passed?'ok':'warn'}">Average: ${avg}% • Attendance: ${att}% • ${passed?'Passed':'Requirement pending / resit'}</span>`;
+}
+["gradeQuiz","gradeAssignment","gradeExam","attPresent","attTotal"].forEach(id=>document.addEventListener("input",ev=>{if(ev.target.id===id)renderGradeSummary()}));
+function saveGradeRecord(){
+  const c=gradeContext(),st=loadState(),key=subjectKey(c);st.activities[key]=st.activities[key]||{lessons:[false,false,false,false],assignmentText:"",assignmentSubmitted:false};Object.assign(st.activities[key],{quizScore:valueOrNull("gradeQuiz"),assignmentGrade:valueOrNull("gradeAssignment"),examScore:valueOrNull("gradeExam"),examAttempts:Number(document.getElementById("gradeAttempts").value||0),attendancePresent:Number(document.getElementById("attPresent").value||0),attendanceAbsent:Number(document.getElementById("attAbsent").value||0),attendanceTotal:Number(document.getElementById("attTotal").value||0),lastUpdated:new Date().toISOString()});saveState(st,"Grade / Attendance Updated",c.level+" "+c.semester+" • "+c.subjectName);renderGradeSummary();
+}
+function valueOrNull(id){const v=document.getElementById(id).value;return v===""?null:Number(v)}
+
+function renderPaymentsAdmin(){
+  const st=loadState();const rs=document.getElementById("payRegStatus"),fa=document.getElementById("payFeeAmount"),fs=document.getElementById("payFeeStatus");if(rs)rs.value=st.enrollment.registrationStatus;if(fa)fa.value=st.enrollment.feeAmount==="Not configured"?"":st.enrollment.feeAmount;if(fs)fs.value=st.enrollment.feeStatus;
+  const root=document.getElementById("paymentHistoryAdmin");if(root)root.innerHTML=(st.professional.payments||[]).slice().reverse().map(p=>`<div class="list-item"><strong>${escapeHtml(p.reference||"Payment")}</strong><br><span class="small">${escapeHtml(p.date||"")} • ${escapeHtml(p.amount||"")} • ${escapeHtml(p.status||"")}</span></div>`).join("")||'<p class="small">No payments recorded.</p>';
+}
+function saveEnrollmentPayment(){const st=loadState();st.enrollment.registrationStatus=document.getElementById("payRegStatus").value;st.enrollment.feeAmount=document.getElementById("payFeeAmount").value.trim()||"Not configured";st.enrollment.feeStatus=document.getElementById("payFeeStatus").value;saveState(st,"Enrollment / Fee Status Updated",st.enrollment.registrationStatus+" • "+st.enrollment.feeStatus);}
+function addPaymentHistory(){const st=loadState(),p={reference:document.getElementById("paymentRef").value.trim()||("PAY-"+Date.now()),amount:document.getElementById("paymentAmount").value.trim(),status:document.getElementById("paymentStatus").value,date:new Date().toISOString().slice(0,10)};st.professional.payments.push(p);if(p.status==="Paid")st.enrollment.feeStatus="Paid";saveState(st,"Payment Added",p.reference+" • "+p.amount);["paymentRef","paymentAmount"].forEach(id=>document.getElementById(id).value="");}
+
+function renderResearchAdmin(){const st=loadState(),rr=document.getElementById("adminResearchList"),ir=document.getElementById("adminInternshipList");if(rr)rr.innerHTML=(st.researchRecords||[]).map(r=>`<div class="list-item"><strong>${escapeHtml(r.title)}</strong><br><span class="small">${escapeHtml(r.type)} • ${escapeHtml(r.status)} • Supervisor: ${escapeHtml(r.supervisor||"")}</span></div>`).join("")||'<p class="small">No research records.</p>';if(ir)ir.innerHTML=(st.internships||[]).map(r=>`<div class="list-item"><strong>${escapeHtml(r.level)} — ${escapeHtml(r.company)}</strong><br><span class="small">${escapeHtml(r.status)} • Supervisor: ${escapeHtml(r.supervisor||"")} • Grade: ${r.grade??"—"}</span></div>`).join("")||'<p class="small">No internship records.</p>';}
+
+function renderDiplomas(){fillStudentSelect("dipStudent");const st=loadState(),root=document.getElementById("adminDiplomaList");if(root)root.innerHTML=st.diplomas.length?st.diplomas.slice().reverse().map(d=>`<div class="list-item"><strong>${escapeHtml(d.type)}</strong> <span class="badge ok">${escapeHtml(d.status||"VALID")}</span><br><span class="small">${escapeHtml(d.id)} • ${escapeHtml(d.name)} • ${escapeHtml(d.filiere||"")} • ${escapeHtml(d.classification||"")}</span></div>`).join(""):'<p class="small">No issued diplomas.</p>';}
+function issueDiploma(){const st=loadState(),sid=document.getElementById("dipStudent").value,s=st.universityAdmin.students.find(x=>x.id===sid);if(!s){alert("Select student.");return}const f=filiere(s.filiereId);const type=document.getElementById("dipType").value,d={id:"GETI-"+(type.startsWith("Master")?"MASTER":"BACHELOR")+"-"+new Date().getFullYear()+"-"+String(Date.now()).slice(-7),studentId:s.id,name:s.name,type,filiere:f?f.en:"",specialisation:(type.startsWith("Master")?localStorage.getItem("geti_university_specialisation_"+s.filiereId)||"":""),
+classification:document.getElementById("dipClassification").value,issueDate:new Date().toISOString().slice(0,10),status:"VALID"};st.diplomas.push(d);saveState(st,"Diploma Issued",d.id+" • "+d.name);}
+function verifyAdminDiploma(){const q=document.getElementById("verifyQuery").value.trim().toLowerCase(),rows=loadState().diplomas.filter(d=>String(d.id).toLowerCase().includes(q)||String(d.studentId).toLowerCase().includes(q)||String(d.name).toLowerCase().includes(q)),root=document.getElementById("adminVerificationResult");root.innerHTML=rows.length?rows.map(d=>`<div class="notice ok"><strong>VALID DIPLOMA</strong><br>${escapeHtml(d.id)}<br>${escapeHtml(d.name)} • ${escapeHtml(d.type)} • ${escapeHtml(d.filiere||"")}</div>`).join(""):'<div class="notice warn">No matching record.</div>';}
+
+function publishAnnouncement(){const title=document.getElementById("annTitle").value.trim(),message=document.getElementById("annMessage").value.trim(),aud=document.getElementById("annAudience").value;if(!title||!message){alert("Title and message required.");return}const st=loadState(),date=new Date().toISOString().slice(0,10);if(aud==="student"||aud==="both"){st.announcements.push({id:"ANN-"+Date.now(),date,title,message});st.professional.notifications.push({id:"NTF-"+Date.now(),date:new Date().toISOString(),type:"Announcement",message:title+": "+message,read:false})}if(aud==="public"||aud==="both")st.professional.news.push({id:"NEWS-"+Date.now(),date,type:"Academic",title,message});saveState(st,"Announcement Published",aud+" • "+title);document.getElementById("annTitle").value="";document.getElementById("annMessage").value="";}
+function renderAnnouncementsAdmin(){const st=loadState(),root=document.getElementById("adminAnnouncementList");if(root)root.innerHTML=[...(st.announcements||[])].slice().reverse().slice(0,10).map(a=>`<div class="list-item"><strong>${escapeHtml(a.title)}</strong><br><span class="small">${escapeHtml(a.date)} • ${escapeHtml(a.message)}</span></div>`).join("")||'<p class="small">No announcements.</p>';}
+
+function renderReports(){const st=loadState(),acts=Object.values(st.activities),graded=acts.filter(a=>a.quizScore!=null&&a.assignmentGrade!=null&&a.examScore!=null),passed=graded.filter(a=>a.quizScore*.2+a.assignmentGrade*.3+a.examScore*.5>=50&&a.examScore>=50).length,passRate=graded.length?Math.round(passed/graded.length*100):0;document.getElementById("reportKpis").innerHTML=`<div class="card kpi"><b>${st.universityAdmin.students.length}</b><span>Students</span></div><div class="card kpi"><b>${st.universityAdmin.teachers.length}</b><span>Teachers</span></div><div class="card kpi"><b>${passRate}%</b><span>Pass Rate</span></div><div class="card kpi"><b>${st.diplomas.length}</b><span>Diplomas</span></div>`;document.getElementById("reportAcademic").innerHTML=`<p>Activity records: <strong>${acts.length}</strong><br>Fully graded subjects: <strong>${graded.length}</strong><br>Passed: <strong>${passed}</strong><br>Curriculum overrides: <strong>${Object.keys(st.universityAdmin.curriculumOverrides).length}</strong></p>`;document.getElementById("reportRecords").innerHTML=`<p>Teacher PDFs: <strong>${st.teacherLessons.length}</strong><br>Announcements: <strong>${st.announcements.length}</strong><br>Payments: <strong>${st.professional.payments.length}</strong><br>Research: <strong>${st.researchRecords.length}</strong><br>Internships: <strong>${st.internships.length}</strong></p>`;}
+
+function renderAudit(){const logs=(loadState().professional.auditLogs||[]).slice().reverse(),root=document.getElementById("auditList");if(root)root.innerHTML=logs.length?logs.map(x=>`<div class="audit"><strong>${escapeHtml(x.action)}</strong> <span class="badge">${escapeHtml(x.role||"System")}</span><br><span class="small">${new Date(x.date).toLocaleString()} • ${escapeHtml(x.detail||"")}</span></div>`).join(""):'<p class="small">No audit entries.</p>';}
+
+function exportAdminBackup(){const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),schema:"GETI-University-State-v1",lms:loadState()},null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="GETI_University_Backup_"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(url),20000);}
+function importAdminBackup(ev){const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{try{const p=JSON.parse(r.result);if(!p.lms)throw new Error();localStorage.setItem("geti_lms_state",JSON.stringify(p.lms));if(syncChannel)syncChannel.postMessage({type:"state-restored"});refreshAllAdminData();alert("Backup restored.");}catch(e){alert("Invalid backup file.")}};r.readAsText(file);}
+
+window.addEventListener("storage",e=>{if(e.key==="geti_lms_state")refreshAllAdminData()});
+try{if(syncChannel)syncChannel.onmessage=()=>refreshAllAdminData();}catch(e){}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  if(sessionStorage.getItem("geti_admin_session")) document.getElementById("adminLogin").style.display="none";
+  fillFiliereSelect("stuFiliere");fillFiliereSelect("curFiliere");fillFiliereSelect("assFiliere");fillFiliereSelect("gradeFiliere");
+  refreshCurriculumSelectors();refreshAssessmentSelectors();refreshGradeSelectors();refreshAllAdminData();
+});
+</script>
+</body>
+</html>
