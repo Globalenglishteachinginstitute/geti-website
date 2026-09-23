@@ -14058,7 +14058,62 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
           <div class="box"><h2>Lesson Content</h2><p>This lesson page is the PDF-ready lesson template for ${lmsEscape(ctx.subjectName)}. Teachers can upload the full official PDF from the Teacher Dashboard.</p></div>
           <div class="box"><h2>Practice</h2><p>1. Define three key terms. 2. Give one applied example. 3. Explain one method or process. 4. Write a short conclusion.</p></div>
           <button onclick="window.print()">Print / Save as PDF</button>
-          </body></html>`);
+          
+<style id="geti-bac-complete-flow-style">
+.bac-progress-panel{margin:16px 0 22px;padding:18px;border:1px solid #dbe7f4;border-radius:18px;background:linear-gradient(135deg,#f8fbff,#eef7ff);box-shadow:0 10px 28px rgba(8,46,93,.08)}
+.bac-progress-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}.bac-progress-track{height:10px;background:#dce8f4;border-radius:999px;overflow:hidden}.bac-progress-fill{height:100%;background:linear-gradient(90deg,#0b63ce,#14a38b);border-radius:999px;transition:width .3s ease}.exam-level-card.bac-done{border-color:#8fd3ba;background:linear-gradient(135deg,#effcf6,#e6f8f1)}.exam-level-card.bac-locked{opacity:.62;cursor:not-allowed;filter:grayscale(.15)}.exam-level-card.bac-final{border:2px solid #d8b45a;background:linear-gradient(135deg,#fff9e8,#fff2c8)}.exam-level-card.bac-final-ready{border-color:#8a6a12;box-shadow:0 12px 30px rgba(164,126,25,.18)}.bac-status-pill{display:inline-flex;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:800;margin-top:8px;background:#edf2f7;color:#526579}.bac-status-pill.ok{background:#dff6eb;color:#176443}.bac-status-pill.lock{background:#f2f2f2;color:#6b7280}.bac-final-success{padding:18px;border-radius:16px;background:#eef9f4;border:1px solid #b8e1cd;color:#185c40;margin-top:18px}
+</style>
+<script id="geti-bac-complete-flow">
+(function(){
+  let getiBacIsFinal=false;
+  const PASS=50;
+  function regId(){ const r=getiExamRegistration||{}; return (r.email||'candidate').toLowerCase().trim().replace(/[^a-z0-9]+/g,'_')+'_'+(r.filiere||'option').replace(/[^a-z0-9]+/gi,'_'); }
+  function key(){return 'geti_bac_progress_'+regId();}
+  function load(){try{return JSON.parse(localStorage.getItem(key()))||{subjects:{},final:null};}catch(e){return {subjects:{},final:null};}}
+  function save(x){localStorage.setItem(key(),JSON.stringify(x));}
+  function subjects(){return bacSubjectsByOption[getiExamRegistration?.filiere]||['English Language','Mathematics','General Studies','Digital Skills'];}
+  function semesterDone(sem){const p=load();return subjects().every(sub=>p.subjects[sem+'|'+sub]?.passed===true);}
+  function allDone(){return ['S1','S2','S3','S4','S5'].every(semesterDone);}
+  function completedCount(){return ['S1','S2','S3','S4','S5'].filter(semesterDone).length;}
+  function finalQuestions(){
+    const option=getiExamRegistration?.filiere||'Baccalaureat'; const subs=subjects(); const out=[];
+    for(let i=0;i<20;i++){const sub=subs[i%subs.length];out.push({q:'Final Baccalaureat • '+option+' • '+sub+' • Question '+(i+1)+': Which response demonstrates the best academic method?',a:['Apply the relevant concept, justify the answer and verify the result','Ignore the evidence and guess','Use an unrelated method','Leave the reasoning unchecked'],c:0});}
+    return out;
+  }
+  const oldShow=showBacSemesters;
+  showBacSemesters=function(){
+    getiBacIsFinal=false; oldShow();
+    const grid=document.getElementById('bacSemesterGrid'); if(!grid)return;
+    const done=completedCount(), pct=done*20;
+    const panel=document.createElement('div'); panel.className='bac-progress-panel';
+    panel.innerHTML='<div class="bac-progress-head"><strong>Baccalaureat Progress</strong><span>'+done+' / 5 sessions completed</span></div><div class="bac-progress-track"><div class="bac-progress-fill" style="width:'+pct+'%"></div></div><small>Pass every subject in S1–S5 to unlock the Baccalaureat Final Exam.</small>';
+    grid.parentNode.insertBefore(panel,grid);
+    [...grid.children].forEach((b,i)=>{const sem='S'+(i+1),ok=semesterDone(sem); if(ok){b.classList.add('bac-done');b.innerHTML='<strong>Exam '+sem+'</strong><span>All subjects completed</span><span class="bac-status-pill ok">Passed ✓</span>';}else{b.innerHTML='<strong>Exam '+sem+'</strong><span>Open subjects for '+sem+'</span><span class="bac-status-pill">In progress</span>';}});
+    const f=document.createElement('button'); f.type='button'; f.className='exam-level-card bac-final '+(allDone()?'bac-final-ready':'bac-locked');
+    f.innerHTML=allDone()?'<strong>🎓 Baccalaureat Final Exam</strong><span>20 questions • Diploma qualifying examination</span><span class="bac-status-pill ok">Unlocked</span>':'<strong>🔒 Baccalaureat Final Exam</strong><span>Complete and pass S1–S5 first</span><span class="bac-status-pill lock">Locked</span>';
+    f.onclick=()=>{if(!allDone()){alert('Complete and pass all subjects in Exam S1, S2, S3, S4 and S5 first.');return;} startBacFinalExam();}; grid.appendChild(f);
+  };
+  const oldSubjects=showBacSubjects;
+  showBacSubjects=function(semester){getiBacIsFinal=false;oldSubjects(semester);const p=load(),grid=document.getElementById('bacSubjectGrid');if(grid)[...grid.children].forEach((b,i)=>{const sub=subjects()[i];const r=p.subjects[semester+'|'+sub];if(r?.passed){b.classList.add('bac-done');b.innerHTML='<strong>'+sub+'</strong><span>20 questions • Exam '+semester+'</span><span class="bac-status-pill ok">Passed '+r.score+'% ✓</span>';}});};
+  const oldStart=startBacSubjectExam; startBacSubjectExam=function(subject){getiBacIsFinal=false;oldStart(subject);};
+  window.startBacFinalExam=function(){getiBacIsFinal=true;getiBacSemester='FINAL';getiBacSubject='Baccalaureat Final Exam';getiExamQuestionBank.Baccalaureat=finalQuestions();renderDiplomaExam();const t=document.getElementById('examTakingTitle');if(t)t.textContent='GETI Baccalaureat Final Exam';showScreen('examTakingScreen');};
+  submitDiplomaExam=function(){
+    if(!getiExamRegistration)return; const qs=getiExamQuestionBank[getiExamRegistration.type]||[];let answered=0,score=0;
+    qs.forEach((q,i)=>{const c=document.querySelector('input[name="diploma_exam_q_'+i+'"]:checked');if(c){answered++;if(Number(c.value)===q.c)score++;}});
+    const box=document.getElementById('examFinalResult');if(answered<qs.length){if(box){box.classList.add('show');box.style.background='#fff7e6';box.style.borderColor='#f0d49d';box.style.color='#714d0b';box.innerHTML='<b>Please answer all '+qs.length+' questions before submitting.</b>';}return;}
+    const pct=Math.round(score/qs.length*100),passed=pct>=PASS,p=load();
+    if(getiExamRegistration.type==='Baccalaureat'&&!getiBacIsFinal){p.subjects[getiBacSemester+'|'+getiBacSubject]={score:pct,passed,date:new Date().toISOString()};save(p);if(box){box.classList.add('show');box.style.background=passed?'#eef9f4':'#fff1f1';box.style.borderColor=passed?'#b8e1cd':'#f1c2c2';box.style.color=passed?'#185c40':'#8b2525';box.innerHTML=passed?'<b>Passed — '+pct+'%</b><br>'+getiBacSubject+' completed. Return to the session list to continue your Baccalaureat pathway.':'<b>Score — '+pct+'%</b><br>Pass mark is '+PASS+'%. Retake this subject before the session can be completed.';}return;}
+    const result={registration:getiExamRegistration,score:pct,passed,date:new Date().toISOString(),finalBaccalaureat:getiBacIsFinal===true};
+    if(getiBacIsFinal){p.final=result;save(p);} localStorage.setItem('geti_exam_result',JSON.stringify(result));
+    if(box){box.classList.add('show');box.style.background=passed?'#eef9f4':'#fff1f1';box.style.borderColor=passed?'#b8e1cd':'#f1c2c2';box.style.color=passed?'#185c40':'#8b2525';box.innerHTML=passed?'<b>Final Exam Passed — '+pct+'%</b><br>You completed the Baccalaureat examination pathway. Diploma eligibility and GETI University admission access are now unlocked.':'<b>Final Exam Score — '+pct+'%</b><br>You did not reach the '+PASS+'% pass mark. The final examination must be retaken.';}
+    updateExamResultUI(result);
+    if(passed&&getiBacIsFinal){const extra=document.createElement('div');extra.className='bac-final-success';extra.innerHTML='<strong>🎓 Baccalaureat pathway completed</strong><br>Your result is eligible for the GETI diploma issuance/verification process. GETI University admission is now available.<div style="margin-top:12px"><button class="btn btn-primary" type="button" onclick="openUniversityAdmission()">Continue to GETI University</button> <button class="btn btn-outline" type="button" onclick="showScreen(\'diplomaScreen\')">Diploma Center</button></div>';box.after(extra);}
+  };
+  const oldCancel=cancelCurrentExam; cancelCurrentExam=function(){if(getiBacIsFinal){showBacSemesters();return;}oldCancel();};
+})();
+</script>
+
+</body></html>`);
         w.document.close();
       }
       renderUniversitySubjectCourse();
@@ -15933,7 +15988,62 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
       <p><strong>Student:</strong> ${lmsEscape(student.name)}<br><strong>Student ID:</strong> ${lmsEscape(student.id)}<br>
       <strong>Programme:</strong> ${f?lmsEscape(f.en):"Not selected"}<br><strong>Status:</strong> ${lmsEscape(d.status)}<br>
       <strong>Document ID:</strong> ${lmsEscape(d.id)}<br><strong>Date:</strong> ${lmsEscape(d.date)}</p></div>
-      <button onclick="window.print()">Print / Save PDF</button></body></html>`);
+      <button onclick="window.print()">Print / Save PDF</button>
+<style id="geti-bac-complete-flow-style">
+.bac-progress-panel{margin:16px 0 22px;padding:18px;border:1px solid #dbe7f4;border-radius:18px;background:linear-gradient(135deg,#f8fbff,#eef7ff);box-shadow:0 10px 28px rgba(8,46,93,.08)}
+.bac-progress-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}.bac-progress-track{height:10px;background:#dce8f4;border-radius:999px;overflow:hidden}.bac-progress-fill{height:100%;background:linear-gradient(90deg,#0b63ce,#14a38b);border-radius:999px;transition:width .3s ease}.exam-level-card.bac-done{border-color:#8fd3ba;background:linear-gradient(135deg,#effcf6,#e6f8f1)}.exam-level-card.bac-locked{opacity:.62;cursor:not-allowed;filter:grayscale(.15)}.exam-level-card.bac-final{border:2px solid #d8b45a;background:linear-gradient(135deg,#fff9e8,#fff2c8)}.exam-level-card.bac-final-ready{border-color:#8a6a12;box-shadow:0 12px 30px rgba(164,126,25,.18)}.bac-status-pill{display:inline-flex;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:800;margin-top:8px;background:#edf2f7;color:#526579}.bac-status-pill.ok{background:#dff6eb;color:#176443}.bac-status-pill.lock{background:#f2f2f2;color:#6b7280}.bac-final-success{padding:18px;border-radius:16px;background:#eef9f4;border:1px solid #b8e1cd;color:#185c40;margin-top:18px}
+</style>
+<script id="geti-bac-complete-flow">
+(function(){
+  let getiBacIsFinal=false;
+  const PASS=50;
+  function regId(){ const r=getiExamRegistration||{}; return (r.email||'candidate').toLowerCase().trim().replace(/[^a-z0-9]+/g,'_')+'_'+(r.filiere||'option').replace(/[^a-z0-9]+/gi,'_'); }
+  function key(){return 'geti_bac_progress_'+regId();}
+  function load(){try{return JSON.parse(localStorage.getItem(key()))||{subjects:{},final:null};}catch(e){return {subjects:{},final:null};}}
+  function save(x){localStorage.setItem(key(),JSON.stringify(x));}
+  function subjects(){return bacSubjectsByOption[getiExamRegistration?.filiere]||['English Language','Mathematics','General Studies','Digital Skills'];}
+  function semesterDone(sem){const p=load();return subjects().every(sub=>p.subjects[sem+'|'+sub]?.passed===true);}
+  function allDone(){return ['S1','S2','S3','S4','S5'].every(semesterDone);}
+  function completedCount(){return ['S1','S2','S3','S4','S5'].filter(semesterDone).length;}
+  function finalQuestions(){
+    const option=getiExamRegistration?.filiere||'Baccalaureat'; const subs=subjects(); const out=[];
+    for(let i=0;i<20;i++){const sub=subs[i%subs.length];out.push({q:'Final Baccalaureat • '+option+' • '+sub+' • Question '+(i+1)+': Which response demonstrates the best academic method?',a:['Apply the relevant concept, justify the answer and verify the result','Ignore the evidence and guess','Use an unrelated method','Leave the reasoning unchecked'],c:0});}
+    return out;
+  }
+  const oldShow=showBacSemesters;
+  showBacSemesters=function(){
+    getiBacIsFinal=false; oldShow();
+    const grid=document.getElementById('bacSemesterGrid'); if(!grid)return;
+    const done=completedCount(), pct=done*20;
+    const panel=document.createElement('div'); panel.className='bac-progress-panel';
+    panel.innerHTML='<div class="bac-progress-head"><strong>Baccalaureat Progress</strong><span>'+done+' / 5 sessions completed</span></div><div class="bac-progress-track"><div class="bac-progress-fill" style="width:'+pct+'%"></div></div><small>Pass every subject in S1–S5 to unlock the Baccalaureat Final Exam.</small>';
+    grid.parentNode.insertBefore(panel,grid);
+    [...grid.children].forEach((b,i)=>{const sem='S'+(i+1),ok=semesterDone(sem); if(ok){b.classList.add('bac-done');b.innerHTML='<strong>Exam '+sem+'</strong><span>All subjects completed</span><span class="bac-status-pill ok">Passed ✓</span>';}else{b.innerHTML='<strong>Exam '+sem+'</strong><span>Open subjects for '+sem+'</span><span class="bac-status-pill">In progress</span>';}});
+    const f=document.createElement('button'); f.type='button'; f.className='exam-level-card bac-final '+(allDone()?'bac-final-ready':'bac-locked');
+    f.innerHTML=allDone()?'<strong>🎓 Baccalaureat Final Exam</strong><span>20 questions • Diploma qualifying examination</span><span class="bac-status-pill ok">Unlocked</span>':'<strong>🔒 Baccalaureat Final Exam</strong><span>Complete and pass S1–S5 first</span><span class="bac-status-pill lock">Locked</span>';
+    f.onclick=()=>{if(!allDone()){alert('Complete and pass all subjects in Exam S1, S2, S3, S4 and S5 first.');return;} startBacFinalExam();}; grid.appendChild(f);
+  };
+  const oldSubjects=showBacSubjects;
+  showBacSubjects=function(semester){getiBacIsFinal=false;oldSubjects(semester);const p=load(),grid=document.getElementById('bacSubjectGrid');if(grid)[...grid.children].forEach((b,i)=>{const sub=subjects()[i];const r=p.subjects[semester+'|'+sub];if(r?.passed){b.classList.add('bac-done');b.innerHTML='<strong>'+sub+'</strong><span>20 questions • Exam '+semester+'</span><span class="bac-status-pill ok">Passed '+r.score+'% ✓</span>';}});};
+  const oldStart=startBacSubjectExam; startBacSubjectExam=function(subject){getiBacIsFinal=false;oldStart(subject);};
+  window.startBacFinalExam=function(){getiBacIsFinal=true;getiBacSemester='FINAL';getiBacSubject='Baccalaureat Final Exam';getiExamQuestionBank.Baccalaureat=finalQuestions();renderDiplomaExam();const t=document.getElementById('examTakingTitle');if(t)t.textContent='GETI Baccalaureat Final Exam';showScreen('examTakingScreen');};
+  submitDiplomaExam=function(){
+    if(!getiExamRegistration)return; const qs=getiExamQuestionBank[getiExamRegistration.type]||[];let answered=0,score=0;
+    qs.forEach((q,i)=>{const c=document.querySelector('input[name="diploma_exam_q_'+i+'"]:checked');if(c){answered++;if(Number(c.value)===q.c)score++;}});
+    const box=document.getElementById('examFinalResult');if(answered<qs.length){if(box){box.classList.add('show');box.style.background='#fff7e6';box.style.borderColor='#f0d49d';box.style.color='#714d0b';box.innerHTML='<b>Please answer all '+qs.length+' questions before submitting.</b>';}return;}
+    const pct=Math.round(score/qs.length*100),passed=pct>=PASS,p=load();
+    if(getiExamRegistration.type==='Baccalaureat'&&!getiBacIsFinal){p.subjects[getiBacSemester+'|'+getiBacSubject]={score:pct,passed,date:new Date().toISOString()};save(p);if(box){box.classList.add('show');box.style.background=passed?'#eef9f4':'#fff1f1';box.style.borderColor=passed?'#b8e1cd':'#f1c2c2';box.style.color=passed?'#185c40':'#8b2525';box.innerHTML=passed?'<b>Passed — '+pct+'%</b><br>'+getiBacSubject+' completed. Return to the session list to continue your Baccalaureat pathway.':'<b>Score — '+pct+'%</b><br>Pass mark is '+PASS+'%. Retake this subject before the session can be completed.';}return;}
+    const result={registration:getiExamRegistration,score:pct,passed,date:new Date().toISOString(),finalBaccalaureat:getiBacIsFinal===true};
+    if(getiBacIsFinal){p.final=result;save(p);} localStorage.setItem('geti_exam_result',JSON.stringify(result));
+    if(box){box.classList.add('show');box.style.background=passed?'#eef9f4':'#fff1f1';box.style.borderColor=passed?'#b8e1cd':'#f1c2c2';box.style.color=passed?'#185c40':'#8b2525';box.innerHTML=passed?'<b>Final Exam Passed — '+pct+'%</b><br>You completed the Baccalaureat examination pathway. Diploma eligibility and GETI University admission access are now unlocked.':'<b>Final Exam Score — '+pct+'%</b><br>You did not reach the '+PASS+'% pass mark. The final examination must be retaken.';}
+    updateExamResultUI(result);
+    if(passed&&getiBacIsFinal){const extra=document.createElement('div');extra.className='bac-final-success';extra.innerHTML='<strong>🎓 Baccalaureat pathway completed</strong><br>Your result is eligible for the GETI diploma issuance/verification process. GETI University admission is now available.<div style="margin-top:12px"><button class="btn btn-primary" type="button" onclick="openUniversityAdmission()">Continue to GETI University</button> <button class="btn btn-outline" type="button" onclick="showScreen(\'diplomaScreen\')">Diploma Center</button></div>';box.after(extra);}
+  };
+  const oldCancel=cancelCurrentExam; cancelCurrentExam=function(){if(getiBacIsFinal){showBacSemesters();return;}oldCancel();};
+})();
+</script>
+
+</body></html>`);
       w.document.close();
     }
 
@@ -16412,5 +16522,60 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
 </script>
+
+<style id="geti-bac-complete-flow-style">
+.bac-progress-panel{margin:16px 0 22px;padding:18px;border:1px solid #dbe7f4;border-radius:18px;background:linear-gradient(135deg,#f8fbff,#eef7ff);box-shadow:0 10px 28px rgba(8,46,93,.08)}
+.bac-progress-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}.bac-progress-track{height:10px;background:#dce8f4;border-radius:999px;overflow:hidden}.bac-progress-fill{height:100%;background:linear-gradient(90deg,#0b63ce,#14a38b);border-radius:999px;transition:width .3s ease}.exam-level-card.bac-done{border-color:#8fd3ba;background:linear-gradient(135deg,#effcf6,#e6f8f1)}.exam-level-card.bac-locked{opacity:.62;cursor:not-allowed;filter:grayscale(.15)}.exam-level-card.bac-final{border:2px solid #d8b45a;background:linear-gradient(135deg,#fff9e8,#fff2c8)}.exam-level-card.bac-final-ready{border-color:#8a6a12;box-shadow:0 12px 30px rgba(164,126,25,.18)}.bac-status-pill{display:inline-flex;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:800;margin-top:8px;background:#edf2f7;color:#526579}.bac-status-pill.ok{background:#dff6eb;color:#176443}.bac-status-pill.lock{background:#f2f2f2;color:#6b7280}.bac-final-success{padding:18px;border-radius:16px;background:#eef9f4;border:1px solid #b8e1cd;color:#185c40;margin-top:18px}
+</style>
+<script id="geti-bac-complete-flow">
+(function(){
+  let getiBacIsFinal=false;
+  const PASS=50;
+  function regId(){ const r=getiExamRegistration||{}; return (r.email||'candidate').toLowerCase().trim().replace(/[^a-z0-9]+/g,'_')+'_'+(r.filiere||'option').replace(/[^a-z0-9]+/gi,'_'); }
+  function key(){return 'geti_bac_progress_'+regId();}
+  function load(){try{return JSON.parse(localStorage.getItem(key()))||{subjects:{},final:null};}catch(e){return {subjects:{},final:null};}}
+  function save(x){localStorage.setItem(key(),JSON.stringify(x));}
+  function subjects(){return bacSubjectsByOption[getiExamRegistration?.filiere]||['English Language','Mathematics','General Studies','Digital Skills'];}
+  function semesterDone(sem){const p=load();return subjects().every(sub=>p.subjects[sem+'|'+sub]?.passed===true);}
+  function allDone(){return ['S1','S2','S3','S4','S5'].every(semesterDone);}
+  function completedCount(){return ['S1','S2','S3','S4','S5'].filter(semesterDone).length;}
+  function finalQuestions(){
+    const option=getiExamRegistration?.filiere||'Baccalaureat'; const subs=subjects(); const out=[];
+    for(let i=0;i<20;i++){const sub=subs[i%subs.length];out.push({q:'Final Baccalaureat • '+option+' • '+sub+' • Question '+(i+1)+': Which response demonstrates the best academic method?',a:['Apply the relevant concept, justify the answer and verify the result','Ignore the evidence and guess','Use an unrelated method','Leave the reasoning unchecked'],c:0});}
+    return out;
+  }
+  const oldShow=showBacSemesters;
+  showBacSemesters=function(){
+    getiBacIsFinal=false; oldShow();
+    const grid=document.getElementById('bacSemesterGrid'); if(!grid)return;
+    const done=completedCount(), pct=done*20;
+    const panel=document.createElement('div'); panel.className='bac-progress-panel';
+    panel.innerHTML='<div class="bac-progress-head"><strong>Baccalaureat Progress</strong><span>'+done+' / 5 sessions completed</span></div><div class="bac-progress-track"><div class="bac-progress-fill" style="width:'+pct+'%"></div></div><small>Pass every subject in S1–S5 to unlock the Baccalaureat Final Exam.</small>';
+    grid.parentNode.insertBefore(panel,grid);
+    [...grid.children].forEach((b,i)=>{const sem='S'+(i+1),ok=semesterDone(sem); if(ok){b.classList.add('bac-done');b.innerHTML='<strong>Exam '+sem+'</strong><span>All subjects completed</span><span class="bac-status-pill ok">Passed ✓</span>';}else{b.innerHTML='<strong>Exam '+sem+'</strong><span>Open subjects for '+sem+'</span><span class="bac-status-pill">In progress</span>';}});
+    const f=document.createElement('button'); f.type='button'; f.className='exam-level-card bac-final '+(allDone()?'bac-final-ready':'bac-locked');
+    f.innerHTML=allDone()?'<strong>🎓 Baccalaureat Final Exam</strong><span>20 questions • Diploma qualifying examination</span><span class="bac-status-pill ok">Unlocked</span>':'<strong>🔒 Baccalaureat Final Exam</strong><span>Complete and pass S1–S5 first</span><span class="bac-status-pill lock">Locked</span>';
+    f.onclick=()=>{if(!allDone()){alert('Complete and pass all subjects in Exam S1, S2, S3, S4 and S5 first.');return;} startBacFinalExam();}; grid.appendChild(f);
+  };
+  const oldSubjects=showBacSubjects;
+  showBacSubjects=function(semester){getiBacIsFinal=false;oldSubjects(semester);const p=load(),grid=document.getElementById('bacSubjectGrid');if(grid)[...grid.children].forEach((b,i)=>{const sub=subjects()[i];const r=p.subjects[semester+'|'+sub];if(r?.passed){b.classList.add('bac-done');b.innerHTML='<strong>'+sub+'</strong><span>20 questions • Exam '+semester+'</span><span class="bac-status-pill ok">Passed '+r.score+'% ✓</span>';}});};
+  const oldStart=startBacSubjectExam; startBacSubjectExam=function(subject){getiBacIsFinal=false;oldStart(subject);};
+  window.startBacFinalExam=function(){getiBacIsFinal=true;getiBacSemester='FINAL';getiBacSubject='Baccalaureat Final Exam';getiExamQuestionBank.Baccalaureat=finalQuestions();renderDiplomaExam();const t=document.getElementById('examTakingTitle');if(t)t.textContent='GETI Baccalaureat Final Exam';showScreen('examTakingScreen');};
+  submitDiplomaExam=function(){
+    if(!getiExamRegistration)return; const qs=getiExamQuestionBank[getiExamRegistration.type]||[];let answered=0,score=0;
+    qs.forEach((q,i)=>{const c=document.querySelector('input[name="diploma_exam_q_'+i+'"]:checked');if(c){answered++;if(Number(c.value)===q.c)score++;}});
+    const box=document.getElementById('examFinalResult');if(answered<qs.length){if(box){box.classList.add('show');box.style.background='#fff7e6';box.style.borderColor='#f0d49d';box.style.color='#714d0b';box.innerHTML='<b>Please answer all '+qs.length+' questions before submitting.</b>';}return;}
+    const pct=Math.round(score/qs.length*100),passed=pct>=PASS,p=load();
+    if(getiExamRegistration.type==='Baccalaureat'&&!getiBacIsFinal){p.subjects[getiBacSemester+'|'+getiBacSubject]={score:pct,passed,date:new Date().toISOString()};save(p);if(box){box.classList.add('show');box.style.background=passed?'#eef9f4':'#fff1f1';box.style.borderColor=passed?'#b8e1cd':'#f1c2c2';box.style.color=passed?'#185c40':'#8b2525';box.innerHTML=passed?'<b>Passed — '+pct+'%</b><br>'+getiBacSubject+' completed. Return to the session list to continue your Baccalaureat pathway.':'<b>Score — '+pct+'%</b><br>Pass mark is '+PASS+'%. Retake this subject before the session can be completed.';}return;}
+    const result={registration:getiExamRegistration,score:pct,passed,date:new Date().toISOString(),finalBaccalaureat:getiBacIsFinal===true};
+    if(getiBacIsFinal){p.final=result;save(p);} localStorage.setItem('geti_exam_result',JSON.stringify(result));
+    if(box){box.classList.add('show');box.style.background=passed?'#eef9f4':'#fff1f1';box.style.borderColor=passed?'#b8e1cd':'#f1c2c2';box.style.color=passed?'#185c40':'#8b2525';box.innerHTML=passed?'<b>Final Exam Passed — '+pct+'%</b><br>You completed the Baccalaureat examination pathway. Diploma eligibility and GETI University admission access are now unlocked.':'<b>Final Exam Score — '+pct+'%</b><br>You did not reach the '+PASS+'% pass mark. The final examination must be retaken.';}
+    updateExamResultUI(result);
+    if(passed&&getiBacIsFinal){const extra=document.createElement('div');extra.className='bac-final-success';extra.innerHTML='<strong>🎓 Baccalaureat pathway completed</strong><br>Your result is eligible for the GETI diploma issuance/verification process. GETI University admission is now available.<div style="margin-top:12px"><button class="btn btn-primary" type="button" onclick="openUniversityAdmission()">Continue to GETI University</button> <button class="btn btn-outline" type="button" onclick="showScreen(\'diplomaScreen\')">Diploma Center</button></div>';box.after(extra);}
+  };
+  const oldCancel=cancelCurrentExam; cancelCurrentExam=function(){if(getiBacIsFinal){showBacSemesters();return;}oldCancel();};
+})();
+</script>
+
 </body>
 </html>
