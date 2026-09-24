@@ -12041,7 +12041,7 @@
 
                 <div class="exam-field">
                   <label for="examCandidateCountry">Country *</label>
-                  <input id="examCandidateCountry" type="text" required autocomplete="country-name">
+                  <input id="examCandidateCountry" type="text" autocomplete="country-name">
                 </div>
 
                 <div class="exam-field">
@@ -13127,7 +13127,7 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
         name: document.getElementById("examCandidateName").value.trim(),
         email: document.getElementById("examCandidateEmail").value.trim(),
         address: document.getElementById("examCandidateAddress").value.trim(),
-        country: document.getElementById("examCandidateCountry").value.trim(),
+        country: document.getElementById("examCandidateCountry").value.trim() || "Not specified",
         number: document.getElementById("examCandidateNumber").value.trim(),
         filiere: document.getElementById("examCandidateFiliere").value,
         code: document.getElementById("examCandidateCode").value.trim()
@@ -13136,7 +13136,7 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
       const errorBox = document.getElementById("examRegistrationError");
 
       if(!registration.type || !registration.name || !registration.email ||
-         !registration.country || !registration.filiere){
+         !registration.filiere){
         if(errorBox){
           errorBox.classList.add("show");
           errorBox.style.background = "#fff1f1";
@@ -15874,6 +15874,17 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
   border-color:#1769aa;box-shadow:0 0 0 4px rgba(23,105,170,.10);
 }
 @media(max-width:700px){#examRegistrationPanel .exam-registration-grid{padding:13px}}
+</style>
+
+<style id="hide-public-extra-content">
+/* Hide requested public information blocks only; keep existing functions unchanged */
+#levels,
+#about,
+#programmes,
+#admissions,
+#experience,
+#regulations,
+#transparency {display:none !important;}
 </style>
 </head>
       <body><h1>GETI</h1><h2>${lmsEscape(d.title)}</h2><div class="box">
