@@ -12020,7 +12020,7 @@
           <div class="panel" style="min-height:72vh">
             <div class="kicker">Exam Registration</div>
             <h2 id="examRegistrationTitle" style="color:#082e5d;margin-top:6px">Exam Registration</h2>
-            <p style="color:#6b7c8e">Complete your registration before starting the examination.</p>
+            <p style="color:#6b7c8e">Complete all required information before starting the examination.</p>
 
             <form id="examRegistrationForm" onsubmit="startDiplomaExam(event)">
               <div class="exam-registration-grid">
@@ -12035,18 +12035,18 @@
                 </div>
 
                 <div class="exam-field full">
-                  <label for="examCandidateAddress">Address (optional)</label>
-                  <input id="examCandidateAddress" type="text" autocomplete="street-address">
+                  <label for="examCandidateAddress">Address *</label>
+                  <input id="examCandidateAddress" type="text" required autocomplete="street-address">
                 </div>
 
                 <div class="exam-field">
                   <label for="examCandidateCountry">Country *</label>
-                  <input id="examCandidateCountry" type="text" autocomplete="country-name">
+                  <input id="examCandidateCountry" type="text" required autocomplete="country-name">
                 </div>
 
                 <div class="exam-field">
-                  <label for="examCandidateNumber">Number / Phone (optional)</label>
-                  <input id="examCandidateNumber" type="tel" autocomplete="tel">
+                  <label for="examCandidateNumber">Number / Phone *</label>
+                  <input id="examCandidateNumber" type="tel" required autocomplete="tel">
                 </div>
 
                 <div class="exam-field">
@@ -12055,8 +12055,8 @@
                 </div>
 
                 <div class="exam-field">
-                  <label for="examCandidateCode">Exam Code (optional)</label>
-                  <input id="examCandidateCode" type="text" autocomplete="off" placeholder="Enter your exam code">
+                  <label for="examCandidateCode">Exam Code *</label>
+                  <input id="examCandidateCode" type="text" required autocomplete="off" placeholder="Enter your exam code">
                 </div>
               </div>
 
@@ -13127,7 +13127,7 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
         name: document.getElementById("examCandidateName").value.trim(),
         email: document.getElementById("examCandidateEmail").value.trim(),
         address: document.getElementById("examCandidateAddress").value.trim(),
-        country: document.getElementById("examCandidateCountry").value.trim() || "Not specified",
+        country: document.getElementById("examCandidateCountry").value.trim(),
         number: document.getElementById("examCandidateNumber").value.trim(),
         filiere: document.getElementById("examCandidateFiliere").value,
         code: document.getElementById("examCandidateCode").value.trim()
@@ -13136,7 +13136,8 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
       const errorBox = document.getElementById("examRegistrationError");
 
       if(!registration.type || !registration.name || !registration.email ||
-         !registration.filiere){
+         !registration.address || !registration.country || !registration.number ||
+         !registration.filiere || !registration.code){
         if(errorBox){
           errorBox.classList.add("show");
           errorBox.style.background = "#fff1f1";
@@ -14005,7 +14006,45 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
           <div class="box"><h2>Lesson Content</h2><p>This lesson page is the PDF-ready lesson template for ${lmsEscape(ctx.subjectName)}. Teachers can upload the full official PDF from the Teacher Dashboard.</p></div>
           <div class="box"><h2>Practice</h2><p>1. Define three key terms. 2. Give one applied example. 3. Explain one method or process. 4. Write a short conclusion.</p></div>
           <button onclick="window.print()">Print / Save as PDF</button>
-          </body></html>`);
+          
+<style>
+.geti-exam-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;padding:20px}
+.geti-exam-box{max-width:900px;margin:auto;background:white;border-radius:22px;padding:25px;box-shadow:0 15px 40px #0004}
+.exam-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:15px}.exam-card{padding:20px;border-radius:15px;color:white;background:linear-gradient(135deg,#2563eb,#7c3aed);cursor:pointer;text-align:center;font-weight:bold}
+.exam-q{padding:20px;border:1px solid #ddd;border-radius:15px;margin:15px 0}
+@media(max-width:700px){.exam-cards{grid-template-columns:1fr 1fr}}
+</style>
+<div id="baccExam" class="geti-exam-modal">
+<div class="geti-exam-box">
+<h2>GETI Baccalaureate Registration</h2>
+<div id="regBox">
+<input id="exName" placeholder="Full Name"><input id="exEmail" placeholder="Email Address"><input id="exNation" placeholder="Nationality"><input id="exOption" placeholder="Option / Filière">
+<button onclick="startBacc()">Register & Continue</button>
+</div>
+<div id="dashBox" style="display:none">
+<h2>Baccalaureate Exam Dashboard</h2><div class="exam-cards" id="sessions"></div>
+</div>
+<div id="questionBox" style="display:none"></div>
+<button onclick="closeBacc()">Close</button>
+</div></div>
+<script>
+let currentExam=[],currentQ=0,answers=[];
+function openBacc(){document.getElementById('baccExam').style.display='block'}
+function closeBacc(){document.getElementById('baccExam').style.display='none'}
+function startBacc(){
+ localStorage.setItem('GETI_student',JSON.stringify({name:exName.value,email:exEmail.value,nationality:exNation.value,option:exOption.value}));
+ regBox.style.display='none';dashBox.style.display='block';
+ sessions.innerHTML=['S1','S2','S3','S4','S5'].map((s,i)=>`<div class="exam-card" onclick="loadExam(${i})">Exam ${s}</div>`).join('');
+}
+function loadExam(s){
+ currentExam=Array.from({length:20},(_,i)=>({q:`Question ${i+1} - Matière Session ${s+1}`,a:['A','B','C','D']}));
+ currentQ=0;answers=[];dashBox.style.display='none';questionBox.style.display='block';showQ();
+}
+function showQ(){let q=currentExam[currentQ];questionBox.innerHTML=`<h3>${q.q}</h3><p>Question ${currentQ+1}/20</p><div class="exam-q">${q.a.map(x=>`<label><input type="radio" name="a" value="${x}"> ${x}</label><br>`).join('')}</div><button onclick="prevQ()">Previous</button><button onclick="nextQ()">Next</button>`}
+function prevQ(){if(currentQ>0){currentQ--;showQ()}}
+function nextQ(){answers[currentQ]=document.querySelector('input[name=a]:checked')?.value; if(currentQ<19){currentQ++;showQ()}else{let score=answers.filter(Boolean).length;localStorage.setItem('GETI_exam_result',JSON.stringify({score,total:20}));questionBox.innerHTML=`<h2>Result</h2><p>Score: ${score}/20</p><button onclick="closeBacc()">Finish</button>`}}
+</script>
+</body></html>`);
         w.document.close();
       }
       renderUniversitySubjectCourse();
@@ -15875,23 +15914,50 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
 }
 @media(max-width:700px){#examRegistrationPanel .exam-registration-grid{padding:13px}}
 </style>
-
-<style id="hide-public-extra-content">
-/* Hide requested public information blocks only; keep existing functions unchanged */
-#levels,
-#about,
-#programmes,
-#admissions,
-#experience,
-#regulations,
-#transparency {display:none !important;}
-</style>
 </head>
       <body><h1>GETI</h1><h2>${lmsEscape(d.title)}</h2><div class="box">
       <p><strong>Student:</strong> ${lmsEscape(student.name)}<br><strong>Student ID:</strong> ${lmsEscape(student.id)}<br>
       <strong>Programme:</strong> ${f?lmsEscape(f.en):"Not selected"}<br><strong>Status:</strong> ${lmsEscape(d.status)}<br>
       <strong>Document ID:</strong> ${lmsEscape(d.id)}<br><strong>Date:</strong> ${lmsEscape(d.date)}</p></div>
-      <button onclick="window.print()">Print / Save PDF</button></body></html>`);
+      <button onclick="window.print()">Print / Save PDF</button>
+<style>
+.geti-exam-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;padding:20px}
+.geti-exam-box{max-width:900px;margin:auto;background:white;border-radius:22px;padding:25px;box-shadow:0 15px 40px #0004}
+.exam-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:15px}.exam-card{padding:20px;border-radius:15px;color:white;background:linear-gradient(135deg,#2563eb,#7c3aed);cursor:pointer;text-align:center;font-weight:bold}
+.exam-q{padding:20px;border:1px solid #ddd;border-radius:15px;margin:15px 0}
+@media(max-width:700px){.exam-cards{grid-template-columns:1fr 1fr}}
+</style>
+<div id="baccExam" class="geti-exam-modal">
+<div class="geti-exam-box">
+<h2>GETI Baccalaureate Registration</h2>
+<div id="regBox">
+<input id="exName" placeholder="Full Name"><input id="exEmail" placeholder="Email Address"><input id="exNation" placeholder="Nationality"><input id="exOption" placeholder="Option / Filière">
+<button onclick="startBacc()">Register & Continue</button>
+</div>
+<div id="dashBox" style="display:none">
+<h2>Baccalaureate Exam Dashboard</h2><div class="exam-cards" id="sessions"></div>
+</div>
+<div id="questionBox" style="display:none"></div>
+<button onclick="closeBacc()">Close</button>
+</div></div>
+<script>
+let currentExam=[],currentQ=0,answers=[];
+function openBacc(){document.getElementById('baccExam').style.display='block'}
+function closeBacc(){document.getElementById('baccExam').style.display='none'}
+function startBacc(){
+ localStorage.setItem('GETI_student',JSON.stringify({name:exName.value,email:exEmail.value,nationality:exNation.value,option:exOption.value}));
+ regBox.style.display='none';dashBox.style.display='block';
+ sessions.innerHTML=['S1','S2','S3','S4','S5'].map((s,i)=>`<div class="exam-card" onclick="loadExam(${i})">Exam ${s}</div>`).join('');
+}
+function loadExam(s){
+ currentExam=Array.from({length:20},(_,i)=>({q:`Question ${i+1} - Matière Session ${s+1}`,a:['A','B','C','D']}));
+ currentQ=0;answers=[];dashBox.style.display='none';questionBox.style.display='block';showQ();
+}
+function showQ(){let q=currentExam[currentQ];questionBox.innerHTML=`<h3>${q.q}</h3><p>Question ${currentQ+1}/20</p><div class="exam-q">${q.a.map(x=>`<label><input type="radio" name="a" value="${x}"> ${x}</label><br>`).join('')}</div><button onclick="prevQ()">Previous</button><button onclick="nextQ()">Next</button>`}
+function prevQ(){if(currentQ>0){currentQ--;showQ()}}
+function nextQ(){answers[currentQ]=document.querySelector('input[name=a]:checked')?.value; if(currentQ<19){currentQ++;showQ()}else{let score=answers.filter(Boolean).length;localStorage.setItem('GETI_exam_result',JSON.stringify({score,total:20}));questionBox.innerHTML=`<h2>Result</h2><p>Score: ${score}/20</p><button onclick="closeBacc()">Finish</button>`}}
+</script>
+</body></html>`);
       w.document.close();
     }
 
@@ -16369,6 +16435,44 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
  }
  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
+</script>
+
+<style>
+.geti-exam-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;padding:20px}
+.geti-exam-box{max-width:900px;margin:auto;background:white;border-radius:22px;padding:25px;box-shadow:0 15px 40px #0004}
+.exam-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:15px}.exam-card{padding:20px;border-radius:15px;color:white;background:linear-gradient(135deg,#2563eb,#7c3aed);cursor:pointer;text-align:center;font-weight:bold}
+.exam-q{padding:20px;border:1px solid #ddd;border-radius:15px;margin:15px 0}
+@media(max-width:700px){.exam-cards{grid-template-columns:1fr 1fr}}
+</style>
+<div id="baccExam" class="geti-exam-modal">
+<div class="geti-exam-box">
+<h2>GETI Baccalaureate Registration</h2>
+<div id="regBox">
+<input id="exName" placeholder="Full Name"><input id="exEmail" placeholder="Email Address"><input id="exNation" placeholder="Nationality"><input id="exOption" placeholder="Option / Filière">
+<button onclick="startBacc()">Register & Continue</button>
+</div>
+<div id="dashBox" style="display:none">
+<h2>Baccalaureate Exam Dashboard</h2><div class="exam-cards" id="sessions"></div>
+</div>
+<div id="questionBox" style="display:none"></div>
+<button onclick="closeBacc()">Close</button>
+</div></div>
+<script>
+let currentExam=[],currentQ=0,answers=[];
+function openBacc(){document.getElementById('baccExam').style.display='block'}
+function closeBacc(){document.getElementById('baccExam').style.display='none'}
+function startBacc(){
+ localStorage.setItem('GETI_student',JSON.stringify({name:exName.value,email:exEmail.value,nationality:exNation.value,option:exOption.value}));
+ regBox.style.display='none';dashBox.style.display='block';
+ sessions.innerHTML=['S1','S2','S3','S4','S5'].map((s,i)=>`<div class="exam-card" onclick="loadExam(${i})">Exam ${s}</div>`).join('');
+}
+function loadExam(s){
+ currentExam=Array.from({length:20},(_,i)=>({q:`Question ${i+1} - Matière Session ${s+1}`,a:['A','B','C','D']}));
+ currentQ=0;answers=[];dashBox.style.display='none';questionBox.style.display='block';showQ();
+}
+function showQ(){let q=currentExam[currentQ];questionBox.innerHTML=`<h3>${q.q}</h3><p>Question ${currentQ+1}/20</p><div class="exam-q">${q.a.map(x=>`<label><input type="radio" name="a" value="${x}"> ${x}</label><br>`).join('')}</div><button onclick="prevQ()">Previous</button><button onclick="nextQ()">Next</button>`}
+function prevQ(){if(currentQ>0){currentQ--;showQ()}}
+function nextQ(){answers[currentQ]=document.querySelector('input[name=a]:checked')?.value; if(currentQ<19){currentQ++;showQ()}else{let score=answers.filter(Boolean).length;localStorage.setItem('GETI_exam_result',JSON.stringify({score,total:20}));questionBox.innerHTML=`<h2>Result</h2><p>Score: ${score}/20</p><button onclick="closeBacc()">Finish</button>`}}
 </script>
 </body>
 </html>
