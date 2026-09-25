@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GETI School Online University</title>
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif;margin:0;padding:0}
+body{background:#f5f8fc}
+header{height:80px;background:#061b40;color:white;display:flex;align-items:center;justify-content:space-between;padding:0 8%}
+.logo{color:#d4af37;font-size:22px;font-weight:bold}
+nav a{color:white;text-decoration:none;margin:0 10px;font-size:14px;cursor:pointer}
+.signin{background:#d4af37;color:#061b40!important;padding:10px 20px;border-radius:20px}
+.hero{height:550px;background:linear-gradient(#061b40aa,#061b40aa),url("https://images.unsplash.com/photo-1562774053-701939374585");background-size:cover;display:flex;align-items:center;padding:0 8%;color:white}
+.hero h1{font-size:42px}.hero p{font-size:18px;margin:20px 0}
+.btn{background:#d4af37;color:#061b40;padding:12px 28px;border-radius:25px;font-weight:bold;cursor:pointer}
+.popup{display:none;position:fixed;inset:0;background:#0008;align-items:center;justify-content:center}
+.box{background:white;padding:30px;border-radius:12px;width:400px;max-width:90%}
+.box input,.box select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:7px}
+.box button{width:100%;padding:13px;background:#061b40;color:white;border:0;border-radius:7px;font-weight:bold}
+.close{float:right;cursor:pointer}
+.student-area{display:none;height:100vh;background:#061b40;align-items:center;justify-content:center;text-align:center}
+.student-area h1{color:white;margin-bottom:35px}
+.dashboard-btn{display:block;width:300px;padding:18px;margin:15px;background:#d4af37;color:#061b40;border:0;border-radius:30px;font-weight:bold;font-size:16px}
+</style>
+</head>
+
+<body>
+
+<div id="home">
+<header>
+<div class="logo">GETI SCHOOL ONLINE</div>
+<nav>
+<a>Home</a>
+<a>About</a>
+<a>Programs</a>
+<a>Campus</a>
+<a onclick="openStudentID()">Student ID</a>
+<a class="signin" onclick="openLogin()">Sign In</a>
+</nav>
+</header>
+
+<section class="hero">
+<div>
+<h1>GETI School Online University</h1>
+<p>Learn Anywhere. Study Anytime. Build Your Future.</p>
+<div class="btn" onclick="openStudentID()">Student ID</div>
+</div>
+</section>
+</div>
+
+
+<div class="popup" id="login">
+<div class="box">
+<span class="close" onclick="closeAll()">✖</span>
+<h2>Sign In</h2><br>
+<input placeholder="Email or Student ID">
+<input type="password" placeholder="Password">
+<button onclick="enterArea()">Sign In</button>
+<br><br>
+<button onclick="openRegister()">Create Account</button>
+</div>
+</div>
+
+
+<div class="popup" id="register">
+<div class="box">
+<span class="close" onclick="closeAll()">✖</span>
+<h2>Create Account</h2><br>
+<input placeholder="Name">
+<input placeholder="Email">
+<input placeholder="Phone Number">
+<select><option>Country</option><option>Madagascar</option></select>
+<input type="file" accept="image/png">
+<input type="password" placeholder="Password">
+<button onclick="enterArea()">Create Account</button>
+</div>
+</div>
+
+
+<div class="popup" id="studentID">
+<div class="box">
+<span class="close" onclick="closeAll()">✖</span>
+<h2>GETI Student ID</h2><br>
+<input placeholder="Name">
+<input placeholder="Email">
+<input placeholder="Country">
+<input placeholder="Nationality">
+<input type="file" accept="image/*">
+<button onclick="alert('Student ID Generated')">Generate ID Card</button>
+</div>
+</div>
+
+
+<div class="student-area" id="area">
+<div>
+<h1>GETI STUDENT AREA</h1>
+<button class="dashboard-btn">📚 STUDY</button>
+<button class="dashboard-btn">📝 TAKE AN EXAM</button>
+<button class="dashboard-btn">🎓 MY STUDENT ID</button>
+<button class="dashboard-btn">📊 MY RESULTS</button>
+</div>
+</div>
+
+
+<script>
+function openLogin(){login.style.display="flex"}
+function openRegister(){login.style.display="none";register.style.display="flex"}
+function openStudentID(){studentID.style.display="flex"}
+function closeAll(){login.style.display="none";register.style.display="none";studentID.style.display="none"}
+function enterArea(){closeAll();home.style.display="none";area.style.display="flex"}
+</script>
+
+</body>
+</html>
