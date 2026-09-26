@@ -2313,6 +2313,213 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 }
 </style>
 
+
+<style id="geti-level-buttons-style">
+#studentApp.active{
+  min-height:100vh !important;
+  background:#f4f7fb !important;
+}
+#studentApp .geti-level-buttons{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:18px;
+  padding:55px 24px;
+  flex-wrap:wrap;
+}
+#studentApp .geti-level-buttons button{
+  min-width:190px;
+  padding:17px 28px;
+  border:0;
+  border-radius:10px;
+  background:#123d63;
+  color:#fff;
+  font-size:17px;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 5px 14px rgba(18,61,99,.16);
+}
+#studentApp .geti-level-buttons button:hover{
+  background:#2475ee;
+}
+</style>
+
+
+<style id="geti-bac-streams-style">
+#studentApp .geti-bac-streams{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(150px,1fr));
+  gap:14px;
+  max-width:900px;
+  margin:0 auto;
+  padding:0 24px 45px;
+}
+#studentApp .geti-bac-streams[hidden]{display:none !important;}
+#studentApp .geti-bac-streams button{
+  padding:16px 18px;
+  border:1px solid #dbe5ef;
+  border-radius:10px;
+  background:#fff;
+  color:#123d63;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(18,61,99,.08);
+}
+#studentApp .geti-bac-streams button:hover{
+  background:#2475ee;
+  border-color:#2475ee;
+  color:#fff;
+}
+@media(max-width:720px){
+  #studentApp .geti-bac-streams{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(max-width:430px){
+  #studentApp .geti-bac-streams{grid-template-columns:1fr;}
+}
+</style>
+
+
+<style id="geti-button-focus-behavior">
+/* Behavior only: do not alter the existing visual form. */
+#studentApp.geti-focus-bac .geti-level-buttons > button:not(:first-child){
+  display:none !important;
+}
+#studentApp.geti-focus-bachelor .geti-level-buttons > button:not(:nth-child(2)){
+  display:none !important;
+}
+#studentApp.geti-focus-master .geti-level-buttons > button:not(:nth-child(3)){
+  display:none !important;
+}
+#studentApp.geti-focus-bachelor #baccalaureatStreams,
+#studentApp.geti-focus-master #baccalaureatStreams{
+  display:none !important;
+}
+</style>
+
+
+<style id="geti-bac-subjects-style">
+#studentApp .geti-bac-subjects{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(180px,1fr));
+  gap:12px;
+  max-width:760px;
+  margin:0 auto;
+  padding:0 24px 45px;
+}
+#studentApp .geti-bac-subjects[hidden]{display:none!important}
+#studentApp .geti-bac-subjects button{
+  padding:15px 18px;
+  border:1px solid #dbe5ef;
+  border-radius:10px;
+  background:#fff;
+  color:#123d63;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(18,61,99,.08);
+}
+#studentApp .geti-bac-subjects button:hover{
+  background:#2475ee;
+  border-color:#2475ee;
+  color:#fff;
+}
+@media(max-width:520px){
+  #studentApp .geti-bac-subjects{grid-template-columns:1fr}
+}
+</style>
+
+
+<style id="geti-subject-learning-style">
+#studentApp .geti-subject-learning{
+  max-width:850px;margin:0 auto;padding:0 24px 45px;
+}
+#studentApp .geti-subject-learning[hidden]{display:none!important}
+#studentApp .geti-learning-card{
+  background:#fff;border:1px solid #dbe5ef;border-radius:10px;
+  padding:20px;box-shadow:0 4px 12px rgba(18,61,99,.08)
+}
+#studentApp .geti-progress-head{display:flex;justify-content:space-between;gap:15px;font-weight:800;margin-bottom:8px}
+#studentApp .geti-progress-track{height:12px;background:#e7edf4;border-radius:999px;overflow:hidden;margin-bottom:20px}
+#studentApp .geti-progress-fill{height:100%;width:0;background:#2475ee;transition:width .25s ease}
+#studentApp .geti-pdf-box{border:1px solid #dbe5ef;border-radius:9px;padding:15px;margin-bottom:16px}
+#studentApp .geti-exercise-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+#studentApp .geti-exercise-list button{padding:12px 8px;border:1px solid #dbe5ef;border-radius:9px;background:#fff;color:#123d63;font-weight:800;cursor:pointer}
+#studentApp .geti-exercise-list button.done{background:#10ad67;color:#fff;border-color:#10ad67}
+#studentApp .geti-exercise-list button:disabled{cursor:not-allowed;opacity:.72}
+#studentApp .geti-quiz{margin-top:18px}
+#studentApp .geti-question{padding:12px 0;border-top:1px solid #edf1f5}
+#studentApp .geti-question label{display:block;margin:7px 0}
+#studentApp .geti-submit-exercise{margin-top:14px;padding:12px 18px;border:0;border-radius:9px;background:#2475ee;color:#fff;font-weight:800;cursor:pointer}
+#studentApp .geti-complete-message{margin-top:15px;padding:13px;border-radius:9px;background:#eaf8f1;color:#087647;font-weight:800}
+@media(max-width:650px){#studentApp .geti-exercise-list{grid-template-columns:1fr}}
+</style>
+
+
+<style id="geti-bac-exam-plan-style">
+#studentApp .geti-bac-exam-area{max-width:900px;margin:0 auto;padding:0 24px 55px}
+#studentApp .geti-bac-exam-area[hidden]{display:none!important}
+#studentApp .bac-exam-card{background:#fff;border:1px solid #dbe5ef;border-radius:10px;padding:20px;box-shadow:0 4px 12px rgba(18,61,99,.08)}
+#studentApp .bac-exam-btn{padding:15px 20px;border:0;border-radius:10px;background:#123d63;color:#fff;font-weight:800;cursor:pointer}
+#studentApp .bac-exam-btn:disabled{opacity:.5;cursor:not-allowed}
+#studentApp .bac-subject-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px}
+#studentApp .bac-subject-grid button{padding:14px;border:1px solid #dbe5ef;border-radius:9px;background:#fff;color:#123d63;font-weight:800;cursor:pointer}
+#studentApp .bac-subject-grid button.done{background:#10ad67;color:#fff;border-color:#10ad67}
+#studentApp .bac-q{padding:13px 0;border-top:1px solid #edf1f5}
+#studentApp .bac-q label{display:block;margin:7px 0}
+#studentApp .bac-result-table{width:100%;border-collapse:collapse;margin:15px 0}
+#studentApp .bac-result-table th,#studentApp .bac-result-table td{padding:9px;border:1px solid #dbe5ef;text-align:left}
+#studentApp .bac-result-table th{background:#edf4fb}
+#studentApp .bac-pass{padding:14px;border-radius:9px;background:#eaf8f1;color:#087647;font-weight:800}
+#studentApp .bac-fail{padding:14px;border-radius:9px;background:#fff1f1;color:#8b2525;font-weight:800}
+#studentApp .bac-transcript{background:#fff;border:1px solid #cfdce8;padding:25px;border-radius:8px}
+@media(max-width:620px){#studentApp .bac-subject-grid{grid-template-columns:1fr}}
+</style>
+
+
+<style id="geti-combined-progress-style">
+#studentApp .geti-combined-progress-area{
+  max-width:900px;
+  margin:0 auto;
+  padding:0 24px 22px;
+}
+#studentApp .geti-combined-progress-area[hidden]{display:none!important}
+#studentApp .combined-progress-card{
+  background:#fff;
+  border:1px solid #dbe5ef;
+  border-radius:10px;
+  padding:18px 20px;
+  box-shadow:0 4px 12px rgba(18,61,99,.08);
+}
+#studentApp .combined-progress-head{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:9px;
+  font-weight:800;
+  color:#123d63;
+}
+#studentApp .combined-progress-track{
+  position:relative;
+  height:16px;
+  background:#e7edf4;
+  border-radius:999px;
+  overflow:hidden;
+}
+#studentApp .combined-progress-fill{
+  height:100%;
+  width:0;
+  background:#2475ee;
+  border-radius:999px;
+  transition:width .3s ease;
+}
+#studentApp .combined-progress-note{
+  margin-top:9px;
+  font-size:13px;
+  color:#63768b;
+}
+</style>
+
 </head>
 <body>
 <div class="geti-mini">
@@ -2652,7 +2859,28 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 </div>
 </div>
 </section>
-<section class="app-page" id="studentApp"></section>
+<section class="app-page" id="studentApp">
+<div class="geti-level-buttons">
+  <button type="button" onclick="toggleBaccalaureatStreams()">Baccalaureat</button>
+  <button type="button">Bachelor</button>
+  <button type="button">Master</button>
+</div>
+<div id="baccalaureatStreams" class="geti-bac-streams" hidden>
+  <button type="button" data-stream="Literary">Literary</button>
+  <button type="button" data-stream="Scientific">Scientific</button>
+  <button type="button" data-stream="Economic and Society">Economic and Society</button>
+  <button type="button" data-stream="IT">IT</button>
+</div>
+<div id="bacSubjects" class="geti-bac-subjects" hidden></div>
+<div id="subjectLearning" class="geti-subject-learning" hidden></div>
+
+<div id="getiCombinedProgressArea" class="geti-combined-progress-area" hidden></div>
+<div id="getiBacExamArea" class="geti-bac-exam-area" hidden></div>
+
+
+
+
+</section>
 <div class="modal" id="programModal">
 <div class="modal-card">
 <div class="modal-head">
@@ -4625,7 +4853,521 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
           <div class="box"><h2>Lesson Content</h2><p>This lesson page is the PDF-ready lesson template for ${lmsEscape(ctx.subjectName)}. Teachers can upload the full official PDF from the Teacher Dashboard.</p></div>
           <div class="box"><h2>Practice</h2><p>1. Define three key terms. 2. Give one applied example. 3. Explain one method or process. 4. Write a short conclusion.</p></div>
           <button onclick="window.print()">Print / Save as PDF</button>
-          </body></html>`);
+          
+<script id="geti-bac-streams-script">
+function toggleBaccalaureatStreams(){
+  const box = document.getElementById("baccalaureatStreams");
+  if (!box) return;
+  box.hidden = !box.hidden;
+}
+
+ document.addEventListener("click",function(){
+   if(selectedStream) setTimeout(refreshEligibility,120);
+ },false);
+
+</script>
+
+
+<script id="geti-button-focus-script">
+(function(){
+  function app(){ return document.getElementById("studentApp"); }
+  function levelButtons(){
+    const box = document.querySelector("#studentApp .geti-level-buttons");
+    return box ? Array.from(box.querySelectorAll(":scope > button")) : [];
+  }
+
+  window.getiFocusLevel = function(level){
+    const root = app();
+    if(!root) return;
+    root.classList.remove("geti-focus-bac","geti-focus-bachelor","geti-focus-master");
+    if(level === "bac") root.classList.add("geti-focus-bac");
+    if(level === "bachelor") root.classList.add("geti-focus-bachelor");
+    if(level === "master") root.classList.add("geti-focus-master");
+  };
+
+  document.addEventListener("DOMContentLoaded", function(){
+    const buttons = levelButtons();
+    if(buttons[0]){
+      buttons[0].addEventListener("click", function(){ getiFocusLevel("bac"); });
+    }
+    if(buttons[1]){
+      buttons[1].addEventListener("click", function(){ getiFocusLevel("bachelor"); });
+    }
+    if(buttons[2]){
+      buttons[2].addEventListener("click", function(){ getiFocusLevel("master"); });
+    }
+
+    /* Any stream clicked: keep only Baccalaureat context + that selected stream. */
+    document.querySelectorAll("#baccalaureatStreams > button").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        const box = document.getElementById("baccalaureatStreams");
+        if(!box) return;
+        Array.from(box.children).forEach(function(other){
+          if(other !== btn) other.style.display = "none";
+        });
+      });
+    });
+  });
+})();
+</script>
+
+
+<script id="geti-bac-subjects-script">
+(function(){
+  const streamSubjects = {"Literary": ["French", "English", "History and Geography", "Philosophy", "Mathematics", "Literature", "Physical Education"], "Scientific": ["Mathematics", "Physics and Chemistry", "Life and Earth Sciences", "French", "English", "History and Geography", "Computer Science"], "Economic and Society": ["Economics", "Management (Gestion)", "Mathematics", "History and Geography", "French", "English", "Philosophy"], "IT": ["Programming", "Database Systems", "Computer Networks", "Operating Systems", "Web Development", "Cybersecurity", "Mathematics"]};
+
+  function showSubjects(stream, selectedButton){
+    const root = document.getElementById("studentApp");
+    const streamBox = document.getElementById("baccalaureatStreams");
+    const box = document.getElementById("bacSubjects");
+    if(!root || !streamBox || !box || !streamSubjects[stream]) return;
+
+    root.classList.add("geti-focus-bac");
+    Array.from(streamBox.children).forEach(function(btn){
+      btn.style.display = (btn === selectedButton) ? "" : "none";
+    });
+
+    box.innerHTML = "";
+    streamSubjects[stream].forEach(function(subject){
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = subject;
+      box.appendChild(btn);
+    });
+    box.hidden = false;
+  }
+
+  document.addEventListener("click", function(e){
+    const btn = e.target.closest("#baccalaureatStreams > button[data-stream]");
+    if(!btn) return;
+    showSubjects(btn.getAttribute("data-stream"), btn);
+  }, true);
+})();
+</script>
+
+
+<script id="geti-subject-learning-script">
+(function(){
+  const STORE = "geti_bac_subject_progress_v1";
+  let currentSubject = "";
+  let currentExercise = 0;
+
+  function key(subject){ return subject.replace(/\s+/g,"_").toLowerCase(); }
+  function loadAll(){ try{return JSON.parse(localStorage.getItem(STORE)||"{}")}catch(e){return {}} }
+  function saveAll(v){ localStorage.setItem(STORE,JSON.stringify(v)); }
+  function state(subject){
+    const all=loadAll(), k=key(subject);
+    if(!all[k]) all[k]={completedExercises:[]};
+    return all[k];
+  }
+  function saveState(subject,s){
+    const all=loadAll(); all[key(subject)]=s; saveAll(all);
+  }
+  function pct(s){ return Math.min(100,(s.completedExercises||[]).length*20); }
+
+  function openSubject(subject){
+    const s=state(subject), p=pct(s), box=document.getElementById("subjectLearning");
+    currentSubject=subject;
+    const complete=p>=100;
+    box.hidden=false;
+    box.innerHTML=`
+      <div class="geti-learning-card">
+        <div class="geti-progress-head"><span>${subject}</span><span>${p}%</span></div>
+        <div class="geti-progress-track"><div class="geti-progress-fill" style="width:${p}%"></div></div>
+        ${complete ? `
+          <div class="geti-complete-message">100% completed. This subject is now locked. Please continue with another subject.</div>
+        ` : `
+          <div class="geti-pdf-box"><strong>Lesson PDF</strong><div style="margin-top:6px">PDF lesson will be available here.</div></div>
+          <div class="geti-exercise-list">
+            ${[1,2,3,4,5].map(n=>{
+              const done=(s.completedExercises||[]).includes(n);
+              return `<button type="button" class="${done?"done":""}" data-ex="${n}" ${done?"disabled":""}>Exercise ${n}<br><small>10 questions</small></button>`;
+            }).join("")}
+          </div>
+          <div id="exerciseQuiz" class="geti-quiz"></div>
+        `}
+      </div>`;
+    box.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  function showQuiz(n){
+    currentExercise=n;
+    const q=document.getElementById("exerciseQuiz");
+    if(!q) return;
+    q.innerHTML=`<h3>Exercise ${n} — 10 Questions</h3>`+
+      Array.from({length:10},(_,i)=>`
+        <div class="geti-question">
+          <strong>Question ${i+1}</strong>
+          <label><input type="radio" name="q${i}" value="a"> Answer A</label>
+          <label><input type="radio" name="q${i}" value="b"> Answer B</label>
+          <label><input type="radio" name="q${i}" value="c"> Answer C</label>
+        </div>`).join("")+
+      `<button type="button" class="geti-submit-exercise">Complete Exercise</button>`;
+  }
+
+  document.addEventListener("click",function(e){
+    const subjectBtn=e.target.closest("#bacSubjects > button");
+    if(subjectBtn){
+      openSubject(subjectBtn.textContent.trim());
+      return;
+    }
+    const ex=e.target.closest("#subjectLearning button[data-ex]");
+    if(ex && !ex.disabled){ showQuiz(Number(ex.dataset.ex)); return; }
+    if(e.target.closest(".geti-submit-exercise")){
+      const quiz=document.getElementById("exerciseQuiz");
+      const answered=quiz ? quiz.querySelectorAll('input[type="radio"]:checked').length : 0;
+      if(answered<10){ alert("Please answer all 10 questions before completing the exercise."); return; }
+      const s=state(currentSubject);
+      if(!s.completedExercises.includes(currentExercise)) s.completedExercises.push(currentExercise);
+      saveState(currentSubject,s);
+      openSubject(currentSubject);
+    }
+  });
+
+  /* New dynamically-created subject buttons inherit the same system automatically. */
+  const obs=new MutationObserver(function(){
+    document.querySelectorAll("#bacSubjects > button").forEach(function(btn){
+      const s=state(btn.textContent.trim());
+      if(pct(s)>=100){ btn.disabled=true; btn.title="100% completed"; }
+    });
+  });
+  const subjects=document.getElementById("bacSubjects");
+  if(subjects) obs.observe(subjects,{childList:true});
+})();
+</script>
+
+
+<script id="geti-baccalaureat-exam-plan-script">
+(function(){
+ const SUBJECT_PROGRESS="geti_bac_subject_progress_v1";
+ const EXAM_STORE="geti_baccalaureat_exam_v1";
+ const streams={
+  "Literary":["French","English","History and Geography","Philosophy","Mathematics","Literature","Physical Education"],
+  "Scientific":["Mathematics","Physics and Chemistry","Life and Earth Sciences","French","English","History and Geography","Computer Science"],
+  "Economic and Society":["Economics","Management (Gestion)","Mathematics","History and Geography","French","English","Philosophy"],
+  "IT":["Programming","Database Systems","Computer Networks","Operating Systems","Web Development","Cybersecurity","Mathematics"]
+ };
+ const streamCoeff={
+  "Literary":{
+    "French":4,
+    "English":4,
+    "History and Geography":4,
+    "Philosophy":5,
+    "Mathematics":2,
+    "Literature":5,
+    "Physical Education":1
+  },
+  "Scientific":{
+    "Mathematics":5,
+    "Physics and Chemistry":5,
+    "Life and Earth Sciences":4,
+    "French":2,
+    "English":2,
+    "History and Geography":2,
+    "Computer Science":3
+  },
+  "Economic and Society":{
+    "Economics":5,
+    "Management (Gestion)":5,
+    "Mathematics":4,
+    "History and Geography":3,
+    "French":2,
+    "English":2,
+    "Philosophy":2
+  },
+  "IT":{
+    "Programming":5,
+    "Database Systems":4,
+    "Computer Networks":4,
+    "Operating Systems":4,
+    "Web Development":4,
+    "Cybersecurity":4,
+    "Mathematics":5
+  }
+ };
+ function subjectCoeff(subject){
+   return (streamCoeff[selectedStream] && streamCoeff[selectedStream][subject]) || 1;
+ }
+ const calculationSubjects=new Set(["Mathematics","Physics and Chemistry","Economics","Management (Gestion)","Programming","Database Systems","Computer Networks"]);
+ let selectedStream=localStorage.getItem("geti_selected_bac_stream")||"";
+
+ function load(k){try{return JSON.parse(localStorage.getItem(k)||"{}")}catch(e){return {}}}
+ function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+ function slug(s){return s.replace(/\s+/g,"_").toLowerCase()}
+ function subjectProgress(subject){
+   const all=load(SUBJECT_PROGRESS), s=all[slug(subject)]||{completedExercises:[]};
+   return Math.min(100,(s.completedExercises||[]).length*20);
+ }
+ function streamProgress(stream){
+   const list=streams[stream]||[]; if(!list.length)return 0;
+   return Math.round(list.reduce((a,s)=>a+subjectProgress(s),0)/list.length);
+ }
+ function examState(){
+   const all=load(EXAM_STORE);
+   if(!all.streams)all.streams={};
+   if(selectedStream&&!all.streams[selectedStream]) all.streams[selectedStream]={registered:false,subjects:{}};
+   return all;
+ }
+ function current(){const all=examState();return all.streams[selectedStream]||{registered:false,subjects:{}}}
+ function writeCurrent(st){const all=examState();all.streams[selectedStream]=st;save(EXAM_STORE,all)}
+ function qBank(subject){
+   const calc=calculationSubjects.has(subject);
+   return Array.from({length:15},(_,i)=>{
+     if(calc && i%3===0){
+       const a=i+2,b=i+3,ans=a*b;
+       return {q:`Calculation ${i+1}: Using the method studied in ${subject}, calculate ${a} × ${b}.`,opts:[String(ans),String(ans+2),String(ans-2),String(a+b)],correct:0};
+     }
+     return {q:`${subject} — Question ${i+1}: Choose the best answer based on the lesson content.`,opts:["Correct concept or method","Unrelated statement","Incorrect application","Unsupported conclusion"],correct:0};
+   });
+ }
+ function refreshEligibility(){
+   if(!selectedStream)return;
+   const p=streamProgress(selectedStream);
+   const progressArea=document.getElementById("getiCombinedProgressArea");
+   const area=document.getElementById("getiBacExamArea");
+   if(!progressArea || !area)return;
+
+   progressArea.hidden=false;
+   progressArea.innerHTML=`<div class="combined-progress-card">
+     <div class="combined-progress-head">
+       <span>${selectedStream} — Combined Progress</span>
+       <span>${p}%</span>
+     </div>
+     <div class="combined-progress-track">
+       <div class="combined-progress-fill" style="width:${p}%"></div>
+     </div>
+     <div class="combined-progress-note">${
+       p < 50
+       ? `Continue your lessons and exercises. Baccalaureat Exam unlocks at 50%.`
+       : `50% requirement reached. Baccalaureat Exam is now unlocked.`
+     }</div>
+   </div>`;
+
+   if(p>=50){
+     area.hidden=false;
+     area.innerHTML=`<div class="bac-exam-card"><h3>Baccalaureat Exam</h3><button class="bac-exam-btn" id="openBacExam">Baccalaureat Exam</button></div>`;
+   } else {
+     area.hidden=true;
+     area.innerHTML="";
+   }
+ }
+ function registration(){
+   const area=document.getElementById("getiBacExamArea"), st=current();
+   area.hidden=false;
+   area.innerHTML=`<div class="bac-exam-card"><h3>Registration du Baccalaureat</h3>
+   <p>Stream: <b>${selectedStream}</b></p>
+   <label>Candidate Full Name<br><input id="bacCandidateName" style="width:100%;padding:10px;margin:6px 0 12px" value="${st.name||localStorage.getItem("geti_student_name")||""}"></label>
+   <label>Candidate ID / Registration Number<br><input id="bacCandidateId" style="width:100%;padding:10px;margin:6px 0 12px" value="${st.candidateId||""}"></label>
+   <button class="bac-exam-btn" id="confirmBacRegistration">${st.registered?"Continue":"Complete Registration"}</button></div>`;
+ }
+ function subjectsPage(){
+   const area=document.getElementById("getiBacExamArea"), st=current();
+   area.innerHTML=`<div class="bac-exam-card"><h3>${selectedStream} — Baccalaureat Subjects</h3>
+   <p>Each subject has <b>15 questions</b>. Progress is saved automatically.</p>
+   <div class="bac-subject-grid">${streams[selectedStream].map(s=>`<button data-bac-subject="${s}" class="${st.subjects[s]?.finished?"done":""}">${s}<br><small>Coefficient ${subjectCoeff(s)}${st.subjects[s]?.finished?" • Completed":""}</small></button>`).join("")}</div></div>`;
+ }
+ function openSubjectExam(subject){
+   const st=current(); if(!st.subjects[subject])st.subjects[subject]={answers:{},index:0,finished:false,score:0};
+   writeCurrent(st);
+   const ss=st.subjects[subject], qs=qBank(subject), idx=Math.min(ss.index||0,14), q=qs[idx], area=document.getElementById("getiBacExamArea");
+   if(ss.finished){subjectsPage();return}
+   area.innerHTML=`<div class="bac-exam-card"><h3>${subject}</h3><p>Question <b>${idx+1}/15</b> • Coefficient ${subjectCoeff(subject)}</p>
+   <div class="bac-q"><strong>${q.q}</strong>${q.opts.map((o,j)=>`<label><input type="radio" name="bacAnswer" value="${j}" ${String(ss.answers[idx])===String(j)?"checked":""}> ${o}</label>`).join("")}</div>
+   <button class="bac-exam-btn" id="bacNextQuestion">${idx===14?"Finish Subject":"Next Question"}</button></div>`;
+   area.dataset.subject=subject;
+ }
+ function saveAnswerAndNext(){
+   const area=document.getElementById("getiBacExamArea"), subject=area.dataset.subject, st=current(), ss=st.subjects[subject], chosen=document.querySelector('input[name="bacAnswer"]:checked');
+   if(!chosen){alert("Please select an answer.");return}
+   ss.answers[ss.index||0]=Number(chosen.value);
+   if((ss.index||0)>=14){
+     const qs=qBank(subject); let correct=0;
+     for(let i=0;i<15;i++) if(Number(ss.answers[i])===qs[i].correct)correct++;
+     ss.score=correct; ss.mark20=Math.round((correct/15)*20*100)/100; ss.finished=true;
+     writeCurrent(st);
+     if(streams[selectedStream].every(s=>st.subjects[s]?.finished)) resultPage(); else subjectsPage();
+   } else {
+     ss.index=(ss.index||0)+1; writeCurrent(st); openSubjectExam(subject);
+   }
+ }
+ function resultPage(){
+   const st=current(), list=streams[selectedStream];
+   let weighted=0,totalCoef=0;
+   list.forEach(s=>{const c=subjectCoeff(s),m=st.subjects[s]?.mark20||0;weighted+=m*c;totalCoef+=c});
+   const avg=Math.round((weighted/totalCoef)*100)/100, passed=avg>=10;
+   st.average=avg;st.passed=passed;writeCurrent(st);
+   const area=document.getElementById("getiBacExamArea");
+   area.innerHTML=`<div class="bac-exam-card"><h3>Baccalaureat Results</h3>
+   <table class="bac-result-table"><tr><th>Subject</th><th>Coefficient</th><th>Mark /20</th><th>Weighted</th></tr>
+   ${list.map(s=>{const c=subjectCoeff(s),m=st.subjects[s].mark20;return `<tr><td>${s}</td><td>${c}</td><td>${m}</td><td>${(m*c).toFixed(2)}</td></tr>`}).join("")}</table>
+   <p><b>Automatic weighted average: ${avg}/20</b></p>
+   <p><small>Calculation: Σ(Mark × Coefficient) ÷ Σ(Coefficients)</small></p>
+   <div class="${passed?"bac-pass":"bac-fail"}">${passed?"PASS — Eligible for university registration.":"NOT PASSED — Average below 10/20."}</div>
+   ${passed?'<button class="bac-exam-btn" id="bacResultNext" style="margin-top:15px">Next</button>':""}</div>`;
+ }
+ function transcript(){
+   const st=current(),list=streams[selectedStream],area=document.getElementById("getiBacExamArea");
+   area.innerHTML=`<div class="bac-exam-card"><div id="bacTranscriptCard" class="bac-transcript">
+   <h2 style="text-align:center">GETI — Relevé de Baccalaureat</h2><p style="text-align:center"><b>${selectedStream}</b></p>
+   <p>Candidate: <b>${st.name||""}</b><br>Registration No: <b>${st.candidateId||""}</b></p>
+   <table class="bac-result-table"><tr><th>Subject</th><th>Coef.</th><th>Mark /20</th></tr>${list.map(s=>`<tr><td>${s}</td><td>${subjectCoeff(s)}</td><td>${st.subjects[s].mark20}</td></tr>`).join("")}</table>
+   <p><b>Final Average: ${st.average}/20 — PASS</b></p><p>This transcript can be used as an academic record for the university admission workflow.</p></div>
+   <button class="bac-exam-btn" id="downloadBacPng" style="margin-top:15px">Download PNG</button></div>`;
+ }
+ function downloadPNG(){
+   const card=document.getElementById("bacTranscriptCard");
+   if(!card)return;
+   const canvas=document.createElement("canvas");canvas.width=1200;canvas.height=1600;
+   const ctx=canvas.getContext("2d");ctx.fillStyle="#fff";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle="#123d63";ctx.font="bold 44px Arial";ctx.fillText("GETI - Releve de Baccalaureat",70,90);
+   const st=current();ctx.font="28px Arial";ctx.fillStyle="#111";ctx.fillText("Stream: "+selectedStream,70,145);ctx.fillText("Candidate: "+(st.name||""),70,195);ctx.fillText("Registration No: "+(st.candidateId||""),70,240);
+   let y=310;ctx.font="bold 25px Arial";ctx.fillText("Subject",70,y);ctx.fillText("Coef.",700,y);ctx.fillText("Mark /20",850,y);ctx.font="24px Arial";
+   streams[selectedStream].forEach(s=>{y+=55;ctx.fillText(s,70,y);ctx.fillText(String(subjectCoeff(s)),710,y);ctx.fillText(String(st.subjects[s].mark20),860,y)});
+   y+=90;ctx.font="bold 32px Arial";ctx.fillStyle="#087647";ctx.fillText("Final Average: "+st.average+"/20 - PASS",70,y);
+   const a=document.createElement("a");a.download="GETI_Baccalaureat_Transcript.png";a.href=canvas.toDataURL("image/png");a.click();
+ }
+ document.addEventListener("click",function(e){
+   const streamBtn=e.target.closest("#baccalaureatStreams > button[data-stream]");
+   if(streamBtn){selectedStream=streamBtn.getAttribute("data-stream");localStorage.setItem("geti_selected_bac_stream",selectedStream);setTimeout(refreshEligibility,50)}
+   if(e.target.id==="openBacExam")registration();
+   if(e.target.id==="confirmBacRegistration"){const st=current();st.name=document.getElementById("bacCandidateName").value.trim();st.candidateId=document.getElementById("bacCandidateId").value.trim();if(!st.name||!st.candidateId){alert("Please complete the registration form.");return}st.registered=true;writeCurrent(st);subjectsPage()}
+   const sb=e.target.closest("[data-bac-subject]");if(sb)openSubjectExam(sb.getAttribute("data-bac-subject"));
+   if(e.target.id==="bacNextQuestion")saveAnswerAndNext();
+   if(e.target.id==="bacResultNext")transcript();
+   if(e.target.id==="downloadBacPng")downloadPNG();
+ },true);
+ window.addEventListener("load",function(){selectedStream=localStorage.getItem("geti_selected_bac_stream")||selectedStream;if(selectedStream)setTimeout(refreshEligibility,100)});
+})();
+</script>
+
+
+<script id="geti-stream-lock-retake-script">
+(function(){
+  const LOCK_KEY="geti_stream_exam_lock_v1";
+  const SEVEN_MONTHS=7;
+
+  function load(){
+    try{return JSON.parse(localStorage.getItem(LOCK_KEY)||"{}")}catch(e){return {}}
+  }
+  function save(v){localStorage.setItem(LOCK_KEY,JSON.stringify(v))}
+  function addMonths(date, months){
+    const d=new Date(date);
+    const day=d.getDate();
+    d.setMonth(d.getMonth()+months);
+    if(d.getDate()<day)d.setDate(0);
+    return d;
+  }
+  function fmt(d){
+    try{return new Date(d).toLocaleDateString()}catch(e){return ""}
+  }
+  function selected(){
+    return localStorage.getItem("geti_selected_bac_stream")||"";
+  }
+  function streamButtons(){
+    return Array.from(document.querySelectorAll("#baccalaureatStreams > button[data-stream]"));
+  }
+  function getPassedInfo(stream){
+    const locks=load();
+    return locks.passed && locks.passed[stream] ? locks.passed[stream] : null;
+  }
+  function canRetake(stream){
+    const info=getPassedInfo(stream);
+    if(!info)return true;
+    return new Date() >= new Date(info.retakeAt);
+  }
+  function applyLocks(){
+    const locks=load();
+    const active=locks.activeStream||selected();
+    streamButtons().forEach(btn=>{
+      const s=btn.getAttribute("data-stream");
+      const passed=getPassedInfo(s);
+      let disabled=false, title="";
+
+      if(active && s!==active){
+        disabled=true;
+        title="Finish the selected stream first.";
+      }
+      if(passed && !canRetake(s)){
+        disabled=true;
+        title="Passed. Retake available after "+fmt(passed.retakeAt)+".";
+      }
+      btn.disabled=disabled;
+      btn.style.opacity=disabled?".48":"";
+      btn.style.cursor=disabled?"not-allowed":"";
+      if(title)btn.title=title; else btn.removeAttribute("title");
+    });
+  }
+
+  // Capture stream choice before the existing handlers. Once chosen, it becomes the active stream.
+  document.addEventListener("click",function(e){
+    const btn=e.target.closest("#baccalaureatStreams > button[data-stream]");
+    if(!btn)return;
+    const stream=btn.getAttribute("data-stream");
+    const locks=load();
+    const active=locks.activeStream||"";
+
+    if(active && active!==stream){
+      e.preventDefault(); e.stopImmediatePropagation();
+      alert("You must finish "+active+" before opening another stream.");
+      return;
+    }
+    const passed=getPassedInfo(stream);
+    if(passed && !canRetake(stream)){
+      e.preventDefault(); e.stopImmediatePropagation();
+      alert("You already passed "+stream+". You can retake it after "+fmt(passed.retakeAt)+".");
+      return;
+    }
+    locks.activeStream=stream;
+    save(locks);
+    localStorage.setItem("geti_selected_bac_stream",stream);
+    setTimeout(applyLocks,50);
+  },true);
+
+  // Observe results. A PASS is recorded with a 7-month retake date.
+  const observer=new MutationObserver(function(){
+    const area=document.getElementById("getiBacExamArea");
+    if(!area)return;
+    const passNode=area.querySelector(".bac-pass");
+    if(passNode && /PASS/i.test(passNode.textContent||"")){
+      const stream=selected();
+      if(!stream)return;
+      const locks=load();
+      locks.passed=locks.passed||{};
+      if(!locks.passed[stream]){
+        const passedAt=new Date();
+        const retakeAt=addMonths(passedAt,SEVEN_MONTHS);
+        locks.passed[stream]={
+          passedAt:passedAt.toISOString(),
+          retakeAt:retakeAt.toISOString()
+        };
+      }
+      // Once the selected stream is completed successfully, other streams may be selected.
+      if(locks.activeStream===stream)locks.activeStream="";
+      save(locks);
+      applyLocks();
+
+      const info=locks.passed[stream];
+      if(!area.querySelector(".geti-retake-info")){
+        const note=document.createElement("div");
+        note.className="geti-retake-info";
+        note.style.cssText="margin-top:12px;padding:12px;border-radius:8px;background:#eef5fb;color:#123d63;font-weight:700";
+        note.textContent="Baccalaureat passed. This stream cannot be taken again until "+fmt(info.retakeAt)+" (7 months).";
+        passNode.insertAdjacentElement("afterend",note);
+      }
+    }
+  });
+
+  window.addEventListener("load",function(){
+    const area=document.getElementById("getiBacExamArea");
+    if(area)observer.observe(area,{childList:true,subtree:true});
+    applyLocks();
+  });
+
+  // Keep locks visually correct after portal navigation.
+  document.addEventListener("click",function(){setTimeout(applyLocks,120)},false);
+})();
+</script>
+
+</body></html>`);
         w.document.close();
       }
       renderUniversitySubjectCourse();
