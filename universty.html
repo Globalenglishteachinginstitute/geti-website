@@ -2176,10 +2176,6 @@
     }
 
 </style>
-
-<style id="first-area-separation">
-#studentApp{display:none !important}
-</style>
 </head>
 <body>
 <div class="geti-mini">
@@ -10079,7 +10075,9 @@
     
     function goHomeIfLoggedOut(){
       if(localStorage.getItem("geti_logged_in") === "true"){
-        window.location.href = "student-area.html";
+        document.getElementById("studentApp").classList.add("active");
+        hideMainSite(true);
+        showScreen("dashboardScreen");
         return false;
       }
       return true;
@@ -10677,7 +10675,11 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
       if(nameEl) nameEl.textContent = account.name;
       if(programEl) programEl.textContent = account.program || "GETI University";
 
-      window.location.href = "student-area.html";
+      document.getElementById("authPage").classList.remove("active");
+      document.getElementById("studentApp").classList.add("active");
+      hideMainSite(true);
+      showScreen("dashboardScreen");
+      window.scrollTo(0,0);
     }
 
     async function enterStudentPortal(mode, event){
