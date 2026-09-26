@@ -2289,45 +2289,9 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 </style>
 
 
-<style id="geti-single-view-mode">
-  body.geti-public-single-view > .topbar,
-  body.geti-public-single-view > nav.nav,
-  body.geti-public-single-view > header,
-  body.geti-public-single-view > section,
-  body.geti-public-single-view > footer{
-    display:none !important;
-  }
-  body.geti-public-single-view > section.geti-single-target{
-    display:block !important;
-    min-height:100vh;
-    padding-top:34px !important;
-  }
-  #getiSingleBack{
-    display:none;
-    position:fixed;
-    top:16px;
-    left:16px;
-    z-index:100000;
-    border:1px solid #d6e0ea;
-    background:#fff;
-    color:#0b2b4c;
-    border-radius:9px;
-    padding:10px 15px;
-    font-weight:800;
-    cursor:pointer;
-    box-shadow:0 8px 24px rgba(15,39,64,.12);
-  }
-  body.geti-public-single-view #getiSingleBack{display:block}
-  @media(max-width:700px){
-    body.geti-public-single-view > section.geti-single-target{padding-top:72px !important}
-    #getiSingleBack{top:10px;left:10px}
-  }
-</style>
 
 </head>
 <body>
-<button id="getiSingleBack" type="button" onclick="closePublicSingleView()">← Back to GETI</button>
-
 <div class="geti-mini">
 <div class="container">
 <span>GETI Academic Platform</span>
@@ -2938,7 +2902,6 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 
     
     function goHomeIfLoggedOut(){
-      closePublicSingleView();
       if(localStorage.getItem("geti_logged_in") === "true"){
         document.getElementById("studentApp").classList.add("active");
         hideMainSite(true);
@@ -3449,7 +3412,6 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
         .forEach(el => el.style.display = hide ? "none" : "");
     }
     function openAuth(mode){
-      closePublicSingleView();
       document.body.classList.add("geti-auth-view");
       hideMainSite(true);
       document.getElementById("studentApp").classList.remove("active");
@@ -7037,52 +6999,5 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
     });
 </script>
 <script>document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('img').forEach((img)=>{img.addEventListener('error',()=>{if(img.dataset.getiFallback)return;img.dataset.getiFallback='1';img.alt='University students';img.src='https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg?auto=compress&cs=tinysrgb&w=1200';});});});
-    /* GETI single-view navigation:
-       clicking an internal public navigation button/link shows only its destination. */
-    function openPublicSingleView(targetId){
-      if(!targetId || targetId === "home"){
-        closePublicSingleView();
-        return;
-      }
-      const target = document.getElementById(targetId);
-      if(!target) return;
-
-      document.querySelectorAll("body > section.geti-single-target")
-        .forEach(el => el.classList.remove("geti-single-target"));
-
-      target.classList.add("geti-single-target");
-      document.body.classList.add("geti-public-single-view");
-      window.scrollTo(0,0);
-    }
-
-    function closePublicSingleView(){
-      document.body.classList.remove("geti-public-single-view");
-      document.querySelectorAll(".geti-single-target")
-        .forEach(el => el.classList.remove("geti-single-target"));
-      if(location.hash && location.hash !== "#home"){
-        try{ history.replaceState(null, "", location.pathname + location.search + "#home"); }catch(e){}
-      }
-      window.scrollTo(0,0);
-    }
-
-    document.addEventListener("click", function(event){
-      const link = event.target.closest('a[href^="#"]');
-      if(!link) return;
-
-      const href = link.getAttribute("href");
-      if(!href || href === "#" || href === "#home") return;
-
-      const id = href.slice(1);
-      const target = document.getElementById(id);
-      if(!target) return;
-
-      /* Do not interfere with auth or app-internal controls. */
-      if(link.closest("#authPage") || link.closest("#studentApp")) return;
-
-      event.preventDefault();
-      openPublicSingleView(id);
-      try{ history.replaceState(null, "", "#" + id); }catch(e){}
-    }, true);
-
 </script></body>
 </html>
