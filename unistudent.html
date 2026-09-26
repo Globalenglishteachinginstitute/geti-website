@@ -2177,8 +2177,9 @@
 
 </style>
 
-<style id="first-area-separation">
-#studentApp{display:none !important}
+<style id="second-area-separation">
+body > header, body > main, body > footer, #authPage {display:none !important}
+#studentApp{display:block !important}
 </style>
 </head>
 <body>
@@ -10079,7 +10080,9 @@
     
     function goHomeIfLoggedOut(){
       if(localStorage.getItem("geti_logged_in") === "true"){
-        window.location.href = "student-area.html";
+        document.getElementById("studentApp").classList.add("active");
+        hideMainSite(true);
+        showScreen("dashboardScreen");
         return false;
       }
       return true;
@@ -10677,7 +10680,11 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
       if(nameEl) nameEl.textContent = account.name;
       if(programEl) programEl.textContent = account.program || "GETI University";
 
-      window.location.href = "student-area.html";
+      document.getElementById("authPage").classList.remove("active");
+      document.getElementById("studentApp").classList.add("active");
+      hideMainSite(true);
+      showScreen("dashboardScreen");
+      window.scrollTo(0,0);
     }
 
     async function enterStudentPortal(mode, event){
@@ -10765,10 +10772,7 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
       localStorage.removeItem("geti_logged_in");
       localStorage.removeItem("geti_session_email");
       localStorage.removeItem("geti_last_screen");
-      document.getElementById("studentApp").classList.remove("active");
-      document.getElementById("authPage").classList.remove("active");
-      hideMainSite(false);
-      window.scrollTo(0,0);
+      window.location.href = "index.html";
     }
     function showScreen(id, navEl){
       document.querySelectorAll("#studentApp .screen").forEach(s => s.classList.remove("active"));
@@ -11834,6 +11838,29 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
     });
   }
   document.querySelectorAll("img").forEach(protectImage);
+})();
+</script>
+
+
+<script id="student-area-access-guard">
+(function(){
+  if(localStorage.getItem("geti_logged_in") !== "true"){
+    window.location.replace("index.html");
+    return;
+  }
+  document.addEventListener("DOMContentLoaded", function(){
+    var app = document.getElementById("studentApp");
+    if(app) app.classList.add("active");
+    var name = localStorage.getItem("geti_student_name") || "Student";
+    var program = localStorage.getItem("geti_student_program") || "GETI University";
+    var email = localStorage.getItem("geti_student_email") || "";
+    var nameEl = document.getElementById("portalStudentName");
+    var programEl = document.getElementById("portalProgram");
+    var sideEl = document.getElementById("sidebarStudentIdentity");
+    if(nameEl) nameEl.textContent = name;
+    if(programEl) programEl.textContent = program;
+    if(sideEl) sideEl.textContent = email || "Private Academic Area";
+  });
 })();
 </script>
 
