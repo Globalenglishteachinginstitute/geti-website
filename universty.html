@@ -14120,6 +14120,17 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
       }
     });
 
-  </script>
+  
+    // Image loading protection: hide broken-image text if an external/local image fails.
+    document.addEventListener("DOMContentLoaded", function(){
+      document.querySelectorAll("img").forEach(function(img){
+        img.addEventListener("error", function(){
+          this.alt = "";
+          this.style.background = "linear-gradient(135deg,#eef3f8,#dbe5ef)";
+        });
+      });
+    });
+
+</script>
 </body>
 </html>
