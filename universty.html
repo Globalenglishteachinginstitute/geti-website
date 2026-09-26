@@ -2288,6 +2288,158 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
   }
 </style>
 
+
+<style id="geti-second-area-dashboard-theme">
+/* ===== SECOND AREA ONLY — dashboard reference styling ===== */
+#studentApp{
+  --dash-navy:#0d3152;
+  --dash-navy-2:#123d63;
+  --dash-blue:#2475ee;
+  --dash-green:#10ad67;
+  --dash-purple:#8847e8;
+  --dash-orange:#ff791f;
+  --dash-bg:#f3f7fb;
+  --dash-border:#dfe8f1;
+  --dash-text:#102640;
+  --dash-muted:#63768b;
+  background:var(--dash-bg)!important;
+  color:var(--dash-text)!important;
+  min-height:100vh!important;
+}
+#studentApp .app-topbar,
+#studentApp .portal-topbar,
+#studentApp .student-topbar{
+  background:linear-gradient(100deg,var(--dash-navy),var(--dash-navy-2))!important;
+  color:#fff!important;
+  border:0!important;
+  box-shadow:0 2px 10px rgba(10,38,65,.14)!important;
+}
+#studentApp .app-topbar *,
+#studentApp .portal-topbar *,
+#studentApp .student-topbar *{color:#fff!important}
+
+#studentApp .app-shell,
+#studentApp .portal-shell,
+#studentApp .student-shell{
+  background:var(--dash-bg)!important;
+}
+#studentApp .app-sidebar,
+#studentApp .portal-sidebar,
+#studentApp .student-sidebar,
+#studentApp aside{
+  background:linear-gradient(180deg,#103858 0%,#0a2b49 100%)!important;
+  color:#eaf3fb!important;
+  border:0!important;
+}
+#studentApp .app-sidebar a,
+#studentApp .portal-sidebar a,
+#studentApp .student-sidebar a,
+#studentApp aside a,
+#studentApp aside button{
+  color:#eaf3fb!important;
+  border-radius:8px!important;
+}
+#studentApp .app-sidebar a:hover,
+#studentApp .portal-sidebar a:hover,
+#studentApp .student-sidebar a:hover,
+#studentApp aside a:hover,
+#studentApp aside button:hover,
+#studentApp .app-sidebar .active,
+#studentApp .portal-sidebar .active,
+#studentApp .student-sidebar .active,
+#studentApp aside .active{
+  background:#2475ee!important;
+  color:#fff!important;
+}
+
+#studentApp .screen{
+  background:var(--dash-bg)!important;
+}
+#studentApp .screen.active{
+  display:block!important;
+}
+#studentApp .card,
+#studentApp .panel,
+#studentApp .portal-card,
+#studentApp .dashboard-card,
+#studentApp .stat-card,
+#studentApp .table-wrap{
+  background:#fff!important;
+  border:1px solid var(--dash-border)!important;
+  border-radius:12px!important;
+  box-shadow:0 5px 16px rgba(22,54,85,.055)!important;
+}
+#studentApp h1,#studentApp h2,#studentApp h3,#studentApp h4{
+  color:var(--dash-text)!important;
+}
+#studentApp p,#studentApp .muted,#studentApp small{
+  color:var(--dash-muted);
+}
+#studentApp input,#studentApp select,#studentApp textarea{
+  background:#fff!important;
+  border:1px solid #ccd9e5!important;
+  border-radius:8px!important;
+  color:var(--dash-text)!important;
+}
+#studentApp table{
+  background:#fff!important;
+}
+#studentApp th{
+  background:#edf4fb!important;
+  color:var(--dash-navy)!important;
+}
+#studentApp .progress,
+#studentApp progress{
+  accent-color:var(--dash-blue)!important;
+}
+
+/* Main dashboard action buttons — same palette as reference */
+#studentApp #dashboardScreen .btn,
+#studentApp #dashboardScreen button{
+  border-radius:9px!important;
+  font-weight:800!important;
+}
+#studentApp #dashboardScreen .btn-primary{
+  background:var(--dash-blue)!important;
+  border-color:var(--dash-blue)!important;
+  color:#fff!important;
+}
+
+/* Color the first four prominent dashboard action cards/buttons */
+#studentApp #dashboardScreen .quick-actions > *:nth-child(1),
+#studentApp #dashboardScreen .dashboard-actions > *:nth-child(1),
+#studentApp #dashboardScreen .action-grid > *:nth-child(1){background:var(--dash-blue)!important;color:#fff!important}
+#studentApp #dashboardScreen .quick-actions > *:nth-child(2),
+#studentApp #dashboardScreen .dashboard-actions > *:nth-child(2),
+#studentApp #dashboardScreen .action-grid > *:nth-child(2){background:var(--dash-green)!important;color:#fff!important}
+#studentApp #dashboardScreen .quick-actions > *:nth-child(3),
+#studentApp #dashboardScreen .dashboard-actions > *:nth-child(3),
+#studentApp #dashboardScreen .action-grid > *:nth-child(3){background:var(--dash-purple)!important;color:#fff!important}
+#studentApp #dashboardScreen .quick-actions > *:nth-child(4),
+#studentApp #dashboardScreen .dashboard-actions > *:nth-child(4),
+#studentApp #dashboardScreen .action-grid > *:nth-child(4){background:var(--dash-orange)!important;color:#fff!important}
+
+/* Never show the public first-area hero inside the student portal. */
+#studentApp .geti-first-hero,
+#studentApp #home,
+#studentApp #public-home,
+#studentApp [class*="first-area-rich-hero"]{
+  display:none!important;
+}
+@media(max-width:900px){
+  #studentApp .app-sidebar,
+  #studentApp .portal-sidebar,
+  #studentApp .student-sidebar,
+  #studentApp aside{background:#0d3152!important}
+}
+</style>
+
+
+<style>
+@media(max-width:850px){#studentApp .dashboard-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:520px){#studentApp .dashboard-actions{grid-template-columns:1fr!important}}
+</style>
+
 </head>
 <body>
 <div class="geti-mini">
@@ -2680,6 +2832,13 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 </aside>
 <main class="app-main">
 <div class="screen active" id="dashboardScreen">
+<div class="dashboard-actions" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:18px 0 22px">
+  <button type="button" onclick="showScreen('coursesScreen')" style="background:#2475ee;color:#fff;border:0;border-radius:10px;padding:18px;text-align:left;cursor:pointer"><strong>Continue Learning</strong><br><small style="color:#eaf3ff">Access your current courses</small></button>
+  <button type="button" onclick="showScreen('examsScreen')" style="background:#10ad67;color:#fff;border:0;border-radius:10px;padding:18px;text-align:left;cursor:pointer"><strong>Take an Exam</strong><br><small style="color:#edfff7">View and start exams</small></button>
+  <button type="button" onclick="showScreen('resultsScreen')" style="background:#8847e8;color:#fff;border:0;border-radius:10px;padding:18px;text-align:left;cursor:pointer"><strong>View Results</strong><br><small style="color:#f5efff">Check your progress</small></button>
+  <button type="button" onclick="showScreen('diplomaScreen')" style="background:#ff791f;color:#fff;border:0;border-radius:10px;padding:18px;text-align:left;cursor:pointer"><strong>Diploma Services</strong><br><small style="color:#fff3ea">Access diploma services</small></button>
+</div>
+
 <div class="panel" style="min-height:72vh">
 <div class="kicker">Student Portal</div>
 <h2 style="color:#082e5d;margin-top:6px">Student Dashboard</h2>
