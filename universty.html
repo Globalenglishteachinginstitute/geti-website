@@ -2176,6 +2176,31 @@
     }
 
 </style>
+
+<style id="geti-premium-visual-refresh">
+:root{
+  --geti-navy:#06294b; --geti-blue:#0967d8; --geti-gold:#e6a72f;
+  --geti-ink:#0a2746; --geti-soft:#f4f8fc; --geti-white:#fff;
+}
+body{background:#fff;color:var(--geti-ink)}
+header,.site-header{background:#fff!important;box-shadow:0 3px 18px rgba(6,41,75,.09)}
+nav a,.nav-link{font-weight:700}
+.btn-primary{background:var(--geti-blue)!important;border-color:var(--geti-blue)!important}
+.btn-primary:hover{filter:brightness(.92);transform:translateY(-1px)}
+.hero,.hero-section,#hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(90deg,rgba(3,31,57,.92) 0%,rgba(3,31,57,.76) 42%,rgba(3,31,57,.10) 76%)!important;
+  min-height:500px;
+}
+.hero h1,.hero-section h1,#hero h1{font-size:clamp(42px,5.5vw,76px)!important;line-height:1.02!important;font-weight:900!important;letter-spacing:-2px}
+.hero p,.hero-section p,#hero p{font-size:18px;line-height:1.55}
+.card,.faculty-card,.program-card{border-radius:14px!important;overflow:hidden;box-shadow:0 8px 26px rgba(6,41,75,.09)!important;border:1px solid #e5edf5!important}
+.card img,.faculty-card img,.program-card img{object-fit:cover}
+section{scroll-margin-top:90px}
+input,select{border-radius:9px!important}
+.stats,.stat-strip,.stats-section{background:#f5f9fd!important}
+</style>
+
 </head>
 <body>
 <div class="geti-mini">
@@ -2341,7 +2366,7 @@
 </figure>
 <div class="public-photo-stack">
 <figure><img alt="Students on campus" decoding="async" loading="lazy" src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695b1e5ad453321e3979e506/d85ee7609_students.png"/></figure>
-<figure><img alt="Books and reading in education" decoding="async" loading="lazy" src="https://media.easy-peasy.ai/d7c7c839-4df1-4b14-8d68-75c4b2d1cefd/1bcc6d35-d3f0-47ed-b116-8ab8651411c8_medium.webp"/></figure>
+<figure><img alt="University students" decoding="async" loading="lazy" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1400&q=85"/></figure>
 </div>
 </div>
 </div>
@@ -2434,7 +2459,7 @@
 <p>From early coursework to L3 project work and M2 thesis preparation, students can progressively build research skills and academic writing habits.</p>
 </article>
 <article class="public-experience-card">
-<figure><img alt="Education technology and digital learning" decoding="async" loading="lazy" src="https://media.nature.com/lw767/magazine-assets/d41586-021-02983-9/d41586-021-02983-9_19795318.jpg"/></figure>
+<figure><img alt="University students" decoding="async" loading="lazy" src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=85"/></figure>
 <h3>Digital Learning Tools</h3>
 <p>The platform can host PDF lessons, books, references, announcements, assessments, feedback and academic records in one organized environment.</p>
 </article>
@@ -11815,7 +11840,27 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
           <div class="box"><h2>Lesson Content</h2><p>This lesson page is the PDF-ready lesson template for ${lmsEscape(ctx.subjectName)}. Teachers can upload the full official PDF from the Teacher Dashboard.</p></div>
           <div class="box"><h2>Practice</h2><p>1. Define three key terms. 2. Give one applied example. 3. Explain one method or process. 4. Write a short conclusion.</p></div>
           <button onclick="window.print()">Print / Save as PDF</button>
-          </body></html>`);
+          
+<script id="geti-image-fallback">
+(function(){
+ const fallbacks=[
+  "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1400&q=85",
+  "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=1200&q=85"
+ ];
+ document.querySelectorAll("img").forEach(function(img,i){
+   img.addEventListener("error",function(){
+     if(this.dataset.getiFallback==="1"){ this.alt=""; return; }
+     this.dataset.getiFallback="1";
+     this.alt="University students";
+     this.src=fallbacks[i%fallbacks.length];
+   });
+ });
+})();
+</script>
+
+</body></html>`);
         w.document.close();
       }
       renderUniversitySubjectCourse();
