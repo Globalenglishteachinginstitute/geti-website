@@ -2288,8 +2288,46 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
   }
 </style>
 
+
+<style id="geti-single-view-mode">
+  body.geti-public-single-view > .topbar,
+  body.geti-public-single-view > nav.nav,
+  body.geti-public-single-view > header,
+  body.geti-public-single-view > section,
+  body.geti-public-single-view > footer{
+    display:none !important;
+  }
+  body.geti-public-single-view > section.geti-single-target{
+    display:block !important;
+    min-height:100vh;
+    padding-top:34px !important;
+  }
+  #getiSingleBack{
+    display:none;
+    position:fixed;
+    top:16px;
+    left:16px;
+    z-index:100000;
+    border:1px solid #d6e0ea;
+    background:#fff;
+    color:#0b2b4c;
+    border-radius:9px;
+    padding:10px 15px;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 8px 24px rgba(15,39,64,.12);
+  }
+  body.geti-public-single-view #getiSingleBack{display:block}
+  @media(max-width:700px){
+    body.geti-public-single-view > section.geti-single-target{padding-top:72px !important}
+    #getiSingleBack{top:10px;left:10px}
+  }
+</style>
+
 </head>
 <body>
+<button id="getiSingleBack" type="button" onclick="closePublicSingleView()">← Back to GETI</button>
+
 <div class="geti-mini">
 <div class="container">
 <span>GETI Academic Platform</span>
@@ -2609,21 +2647,6 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 <div aria-live="polite" class="auth-status" id="signinStatus" role="alert"></div>
 <div class="form-group"><label for="signinEmail">Email Address</label><input autocomplete="email" id="signinEmail" placeholder="student@example.com" required="" type="email"/></div>
 <div class="form-group"><label for="signinPassword">Password</label><div class="password-row"><input autocomplete="current-password" id="signinPassword" minlength="6" placeholder="••••••••" required="" type="password"/><button class="password-toggle" onclick="togglePassword('signinPassword',this)" type="button">Show</button></div></div>
-<div style="text-align:right;margin:-4px 0 14px">
-<button type="button" onclick="openForgotPassword()" style="border:0;background:transparent;color:var(--blue);font-size:13px;font-weight:800;cursor:pointer;padding:2px 0">Forgot Password?</button>
-</div>
-<div id="forgotPasswordBox" class="hidden" style="margin:0 0 16px;padding:16px;border:1px solid #d9e2ec;border-radius:10px;background:#f8fbff">
-<h3 style="margin:0 0 12px;color:var(--navy);font-size:18px">Reset Password</h3>
-<div class="form-group"><label for="forgotEmail">Email Address</label><input id="forgotEmail" autocomplete="email" type="email" placeholder="student@example.com"/></div>
-<div class="form-group"><label for="forgotNewPassword">New Password</label><div class="password-row"><input id="forgotNewPassword" autocomplete="new-password" minlength="6" type="password" placeholder="Minimum 6 characters"/><button class="password-toggle" onclick="togglePassword('forgotNewPassword',this)" type="button">Show</button></div></div>
-<div class="form-group"><label for="forgotConfirmPassword">Confirm New Password</label><div class="password-row"><input id="forgotConfirmPassword" autocomplete="new-password" minlength="6" type="password" placeholder="Repeat new password"/><button class="password-toggle" onclick="togglePassword('forgotConfirmPassword',this)" type="button">Show</button></div></div>
-<div id="forgotStatus" class="auth-status" role="alert" aria-live="polite"></div>
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<button class="btn btn-primary" type="button" onclick="resetLocalPassword()">Reset Password</button>
-<button class="btn" type="button" onclick="closeForgotPassword()">Cancel</button>
-</div>
-</div>
-
 <button class="btn btn-primary" style="width:100%" type="submit">Sign In and Continue</button>
 <p class="auth-note">Use the email address and password you created on this browser.</p>
 </form>
@@ -2915,6 +2938,7 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 
     
     function goHomeIfLoggedOut(){
+      closePublicSingleView();
       if(localStorage.getItem("geti_logged_in") === "true"){
         document.getElementById("studentApp").classList.add("active");
         hideMainSite(true);
@@ -3425,6 +3449,7 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
         .forEach(el => el.style.display = hide ? "none" : "");
     }
     function openAuth(mode){
+      closePublicSingleView();
       document.body.classList.add("geti-auth-view");
       hideMainSite(true);
       document.getElementById("studentApp").classList.remove("active");
@@ -4677,150 +4702,7 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
           <div class="box"><h2>Lesson Content</h2><p>This lesson page is the PDF-ready lesson template for ${lmsEscape(ctx.subjectName)}. Teachers can upload the full official PDF from the Teacher Dashboard.</p></div>
           <div class="box"><h2>Practice</h2><p>1. Define three key terms. 2. Give one applied example. 3. Explain one method or process. 4. Write a short conclusion.</p></div>
           <button onclick="window.print()">Print / Save as PDF</button>
-          
-<style id="geti-single-view-style">
-  body.geti-single-view header,
-  body.geti-single-view footer,
-  body.geti-single-view main > section,
-  body.geti-single-view main > div,
-  body.geti-single-view > section {
-    display:none !important;
-  }
-  body.geti-single-view .geti-current-view {
-    display:block !important;
-  }
-  body.geti-single-view header.geti-keep-nav {
-    display:block !important;
-  }
-</style>
-<script id="geti-single-view-navigation">
-(function(){
-  function resolveTarget(hash){
-    if(!hash || hash === "#") return null;
-    try { return document.querySelector(hash); } catch(e) { return null; }
-  }
-
-  function topLevelView(el){
-    if(!el) return null;
-    var node = el;
-    while(node && node.parentElement){
-      if(node.tagName === "SECTION") return node;
-      if(node.parentElement.tagName === "MAIN") return node;
-      node = node.parentElement;
-    }
-    return el;
-  }
-
-  function clearSingleView(){
-    document.body.classList.remove("geti-single-view");
-    document.querySelectorAll(".geti-current-view").forEach(function(el){
-      el.classList.remove("geti-current-view");
-    });
-  }
-
-  function showOnlyTarget(target){
-    if(!target) return false;
-
-    /* Auth/student app already have their own dedicated view logic. */
-    if(target.id === "authPage" || target.closest("#authPage") ||
-       target.id === "studentApp" || target.closest("#studentApp")){
-      return false;
-    }
-
-    var view = topLevelView(target);
-    if(!view) return false;
-
-    document.querySelectorAll(".geti-current-view").forEach(function(el){
-      el.classList.remove("geti-current-view");
-    });
-    document.body.classList.add("geti-single-view");
-    view.classList.add("geti-current-view");
-    view.scrollIntoView({behavior:"smooth", block:"start"});
-    return true;
-  }
-
-  document.addEventListener("click", function(e){
-    var link = e.target.closest("a[href],button");
-    if(!link) return;
-
-    /* Do not interfere with auth controls, forms, dashboard buttons, or explicit JS actions. */
-    if(link.closest("#authPage") || link.closest("#studentApp")) return;
-    if(link.getAttribute("onclick")) return;
-
-    if(link.tagName === "A"){
-      var href = link.getAttribute("href") || "";
-
-      /* Home/top links restore the normal public first page. */
-      if(href === "#" || href === "#home" || href === "#top"){
-        clearSingleView();
-        return;
-      }
-
-      if(href.charAt(0) === "#"){
-        var target = resolveTarget(href);
-        if(target){
-          e.preventDefault();
-          showOnlyTarget(target);
-          history.replaceState(null, "", href);
-        }
-      }
-    }
-  });
-
-  /* Browser Back/Forward follows the same one-section rule. */
-  window.addEventListener("hashchange", function(){
-    var hash = location.hash;
-    if(!hash || hash === "#home" || hash === "#top"){
-      clearSingleView();
-      return;
-    }
-    var target = resolveTarget(hash);
-    if(target) showOnlyTarget(target);
-  });
-
-  window.getiShowPublicHome = clearSingleView;
-})();
-</script>
-
-
-<script id="geti-forgot-password">
-function openForgotPassword(){
-  var box=document.getElementById("forgotPasswordBox");
-  if(!box)return;
-  box.classList.remove("hidden");
-  var a=document.getElementById("signinEmail"), b=document.getElementById("forgotEmail");
-  if(a&&b&&a.value)b.value=a.value;
-  clearAuthStatus("forgotStatus");
-}
-function closeForgotPassword(){
-  var box=document.getElementById("forgotPasswordBox");
-  if(box)box.classList.add("hidden");
-  ["forgotNewPassword","forgotConfirmPassword"].forEach(function(id){var e=document.getElementById(id);if(e)e.value="";});
-  clearAuthStatus("forgotStatus");
-}
-async function resetLocalPassword(){
-  clearAuthStatus("forgotStatus");
-  var email=normalizeEmail(document.getElementById("forgotEmail").value);
-  var password=document.getElementById("forgotNewPassword").value;
-  var confirm=document.getElementById("forgotConfirmPassword").value;
-  if(!validEmail(email)){showAuthStatus("forgotStatus","Please enter a valid email address.","error");return;}
-  if(password.length<6){showAuthStatus("forgotStatus","New password must contain at least 6 characters.","error");return;}
-  if(password!==confirm){showAuthStatus("forgotStatus","Passwords do not match.","error");return;}
-  var accounts=getLocalAccounts();
-  var index=accounts.findIndex(function(a){return normalizeEmail(a.email)===email;});
-  if(index<0){showAuthStatus("forgotStatus","No account was found for this email.","error");return;}
-  accounts[index].passwordHash=await passwordDigest(password);
-  accounts[index].passwordUpdatedAt=new Date().toISOString();
-  saveLocalAccounts(accounts);
-  var signinEmail=document.getElementById("signinEmail");
-  if(signinEmail)signinEmail.value=email;
-  document.getElementById("forgotNewPassword").value="";
-  document.getElementById("forgotConfirmPassword").value="";
-  showAuthStatus("forgotStatus","Password reset successfully. You can now sign in.","success");
-}
-</script>
-
-</body></html>`);
+          </body></html>`);
         w.document.close();
       }
       renderUniversitySubjectCourse();
@@ -7154,5 +7036,53 @@ async function resetLocalPassword(){
       });
     });
 </script>
-<script>document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('img').forEach((img)=>{img.addEventListener('error',()=>{if(img.dataset.getiFallback)return;img.dataset.getiFallback='1';img.alt='University students';img.src='https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg?auto=compress&cs=tinysrgb&w=1200';});});});</script></body>
+<script>document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('img').forEach((img)=>{img.addEventListener('error',()=>{if(img.dataset.getiFallback)return;img.dataset.getiFallback='1';img.alt='University students';img.src='https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg?auto=compress&cs=tinysrgb&w=1200';});});});
+    /* GETI single-view navigation:
+       clicking an internal public navigation button/link shows only its destination. */
+    function openPublicSingleView(targetId){
+      if(!targetId || targetId === "home"){
+        closePublicSingleView();
+        return;
+      }
+      const target = document.getElementById(targetId);
+      if(!target) return;
+
+      document.querySelectorAll("body > section.geti-single-target")
+        .forEach(el => el.classList.remove("geti-single-target"));
+
+      target.classList.add("geti-single-target");
+      document.body.classList.add("geti-public-single-view");
+      window.scrollTo(0,0);
+    }
+
+    function closePublicSingleView(){
+      document.body.classList.remove("geti-public-single-view");
+      document.querySelectorAll(".geti-single-target")
+        .forEach(el => el.classList.remove("geti-single-target"));
+      if(location.hash && location.hash !== "#home"){
+        try{ history.replaceState(null, "", location.pathname + location.search + "#home"); }catch(e){}
+      }
+      window.scrollTo(0,0);
+    }
+
+    document.addEventListener("click", function(event){
+      const link = event.target.closest('a[href^="#"]');
+      if(!link) return;
+
+      const href = link.getAttribute("href");
+      if(!href || href === "#" || href === "#home") return;
+
+      const id = href.slice(1);
+      const target = document.getElementById(id);
+      if(!target) return;
+
+      /* Do not interfere with auth or app-internal controls. */
+      if(link.closest("#authPage") || link.closest("#studentApp")) return;
+
+      event.preventDefault();
+      openPublicSingleView(id);
+      try{ history.replaceState(null, "", "#" + id); }catch(e){}
+    }, true);
+
+</script></body>
 </html>
