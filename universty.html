@@ -2180,6 +2180,17 @@
     .private-area-level-buttons{display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px}
     .private-area-level-buttons button{width:100%;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.10);color:#fff;border-radius:9px;padding:10px 12px;font-weight:700;text-align:left;cursor:pointer;transition:.18s ease}
     .private-area-level-buttons button:hover,.private-area-level-buttons button:focus{background:#fff;color:#082e5d;border-color:#fff;outline:none}
+
+    .academic-level-home{display:flex;align-items:center;justify-content:center}
+    .academic-level-home-inner{width:min(980px,100%);text-align:center;padding:34px 0}
+    .academic-level-home-inner h2{color:#082e5d;margin:8px 0 10px;font-size:clamp(30px,4vw,46px)}
+    .academic-level-home-inner>p{color:#6b7c8e;margin:0 auto 28px}
+    .academic-level-home-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .academic-level-home-grid button{min-height:180px;border:1px solid #dbe6f0;background:#fff;border-radius:16px;padding:28px 20px;cursor:pointer;box-shadow:0 10px 30px rgba(7,43,84,.08);transition:.2s ease;text-align:center}
+    .academic-level-home-grid button:hover,.academic-level-home-grid button:focus{transform:translateY(-4px);border-color:#1680e9;box-shadow:0 16px 38px rgba(7,43,84,.14);outline:none}
+    .academic-level-home-grid strong{display:block;color:#082e5d;font-size:24px;margin-bottom:9px}
+    .academic-level-home-grid span{display:block;color:#6b7c8e;font-size:14px}
+    @media(max-width:760px){.academic-level-home-grid{grid-template-columns:1fr}.academic-level-home-grid button{min-height:125px}}
 </style>
 <style>
 /* ===== GETI PREMIUM UI — reference mockup inspired ===== */
@@ -2656,14 +2667,10 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 <div class="student-sidebar-head">
 <strong>Student Portal</strong>
 <span id="sidebarStudentIdentity">Private Academic Area</span>
-<div class="private-area-level-buttons" aria-label="Academic level selection">
-<button type="button" onclick="showScreen('baccalaureatScreen');closePortalMenu();">Baccalaureat</button>
-<button type="button" onclick="showScreen('universityScreen');closePortalMenu();">Bachelor</button>
-<button type="button" onclick="showScreen('universityScreen');closePortalMenu();">Master</button>
-</div>
+
 </div>
 <div class="sidebar-section-title">Overview</div>
-<a class="active" href="#" onclick="showScreen('studentInformationSystemScreen',this);renderStudentInformationSystem();closePortalMenu();return false;">My Profile and Status</a>
+<a class="active" href="#" onclick="showScreen('studentInformationSystemScreen',this);renderStudentInformationSystem();closePortalMenu();return false;">Academic Levels</a>
 <a href="#" onclick="showScreen('notificationCenterScreen',this);renderNotificationCenter();closePortalMenu();return false;">Notifications</a>
 <div class="sidebar-section-title">Academic Experience</div>
 <a href="#" onclick="showScreen('researchScreen',this);renderResearchSection();closePortalMenu();return false;">Research / Thesis</a>
@@ -9316,17 +9323,16 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 </div>
 </div>
 <div class="screen active" id="studentInformationSystemScreen">
-<div class="panel" style="min-height:72vh">
-<div class="kicker">Student Information System</div>
-<h2 style="color:#082e5d;margin-top:6px">Student Information System</h2>
-<div class="pro-kpi-grid" id="sisKpis"></div>
-<div class="pro-grid two" style="margin-top:18px">
-<section class="pro-card"><h3>Student Profile</h3><div id="sisStudentProfile"></div></section>
-<section class="pro-card"><h3>Registration and Academic Status</h3><div id="sisAcademicStatus"></div></section>
-<section class="pro-card"><h3>Current Subjects</h3><div id="sisCurrentSubjects"></div></section>
-<section class="pro-card"><h3>Progress and Results</h3><div id="sisProgressResults"></div></section>
-<section class="pro-card"><h3>Payments</h3><div id="sisPayments"></div></section>
-<section class="pro-card"><h3>Graduation Clearance</h3><div id="sisGraduationClearance"></div></section>
+<div class="panel academic-level-home" style="min-height:72vh">
+<div class="academic-level-home-inner">
+<div class="kicker">Private Academic Area</div>
+<h2>Choose Your Academic Level</h2>
+<p>Select the academic area you want to access.</p>
+<div class="academic-level-home-grid" aria-label="Academic level selection">
+<button type="button" onclick="showScreen('baccalaureatScreen')"><strong>Baccalaureat</strong><span>Open Baccalaureat area</span></button>
+<button type="button" onclick="showScreen('universityScreen')"><strong>Bachelor</strong><span>Open Bachelor area</span></button>
+<button type="button" onclick="showScreen('universityScreen')"><strong>Master</strong><span>Open Master area</span></button>
+</div>
 </div>
 </div>
 </div>
