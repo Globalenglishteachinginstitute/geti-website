@@ -2637,8 +2637,6 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 </div>
 </section>
 <section class="app-page" id="studentApp">
-<button class="geti-school-button" onclick="showScreen('schoolScreen')" type="button">GETI School</button>
-<button class="take-exam-button" onclick="showScreen('examScreen')" type="button">Take an Exam</button>
 <button aria-label="Open student menu" class="portal-menu-button" id="portalMenuButton" onclick="togglePortalMenu()" type="button">
 <span class="portal-menu-button-inner">
 <span></span>
@@ -2658,29 +2656,13 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 <a class="active" href="#" onclick="showScreen('dashboardScreen',this);renderStudentDashboard();closePortalMenu();return false;">Dashboard</a>
 <a href="#" onclick="showScreen('studentInformationSystemScreen',this);renderStudentInformationSystem();closePortalMenu();return false;">My Profile and Status</a>
 <a href="#" onclick="showScreen('notificationCenterScreen',this);renderNotificationCenter();closePortalMenu();return false;">Notifications</a>
-<div class="sidebar-section-title">Study</div>
-<a href="#" onclick="showScreen('schoolScreen',this);closePortalMenu();return false;">GETI School</a>
-<a href="#" onclick="showScreen('enrollmentScreen',this);renderEnrollment();closePortalMenu();return false;">Registration / Enrollment</a>
-<a href="#" onclick="showScreen('academicCalendarScreen',this);renderAcademicCalendar();closePortalMenu();return false;">Academic Calendar</a>
-<a href="#" onclick="showScreen('timetableScreen',this);renderTimetable();closePortalMenu();return false;">My Timetable</a>
-<a href="#" onclick="showScreen('courseCatalogueScreen',this);renderCourseCatalogue();closePortalMenu();return false;">Course Catalogue</a>
-<a href="#" onclick="showScreen('digitalLibraryScreen',this);renderDigitalLibrary();closePortalMenu();return false;">Digital Library</a>
-<div class="sidebar-section-title">Assessment and Results</div>
-<a href="#" onclick="showScreen('examScreen',this);closePortalMenu();return false;">Take an Exam</a>
-<a href="#" onclick="showScreen('gradebookScreen',this);renderProfessionalGradebook();closePortalMenu();return false;">My Gradebook</a>
-<a href="#" onclick="showScreen('resultsScreen',this);closePortalMenu();return false;">Exam Results</a>
-<a href="#" onclick="showScreen('transcriptScreen',this);renderTranscript();closePortalMenu();return false;">Transcript</a>
-<a href="#" onclick="showScreen('transcriptArchiveScreen',this);renderTranscriptArchive();closePortalMenu();return false;">Transcript Archive</a>
 <div class="sidebar-section-title">Academic Experience</div>
 <a href="#" onclick="showScreen('researchScreen',this);renderResearchSection();closePortalMenu();return false;">Research / Thesis</a>
 <a href="#" onclick="showScreen('internshipScreen',this);renderInternshipTracking();closePortalMenu();return false;">Internship / Stage</a>
-<a href="#" onclick="showScreen('paymentScreen',this);renderPayments();closePortalMenu();return false;">Payments</a>
-<a href="#" onclick="showScreen('officialDocumentsScreen',this);renderOfficialDocuments();closePortalMenu();return false;">Official Documents</a>
 <a href="#" onclick="showScreen('diplomaScreen',this);renderDiplomaCenter();closePortalMenu();return false;">Diploma Center</a>
 <div class="sidebar-section-title">Communication and Support</div>
 <a href="#" onclick="showScreen('announcementsScreen',this);renderAnnouncements();closePortalMenu();return false;">Announcements</a>
 <a href="#" onclick="showScreen('messagingScreen',this);renderMessaging();closePortalMenu();return false;">Messages</a>
-<a href="#" onclick="showScreen('helpDeskScreen',this);renderHelpDesk();closePortalMenu();return false;">Help Desk</a>
 <a href="#" onclick="showScreen('verificationScreen',this);renderVerificationPage();closePortalMenu();return false;">Document Verification</a>
 <div class="sidebar-section-title">Account</div>
 <a href="#" onclick="showScreen('studentIdScreen',this);renderStudentIdCard();closePortalMenu();return false;">Student ID Card</a>
@@ -2692,36 +2674,6 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 <div class="panel" style="min-height:72vh">
 <div class="kicker">Student Portal</div>
 <h2 style="color:#082e5d;margin-top:6px">Student Dashboard</h2>
-<p class="lms-muted">Lessons, assessments, credits, academic progress and diploma eligibility.</p>
-<div class="lms-stat-grid" id="studentDashboardStats"></div>
-<div class="student-quick-actions">
-<button onclick="showScreen('schoolScreen')" type="button"><strong>Continue Learning</strong><span>Open GETI School</span></button>
-<button onclick="showScreen('examScreen')" type="button"><strong>Take an Exam</strong><span>Assessment Center</span></button>
-<button onclick="showScreen('transcriptScreen');renderTranscript()" type="button"><strong>Transcript</strong><span>Grades and ECTS</span></button>
-<button onclick="showScreen('paymentScreen');renderPayments()" type="button"><strong>Payments</strong><span>Fees and status</span></button>
-<button onclick="showScreen('officialDocumentsScreen');renderOfficialDocuments()" type="button"><strong>Documents</strong><span>Official records</span></button>
-<button onclick="showScreen('helpDeskScreen');renderHelpDesk()" type="button"><strong>Support</strong><span>Help Desk</span></button>
-</div>
-<div class="lms-two-col">
-<section class="lms-card">
-<h3>Current Programme</h3>
-<div id="studentProgrammeSummary"></div>
-</section>
-<section class="lms-card">
-<h3>Academic Progress</h3>
-<div id="studentProgressSummary"></div>
-</section>
-</div>
-<div class="lms-two-col" style="margin-top:18px">
-<section class="lms-card">
-<h3>Next Actions</h3>
-<div id="studentNextActions"></div>
-</section>
-<section class="lms-card">
-<h3>Academic Requirements</h3>
-<div id="studentRequirementSummary"></div>
-</section>
-</div>
 </div>
 </div>
 <div class="screen" id="schoolScreen">
@@ -10673,12 +10625,16 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
       if(nameEl) nameEl.textContent = account.name;
       if(programEl) programEl.textContent = account.program || "GETI University";
 
-      document.getElementById("authPage").classList.remove("active");
+      const authPage = document.getElementById("authPage");
+      const studentApp = document.getElementById("studentApp");
+      if(authPage) authPage.classList.remove("active");
       document.body.classList.remove("geti-auth-view");
-      document.getElementById("studentApp").classList.add("active");
+      if(studentApp) studentApp.classList.add("active");
       hideMainSite(true);
+      localStorage.setItem("geti_last_screen", "dashboardScreen");
       try{ history.pushState({getiPortal:true}, "", location.href); }catch(e){}
       showScreen("dashboardScreen");
+      try{ renderStudentDashboard(); }catch(e){ console.warn("Dashboard render skipped:", e); }
       window.scrollTo(0,0);
     }
 
@@ -10802,12 +10758,20 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
       localStorage.removeItem("geti_logged_in");
       localStorage.removeItem("geti_session_email");
       localStorage.removeItem("geti_last_screen");
-      document.getElementById("studentApp").classList.remove("active");
-      document.getElementById("authPage").classList.remove("active");
-      document.body.classList.remove("geti-auth-view");
+
+      const studentApp = document.getElementById("studentApp");
+      const authPage = document.getElementById("authPage");
+      if(studentApp) studentApp.classList.remove("active");
       hideMainSite(false);
+
+      // Return explicitly to the Sign In screen after logout.
+      if(authPage) authPage.classList.add("active");
+      document.body.classList.add("geti-auth-view");
+      try{ switchAuth("signin"); }catch(e){}
+      const password = document.getElementById("signinPassword");
+      if(password) password.value = "";
       window.scrollTo(0,0);
-      setTimeout(function(){ getiLogoutInProgress = false; }, 0);
+      setTimeout(function(){ getiLogoutInProgress = false; }, 50);
     }
     function showScreen(id, navEl){
       document.querySelectorAll("#studentApp .screen").forEach(s => s.classList.remove("active"));
@@ -14222,8 +14186,12 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
       document.body.classList.remove("geti-auth-view");
         document.getElementById("studentApp").classList.add("active");
         try{ history.pushState({getiPortal:true}, "", location.href); }catch(e){}
-        const lastScreen = localStorage.getItem("geti_last_screen") || "schoolScreen";
-        showScreen(document.getElementById(lastScreen) ? lastScreen : "schoolScreen");
+        const lastScreen = localStorage.getItem("geti_last_screen") || "dashboardScreen";
+        const allowedScreen = document.getElementById(lastScreen) ? lastScreen : "dashboardScreen";
+        showScreen(allowedScreen === "schoolScreen" ? "dashboardScreen" : allowedScreen);
+        if(allowedScreen === "dashboardScreen" || allowedScreen === "schoolScreen"){
+          try{ renderStudentDashboard(); }catch(e){ console.warn("Dashboard render skipped:", e); }
+        }
         window.scrollTo(0,0);
       } else {
         document.getElementById("studentApp").classList.remove("active");
