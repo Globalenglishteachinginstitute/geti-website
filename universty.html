@@ -2703,31 +2703,6 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 <div class="panel" style="min-height:72vh">
 <div class="kicker">GETI Baccalaureat</div>
 <h2 style="color:#082e5d;margin-top:6px">Choose Your Baccalaureat Option</h2>
-<p style="color:#6b7c8e;margin:6px 0 20px">GETI Baccalaureat → Option → Subject → Lessons / Coursebook PDF</p>
-<div style="margin:0 0 24px;padding:14px 16px;border:1px solid #dce5ee;border-radius:10px;background:#f8fbfe;color:#44576a;font-size:13px;line-height:1.6">
-              All coursebook PDFs in this section are GETI Baccalaureat learning materials. They are organized by option and subject.
-            </div>
-<div class="bacc-stream-grid">
-<button class="bacc-stream-button" onclick="showScreen('literaryScreen')">
-                Literary
-                <small>Languages, literature and humanities</small>
-</button>
-<button class="bacc-stream-button" onclick="showScreen('scientificScreen')">
-                Scientific
-                <small>Mathematics, science and analytical studies</small>
-</button>
-<button class="bacc-stream-button" onclick="showScreen('economicsScreen')">
-                Economics and Society
-                <small>Economics, social studies and business foundations</small>
-</button>
-<button class="bacc-stream-button" onclick="showScreen('itScreen')">
-                IT and Computer Science
-                <small>Computing, digital systems and technology</small>
-</button>
-</div>
-<div style="margin-top:24px">
-<button class="btn btn-outline" onclick="showScreen('schoolScreen')">Back to GETI School</button>
-</div>
 </div>
 </div>
 <div class="screen" id="literaryScreen">
@@ -11882,30 +11857,62 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
  function save(x){localStorage.setItem(KEY,JSON.stringify(x))}
  function prog(){try{return JSON.parse(localStorage.getItem(PROG)||'{}')}catch(e){return {}}}
  function subjects(screenId){const s=document.getElementById(screenId);if(!s)return[];return [...s.querySelectorAll('.subject-button')].map(b=>({name:b.textContent.trim(),screen:(b.getAttribute('onclick')||'').match(/showScreen\\('([^']+)'\\)/)?.[1]})).filter(x=>x.screen)}
- function streamProgress(screenId){const ps=prog(), subs=subjects(screenId);let total=0,done=0;subs.forEach(s=>{const sc=document.getElementById(s.screen);if(!sc)return;const n=sc.querySelectorAll('.lesson-button').length;for(let i=1;i<=n;i++){total++;const id=uid()+'|'+s.screen+'|'+i;if(ps[id]&&ps[id].finished)done++}});return total?Math.round(done*100/total):0}
+ function subjectProgress(subjectScreen){const ps=prog(),sc=document.getElementById(subjectScreen);if(!sc)return 0;const n=sc.querySelectorAll('.lesson-button').length;if(!n)return 0;let done=0;for(let i=1;i<=n;i++){const id=uid()+'|'+subjectScreen+'|'+i;if(ps[id]&&ps[id].finished)done++}return Math.round(done*100/n)}
+ function streamProgress(screenId){const subs=subjects(screenId);if(!subs.length)return 0;return Math.round(subs.reduce((sum,s)=>sum+subjectProgress(s.screen),0)/subs.length)}
+ function streamEligibility(screenId){const subs=subjects(screenId);const rows=subs.map(s=>({name:s.name,screen:s.screen,progress:subjectProgress(s.screen)}));const average=rows.length?Math.round(rows.reduce((n,r)=>n+r.progress,0)/rows.length):0;return {rows,eligible:rows.length>0&&average>=50,average};}
  function coef(name,streamId){
-  const n=name.toLowerCase();
+  const n=(name||'').trim().toLowerCase();
+  // GETI Baccalaureat weighted coefficients: core/speciality subjects carry the highest weight.
+  // Literary keeps English at coefficient 6 as requested.
   const tables={
-    literaryScreen:[[/literature|philosophy|french/,5],[/history|geography|sociology|political/,4],[/english|german|italian/,3]],
-    scientificScreen:[[/mathemat|physics/,6],[/chemistry|biology/,5],[/computer|further mathematics/,4],[/english|french/,2]],
-    economicsScreen:[[/econom|account|financial mathematics/,6],[/management|business|statistic/,5],[/social|sociology|geography/,4],[/english|french/,2]],
-    itScreen:[[/computer|program|database|network|cyber|information technology|mathemat.*informatique/,6],[/web development|mathemat|statistic/,5],[/physics/,3],[/english|french|german|italian/,2]]
+    literaryScreen:[
+      [/^english$|english language|anglais/,6],
+      [/literature|litt[eé]rature|philosophy|philosophie/,5],
+      [/french|fran[cç]ais|history|histoire|geography|g[eé]ographie/,4],
+      [/sociology|sociologie|political|civics|civic|education civique/,3],
+      [/german|allemand|italian|italien|spanish|espagnol/,2]
+    ],
+    scientificScreen:[
+      [/mathemat|math[eé]mat/,6],
+      [/physics|physique/,6],
+      [/chemistry|chimie/,5],
+      [/biology|biologie|life.*earth|svt|science de la vie/,5],
+      [/computer|informatique|further mathematics/,4],
+      [/english|anglais|french|fran[cç]ais/,2],
+      [/history|histoire|geography|g[eé]ographie|philosophy|philosophie/,2]
+    ],
+    economicsScreen:[
+      [/econom|[eé]conomie/,6],
+      [/account|comptabilit|financial mathematics|math.*financ/,6],
+      [/management|gestion|business|commerce/,5],
+      [/statistic|statistique|mathemat|math[eé]mat/,4],
+      [/social|sociology|sociologie|geography|g[eé]ographie/,3],
+      [/english|anglais|french|fran[cç]ais|history|histoire|philosophy|philosophie/,2]
+    ],
+    itScreen:[
+      [/computer science|informatique|program|coding|algorithm/,6],
+      [/database|base de donn[eé]es|network|r[eé]seau|cyber|information technology/,6],
+      [/mathemat|math[eé]mat|web development|d[eé]veloppement web/,5],
+      [/statistic|statistique|physics|physique/,4],
+      [/english|anglais|french|fran[cç]ais/,2],
+      [/history|histoire|geography|g[eé]ographie|philosophy|philosophie/,2]
+    ]
   };
   const rules=tables[streamId]||[];
-  for(const [rx,c] of rules)if(rx.test(n))return c;
+  for(const [rx,c] of rules) if(rx.test(n)) return c;
   return 3;
 }
  function isCalc(name){return /mathemat|physics|chemistry|econom|account|statistic|finance/i.test(name)}
  function qset(name){const calc=isCalc(name), a=[];for(let i=1;i<=15;i++){if(calc && i%3===0){const x=i+2,y=i; a.push({q:`${name} calculation ${i}: If x = ${x} and y = ${y}, calculate x + 2y.`,opts:[String(x+2*y),String(x+y),String(2*x+y)],c:0});}else{a.push({q:`${name} — Question ${i}: Which answer best demonstrates correct understanding and application of the course content?`,opts:['Apply the relevant concept, method and evidence correctly','Ignore the course method and guess','Use information unrelated to the subject'],c:0});}}return a}
  function state(streamId){const all=load(),k=uid()+'|'+streamId;if(!all[k])all[k]={registered:false,registration:{},exams:{}};return [all,k,all[k]]}
- function ensureUI(screenId){const screen=document.getElementById(screenId);if(!screen||screen.dataset.bacExamReady)return;screen.dataset.bacExamReady='1';const panel=screen.querySelector('.panel')||screen;const box=document.createElement('div');box.className='geti-bac-exam-entry';box.innerHTML='<div class="geti-combined-progress-wrap"><div class="geti-combined-progress-head"><span>Combined Progress — 7 Subjects</span><span class="geti-combined-progress-percent">0%</span></div><div class="geti-combined-progress-track"><div class="geti-combined-progress-fill" style="width:0%"></div></div></div><div class="geti-bac-exam-progress"></div><button type="button" class="btn btn-primary geti-bac-exam-btn" hidden>Baccalaureat Exam</button><div class="geti-bac-exam-shell" hidden></div>';panel.appendChild(box);const btn=box.querySelector('.geti-bac-exam-btn');btn.onclick=()=>openExam(screenId,box.querySelector('.geti-bac-exam-shell'));refresh(screenId)}
- function refresh(screenId){const screen=document.getElementById(screenId);if(!screen)return;const p=streamProgress(screenId),info=screen.querySelector('.geti-bac-exam-progress'),btn=screen.querySelector('.geti-bac-exam-btn'),pct=screen.querySelector('.geti-combined-progress-percent'),fill=screen.querySelector('.geti-combined-progress-fill');if(pct)pct.textContent=p+'%';if(fill)fill.style.width=p+'%';if(info)info.textContent=p<50?'Continue lessons and exercises until the combined progress reaches 50%.':'50% requirement completed — Baccalaureat Exam unlocked.';if(btn){const rem=cooldownRemaining(screenId);btn.hidden=p<50||rem>0;if(rem>0&&info)info.textContent='Baccalaureat already passed — a new attempt is available after 7 months ('+formatRemaining(rem)+' remaining).';}}
- function openExam(streamId,shell){const rem=cooldownRemaining(streamId);if(rem>0){alert('This Baccalaureat has already been passed. You can take it again after 7 months. Remaining: '+formatRemaining(rem)+'.');return;}shell.hidden=false;const [all,k,st]=state(streamId);if(!st.registered){shell.innerHTML='<h3>Registration du Baccalaureat</h3><form class="geti-bac-reg"><input required name="name" placeholder="Full Name" value="'+(localStorage.getItem('geti_student_name')||'')+'"><input required name="dob" type="date"><input required name="candidate" placeholder="Candidate / Registration Number"><button class="btn btn-primary" type="submit">Complete Registration</button></form>';shell.querySelector('form').onsubmit=e=>{e.preventDefault();const fd=new FormData(e.target);st.registered=true;st.registration=Object.fromEntries(fd.entries());all[k]=st;save(all);openExam(streamId,shell)};return}renderSubjects(streamId,shell)}
+ function ensureUI(screenId){const screen=document.getElementById(screenId);if(!screen||screen.dataset.bacExamReady)return;screen.dataset.bacExamReady='1';const panel=screen.querySelector('.panel')||screen;const box=document.createElement('div');box.className='geti-bac-exam-entry';box.innerHTML='<div class="geti-combined-progress-wrap"><div class="geti-combined-progress-head"><span>Combined Progress — 50% required</span><span class="geti-combined-progress-percent">0% / 50%</span></div><div class="geti-combined-progress-track"><div class="geti-combined-progress-fill" style="width:0%"></div></div></div><div class="geti-bac-exam-progress"></div><button type="button" class="btn btn-primary geti-bac-exam-btn" hidden>Baccalaureat Exam</button><div class="geti-bac-exam-shell" hidden></div>';panel.appendChild(box);const btn=box.querySelector('.geti-bac-exam-btn');btn.onclick=()=>openExam(screenId,box.querySelector('.geti-bac-exam-shell'));refresh(screenId)}
+ function refresh(screenId){const screen=document.getElementById(screenId);if(!screen)return;const e=streamEligibility(screenId),p=e.average,info=screen.querySelector('.geti-bac-exam-progress'),btn=screen.querySelector('.geti-bac-exam-btn'),pct=screen.querySelector('.geti-combined-progress-percent'),fill=screen.querySelector('.geti-combined-progress-fill');if(pct)pct.textContent=p+'% / 50%';if(fill)fill.style.width=Math.min(100,(p/50)*100)+'%';if(info){const need=Math.max(0,50-p);info.innerHTML=e.eligible?'<strong>Combined Progress reached '+p+'% — Baccalaureat Exam unlocked.</strong>':'Combined Progress: <strong>'+p+'%</strong>. Continue learning and completing exercises. <strong>'+need+'%</strong> more required to unlock the Baccalaureat Exam.';}if(btn){const rem=cooldownRemaining(screenId);btn.hidden=!e.eligible||rem>0;if(rem>0&&info)info.textContent='Baccalaureat already passed — a new attempt is available after 7 months ('+formatRemaining(rem)+' remaining).';}}
+ function openExam(streamId,shell){const eligibility=streamEligibility(streamId);if(!eligibility.eligible){alert('Baccalaureat Exam is locked. Your Combined Progress must reach at least 50%. Continue learning and completing exercises.');return;}const rem=cooldownRemaining(streamId);if(rem>0){alert('This Baccalaureat has already been passed. You can take it again after 7 months. Remaining: '+formatRemaining(rem)+'.');return;}shell.hidden=false;const [all,k,st]=state(streamId);if(!st.registered){shell.innerHTML='<h3>Registration du Baccalaureat</h3><form class="geti-bac-reg"><input required name="name" placeholder="Full Name" value="'+(localStorage.getItem('geti_student_name')||'')+'"><input required name="dob" type="date"><input required name="candidate" placeholder="Candidate / Registration Number"><input required name="country" placeholder="Country"><input required name="school" placeholder="School / Centre"><button class="btn btn-primary" type="submit">Complete Registration</button></form>';shell.querySelector('form').onsubmit=e=>{e.preventDefault();const fd=new FormData(e.target);st.registered=true;st.registration=Object.fromEntries(fd.entries());all[k]=st;save(all);openExam(streamId,shell)};return}renderSubjects(streamId,shell)}
  function renderSubjects(streamId,shell){const [all,k,st]=state(streamId),subs=subjects(streamId);const finished=subs.every(s=>st.exams[s.screen]?.finished);if(finished)return renderResult(streamId,shell);shell.innerHTML='<h3>Baccalaureat Exam — '+streams[streamId]+'</h3><p>15 questions for each subject. Complete every subject to receive the final result.</p><div class="geti-bac-exam-subjects"></div><div class="geti-bac-exam-run"></div>';const grid=shell.querySelector('.geti-bac-exam-subjects');subs.forEach(s=>{const b=document.createElement('button');const d=st.exams[s.screen]?.finished;b.className=d?'done':'';b.textContent=s.name+(d?' — Completed':'');b.onclick=()=>runSubject(streamId,s,shell);grid.appendChild(b)})}
  function runSubject(streamId,sub,shell){const [all,k,st]=state(streamId);if(!st.exams[sub.screen])st.exams[sub.screen]={index:0,answers:{},finished:false,score:0};const ex=st.exams[sub.screen],qs=qset(sub.name),run=shell.querySelector('.geti-bac-exam-run')||shell;function draw(){if(ex.finished){renderSubjects(streamId,shell);return}const i=ex.index,q=qs[i],sel=ex.answers[i];run.innerHTML='<h3>'+sub.name+'</h3><p>Question '+(i+1)+' of 15</p><div class="geti-progress-track"><div class="geti-progress-fill" style="width:'+((i+1)/15*100)+'%"></div></div><div class="geti-bac-q"><b>'+q.q+'</b><div class="opts"></div></div><button class="btn btn-primary next" type="button">'+(i===14?'Finish Subject':'Save and Next')+'</button>';q.opts.forEach((t,j)=>{const b=document.createElement('button');b.type='button';b.className=sel===j?'selected':'';b.textContent=t;b.onclick=()=>{ex.answers[i]=j;all[k]=st;save(all);draw()};run.querySelector('.opts').appendChild(b)});run.querySelector('.next').onclick=()=>{if(ex.answers[i]===undefined){alert('Please answer this question first.');return}if(i===14){ex.finished=true;ex.score=qs.reduce((n,q,j)=>n+(ex.answers[j]===q.c?1:0),0)}else ex.index++;all[k]=st;save(all);draw()}}draw()}
  function resultData(streamId){const [, ,st]=state(streamId),subs=subjects(streamId);let weighted=0,cs=0;const rows=subs.map(s=>{const e=st.exams[s.screen]||{score:0},mark=e.score/15*20,c=coef(s.name,streamId),points=mark*c;weighted+=points;cs+=c;return{name:s.name,score:e.score,mark,c,points}});return{rows,avg:cs?weighted/cs:0,coefSum:cs}}
  function renderResult(streamId,shell){const r=resultData(streamId),pass=r.avg>=10;const [sla,slu,sls]=studentStreamLock();sls.completed[streamId]=true;if(pass&&!sls.passed[streamId])sls.passed[streamId]={passedAt:Date.now(),average:r.avg};if(sls.active===streamId)sls.active=null;sla[slu]=sls;streamLockSave(sla);updateStreamChoiceButtons();shell.innerHTML='<h3>Baccalaureat Result</h3><table class="geti-bac-result-table"><thead><tr><th>Subject</th><th>Score /15</th><th>Mark /20</th><th>Coefficient</th><th>Points</th></tr></thead><tbody>'+r.rows.map(x=>'<tr><td>'+x.name+'</td><td>'+x.score+'/15</td><td>'+x.mark.toFixed(2)+'/20</td><td>'+x.c+'</td><td>'+x.points.toFixed(2)+'</td></tr>').join('')+'</tbody></table><p><b>Total weighted points: '+r.rows.reduce((n,x)=>n+x.points,0).toFixed(2)+' &nbsp; | &nbsp; Total coefficients: '+r.coefSum+'<br>Weighted average = Σ(Mark × Coefficient) ÷ Σ(Coefficients) = '+r.avg.toFixed(2)+'/20</b></p><p class="'+(pass?'geti-bac-pass':'geti-bac-fail')+'">'+(pass?'PASSED':'FAILED')+'</p>'+(pass?'<button type="button" class="btn btn-primary geti-transcript-next">Next</button>':'');if(pass)shell.querySelector('.geti-transcript-next').onclick=()=>renderTranscript(streamId,shell,r)}
- function renderTranscript(streamId,shell,r){const [, ,st]=state(streamId);shell.innerHTML='<h3>Relevé de Baccalaureat</h3><p>This statement can be saved as PNG for university registration.</p><canvas id="getiBacTranscriptCanvas" width="1200" height="1500" style="max-width:100%;border:1px solid #dbe5ef"></canvas><p><button type="button" class="btn btn-primary dl">Download PNG</button></p>';const c=shell.querySelector('canvas'),x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.fillStyle='#123d63';x.font='bold 42px Arial';x.fillText('GETI — RELEVÉ DE BACCALAUREAT',70,90);x.font='24px Arial';x.fillStyle='#222';x.fillText('Student: '+(st.registration.name||''),70,150);x.fillText('Stream: '+streams[streamId],70,190);x.fillText('Candidate No: '+(st.registration.candidate||''),70,230);let y=310;x.font='bold 23px Arial';x.fillText('Subject',70,y);x.fillText('Mark /20',650,y);x.fillText('Coef.',900,y);x.font='22px Arial';r.rows.forEach(a=>{y+=55;x.fillText(a.name,70,y);x.fillText(a.mark.toFixed(2),650,y);x.fillText(String(a.c),900,y)});y+=90;x.font='bold 30px Arial';x.fillText('Weighted Average: '+r.avg.toFixed(2)+'/20',70,y);x.fillStyle='#087647';x.fillText('PASSED',70,y+55);x.fillStyle='#555';x.font='18px Arial';x.fillText('Generated by GETI Online Academic Platform',70,1400);shell.querySelector('.dl').onclick=()=>{const a=document.createElement('a');a.download='GETI_Baccalaureat_Releve.png';a.href=c.toDataURL('image/png');a.click()}}
+ function renderTranscript(streamId,shell,r){const [, ,st]=state(streamId);shell.innerHTML='<h3>Relevé de Baccalaureat</h3><p>This statement can be saved as PNG for university registration.</p><canvas id="getiBacTranscriptCanvas" width="1200" height="1500" style="max-width:100%;border:1px solid #dbe5ef"></canvas><p><button type="button" class="btn btn-primary dl">Download PNG</button></p>';const c=shell.querySelector('canvas'),x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.fillStyle='#123d63';x.font='bold 42px Arial';x.fillText('GETI — RELEVÉ DE BACCALAUREAT',70,90);x.font='24px Arial';x.fillStyle='#222';x.fillText('Student: '+(st.registration.name||''),70,150);x.fillText('Stream: '+streams[streamId],70,190);x.fillText('Candidate No: '+(st.registration.candidate||''),70,230);x.fillText('Country: '+(st.registration.country||''),70,270);x.fillText('School / Centre: '+(st.registration.school||''),70,310);let y=380;x.font='bold 23px Arial';x.fillText('Subject',70,y);x.fillText('Mark /20',650,y);x.fillText('Coef.',900,y);x.font='22px Arial';r.rows.forEach(a=>{y+=55;x.fillText(a.name,70,y);x.fillText(a.mark.toFixed(2),650,y);x.fillText(String(a.c),900,y)});y+=90;x.font='bold 30px Arial';x.fillText('Weighted Average: '+r.avg.toFixed(2)+'/20',70,y);x.fillStyle='#087647';x.fillText('PASSED',70,y+55);x.fillStyle='#555';x.font='18px Arial';x.fillText('Result: PASSED — Eligible for University Registration',70,y+105);x.fillText('Generated by GETI Online Academic Platform',70,1400);shell.querySelector('.dl').onclick=()=>{const a=document.createElement('a');a.download='GETI_Baccalaureat_Releve.png';a.href=c.toDataURL('image/png');a.click()}}
 
  const _getiOldSetItem=localStorage.setItem.bind(localStorage);
  localStorage.setItem=function(k,v){_getiOldSetItem(k,v);if(k===PROG){setTimeout(()=>Object.keys(streams).forEach(refresh),0)}};
