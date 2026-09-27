@@ -2653,8 +2653,7 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 <span id="sidebarStudentIdentity">Private Academic Area</span>
 </div>
 <div class="sidebar-section-title">Overview</div>
-<a class="active" href="#" onclick="showScreen('dashboardScreen',this);renderStudentDashboard();closePortalMenu();return false;">Dashboard</a>
-<a href="#" onclick="showScreen('studentInformationSystemScreen',this);renderStudentInformationSystem();closePortalMenu();return false;">My Profile and Status</a>
+<a class="active" href="#" onclick="showScreen('studentInformationSystemScreen',this);renderStudentInformationSystem();closePortalMenu();return false;">My Profile and Status</a>
 <a href="#" onclick="showScreen('notificationCenterScreen',this);renderNotificationCenter();closePortalMenu();return false;">Notifications</a>
 <div class="sidebar-section-title">Academic Experience</div>
 <a href="#" onclick="showScreen('researchScreen',this);renderResearchSection();closePortalMenu();return false;">Research / Thesis</a>
@@ -2670,12 +2669,6 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 <a class="sign-out-link" href="#" onclick="logoutStudent();return false;">Sign Out</a>
 </aside>
 <main class="app-main">
-<div class="screen active" id="dashboardScreen">
-<div class="panel" style="min-height:72vh">
-<div class="kicker">Student Portal</div>
-<h2 style="color:#082e5d;margin-top:6px">Student Dashboard</h2>
-</div>
-</div>
 <div class="screen" id="schoolScreen">
 <div class="panel school-choice-wrap">
 <div class="school-choice-card">
@@ -9312,7 +9305,7 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 <div id="professionalProgrammeCatalogueList"></div>
 </div>
 </div>
-<div class="screen" id="studentInformationSystemScreen">
+<div class="screen active" id="studentInformationSystemScreen">
 <div class="panel" style="min-height:72vh">
 <div class="kicker">Student Information System</div>
 <h2 style="color:#082e5d;margin-top:6px">Student Information System</h2>
@@ -10631,10 +10624,10 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
       document.body.classList.remove("geti-auth-view");
       if(studentApp) studentApp.classList.add("active");
       hideMainSite(true);
-      localStorage.setItem("geti_last_screen", "dashboardScreen");
+      localStorage.setItem("geti_last_screen", "studentInformationSystemScreen");
       try{ history.pushState({getiPortal:true}, "", location.href); }catch(e){}
-      showScreen("dashboardScreen");
-      try{ renderStudentDashboard(); }catch(e){ console.warn("Dashboard render skipped:", e); }
+      showScreen("studentInformationSystemScreen");
+      try{ renderStudentInformationSystem(); }catch(e){ console.warn("Student profile render skipped:", e); }
       window.scrollTo(0,0);
     }
 
@@ -10751,6 +10744,17 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
       event.stopPropagation();
       enforceStudentPortalLock();
     }, true);
+
+
+    window.addEventListener("pageshow", function(){
+      if(localStorage.getItem("geti_logged_in") === "true" && !getiLogoutInProgress){
+        enforceStudentPortalLock();
+        const saved = localStorage.getItem("geti_last_screen") || "studentInformationSystemScreen";
+        const target = (saved === "dashboardScreen" || saved === "schoolScreen" || !document.getElementById(saved)) ? "studentInformationSystemScreen" : saved;
+        showScreen(target);
+        if(target === "studentInformationSystemScreen") try{ renderStudentInformationSystem(); }catch(e){}
+      }
+    });
 
     function logoutStudent(){
       getiLogoutInProgress = true;
@@ -14186,11 +14190,12 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
       document.body.classList.remove("geti-auth-view");
         document.getElementById("studentApp").classList.add("active");
         try{ history.pushState({getiPortal:true}, "", location.href); }catch(e){}
-        const lastScreen = localStorage.getItem("geti_last_screen") || "dashboardScreen";
-        const allowedScreen = document.getElementById(lastScreen) ? lastScreen : "dashboardScreen";
-        showScreen(allowedScreen === "schoolScreen" ? "dashboardScreen" : allowedScreen);
-        if(allowedScreen === "dashboardScreen" || allowedScreen === "schoolScreen"){
-          try{ renderStudentDashboard(); }catch(e){ console.warn("Dashboard render skipped:", e); }
+        const lastScreen = localStorage.getItem("geti_last_screen") || "studentInformationSystemScreen";
+        const allowedScreen = document.getElementById(lastScreen) ? lastScreen : "studentInformationSystemScreen";
+        const restoreScreen = (allowedScreen === "schoolScreen" || allowedScreen === "dashboardScreen") ? "studentInformationSystemScreen" : allowedScreen;
+        showScreen(restoreScreen);
+        if(restoreScreen === "studentInformationSystemScreen"){
+          try{ renderStudentInformationSystem(); }catch(e){ console.warn("Student profile render skipped:", e); }
         }
         window.scrollTo(0,0);
       } else {
