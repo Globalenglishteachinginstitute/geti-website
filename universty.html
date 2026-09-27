@@ -9727,8 +9727,8 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 <div class="exam-registration-grid">
 <div class="exam-field">
 <label for="examCandidateName">Name *</label>
-<input autocomplete="name" id="examCandidateName" required="" type="text">
-</input></div>
+<input autocomplete="name" id="examCandidateName" required="" type="text"/>
+</div>
 <div class="exam-field">
 <label for="examCandidateEmail">Email *</label>
 <input autocomplete="email" id="examCandidateEmail" required="" type="email"/>
@@ -13027,7 +13027,7 @@ Verified modules: session lock/logout; Baccalaureat 4 options, instructions, 3x1
       const n=document.getElementById("getiIdName"), nat=document.getElementById("getiIdNationality");
       if(n)n.textContent=name;if(nat)nat.textContent=nationality;
       const box=document.getElementById("getiStudentIdPhotoBox");
-      if(box&amp;&amp;getiStudentIdPhotoData&amp;&amp;!document.getElementById("getiStudentIdPhotoPreview"))box.innerHTML='<img alt="Student photo" id="getiStudentIdPhotoPreview" style="width:100%;height:100%;object-fit:cover"/>';
+      if(box&amp;&amp;getiStudentIdPhotoData&amp;&amp;!document.getElementById("getiStudentIdPhotoPreview"))box.innerHTML='<img alt="Student photo" id="getiStudentIdPhotoPreviewLegacy2" style="width:100%;height:100%;object-fit:cover"/>';
       const img=document.getElementById("getiStudentIdPhotoPreview");
       if(img&amp;&amp;getiStudentIdPhotoData){img.src=getiStudentIdPhotoData;const z=+(document.getElementById("studentIdPhotoZoom")?.value||1);const x=+(document.getElementById("studentIdPhotoX")?.value||50);const y=+(document.getElementById("studentIdPhotoY")?.value||50);img.style.transform=`scale(${z})`;img.style.objectPosition=`${x}% ${y}%`;}
       renderGetiStudentQr();
@@ -13886,6 +13886,7 @@ Verified modules: session lock/logout; Baccalaureat 4 options, instructions, 3x1
       const student=lmsStudent();const f=lmsFiliere(student.admittedFiliereId);
       const w=window.open("","_blank");if(!w)return;
       w.document.write(`<!DOCTYPE html>
+
 <html><head><meta charset="utf-8"/><title>${lmsEscape(d.title)}</title>
 <style>body{font-family:Arial,sans-serif;max-width:800px;margin:60px auto;color:#1f354a;line-height:1.65}h1{color:#082e5d}.box{border:1px solid #ddd;padding:20px;border-radius:8px}@media print{button{display:none}}</style></head>
 <body><h1>GETI</h1><h2>${lmsEscape(d.title)}</h2><div class="box">
