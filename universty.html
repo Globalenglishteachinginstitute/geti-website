@@ -1915,6 +1915,13 @@
     .lms-id-card .id-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;opacity:.75}
     .lms-id-card .id-value{font-weight:800;font-size:15px;margin-bottom:10px}
     .lms-id-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;margin-top:20px}
+    .lms-id-builder{max-width:760px;margin-bottom:18px;padding:18px;border:1px solid #dce5ee;border-radius:14px;background:#fafcfe}
+    .lms-id-photo{width:112px;height:132px;border-radius:10px;overflow:hidden;background:#fff;border:3px solid rgba(255,255,255,.85);flex:0 0 auto}
+    .lms-id-photo img{width:100%;height:100%;object-fit:cover;display:block}
+    .lms-id-main{display:flex;gap:22px;align-items:flex-start;margin-top:18px}
+    .lms-id-qr{width:104px;height:104px;background:#fff;padding:7px;border-radius:8px;flex:0 0 auto}
+    .lms-id-qr img,.lms-id-qr canvas{width:90px!important;height:90px!important}
+    .lms-id-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     .lms-policy-list{display:grid;gap:14px}
     .lms-prereq{margin-top:7px;font-size:11px;color:#6b7c8e}
     .lms-prereq.locked{color:#a33a3a;font-weight:800}
@@ -2313,6 +2320,8 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 <style id="getiBacExamSystemStyle">
 .geti-bac-exam-entry{margin-top:18px}.geti-bac-exam-progress{font-size:13px;color:#65788b;margin:8px 0}.geti-combined-progress-wrap{margin:10px 0 16px}.geti-combined-progress-head{display:flex;justify-content:space-between;gap:12px;font-weight:800;color:#123d63;margin-bottom:7px}.geti-combined-progress-track{height:12px;background:#e2eaf1;border-radius:99px;overflow:hidden}.geti-combined-progress-fill{height:100%;background:#0b4b88;transition:width .25s ease}.geti-bac-exam-shell{margin-top:22px}.geti-bac-exam-shell[hidden]{display:none!important}.geti-bac-exam-subjects{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:16px 0}.geti-bac-exam-subjects button{padding:14px;border:1px solid #dbe5ef;border-radius:9px;background:#fff;color:#123d63;font-weight:800;cursor:pointer}.geti-bac-exam-subjects button.done{background:#eaf8f1;border-color:#a9dec5;color:#087647}.geti-bac-q{margin:16px 0}.geti-bac-q button{display:block;width:100%;text-align:left;margin:8px 0;padding:12px;border:1px solid #dbe5ef;border-radius:8px;background:#fff;cursor:pointer}.geti-bac-q button.selected{border-color:#2475ee;background:#eef5ff}.geti-bac-result-table{width:100%;border-collapse:collapse;margin-top:15px}.geti-bac-result-table th,.geti-bac-result-table td{padding:10px;border:1px solid #dbe5ef;text-align:left}.geti-bac-pass{color:#087647;font-weight:900}.geti-bac-fail{color:#a22;font-weight:900}
 </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 <div class="geti-mini">
@@ -8976,57 +8985,6 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
               M1 = choose 1 specialisation from the 5 available for the principal filière.<br/>
               M2 = continue the M1 specialisation + S9 + S10 + mémoire / thesis → Master Degree.
             </div>
-<div class="university-flow-note">
-<strong>University Curriculum:</strong> each semester now displays named subjects matching the selected filière.
-              Subjects are different from one semester to the next. M1 and M2 subjects are generated from the selected specialisation.
-            </div>
-<div class="university-level-table-wrap">
-<table class="university-level-table">
-<thead>
-<tr>
-<th>Level</th><th>Year</th><th>Semesters</th><th>Credits</th>
-<th>Semester 1 Subjects</th><th>Semester 2 Subjects</th><th>Total / Year</th><th>Result</th>
-</tr>
-</thead>
-<tbody>
-<tr><td><span class="university-level-badge">L1</span></td><td>Year 1</td><td>S1 + S2</td><td>60</td><td>8</td><td>8</td><td><strong>16</strong></td><td>First Year</td></tr>
-<tr><td><span class="university-level-badge">L2</span></td><td>Year 2</td><td>S3 + S4</td><td>60</td><td>10</td><td>10</td><td><strong>20</strong></td><td>Second Year</td></tr>
-<tr><td><span class="university-level-badge">L3</span></td><td>Year 3</td><td>S5 + S6</td><td>60</td><td>12</td><td>12</td><td><strong>24</strong></td><td><strong>Bachelor / Licence</strong></td></tr>
-<tr><td><span class="university-level-badge">M1</span></td><td>Year 4</td><td>S7 + S8</td><td>60</td><td>14</td><td>14</td><td><strong>28</strong></td><td>Master Year 1</td></tr>
-<tr><td><span class="university-level-badge">M2</span></td><td>Year 5</td><td>S9 + S10</td><td>60</td><td>16</td><td>16</td><td><strong>32</strong></td><td><strong>Master Degree</strong></td></tr>
-</tbody>
-</table>
-</div>
-<div class="university-year-grid">
-<button class="university-card" onclick="openUniversityYear('L1')" type="button">
-<span class="university-card-en">L1 — First Year</span>
-<span class="university-year-meta">Year 1 • S1 + S2 • 60 Credits</span>
-<span class="university-subject-count">8 + 8 = 16 Subjects / Year</span>
-</button>
-<button class="university-card" onclick="openUniversityYear('L2')" type="button">
-<span class="university-card-en">L2 — Second Year</span>
-<span class="university-year-meta">Year 2 • S3 + S4 • 60 Credits</span>
-<span class="university-subject-count">10 + 10 = 20 Subjects / Year</span>
-</button>
-<button class="university-card" onclick="openUniversityYear('L3')" type="button">
-<span class="university-card-en">L3 — Third Year</span>
-<span class="university-year-meta">Year 3 • S5 + S6 • 60 Credits</span>
-<span class="university-year-result">Bachelor / Licence</span>
-<span class="university-subject-count">12 + 12 = 24 Subjects / Year</span>
-</button>
-<button class="university-card" onclick="openUniversityYear('M1')" type="button">
-<span class="university-card-en">M1 — Fourth Year</span>
-<span class="university-year-meta">Year 4 • S7 + S8 • 60 Credits</span>
-<span class="university-year-result">Choose 1 of 5 Specialisations</span>
-<span class="university-subject-count">14 + 14 = 28 Subjects / Year</span>
-</button>
-<button class="university-card" onclick="openUniversityYear('M2')" type="button">
-<span class="university-card-en">M2 — Fifth Year</span>
-<span class="university-year-meta">Year 5 • S9 + S10 • 60 Credits</span>
-<span class="university-year-result">Continue M1 Specialisation + Thesis</span>
-<span class="university-subject-count">16 + 16 = 32 Subjects / Year</span>
-</button>
-</div>
 <button class="btn btn-outline" onclick="showScreen('schoolScreen')" style="margin-top:24px">Back to GETI School</button>
 </div>
 </div>
@@ -9050,6 +9008,36 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 <button class="btn btn-outline" onclick="showScreen('universityFiliereScreen')" style="margin-top:24px">Back to Filières</button>
 </div>
 </div>
+<div class="screen" id="universityL1RegistrationScreen">
+<div class="panel" style="min-height:72vh">
+<div class="kicker">GETI University • Bachelor • L1</div>
+<h2 style="color:#082e5d;margin-top:6px">First Year Registration</h2>
+<p class="university-path" id="getiL1RegistrationPath">Bachelor → L1 → Filière → Registration → S1</p>
+<div class="university-flow-note"><strong>Registration required before S1.</strong> Enter your name and email, nationality, and upload your Student ID as a PNG image.</div>
+<div class="exam-registration-grid" style="margin-top:20px">
+<div class="exam-field"><label for="getiL1RegName">Full Name</label><input id="getiL1RegName" type="text" required placeholder="Student full name"></div>
+<div class="exam-field"><label for="getiL1RegEmail">Email</label><input id="getiL1RegEmail" type="email" required placeholder="student@example.com"></div>
+<div class="exam-field"><label for="getiL1RegNationality">Nationality</label><input id="getiL1RegNationality" type="text" required placeholder="Nationality"></div>
+<div class="exam-field"><label for="getiL1RegStudentId">Student ID (PNG only)</label><input id="getiL1RegStudentId" type="file" accept="image/png" required></div>
+</div>
+<div id="getiL1RegStatus" class="university-flow-note" style="display:none;margin-top:16px"></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px"><button class="btn btn-primary" type="button" onclick="getiSubmitL1Registration()">Register and Start S1</button><button class="btn btn-outline" type="button" onclick="showScreen('universityFiliereScreen')">Back to Filières</button></div>
+</div></div>
+<div class="screen" id="universityM1RegistrationScreen">
+<div class="panel" style="min-height:72vh">
+<div class="kicker">GETI University — Master</div>
+<h2 style="color:#082e5d;margin-top:6px">Fourth Year — M1 Registration</h2>
+<p class="university-path" id="getiM1RegistrationPath">Master → Fourth Year → Registration → Choose Specialisation</p>
+<div class="university-flow-note" id="getiM1BachelorStatus"></div>
+<div class="form-grid" style="margin-top:18px">
+<label>Full Name<input id="getiM1RegName" type="text" autocomplete="name"></label>
+<label>Email<input id="getiM1RegEmail" type="email" autocomplete="email"></label>
+<label>Nationality<input id="getiM1RegNationality" type="text"></label>
+<label>Student ID (PNG)<input id="getiM1RegStudentId" type="file" accept="image/png,.png"></label>
+</div>
+<div id="getiM1RegStatus" class="university-flow-note" style="display:none;margin-top:16px"></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px"><button class="btn btn-primary" type="button" onclick="getiSubmitM1Registration()">Register and Choose 1 of 5 Specialisations</button><button class="btn btn-outline" type="button" onclick="showScreen('academicLevelHomeScreen')">Back</button></div>
+</div></div>
 <div class="screen" id="universitySubjectScreen">
 <div class="panel" style="min-height:72vh">
 <div class="kicker">GETI University</div>
@@ -9336,8 +9324,8 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 <p>Select the academic area you want to access.</p>
 <div class="academic-level-home-grid" aria-label="Academic level selection">
 <button type="button" onclick="showScreen('baccalaureatScreen')"><strong>Baccalaureat</strong><span>Open Baccalaureat area</span></button>
-<button type="button" onclick="showScreen('universityScreen')"><strong>Bachelor</strong><span>Open Bachelor area</span></button>
-<button type="button" onclick="showScreen('universityScreen')"><strong>Master</strong><span>Open Master area</span></button>
+<button type="button" onclick="showScreen('universityScreen')"><strong>Bachelor</strong><span>Open Bachelor area</span><span id="getiBachelorCurrentYearButton" role="button" tabindex="0" onclick="event.stopPropagation(); getiOpenCurrentBachelorYear()" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();event.stopPropagation();getiOpenCurrentBachelorYear();}" style="display:inline-flex;align-items:center;justify-content:center;margin-top:10px;padding:6px 12px;border-radius:999px;background:#082e5d;color:#fff;font-size:12px;font-weight:700;line-height:1;cursor:pointer;">First Year</span></button>
+<button type="button" onclick="showScreen('universityScreen')"><strong>Master</strong><span>Open Master area</span><span role="button" tabindex="0" onclick="event.stopPropagation(); getiOpenM1Registration()" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();event.stopPropagation();getiOpenM1Registration();}" style="display:inline-flex;align-items:center;justify-content:center;margin-top:10px;padding:6px 12px;border-radius:999px;background:#082e5d;color:#fff;font-size:12px;font-weight:700;line-height:1;cursor:pointer;">Fourth Year</span></button>
 </div>
 </div>
 </div>
@@ -9574,8 +9562,20 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
 <div class="panel" style="min-height:72vh">
 <div class="kicker">Student Services</div>
 <h2 style="color:#082e5d;margin-top:6px">Student ID Card</h2>
+<div class="lms-id-builder">
+  <div style="font-weight:900;color:#082e5d;margin-bottom:12px">Create University Student ID Card</div>
+  <div class="lms-form-grid">
+    <div class="exam-field"><label>Name</label><input id="uniIdName" type="text" placeholder="Student full name"/></div>
+    <div class="exam-field"><label>Nationality</label><input id="uniIdNationality" type="text" placeholder="Nationality"/></div>
+    <div class="exam-field"><label>Student photo</label><input id="uniIdPhoto" type="file" accept="image/png,image/jpeg" onchange="loadUniversityIdPhoto(this)"/></div>
+    <div class="exam-field"><label>Photo zoom</label><input id="uniIdZoom" type="range" min="100" max="220" value="100" oninput="updateUniversityIdPhotoStyle()"/></div>
+    <div class="exam-field"><label>Horizontal position</label><input id="uniIdPosX" type="range" min="0" max="100" value="50" oninput="updateUniversityIdPhotoStyle()"/></div>
+    <div class="exam-field"><label>Vertical position</label><input id="uniIdPosY" type="range" min="0" max="100" value="50" oninput="updateUniversityIdPhotoStyle()"/></div>
+  </div>
+  <div class="lms-id-actions"><button class="btn btn-primary" onclick="saveUniversityIdProfile()" type="button">Create / Update Card</button><button class="btn btn-outline" onclick="downloadUniversityIdPng()" type="button">Download PNG</button></div>
+  <div style="font-size:11px;color:#65788b;margin-top:10px">University Student ID is separate from the Baccalaureate Student ID. The University ID changes automatically when the student advances to a new level.</div>
+</div>
 <div id="studentIdCardWrap"></div>
-<button class="btn btn-outline" onclick="window.print()" style="margin-top:16px" type="button">Print / Save ID Card</button>
 </div>
 </div>
 <div class="screen" id="timetableScreen">
@@ -10068,9 +10068,11 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
     
     
     
-    const getiUniversityLevels = {"L1": {"year": "First Year", "yearNumber": "Year 1", "semesters": ["S1", "S2"], "counts": [8, 8], "credits": 60, "result": "First Year"}, "L2": {"year": "Second Year", "yearNumber": "Year 2", "semesters": ["S3", "S4"], "counts": [10, 10], "credits": 60, "result": "Second Year"}, "L3": {"year": "Third Year", "yearNumber": "Year 3", "semesters": ["S5", "S6"], "counts": [12, 12], "credits": 60, "result": "Bachelor / Licence"}, "M1": {"year": "Fourth Year", "yearNumber": "Year 4", "semesters": ["S7", "S8"], "counts": [14, 14], "credits": 60, "result": "Master Year 1"}, "M2": {"year": "Fifth Year", "yearNumber": "Year 5", "semesters": ["S9", "S10"], "counts": [16, 16], "credits": 60, "result": "Master Degree"}};
+    const getiUniversityLevels = {"L1": {"year": "First Year", "yearNumber": "Year 1", "semesters": ["S1", "S2"], "counts": [15, 18], "credits": 60, "result": "First Year"}, "L2": {"year": "Second Year", "yearNumber": "Year 2", "semesters": ["S3", "S4"], "counts": [21, 24], "credits": 60, "result": "Second Year"}, "L3": {"year": "Third Year", "yearNumber": "Year 3", "semesters": ["S5", "S6"], "counts": [27, 30], "credits": 60, "result": "Bachelor / Licence"}, "M1": {"year": "Fourth Year", "yearNumber": "Year 4", "semesters": ["S7", "S8"], "counts": [33, 36], "credits": 60, "result": "Master Year 1"}, "M2": {"year": "Fifth Year", "yearNumber": "Year 5", "semesters": ["S9", "S10"], "counts": [39, 42], "credits": 60, "result": "Master Degree"}};
     const getiUniversityGroups = [{"id": "literary", "title": "A. LITERARY / SÉRIE L"}, {"id": "scientific", "title": "B. SCIENTIFIC"}, {"id": "ose", "title": "C. OSE / ECONOMICS & SOCIETY"}, {"id": "it", "title": "D. IT & COMPUTER SCIENCE"}];
-    const getiUniversityFilieres = [{"id": "lit01", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Anglophone Studies", "fr": "Études anglophones", "specialisations": ["Applied Linguistics", "English Literature", "TESOL & English Language Teaching", "Translation & Interpreting", "Anglophone Culture & Civilization"]}, {"id": "lit02", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Francophone Studies", "fr": "Études françaises et francophones", "specialisations": ["French Linguistics", "French & Francophone Literature", "French as a Foreign Language (FLE)", "Translation & Interpretation", "Francophone Culture & Civilization"]}, {"id": "lit03", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Tourism Studies", "fr": "Science du tourisme", "specialisations": ["Tourism Management", "Ecotourism", "Cultural & Heritage Tourism", "Destination & Travel Management", "Sustainable Tourism"]}, {"id": "lit04", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Hospitality Management", "fr": "Hôtellerie et restauration", "specialisations": ["Hotel Management", "Food & Beverage Management", "Resort Management", "Events & Hospitality Management", "Hospitality Marketing & Revenue Management"]}, {"id": "lit05", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Philosophy", "fr": "Philosophie", "specialisations": ["Ethics & Applied Philosophy", "Political Philosophy", "Philosophy of Science", "Metaphysics & Epistemology", "Social & Contemporary Philosophy"]}, {"id": "lit06", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Communication and Media Studies", "fr": "Communication et médias", "specialisations": ["Journalism", "Digital Communication", "Corporate Communication", "Public Relations", "Media Production"]}, {"id": "lit07", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "History", "fr": "Histoire", "specialisations": ["African History", "World History", "Colonial & Postcolonial History", "Heritage & Archival Studies", "Political & Social History"]}, {"id": "lit08", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Geography", "fr": "Géographie", "specialisations": ["Human Geography", "Physical Geography", "GIS & Remote Sensing", "Urban & Regional Planning", "Environmental Geography"]}, {"id": "lit09", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Sociology", "fr": "Sociologie", "specialisations": ["Development Sociology", "Sociology of Organizations", "Urban Sociology", "Population & Social Studies", "Social Research"]}, {"id": "lit10", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Political Science", "fr": "Science politique", "specialisations": ["International Relations", "Public Policy", "Governance", "Political Economy", "Diplomacy & Strategic Studies"]}, {"id": "lit11", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Law", "fr": "Droit", "specialisations": ["Public Law", "Private Law", "International Law", "Business Law", "Human Rights Law"]}, {"id": "lit12", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Foreign Languages", "fr": "Langues étrangères", "specialisations": ["Modern Languages", "Applied Linguistics", "Language Teaching", "Translation Studies", "Intercultural Communication"]}, {"id": "lit13", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Translation and Intercultural Studies", "fr": "Traduction et études interculturelles", "specialisations": ["Professional Translation", "Conference Interpreting", "Legal & Technical Translation", "Localization & Digital Translation", "Intercultural Communication"]}, {"id": "lit14", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Anthropology", "fr": "Anthropologie", "specialisations": ["Social & Cultural Anthropology", "Development Anthropology", "Archaeology & Heritage", "Environmental Anthropology", "Applied Anthropology"]}, {"id": "lit15", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Civilization and Cultural Studies", "fr": "Ci", "specialisations": ["African Studies", "European Studies", "American Studies", "Asian Studies", "Cultural Heritage Studies"]}, {"id": "sci16", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Mathematics", "fr": "Mathématiques", "specialisations": ["Pure Mathematics", "Applied Mathematics", "Probability & Statistics", "Mathematical Modelling", "Operations Research"]}, {"id": "sci17", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Computer Science", "fr": "Informatique", "specialisations": ["Artificial Intelligence", "Software Engineering", "Data Science", "Cybersecurity", "Computer Systems & Networks"]}, {"id": "sci18", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Physics", "fr": "Physique", "specialisations": ["Theoretical Physics", "Applied Physics", "Materials Physics", "Energy Physics", "Instrumentation & Electronics"]}, {"id": "sci19", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Chemistry", "fr": "Chimie", "specialisations": ["Organic Chemistry", "Inorganic Chemistry", "Analytical Chemistry", "Physical Chemistry", "Industrial & Environmental Chemistry"]}, {"id": "sci20", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Biology", "fr": "Biologie", "specialisations": ["Molecular & Cellular Biology", "Ecology & Evolution", "Microbiology", "Genetics & Biotechnology", "Plant & Animal Biology"]}, {"id": "sci21", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Biochemistry and Molecular Biology", "fr": "Biochimie et biologie moléculaire", "specialisations": ["Molecular Biotechnology", "Genetics & Genomics", "Protein & Enzyme Science", "Molecular Diagnostics", "Bioinformatics"]}, {"id": "sci22", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Environmental Science", "fr": "Sciences de l’environnement", "specialisations": ["Environmental Management", "Climate Change Studies", "Biodiversity & Conservation", "Pollution Control", "Natural Resources Management"]}, {"id": "sci23", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Geology and Geosciences", "fr": "Géologie et géosciences", "specialisations": ["Economic Geology", "Structural Geology & Tectonics", "Geophysics", "Mineral Resources", "Geological Hazards"]}, {"id": "sci24", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Hydrogeology", "fr": "Hydrogéologie", "specialisations": ["Groundwater Resources", "Groundwater Modelling", "Contaminant Hydrogeology", "Water Resources Management", "Hydrogeophysics"]}, {"id": "sci25", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Geotechnical Engineering", "fr": "Géotechnique", "specialisations": ["Soil Mechanics & Foundations", "Rock Mechanics", "Engineering Geology", "Geotechnical Structures", "Geoenvironmental Engineering"]}, {"id": "sci26", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Applied Mathematics and Statistics", "fr": "Mathématiques appliquées et statistiques", "specialisations": ["Data Analytics", "Actuarial Mathematics", "Financial Mathematics", "Mathematical Modelling", "Biostatistics"]}, {"id": "sci27", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Water Science and Technology", "fr": "Sciences et techniques de l’eau", "specialisations": ["Hydrology", "Water & Wastewater Treatment", "Integrated Water Resources Management", "Hydraulics", "Water Quality Management"]}, {"id": "sci28", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Agricultural Science", "fr": "Sciences agronomiques", "specialisations": ["Crop Science", "Animal Science", "Soil Science", "Agribusiness", "Agroecology"]}, {"id": "sci29", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Medical and Health Sciences", "fr": "Sciences médicales et santé", "specialisations": ["Public Health", "Biomedical Sciences", "Epidemiology", "Health Management", "Clinical Research"]}, {"id": "sci30", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Engineering Sciences", "fr": "Sciences de l’ingénieur / Polytechnique", "specialisations": ["Civil Engineering", "Mechanical Engineering", "Electrical Engineering", "Industrial Engineering", "Energy Engineering"]}, {"id": "ose31", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Economics", "fr": "Économie", "specialisations": ["Development Economics", "International Economics", "Public Economics", "Econometrics", "Monetary & Financial Economics"]}, {"id": "ose32", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Business Management", "fr": "Gestion d’entreprise", "specialisations": ["Strategic Management", "Operations Management", "Project Management", "International Management", "Entrepreneurship"]}, {"id": "ose33", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Finance", "fr": "Finance", "specialisations": ["Corporate Finance", "Banking & Finance", "Investment Management", "Financial Risk Management", "FinTech & Digital Finance"]}, {"id": "ose34", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Accounting", "fr": "Comptabilité", "specialisations": ["Financial Accounting", "Audit & Assurance", "Management Accounting", "Taxation", "Accounting & Financial Control"]}, {"id": "ose35", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Banking and Insurance", "fr": "Banque et assurance", "specialisations": ["Banking Management", "Insurance Management", "Risk Management", "Microfinance", "Digital Banking"]}, {"id": "ose36", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Marketing", "fr": "Marketing", "specialisations": ["Digital Marketing", "Brand Management", "Consumer Behaviour", "Marketing Analytics", "International Marketing"]}, {"id": "ose37", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "International Business", "fr": "Commerce international", "specialisations": ["International Trade", "Logistics & Supply Chain", "International Finance", "Global Business Strategy", "Import–Export Management"]}, {"id": "ose38", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Human Resource Management", "fr": "Gestion des ressources humaines", "specialisations": ["Talent Management", "Labour Relations", "Training & Development", "Compensation & Benefits", "HR Analytics"]}, {"id": "ose39", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Sociology", "fr": "Sociologie", "specialisations": ["Economic Sociology", "Sociology of Work", "Development Sociology", "Social Policy", "Population Studies"]}, {"id": "ose40", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Political Science", "fr": "Science politique", "specialisations": ["Public Policy", "Governance", "International Relations", "Political Economy", "Public Administration"]}, {"id": "ose41", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Law", "fr": "Droit", "specialisations": ["Business Law", "Tax Law", "Labour Law", "Administrative Law", "International Trade Law"]}, {"id": "ose42", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Public Administration", "fr": "Administration publique", "specialisations": ["Public Management", "Public Policy & Evaluation", "Local Government Administration", "Public Finance", "Digital Government"]}, {"id": "ose43", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Development Economics", "fr": "Économie du développement", "specialisations": ["Poverty & Development", "Agricultural Economics", "Environmental Economics", "Development Finance", "Project & Programme Evaluation"]}, {"id": "ose44", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Statistics and Economic Analysis", "fr": "Statistiques et analyse économique", "specialisations": ["Econometrics", "Business Data Analytics", "Economic Forecasting", "Survey Statistics", "Financial Statistics"]}, {"id": "ose45", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Entrepreneurship and Business Development", "fr": "Entrepreneuriat et développement", "specialisations": ["Startup & Innovation Management", "SME Management", "Social Entrepreneurship", "Business Development", "E-Commerce Entrepreneurship"]}, {"id": "it46", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Computer Science", "fr": "Informatique", "specialisations": ["Artificial Intelligence", "Data Science", "Software Engineering", "Cybersecurity", "Systems & Networks"]}, {"id": "it47", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Software Engineering", "fr": "Génie logiciel", "specialisations": ["Enterprise Software Engineering", "Mobile Software Engineering", "DevOps Engineering", "Software Quality Assurance", "Software Architecture"]}, {"id": "it48", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Web and Mobile Development", "fr": "Développement web et mobile", "specialisations": ["Full-Stack Web Development", "Mobile Application Development", "Cloud-Native Development", "Front-End & UX Engineering", "E-Commerce Development"]}, {"id": "it49", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Database Systems", "fr": "Bases de données", "specialisations": ["Database Administration", "Big Data Systems", "Distributed Databases", "Data Warehousing & Business Intelligence", "Database Security"]}, {"id": "it50", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Computer Networks and Systems", "fr": "Réseaux et systèmes informatiques", "specialisations": ["Network Engineering", "Systems Administration", "Cloud Networking", "Network Security", "Wireless Networks"]}, {"id": "it51", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Cybersecurity", "fr": "Cybersécurité", "specialisations": ["Network Security", "Application Security", "Digital Forensics", "Cryptography", "Cybersecurity Governance & Risk"]}, {"id": "it52", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Artificial Intelligence", "fr": "Intelligence artificielle", "specialisations": ["Machine Learning", "Natural Language Processing", "Computer Vision", "Robotics & Intelligent Systems", "Deep Learning"]}, {"id": "it53", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Data Science", "fr": "Science des données", "specialisations": ["Machine Learning & Analytics", "Big Data Analytics", "Data Engineering", "Business Intelligence", "Applied Statistics"]}, {"id": "it54", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Cloud Computing", "fr": "Informatique en nuage", "specialisations": ["Cloud Architecture", "DevOps & Site Reliability Engineering", "Cloud Security", "Distributed Systems", "Cloud Platform Engineering"]}, {"id": "it55", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Information Systems", "fr": "Systèmes d’information", "specialisations": ["Management Information Systems", "Enterprise Resource Planning", "Business Analysis", "IT Governance", "Digital Transformation"]}, {"id": "it56", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Computer Systems and Architecture", "fr": "Systèmes et architecture informatique", "specialisations": ["Advanced Computer Architecture", "Operating Systems", "High-Performance Computing", "Hardware–Software Integration", "Computer Engineering"]}, {"id": "it57", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Internet of Things (IoT)", "fr": "Internet des objets", "specialisations": ["Smart Systems", "Industrial IoT", "Wireless Sensor Networks", "Edge Computing", "IoT Security"]}, {"id": "it58", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Embedded Systems", "fr": "Systèmes embarqués", "specialisations": ["Embedded Linux", "Real-Time Systems", "Microcontroller Systems", "Robotics & Automation", "Embedded Hardware Design"]}, {"id": "it59", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Multimedia and Digital Technology", "fr": "Multimédia et technologies numériques", "specialisations": ["Digital Media Production", "Animation & Motion Design", "Game Development", "Audio & Video Technology", "UI/UX & Interactive Media"]}, {"id": "it60", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Telecommunications and Network Engineering", "fr": "Télécommunications et ingénierie réseau", "specialisations": ["Mobile & Wireless Communications", "Fiber-Optic Communications", "Advanced Network Engineering", "Digital Signal Processing", "Satellite & IoT Communications"]}];
+    const getiUniversityFilieres = [{"id": "lit01", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Anglophone Studies", "fr": "Études anglophones", "specialisations": ["Applied Linguistics", "English Literature", "English Communication Studies", "Translation & Interpreting", "Anglophone Culture & Civilization"]}, {"id": "lit02", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Francophone Studies", "fr": "Études françaises et francophones", "specialisations": ["French Linguistics", "French & Francophone Literature", "French as a Foreign Language (FLE)", "Translation & Interpretation", "Francophone Culture & Civilization"]}, {"id": "lit03", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Tourism Studies", "fr": "Science du tourisme", "specialisations": ["Tourism Management", "Ecotourism", "Cultural & Heritage Tourism", "Destination & Travel Management", "Sustainable Tourism"]}, {"id": "lit04", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Hospitality Management", "fr": "Hôtellerie et restauration", "specialisations": ["Hotel Management", "Food & Beverage Management", "Resort Management", "Events & Hospitality Management", "Hospitality Marketing & Revenue Management"]}, {"id": "lit05", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Philosophy", "fr": "Philosophie", "specialisations": ["Ethics & Applied Philosophy", "Political Philosophy", "Philosophy of Science", "Metaphysics & Epistemology", "Social & Contemporary Philosophy"]}, {"id": "lit06", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Communication and Media Studies", "fr": "Communication et médias", "specialisations": ["Journalism", "Digital Communication", "Corporate Communication", "Public Relations", "Media Production"]}, {"id": "lit07", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "History", "fr": "Histoire", "specialisations": ["African History", "World History", "Colonial & Postcolonial History", "Heritage & Archival Studies", "Political & Social History"]}, {"id": "lit08", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Geography", "fr": "Géographie", "specialisations": ["Human Geography", "Physical Geography", "GIS & Remote Sensing", "Urban & Regional Planning", "Environmental Geography"]}, {"id": "lit09", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Sociology", "fr": "Sociologie", "specialisations": ["Development Sociology", "Sociology of Organizations", "Urban Sociology", "Population & Social Studies", "Social Research"]}, {"id": "lit10", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Political Science", "fr": "Science politique", "specialisations": ["International Relations", "Public Policy", "Governance", "Political Economy", "Diplomacy & Strategic Studies"]}, {"id": "lit11", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Law", "fr": "Droit", "specialisations": ["Public Law", "Private Law", "International Law", "Business Law", "Human Rights Law"]}, {"id": "lit12", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Foreign Languages", "fr": "Langues étrangères", "specialisations": ["Modern Languages", "Applied Linguistics", "Language Teaching", "Translation Studies", "Intercultural Communication"]}, {"id": "lit13", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Translation and Intercultural Studies", "fr": "Traduction et études interculturelles", "specialisations": ["Professional Translation", "Conference Interpreting", "Legal & Technical Translation", "Localization & Digital Translation", "Intercultural Communication"]}, {"id": "lit14", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Anthropology", "fr": "Anthropologie", "specialisations": ["Social & Cultural Anthropology", "Development Anthropology", "Archaeology & Heritage", "Environmental Anthropology", "Applied Anthropology"]}, {"id": "lit15", "group": "literary", "groupTitle": "A. LITERARY / SÉRIE L", "en": "Civilization and Cultural Studies", "fr": "Ci", "specialisations": ["African Studies", "European Studies", "American Studies", "Asian Studies", "Cultural Heritage Studies"]}, {"id": "sci16", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Mathematics", "fr": "Mathématiques", "specialisations": ["Pure Mathematics", "Applied Mathematics", "Probability & Statistics", "Mathematical Modelling", "Operations Research"]}, {"id": "sci17", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Computer Science", "fr": "Informatique", "specialisations": ["Artificial Intelligence", "Software Engineering", "Data Science", "Cybersecurity", "Computer Systems & Networks"]}, {"id": "sci18", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Physics", "fr": "Physique", "specialisations": ["Theoretical Physics", "Applied Physics", "Materials Physics", "Energy Physics", "Instrumentation & Electronics"]}, {"id": "sci19", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Chemistry", "fr": "Chimie", "specialisations": ["Organic Chemistry", "Inorganic Chemistry", "Analytical Chemistry", "Physical Chemistry", "Industrial & Environmental Chemistry"]}, {"id": "sci20", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Biology", "fr": "Biologie", "specialisations": ["Molecular & Cellular Biology", "Ecology & Evolution", "Microbiology", "Genetics & Biotechnology", "Plant & Animal Biology"]}, {"id": "sci21", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Biochemistry and Molecular Biology", "fr": "Biochimie et biologie moléculaire", "specialisations": ["Molecular Biotechnology", "Genetics & Genomics", "Protein & Enzyme Science", "Molecular Diagnostics", "Bioinformatics"]}, {"id": "sci22", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Environmental Science", "fr": "Sciences de l’environnement", "specialisations": ["Environmental Management", "Climate Change Studies", "Biodiversity & Conservation", "Pollution Control", "Natural Resources Management"]}, {"id": "sci23", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Geology and Geosciences", "fr": "Géologie et géosciences", "specialisations": ["Economic Geology", "Structural Geology & Tectonics", "Geophysics", "Mineral Resources", "Geological Hazards"]}, {"id": "sci24", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Hydrogeology", "fr": "Hydrogéologie", "specialisations": ["Groundwater Resources", "Groundwater Modelling", "Contaminant Hydrogeology", "Water Resources Management", "Hydrogeophysics"]}, {"id": "sci25", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Geotechnical Engineering", "fr": "Géotechnique", "specialisations": ["Soil Mechanics & Foundations", "Rock Mechanics", "Engineering Geology", "Geotechnical Structures", "Geoenvironmental Engineering"]}, {"id": "sci26", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Applied Mathematics and Statistics", "fr": "Mathématiques appliquées et statistiques", "specialisations": ["Data Analytics", "Actuarial Mathematics", "Financial Mathematics", "Mathematical Modelling", "Biostatistics"]}, {"id": "sci27", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Water Science and Technology", "fr": "Sciences et techniques de l’eau", "specialisations": ["Hydrology", "Water & Wastewater Treatment", "Integrated Water Resources Management", "Hydraulics", "Water Quality Management"]}, {"id": "sci28", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Agricultural Science", "fr": "Sciences agronomiques", "specialisations": ["Crop Science", "Animal Science", "Soil Science", "Agribusiness", "Agroecology"]}, {"id": "sci29", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Medical and Health Sciences", "fr": "Sciences médicales et santé", "specialisations": ["Public Health", "Biomedical Sciences", "Epidemiology", "Health Management", "Clinical Research"]}, {"id": "sci30", "group": "scientific", "groupTitle": "B. SCIENTIFIC", "en": "Engineering Sciences", "fr": "Sciences de l’ingénieur / Polytechnique", "specialisations": ["Civil Engineering", "Mechanical Engineering", "Electrical Engineering", "Industrial Engineering", "Energy Engineering"]}, {"id": "ose31", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Economics", "fr": "Économie", "specialisations": ["Development Economics", "International Economics", "Public Economics", "Econometrics", "Monetary & Financial Economics"]}, {"id": "ose32", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Business Management", "fr": "Gestion d’entreprise", "specialisations": ["Strategic Management", "Operations Management", "Project Management", "International Management", "Entrepreneurship"]}, {"id": "ose33", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Finance", "fr": "Finance", "specialisations": ["Corporate Finance", "Banking & Finance", "Investment Management", "Financial Risk Management", "FinTech & Digital Finance"]}, {"id": "ose34", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Accounting", "fr": "Comptabilité", "specialisations": ["Financial Accounting", "Audit & Assurance", "Management Accounting", "Taxation", "Accounting & Financial Control"]}, {"id": "ose35", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Banking and Insurance", "fr": "Banque et assurance", "specialisations": ["Banking Management", "Insurance Management", "Risk Management", "Microfinance", "Digital Banking"]}, {"id": "ose36", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Marketing", "fr": "Marketing", "specialisations": ["Digital Marketing", "Brand Management", "Consumer Behaviour", "Marketing Analytics", "International Marketing"]}, {"id": "ose37", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "International Business", "fr": "Commerce international", "specialisations": ["International Trade", "Logistics & Supply Chain", "International Finance", "Global Business Strategy", "Import–Export Management"]}, {"id": "ose38", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Human Resource Management", "fr": "Gestion des ressources humaines", "specialisations": ["Talent Management", "Labour Relations", "Training & Development", "Compensation & Benefits", "HR Analytics"]}, {"id": "ose39", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Sociology", "fr": "Sociologie", "specialisations": ["Economic Sociology", "Sociology of Work", "Development Sociology", "Social Policy", "Population Studies"]}, {"id": "ose40", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Political Science", "fr": "Science politique", "specialisations": ["Public Policy", "Governance", "International Relations", "Political Economy", "Public Administration"]}, {"id": "ose41", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Law", "fr": "Droit", "specialisations": ["Business Law", "Tax Law", "Labour Law", "Administrative Law", "International Trade Law"]}, {"id": "ose42", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Public Administration", "fr": "Administration publique", "specialisations": ["Public Management", "Public Policy & Evaluation", "Local Government Administration", "Public Finance", "Digital Government"]}, {"id": "ose43", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Development Economics", "fr": "Économie du développement", "specialisations": ["Poverty & Development", "Agricultural Economics", "Environmental Economics", "Development Finance", "Project & Programme Evaluation"]}, {"id": "ose44", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Statistics and Economic Analysis", "fr": "Statistiques et analyse économique", "specialisations": ["Econometrics", "Business Data Analytics", "Economic Forecasting", "Survey Statistics", "Financial Statistics"]}, {"id": "ose45", "group": "ose", "groupTitle": "C. OSE / ECONOMICS & SOCIETY", "en": "Entrepreneurship and Business Development", "fr": "Entrepreneuriat et développement", "specialisations": ["Startup & Innovation Management", "SME Management", "Social Entrepreneurship", "Business Development", "E-Commerce Entrepreneurship"]}, {"id": "it46", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Computer Science", "fr": "Informatique", "specialisations": ["Artificial Intelligence", "Data Science", "Software Engineering", "Cybersecurity", "Systems & Networks"]}, {"id": "it47", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Software Engineering", "fr": "Génie logiciel", "specialisations": ["Enterprise Software Engineering", "Mobile Software Engineering", "DevOps Engineering", "Software Quality Assurance", "Software Architecture"]}, {"id": "it48", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Web and Mobile Development", "fr": "Développement web et mobile", "specialisations": ["Full-Stack Web Development", "Mobile Application Development", "Cloud-Native Development", "Front-End & UX Engineering", "E-Commerce Development"]}, {"id": "it49", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Database Systems", "fr": "Bases de données", "specialisations": ["Database Administration", "Big Data Systems", "Distributed Databases", "Data Warehousing & Business Intelligence", "Database Security"]}, {"id": "it50", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Computer Networks and Systems", "fr": "Réseaux et systèmes informatiques", "specialisations": ["Network Engineering", "Systems Administration", "Cloud Networking", "Network Security", "Wireless Networks"]}, {"id": "it51", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Cybersecurity", "fr": "Cybersécurité", "specialisations": ["Network Security", "Application Security", "Digital Forensics", "Cryptography", "Cybersecurity Governance & Risk"]}, {"id": "it52", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Artificial Intelligence", "fr": "Intelligence artificielle", "specialisations": ["Machine Learning", "Natural Language Processing", "Computer Vision", "Robotics & Intelligent Systems", "Deep Learning"]}, {"id": "it53", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Data Science", "fr": "Science des données", "specialisations": ["Machine Learning & Analytics", "Big Data Analytics", "Data Engineering", "Business Intelligence", "Applied Statistics"]}, {"id": "it54", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Cloud Computing", "fr": "Informatique en nuage", "specialisations": ["Cloud Architecture", "DevOps & Site Reliability Engineering", "Cloud Security", "Distributed Systems", "Cloud Platform Engineering"]}, {"id": "it55", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Information Systems", "fr": "Systèmes d’information", "specialisations": ["Management Information Systems", "Enterprise Resource Planning", "Business Analysis", "IT Governance", "Digital Transformation"]}, {"id": "it56", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Computer Systems and Architecture", "fr": "Systèmes et architecture informatique", "specialisations": ["Advanced Computer Architecture", "Operating Systems", "High-Performance Computing", "Hardware–Software Integration", "Computer Engineering"]}, {"id": "it57", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Internet of Things (IoT)", "fr": "Internet des objets", "specialisations": ["Smart Systems", "Industrial IoT", "Wireless Sensor Networks", "Edge Computing", "IoT Security"]}, {"id": "it58", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Embedded Systems", "fr": "Systèmes embarqués", "specialisations": ["Embedded Linux", "Real-Time Systems", "Microcontroller Systems", "Robotics & Automation", "Embedded Hardware Design"]}, {"id": "it59", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Multimedia and Digital Technology", "fr": "Multimédia et technologies numériques", "specialisations": ["Digital Media Production", "Animation & Motion Design", "Game Development", "Audio & Video Technology", "UI/UX & Interactive Media"]}, {"id": "it60", "group": "it", "groupTitle": "D. IT & COMPUTER SCIENCE", "en": "Telecommunications and Network Engineering", "fr": "Télécommunications et ingénierie réseau", "specialisations": ["Mobile & Wireless Communications", "Fiber-Optic Communications", "Advanced Network Engineering", "Digital Signal Processing", "Satellite & IoT Communications"]}];
+
+    const getiFirstYearFilieres = [{"id": "l1_01", "en": "English Studies / Anglophone Studies", "fr": "English Studies / Anglophone Studies", "specialisations": []}, {"id": "l1_02", "en": "French & Francophone Studies", "fr": "French & Francophone Studies", "specialisations": []}, {"id": "l1_03", "en": "Linguistics", "fr": "Linguistics", "specialisations": []}, {"id": "l1_04", "en": "Translation and Interpreting", "fr": "Translation and Interpreting", "specialisations": []}, {"id": "l1_05", "en": "Literature / Comparative Literature", "fr": "Literature / Comparative Literature", "specialisations": []}, {"id": "l1_06", "en": "History", "fr": "History", "specialisations": []}, {"id": "l1_07", "en": "Philosophy", "fr": "Philosophy", "specialisations": []}, {"id": "l1_08", "en": "Sociology", "fr": "Sociology", "specialisations": []}, {"id": "l1_09", "en": "Political Science", "fr": "Political Science", "specialisations": []}, {"id": "l1_10", "en": "International Relations", "fr": "International Relations", "specialisations": []}, {"id": "l1_11", "en": "Law", "fr": "Law", "specialisations": []}, {"id": "l1_12", "en": "Public Administration", "fr": "Public Administration", "specialisations": []}, {"id": "l1_13", "en": "Communication and Media Studies", "fr": "Communication and Media Studies", "specialisations": []}, {"id": "l1_14", "en": "Journalism", "fr": "Journalism", "specialisations": []}, {"id": "l1_15", "en": "Tourism and Hospitality Studies", "fr": "Tourism and Hospitality Studies", "specialisations": []}, {"id": "l1_16", "en": "Mathematics", "fr": "Mathematics", "specialisations": []}, {"id": "l1_17", "en": "Applied Mathematics", "fr": "Applied Mathematics", "specialisations": []}, {"id": "l1_18", "en": "Statistics", "fr": "Statistics", "specialisations": []}, {"id": "l1_19", "en": "Physics", "fr": "Physics", "specialisations": []}, {"id": "l1_20", "en": "Applied Physics", "fr": "Applied Physics", "specialisations": []}, {"id": "l1_21", "en": "Chemistry", "fr": "Chemistry", "specialisations": []}, {"id": "l1_22", "en": "Biochemistry", "fr": "Biochemistry", "specialisations": []}, {"id": "l1_23", "en": "Biology", "fr": "Biology", "specialisations": []}, {"id": "l1_24", "en": "Biotechnology", "fr": "Biotechnology", "specialisations": []}, {"id": "l1_25", "en": "Environmental Science", "fr": "Environmental Science", "specialisations": []}, {"id": "l1_26", "en": "Geology", "fr": "Geology", "specialisations": []}, {"id": "l1_27", "en": "Hydrogeology", "fr": "Hydrogeology", "specialisations": []}, {"id": "l1_28", "en": "Water Science and Management", "fr": "Water Science and Management", "specialisations": []}, {"id": "l1_29", "en": "Geotechnical Engineering", "fr": "Geotechnical Engineering", "specialisations": []}, {"id": "l1_30", "en": "Civil Engineering", "fr": "Civil Engineering", "specialisations": []}, {"id": "l1_31", "en": "Mechanical Engineering", "fr": "Mechanical Engineering", "specialisations": []}, {"id": "l1_32", "en": "Electrical Engineering", "fr": "Electrical Engineering", "specialisations": []}, {"id": "l1_33", "en": "Renewable Energy Engineering", "fr": "Renewable Energy Engineering", "specialisations": []}, {"id": "l1_34", "en": "Agricultural Science", "fr": "Agricultural Science", "specialisations": []}, {"id": "l1_35", "en": "Food Science and Technology", "fr": "Food Science and Technology", "specialisations": []}, {"id": "l1_36", "en": "Economics", "fr": "Economics", "specialisations": []}, {"id": "l1_37", "en": "Applied Economics", "fr": "Applied Economics", "specialisations": []}, {"id": "l1_38", "en": "Business Administration", "fr": "Business Administration", "specialisations": []}, {"id": "l1_39", "en": "Business Management", "fr": "Business Management", "specialisations": []}, {"id": "l1_40", "en": "Accounting", "fr": "Accounting", "specialisations": []}, {"id": "l1_41", "en": "Finance", "fr": "Finance", "specialisations": []}, {"id": "l1_42", "en": "Banking and Finance", "fr": "Banking and Finance", "specialisations": []}, {"id": "l1_43", "en": "Marketing", "fr": "Marketing", "specialisations": []}, {"id": "l1_44", "en": "International Business", "fr": "International Business", "specialisations": []}, {"id": "l1_45", "en": "Human Resource Management", "fr": "Human Resource Management", "specialisations": []}, {"id": "l1_46", "en": "Entrepreneurship", "fr": "Entrepreneurship", "specialisations": []}, {"id": "l1_47", "en": "Public Administration", "fr": "Public Administration", "specialisations": []}, {"id": "l1_48", "en": "Development Studies", "fr": "Development Studies", "specialisations": []}, {"id": "l1_49", "en": "Sociology", "fr": "Sociology", "specialisations": []}, {"id": "l1_50", "en": "Political Science", "fr": "Political Science", "specialisations": []}, {"id": "l1_51", "en": "International Relations", "fr": "International Relations", "specialisations": []}, {"id": "l1_52", "en": "Statistics and Economic Analysis", "fr": "Statistics and Economic Analysis", "specialisations": []}, {"id": "l1_53", "en": "Project Management", "fr": "Project Management", "specialisations": []}, {"id": "l1_54", "en": "Logistics and Supply Chain Management", "fr": "Logistics and Supply Chain Management", "specialisations": []}, {"id": "l1_55", "en": "Tourism and Hospitality Management", "fr": "Tourism and Hospitality Management", "specialisations": []}, {"id": "l1_56", "en": "Computer Science", "fr": "Computer Science", "specialisations": []}, {"id": "l1_57", "en": "Software Engineering", "fr": "Software Engineering", "specialisations": []}, {"id": "l1_58", "en": "Information Technology", "fr": "Information Technology", "specialisations": []}, {"id": "l1_59", "en": "Information Systems", "fr": "Information Systems", "specialisations": []}, {"id": "l1_60", "en": "Computer Engineering", "fr": "Computer Engineering", "specialisations": []}, {"id": "l1_61", "en": "Artificial Intelligence", "fr": "Artificial Intelligence", "specialisations": []}, {"id": "l1_62", "en": "Data Science", "fr": "Data Science", "specialisations": []}, {"id": "l1_63", "en": "Cybersecurity", "fr": "Cybersecurity", "specialisations": []}, {"id": "l1_64", "en": "Network Engineering", "fr": "Network Engineering", "specialisations": []}, {"id": "l1_65", "en": "Cloud Computing", "fr": "Cloud Computing", "specialisations": []}, {"id": "l1_66", "en": "Database Administration", "fr": "Database Administration", "specialisations": []}, {"id": "l1_67", "en": "Web Development", "fr": "Web Development", "specialisations": []}, {"id": "l1_68", "en": "Mobile Application Development", "fr": "Mobile Application Development", "specialisations": []}, {"id": "l1_69", "en": "Computer Networks and Systems", "fr": "Computer Networks and Systems", "specialisations": []}, {"id": "l1_70", "en": "Internet of Things (IoT)", "fr": "Internet of Things (IoT)", "specialisations": []}, {"id": "l1_71", "en": "Robotics and Automation", "fr": "Robotics and Automation", "specialisations": []}, {"id": "l1_72", "en": "Machine Learning", "fr": "Machine Learning", "specialisations": []}, {"id": "l1_73", "en": "Big Data and Analytics", "fr": "Big Data and Analytics", "specialisations": []}, {"id": "l1_74", "en": "Digital Systems and Technology", "fr": "Digital Systems and Technology", "specialisations": []}, {"id": "l1_75", "en": "Multimedia and Digital Technologies", "fr": "Multimedia and Digital Technologies", "specialisations": []}];
 
     let getiUniversityLevel = "";
     let getiUniversityFiliereId = "";
@@ -10078,7 +10080,7 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
     let getiUniversityCurrentSemester = "";
 
     function universityFindFiliere(id){
-      return getiUniversityFilieres.find(f => f.id === id) || null;
+      return getiFirstYearFilieres.find(f => f.id === id) || getiUniversityFilieres.find(f => f.id === id) || null;
     }
 
     function openUniversityYear(level){
@@ -10123,6 +10125,32 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
       if(!root) return;
       root.innerHTML = "";
 
+      if(getiUniversityLevel === "L1"){
+        const section = document.createElement("section");
+        section.className = "university-group-section";
+
+        const h = document.createElement("h3");
+        h.className = "university-group-title";
+        h.textContent = "First Year — Filières";
+        section.appendChild(h);
+
+        const grid = document.createElement("div");
+        grid.className = "university-filiere-grid";
+
+        getiFirstYearFilieres.forEach(f => {
+          const btn = document.createElement("button");
+          btn.className = "university-card";
+          btn.type = "button";
+          btn.innerHTML = '<span class="university-card-en">' + f.en + '</span>';
+          btn.onclick = () => openUniversityFiliere(f.id);
+          grid.appendChild(btn);
+        });
+
+        section.appendChild(grid);
+        root.appendChild(section);
+        return;
+      }
+
       getiUniversityGroups.forEach(group => {
         const section = document.createElement("section");
         section.className = "university-group-section";
@@ -10135,7 +10163,7 @@ table{border-collapse:separate!important;border-spacing:0!important;width:100%!i
         const grid = document.createElement("div");
         grid.className = "university-filiere-grid";
 
-        getiUniversityFilieres.filter(f => f.group === group.id).forEach((f, idx) => {
+        getiUniversityFilieres.filter(f => f.group === group.id).forEach(f => {
           const btn = document.createElement("button");
           btn.className = "university-card";
           btn.type = "button";
@@ -11847,6 +11875,95 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
 
 
 
+
+
+<script id="getiAnnualRegistrationGate">
+(function(){
+  const NEXT={L1:'L2',L2:'L3',L3:'M1',M1:'M2'};
+  const FIRST_SEM={L1:'S1',L2:'S3',L3:'S5',M1:'S7',M2:'S9'};
+  function pending(){try{return JSON.parse(localStorage.getItem('geti_pending_year_registration')||'null')}catch(e){return null}}
+  function setPending(from,to,fid,spec){
+    const v={from,to,filiereId:fid||'',specialisation:spec||'',passedAt:new Date().toISOString()};
+    localStorage.setItem('geti_pending_year_registration',JSON.stringify(v));
+    return v;
+  }
+  function clearPending(){localStorage.removeItem('geti_pending_year_registration')}
+  function yearName(level){return getiUniversityLevels[level]?getiUniversityLevels[level].year:level}
+  window.getiRequireNextYearRegistration=function(from,fid,spec){
+    const to=NEXT[from]; if(!to)return;
+    setPending(from,to,fid,spec);
+    if(to==='M1'){
+      alert(from+' Passed. A new registration is required before '+to+' (Fourth Year).');
+      try{getiOpenM1Registration()}catch(e){showScreen('universityM1RegistrationScreen')}
+      return;
+    }
+    getiOpenAnnualRegistration(to,fid,spec);
+  };
+  window.getiOpenAnnualRegistration=function(level,fid,spec){
+    const r=pending();
+    if(!r || r.to!==level){alert('Registration is not available for '+level+' yet. Complete the previous year first.');return}
+    getiUniversityLevel=level; getiUniversityFiliereId=fid||r.filiereId||''; getiUniversitySpecialisation=spec||r.specialisation||'';
+    const title=document.querySelector('#universityL1RegistrationScreen h2');
+    const path=document.getElementById('getiL1RegistrationPath');
+    const note=document.querySelector('#universityL1RegistrationScreen .university-flow-note');
+    const btn=document.querySelector('#universityL1RegistrationScreen button.btn-primary');
+    if(title)title.textContent=yearName(level)+' Registration';
+    if(path)path.textContent='Bachelor → '+level+' → Registration → '+FIRST_SEM[level];
+    if(note)note.innerHTML='<strong>New registration required after every Passed year.</strong> Complete this registration before starting '+level+' ('+FIRST_SEM[level]+').';
+    if(btn){btn.textContent='Register and Start '+FIRST_SEM[level];btn.onclick=function(){getiSubmitAnnualRegistration(level)}}
+    const old=localStorage.getItem('geti_l1_registration_v2');
+    if(old){try{const x=JSON.parse(old);const n=document.getElementById('getiL1RegName'),e=document.getElementById('getiL1RegEmail'),na=document.getElementById('getiL1RegNationality');if(n)n.value=x.name||'';if(e)e.value=x.email||'';if(na)na.value=x.nationality||''}catch(e){}}
+    showScreen('universityL1RegistrationScreen');
+  };
+  window.getiSubmitAnnualRegistration=function(level){
+    const r=pending(); if(!r||r.to!==level){alert('No valid '+level+' registration is pending.');return}
+    const name=document.getElementById('getiL1RegName').value.trim(),email=document.getElementById('getiL1RegEmail').value.trim(),nat=document.getElementById('getiL1RegNationality').value.trim(),file=document.getElementById('getiL1RegStudentId').files[0];
+    if(!name||!email||!nat||!file){alert('Please complete all registration fields and upload the Student ID PNG.');return}
+    if(file.type!=='image/png'&&!/\.png$/i.test(file.name)){alert('Student ID must be a PNG image.');return}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert('Please enter a valid email address.');return}
+    const rd=new FileReader();rd.onload=function(){
+      const reg={name,email,nationality:nat,studentIdPng:rd.result,filiereId:r.filiereId,level,registeredAt:new Date().toISOString()};
+      localStorage.setItem('geti_registration_'+level.toLowerCase(),JSON.stringify(reg));
+      const st=lmsLoad();st.student.activeLevel=level;st.student.name=name;st.student.registrationStatus='Registered';lmsSave(st);
+      localStorage.setItem('geti_university_current_level',level);clearPending();
+      try{if(typeof renderStudentIdCard==='function')renderStudentIdCard()}catch(e){}
+      alert(level+' registration completed. '+FIRST_SEM[level]+' is now available.');
+      openUniversityYear(level);
+    };rd.readAsDataURL(file);
+  };
+  function semPassed(level,fid,spec,sem){try{const ss=lmsSemesterSubjects(level,sem,fid,spec||'');return ss.length>0&&ss.every(x=>lmsSubjectPassed(lmsActivity({level,filiereId:fid,specialisation:spec||'',semester:sem,subjectName:x.name,credits:x.credits})))}catch(e){return false}}
+  const annualBaseSubmit=window.lmsSubmitAssessment;
+  window.lmsSubmitAssessment=function(type){
+    const ctx=getiCurrentSubjectContext?Object.assign({},getiCurrentSubjectContext):null;
+    const out=annualBaseSubmit.apply(this,arguments);
+    if(type==='exam'&&ctx&&ctx.level==='M1'&&semPassed('M1',ctx.filiereId,ctx.specialisation||'','S7')&&semPassed('M1',ctx.filiereId,ctx.specialisation||'','S8')&&!pending()){
+      setTimeout(()=>getiRequireNextYearRegistration('M1',ctx.filiereId,ctx.specialisation||''),80);
+    }
+    return out;
+  };
+  // Intercept direct access: a passed year never unlocks the next year until its new registration is completed.
+  const baseOpen=window.openUniversityYear;
+  window.openUniversityYear=function(level){
+    const r=pending();
+    if(r&&r.to===level){getiOpenAnnualRegistration(level,r.filiereId,r.specialisation);return}
+    return baseOpen.apply(this,arguments);
+  };
+  // Watch the existing progression state and convert automatic advancement into a registration gate.
+  const obs=new MutationObserver(function(){
+    const st=typeof lmsLoad==='function'?lmsLoad():null;if(!st||!st.student)return;
+    const r=pending();if(r)return;
+    const active=st.student.activeLevel||'L1';
+    const fid=st.student.admittedFiliereId||localStorage.getItem('geti_university_principal_filiere')||'';
+    // If older progression code has just advanced the level, roll it back and require registration.
+    const prev={L2:'L1',L3:'L2',M2:'M1'}[active];
+    if(prev && !localStorage.getItem('geti_registration_'+active.toLowerCase())){
+      st.student.activeLevel=prev;lmsSave(st);localStorage.setItem('geti_university_current_level',prev);setPending(prev,active,fid,st.student.specialisation||'');
+    }
+  });
+  document.addEventListener('DOMContentLoaded',()=>obs.observe(document.body,{childList:true,subtree:true}));
+})();
+</script>
+
 </body></html>`);
         w.document.close();
       }
@@ -12947,24 +13064,59 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
     // ------------------------------------------------------------
     // Student ID Card
     // ------------------------------------------------------------
+    function universityLevelStudentId(level){
+      level=(level||"L1").toUpperCase();
+      const key="geti_university_student_id_"+level.toLowerCase();
+      let id=localStorage.getItem(key);
+      if(!id){
+        const base=(localStorage.getItem("geti_university_id_seed")||String(Date.now()).slice(-8));
+        localStorage.setItem("geti_university_id_seed",base);
+        const levelCode={L1:"11",L2:"22",L3:"33",M1:"41",M2:"52"}[level]||"00";
+        id="GETI-UNI-"+level+"-"+levelCode+base.slice(-6);
+        localStorage.setItem(key,id);
+      }
+      return id;
+    }
+    function universityIdProfile(){
+      try{return JSON.parse(localStorage.getItem("geti_university_id_profile_v1")||"{}")||{}}catch(e){return{}}
+    }
+    function loadUniversityIdPhoto(input){
+      const file=input&&input.files&&input.files[0]; if(!file)return;
+      const r=new FileReader(); r.onload=()=>{const p=universityIdProfile();p.photo=r.result;localStorage.setItem("geti_university_id_profile_v1",JSON.stringify(p));renderStudentIdCard()};r.readAsDataURL(file);
+    }
+    function updateUniversityIdPhotoStyle(){
+      const p=universityIdProfile();
+      p.zoom=+(document.getElementById("uniIdZoom")?.value||100);p.x=+(document.getElementById("uniIdPosX")?.value||50);p.y=+(document.getElementById("uniIdPosY")?.value||50);
+      localStorage.setItem("geti_university_id_profile_v1",JSON.stringify(p));
+      const im=document.getElementById("universityIdPhotoPreview");if(im){im.style.objectPosition=p.x+"% "+p.y+"%";im.style.transform="scale("+(p.zoom/100)+")"}
+    }
+    function saveUniversityIdProfile(){
+      const p=universityIdProfile();p.name=(document.getElementById("uniIdName")?.value||"").trim();p.nationality=(document.getElementById("uniIdNationality")?.value||"").trim();
+      p.zoom=+(document.getElementById("uniIdZoom")?.value||100);p.x=+(document.getElementById("uniIdPosX")?.value||50);p.y=+(document.getElementById("uniIdPosY")?.value||50);
+      localStorage.setItem("geti_university_id_profile_v1",JSON.stringify(p));if(p.name)localStorage.setItem("geti_student_name",p.name);renderStudentIdCard();
+    }
     function renderStudentIdCard(){
-      const state=lmsExtState();
-      const student=lmsStudent();
-      const f=lmsFiliere(student.admittedFiliereId);
-      const root=document.getElementById("studentIdCardWrap");
-      if(!root)return;
-      root.innerHTML=`<div class="lms-id-card">
-        <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.8">GETI University</div>
-        <div style="font-size:26px;font-weight:900;margin-top:4px">Student Identification Card</div>
-        <div class="lms-id-grid">
-          <div><div class="id-label">Name</div><div class="id-value">${lmsEscape(student.name)}</div></div>
-          <div><div class="id-label">Student ID</div><div class="id-value">${lmsEscape(student.id)}</div></div>
-          <div><div class="id-label">Programme</div><div class="id-value">${f?lmsEscape(f.en):"Not selected"}</div></div>
-          <div><div class="id-label">Level</div><div class="id-value">${lmsEscape(student.activeLevel||"L1")}</div></div>
-          <div><div class="id-label">Registration</div><div class="id-value">${lmsEscape(state.enrollment.registrationStatus)}</div></div>
-          <div><div class="id-label">Fee Status</div><div class="id-value">${lmsEscape(state.enrollment.feeStatus)}</div></div>
-        </div>
-      </div>`;
+      const state=lmsExtState(),student=lmsStudent(),p=universityIdProfile();
+      const level=(student.activeLevel||localStorage.getItem("geti_university_current_level")||"L1").toUpperCase();
+      const fid=student.admittedFiliereId||localStorage.getItem("geti_university_principal_filiere")||"";const f=lmsFiliere(fid);
+      const root=document.getElementById("studentIdCardWrap");if(!root)return;
+      const name=p.name||student.name||"Student";const nationality=p.nationality||"Not entered";const uid=universityLevelStudentId(level);
+      root.innerHTML=`<div class="lms-id-card" id="universityIdCardVisual">
+        <div style="display:flex;justify-content:space-between;gap:14px;align-items:flex-start"><div><div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.8">GETI University</div><div style="font-size:25px;font-weight:900;margin-top:4px">Student Identification Card</div></div><div class="lms-id-qr" id="universityIdQr"></div></div>
+        <div class="lms-id-main"><div class="lms-id-photo">${p.photo?`<img id="universityIdPhotoPreview" src="${p.photo}" style="object-position:${p.x??50}% ${p.y??50}%;transform:scale(${(p.zoom||100)/100})">`:`<div style="color:#60758a;text-align:center;padding-top:48px;font-size:11px">PHOTO</div>`}</div>
+        <div class="lms-id-grid" style="flex:1;margin-top:0"><div><div class="id-label">Name</div><div class="id-value">${lmsEscape(name)}</div></div><div><div class="id-label">Student ID</div><div class="id-value">${lmsEscape(uid)}</div></div><div><div class="id-label">Nationality</div><div class="id-value">${lmsEscape(nationality)}</div></div><div><div class="id-label">Programme</div><div class="id-value">${f?lmsEscape(f.en):"Not selected"}</div></div><div><div class="id-label">Level</div><div class="id-value">${lmsEscape(level)}</div></div><div><div class="id-label">Registration</div><div class="id-value">${lmsEscape(state.enrollment.registrationStatus)}</div></div></div></div>
+        <div style="font-size:10px;opacity:.75;margin-top:14px">University ID • Separate from Baccalaureate Student ID</div></div>`;
+      if(typeof QRCode!=="undefined")new QRCode(document.getElementById("universityIdQr"),{text:JSON.stringify({institution:"GETI University",studentId:uid,name,level,programme:f?f.en:"Not selected"}),width:90,height:90});
+      const n=document.getElementById("uniIdName"),nat=document.getElementById("uniIdNationality"),z=document.getElementById("uniIdZoom"),x=document.getElementById("uniIdPosX"),y=document.getElementById("uniIdPosY");if(n)n.value=p.name||student.name||"";if(nat)nat.value=p.nationality||"";if(z)z.value=p.zoom||100;if(x)x.value=p.x??50;if(y)y.value=p.y??50;
+    }
+    function downloadUniversityIdPng(){
+      const card=document.getElementById("universityIdCardVisual");if(!card){alert("Create the University ID Card first.");return}
+      const r=card.getBoundingClientRect(),scale=2,c=document.createElement("canvas");c.width=Math.ceil(r.width*scale);c.height=Math.ceil(r.height*scale);const ctx=c.getContext("2d");
+      ctx.scale(scale,scale);const bg=ctx.createLinearGradient(0,0,r.width,r.height);bg.addColorStop(0,"#082e5d");bg.addColorStop(1,"#0b4b88");ctx.fillStyle=bg;ctx.fillRect(0,0,r.width,r.height);
+      const p=universityIdProfile(),student=lmsStudent(),level=(student.activeLevel||localStorage.getItem("geti_university_current_level")||"L1").toUpperCase(),uid=universityLevelStudentId(level),f=lmsFiliere(student.admittedFiliereId||localStorage.getItem("geti_university_principal_filiere")||"");
+      ctx.fillStyle="#fff";ctx.font="12px Arial";ctx.fillText("GETI UNIVERSITY",26,34);ctx.font="bold 25px Arial";ctx.fillText("Student Identification Card",26,66);
+      const photo=document.getElementById("universityIdPhotoPreview");const drawText=()=>{ctx.font="10px Arial";ctx.globalAlpha=.75;ctx.fillText("NAME",165,112);ctx.fillText("STUDENT ID",390,112);ctx.fillText("NATIONALITY",165,164);ctx.fillText("PROGRAMME",390,164);ctx.fillText("LEVEL",165,216);ctx.globalAlpha=1;ctx.font="bold 14px Arial";ctx.fillText(p.name||student.name||"Student",165,132);ctx.fillText(uid,390,132);ctx.fillText(p.nationality||"Not entered",165,184);ctx.fillText(f?f.en:"Not selected",390,184);ctx.fillText(level,165,236);const qr=document.querySelector("#universityIdQr canvas")||document.querySelector("#universityIdQr img");if(qr)ctx.drawImage(qr,r.width-124,18,90,90);const a=document.createElement("a");a.download=uid+".png";a.href=c.toDataURL("image/png");a.click()};
+      if(photo&&photo.complete){ctx.save();ctx.beginPath();ctx.rect(26,92,112,132);ctx.clip();ctx.drawImage(photo,26,92,112,132);ctx.restore();drawText()}else drawText();
     }
 
     // ------------------------------------------------------------
@@ -14365,6 +14517,179 @@ function openCourseLesson(viewerId, pdfFile, pageNo, lessonTitle){
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
   const old=window.showScreen;if(typeof old==='function')window.showScreen=function(id,navEl){old(id,navEl);const s=document.getElementById(id);decorate(s)};
 })();
+</script>
+<style id="getiUniversityProgressionV2Style">
+.geti-exam-signal{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;font-weight:800;font-size:12px;background:#fff6d8;color:#755600;border:1px solid #ead38a;margin:8px 0}.geti-exam-signal.ready{background:#e9f8ef;color:#087647;border-color:#a9dec5}.geti-semester-lock{padding:18px;border:1px dashed #c9d6e3;border-radius:12px;background:#f8fbfe;color:#526579}.geti-ue-mark{font-weight:900}.geti-redouble{background:#fff1f1!important;border-color:#e8bcbc!important;color:#8c2424!important}
+</style>
+<script id="getiUniversityProgressionV2">
+(function(){
+  const DAY=24*60*60*1000, PASS=50;
+  function loadReg(){try{return JSON.parse(localStorage.getItem('geti_l1_registration_v2')||'null')}catch(e){return null}}
+  function saveReg(v){localStorage.setItem('geti_l1_registration_v2',JSON.stringify(v))}
+  function fName(id){const f=typeof universityFindFiliere==='function'?universityFindFiliere(id):null;return f?f.en:id}
+  window.getiOpenL1Registration=function(fid){
+    getiUniversityLevel='L1';getiUniversityFiliereId=fid;getiUniversitySpecialisation='';
+    const r=loadReg(), status=document.getElementById('getiL1RegStatus');
+    const until=Number(localStorage.getItem('geti_university_reenroll_after')||0);
+    const path=document.getElementById('getiL1RegistrationPath');if(path)path.textContent='Bachelor → L1 → '+fName(fid)+' → Registration → S1';
+    if(r){const n=document.getElementById('getiL1RegName'),e=document.getElementById('getiL1RegEmail'),na=document.getElementById('getiL1RegNationality');if(n)n.value=r.name||'';if(e)e.value=r.email||'';if(na)na.value=r.nationality||''}
+    if(status && until>Date.now()){const hrs=Math.ceil((until-Date.now())/3600000);status.style.display='block';status.className='university-flow-note geti-redouble';status.innerHTML='<strong>Re-registration locked.</strong> Redoublant status is active. You can register again in about '+hrs+' hour(s).';}
+    showScreen('universityL1RegistrationScreen');
+  };
+  window.getiSubmitL1Registration=function(){
+    const name=document.getElementById('getiL1RegName').value.trim(),email=document.getElementById('getiL1RegEmail').value.trim(),nat=document.getElementById('getiL1RegNationality').value.trim(),file=document.getElementById('getiL1RegStudentId').files[0],status=document.getElementById('getiL1RegStatus');
+    const until=Number(localStorage.getItem('geti_university_reenroll_after')||0);
+    if(until>Date.now()){status.style.display='block';status.className='university-flow-note geti-redouble';status.textContent='Re-registration is available 2 days after the redoublant decision.';return}
+    if(!name||!email||!nat||!file){alert('Please complete all registration fields and upload the Student ID PNG.');return}
+    if(file.type!=='image/png' && !/\.png$/i.test(file.name)){alert('Student ID must be a PNG image.');return}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert('Please enter a valid email address.');return}
+    const rd=new FileReader();rd.onload=function(){saveReg({name,email,nationality:nat,studentIdPng:rd.result,filiereId:getiUniversityFiliereId,registeredAt:new Date().toISOString()});localStorage.setItem('geti_university_principal_filiere',getiUniversityFiliereId);renderUniversityCurriculum();showScreen('universitySubjectScreen')};rd.readAsDataURL(file);
+  };
+  const baseOpen=window.openUniversityFiliere;
+  window.openUniversityFiliere=function(fid){
+    if(getiUniversityLevel==='L1'){getiOpenL1Registration(fid);return}
+    return baseOpen.apply(this,arguments);
+  };
+  // UE rule: the exam mark itself is the UE mark. 10/20 (50%) validates the UE.
+  window.lmsSubjectAverage=function(a){return a&&a.examScore!==null&&a.examScore!==undefined?Number(a.examScore):null};
+  window.lmsSubjectPassed=function(a){return !!a && a.examScore!==null && Number(a.examScore)>=PASS};
+  function semesterPassed(level,fid,spec,sem){const ss=lmsSemesterSubjects(level,sem,fid,spec||'');return ss.length>0&&ss.every(x=>lmsSubjectPassed(lmsActivity({level,filiereId:fid,specialisation:spec||'',semester:sem,subjectName:x.name,credits:x.credits})))}
+  const baseRenderList=window.renderSemesterList;
+  window.renderSemesterList=function(prefix,sem,count,f,programme){
+    const meta=getiUniversityLevels[getiUniversityLevel],idx=meta?meta.semesters.indexOf(sem):-1;
+    if(idx===1 && !semesterPassed(getiUniversityLevel,f.id,getiUniversitySpecialisation||'',meta.semesters[0])){
+      const title=document.getElementById(prefix+'Title'),m=document.getElementById(prefix+'Meta'),list=document.getElementById(prefix+'SubjectList');if(title)title.textContent=sem+' — Locked';if(m)m.textContent='Complete every UE in '+meta.semesters[0]+' with at least 10/20.';if(list)list.innerHTML='<div class="geti-semester-lock"><strong>'+sem+' is locked.</strong><br>Validate all '+meta.semesters[0]+' UEs first. A rattrapage is available for any UE below 10/20.</div>';return
+    }
+    baseRenderList(prefix,sem,count,f,programme);
+  };
+  function examReady(a){return a && Array.isArray(a.lessons) && a.lessons.length && a.lessons.every(Boolean) && a.quizScore!==null}
+  const baseRenderExam=window.renderCourseExam;
+  window.renderCourseExam=function(){
+    const ctx=getiCurrentSubjectContext,a=ctx?lmsActivity(ctx):null,root=document.getElementById('lmsCourseExam');
+    if(!root||!ctx)return;
+    if(!examReady(a)){root.innerHTML='<div class="lms-card"><h3>Exam</h3><div class="geti-exam-signal">● Exam not ready yet</div><p>Complete all lessons and the exercises/quiz first. When ready, a green signal will appear. You may take the exam at the time that suits you.</p></div>';return}
+    baseRenderExam();
+    root.insertAdjacentHTML('afterbegin','<div class="geti-exam-signal ready">● Exam available — take it when you are ready</div>');
+    if(a.examScore!==null){const mark=(Number(a.examScore)/5).toFixed(2);root.insertAdjacentHTML('beforeend','<p class="geti-ue-mark">UE mark: '+mark+'/20 — '+(a.examScore>=PASS?'VALIDATED':'RATTRAPAGE REQUIRED')+'</p>')}
+    if((a.examAttempts||0)>=2 && a.examScore!==null && a.examScore<PASS){root.querySelectorAll('button').forEach(b=>{if(/Resit/i.test(b.textContent))b.remove()});root.insertAdjacentHTML('beforeend','<div class="university-flow-note geti-redouble"><strong>REDOUBLANT:</strong> this UE is still below 10/20 after rattrapage. New registration opens 2 days after this decision.</div>')}
+  };
+  const baseSubmit=window.lmsSubmitAssessment;
+  window.lmsSubmitAssessment=function(type){
+    if(type==='exam'){const a=getiCurrentSubjectContext?lmsActivity(getiCurrentSubjectContext):null;if(!examReady(a)){alert('Exam is not available yet. Complete lessons and exercises first.');return}}
+    const before=getiCurrentSubjectContext?lmsActivity(getiCurrentSubjectContext).examAttempts||0:0;baseSubmit(type);
+    if(type==='exam'&&getiCurrentSubjectContext){const a=lmsActivity(getiCurrentSubjectContext);if(a.examScore!==null&&a.examScore<PASS&&(a.examAttempts||0)>=2){if(!localStorage.getItem('geti_university_reenroll_after'))localStorage.setItem('geti_university_reenroll_after',String(Date.now()+2*DAY))}checkAutoProgression()}
+  };
+  const baseResit=window.lmsStartResit;
+  window.lmsStartResit=function(){const a=getiCurrentSubjectContext?lmsActivity(getiCurrentSubjectContext):null;if(a&&(a.examAttempts||0)>=2){alert('The rattrapage has already been used. Redoublant status applies.');return}baseResit()};
+  function checkAutoProgression(){
+    const ctx=getiCurrentSubjectContext;if(!ctx)return;const meta=getiUniversityLevels[ctx.level];if(!meta)return;
+    if(semesterPassed(ctx.level,ctx.filiereId,ctx.specialisation||'',meta.semesters[0])){try{renderUniversityCurriculum()}catch(e){}}
+    if(ctx.level==='L1'&&semesterPassed('L1',ctx.filiereId,'','S1')&&semesterPassed('L1',ctx.filiereId,'','S2')){setTimeout(()=>getiRequireNextYearRegistration('L1',ctx.filiereId,''),50)}
+    if(ctx.level==='L2'&&semesterPassed('L2',ctx.filiereId,'','S3')&&semesterPassed('L2',ctx.filiereId,'','S4')){setTimeout(()=>getiRequireNextYearRegistration('L2',ctx.filiereId,''),50)}
+    if(ctx.level==='L3'&&semesterPassed('L3',ctx.filiereId,'','S5')&&semesterPassed('L3',ctx.filiereId,'','S6')){getiCompleteBachelor(ctx.filiereId);setTimeout(()=>getiRequireNextYearRegistration('L3',ctx.filiereId,''),80)}
+  }
+  function getiBachelorMention(avg20){
+    if(avg20===null||!isFinite(avg20))return 'Validated';
+    if(avg20>=16)return 'Très bien';
+    if(avg20>=14)return 'Bien';
+    if(avg20>=12)return 'Assez bien';
+    return 'Passable';
+  }
+  window.getiCompleteBachelor=function(fid){
+    const state=lmsLoad(), stats=lmsLevelStats('L3',fid,''), f=typeof lmsFiliere==='function'?lmsFiliere(fid):null;
+    const avg20=stats.average===null?null:Number(stats.average)/5, mention=getiBachelorMention(avg20);
+    state.transcriptArchive=state.transcriptArchive||[];
+    if(!state.transcriptArchive.some(r=>r.level==='L3'&&r.filiere===(f?f.en:fName(fid))&&r.finalBachelorTranscript)){
+      state.transcriptArchive.push({id:'TR-L3-'+Date.now(),date:new Date().toISOString(),academicYear:new Date().getFullYear(),level:'L3',filiere:f?f.en:fName(fid),specialisation:'',earnedCredits:stats.earnedCredits,totalCredits:stats.totalCredits,average:stats.average,gpa:stats.gpa,progress:stats.progress,mention,finalBachelorTranscript:true});
+    }
+    state.diplomas=state.diplomas||[];
+    if(!state.diplomas.some(d=>(d.type==='Bachelor Degree'||d.type==='Bachelor / Licence')&&d.status==='VALID')){
+      state.diplomas.push({id:typeof lmsDiplomaId==='function'?lmsDiplomaId('BACHELOR'):'BACHELOR-'+Date.now(),studentId:state.student.id,name:state.student.name,type:'Bachelor Degree',filiere:f?f.en:fName(fid),specialisation:'',classification:mention,mention,average:stats.average,issueDate:new Date().toISOString().slice(0,10),status:'VALID'});
+    }
+    state.student.activeLevel='L3';state.student.bachelorCompleted=true;state.student.bachelorMention=mention;lmsSave(state);
+    try{renderTranscriptArchive()}catch(e){} try{renderDiplomaCenter()}catch(e){}
+    if(!sessionStorage.getItem('geti_bachelor_completion_notice')){sessionStorage.setItem('geti_bachelor_completion_notice','1');setTimeout(()=>alert('L3 validated (S5–S6). Your L3 Relevé de notes is available. Mention: '+mention+'. Bachelor Degree awarded.'),50)}
+  };
+  const baseGrade=window.renderSubjectGrade;
+  window.renderSubjectGrade=function(){baseGrade();const root=document.getElementById('lmsCourseGrade'),ctx=getiCurrentSubjectContext;if(!root||!ctx)return;const a=lmsActivity(ctx);if(a.examScore!==null){const p=root.querySelector('.lms-card');if(p)p.insertAdjacentHTML('afterbegin','<p class="geti-ue-mark">Official UE mark: '+(Number(a.examScore)/5).toFixed(2)+'/20</p>')}};
+})();
+</script>
+
+<script id="getiMasterFourthYearV1">
+(function(){
+  function bachelorInfo(){
+    const st=typeof lmsLoad==='function'?lmsLoad():{};
+    const ds=(st&&Array.isArray(st.diplomas))?st.diplomas:[];
+    const d=ds.find(x=>(x.type==='Bachelor Degree'||x.type==='Bachelor / Licence')&&x.status==='VALID');
+    const fid=(d&&d.filiereId)||localStorage.getItem('geti_university_principal_filiere')||'';
+    const f=typeof universityFindFiliere==='function'?universityFindFiliere(fid):null;
+    return {state:st,diploma:d,fid:fid,f:f};
+  }
+  function masterSpecs(f){
+    if(!f)return [];
+    const n=f.en;
+    const exact={
+      'English Studies / Anglophone Studies':['Applied Linguistics','English Literature','English Communication Studies','Translation & Interpreting','Anglophone Culture & Civilization'],
+      'French & Francophone Studies':['French Linguistics','French & Francophone Literature','French as a Foreign Language (FLE)','Translation & Interpreting','Francophone Culture & Civilization'],
+      'Computer Science':['Artificial Intelligence','Software Engineering','Data Science','Cybersecurity','Computer Systems & Networks'],
+      'Economics':['Development Economics','International Economics','Public Economics','Econometrics','Monetary & Financial Economics'],
+      'Communication and Media Studies':['Journalism','Digital Communication','Corporate Communication','Public Relations','Media Production'],
+      'Law':['Public Law','Private Law','International Law','Business Law','Human Rights Law']
+    };
+    return exact[n]||['Advanced '+n,'Applied '+n,n+' Research & Methodology','Professional Practice in '+n,'International & Contemporary '+n];
+  }
+  window.getiOpenM1Registration=function(){
+    const b=bachelorInfo();
+    if(!b.diploma || !b.f){alert('Fourth Year (M1) is available after a valid Bachelor Degree. Complete L3 first.');return;}
+    getiUniversityLevel='M1';getiUniversityFiliereId=b.fid;getiUniversitySpecialisation='';
+    const box=document.getElementById('getiM1BachelorStatus'),path=document.getElementById('getiM1RegistrationPath');
+    if(path)path.textContent='Master → Fourth Year → '+b.f.en+' → Registration → Choose 1 of 5 Specialisations';
+    if(box)box.innerHTML='<strong>Bachelor verified:</strong> '+b.f.en+'. Your M1 must continue from this Bachelor filière. After registration, choose exactly 1 of the 5 available specialisations.';
+    const old=(()=>{try{return JSON.parse(localStorage.getItem('geti_m1_registration_v1')||'null')}catch(e){return null}})();
+    if(old){document.getElementById('getiM1RegName').value=old.name||'';document.getElementById('getiM1RegEmail').value=old.email||'';document.getElementById('getiM1RegNationality').value=old.nationality||'';}
+    showScreen('universityM1RegistrationScreen');
+  };
+  window.getiSubmitM1Registration=function(){
+    const b=bachelorInfo();if(!b.diploma||!b.f){alert('A valid Bachelor Degree is required.');return;}
+    const name=document.getElementById('getiM1RegName').value.trim(),email=document.getElementById('getiM1RegEmail').value.trim(),nat=document.getElementById('getiM1RegNationality').value.trim(),file=document.getElementById('getiM1RegStudentId').files[0];
+    if(!name||!email||!nat||!file){alert('Please complete all registration fields and upload the Student ID PNG.');return;}
+    if(file.type!=='image/png'&&!/\.png$/i.test(file.name)){alert('Student ID must be a PNG image.');return;}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert('Please enter a valid email address.');return;}
+    const rd=new FileReader();rd.onload=function(){
+      localStorage.setItem('geti_m1_registration_v1',JSON.stringify({name,email,nationality:nat,studentIdPng:rd.result,filiereId:b.fid,registeredAt:new Date().toISOString()}));
+      try{const st=lmsLoad();st.student.activeLevel='M1';lmsSave(st);localStorage.setItem('geti_university_current_level','M1');localStorage.removeItem('geti_pending_year_registration');}catch(e){}
+      b.f.specialisations=masterSpecs(b.f);getiUniversityLevel='M1';getiUniversityFiliereId=b.fid;getiUniversitySpecialisation='';openUniversitySpecialisations(false);
+    };rd.readAsDataURL(file);
+  };
+  const oldOpenSpecs=window.openUniversitySpecialisations;
+  window.openUniversitySpecialisations=function(isM2Continuation){
+    const f=typeof universityFindFiliere==='function'?universityFindFiliere(getiUniversityFiliereId):null;if(f&&(!Array.isArray(f.specialisations)||f.specialisations.length!==5))f.specialisations=masterSpecs(f);
+    return oldOpenSpecs.apply(this,arguments);
+  };
+  const oldComplete=window.getiCompleteBachelor;
+  window.getiCompleteBachelor=function(fid){
+    const r=oldComplete.apply(this,arguments),st=typeof lmsLoad==='function'?lmsLoad():null;if(st&&Array.isArray(st.diplomas)){const d=st.diplomas.find(x=>(x.type==='Bachelor Degree'||x.type==='Bachelor / Licence')&&x.status==='VALID');if(d&&!d.filiereId){d.filiereId=fid;lmsSave(st);}}return r;
+  };
+})();
+
+    function getiCurrentBachelorLevel(){
+      try{
+        const state=lmsLoad();
+        const level=(state&&state.student&&state.student.activeLevel)||"L1";
+        return level==="L2"?"L2":level==="L3"?"L3":"L1";
+      }catch(e){ return "L1"; }
+    }
+    function getiRefreshBachelorYearButton(){
+      const btn=document.getElementById("getiBachelorCurrentYearButton");
+      if(!btn) return;
+      const level=getiCurrentBachelorLevel();
+      btn.textContent=level==="L2"?"Second Year":level==="L3"?"Third Year":"First Year";
+    }
+    function getiOpenCurrentBachelorYear(){
+      openUniversityYear(getiCurrentBachelorLevel());
+    }
+    document.addEventListener("DOMContentLoaded",getiRefreshBachelorYearButton);
+    document.addEventListener("click",()=>setTimeout(getiRefreshBachelorYearButton,0));
 </script>
 </body>
 </html>
