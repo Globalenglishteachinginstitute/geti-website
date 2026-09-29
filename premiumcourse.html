@@ -7,214 +7,596 @@
   <title>Premium Courses | GETI</title>
 
   <meta name="description"
-        content="Explore GETI Premium Courses and develop practical skills through structured online learning and assessment.">
+        content="Explore GETI Premium Courses, structured online training, professional development and certification opportunities.">
 
   <style>
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
       font-family: Arial, Helvetica, sans-serif;
-      background: #f7f9fc;
-      color: #1f2937;
+      background: #f8fafc;
+      color: #1e293b;
       line-height: 1.6;
     }
 
+    /* HEADER */
+
     header {
       background: #ffffff;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 18px 7%;
+      border-bottom: 1px solid #e2e8f0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 16px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
     .logo {
-      font-size: 25px;
-      font-weight: 700;
+      font-size: 26px;
+      font-weight: 800;
+      color: #0f172a;
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    nav {
+      display: flex;
+      gap: 28px;
+      align-items: center;
     }
 
     nav a {
-      color: #374151;
+      color: #475569;
       text-decoration: none;
-      margin-left: 25px;
+      font-size: 15px;
       font-weight: 600;
     }
 
+    nav a:hover {
+      color: #0f172a;
+    }
+
+    .nav-button {
+      background: #0f172a;
+      color: #ffffff !important;
+      padding: 10px 18px;
+      border-radius: 7px;
+    }
+
+    /* HERO */
+
     .hero {
-      text-align: center;
-      padding: 90px 20px;
-      background: #111827;
+      background:
+        linear-gradient(
+          135deg,
+          #020617,
+          #0f172a,
+          #1e293b
+        );
+
       color: white;
+      text-align: center;
+      padding: 110px 24px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 7px 14px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 30px;
+      margin-bottom: 22px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .7px;
     }
 
     .hero h1 {
-      font-size: 46px;
-      margin-bottom: 15px;
+      max-width: 850px;
+      margin: auto;
+      font-size: clamp(38px, 6vw, 64px);
+      line-height: 1.1;
     }
 
     .hero p {
-      max-width: 700px;
-      margin: auto;
+      max-width: 720px;
+      margin: 24px auto 0;
+      color: #cbd5e1;
       font-size: 18px;
-      color: #d1d5db;
     }
 
-    .courses {
-      max-width: 1100px;
-      margin: auto;
-      padding: 70px 20px;
-    }
-
-    .courses h2 {
-      text-align: center;
-      font-size: 32px;
-      margin-bottom: 40px;
-    }
-
-    .course-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 25px;
-    }
-
-    .course {
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 30px;
-    }
-
-    .course h3 {
-      margin-bottom: 12px;
-    }
-
-    .course p {
-      color: #6b7280;
-      margin-bottom: 22px;
+    .hero-actions {
+      margin-top: 35px;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
     }
 
     .btn {
       display: inline-block;
-      background: #111827;
-      color: white;
-      padding: 11px 20px;
-      border-radius: 6px;
+      padding: 14px 24px;
+      border-radius: 8px;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700;
+      font-size: 15px;
     }
 
-    .info {
-      max-width: 850px;
-      margin: 0 auto 70px;
-      padding: 35px;
+    .btn-primary {
       background: white;
-      border-radius: 12px;
-      border: 1px solid #e5e7eb;
+      color: #0f172a;
     }
 
-    .info h2 {
+    .btn-secondary {
+      border: 1px solid #64748b;
+      color: white;
+    }
+
+    /* GENERAL */
+
+    .container {
+      max-width: 1150px;
+      margin: auto;
+      padding: 80px 24px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-title span {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      color: #64748b;
+    }
+
+    .section-title h2 {
+      font-size: clamp(30px, 4vw, 42px);
+      margin-top: 8px;
+      color: #0f172a;
+    }
+
+    .section-title p {
+      max-width: 680px;
+      margin: 15px auto 0;
+      color: #64748b;
+    }
+
+    /* PROGRAMS */
+
+    .program-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(270px, 1fr));
+      gap: 24px;
+    }
+
+    .program-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 32px;
+      transition: .25s;
+    }
+
+    .program-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(15,23,42,.08);
+    }
+
+    .program-card .tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 800;
+      background: #f1f5f9;
+      padding: 6px 10px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+
+    .program-card h3 {
+      color: #0f172a;
+      font-size: 23px;
+      margin-bottom: 12px;
+    }
+
+    .program-card p {
+      color: #64748b;
+      margin-bottom: 24px;
+    }
+
+    .program-card a {
+      color: #0f172a;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    /* HOW IT WORKS */
+
+    .process {
+      background: #ffffff;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(210px, 1fr));
+      gap: 20px;
+    }
+
+    .step {
+      padding: 25px;
+      border-left: 3px solid #0f172a;
+    }
+
+    .step-number {
+      font-size: 13px;
+      font-weight: 800;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+
+    .step h3 {
+      margin-bottom: 8px;
+      color: #0f172a;
+    }
+
+    .step p {
+      color: #64748b;
+      font-size: 15px;
+    }
+
+    /* BENEFITS */
+
+    .benefits {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(240px, 1fr));
+      gap: 22px;
+    }
+
+    .benefit {
+      background: white;
+      padding: 28px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .benefit-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .benefit h3 {
+      margin-bottom: 8px;
+    }
+
+    .benefit p {
+      color: #64748b;
+      font-size: 15px;
+    }
+
+    /* CERTIFICATE */
+
+    .certificate-section {
+      background: #0f172a;
+      color: white;
+    }
+
+    .certificate-box {
+      max-width: 900px;
+      margin: auto;
+      text-align: center;
+      padding: 80px 24px;
+    }
+
+    .certificate-box h2 {
+      font-size: clamp(30px, 4vw, 44px);
+      margin-bottom: 20px;
+    }
+
+    .certificate-box p {
+      max-width: 700px;
+      margin: auto;
+      color: #cbd5e1;
+      font-size: 17px;
+    }
+
+    /* FAQ */
+
+    .faq {
+      max-width: 850px;
+      margin: auto;
+    }
+
+    details {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 20px;
+      cursor: pointer;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    details p {
+      padding: 0 20px 20px;
+      color: #64748b;
+    }
+
+    /* CTA */
+
+    .cta {
+      text-align: center;
+      padding: 80px 24px;
+      background: #f1f5f9;
+    }
+
+    .cta h2 {
+      font-size: clamp(30px, 4vw, 42px);
       margin-bottom: 15px;
     }
 
-    footer {
-      background: #111827;
-      color: #d1d5db;
-      text-align: center;
-      padding: 30px 20px;
+    .cta p {
+      max-width: 650px;
+      margin: 0 auto 30px;
+      color: #64748b;
     }
 
-    @media (max-width: 600px) {
-      .hero h1 {
-        font-size: 34px;
+    .cta .btn {
+      background: #0f172a;
+      color: white;
+    }
+
+    /* FOOTER */
+
+    footer {
+      background: #020617;
+      color: #94a3b8;
+      padding: 50px 24px;
+    }
+
+    .footer-container {
+      max-width: 1150px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand {
+      max-width: 420px;
+    }
+
+    .footer-brand strong {
+      color: white;
+      display: block;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: #cbd5e1;
+      text-decoration: none;
+    }
+
+    .copyright {
+      max-width: 1150px;
+      margin: 35px auto 0;
+      padding-top: 25px;
+      border-top: 1px solid #1e293b;
+      font-size: 13px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 750px) {
+
+      nav a:not(.nav-button) {
+        display: none;
       }
 
-      nav {
-        display: none;
+      .hero {
+        padding: 80px 20px;
+      }
+
+      .container {
+        padding: 60px 20px;
       }
     }
   </style>
 </head>
 
+
 <body>
 
 <header>
-  <div class="logo">GETI</div>
 
-  <nav>
-    <a href="/">Home</a>
-    <a href="/PremiumCourse.html">Premium Courses</a>
-    <a href="/uni.html">Student Portal</a>
-  </nav>
+  <div class="nav-container">
+
+    <a href="/" class="logo">
+      GETI
+    </a>
+
+    <nav>
+      <a href="/">Home</a>
+      <a href="#programs">Programs</a>
+      <a href="#certification">Certification</a>
+      <a href="#faq">FAQ</a>
+
+      <a href="#programs" class="nav-button">
+        Start Learning
+      </a>
+    </nav>
+
+  </div>
+
 </header>
 
 
+<!-- HERO -->
+
 <section class="hero">
 
-  <h1>GETI Premium Courses</h1>
+  <div class="hero-badge">
+    GETI PREMIUM LEARNING
+  </div>
+
+  <h1>
+    Build Skills.
+    Demonstrate Achievement.
+  </h1>
 
   <p>
-    Build practical knowledge, strengthen your professional skills
-    and demonstrate your achievement through structured online learning.
+    Explore structured online training designed to help
+    learners develop practical knowledge, strengthen
+    professional skills and demonstrate their achievement
+    through GETI learning and assessment.
   </p>
+
+  <div class="hero-actions">
+
+    <a href="#programs" class="btn btn-primary">
+      Explore Premium Courses →
+    </a>
+
+    <a href="#certification" class="btn btn-secondary">
+      How Certification Works
+    </a>
+
+  </div>
 
 </section>
 
 
-<section class="courses">
+<!-- PROGRAMS -->
 
-  <h2>Choose Your Training Program</h2>
+<section id="programs">
 
-  <div class="course-grid">
+  <div class="container">
 
-    <div class="course">
+    <div class="section-title">
 
-      <h3>20–168 Training Hours</h3>
+      <span>Premium Programs</span>
+
+      <h2>
+        Choose Your Training Path
+      </h2>
 
       <p>
-        Flexible professional training designed for learners
-        seeking focused skills development.
+        Select the training duration and learning path
+        that best matches your development goals.
       </p>
-
-      <a href="#" class="btn">
-        View Program
-      </a>
 
     </div>
 
 
-    <div class="course">
+    <div class="program-grid">
 
-      <h3>180–420 Training Hours</h3>
+      <div class="program-card">
 
-      <p>
-        Extended professional training for learners seeking
-        more comprehensive knowledge and development.
-      </p>
+        <span class="tag">
+          PROFESSIONAL TRAINING
+        </span>
 
-      <a href="#" class="btn">
-        View Program
-      </a>
+        <h3>
+          20–168 Training Hours
+        </h3>
 
-    </div>
+        <p>
+          Focused online training for learners seeking
+          practical knowledge and targeted professional
+          skills development.
+        </p>
+
+        <a href="#">
+          View Program →
+        </a>
+
+      </div>
 
 
-    <div class="course">
+      <div class="program-card">
 
-      <h3>Certification</h3>
+        <span class="tag">
+          ADVANCED TRAINING
+        </span>
 
-      <p>
-        Successfully complete the applicable learning and
-        assessment requirements to proceed through the GETI
-        certification process.
-      </p>
+        <h3>
+          180–420 Training Hours
+        </h3>
 
-      <a href="#" class="btn">
-        Learn More
-      </a>
+        <p>
+          Extended learning programs designed for
+          learners seeking more comprehensive knowledge
+          and professional development.
+        </p>
+
+        <a href="#">
+          View Program →
+        </a>
+
+      </div>
+
+
+      <div class="program-card">
+
+        <span class="tag">
+          CERTIFICATION
+        </span>
+
+        <h3>
+          Assessment & Certificate
+        </h3>
+
+        <p>
+          Demonstrate your knowledge and skills through
+          the applicable assessment process and complete
+          the required certification procedure.
+        </p>
+
+        <a href="#certification">
+          Learn About Certification →
+        </a>
+
+      </div>
 
     </div>
 
@@ -223,25 +605,396 @@
 </section>
 
 
-<section class="info">
+<!-- PROCESS -->
 
-  <h2>Certification Through Achievement</h2>
+<section class="process">
 
-  <p>
-    GETI certificates are earned through achievement.
-    Candidates must successfully demonstrate the knowledge,
-    skills and competencies required by their selected program.
-  </p>
+  <div class="container">
+
+    <div class="section-title">
+
+      <span>How It Works</span>
+
+      <h2>
+        Your Learning Journey
+      </h2>
+
+    </div>
+
+
+    <div class="steps">
+
+      <div class="step">
+
+        <div class="step-number">
+          STEP 01
+        </div>
+
+        <h3>
+          Choose a Program
+        </h3>
+
+        <p>
+          Select the premium training option that
+          matches your learning or professional goals.
+        </p>
+
+      </div>
+
+
+      <div class="step">
+
+        <div class="step-number">
+          STEP 02
+        </div>
+
+        <h3>
+          Complete Registration
+        </h3>
+
+        <p>
+          Provide the required information and complete
+          the applicable registration process.
+        </p>
+
+      </div>
+
+
+      <div class="step">
+
+        <div class="step-number">
+          STEP 03
+        </div>
+
+        <h3>
+          Learn & Prepare
+        </h3>
+
+        <p>
+          Follow the available learning materials and
+          prepare for the required assessment.
+        </p>
+
+      </div>
+
+
+      <div class="step">
+
+        <div class="step-number">
+          STEP 04
+        </div>
+
+        <h3>
+          Demonstrate Achievement
+        </h3>
+
+        <p>
+          Complete the applicable assessment and meet
+          the required standards for successful completion.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </section>
 
 
-<footer>
+<!-- BENEFITS -->
+
+<section>
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <span>Why GETI Premium</span>
+
+      <h2>
+        Learning Designed Around Achievement
+      </h2>
+
+    </div>
+
+
+    <div class="benefits">
+
+      <div class="benefit">
+
+        <div class="benefit-icon">01</div>
+
+        <h3>
+          Flexible Learning
+        </h3>
+
+        <p>
+          Access structured learning online and progress
+          through your selected program according to the
+          applicable learning requirements.
+        </p>
+
+      </div>
+
+
+      <div class="benefit">
+
+        <div class="benefit-icon">02</div>
+
+        <h3>
+          Practical Assessment
+        </h3>
+
+        <p>
+          Demonstrate the knowledge and competencies
+          developed through your selected learning path.
+        </p>
+
+      </div>
+
+
+      <div class="benefit">
+
+        <div class="benefit-icon">03</div>
+
+        <h3>
+          Verifiable Records
+        </h3>
+
+        <p>
+          Official certificate records can include
+          identification information designed to support
+          online certificate verification.
+        </p>
+
+      </div>
+
+
+      <div class="benefit">
+
+        <div class="benefit-icon">04</div>
+
+        <h3>
+          Professional Development
+        </h3>
+
+        <p>
+          Strengthen knowledge and skills that can support
+          your continued academic and professional development.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- CERTIFICATION -->
+
+<section
+  id="certification"
+  class="certificate-section"
+>
+
+  <div class="certificate-box">
+
+    <h2>
+      Certification Through Achievement
+    </h2>
+
+    <p>
+      GETI certificates are earned through achievement.
+      Candidates must successfully meet the applicable
+      learning and assessment requirements of their
+      selected program. This approach helps ensure that
+      certification reflects demonstrated knowledge,
+      skills and successful completion.
+    </p>
+
+  </div>
+
+</section>
+
+
+<!-- FAQ -->
+
+<section id="faq">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <span>Support</span>
+
+      <h2>
+        Frequently Asked Questions
+      </h2>
+
+      <p>
+        Quick answers about GETI Premium Courses,
+        assessments and certification.
+      </p>
+
+    </div>
+
+
+    <div class="faq">
+
+      <details>
+
+        <summary>
+          How do I start a GETI Premium Course?
+        </summary>
+
+        <p>
+          Select your preferred training program,
+          complete the applicable registration process
+          and follow the instructions provided to begin
+          your learning journey.
+        </p>
+
+      </details>
+
+
+      <details>
+
+        <summary>
+          Can I access GETI courses on mobile?
+        </summary>
+
+        <p>
+          GETI online services can be accessed using
+          compatible devices. A stable internet connection
+          and an updated browser are recommended.
+        </p>
+
+      </details>
+
+
+      <details>
+
+        <summary>
+          How does GETI certification work?
+        </summary>
+
+        <p>
+          Candidates must complete the applicable program
+          requirements and successfully meet the required
+          assessment standards before proceeding through
+          the certification process.
+        </p>
+
+      </details>
+
+
+      <details>
+
+        <summary>
+          Can my certificate be verified?
+        </summary>
+
+        <p>
+          Where an official GETI certificate record is
+          available, the corresponding certificate
+          information can be checked through the GETI
+          certificate verification system.
+        </p>
+
+      </details>
+
+
+      <details>
+
+        <summary>
+          How can I contact GETI?
+        </summary>
+
+        <p>
+          For assistance with registration, learning,
+          examinations, results or certification, contact
+          GETI Administration at admin@getienglish.com.
+        </p>
+
+      </details>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- CTA -->
+
+<section class="cta">
+
+  <h2>
+    Ready to Start Learning?
+  </h2>
 
   <p>
+    Choose a GETI Premium Course and begin building
+    knowledge and skills through structured online learning.
+  </p>
+
+  <a href="#programs" class="btn">
+    Explore Premium Courses →
+  </a>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+  <div class="footer-container">
+
+    <div class="footer-brand">
+
+      <strong>
+        Global English Teaching Institute
+      </strong>
+
+      <p>
+        Online learning, assessment and professional
+        development through GETI.
+      </p>
+
+    </div>
+
+
+    <div class="footer-links">
+
+      <a href="/">Home</a>
+
+      <a href="#programs">
+        Premium Courses
+      </a>
+
+      <a href="#certification">
+        Certification
+      </a>
+
+      <a href="#faq">
+        FAQ
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <div class="copyright">
+
     © 2026 Global English Teaching Institute (GETI).
     All rights reserved.
-  </p>
+
+  </div>
 
 </footer>
 
