@@ -393,7 +393,7 @@ function verificationSlug(){
 }
 
 function getVerificationURL(){
-  return 'https://getienglish.com/verify-id/?id='+encodeURIComponent(verificationSlug());
+  return 'https://getienglish.com/student-id-verify.html?id='+encodeURIComponent(verificationSlug());
 }
 
 function updateBadge(){
@@ -571,11 +571,6 @@ async function confirmInformation(){
   }
   if(!requireValidIdentityPhoto()) return;
 
-  if(!currentUser || !sb){
-    alert('Secure GETI connection is not available. The card cannot be confirmed.');
-    return;
-  }
-
   try{
     confirmBtn.disabled=true;
     confirmBtn.textContent='Confirming...';
@@ -583,7 +578,7 @@ async function confirmInformation(){
     const png=await renderBadgePNGDataURL();
     await persistAndLockServer(png);
 
-    alert('Information confirmed successfully. The Student ID is now saved on the GETI server and locked for 2 months.');
+    alert('Information confirmed successfully. The Student ID is saved on the GETI server and locked for 2 months.');
   }catch(err){
     console.error(err);
     alert('Server confirmation failed: '+(err.message||err));
@@ -624,27 +619,11 @@ function triggerDownload(png){
 
 
 async function getCurrentUser(){
-  if(!sb) return null;
-  try{
-    let {data:{session}}=await sb.auth.getSession();
-    if(session?.user) return session.user;
-
-    const {data,error}=await sb.auth.signInAnonymously();
-    if(error) throw error;
-    return data?.user || data?.session?.user || null;
-  }catch(err){
-    console.error('Secure session error:',err);
-    const box=document.getElementById('backendStatus');
-    if(box){
-      box.className='backend-status show bad';
-      box.textContent='Secure GETI connection failed. Enable Anonymous Sign-Ins in Supabase Authentication to issue Student IDs without a normal login.';
-    }
-    return null;
-  }
+  return null;
 }
 
 async function assignStudentId(){
-  if(!currentUser || !sb) throw new Error('Secure GETI session is required.');
+  if(!sb) throw new Error('Unable to connect to GETI server.');
   const {data,error}=await sb.rpc('next_geti_student_id');
   if(error) throw error;
   if(!data) throw new Error('Unable to generate Student ID.');
@@ -652,95 +631,59 @@ async function assignStudentId(){
   updateBadge();
 }
 
-async function signedPhotoURL(path){
-  if(!path||!sb)return '';
-  const {data,error}=await sb.storage.from('geti-student-id-photos').createSignedUrl(path,3600);
-  return error?'':data.signedUrl;
-}
 
-async function loadServerCard(){
-  if(!currentUser||!sb)return false;
-  const {data,error}=await sb.from('student_id_cards').select('*').eq('owner_user_id',currentUser.id).maybeSingle();
-  if(error||!data)return false;
-  currentCard=data;
-  studentId.value=data.student_id||'';
-  firstName.value=data.first_name||'';
-  lastName.value=data.last_name||'';
-  email.value=data.email||'';
-  phone.value=data.phone||'';
-  validUntil.value=data.valid_until||'';
-  const t=data.photo_transform||{};
-  zoom.value=t.zoom??1;rotation.value=t.rotation??0;posX.value=t.x??0;posY.value=t.y??0;
-  const signed=await signedPhotoURL(data.photo_url);
-  if(signed){
-    badgePhoto.src=signed;photoAutoValid=true;identityConfirmed.checked=true;
-    setPhotoStatus("Secure identity photo loaded.",'ok');
+
+
+
+
+
+
+
+
+
+function getEditToken(){
+  const key='geti_student_id_edit_token_'+verificationSlug();
+  let token=localStorage.getItem(key);
+  if(!token){
+    const bytes=new Uint8Array(32);
+    crypto.getRandomValues(bytes);
+    token=Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
+    localStorage.setItem(key,token);
   }
-  updateBadge();updatePhoto();applyLockUI();
-  return true;
-}
-
-function dataURLtoBlob(dataURL){
-  const [head,body]=dataURL.split(',');
-  const mime=(head.match(/:(.*?);/)||[])[1]||'image/png';
-  const bytes=atob(body),arr=new Uint8Array(bytes.length);
-  for(let i=0;i<bytes.length;i++)arr[i]=bytes.charCodeAt(i);
-  return new Blob([arr],{type:mime});
-}
-
-async function uploadPhoto(){
-  if(!selectedPhotoFile){
-    if(currentCard?.photo_url)return currentCard.photo_url;
-    throw new Error("Photo d'identité requise.");
-  }
-  const ext=(selectedPhotoFile.name.split('.').pop()||'jpg').replace(/[^a-z0-9]/gi,'').toLowerCase();
-  const path=currentUser.id+'/'+verificationSlug()+'/photo.'+ext;
-  const {error}=await sb.storage.from('geti-student-id-photos').upload(path,selectedPhotoFile,{upsert:true,contentType:selectedPhotoFile.type});
-  if(error)throw error;
-  return path;
-}
-
-async function uploadCardPNG(png){
-  const blob=dataURLtoBlob(png);
-  const path=currentUser.id+'/'+verificationSlug()+'.png';
-  const {error}=await sb.storage.from('geti-student-id-cards').upload(path,blob,{upsert:true,contentType:'image/png'});
-  if(error)throw error;
-  const {data}=sb.storage.from('geti-student-id-cards').getPublicUrl(path);
-  return data.publicUrl;
+  return token;
 }
 
 async function persistAndLockServer(png){
-  const photoPath=await uploadPhoto();
-  const cardUrl=await uploadCardPNG(png);
-  const payload={
-    owner_user_id:currentUser.id,
-    student_id:studentId.value.trim(),
-    first_name:firstName.value.trim(),
-    last_name:lastName.value.trim(),
-    course:'',
-    email:email.value.trim(),
-    phone:phone.value.trim(),
-    valid_until:validUntil.value||null,
-    photo_url:photoPath,
-    card_url:cardUrl,
-    photo_transform:{zoom:Number(zoom.value),rotation:Number(rotation.value),x:Number(posX.value),y:Number(posY.value)}
-  };
-  let saved;
-  if(currentCard?.id){
-    const {data,error}=await sb.from('student_id_cards').update(payload).eq('id',currentCard.id).select().single();
-    if(error)throw error;saved=data;
-  }else{
-    const {data,error}=await sb.from('student_id_cards').insert(payload).select().single();
-    if(error)throw error;saved=data;
-  }
-  const {data,error}=await sb.rpc('lock_student_id_card',{p_card_id:saved.id});
-  if(error)throw error;
-  currentCard=data;modificationMode=false;selectedPhotoFile=null;applyLockUI();
+  if(!sb) throw new Error('Unable to connect to GETI server.');
+
+  const {data,error}=await sb.rpc('confirm_student_id_card_public',{
+    p_student_id: studentId.value.trim(),
+    p_first_name: firstName.value.trim(),
+    p_last_name: lastName.value.trim(),
+    p_email: email.value.trim(),
+    p_phone: phone.value.trim(),
+    p_valid_until: validUntil.value || null,
+    p_card_data_url: png,
+    p_photo_transform: {
+      zoom:Number(zoom.value),
+      rotation:Number(rotation.value),
+      x:Number(posX.value),
+      y:Number(posY.value)
+    },
+    p_edit_token: getEditToken()
+  });
+
+  if(error) throw error;
+
+  currentCard=Array.isArray(data) ? data[0] : data;
+  modificationMode=false;
+  selectedPhotoFile=null;
+  applyLockUI();
 }
 
 downloadBtn.addEventListener('click',async()=>{
   if(!currentCard?.id){
-    alert('Please click Confirm Information first. The card must be saved on the GETI server before download.');
+    alert('Please click Confirm Information first.');
     return;
   }
   try{
@@ -757,25 +700,19 @@ async function init(){
   updateBadge();
   updatePhoto();
 
-  currentUser=await getCurrentUser();
-
-  if(!currentUser){
+  try{
+    await assignStudentId();
+    currentCard=null;
+    setEditingEnabled(true);
+    applyLockUI();
+  }catch(err){
+    console.error(err);
     setEditingEnabled(false);
     confirmBtn.classList.remove('show');
     downloadBtn.disabled=true;
     cardLockBox.className='lock-box locked';
-    cardLockBox.innerHTML='<strong>Secure connection unavailable</strong><br>This Student ID cannot be confirmed until a secure GETI server session is available.';
-    return;
+    cardLockBox.innerHTML='<strong>Server unavailable</strong><br>Please try again when the GETI server connection is available.';
   }
-
-  const loaded=await loadServerCard();
-  if(!loaded){
-    await assignStudentId();
-    currentCard=null;
-  }
-
-  downloadBtn.disabled=false;
-  applyLockUI();
 }
 init();
 </script>

@@ -42,14 +42,7 @@ async function verify(){
   status.textContent=st==='ACTIVE'?'GETI VERIFIED STUDENT':st;
   status.className='status '+(st==='ACTIVE'?'ok':st==='EXPIRED'?'warn':'bad');
 
-  if(row.card_url){
-    img.onload=()=>img.classList.remove('hidden');
-    img.onerror=()=>{
-      img.classList.add('hidden');
-      meta.insertAdjacentHTML('beforeend','<br><strong>Card image:</strong> unavailable');
-    };
-    img.src=row.card_url;
-  }
+  if(row.card_data_url){img.src=row.card_data_url;img.classList.remove('hidden');}
   meta.innerHTML=`<strong>Student ID:</strong> ${esc(row.student_id)}<br>
   <strong>Name:</strong> ${esc(row.first_name)} ${esc(row.last_name)}<br>
   <strong>Valid Until:</strong> ${esc(row.valid_until||'—')}<br>
