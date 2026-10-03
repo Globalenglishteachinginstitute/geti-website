@@ -41,7 +41,7 @@ header{background:linear-gradient(135deg,#052d5f,#0a66bd);color:#fff;padding:14p
 <div class="panel">
 <h2>Student Information</h2><div id="backendStatus" class="backend-status">Connecting to GETI secure database…</div>
 <div class="form-group"><label>Photo étudiant — PHOTO D'IDENTITÉ OBLIGATOIRE</label><input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp"><div class="photo-rules"><strong>Photo acceptée seulement si :</strong><br>• visage seul et bien visible<br>• personne de face, regard vers l'objectif<br>• tête et épaules visibles<br>• photo verticale, nette et suffisamment grande<br>• fond simple/neutre recommandé<br>• pas de selfie incliné, photo de groupe, filtre ou visage caché</div><div id="photoStatus" class="photo-status">Aucune photo d'identité validée.</div><label class="identity-check"><input type="checkbox" id="identityConfirmed"><span>Je confirme que cette image est une vraie photo d'identité : étudiant seul, visage de face, correctement cadré et reconnaissable.</span></label></div>
-<div class="form-group"><label>Student ID</label><input id="studentId" value="GETI-2026-0001" oninput="updateBadge()"></div>
+<div class="form-group"><label>Student ID</label><input id="studentId" value="GETI-9500" oninput="updateBadge()"></div>
 <div class="form-group"><label>First Name</label><input id="firstName" placeholder="First Name" oninput="updateBadge()"></div>
 <div class="form-group"><label>Last Name</label><input id="lastName" placeholder="Last Name" oninput="updateBadge()"></div>
 <div class="form-group"><label>Course / Program</label><input id="course" value="English Proficiency Course" oninput="updateBadge()"></div>
@@ -77,9 +77,9 @@ Rehefa voatahiry voalohany ny karatra dia tsy azo ovaina mandritra ny 2 volana.
 <script>
 function setDefaultDate(){const d=new Date();d.setFullYear(d.getFullYear()+1);validUntil.value=d.toISOString().slice(0,10)}
 function formatDate(date){if(!date)return '—';return new Date(date+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})}
-function updateBadge(){const first=firstName.value.trim(),last=lastName.value.trim();badgeName.textContent=(first||'FIRST NAME')+' '+(last||'LAST NAME');badgeId.textContent=studentId.value.trim()||'GETI-0000';badgeCourse.textContent=course.value.trim()||'ENGLISH PROGRAM';badgeEmail.textContent=email.value.trim()||'—';badgePhone.textContent=phone.value.trim()||'—';badgeValid.textContent=formatDate(validUntil.value);generateQR()}
+function updateBadge(){const first=firstName.value.trim(),last=lastName.value.trim();badgeName.textContent=(first||'FIRST NAME')+' '+(last||'LAST NAME');badgeId.textContent=studentId.value.trim()||'GETI-9500';badgeCourse.textContent=course.value.trim()||'ENGLISH PROGRAM';badgeEmail.textContent=email.value.trim()||'—';badgePhone.textContent=phone.value.trim()||'—';badgeValid.textContent=formatDate(validUntil.value);generateQR()}
 let photoAutoValid=false;function setPhotoStatus(message,type){photoStatus.textContent=message;photoStatus.className='photo-status'+(type?' '+type:'')}function validateIdentityPhotoFile(file,dataUrl){return new Promise(resolve=>{const img=new Image();img.onload=()=>{const w=img.naturalWidth,h=img.naturalHeight,ratio=w/h;if(w<300||h<400){resolve({ok:false,msg:"Photo refusée : résolution trop faible. Minimum conseillé : 300 × 400 px."});return}if(h<=w){resolve({ok:false,msg:"Photo refusée : utilisez une photo d'identité verticale, avec le visage de face."});return}if(ratio<0.50||ratio>0.90){resolve({ok:false,msg:"Photo refusée : cadrage non adapté. Utilisez une photo portrait tête/épaules proche du format identité."});return}resolve({ok:true,msg:"Format photo correct. Vérifiez maintenant que le visage est bien de face, puis cochez la confirmation."})};img.onerror=()=>resolve({ok:false,msg:"Image illisible. Choisissez une autre photo d'identité."});img.src=dataUrl})}photoInput.addEventListener('change',function(){const file=this.files[0];photoAutoValid=false;identityConfirmed.checked=false;if(!file){badgePhoto.removeAttribute('src');setPhotoStatus("Aucune photo d'identité validée.","");return}if(!/^image\/(jpeg|png|webp)$/.test(file.type)){this.value="";setPhotoStatus("Photo refusée : format accepté JPG, PNG ou WEBP.","bad");return}const reader=new FileReader();reader.onload=async e=>{const result=await validateIdentityPhotoFile(file,e.target.result);if(!result.ok){photoAutoValid=false;badgePhoto.removeAttribute('src');photoInput.value="";setPhotoStatus(result.msg,"bad");return}photoAutoValid=true;badgePhoto.src=e.target.result;resetPhoto();setPhotoStatus(result.msg,"ok")};reader.readAsDataURL(file)});function requireValidIdentityPhoto(){if(!photoAutoValid||!badgePhoto.src){alert("Mila photo d'identité tena izy aloha: portrait vertical, mazava, tête/épaules.");return false}if(!identityConfirmed.checked){alert("Hamarino aloha fa manatrika tsara ny visage ary cochez ny confirmation Photo d'identité.");return false}return true}
-function verificationSlug(){return (studentId.value.trim()||'GETI-0000').replace(/[^A-Za-z0-9_-]/g,'-')}
+function verificationSlug(){return (studentId.value.trim()||'GETI-9500').replace(/[^A-Za-z0-9_-]/g,'-')}
 function getVerificationURL(){return 'https://getienglish.com/student-id-verify.html?id='+encodeURIComponent(verificationSlug())}
 function generateQR(){qrBox.innerHTML='';const url=getVerificationURL();if(document.getElementById('verificationUrlText'))verificationUrlText.textContent=url;new QRCode(qrBox,{text:url,width:104,height:104,correctLevel:QRCode.CorrectLevel.M})}
 function updatePhoto(){const z=Number(zoom.value),r=Number(rotation.value),x=Number(posX.value),y=Number(posY.value);badgePhoto.style.transform=`translate(${x}px,${y}px) scale(${z}) rotate(${r}deg)`;zoomValue.textContent=z.toFixed(2);rotationValue.textContent=r}
@@ -209,6 +209,18 @@ async function restoreServerCard(card){
   updateBadge();
   updatePhoto();
   applyServerLockUI();
+}
+
+async function assignNextStudentId(){
+  if(!currentUser || currentCard)return;
+  const {data,error}=await sb.rpc('next_geti_student_id');
+  if(error)throw error;
+  if(data){
+    studentId.value=data;
+    studentId.readOnly=true;
+    studentId.title='Student ID generated automatically by GETI';
+    updateBadge();
+  }
 }
 
 async function loadCardFromServer(){
@@ -378,6 +390,9 @@ async function initSecureBackend(){
     }
     setBackendStatus('Connected securely as '+(user.email||'GETI user')+'. Loading Student ID…','ok');
     await loadCardFromServer();
+    if(!currentCard){
+      await assignNextStudentId();
+    }
     await prefillProfileIfEmpty();
     if(currentCard){
       setBackendStatus('Student ID loaded from GETI secure database.','ok');
