@@ -393,7 +393,7 @@ function verificationSlug(){
 }
 
 function getVerificationURL(){
-  return 'https://getienglish.com/verify-id?id='+encodeURIComponent(verificationSlug());
+  return 'https://getienglish.com/verify-id/?id='+encodeURIComponent(verificationSlug());
 }
 
 function updateBadge(){
@@ -634,6 +634,11 @@ async function getCurrentUser(){
     return data?.user || data?.session?.user || null;
   }catch(err){
     console.error('Secure session error:',err);
+    const box=document.getElementById('backendStatus');
+    if(box){
+      box.className='backend-status show bad';
+      box.textContent='Secure GETI connection failed. Enable Anonymous Sign-Ins in Supabase Authentication to issue Student IDs without a normal login.';
+    }
     return null;
   }
 }
