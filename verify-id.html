@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GETI Student ID Verification</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f8;color:#182233}.wrap{max-width:900px;margin:auto;padding:28px}.card{background:#fff;border-radius:20px;padding:24px;box-shadow:0 10px 35px rgba(0,0,0,.10);text-align:center}.brand{color:#063b78;font-weight:900;font-size:26px}.sub{color:#66788c;margin:6px 0 18px}.status{display:inline-block;padding:9px 15px;border-radius:999px;font-weight:800;margin-bottom:18px}.ok{background:#e3f7eb;color:#17633a}.bad{background:#fde9e9;color:#982525}.warn{background:#fff4d8;color:#7a5900}.cardimg{max-width:100%;border-radius:18px;box-shadow:0 10px 28px rgba(0,0,0,.18);margin:10px auto 18px;display:block}.meta{line-height:1.8;color:#4c5d6e}.meta strong{color:#183654}.foot{margin-top:22px;font-size:12px;color:#7c8997}.hidden{display:none}</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="brand">GLOBAL ENGLISH TEACHING INSTITUTE</div>
+    <div class="sub">Official Student ID Verification</div>
+    <div id="status" class="status warn">Checking…</div>
+    <img id="cardImage" class="cardimg hidden" alt="GETI Student ID">
+    <div id="meta" class="meta"></div>
+    <div class="foot">Verification data is served from the GETI secure database.</div>
+  </div>
+</div>
+<script>
+const SUPABASE_URL='https://syawyulrelrhjprnxdyn.supabase.co';
+const SUPABASE_KEY='sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+async function verify(){
+  const id=new URLSearchParams(location.search).get('id')||'';
+  const status=document.getElementById('status');
+  const meta=document.getElementById('meta');
+  const img=document.getElementById('cardImage');
+  if(!id){status.textContent='Missing Student ID';status.className='status bad';return;}
+
+  const {data,error}=await sb.rpc('verify_student_id',{p_student_id:id});
+  if(error){status.textContent='Verification unavailable';status.className='status bad';meta.textContent=error.message;return;}
+  const row=Array.isArray(data)?data[0]:data;
+  if(!row){status.textContent='Student ID not found';status.className='status bad';meta.textContent='This Student ID has not been confirmed and published on the GETI server.';return;}
+
+  const st=row.status||'ACTIVE';
+  status.textContent=st==='ACTIVE'?'GETI VERIFIED STUDENT':st;
+  status.className='status '+(st==='ACTIVE'?'ok':st==='EXPIRED'?'warn':'bad');
+
+  if(row.card_url){img.src=row.card_url;img.classList.remove('hidden');}
+  meta.innerHTML=`<strong>Student ID:</strong> ${esc(row.student_id)}<br>
+  <strong>Name:</strong> ${esc(row.first_name)} ${esc(row.last_name)}<br>
+  <strong>Valid Until:</strong> ${esc(row.valid_until||'—')}<br>
+  <strong>Issued:</strong> ${esc(row.issued_at?new Date(row.issued_at).toLocaleDateString():'—')}`;
+}
+verify();
+</script>
+</body>
+</html>
