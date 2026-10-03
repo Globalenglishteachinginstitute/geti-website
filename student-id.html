@@ -202,13 +202,12 @@ input[type=range]{padding:0;accent-color:var(--blue)}
         <label>Identity Photo</label>
         <input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp">
         <div class="photo-help">
-          Photo d'identité obligatoire: étudiant seul, visage de face, regard vers l'objectif,
-          tête et épaules visibles, photo verticale et nette.
+          Identity photo required: one student only, facing the camera, looking directly at the lens, head and shoulders visible, vertical and clear photo.
         </div>
-        <div id="photoStatus" class="photo-status">Aucune photo d'identité validée.</div>
+        <div id="photoStatus" class="photo-status">No identity photo validated.</div>
         <label class="identity-check">
           <input id="identityConfirmed" type="checkbox">
-          <span>Je confirme que la photo est une vraie photo d'identité et que le visage est bien de face.</span>
+          <span>I confirm that this is a genuine identity photo and that the student is facing the camera.</span>
         </label>
       </div>
 
@@ -274,12 +273,11 @@ input[type=range]{padding:0;accent-color:var(--blue)}
       <button class="btn btn-light" id="resetPhotoBtn" type="button">Reset Photo</button>
 
       <div id="cardLockBox" class="lock-box">
-        <strong>Card protection</strong><br>
-        Rehefa avoaka voalohany ny card dia mihidy 2 volana ny information.
-        Download PNG kosa azo atao foana.
+        <strong>Card Protection</strong><br>
+        After the card is issued for the first time, the information is locked for 2 months. PNG download remains available at any time.
       </div>
 
-      <button id="modifyBtn" class="btn btn-green" type="button">Modification</button>
+      <button id="modifyBtn" class="btn btn-green" type="button">Edit</button>
       <button id="downloadBtn" class="btn btn-primary" type="button">Download PNG</button>
 
       <div class="size-note">
@@ -424,12 +422,12 @@ function validateIdentityPhoto(dataUrl){
     const img=new Image();
     img.onload=()=>{
       const w=img.naturalWidth,h=img.naturalHeight,ratio=w/h;
-      if(w<300||h<400)return resolve({ok:false,msg:'Photo refusée: résolution trop faible. Minimum 300 × 400 px.'});
-      if(h<=w)return resolve({ok:false,msg:"Photo refusée: utilisez une photo d'identité verticale."});
-      if(ratio<.50||ratio>.90)return resolve({ok:false,msg:"Photo refusée: cadrage portrait non adapté."});
-      resolve({ok:true,msg:"Format correct. Vérifiez que le visage est bien de face puis cochez la confirmation."});
+      if(w<300||h<400)return resolve({ok:false,msg:'Photo rejected: resolution is too low. Minimum required: 300 × 400 px.'});
+      if(h<=w)return resolve({ok:false,msg:"Photo rejected: please use a vertical identity photo."});
+      if(ratio<.50||ratio>.90)return resolve({ok:false,msg:"Photo rejected: the portrait framing is not suitable."});
+      resolve({ok:true,msg:"Photo format accepted. Make sure the student is facing the camera, then confirm below."});
     };
-    img.onerror=()=>resolve({ok:false,msg:'Image illisible.'});
+    img.onerror=()=>resolve({ok:false,msg:'Unable to read the image.'});
     img.src=dataUrl;
   });
 }
@@ -441,12 +439,12 @@ photoInput.addEventListener('change',function(){
   identityConfirmed.checked=false;
   if(!file){
     badgePhoto.removeAttribute('src');
-    setPhotoStatus("Aucune photo d'identité validée.");
+    setPhotoStatus("No identity photo validated.");
     return;
   }
   if(!/^image\/(jpeg|png|webp)$/.test(file.type)){
     this.value='';
-    setPhotoStatus('Format refusé. Utilisez JPG, PNG ou WEBP.','bad');
+    setPhotoStatus('Unsupported format. Use JPG, PNG, or WEBP.','bad');
     return;
   }
   const reader=new FileReader();
@@ -469,11 +467,11 @@ photoInput.addEventListener('change',function(){
 
 function requireValidIdentityPhoto(){
   if(!photoAutoValid||!badgePhoto.src){
-    alert("Mila photo d'identité verticale sy mazava aloha.");
+    alert("A clear vertical identity photo is required.");
     return false;
   }
   if(!identityConfirmed.checked){
-    alert("Cochez la confirmation: visage de face et photo d'identité correcte.");
+    alert("Please confirm that the student is facing the camera and that the photo is a valid identity photo.");
     return false;
   }
   return true;
@@ -530,7 +528,7 @@ function isLocked(card){
 }
 
 function formatLockDate(iso){
-  return new Date(iso).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+  return new Date(iso).toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
 }
 
 function daysRemaining(iso){
@@ -542,24 +540,24 @@ function applyLockUI(){
     setEditingEnabled(true);
     modifyBtn.classList.remove('show');
     cardLockBox.className='lock-box';
-    cardLockBox.innerHTML='<strong>Card protection</strong><br>Après la première émission, les informations sont verrouillées pendant <strong>2 mois</strong>. Download PNG reste disponible.';
+    cardLockBox.innerHTML='<strong>Card Protection</strong><br>After the first issuance, the information is locked for <strong>2 months</strong>. PNG download remains available at any time.';
     return;
   }
   if(isLocked(currentCard)&&!modificationMode){
     setEditingEnabled(false);
     modifyBtn.classList.remove('show');
     cardLockBox.className='lock-box locked';
-    cardLockBox.innerHTML='<strong>Information locked</strong><br>Modification disponible à partir du <strong>'+formatLockDate(currentCard.locked_until)+'</strong> ('+daysRemaining(currentCard.locked_until)+' jours environ).';
+    cardLockBox.innerHTML='<strong>Information Locked</strong><br>Edit disponible à partir du <strong>'+formatLockDate(currentCard.locked_until)+'</strong> ('+daysRemaining(currentCard.locked_until)+' days remaining approximately).';
   }else if(!modificationMode){
     setEditingEnabled(false);
     modifyBtn.classList.add('show');
     cardLockBox.className='lock-box ready';
-    cardLockBox.innerHTML='<strong>Modification disponible</strong><br>La période de 2 mois est terminée.';
+    cardLockBox.innerHTML='<strong>Edit disponible</strong><br>The 2-month lock period has ended.';
   }else{
     setEditingEnabled(true);
     modifyBtn.classList.remove('show');
     cardLockBox.className='lock-box ready';
-    cardLockBox.innerHTML='<strong>Modification mode</strong><br>Après la prochaine émission, une nouvelle période de 2 mois commencera.';
+    cardLockBox.innerHTML='<strong>Edit mode</strong><br>After the next card issuance, a new 2-month lock period will begin.';
   }
 }
 
@@ -667,7 +665,7 @@ async function loadServerCard(){
   const signed=await signedPhotoURL(data.photo_url);
   if(signed){
     badgePhoto.src=signed;photoAutoValid=true;identityConfirmed.checked=true;
-    setPhotoStatus("Photo d'identité sécurisée chargée.",'ok');
+    setPhotoStatus("Secure identity photo loaded.",'ok');
   }
   updateBadge();updatePhoto();applyLockUI();
   return true;
@@ -733,7 +731,7 @@ async function persistAndLockServer(png){
 
 downloadBtn.addEventListener('click',async()=>{
   if(!firstName.value.trim()||!lastName.value.trim()){
-    alert('First Name sy Last Name dia obligatoire.');
+    alert('First Name and Last Name are required.');
     return;
   }
   if(currentCard&&isLocked(currentCard)&&!modificationMode){
@@ -753,7 +751,7 @@ downloadBtn.addEventListener('click',async()=>{
     triggerDownload(png);
   }catch(err){
     console.error(err);
-    alert('Erreur: '+(err.message||err));
+    alert('Error: '+(err.message||err));
   }
 });
 
