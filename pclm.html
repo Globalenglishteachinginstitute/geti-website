@@ -447,6 +447,7 @@ Preview 860 × 540 px
 }
 
 #badgeFullName{
+    display:none;
     color:#08182d;
     font-size:31px;
     line-height:1.05;
@@ -522,30 +523,46 @@ Preview 860 × 540 px
 
 .security-mark{
     position:absolute;
-    right:32px;
-    bottom:84px;
-    width:72px;
-    height:72px;
+    right:24px;
+    bottom:68px;
+    width:118px;
+    min-height:132px;
+    padding:6px 6px 5px;
     border:2px solid #c99a23;
-    border-radius:9px;
+    border-radius:10px;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    background:white;
+    background:#ffffff;
     color:#08182d;
     z-index:5;
+    box-shadow:0 3px 10px rgba(7,21,38,.12);
 }
 
-.security-mark strong{
-    font-size:16px;
+#studentQRCode{
+    width:104px;
+    height:104px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+#studentQRCode canvas,
+#studentQRCode img{
+    width:104px !important;
+    height:104px !important;
+    display:block;
 }
 
 .security-mark span{
-    margin-top:2px;
-    font-size:7px;
-    font-weight:800;
-    letter-spacing:.6px;
+    margin-top:4px;
+    font-size:6.5px;
+    font-weight:900;
+    letter-spacing:.55px;
+    text-align:center;
+    color:#7b6122;
 }
 
 .badge-footer{
@@ -1077,9 +1094,9 @@ body{padding-top:0!important;}
 
     &lt;/div&gt;
 
-    &lt;div class=&quot;security-mark&quot;&gt;
-        &lt;strong&gt;PCLM&lt;/strong&gt;
-        &lt;span&gt;VERIFIED STUDENT&lt;/span&gt;
+    &lt;div class=&quot;security-mark&quot; title=&quot;Scan to view student information&quot;&gt;
+        &lt;div id=&quot;studentQRCode&quot;&gt;&lt;/div&gt;
+        &lt;span&gt;SCAN STUDENT INFO&lt;/span&gt;
     &lt;/div&gt;
 
     &lt;div class=&quot;badge-footer&quot;&gt;
@@ -1171,6 +1188,8 @@ body{padding-top:0!important;}
 &lt;/div&gt;
 
 &lt;!-- LIBRARIES --&gt;
+
+&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js&quot;&gt;&lt;/script&gt;
 
 &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js&quot;&gt;&lt;/script&gt;
 
@@ -1321,6 +1340,46 @@ function fitProgram(){
 
 
 /* ==================================================
+STUDENT QR CODE
+The QR contains the student information shown on the card.
+================================================== */
+
+function generateStudentQR(){
+
+    const container = document.getElementById(&quot;studentQRCode&quot;);
+    if(!container || typeof QRCode === &quot;undefined&quot;) return;
+
+    const firstName = document.getElementById(&quot;studentFirstName&quot;).value.trim();
+    const lastName = document.getElementById(&quot;studentLastName&quot;).value.trim();
+    const studentId = document.getElementById(&quot;studentId&quot;).value.trim();
+    const course = document.getElementById(&quot;studentCourse&quot;).value.trim();
+    const email = document.getElementById(&quot;studentEmail&quot;).value.trim();
+    const valid = document.getElementById(&quot;validUntil&quot;).value;
+    const fullName = (firstName + &quot; &quot; + lastName).trim();
+
+    const qrText = [
+        &quot;PCLM - Proficiency Core Language Madagascar&quot;,
+        &quot;Student ID: &quot; + (studentId || &quot;-&quot;),
+        &quot;Name: &quot; + (fullName || &quot;-&quot;),
+        &quot;Program: &quot; + (course || &quot;-&quot;),
+        &quot;Email: &quot; + (email || &quot;-&quot;),
+        &quot;Valid Until: &quot; + (valid || &quot;-&quot;)
+    ].join(&quot;\n&quot;);
+
+    container.innerHTML = &quot;&quot;;
+
+    new QRCode(container,{
+        text:qrText,
+        width:104,
+        height:104,
+        colorDark:&quot;#071526&quot;,
+        colorLight:&quot;#ffffff&quot;,
+        correctLevel:QRCode.CorrectLevel.M
+    });
+}
+
+
+/* ==================================================
 UPDATE BADGE
 ================================================== */
 
@@ -1407,6 +1466,8 @@ function updateBadge(){
     ).textContent =
     valid
     || &quot;-&quot;;
+
+    generateStudentQR();
 
     requestAnimationFrame(
         () =&gt; {
