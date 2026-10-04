@@ -638,10 +638,10 @@ Preview 856 × 540 px
 
 .security-mark{
     position:absolute;
-    right:25px;
-    bottom:70px;
-    width:88px;
-    min-height:96px;
+    right:18px;
+    bottom:58px;
+    width:112px;
+    min-height:126px;
     border:2px solid #c99a23;
     border-radius:9px;
     display:flex;
@@ -656,8 +656,8 @@ Preview 856 × 540 px
 }
 
 #badgeQr{
-    width:68px;
-    height:68px;
+    width:96px;
+    height:96px;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -667,8 +667,8 @@ Preview 856 × 540 px
 
 #badgeQr canvas,
 #badgeQr img{
-    width:68px !important;
-    height:68px !important;
+    width:96px !important;
+    height:96px !important;
     display:block;
 }
 
@@ -796,6 +796,7 @@ Preview 856 × 540 px
     width:100%;
     height:100%;
     object-fit:contain;
+    display:block;
 }
 
 .back-title h3{
@@ -893,8 +894,8 @@ Preview 856 × 540 px
 }
 
 #badgeBackQr{
-    width:90px;
-    height:90px;
+    width:112px;
+    height:112px;
     background:#fff;
     border-radius:10px;
     display:flex;
@@ -906,8 +907,8 @@ Preview 856 × 540 px
 
 #badgeBackQr canvas,
 #badgeBackQr img{
-    width:78px !important;
-    height:78px !important;
+    width:96px !important;
+    height:96px !important;
     display:block;
 }
 
@@ -1797,11 +1798,12 @@ UPDATE BADGE
 
 function syncBackLogo(){
 
-    const headerLogo = document.querySelector(&quot;.header-logo&quot;);
+    const rectoLogo = document.querySelector(&quot;.logo-holder img&quot;);
     const backLogo = document.getElementById(&quot;backLogoImg&quot;);
 
-    if(headerLogo && backLogo){
-        backLogo.src = headerLogo.src;
+    if(rectoLogo && backLogo){
+        backLogo.src = rectoLogo.src;
+        backLogo.style.display = &quot;block&quot;;
     }
 }
 
@@ -1944,16 +1946,15 @@ function updateBadge(){
     syncBackLogo();
 
     const qrText = [
-        &quot;PCLM VERIFIED STUDENT&quot;,
-        &quot;Student ID: &quot; + (studentId || &quot;PCLM-0001&quot;),
-        &quot;Name: &quot; + (fullName || &quot;-&quot;),
-        &quot;Program: &quot; + (course || &quot;ENGLISH PROFICIENCY&quot;),
-        &quot;Phone: &quot; + (phone || &quot;-&quot;),
-        &quot;Valid Until: &quot; + (valid || &quot;-&quot;)
+        &quot;PCLM VERIFIED&quot;,
+        &quot;ID:&quot; + (studentId || &quot;PCLM-0001&quot;),
+        &quot;NAME:&quot; + (fullName || &quot;-&quot;),
+        &quot;PHONE:&quot; + (phone || &quot;-&quot;),
+        &quot;VALID:&quot; + (valid || &quot;-&quot;)
     ].join(&quot;\n&quot;);
 
-    renderQrCode(&quot;badgeQr&quot;, qrText, 68);
-    renderQrCode(&quot;badgeBackQr&quot;, qrText, 78);
+    renderQrCode(&quot;badgeQr&quot;, qrText, 96);
+    renderQrCode(&quot;badgeBackQr&quot;, qrText, 96);
 
     requestAnimationFrame(
         () =&gt; {
