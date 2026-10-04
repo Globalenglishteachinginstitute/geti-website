@@ -61,6 +61,16 @@ button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:7
 @media(max-width:650px){.tableau-student-totals{width:100%}.tableau-total-chip{flex:1;min-width:120px}.tableau-month-table th,.tableau-month-table td{padding:9px 8px;font-size:12px}}
 
 .payment-date-note{display:inline-block;margin-top:4px;font-size:11px;line-height:1.45;color:#475467;white-space:nowrap}.payment-date-note.no-date{color:#98a2b3;font-style:italic}.table-wrap td:nth-child(9) div{margin-bottom:5px}.table-wrap td:nth-child(9) div:last-child{margin-bottom:0}
+
+/* ===== Exclusive single-section button mode ===== */
+#adminSection.single-section-mode > .dashboard{display:none !important;}
+#adminSection.single-section-mode .main-grid{display:block !important;}
+#adminSection.single-section-mode .main-grid > div{display:contents !important;}
+#adminSection.single-section-mode .main-grid .panel{display:none !important;}
+#adminSection.single-section-mode .main-grid .panel.single-section-active{display:block !important;max-width:1450px;margin:0 auto 22px !important;}
+#adminSection.single-section-mode #promotionHistoryPanel.single-section-active,
+#adminSection.single-section-mode #studentTableauPanel.single-section-active{display:block !important;}
+#adminSection.single-section-mode .single-section-back{display:inline-flex !important;}
 </style>
 
 <style id="promotionHistoryEnhancementStyles">
@@ -99,7 +109,7 @@ button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:7
 <div class="panel"><div class="panel-title"><h2>PCLM Students</h2><input type="search" id="searchStudent" placeholder="Search student..." oninput="renderStudents()" style="max-width:230px"></div><div class="table-wrap"><table><thead><tr><th>Photo</th><th>ID</th><th>Student</th><th>Program</th><th>Registration</th><th>Paid</th><th>Remaining</th><th>School</th><th>School Month</th><th>Exam Reg.</th><th>Exam</th><th>Certificate</th><th>Total</th><th>Action</th></tr></thead><tbody id="studentTableBody"></tbody></table></div></div>
 <div class="panel"><h2>Student Payment</h2><div class="form-row"><div class="form-group"><label>Student</label><select id="paymentStudent" onchange="autoFillPaymentAmount()"></select></div><div class="form-group"><label>Payment Type</label><select id="paymentType" onchange="autoFillPaymentAmount()"><option value="registration">Registration Fee</option><option value="examRegistration">Exam Registration Fee</option><option value="exam">Exam Fee</option><option value="certificate">Certificate Fee</option><option value="other">Other Payment / Autre</option></select></div></div><div class="form-group" id="otherPaymentNameGroup" style="display:none"><label>Other Payment Name</label><input id="otherPaymentName" placeholder="Example: Uniform, Book, Badge, Activity..."></div><div class="form-row"><div class="form-group"><label id="paymentAmountLabel">Amount — Automatic</label><input id="paymentAmount" type="number" min="0"></div><div class="form-group"><label>Date — Automatic</label><input id="paymentDate" type="date"></div></div><button class="btn-green" onclick="addStudentPayment()">Add Payment</button></div>
 <div class="panel"><h2>Monthly School Fee</h2><div class="form-row"><div class="form-group"><label>Student</label><select id="schoolStudent"></select></div><div class="form-group"><label>Year — Automatic</label><input id="schoolYear" type="number"></div></div><div class="form-row"><div class="form-group"><label>Month</label><select id="schoolMonth"><option value="January">January</option><option value="February">February</option><option value="March">March</option><option value="April">April</option><option value="May">May</option><option value="June">June</option><option value="July">July</option><option value="August">August</option><option value="September">September</option><option value="October">October</option><option value="November">November</option><option value="December">December</option></select></div><div class="form-group"><label>Amount — Automatic</label><input id="schoolAmount" type="number" min="0"></div></div><div class="form-group"><label>Payment Date — Automatic</label><input id="schoolPaymentDate" type="date"></div><button class="btn-blue" onclick="addSchoolPayment()">Add School Payment</button></div>
-<div class="panel"><div class="panel-title"><button class="btn-gray" type="button" id="recentPaymentsToggleBtn" onclick="toggleRecentPayments()">Recent Payments</button><button class="btn-gray" onclick="exportBackup()">Export Backup</button></div><div id="recentPaymentsContent" style="display:none;margin-top:14px;"><div id="paymentHistory"></div></div></div><div class="panel"><h2>Expense History</h2><div id="expenseHistory"></div><div class="actions"><button class="btn-red" onclick="resetAllData()">Reset All Data</button><button class="btn-blue small-btn" type="button" onclick="nextPromotion()">Promotion</button><button class="btn-gray small-btn" type="button" onclick="togglePromotionHistory()">All Promotion History</button><button class="btn-gold small-btn" type="button" onclick="toggleStudentTableau()">Tableau</button><strong id="currentPromotionLabel" style="display:inline-flex;align-items:center;padding:0 4px;font-size:12px;">1er promotion</strong></div><div class="info">All PCLM data are saved automatically in this browser. The Student ID page reads the same student database.</div></div><div class="panel promotion-history-panel" id="promotionHistoryPanel"><div class="promotion-history-head"><div><h2>All Promotion History</h2><small style="color:#667085">Students and finances for every promotion</small></div><button class="btn-gray small-btn" type="button" onclick="renderPromotionHistory()">Refresh</button></div><div id="promotionHistoryContent"></div></div><div class="panel student-tableau-panel" id="studentTableauPanel"><div class="student-tableau-head"><div><h2>Tableau</h2><small id="studentTableauSubtitle">Monthly school fees and registration rights for each student</small></div><button class="btn-gray small-btn" type="button" onclick="renderStudentTableau()">Refresh</button></div><div id="studentTableauContent"></div></div>
+<div class="panel" id="recentPaymentsPanel"><div class="panel-title"><button class="btn-gray" type="button" id="recentPaymentsToggleBtn" onclick="toggleRecentPayments()">Recent Payments</button><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-gray" onclick="exportBackup()">Export Backup</button><button class="btn-blue single-section-back" type="button" onclick="exitSingleSectionMode()" style="display:none">← Back to Administration</button></div></div><div id="recentPaymentsContent" style="display:none;margin-top:14px;"><div id="paymentHistory"></div></div></div><div class="panel"><h2>Expense History</h2><div id="expenseHistory"></div><div class="actions"><button class="btn-red" onclick="resetAllData()">Reset All Data</button><button class="btn-blue small-btn" type="button" onclick="nextPromotion()">Promotion</button><button class="btn-gray small-btn" type="button" onclick="togglePromotionHistory()">All Promotion History</button><button class="btn-gold small-btn" type="button" onclick="toggleStudentTableau()">Tableau</button><strong id="currentPromotionLabel" style="display:inline-flex;align-items:center;padding:0 4px;font-size:12px;">1er promotion</strong></div><div class="info">All PCLM data are saved automatically in this browser. The Student ID page reads the same student database.</div></div><div class="panel promotion-history-panel" id="promotionHistoryPanel"><div class="promotion-history-head"><div><h2>All Promotion History</h2><small style="color:#667085">Students and finances for every promotion</small></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-gray small-btn" type="button" onclick="renderPromotionHistory()">Refresh</button><button class="btn-blue small-btn single-section-back" type="button" onclick="exitSingleSectionMode()" style="display:none">← Back to Administration</button></div></div><div id="promotionHistoryContent"></div></div><div class="panel student-tableau-panel" id="studentTableauPanel"><div class="student-tableau-head"><div><h2>Tableau</h2><small id="studentTableauSubtitle">Monthly school fees and registration rights for each student</small></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-gray small-btn" type="button" onclick="renderStudentTableau()">Refresh</button><button class="btn-blue small-btn single-section-back" type="button" onclick="exitSingleSectionMode()" style="display:none">← Back to Administration</button></div></div><div id="studentTableauContent"></div></div>
 </div></div></div>
 
 <section id="badgeSection" style="display:none;max-width:1600px;margin:22px auto;padding:0 18px;">
@@ -111,6 +121,7 @@ button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:7
 &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
 
 &lt;title&gt;PCLM Student Badge Manager&lt;/title&gt;
+&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js&quot;&gt;&lt;/script&gt;
 
 &lt;style&gt;
 *{
@@ -582,30 +593,48 @@ Preview 860 × 540 px
 
 .security-mark{
     position:absolute;
-    right:32px;
-    bottom:84px;
-    width:72px;
-    height:72px;
+    right:25px;
+    bottom:70px;
+    width:88px;
+    min-height:96px;
     border:2px solid #c99a23;
     border-radius:9px;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
+    gap:3px;
+    padding:5px;
     background:white;
     color:#08182d;
     z-index:5;
 }
 
-.security-mark strong{
-    font-size:16px;
+#badgeQr{
+    width:68px;
+    height:68px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:#fff;
+}
+
+#badgeQr canvas,
+#badgeQr img{
+    width:68px !important;
+    height:68px !important;
+    display:block;
 }
 
 .security-mark span{
-    margin-top:2px;
-    font-size:7px;
-    font-weight:800;
-    letter-spacing:.6px;
+    margin-top:1px;
+    font-size:6px;
+    line-height:1.1;
+    text-align:center;
+    font-weight:900;
+    letter-spacing:.35px;
+    color:#08182d;
 }
 
 .badge-footer{
@@ -1137,9 +1166,9 @@ body{padding-top:0!important;}
 
     &lt;/div&gt;
 
-    &lt;div class=&quot;security-mark&quot;&gt;
-        &lt;strong&gt;PCLM&lt;/strong&gt;
-        &lt;span&gt;VERIFIED STUDENT&lt;/span&gt;
+    &lt;div class=&quot;security-mark&quot; title=&quot;Scan to verify student information&quot;&gt;
+        &lt;div id=&quot;badgeQr&quot;&gt;&lt;/div&gt;
+        &lt;span&gt;PCLM VERIFIED STUDENT&lt;/span&gt;
     &lt;/div&gt;
 
     &lt;div class=&quot;badge-footer&quot;&gt;
@@ -1469,6 +1498,32 @@ function updateBadge(){
     ).textContent =
     valid
     || &quot;-&quot;;
+
+    const qrBox = document.getElementById(&quot;badgeQr&quot;);
+    if(qrBox){
+        qrBox.innerHTML = &quot;&quot;;
+        const qrText = [
+            &quot;PCLM VERIFIED STUDENT&quot;,
+            &quot;Student ID: &quot; + (studentId || &quot;PCLM-0001&quot;),
+            &quot;Name: &quot; + (fullName || &quot;-&quot;),
+            &quot;Program: &quot; + (course || &quot;ENGLISH PROFICIENCY&quot;),
+            &quot;Valid Until: &quot; + (valid || &quot;-&quot;)
+        ].join(&quot;\n&quot;);
+
+        if(typeof QRCode !== &quot;undefined&quot;){
+            new QRCode(qrBox,{
+                text: qrText,
+                width: 68,
+                height: 68,
+                colorDark: &quot;#000000&quot;,
+                colorLight: &quot;#ffffff&quot;,
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        }else{
+            qrBox.innerHTML = &quot;&lt;div style=\&quot;font-size:7px;text-align:center;padding:6px;line-height:1.2\&quot;&gt;QR loading...&lt;/div&gt;&quot;;
+            setTimeout(updateBadge,600);
+        }
+    }
 
     requestAnimationFrame(
         () =&gt; {
@@ -2635,7 +2690,39 @@ function promotionData(n){return {students:JSON.parse(localStorage.getItem(promo
 function promotionStats(list,exps){let r=0,s=0,er=0,e=0,c=0,o=0;(list||[]).forEach(x=>{r+=paymentTotal(x,'registration');s+=paymentTotal(x,'school');er+=paymentTotal(x,'examRegistration');e+=paymentTotal(x,'exam');c+=paymentTotal(x,'certificate');o+=paymentTotal(x,'other')});const received=r+s+er+e+c+o,expensesTotal=(exps||[]).reduce((a,x)=>a+(+x.amount||0),0);return {students:(list||[]).length,received,expenses:expensesTotal,balance:received-expensesTotal,registration:r,school:s,exam:er+e,certificate:c,other:o}}
 function getHighestPromotion(){let max=currentPromotion;for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i)||'';let m=k.match(/^pclm_students_finance_v1_promotion_(\d+)$/);if(!m)m=k.match(/^pclm_expenses_finance_v1_promotion_(\d+)$/);if(m)max=Math.max(max,Number(m[1])||1)}return Math.max(1,max)}
 function escapePromotionHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function togglePromotionHistory(){const panel=document.getElementById('promotionHistoryPanel');if(!panel)return;panel.classList.toggle('active');if(panel.classList.contains('active')){renderPromotionHistory();setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}),50)}}
+function enterSingleSectionMode(panelId){
+    const admin=document.getElementById('adminSection');
+    if(!admin)return;
+    admin.classList.add('single-section-mode');
+    document.querySelectorAll('#adminSection .panel').forEach(p=>p.classList.remove('single-section-active'));
+    const panel=document.getElementById(panelId);
+    if(panel){
+        panel.classList.add('single-section-active');
+        panel.classList.add('active');
+        setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}),30);
+    }
+}
+function exitSingleSectionMode(){
+    const admin=document.getElementById('adminSection');
+    if(!admin)return;
+    admin.classList.remove('single-section-mode');
+    document.querySelectorAll('#adminSection .panel').forEach(p=>p.classList.remove('single-section-active'));
+    const recent=document.getElementById('recentPaymentsContent');
+    if(recent) recent.style.display='none';
+    const recentBtn=document.getElementById('recentPaymentsToggleBtn');
+    if(recentBtn) recentBtn.textContent='Recent Payments';
+    const ph=document.getElementById('promotionHistoryPanel');
+    const tb=document.getElementById('studentTableauPanel');
+    if(ph) ph.classList.remove('active');
+    if(tb) tb.classList.remove('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+function togglePromotionHistory(){
+    const panel=document.getElementById('promotionHistoryPanel');
+    if(!panel)return;
+    renderPromotionHistory();
+    enterSingleSectionMode('promotionHistoryPanel');
+}
 function renderPromotionHistory(){const box=document.getElementById('promotionHistoryContent');if(!box)return;const max=getHighestPromotion();let grand={students:0,received:0,expenses:0,balance:0,registration:0,school:0,exam:0,certificate:0};let blocks='';for(let n=1;n<=max;n++){const d=promotionData(n),st=promotionStats(d.students,d.expenses);Object.keys(grand).forEach(k=>grand[k]+=st[k]||0);let studentRows='';d.students.forEach(x=>{const regPaid=paymentTotal(x,'registration'),regRemain=Math.max(0,(+x.registrationFee||0)-regPaid);studentRows+=`<tr><td><strong>${escapePromotionHtml(x.studentId||'-')}</strong></td><td><strong>${escapePromotionHtml(x.name||'-')}</strong><br><small>${escapePromotionHtml(x.email||'')}</small></td><td>${escapePromotionHtml(x.course||'-')}</td><td>${money(regPaid)}</td><td>${money(regRemain)}</td><td>${money(paymentTotal(x,'school'))}</td><td>${money(paymentTotal(x,'examRegistration')+paymentTotal(x,'exam'))}</td><td>${money(paymentTotal(x,'certificate'))}</td><td><strong>${money(studentTotal(x))}</strong></td></tr>`});let expenseRows='';d.expenses.slice().reverse().forEach(e=>{expenseRows+=`<div class="promotion-expense-row"><div><strong>${escapePromotionHtml(e.description||'Expense')}</strong><br><small>${escapePromotionHtml(e.date||'')}</small></div><strong>${money(e.amount)}</strong></div>`});blocks+=`<div class="promotion-block"><div class="promotion-block-head"><h3>${promotionLabel(n)}</h3><span>${n===currentPromotion?'Current promotion':'Saved history'}</span></div><div class="promotion-mini-dashboard"><div class="promotion-mini-card"><small>Students</small><strong>${st.students}</strong></div><div class="promotion-mini-card"><small>Total Received</small><strong>${money(st.received)}</strong></div><div class="promotion-mini-card"><small>Total Expenses</small><strong>${money(st.expenses)}</strong></div><div class="promotion-mini-card"><small>Balance</small><strong>${money(st.balance)}</strong></div><div class="promotion-mini-card"><small>Registration</small><strong>${money(st.registration)}</strong></div><div class="promotion-mini-card"><small>School Fees</small><strong>${money(st.school)}</strong></div><div class="promotion-mini-card"><small>Exam Payments</small><strong>${money(st.exam)}</strong></div><div class="promotion-mini-card"><small>Certificate</small><strong>${money(st.certificate)}</strong></div></div><div class="promotion-section-title">Students (${st.students})</div>${d.students.length?`<div class="promotion-student-table table-wrap"><table><thead><tr><th>ID</th><th>Student</th><th>Program</th><th>Registration Paid</th><th>Registration Remaining</th><th>School</th><th>Exam</th><th>Certificate</th><th>Total Paid</th></tr></thead><tbody>${studentRows}</tbody></table></div>`:'<div class="promotion-empty">No student recorded in this promotion.</div>'}<div class="promotion-section-title">Expenses (${d.expenses.length})</div>${d.expenses.length?`<div class="promotion-expenses">${expenseRows}</div>`:'<div class="promotion-empty">No expense recorded in this promotion.</div>'}</div>`}box.innerHTML=`<div class="promotion-grand-summary"><div class="promotion-summary-card"><small>All Promotions</small><strong>${max}</strong></div><div class="promotion-summary-card"><small>Total Students</small><strong>${grand.students}</strong></div><div class="promotion-summary-card"><small>Total Received</small><strong>${money(grand.received)}</strong></div><div class="promotion-summary-card"><small>Total Expenses</small><strong>${money(grand.expenses)}</strong></div><div class="promotion-summary-card"><small>Global Balance</small><strong>${money(grand.balance)}</strong></div><div class="promotion-summary-card"><small>Registration Total</small><strong>${money(grand.registration)}</strong></div><div class="promotion-summary-card"><small>School Fees Total</small><strong>${money(grand.school)}</strong></div><div class="promotion-summary-card"><small>Exam + Certificate</small><strong>${money(grand.exam+grand.certificate)}</strong></div></div>${blocks}`}
 
 const money=v=>Number(v||0).toLocaleString('fr-FR')+' Ar';
@@ -2659,11 +2746,8 @@ function saveExpenses(){
 function toggleStudentTableau(){
     const panel=document.getElementById('studentTableauPanel');
     if(!panel)return;
-    panel.classList.toggle('active');
-    if(panel.classList.contains('active')){
-        renderStudentTableau();
-        setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}),50);
-    }
+    renderStudentTableau();
+    enterSingleSectionMode('studentTableauPanel');
 }
 function tableauMonthInfo(payment){
     const en=['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -3036,10 +3120,11 @@ function renderPaymentHistory(){
 function toggleRecentPayments(){
     const content=document.getElementById('recentPaymentsContent');
     const btn=document.getElementById('recentPaymentsToggleBtn');
-    if(!content||!btn) return;
-    const isOpen=content.style.display!=='none';
-    content.style.display=isOpen?'none':'block';
-    btn.textContent=isOpen?'Recent Payments':'Recent Payments ▲';
+    if(!content||!btn)return;
+    content.style.display='block';
+    btn.textContent='Recent Payments';
+    if(typeof renderPaymentHistory==='function') renderPaymentHistory();
+    enterSingleSectionMode('recentPaymentsPanel');
 }
 </script>
 </body></html>
