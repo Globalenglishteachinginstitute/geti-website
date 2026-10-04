@@ -1,55 +1,3519 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GETI Student ID Verification</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f8;color:#182233}.wrap{max-width:900px;margin:auto;padding:28px}.card{background:#fff;border-radius:20px;padding:24px;box-shadow:0 10px 35px rgba(0,0,0,.10);text-align:center}.brand{color:#063b78;font-weight:900;font-size:26px}.sub{color:#66788c;margin:6px 0 18px}.status{display:inline-block;padding:9px 15px;border-radius:999px;font-weight:800;margin-bottom:18px}.ok{background:#e3f7eb;color:#17633a}.bad{background:#fde9e9;color:#982525}.warn{background:#fff4d8;color:#7a5900}.cardimg{max-width:100%;border-radius:18px;box-shadow:0 10px 28px rgba(0,0,0,.18);margin:10px auto 18px;display:block}.meta{line-height:1.8;color:#4c5d6e}.meta strong{color:#183654}.foot{margin-top:22px;font-size:12px;color:#7c8997}.hidden{display:none}</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>GETI Collaboration</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: #f4f7fb;
+      color: #1f2937;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .site-header {
+      width: 100%;
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      box-shadow: 0 3px 15px rgba(0,0,0,.06);
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+    }
+
+    .navbar {
+      max-width: 1200px;
+      min-height: 72px;
+      margin: auto;
+      padding: 0 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      position: relative;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #0b4ea2;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #0b4ea2;
+      color: white;
+
+      border-radius: 10px;
+
+      font-size: 23px;
+      font-weight: 800;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-text strong {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .brand-text span {
+      font-size: 10px;
+      color: #6b7280;
+      margin-top: 5px;
+    }
+
+    /* =========================
+       DESKTOP MENU
+    ========================= */
+
+    .desktop-menu {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .desktop-menu a {
+      color: #374151;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 11px;
+      border-radius: 8px;
+    }
+
+    .desktop-menu a:hover {
+      background: #eef5ff;
+      color: #0b4ea2;
+    }
+
+    /* =========================
+       THREE LINE MENU
+    ========================= */
+
+    .menu-toggle {
+      width: 44px;
+      height: 44px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+
+      gap: 5px;
+
+      border: none;
+      border-radius: 9px;
+
+      background: #f3f6fa;
+
+      cursor: pointer;
+    }
+
+    .menu-toggle span {
+      width: 22px;
+      height: 2px;
+
+      background: #0b4ea2;
+
+      border-radius: 10px;
+
+      transition: .25s;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .side-menu {
+      position: absolute;
+      top: 62px;
+      right: 20px;
+
+      width: 245px;
+
+      padding: 10px;
+
+      background: white;
+
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+
+      box-shadow: 0 15px 35px rgba(0,0,0,.12);
+
+      display: none;
+
+      z-index: 10000;
+    }
+
+    .side-menu.open {
+      display: block;
+    }
+
+    .side-menu a {
+      display: block;
+
+      padding: 13px 14px;
+
+      border-radius: 8px;
+
+      text-decoration: none;
+
+      color: #374151;
+
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .side-menu a:hover {
+      background: #eef5ff;
+      color: #0b4ea2;
+    }
+
+    .side-menu a.active {
+      background: #0b4ea2;
+      color: white;
+    }
+
+    .menu-divider {
+      height: 1px;
+      background: #e5e7eb;
+      margin: 8px 0;
+    }
+
+    /* =========================
+       PAGE
+    ========================= */
+
+    .page {
+      padding: 30px 15px 60px;
+    }
+
+    .main-card {
+      max-width: 820px;
+      margin: auto;
+
+      background: white;
+
+      border-radius: 20px;
+
+      overflow: hidden;
+
+      box-shadow: 0 12px 40px rgba(0,0,0,.08);
+    }
+
+    .hero {
+      padding: 38px 25px;
+
+      text-align: center;
+
+      background: #0b4ea2;
+
+      color: white;
+    }
+
+    .hero h1 {
+      margin: 0 0 9px;
+      font-size: 31px;
+    }
+
+    .hero p {
+      margin: auto;
+      max-width: 620px;
+      line-height: 1.6;
+      opacity: .95;
+    }
+
+    .content {
+      padding: 32px;
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      color: #0b4ea2;
+      font-size: 26px;
+    }
+
+    .section-subtitle {
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    /* =========================
+       STEPS
+    ========================= */
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+
+      gap: 8px;
+
+      margin-bottom: 28px;
+    }
+
+    .step-indicator {
+      padding: 10px 5px;
+
+      background: #f3f4f6;
+
+      border-radius: 8px;
+
+      text-align: center;
+
+      font-size: 12px;
+      font-weight: 700;
+
+      color: #6b7280;
+    }
+
+    .step-indicator.active {
+      background: #0b4ea2;
+      color: white;
+    }
+
+    .step-indicator.completed {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    /* =========================
+       FORMS
+    ========================= */
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+
+      font-weight: 700;
+
+      margin-bottom: 7px;
+
+      line-height: 1.4;
+    }
+
+    .required {
+      color: #dc2626;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+
+      padding: 13px 14px;
+
+      border: 1px solid #d1d5db;
+
+      border-radius: 10px;
+
+      font-size: 15px;
+
+      outline: none;
+
+      background: white;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #0b4ea2;
+      box-shadow: 0 0 0 4px rgba(11,78,162,.08);
+    }
+
+    textarea {
+      min-height: 115px;
+      resize: vertical;
+    }
+
+    /* =========================
+       BUTTONS
+    ========================= */
+
+    .btn {
+      width: 100%;
+
+      padding: 14px 18px;
+
+      border: none;
+
+      border-radius: 10px;
+
+      background: #0b4ea2;
+
+      color: white;
+
+      font-size: 16px;
+      font-weight: 700;
+
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #083d82;
+    }
+
+    .secondary-btn {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .secondary-btn:hover {
+      background: #d1d5db;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+
+      margin-top: 15px;
+    }
+
+    /* =========================
+       CHECKBOX
+    ========================= */
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .check-card {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+
+      padding: 11px;
+
+      border: 1px solid #dbe3ed;
+      border-radius: 9px;
+
+      background: #f8fafc;
+
+      cursor: pointer;
+
+      font-weight: 500;
+    }
+
+    .check-card input {
+      width: auto;
+      margin: 0;
+    }
+
+    /* =========================
+       REVIEW
+    ========================= */
+
+    .review-box {
+      background: #f8fafc;
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 12px;
+
+      padding: 18px;
+
+      margin-bottom: 20px;
+    }
+
+    .review-row {
+      padding: 10px 0;
+
+      border-bottom: 1px solid #e5e7eb;
+
+      line-height: 1.5;
+
+      word-break: break-word;
+    }
+
+    .review-row:last-child {
+      border-bottom: none;
+    }
+
+    .review-row strong {
+      color: #0b4ea2;
+    }
+
+    .agreement {
+      padding: 18px;
+
+      margin-bottom: 20px;
+
+      background: #eef5ff;
+
+      border-left: 4px solid #0b4ea2;
+
+      border-radius: 8px;
+
+      line-height: 1.65;
+    }
+
+    /* =========================
+       SIGNATURE
+    ========================= */
+
+    .signature-wrap {
+      padding: 15px;
+
+      border: 2px dashed #aeb7c2;
+
+      border-radius: 12px;
+
+      background: #fafafa;
+    }
+
+    #signatureCanvas {
+      width: 100%;
+      height: 180px;
+
+      display: block;
+
+      background: white;
+
+      border: 1px solid #cfd6df;
+
+      border-radius: 8px;
+
+      cursor: crosshair;
+
+      touch-action: none;
+    }
+
+    .signature-note {
+      text-align: center;
+
+      color: #6b7280;
+
+      font-size: 13px;
+
+      margin-top: 8px;
+    }
+
+    /* =========================
+       SUCCESS
+    ========================= */
+
+    .success {
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 84px;
+      height: 84px;
+
+      margin: 0 auto 20px;
+
+      border-radius: 50%;
+
+      background: #dcfce7;
+
+      color: #15803d;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 44px;
+      font-weight: 800;
+    }
+
+    .status {
+      margin: 20px 0;
+
+      padding: 16px;
+
+      border-radius: 10px;
+
+      background: #fff7ed;
+
+      color: #9a3412;
+
+      font-weight: 700;
+    }
+
+    /* =====================================================
+       COLLABORATION AREA - LIKE STUDENT AREA
+    ===================================================== */
+
+    .collaboration-dashboard {
+      width: 100%;
+    }
+
+    .area-menu-toggle {
+      display: none;
+
+      width: 100%;
+
+      padding: 12px;
+
+      margin-bottom: 15px;
+
+      border: none;
+
+      border-radius: 8px;
+
+      background: #0b4ea2;
+
+      color: white;
+
+      font-weight: 700;
+
+      cursor: pointer;
+    }
+
+    .collaboration-layout {
+      display: grid;
+      grid-template-columns: 245px 1fr;
+
+      min-height: 650px;
+
+      margin: -32px;
+    }
+
+    /* =========================
+       COLLAB SIDEBAR
+    ========================= */
+
+    .collaboration-sidebar {
+      background: #0b4ea2;
+
+      color: white;
+
+      padding: 25px 15px;
+    }
+
+    .sidebar-profile {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+
+      padding: 0 8px 18px;
+    }
+
+    .sidebar-avatar {
+      width: 46px;
+      height: 46px;
+
+      border-radius: 50%;
+
+      background: white;
+
+      color: #0b4ea2;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .sidebar-profile strong {
+      display: block;
+
+      color: white;
+
+      max-width: 150px;
+
+      white-space: nowrap;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+    }
+
+    .sidebar-profile span {
+      display: block;
+
+      margin-top: 3px;
+
+      font-size: 11px;
+
+      opacity: .8;
+    }
+
+    .sidebar-id {
+      margin: 0 8px 20px;
+
+      padding: 9px;
+
+      background: rgba(255,255,255,.12);
+
+      border-radius: 8px;
+
+      font-size: 11px;
+
+      word-break: break-all;
+    }
+
+    .area-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .area-nav-btn {
+      width: 100%;
+
+      border: none;
+
+      background: transparent;
+
+      color: rgba(255,255,255,.86);
+
+      padding: 12px 13px;
+
+      border-radius: 8px;
+
+      text-align: left;
+
+      font-size: 14px;
+      font-weight: 600;
+
+      cursor: pointer;
+
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .area-nav-btn:hover {
+      background: rgba(255,255,255,.12);
+      color: white;
+    }
+
+    .area-nav-btn.active {
+      background: white;
+      color: #0b4ea2;
+    }
+
+    .sidebar-divider {
+      height: 1px;
+
+      background: rgba(255,255,255,.18);
+
+      margin: 12px 5px;
+    }
+
+    .logout-btn {
+      color: #ffd9d9;
+    }
+
+    /* =========================
+       AREA MAIN
+    ========================= */
+
+    .collaboration-main {
+      background: #f5f7fb;
+
+      padding: 30px;
+
+      min-width: 0;
+    }
+
+    .collab-section {
+      display: none;
+    }
+
+    .collab-section.active-section {
+      display: block;
+    }
+
+    .area-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      gap: 15px;
+
+      margin-bottom: 24px;
+    }
+
+    .area-title h2 {
+      margin: 0;
+
+      color: #0b4ea2;
+    }
+
+    .area-title p {
+      margin: 6px 0 0;
+
+      color: #6b7280;
+    }
+
+    .pending-badge {
+      display: inline-block;
+
+      padding: 8px 12px;
+
+      background: #fff7ed;
+
+      color: #c2410c;
+
+      border-radius: 20px;
+
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .big-status {
+      font-size: 14px;
+
+      padding: 10px 15px;
+    }
+
+    /* =========================
+       DASHBOARD SUMMARY
+    ========================= */
+
+    .dashboard-summary {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+
+      background: white;
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 12px;
+
+      margin-bottom: 20px;
+
+      overflow: hidden;
+    }
+
+    .summary-item {
+      padding: 18px;
+
+      border-right: 1px solid #e5e7eb;
+    }
+
+    .summary-item:last-child {
+      border-right: none;
+    }
+
+    .summary-label {
+      display: block;
+
+      color: #6b7280;
+
+      font-size: 12px;
+
+      margin-bottom: 7px;
+    }
+
+    .success-text {
+      color: #15803d;
+    }
+
+    /* =========================
+       AREA PANELS
+    ========================= */
+
+    .info-panel,
+    .status-main,
+    .message-item,
+    .empty-state {
+      background: white;
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 12px;
+
+      padding: 20px;
+    }
+
+    .info-panel h3 {
+      color: #0b4ea2;
+
+      margin-top: 0;
+    }
+
+    /* =========================
+       PROGRESS
+    ========================= */
+
+    .progress-item {
+      display: flex;
+
+      gap: 13px;
+
+      padding: 15px 0;
+
+      border-bottom: 1px solid #eef0f3;
+    }
+
+    .progress-item:last-child {
+      border-bottom: none;
+    }
+
+    .progress-circle {
+      width: 34px;
+      height: 34px;
+
+      flex: 0 0 34px;
+
+      border-radius: 50%;
+
+      background: #e5e7eb;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-weight: 700;
+    }
+
+    .completed-progress .progress-circle {
+      background: #dcfce7;
+
+      color: #15803d;
+    }
+
+    .pending-circle {
+      background: #fff7ed;
+
+      color: #c2410c;
+    }
+
+    .progress-item p {
+      margin: 4px 0 0;
+
+      color: #6b7280;
+
+      font-size: 13px;
+    }
+
+    /* =========================
+       INFO ROW
+    ========================= */
+
+    .info-row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+
+      gap: 15px;
+
+      padding: 13px 0;
+
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-row span {
+      color: #6b7280;
+    }
+
+    /* =========================
+       DOCUMENTS
+    ========================= */
+
+    .document-list {
+      background: white;
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 12px;
+
+      overflow: hidden;
+    }
+
+    .document-row {
+      padding: 17px 20px;
+
+      display: flex;
+      justify-content: space-between;
+
+      gap: 20px;
+
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .document-row:last-child {
+      border-bottom: none;
+    }
+
+    .document-row strong {
+      display: block;
+    }
+
+    .document-row div span {
+      display: block;
+
+      color: #6b7280;
+
+      margin-top: 5px;
+
+      font-size: 13px;
+    }
+
+    /* =========================
+       MESSAGES
+    ========================= */
+
+    .message-item strong {
+      color: #0b4ea2;
+    }
+
+    .message-item > span {
+      display: block;
+
+      margin-top: 4px;
+
+      color: #6b7280;
+
+      font-size: 12px;
+    }
+
+    .message-item p {
+      line-height: 1.6;
+    }
+
+    /* =========================
+       PROGRAMS
+    ========================= */
+
+    .simple-list {
+      background: white;
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 12px;
+
+      overflow: hidden;
+    }
+
+    .simple-list div {
+      padding: 15px 18px;
+
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .simple-list div:last-child {
+      border-bottom: none;
+    }
+
+    /* =========================
+       EMPTY
+    ========================= */
+
+    .empty-state {
+      text-align: center;
+
+      padding: 45px 20px;
+    }
+
+    .empty-state p {
+      color: #6b7280;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      margin-top: 60px;
+
+      padding: 25px 20px;
+
+      text-align: center;
+
+      background: white;
+
+      border-top: 1px solid #e5e7eb;
+
+      color: #6b7280;
+
+      font-size: 13px;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media(max-width:850px) {
+      .desktop-menu {
+        display: none;
+      }
+
+      .side-menu {
+        top: 68px;
+        left: 15px;
+        right: 15px;
+        width: auto;
+      }
+
+      .brand-text span {
+        display: none;
+      }
+    }
+
+    @media(max-width:760px) {
+      .collaboration-layout {
+        display: block;
+        margin: -20px;
+      }
+
+      .area-menu-toggle {
+        display: block;
+      }
+
+      .collaboration-sidebar {
+        display: none;
+      }
+
+      .collaboration-sidebar.mobile-open {
+        display: block;
+      }
+
+      .collaboration-main {
+        padding: 20px;
+      }
+
+      .dashboard-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-item {
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .summary-item:last-child {
+        border-bottom: none;
+      }
+
+      .info-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+      }
+
+      .area-title {
+        flex-direction: column;
+      }
+    }
+
+    @media(max-width:620px) {
+      .page {
+        padding: 18px 10px 40px;
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      .hero {
+        padding: 30px 18px;
+      }
+
+      .hero h1 {
+        font-size: 25px;
+      }
+
+      .steps {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .checkbox-grid,
+      .button-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div class="wrap">
-  <div class="card">
-    <div class="brand">GLOBAL ENGLISH TEACHING INSTITUTE</div>
-    <div class="sub">Official Student ID Verification</div>
-    <div id="status" class="status warn">Checking…</div>
-    <img id="cardImage" class="cardimg hidden" alt="GETI Student ID">
-    <div id="meta" class="meta"></div>
-    <div class="foot">Verification data is served from the GETI secure database.</div>
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="site-header">
+
+  <div class="navbar">
+
+    <a href="index.html" class="brand">
+
+      <div class="brand-logo">
+        G
+      </div>
+
+      <div class="brand-text">
+
+        <strong>
+          GETI
+        </strong>
+
+        <span>
+          Global English Teaching Institute
+        </span>
+
+      </div>
+
+    </a>
+
+    <nav class="desktop-menu">
+
+      <a href="index.html">
+        Home
+      </a>
+
+      <a href="course.html">
+        Courses
+      </a>
+
+      <a href="certificate.html">
+        Certificates
+      </a>
+
+      <a href="student-id.html">
+        Student ID
+      </a>
+
+      <a href="verify-id.html">
+        Verification
+      </a>
+
+    </nav>
+
+    <button
+      id="menuToggle"
+      type="button"
+      class="menu-toggle"
+      aria-label="Open menu"
+    >
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+    </button>
+
+    <div id="sideMenu" class="side-menu">
+
+      <a
+        href="collaboration.html"
+        class="active"
+      >
+        Collaboration
+      </a>
+
+      <a href="about.html">
+        About GETI
+      </a>
+
+      <a href="contact.html">
+        Contact
+      </a>
+
+      <div class="menu-divider"></div>
+
+      <a href="index.html">
+        Main Website
+      </a>
+
+    </div>
+
   </div>
-</div>
+
+</header>
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="page">
+
+  <div class="main-card">
+
+    <div class="hero">
+
+      <h1>
+        Collaboration with GETI
+      </h1>
+
+      <p>
+        Submit your collaboration application,
+        prepare your dossier and access your
+        GETI Collaboration Area.
+      </p>
+
+    </div>
+
+    <div class="content">
+
+      <!-- STEP INDICATORS -->
+
+      <div id="stepsIndicator" class="steps">
+
+        <div id="indicator1" class="step-indicator active">
+          1. Registration
+        </div>
+
+        <div id="indicator2" class="step-indicator">
+          2. Dossier
+        </div>
+
+        <div id="indicator3" class="step-indicator">
+          3. Signature
+        </div>
+
+        <div id="indicator4" class="step-indicator">
+          4. Submission
+        </div>
+
+      </div>
+
+      <!-- =========================
+           STEP 1
+      ========================= -->
+
+      <section id="step1">
+
+        <h2 class="section-title">
+          Collaboration Registration
+        </h2>
+
+        <p class="section-subtitle">
+          Complete the form below to start your collaboration application.
+        </p>
+
+        <div class="form-group">
+
+          <label>
+            Full Name
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="name"
+            type="text"
+            placeholder="Enter your full name"
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            Email Address
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="email"
+            type="email"
+            placeholder="example@email.com"
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            Phone Number
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="phone"
+            type="tel"
+            placeholder="+261 ..."
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            School / Center / Club / Organization
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="organization"
+            type="text"
+            placeholder="Organization name"
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            Why do you choose GETI?
+            <span class="required">*</span>
+          </label>
+
+          <textarea
+            id="reason"
+            placeholder="Explain why you would like to collaborate with GETI..."
+          ></textarea>
+
+        </div>
+
+        <button
+          id="submitRegistrationBtn"
+          type="button"
+          class="btn"
+        >
+          Submit Registration
+        </button>
+
+      </section>
+
+      <!-- =========================
+           STEP 2
+      ========================= -->
+
+      <section id="step2" class="hidden">
+
+        <h2 class="section-title">
+          Fill This
+        </h2>
+
+        <p class="section-subtitle">
+          Complete this information before preparing your collaboration dossier.
+        </p>
+
+        <div class="form-group">
+
+          <label>
+            Organization / School / Center / Club Name
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="orgName"
+            type="text"
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            Your Position / Role
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="role"
+            type="text"
+            placeholder="Director, Teacher, President..."
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            Organization Address
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="address"
+            type="text"
+            placeholder="Organization address"
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            Country
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="country"
+            type="text"
+            placeholder="Country"
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            Type of Collaboration
+            <span class="required">*</span>
+          </label>
+
+          <div class="checkbox-grid">
+
+            <label class="check-card">
+              <input
+                type="checkbox"
+                name="collaborationType"
+                value="School Partnership"
+              >
+              School Partnership
+            </label>
+
+            <label class="check-card">
+              <input
+                type="checkbox"
+                name="collaborationType"
+                value="Training Center Partnership"
+              >
+              Training Center Partnership
+            </label>
+
+            <label class="check-card">
+              <input
+                type="checkbox"
+                name="collaborationType"
+                value="Club Partnership"
+              >
+              Club Partnership
+            </label>
+
+            <label class="check-card">
+              <input
+                type="checkbox"
+                name="collaborationType"
+                value="Teacher Training"
+              >
+              Teacher Training
+            </label>
+
+            <label class="check-card">
+              <input
+                type="checkbox"
+                name="collaborationType"
+                value="English Course Partnership"
+              >
+              English Course Partnership
+            </label>
+
+            <label class="check-card">
+              <input
+                type="checkbox"
+                name="collaborationType"
+                value="Educational Program"
+              >
+              Educational Program
+            </label>
+
+            <label class="check-card">
+              <input
+                type="checkbox"
+                name="collaborationType"
+                value="Student Program"
+              >
+              Student Program
+            </label>
+
+            <label class="check-card">
+              <input
+                type="checkbox"
+                name="collaborationType"
+                value="Other"
+              >
+              Other
+            </label>
+
+          </div>
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            What kind of collaboration would you like to develop with GETI?
+            <span class="required">*</span>
+          </label>
+
+          <textarea
+            id="collaborationProposal"
+            placeholder="Describe your collaboration proposal..."
+          ></textarea>
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            Proposed Activity / Project
+            <span class="required">*</span>
+          </label>
+
+          <textarea
+            id="project"
+            placeholder="Describe the proposed activity or project..."
+          ></textarea>
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            Expected Participants
+          </label>
+
+          <input
+            id="participants"
+            type="number"
+            min="0"
+            placeholder="Example: 25"
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            Preferred Starting Date
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="startDate"
+            type="date"
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            Additional Information
+          </label>
+
+          <textarea
+            id="additional"
+            placeholder="Optional additional information..."
+          ></textarea>
+
+        </div>
+
+        <div class="button-row">
+
+          <button
+            id="backRegistrationBtn"
+            type="button"
+            class="btn secondary-btn"
+          >
+            Back
+          </button>
+
+          <button
+            id="continueDossierBtn"
+            type="button"
+            class="btn"
+          >
+            Continue to Dossier
+          </button>
+
+        </div>
+
+      </section>
+
+      <!-- =========================
+           STEP 3
+      ========================= -->
+
+      <section id="step3" class="hidden">
+
+        <h2 class="section-title">
+          Review & Sign Your Dossier
+        </h2>
+
+        <p class="section-subtitle">
+          Review all information carefully before signing.
+        </p>
+
+        <div class="review-box">
+
+          <div class="review-row">
+            <strong>Registration ID:</strong>
+            <span id="rId"></span>
+          </div>
+
+          <div class="review-row">
+            <strong>Full Name:</strong>
+            <span id="rName"></span>
+          </div>
+
+          <div class="review-row">
+            <strong>Email:</strong>
+            <span id="rEmail"></span>
+          </div>
+
+          <div class="review-row">
+            <strong>Phone:</strong>
+            <span id="rPhone"></span>
+          </div>
+
+          <div class="review-row">
+            <strong>Organization:</strong>
+            <span id="rOrganization"></span>
+          </div>
+
+          <div class="review-row">
+            <strong>Position / Role:</strong>
+            <span id="rRole"></span>
+          </div>
+
+          <div class="review-row">
+            <strong>Address:</strong>
+            <span id="rAddress"></span>
+          </div>
+
+          <div class="review-row">
+            <strong>Country:</strong>
+            <span id="rCountry"></span>
+          </div>
+
+          <div class="review-row">
+            <strong>Collaboration Type:</strong>
+            <span id="rType"></span>
+          </div>
+
+          <div class="review-row">
+            <strong>Why GETI:</strong>
+            <span id="rReason"></span>
+          </div>
+
+          <div class="review-row">
+            <strong>Collaboration Proposal:</strong>
+            <span id="rProposal"></span>
+          </div>
+
+          <div class="review-row">
+            <strong>Proposed Project:</strong>
+            <span id="rProject"></span>
+          </div>
+
+          <div class="review-row">
+            <strong>Expected Participants:</strong>
+            <span id="rParticipants"></span>
+          </div>
+
+          <div class="review-row">
+            <strong>Preferred Starting Date:</strong>
+            <span id="rDate"></span>
+          </div>
+
+          <div class="review-row">
+            <strong>Additional Information:</strong>
+            <span id="rAdditional"></span>
+          </div>
+
+        </div>
+
+        <div class="agreement">
+
+          <strong>
+            Collaboration Declaration
+          </strong>
+
+          <p>
+            I confirm that all information provided in this collaboration application
+            is accurate and complete.
+          </p>
+
+          <p>
+            I express my intention to collaborate with the Global English Teaching
+            Institute (GETI) and authorize GETI to review this application
+            and contact me regarding the proposed collaboration.
+          </p>
+
+        </div>
+
+        <label>
+          Applicant Signature
+          <span class="required">*</span>
+        </label>
+
+        <div class="signature-wrap">
+
+          <canvas id="signatureCanvas"></canvas>
+
+          <p class="signature-note">
+            Sign inside the box using your mouse or finger.
+          </p>
+
+          <div class="button-row">
+
+            <button
+              id="clearSignatureBtn"
+              type="button"
+              class="btn secondary-btn"
+            >
+              Clear Signature
+            </button>
+
+            <button
+              id="submitDossierBtn"
+              type="button"
+              class="btn"
+            >
+              Submit Signed Dossier
+            </button>
+
+          </div>
+
+        </div>
+
+        <div style="margin-top:12px;">
+
+          <button
+            id="backDossierBtn"
+            type="button"
+            class="btn secondary-btn"
+          >
+            Back to Fill This
+          </button>
+
+        </div>
+
+      </section>
+
+      <!-- =========================
+           STEP 4
+      ========================= -->
+
+      <section id="step4" class="hidden success">
+
+        <div class="success-icon">
+          ✓
+        </div>
+
+        <h2 class="section-title">
+          Dossier Submitted Successfully
+        </h2>
+
+        <p class="section-subtitle">
+          Your signed collaboration dossier has been submitted successfully to GETI.
+        </p>
+
+        <div class="review-box" style="text-align:left;">
+
+          <div class="review-row">
+
+            <strong>
+              Registration ID:
+            </strong>
+
+            <span id="finalId"></span>
+
+          </div>
+
+          <div class="review-row">
+
+            <strong>
+              Applicant:
+            </strong>
+
+            <span id="finalName"></span>
+
+          </div>
+
+          <div class="review-row">
+
+            <strong>
+              Dossier:
+            </strong>
+
+            <span class="success-text">
+              Signed
+            </span>
+
+          </div>
+
+        </div>
+
+        <div class="status">
+          Application Status: Pending Review
+        </div>
+
+        <button
+          id="continueAreaBtn"
+          type="button"
+          class="btn"
+        >
+          Continue
+        </button>
+
+      </section>
+
+      <!-- =================================================
+           COLLABORATION AREA
+      ================================================= -->
+
+      <section
+        id="collaborationArea"
+        class="hidden collaboration-dashboard"
+      >
+
+        <button
+          id="areaMenuToggle"
+          class="area-menu-toggle"
+          type="button"
+        >
+          ☰ Collaboration Menu
+        </button>
+
+        <div class="collaboration-layout">
+
+          <!-- SIDEBAR -->
+
+          <aside
+            id="collaborationSidebar"
+            class="collaboration-sidebar"
+          >
+
+            <div class="sidebar-profile">
+
+              <div class="sidebar-avatar">
+                G
+              </div>
+
+              <div>
+
+                <strong id="sidebarName">
+                  Applicant
+                </strong>
+
+                <span>
+                  Collaboration Area
+                </span>
+
+              </div>
+
+            </div>
+
+            <div
+              id="sidebarRegistrationId"
+              class="sidebar-id"
+            >
+              GETI-COL
+            </div>
+
+            <nav class="area-nav">
+
+              <button
+                type="button"
+                class="area-nav-btn active"
+                data-section="dashboardHome"
+              >
+                <span>⌂</span>
+                Dashboard
+              </button>
+
+              <button
+                type="button"
+                class="area-nav-btn"
+                data-section="myDossier"
+              >
+                <span>📄</span>
+                My Dossier
+              </button>
+
+              <button
+                type="button"
+                class="area-nav-btn"
+                data-section="applicationStatus"
+              >
+                <span>✓</span>
+                Application Status
+              </button>
+
+              <button
+                type="button"
+                class="area-nav-btn"
+                data-section="documentsSection"
+              >
+                <span>📁</span>
+                Documents
+              </button>
+
+              <button
+                type="button"
+                class="area-nav-btn"
+                data-section="messagesSection"
+              >
+                <span>✉</span>
+                Messages
+              </button>
+
+              <button
+                type="button"
+                class="area-nav-btn"
+                data-section="programsSection"
+              >
+                <span>📚</span>
+                Programs
+              </button>
+
+              <button
+                type="button"
+                class="area-nav-btn"
+                data-section="activitiesSection"
+              >
+                <span>📅</span>
+                Activities
+              </button>
+
+              <button
+                type="button"
+                class="area-nav-btn"
+                data-section="informationSection"
+              >
+                <span>👤</span>
+                My Information
+              </button>
+
+              <button
+                type="button"
+                class="area-nav-btn"
+                data-section="supportSection"
+              >
+                <span>?</span>
+                Support
+              </button>
+
+              <div class="sidebar-divider"></div>
+
+              <button
+                type="button"
+                id="logoutAreaBtn"
+                class="area-nav-btn logout-btn"
+              >
+                <span>↪</span>
+                Log Out
+              </button>
+
+            </nav>
+
+          </aside>
+
+          <!-- MAIN -->
+
+          <div class="collaboration-main">
+
+            <!-- DASHBOARD -->
+
+            <section
+              id="dashboardHome"
+              class="collab-section active-section"
+            >
+
+              <div class="area-title">
+
+                <div>
+
+                  <h2>
+                    Collaboration Dashboard
+                  </h2>
+
+                  <p>
+                    Welcome,
+                    <strong id="dashboardName"></strong>
+                  </p>
+
+                </div>
+
+                <span class="pending-badge">
+                  Pending Review
+                </span>
+
+              </div>
+
+              <div class="dashboard-summary">
+
+                <div class="summary-item">
+
+                  <span class="summary-label">
+                    Registration ID
+                  </span>
+
+                  <strong id="dashboardRegistrationId">
+                    —
+                  </strong>
+
+                </div>
+
+                <div class="summary-item">
+
+                  <span class="summary-label">
+                    Dossier
+                  </span>
+
+                  <strong class="success-text">
+                    Signed
+                  </strong>
+
+                </div>
+
+                <div class="summary-item">
+
+                  <span class="summary-label">
+                    Application
+                  </span>
+
+                  <strong>
+                    Pending Review
+                  </strong>
+
+                </div>
+
+              </div>
+
+              <div class="info-panel">
+
+                <h3>
+                  Application Progress
+                </h3>
+
+                <div class="progress-item completed-progress">
+
+                  <span class="progress-circle">
+                    ✓
+                  </span>
+
+                  <div>
+
+                    <strong>
+                      Registration
+                    </strong>
+
+                    <p>
+                      Registration information completed.
+                    </p>
+
+                  </div>
+
+                </div>
+
+                <div class="progress-item completed-progress">
+
+                  <span class="progress-circle">
+                    ✓
+                  </span>
+
+                  <div>
+
+                    <strong>
+                      Collaboration Dossier
+                    </strong>
+
+                    <p>
+                      Collaboration dossier completed.
+                    </p>
+
+                  </div>
+
+                </div>
+
+                <div class="progress-item completed-progress">
+
+                  <span class="progress-circle">
+                    ✓
+                  </span>
+
+                  <div>
+
+                    <strong>
+                      Signature
+                    </strong>
+
+                    <p>
+                      Signed dossier received.
+                    </p>
+
+                  </div>
+
+                </div>
+
+                <div class="progress-item">
+
+                  <span class="progress-circle pending-circle">
+                    4
+                  </span>
+
+                  <div>
+
+                    <strong>
+                      Administrative Review
+                    </strong>
+
+                    <p>
+                      Your application is awaiting GETI review.
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </section>
+
+            <!-- DOSSIER -->
+
+            <section
+              id="myDossier"
+              class="collab-section"
+            >
+
+              <div class="area-title">
+
+                <div>
+
+                  <h2>
+                    My Dossier
+                  </h2>
+
+                  <p>
+                    Review your collaboration dossier.
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div class="info-panel">
+
+                <div class="info-row">
+
+                  <span>
+                    Registration ID
+                  </span>
+
+                  <strong id="dossierAreaId"></strong>
+
+                </div>
+
+                <div class="info-row">
+
+                  <span>
+                    Applicant
+                  </span>
+
+                  <strong id="dossierAreaName"></strong>
+
+                </div>
+
+                <div class="info-row">
+
+                  <span>
+                    Organization
+                  </span>
+
+                  <strong id="dossierAreaOrg"></strong>
+
+                </div>
+
+                <div class="info-row">
+
+                  <span>
+                    Position / Role
+                  </span>
+
+                  <strong id="dossierAreaRole"></strong>
+
+                </div>
+
+                <div class="info-row">
+
+                  <span>
+                    Collaboration Type
+                  </span>
+
+                  <strong id="dossierAreaType"></strong>
+
+                </div>
+
+                <div class="info-row">
+
+                  <span>
+                    Dossier Status
+                  </span>
+
+                  <strong class="success-text">
+                    Signed
+                  </strong>
+
+                </div>
+
+              </div>
+
+            </section>
+
+            <!-- STATUS -->
+
+            <section
+              id="applicationStatus"
+              class="collab-section"
+            >
+
+              <div class="area-title">
+
+                <div>
+
+                  <h2>
+                    Application Status
+                  </h2>
+
+                  <p>
+                    Track your collaboration application.
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div class="status-main">
+
+                <span class="pending-badge big-status">
+                  Pending Review
+                </span>
+
+                <p>
+                  GETI has received your signed collaboration dossier.
+                  Your application is currently waiting for administrative review.
+                </p>
+
+              </div>
+
+            </section>
+
+            <!-- DOCUMENTS -->
+
+            <section
+              id="documentsSection"
+              class="collab-section"
+            >
+
+              <div class="area-title">
+
+                <div>
+
+                  <h2>
+                    Documents
+                  </h2>
+
+                  <p>
+                    Your collaboration documents.
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div class="document-list">
+
+                <div class="document-row">
+
+                  <div>
+
+                    <strong>
+                      Collaboration Registration
+                    </strong>
+
+                    <span>
+                      Submitted
+                    </span>
+
+                  </div>
+
+                  <span class="success-text">
+                    ✓
+                  </span>
+
+                </div>
+
+                <div class="document-row">
+
+                  <div>
+
+                    <strong>
+                      Signed Collaboration Dossier
+                    </strong>
+
+                    <span>
+                      Received by GETI
+                    </span>
+
+                  </div>
+
+                  <span class="success-text">
+                    ✓
+                  </span>
+
+                </div>
+
+                <div class="document-row">
+
+                  <div>
+
+                    <strong>
+                      Partnership Agreement
+                    </strong>
+
+                    <span>
+                      Available after approval
+                    </span>
+
+                  </div>
+
+                  <span>
+                    Pending
+                  </span>
+
+                </div>
+
+                <div class="document-row">
+
+                  <div>
+
+                    <strong>
+                      Official Approval
+                    </strong>
+
+                    <span>
+                      Not yet available
+                    </span>
+
+                  </div>
+
+                  <span>
+                    Pending
+                  </span>
+
+                </div>
+
+              </div>
+
+            </section>
+
+            <!-- MESSAGES -->
+
+            <section
+              id="messagesSection"
+              class="collab-section"
+            >
+
+              <div class="area-title">
+
+                <div>
+
+                  <h2>
+                    Messages
+                  </h2>
+
+                  <p>
+                    Messages from GETI administration.
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div class="message-item">
+
+                <strong>
+                  GETI Administration
+                </strong>
+
+                <span>
+                  Application received
+                </span>
+
+                <p>
+                  Your collaboration dossier has been received successfully.
+                  Our administration will review your application and
+                  contact you if additional information is required.
+                </p>
+
+              </div>
+
+            </section>
+
+            <!-- PROGRAMS -->
+
+            <section
+              id="programsSection"
+              class="collab-section"
+            >
+
+              <div class="area-title">
+
+                <div>
+
+                  <h2>
+                    Programs
+                  </h2>
+
+                  <p>
+                    Programs available for collaboration.
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div class="simple-list">
+
+                <div>
+                  A1–C2 English Courses
+                </div>
+
+                <div>
+                  TEFL Teacher Training
+                </div>
+
+                <div>
+                  TESOL Professional Training
+                </div>
+
+                <div>
+                  School English Programs
+                </div>
+
+                <div>
+                  Teacher Development Programs
+                </div>
+
+                <div>
+                  Student Educational Programs
+                </div>
+
+                <div>
+                  Online Learning Programs
+                </div>
+
+                <div>
+                  Institutional Partnership Programs
+                </div>
+
+              </div>
+
+            </section>
+
+            <!-- ACTIVITIES -->
+
+            <section
+              id="activitiesSection"
+              class="collab-section"
+            >
+
+              <div class="area-title">
+
+                <div>
+
+                  <h2>
+                    Activities
+                  </h2>
+
+                  <p>
+                    Your collaboration activities.
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div class="empty-state">
+
+                <strong>
+                  No activities scheduled yet
+                </strong>
+
+                <p>
+                  Meetings, training sessions and activities
+                  will appear here after your partnership is approved.
+                </p>
+
+              </div>
+
+            </section>
+
+            <!-- INFORMATION -->
+
+            <section
+              id="informationSection"
+              class="collab-section"
+            >
+
+              <div class="area-title">
+
+                <div>
+
+                  <h2>
+                    My Information
+                  </h2>
+
+                  <p>
+                    Your collaboration profile.
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div class="info-panel">
+
+                <div class="info-row">
+
+                  <span>
+                    Full Name
+                  </span>
+
+                  <strong id="profileName"></strong>
+
+                </div>
+
+                <div class="info-row">
+
+                  <span>
+                    Email
+                  </span>
+
+                  <strong id="profileEmail"></strong>
+
+                </div>
+
+                <div class="info-row">
+
+                  <span>
+                    Phone
+                  </span>
+
+                  <strong id="profilePhone"></strong>
+
+                </div>
+
+                <div class="info-row">
+
+                  <span>
+                    Organization
+                  </span>
+
+                  <strong id="profileOrganization"></strong>
+
+                </div>
+
+                <div class="info-row">
+
+                  <span>
+                    Position / Role
+                  </span>
+
+                  <strong id="profileRole"></strong>
+
+                </div>
+
+                <div class="info-row">
+
+                  <span>
+                    Address
+                  </span>
+
+                  <strong id="profileAddress"></strong>
+
+                </div>
+
+                <div class="info-row">
+
+                  <span>
+                    Country
+                  </span>
+
+                  <strong id="profileCountry"></strong>
+
+                </div>
+
+                <div class="info-row">
+
+                  <span>
+                    Registration ID
+                  </span>
+
+                  <strong id="profileRegistrationId"></strong>
+
+                </div>
+
+              </div>
+
+            </section>
+
+            <!-- SUPPORT -->
+
+            <section
+              id="supportSection"
+              class="collab-section"
+            >
+
+              <div class="area-title">
+
+                <div>
+
+                  <h2>
+                    Support
+                  </h2>
+
+                  <p>
+                    Get assistance with your collaboration.
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div class="info-panel">
+
+                <h3>
+                  How can we help?
+                </h3>
+
+                <p>
+                  Contact GETI administration regarding:
+                </p>
+
+                <ul>
+                  <li>
+                    Collaboration application
+                  </li>
+
+                  <li>
+                    Dossier correction
+                  </li>
+
+                  <li>
+                    Partnership agreement
+                  </li>
+
+                  <li>
+                    Training programs
+                  </li>
+
+                  <li>
+                    Educational programs
+                  </li>
+
+                  <li>
+                    Technical assistance
+                  </li>
+                </ul>
+
+              </div>
+
+            </section>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  © 2026 Global English Teaching Institute — GETI
+</footer>
+
 <script>
-const SUPABASE_URL='https://syawyulrelrhjprnxdyn.supabase.co';
-const SUPABASE_KEY='sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8';
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+document.addEventListener("DOMContentLoaded", function () {
 
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  /* =========================
+     TOP MENU
+  ========================= */
 
-async function verify(){
-  const id=new URLSearchParams(location.search).get('id')||'';
-  const status=document.getElementById('status');
-  const meta=document.getElementById('meta');
-  const img=document.getElementById('cardImage');
-  if(!id){status.textContent='Missing Student ID';status.className='status bad';return;}
+  const menuToggle =
+    document.getElementById("menuToggle");
 
-  const {data,error}=await sb.rpc('verify_student_id',{p_student_id:id});
-  if(error){status.textContent='Verification unavailable';status.className='status bad';meta.textContent=error.message;return;}
-  const row=Array.isArray(data)?data[0]:data;
-  if(!row){status.textContent='Student ID not found';status.className='status bad';meta.textContent='No GETI record matches this Student ID.';return;}
+  const sideMenu =
+    document.getElementById("sideMenu");
 
-  const st=row.status||'ACTIVE';
-  status.textContent=st==='ACTIVE'?'GETI VERIFIED STUDENT':st;
-  status.className='status '+(st==='ACTIVE'?'ok':st==='EXPIRED'?'warn':'bad');
+  menuToggle.addEventListener("click", function (event) {
 
-  if(row.card_url){img.src=row.card_url;img.classList.remove('hidden');}
-  meta.innerHTML=`<strong>Student ID:</strong> ${esc(row.student_id)}<br>
-  <strong>Name:</strong> ${esc(row.first_name)} ${esc(row.last_name)}<br>
-  <strong>Program:</strong> ${esc(row.course||'—')}<br>
-  <strong>Valid Until:</strong> ${esc(row.valid_until||'—')}<br>
-  <strong>Issued:</strong> ${esc(row.issued_at?new Date(row.issued_at).toLocaleDateString():'—')}`;
-}
-verify();
+    event.stopPropagation();
+
+    sideMenu.classList.toggle("open");
+    menuToggle.classList.toggle("active");
+
+  });
+
+  sideMenu.addEventListener("click", function (event) {
+    event.stopPropagation();
+  });
+
+  document.addEventListener("click", function () {
+
+    sideMenu.classList.remove("open");
+    menuToggle.classList.remove("active");
+
+  });
+
+  /* =========================
+     SECTIONS
+  ========================= */
+
+  const step1 =
+    document.getElementById("step1");
+
+  const step2 =
+    document.getElementById("step2");
+
+  const step3 =
+    document.getElementById("step3");
+
+  const step4 =
+    document.getElementById("step4");
+
+  const collaborationArea =
+    document.getElementById("collaborationArea");
+
+  const stepsIndicator =
+    document.getElementById("stepsIndicator");
+
+  const indicators = [
+    document.getElementById("indicator1"),
+    document.getElementById("indicator2"),
+    document.getElementById("indicator3"),
+    document.getElementById("indicator4")
+  ];
+
+  function updateIndicators(activeStep) {
+
+    indicators.forEach(function (indicator, index) {
+
+      indicator.classList.remove(
+        "active",
+        "completed"
+      );
+
+      if (index + 1 < activeStep) {
+        indicator.classList.add("completed");
+      }
+
+      if (index + 1 === activeStep) {
+        indicator.classList.add("active");
+      }
+
+    });
+
+  }
+
+  function showStep(section, number) {
+
+    step1.classList.add("hidden");
+    step2.classList.add("hidden");
+    step3.classList.add("hidden");
+    step4.classList.add("hidden");
+    collaborationArea.classList.add("hidden");
+
+    section.classList.remove("hidden");
+
+    stepsIndicator.classList.remove("hidden");
+
+    updateIndicators(number);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+
+  let registrationId = "";
+
+  let selectedTypeText = "";
+
+  /* =========================
+     STEP 1
+  ========================= */
+
+  document
+    .getElementById("submitRegistrationBtn")
+    .addEventListener("click", function () {
+
+      const name =
+        document.getElementById("name").value.trim();
+
+      const email =
+        document.getElementById("email").value.trim();
+
+      const phone =
+        document.getElementById("phone").value.trim();
+
+      const organization =
+        document.getElementById("organization").value.trim();
+
+      const reason =
+        document.getElementById("reason").value.trim();
+
+      if (
+        !name ||
+        !email ||
+        !phone ||
+        !organization ||
+        !reason
+      ) {
+
+        alert(
+          "Please complete all required fields."
+        );
+
+        return;
+      }
+
+      if (
+        !email.includes("@")
+      ) {
+
+        alert(
+          "Please enter a valid email address."
+        );
+
+        return;
+      }
+
+      document.getElementById("orgName").value =
+        organization;
+
+      showStep(
+        step2,
+        2
+      );
+
+    });
+
+  /* BACK */
+
+  document
+    .getElementById("backRegistrationBtn")
+    .addEventListener("click", function () {
+
+      showStep(
+        step1,
+        1
+      );
+
+    });
+
+  /* =========================
+     STEP 2
+  ========================= */
+
+  document
+    .getElementById("continueDossierBtn")
+    .addEventListener("click", function () {
+
+      const orgName =
+        document.getElementById("orgName").value.trim();
+
+      const role =
+        document.getElementById("role").value.trim();
+
+      const address =
+        document.getElementById("address").value.trim();
+
+      const country =
+        document.getElementById("country").value.trim();
+
+      const proposal =
+        document.getElementById("collaborationProposal").value.trim();
+
+      const project =
+        document.getElementById("project").value.trim();
+
+      const participants =
+        document.getElementById("participants").value.trim();
+
+      const startDate =
+        document.getElementById("startDate").value;
+
+      const additional =
+        document.getElementById("additional").value.trim();
+
+      const selectedTypes =
+        document.querySelectorAll(
+          'input[name="collaborationType"]:checked'
+        );
+
+      if (
+        !orgName ||
+        !role ||
+        !address ||
+        !country ||
+        !proposal ||
+        !project ||
+        !startDate
+      ) {
+
+        alert(
+          "Please complete all required fields."
+        );
+
+        return;
+      }
+
+      if (
+        selectedTypes.length === 0
+      ) {
+
+        alert(
+          "Please select at least one collaboration type."
+        );
+
+        return;
+      }
+
+      selectedTypeText =
+        Array.from(selectedTypes)
+          .map(function (item) {
+            return item.value;
+          })
+          .join(", ");
+
+      registrationId =
+        "GETI-COL-" +
+        new Date().getFullYear() +
+        "-" +
+        Math.floor(
+          100000 +
+          Math.random() *
+          900000
+        );
+
+      document.getElementById("rId").textContent =
+        registrationId;
+
+      document.getElementById("rName").textContent =
+        document.getElementById("name").value;
+
+      document.getElementById("rEmail").textContent =
+        document.getElementById("email").value;
+
+      document.getElementById("rPhone").textContent =
+        document.getElementById("phone").value;
+
+      document.getElementById("rOrganization").textContent =
+        orgName;
+
+      document.getElementById("rRole").textContent =
+        role;
+
+      document.getElementById("rAddress").textContent =
+        address;
+
+      document.getElementById("rCountry").textContent =
+        country;
+
+      document.getElementById("rType").textContent =
+        selectedTypeText;
+
+      document.getElementById("rReason").textContent =
+        document.getElementById("reason").value;
+
+      document.getElementById("rProposal").textContent =
+        proposal;
+
+      document.getElementById("rProject").textContent =
+        project;
+
+      document.getElementById("rParticipants").textContent =
+        participants || "Not specified";
+
+      document.getElementById("rDate").textContent =
+        startDate;
+
+      document.getElementById("rAdditional").textContent =
+        additional || "None";
+
+      showStep(
+        step3,
+        3
+      );
+
+      setTimeout(
+        setupCanvas,
+        100
+      );
+
+    });
+
+  document
+    .getElementById("backDossierBtn")
+    .addEventListener("click", function () {
+
+      showStep(
+        step2,
+        2
+      );
+
+    });
+
+  /* =========================
+     SIGNATURE
+  ========================= */
+
+  const canvas =
+    document.getElementById("signatureCanvas");
+
+  const ctx =
+    canvas.getContext("2d");
+
+  let drawing = false;
+  let hasSignature = false;
+
+  function setupCanvas() {
+
+    const rect =
+      canvas.getBoundingClientRect();
+
+    const ratio =
+      window.devicePixelRatio || 1;
+
+    canvas.width =
+      rect.width * ratio;
+
+    canvas.height =
+      180 * ratio;
+
+    ctx.setTransform(
+      ratio,
+      0,
+      0,
+      ratio,
+      0,
+      0
+    );
+
+    ctx.lineWidth = 2;
+
+    ctx.lineCap = "round";
+
+    ctx.lineJoin = "round";
+
+    ctx.strokeStyle =
+      "#111827";
+  }
+
+  function getPosition(event) {
+
+    const rect =
+      canvas.getBoundingClientRect();
+
+    if (
+      event.touches &&
+      event.touches.length
+    ) {
+
+      return {
+        x:
+          event.touches[0].clientX -
+          rect.left,
+
+        y:
+          event.touches[0].clientY -
+          rect.top
+      };
+
+    }
+
+    return {
+      x:
+        event.clientX -
+        rect.left,
+
+      y:
+        event.clientY -
+        rect.top
+    };
+
+  }
+
+  function startDraw(event) {
+
+    event.preventDefault();
+
+    drawing = true;
+
+    const position =
+      getPosition(event);
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      position.x,
+      position.y
+    );
+
+  }
+
+  function draw(event) {
+
+    if (!drawing) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const position =
+      getPosition(event);
+
+    ctx.lineTo(
+      position.x,
+      position.y
+    );
+
+    ctx.stroke();
+
+    hasSignature = true;
+
+  }
+
+  function stopDraw() {
+    drawing = false;
+  }
+
+  canvas.addEventListener(
+    "mousedown",
+    startDraw
+  );
+
+  canvas.addEventListener(
+    "mousemove",
+    draw
+  );
+
+  canvas.addEventListener(
+    "mouseup",
+    stopDraw
+  );
+
+  canvas.addEventListener(
+    "mouseleave",
+    stopDraw
+  );
+
+  canvas.addEventListener(
+    "touchstart",
+    startDraw,
+    { passive: false }
+  );
+
+  canvas.addEventListener(
+    "touchmove",
+    draw,
+    { passive: false }
+  );
+
+  canvas.addEventListener(
+    "touchend",
+    stopDraw
+  );
+
+  document
+    .getElementById("clearSignatureBtn")
+    .addEventListener("click", function () {
+
+      ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+      hasSignature = false;
+
+    });
+
+  /* =========================
+     FINAL SUBMIT
+  ========================= */
+
+  document
+    .getElementById("submitDossierBtn")
+    .addEventListener("click", function () {
+
+      if (
+        !hasSignature
+      ) {
+
+        alert(
+          "Please sign the dossier before submitting."
+        );
+
+        return;
+      }
+
+      document.getElementById("finalId").textContent =
+        registrationId;
+
+      document.getElementById("finalName").textContent =
+        document.getElementById("name").value;
+
+      showStep(
+        step4,
+        4
+      );
+
+    });
+
+  /* =========================
+     CONTINUE TO AREA
+  ========================= */
+
+  document
+    .getElementById("continueAreaBtn")
+    .addEventListener("click", function () {
+
+      step1.classList.add("hidden");
+      step2.classList.add("hidden");
+      step3.classList.add("hidden");
+      step4.classList.add("hidden");
+
+      stepsIndicator.classList.add("hidden");
+
+      collaborationArea.classList.remove("hidden");
+
+      /* PROFILE */
+
+      const userName =
+        document.getElementById("name").value;
+
+      document.getElementById("dashboardName").textContent =
+        userName;
+
+      document.getElementById("sidebarName").textContent =
+        userName;
+
+      document.getElementById("dashboardRegistrationId").textContent =
+        registrationId;
+
+      document.getElementById("sidebarRegistrationId").textContent =
+        registrationId;
+
+      /* DOSSIER */
+
+      document.getElementById("dossierAreaId").textContent =
+        registrationId;
+
+      document.getElementById("dossierAreaName").textContent =
+        userName;
+
+      document.getElementById("dossierAreaOrg").textContent =
+        document.getElementById("orgName").value;
+
+      document.getElementById("dossierAreaRole").textContent =
+        document.getElementById("role").value;
+
+      document.getElementById("dossierAreaType").textContent =
+        selectedTypeText;
+
+      /* INFORMATION */
+
+      document.getElementById("profileName").textContent =
+        userName;
+
+      document.getElementById("profileEmail").textContent =
+        document.getElementById("email").value;
+
+      document.getElementById("profilePhone").textContent =
+        document.getElementById("phone").value;
+
+      document.getElementById("profileOrganization").textContent =
+        document.getElementById("orgName").value;
+
+      document.getElementById("profileRole").textContent =
+        document.getElementById("role").value;
+
+      document.getElementById("profileAddress").textContent =
+        document.getElementById("address").value;
+
+      document.getElementById("profileCountry").textContent =
+        document.getElementById("country").value;
+
+      document.getElementById("profileRegistrationId").textContent =
+        registrationId;
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+    });
+
+  /* =========================
+     COLLABORATION AREA NAV
+  ========================= */
+
+  const areaMenuToggle =
+    document.getElementById("areaMenuToggle");
+
+  const collaborationSidebar =
+    document.getElementById("collaborationSidebar");
+
+  const areaNavButtons =
+    document.querySelectorAll(
+      ".area-nav-btn[data-section]"
+    );
+
+  const collabSections =
+    document.querySelectorAll(
+      ".collab-section"
+    );
+
+  areaMenuToggle.addEventListener(
+    "click",
+    function () {
+
+      collaborationSidebar
+        .classList
+        .toggle("mobile-open");
+
+    }
+  );
+
+  areaNavButtons.forEach(
+    function (button) {
+
+      button.addEventListener(
+        "click",
+        function () {
+
+          const targetId =
+            button.getAttribute(
+              "data-section"
+            );
+
+          const targetSection =
+            document.getElementById(
+              targetId
+            );
+
+          areaNavButtons.forEach(
+            function (item) {
+
+              item.classList.remove(
+                "active"
+              );
+
+            }
+          );
+
+          collabSections.forEach(
+            function (section) {
+
+              section.classList.remove(
+                "active-section"
+              );
+
+            }
+          );
+
+          button.classList.add(
+            "active"
+          );
+
+          targetSection.classList.add(
+            "active-section"
+          );
+
+          collaborationSidebar.classList.remove(
+            "mobile-open"
+          );
+
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+          });
+
+        }
+      );
+
+    }
+  );
+
+  /* =========================
+     LOGOUT
+  ========================= */
+
+  document
+    .getElementById("logoutAreaBtn")
+    .addEventListener("click", function () {
+
+      collaborationSidebar.classList.remove(
+        "mobile-open"
+      );
+
+      collaborationArea.classList.add(
+        "hidden"
+      );
+
+      stepsIndicator.classList.remove(
+        "hidden"
+      );
+
+      showStep(
+        step1,
+        1
+      );
+
+    });
+
+});
 </script>
+
 </body>
 </html>
