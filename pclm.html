@@ -24,6 +24,43 @@ button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:7
 .panel-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px} .table-wrap{width:100%;overflow:auto} table{width:100%;min-width:1260px;border-collapse:collapse} th{background:#071526;color:#fff;padding:10px 8px;font-size:10px;text-align:left;white-space:nowrap} td{padding:9px 8px;border-bottom:1px solid #e5e7eb;font-size:11px;vertical-align:middle} tr:hover td{background:#fafafa} .student-photo{width:45px;height:52px;border-radius:6px;object-fit:cover;background:#eee}
 .history-item{display:flex;justify-content:space-between;gap:12px;border:1px solid #e5e7eb;border-radius:9px;padding:10px;margin-bottom:7px} .history-item small{color:#667085} .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px} .info{margin-top:14px;padding:11px;background:#fff8e1;border-left:4px solid #c99a23;border-radius:6px;font-size:12px;line-height:1.6}
 @media(max-width:1100px){.dashboard{grid-template-columns:repeat(2,1fr)}.main-grid{grid-template-columns:1fr}} @media(max-width:650px){.dashboard,.form-row,.settings-grid{grid-template-columns:1fr}.header-inner{align-items:flex-start;flex-direction:column}}
+.promotion-history-panel{display:none;margin-top:22px}
+.promotion-history-panel.active{display:block}
+.promotion-history-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.promotion-history-head h2{margin:0}
+.promotion-grand-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.promotion-summary-card{background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:12px}
+.promotion-summary-card small{display:block;color:#667085;font-size:10px;font-weight:800;text-transform:uppercase;margin-bottom:5px}
+.promotion-summary-card strong{font-size:16px;color:#071526}
+.promotion-block{border:1px solid #dfe3e8;border-radius:12px;overflow:hidden;margin-bottom:18px;background:#fff}
+.promotion-block-head{background:#071526;color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.promotion-block-head h3{font-size:17px;margin:0}.promotion-block-head span{font-size:11px;opacity:.85}
+.promotion-mini-dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;background:#f8fafc;border-bottom:1px solid #e5e7eb}
+.promotion-mini-card{background:#fff;border:1px solid #e5e7eb;border-radius:9px;padding:10px}
+.promotion-mini-card small{display:block;font-size:9px;color:#667085;font-weight:800;text-transform:uppercase;margin-bottom:4px}
+.promotion-mini-card strong{font-size:14px;color:#071526}
+.promotion-section-title{font-size:13px;font-weight:800;color:#071526;margin:14px 14px 8px}
+.promotion-student-table{padding:0 14px 14px}.promotion-student-table table{min-width:1000px}
+.promotion-empty{padding:12px 14px;color:#667085;font-size:12px}
+.promotion-expenses{padding:0 14px 14px}.promotion-expense-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #eef0f2;font-size:11px}.promotion-expense-row:last-child{border-bottom:0}
+@media(max-width:900px){.promotion-grand-summary,.promotion-mini-dashboard{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:550px){.promotion-grand-summary,.promotion-mini-dashboard{grid-template-columns:1fr}}
+
+
+/* ===== Student monthly Tableau ===== */
+.student-tableau-panel{display:none}.student-tableau-panel.active{display:block}
+.student-tableau-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+.student-tableau-head h2{margin:0}.student-tableau-head small{color:#667085}
+.tableau-promotion-banner{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;margin-bottom:16px;border:1px solid #d7dee8;border-radius:12px;background:#f8fafc;flex-wrap:wrap}
+.tableau-promotion-banner strong{font-size:17px}.tableau-promotion-banner span{font-size:12px;color:#667085}
+.tableau-student-zone{border:1px solid #d9e0e8;border-radius:14px;overflow:hidden;background:#fff;margin:0 0 16px;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+.tableau-student-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;padding:14px 16px;background:#f7f9fc;border-bottom:1px solid #e3e8ef;flex-wrap:wrap}
+.tableau-student-name{font-weight:700;font-size:16px}.tableau-student-meta{font-size:12px;color:#667085;margin-top:3px}
+.tableau-student-totals{display:flex;gap:8px;flex-wrap:wrap}.tableau-total-chip{padding:7px 10px;border:1px solid #dce3eb;border-radius:9px;background:white;font-size:12px}.tableau-total-chip strong{display:block;font-size:13px;margin-top:2px;color:#111827}
+.tableau-month-table{width:100%;border-collapse:collapse}.tableau-month-table th,.tableau-month-table td{padding:11px 14px;border-bottom:1px solid #edf0f4;text-align:left}.tableau-month-table th{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:#667085;background:#fff}.tableau-month-table td:nth-child(2),.tableau-month-table td:nth-child(3),.tableau-month-table th:nth-child(2),.tableau-month-table th:nth-child(3){text-align:right}.tableau-month-table tr:last-child td{border-bottom:0}.tableau-empty{padding:18px;text-align:center;color:#667085;background:#fafbfc;border-radius:10px}
+@media(max-width:650px){.tableau-student-totals{width:100%}.tableau-total-chip{flex:1;min-width:120px}.tableau-month-table th,.tableau-month-table td{padding:9px 8px;font-size:12px}}
+
+.payment-date-note{display:inline-block;margin-top:4px;font-size:11px;line-height:1.45;color:#475467;white-space:nowrap}.payment-date-note.no-date{color:#98a2b3;font-style:italic}.table-wrap td:nth-child(9) div{margin-bottom:5px}.table-wrap td:nth-child(9) div:last-child{margin-bottom:0}
 </style>
 </head>
 <body>
@@ -32,14 +69,14 @@ button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:7
 <div class="dashboard"><div class="card"><small>Total Students</small><h2 id="dashStudents">0</h2></div><div class="card"><small>Total Received</small><h2 id="dashReceived">0 Ar</h2></div><div class="card"><small>Total Expenses</small><h2 id="dashExpenses">0 Ar</h2></div><div class="card"><small>Balance</small><h2 id="dashBalance">0 Ar</h2></div><div class="card"><small>Registration</small><h2 id="dashRegistration">0 Ar</h2></div><div class="card"><small>School Fees</small><h2 id="dashSchool">0 Ar</h2></div><div class="card"><small>Exam Payments</small><h2 id="dashExam">0 Ar</h2></div><div class="card"><small>Certificate</small><h2 id="dashCertificate">0 Ar</h2></div></div>
 <div class="main-grid"><div>
 <div class="panel"><h2>PCLM Fees Settings</h2><div class="settings-grid">
-<div class="form-group"><label>Standard Registration Fee</label><input type="number" id="standardRegistrationFee" min="0"></div><div class="form-group"><label>Special Registration Fee</label><input type="number" id="specialRegistrationFee" min="0"></div><div class="form-group"><label>School Fee / Month</label><input type="number" id="monthlyFee" min="0"></div><div class="form-group"><label>Exam Registration Fee</label><input type="number" id="examRegistrationFee" min="0"></div><div class="form-group"><label>Exam Fee</label><input type="number" id="examFee" min="0"></div><div class="form-group"><label>Certificate Fee</label><input type="number" id="certificateFee" min="0"></div></div><button class="btn-gold" onclick="saveFees()">Save Fees</button></div>
-<div class="panel"><h2>Add Student</h2><div class="photo-preview" id="photoPreview">Student Photo</div><div class="form-group"><label>Student Photo</label><input type="file" id="studentPhoto" accept="image/*"></div><div class="form-row"><div class="form-group"><label>First Name</label><input id="firstName"></div><div class="form-group"><label>Last Name</label><input id="lastName"></div></div><div class="form-group"><label>Student ID — Automatic</label><input id="studentId" readonly></div><div class="form-group"><label>Program / Course</label><input id="course" placeholder="English Proficiency"></div><div class="form-row"><div class="form-group"><label>Email</label><input id="email" type="email"></div><div class="form-group"><label>Phone</label><input id="phone"></div></div><div class="form-group"><label>Registration Date — Automatic</label><input id="registrationDate" type="date"></div><div class="form-group"><label>Registration Type</label><select id="registrationType" onchange="updateAutomaticRegistrationFee()"><option value="standard">Standard Registration</option><option value="special">Special Registration</option></select></div><div class="auto-info"><div class="auto-row"><span>Registration Fee</span><strong id="autoRegistrationFee">0 Ar</strong></div><div class="auto-row"><span>Amount Paid</span><strong id="autoRegistrationPaid">0 Ar</strong></div><div class="auto-row"><span>Remaining</span><strong id="autoRegistrationRemaining">0 Ar</strong></div></div><div class="form-group"><label>Registration Payment</label><input type="number" id="registrationPaid" min="0" value="0" oninput="updateRegistrationCalculation()"></div><div class="form-group"><label>About Student</label><textarea id="studentAbout"></textarea></div><button class="btn-dark" onclick="addStudent()">Add Student</button></div>
+<div class="form-group"><label>Registration Fee</label><input type="number" id="standardRegistrationFee" min="0"></div><div class="form-group"><label>School Fee / Month</label><input type="number" id="monthlyFee" min="0"></div><div class="form-group"><label>Exam Registration Fee</label><input type="number" id="examRegistrationFee" min="0"></div><div class="form-group"><label>Exam Fee</label><input type="number" id="examFee" min="0"></div><div class="form-group"><label>Certificate Fee</label><input type="number" id="certificateFee" min="0"></div></div><button class="btn-gold" onclick="saveFees()">Save Fees</button></div>
+<div class="panel"><h2>Add Student</h2><div class="photo-preview" id="photoPreview">Student Photo</div><div class="form-group"><label>Student Photo</label><input type="file" id="studentPhoto" accept="image/*"></div><div class="form-row"><div class="form-group"><label>First Name</label><input id="firstName"></div><div class="form-group"><label>Last Name</label><input id="lastName"></div></div><div class="form-group"><label>Student ID — Automatic</label><input id="studentId" readonly></div><div class="form-group"><label>Program / Course</label><input id="course" placeholder="English Proficiency"></div><div class="form-row"><div class="form-group"><label>Email</label><input id="email" type="email"></div><div class="form-group"><label>Phone</label><input id="phone"></div></div><div class="form-group"><label>Registration Date — Automatic</label><input id="registrationDate" type="date"></div><div class="auto-info"><div class="auto-row"><span>Registration Fee</span><strong id="autoRegistrationFee">0 Ar</strong></div><div class="auto-row"><span>Amount Paid</span><strong id="autoRegistrationPaid">0 Ar</strong></div><div class="auto-row"><span>Remaining</span><strong id="autoRegistrationRemaining">0 Ar</strong></div></div><div class="form-group"><label>Registration Payment</label><input type="number" id="registrationPaid" min="0" value="0" oninput="updateRegistrationCalculation()"></div><div class="form-group"><label>About Student</label><textarea id="studentAbout"></textarea></div><button class="btn-dark" onclick="addStudent()">Add Student</button></div>
 <div class="panel"><h2>Add Expense</h2><div class="form-group"><label>Description</label><input id="expenseDescription"></div><div class="form-group"><label>Amount</label><input id="expenseAmount" type="number" min="0"></div><div class="form-group"><label>Date — Automatic</label><input id="expenseDate" type="date"></div><button class="btn-red" onclick="addExpense()">Add Expense</button></div>
 </div><div>
-<div class="panel"><div class="panel-title"><h2>PCLM Students</h2><input type="search" id="searchStudent" placeholder="Search student..." oninput="renderStudents()" style="max-width:230px"></div><div class="table-wrap"><table><thead><tr><th>Photo</th><th>ID</th><th>Student</th><th>Program</th><th>Registration</th><th>Paid</th><th>Remaining</th><th>School</th><th>Exam Reg.</th><th>Exam</th><th>Certificate</th><th>Total</th><th>Action</th></tr></thead><tbody id="studentTableBody"></tbody></table></div></div>
-<div class="panel"><h2>Student Payment</h2><div class="form-row"><div class="form-group"><label>Student</label><select id="paymentStudent" onchange="autoFillPaymentAmount()"></select></div><div class="form-group"><label>Payment Type</label><select id="paymentType" onchange="autoFillPaymentAmount()"><option value="registration">Registration Fee</option><option value="examRegistration">Exam Registration Fee</option><option value="exam">Exam Fee</option><option value="certificate">Certificate Fee</option></select></div></div><div class="form-row"><div class="form-group"><label>Amount — Automatic</label><input id="paymentAmount" type="number" min="0"></div><div class="form-group"><label>Date — Automatic</label><input id="paymentDate" type="date"></div></div><button class="btn-green" onclick="addStudentPayment()">Add Payment</button></div>
+<div class="panel"><div class="panel-title"><h2>PCLM Students</h2><input type="search" id="searchStudent" placeholder="Search student..." oninput="renderStudents()" style="max-width:230px"></div><div class="table-wrap"><table><thead><tr><th>Photo</th><th>ID</th><th>Student</th><th>Program</th><th>Registration</th><th>Paid</th><th>Remaining</th><th>School</th><th>School Month</th><th>Exam Reg.</th><th>Exam</th><th>Certificate</th><th>Total</th><th>Action</th></tr></thead><tbody id="studentTableBody"></tbody></table></div></div>
+<div class="panel"><h2>Student Payment</h2><div class="form-row"><div class="form-group"><label>Student</label><select id="paymentStudent" onchange="autoFillPaymentAmount()"></select></div><div class="form-group"><label>Payment Type</label><select id="paymentType" onchange="autoFillPaymentAmount()"><option value="registration">Registration Fee</option><option value="examRegistration">Exam Registration Fee</option><option value="exam">Exam Fee</option><option value="certificate">Certificate Fee</option><option value="other">Other Payment / Autre</option></select></div></div><div class="form-group" id="otherPaymentNameGroup" style="display:none"><label>Other Payment Name</label><input id="otherPaymentName" placeholder="Example: Uniform, Book, Badge, Activity..."></div><div class="form-row"><div class="form-group"><label id="paymentAmountLabel">Amount — Automatic</label><input id="paymentAmount" type="number" min="0"></div><div class="form-group"><label>Date — Automatic</label><input id="paymentDate" type="date"></div></div><button class="btn-green" onclick="addStudentPayment()">Add Payment</button></div>
 <div class="panel"><h2>Monthly School Fee</h2><div class="form-row"><div class="form-group"><label>Student</label><select id="schoolStudent"></select></div><div class="form-group"><label>Year — Automatic</label><input id="schoolYear" type="number"></div></div><div class="form-row"><div class="form-group"><label>Month</label><select id="schoolMonth"><option value="January">January</option><option value="February">February</option><option value="March">March</option><option value="April">April</option><option value="May">May</option><option value="June">June</option><option value="July">July</option><option value="August">August</option><option value="September">September</option><option value="October">October</option><option value="November">November</option><option value="December">December</option></select></div><div class="form-group"><label>Amount — Automatic</label><input id="schoolAmount" type="number" min="0"></div></div><div class="form-group"><label>Payment Date — Automatic</label><input id="schoolPaymentDate" type="date"></div><button class="btn-blue" onclick="addSchoolPayment()">Add School Payment</button></div>
-<div class="panel"><div class="panel-title"><h2>Recent Payments</h2><button class="btn-gray" onclick="exportBackup()">Export Backup</button></div><div id="paymentHistory"></div></div><div class="panel"><h2>Expense History</h2><div id="expenseHistory"></div><div class="actions"><button class="btn-red" onclick="resetAllData()">Reset All Data</button></div><div class="info">All PCLM data are saved automatically in this browser. The Student ID page reads the same student database.</div></div>
+<div class="panel"><div class="panel-title"><h2>Recent Payments</h2><button class="btn-gray" onclick="exportBackup()">Export Backup</button></div><div id="paymentHistory"></div></div><div class="panel"><h2>Expense History</h2><div id="expenseHistory"></div><div class="actions"><button class="btn-red" onclick="resetAllData()">Reset All Data</button><button class="btn-blue small-btn" type="button" onclick="nextPromotion()">Promotion</button><button class="btn-gray small-btn" type="button" onclick="togglePromotionHistory()">All Promotion History</button><button class="btn-gold small-btn" type="button" onclick="toggleStudentTableau()">Tableau</button><strong id="currentPromotionLabel" style="display:inline-flex;align-items:center;padding:0 4px;font-size:12px;">1er promotion</strong></div><div class="info">All PCLM data are saved automatically in this browser. The Student ID page reads the same student database.</div></div><div class="panel promotion-history-panel" id="promotionHistoryPanel"><div class="promotion-history-head"><div><h2>All Promotion History</h2><small style="color:#667085">Students and finances for every promotion</small></div><button class="btn-gray small-btn" type="button" onclick="renderPromotionHistory()">Refresh</button></div><div id="promotionHistoryContent"></div></div><div class="panel student-tableau-panel" id="studentTableauPanel"><div class="student-tableau-head"><div><h2>Tableau</h2><small id="studentTableauSubtitle">Monthly school fees and registration rights for each student</small></div><button class="btn-gray small-btn" type="button" onclick="renderStudentTableau()">Refresh</button></div><div id="studentTableauContent"></div></div>
 </div></div></div>
 
 <section id="badgeSection" style="display:none;max-width:1600px;margin:22px auto;padding:0 18px;">
@@ -447,7 +484,6 @@ Preview 860 × 540 px
 }
 
 #badgeFullName{
-    display:none;
     color:#08182d;
     font-size:31px;
     line-height:1.05;
@@ -523,46 +559,30 @@ Preview 860 × 540 px
 
 .security-mark{
     position:absolute;
-    right:24px;
-    bottom:68px;
-    width:118px;
-    min-height:132px;
-    padding:6px 6px 5px;
+    right:32px;
+    bottom:84px;
+    width:72px;
+    height:72px;
     border:2px solid #c99a23;
-    border-radius:10px;
+    border-radius:9px;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    background:#ffffff;
+    background:white;
     color:#08182d;
     z-index:5;
-    box-shadow:0 3px 10px rgba(7,21,38,.12);
 }
 
-#studentQRCode{
-    width:104px;
-    height:104px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-}
-
-#studentQRCode canvas,
-#studentQRCode img{
-    width:104px !important;
-    height:104px !important;
-    display:block;
+.security-mark strong{
+    font-size:16px;
 }
 
 .security-mark span{
-    margin-top:4px;
-    font-size:6.5px;
-    font-weight:900;
-    letter-spacing:.55px;
-    text-align:center;
-    color:#7b6122;
+    margin-top:2px;
+    font-size:7px;
+    font-weight:800;
+    letter-spacing:.6px;
 }
 
 .badge-footer{
@@ -1094,9 +1114,9 @@ body{padding-top:0!important;}
 
     &lt;/div&gt;
 
-    &lt;div class=&quot;security-mark&quot; title=&quot;Scan to view student information&quot;&gt;
-        &lt;div id=&quot;studentQRCode&quot;&gt;&lt;/div&gt;
-        &lt;span&gt;SCAN STUDENT INFO&lt;/span&gt;
+    &lt;div class=&quot;security-mark&quot;&gt;
+        &lt;strong&gt;PCLM&lt;/strong&gt;
+        &lt;span&gt;VERIFIED STUDENT&lt;/span&gt;
     &lt;/div&gt;
 
     &lt;div class=&quot;badge-footer&quot;&gt;
@@ -1189,8 +1209,6 @@ body{padding-top:0!important;}
 
 &lt;!-- LIBRARIES --&gt;
 
-&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js&quot;&gt;&lt;/script&gt;
-
 &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js&quot;&gt;&lt;/script&gt;
 
 &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js&quot;&gt;&lt;/script&gt;
@@ -1201,7 +1219,9 @@ body{padding-top:0!important;}
 /* ==================================================
 EXISTING PCLM STUDENTS FROM ADMINISTRATION
 ================================================== */
-let pclmStudents = JSON.parse(localStorage.getItem(&quot;pclm_students_finance_v1&quot;) || &quot;[]&quot;);
+let pclmPromotion = Math.max(1, Number(localStorage.getItem(&quot;pclm_current_promotion&quot;) || 1));
+let pclmStudentStorageKey = pclmPromotion === 1 ? &quot;pclm_students_finance_v1&quot; : &quot;pclm_students_finance_v1_promotion_&quot; + pclmPromotion;
+let pclmStudents = JSON.parse(localStorage.getItem(pclmStudentStorageKey) || &quot;[]&quot;);
 
 function splitExistingName(fullName){
     const value = String(fullName || &quot;&quot;).trim();
@@ -1340,46 +1360,6 @@ function fitProgram(){
 
 
 /* ==================================================
-STUDENT QR CODE
-The QR contains the student information shown on the card.
-================================================== */
-
-function generateStudentQR(){
-
-    const container = document.getElementById(&quot;studentQRCode&quot;);
-    if(!container || typeof QRCode === &quot;undefined&quot;) return;
-
-    const firstName = document.getElementById(&quot;studentFirstName&quot;).value.trim();
-    const lastName = document.getElementById(&quot;studentLastName&quot;).value.trim();
-    const studentId = document.getElementById(&quot;studentId&quot;).value.trim();
-    const course = document.getElementById(&quot;studentCourse&quot;).value.trim();
-    const email = document.getElementById(&quot;studentEmail&quot;).value.trim();
-    const valid = document.getElementById(&quot;validUntil&quot;).value;
-    const fullName = (firstName + &quot; &quot; + lastName).trim();
-
-    const qrText = [
-        &quot;PCLM - Proficiency Core Language Madagascar&quot;,
-        &quot;Student ID: &quot; + (studentId || &quot;-&quot;),
-        &quot;Name: &quot; + (fullName || &quot;-&quot;),
-        &quot;Program: &quot; + (course || &quot;-&quot;),
-        &quot;Email: &quot; + (email || &quot;-&quot;),
-        &quot;Valid Until: &quot; + (valid || &quot;-&quot;)
-    ].join(&quot;\n&quot;);
-
-    container.innerHTML = &quot;&quot;;
-
-    new QRCode(container,{
-        text:qrText,
-        width:104,
-        height:104,
-        colorDark:&quot;#071526&quot;,
-        colorLight:&quot;#ffffff&quot;,
-        correctLevel:QRCode.CorrectLevel.M
-    });
-}
-
-
-/* ==================================================
 UPDATE BADGE
 ================================================== */
 
@@ -1466,8 +1446,6 @@ function updateBadge(){
     ).textContent =
     valid
     || &quot;-&quot;;
-
-    generateStudentQR();
 
     requestAnimationFrame(
         () =&gt; {
@@ -2602,34 +2580,142 @@ renderPrintSheets();
   </div>
 </section>
 <script>
-const KEYS={standardRegistration:'pclm_standard_registration_fee',specialRegistration:'pclm_special_registration_fee',monthly:'pclm_monthly_fee',examRegistration:'pclm_exam_registration_fee',exam:'pclm_exam_fee',certificate:'pclm_certificate_fee',students:'pclm_students_finance_v1',expenses:'pclm_expenses_finance_v1'};
+let currentPromotion=Math.max(1,Number(localStorage.getItem('pclm_current_promotion')||1));
+function promotionStudentKey(n){return n===1?'pclm_students_finance_v1':'pclm_students_finance_v1_promotion_'+n}
+function promotionExpenseKey(n){return n===1?'pclm_expenses_finance_v1':'pclm_expenses_finance_v1_promotion_'+n}
+const KEYS={standardRegistration:'pclm_standard_registration_fee',specialRegistration:'pclm_special_registration_fee',monthly:'pclm_monthly_fee',examRegistration:'pclm_exam_registration_fee',exam:'pclm_exam_fee',certificate:'pclm_certificate_fee',students:promotionStudentKey(currentPromotion),expenses:promotionExpenseKey(currentPromotion)};
 let students=JSON.parse(localStorage.getItem(KEYS.students)||'[]'); let expenses=JSON.parse(localStorage.getItem(KEYS.expenses)||'[]'); let studentPhotoData='';
+function promotionLabel(n){return n===1?'1er promotion':n+'eme promotion'}
+function updatePromotionLabel(){const el=document.getElementById('currentPromotionLabel');if(el)el.textContent=promotionLabel(currentPromotion)}
+function loadPromotionData(){KEYS.students=promotionStudentKey(currentPromotion);KEYS.expenses=promotionExpenseKey(currentPromotion);students=JSON.parse(localStorage.getItem(KEYS.students)||'[]');expenses=JSON.parse(localStorage.getItem(KEYS.expenses)||'[]');updatePromotionLabel()}
+function nextPromotion(){currentPromotion+=1;localStorage.setItem('pclm_current_promotion',String(currentPromotion));loadPromotionData();refreshAll();try{const f=document.getElementById('pclmBadgeFrame');if(f&&f.contentWindow){f.contentWindow.pclmStudents=students;f.contentWindow.loadExistingStudents&&f.contentWindow.loadExistingStudents()}}catch(e){}}
+function promotionData(n){return {students:JSON.parse(localStorage.getItem(promotionStudentKey(n))||'[]'),expenses:JSON.parse(localStorage.getItem(promotionExpenseKey(n))||'[]')}}
+function promotionStats(list,exps){let r=0,s=0,er=0,e=0,c=0,o=0;(list||[]).forEach(x=>{r+=paymentTotal(x,'registration');s+=paymentTotal(x,'school');er+=paymentTotal(x,'examRegistration');e+=paymentTotal(x,'exam');c+=paymentTotal(x,'certificate');o+=paymentTotal(x,'other')});const received=r+s+er+e+c+o,expensesTotal=(exps||[]).reduce((a,x)=>a+(+x.amount||0),0);return {students:(list||[]).length,received,expenses:expensesTotal,balance:received-expensesTotal,registration:r,school:s,exam:er+e,certificate:c,other:o}}
+function getHighestPromotion(){let max=currentPromotion;for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i)||'';let m=k.match(/^pclm_students_finance_v1_promotion_(\d+)$/);if(!m)m=k.match(/^pclm_expenses_finance_v1_promotion_(\d+)$/);if(m)max=Math.max(max,Number(m[1])||1)}return Math.max(1,max)}
+function escapePromotionHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function togglePromotionHistory(){const panel=document.getElementById('promotionHistoryPanel');if(!panel)return;panel.classList.toggle('active');if(panel.classList.contains('active')){renderPromotionHistory();setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}),50)}}
+function renderPromotionHistory(){const box=document.getElementById('promotionHistoryContent');if(!box)return;const max=getHighestPromotion();let grand={students:0,received:0,expenses:0,balance:0,registration:0,school:0,exam:0,certificate:0};let blocks='';for(let n=1;n<=max;n++){const d=promotionData(n),st=promotionStats(d.students,d.expenses);Object.keys(grand).forEach(k=>grand[k]+=st[k]||0);let studentRows='';d.students.forEach(x=>{const regPaid=paymentTotal(x,'registration'),regRemain=Math.max(0,(+x.registrationFee||0)-regPaid);studentRows+=`<tr><td><strong>${escapePromotionHtml(x.studentId||'-')}</strong></td><td><strong>${escapePromotionHtml(x.name||'-')}</strong><br><small>${escapePromotionHtml(x.email||'')}</small></td><td>${escapePromotionHtml(x.course||'-')}</td><td>${money(regPaid)}</td><td>${money(regRemain)}</td><td>${money(paymentTotal(x,'school'))}</td><td>${money(paymentTotal(x,'examRegistration')+paymentTotal(x,'exam'))}</td><td>${money(paymentTotal(x,'certificate'))}</td><td><strong>${money(studentTotal(x))}</strong></td></tr>`});let expenseRows='';d.expenses.slice().reverse().forEach(e=>{expenseRows+=`<div class="promotion-expense-row"><div><strong>${escapePromotionHtml(e.description||'Expense')}</strong><br><small>${escapePromotionHtml(e.date||'')}</small></div><strong>${money(e.amount)}</strong></div>`});blocks+=`<div class="promotion-block"><div class="promotion-block-head"><h3>${promotionLabel(n)}</h3><span>${n===currentPromotion?'Current promotion':'Saved history'}</span></div><div class="promotion-mini-dashboard"><div class="promotion-mini-card"><small>Students</small><strong>${st.students}</strong></div><div class="promotion-mini-card"><small>Total Received</small><strong>${money(st.received)}</strong></div><div class="promotion-mini-card"><small>Total Expenses</small><strong>${money(st.expenses)}</strong></div><div class="promotion-mini-card"><small>Balance</small><strong>${money(st.balance)}</strong></div><div class="promotion-mini-card"><small>Registration</small><strong>${money(st.registration)}</strong></div><div class="promotion-mini-card"><small>School Fees</small><strong>${money(st.school)}</strong></div><div class="promotion-mini-card"><small>Exam Payments</small><strong>${money(st.exam)}</strong></div><div class="promotion-mini-card"><small>Certificate</small><strong>${money(st.certificate)}</strong></div></div><div class="promotion-section-title">Students (${st.students})</div>${d.students.length?`<div class="promotion-student-table table-wrap"><table><thead><tr><th>ID</th><th>Student</th><th>Program</th><th>Registration Paid</th><th>Registration Remaining</th><th>School</th><th>Exam</th><th>Certificate</th><th>Total Paid</th></tr></thead><tbody>${studentRows}</tbody></table></div>`:'<div class="promotion-empty">No student recorded in this promotion.</div>'}<div class="promotion-section-title">Expenses (${d.expenses.length})</div>${d.expenses.length?`<div class="promotion-expenses">${expenseRows}</div>`:'<div class="promotion-empty">No expense recorded in this promotion.</div>'}</div>`}box.innerHTML=`<div class="promotion-grand-summary"><div class="promotion-summary-card"><small>All Promotions</small><strong>${max}</strong></div><div class="promotion-summary-card"><small>Total Students</small><strong>${grand.students}</strong></div><div class="promotion-summary-card"><small>Total Received</small><strong>${money(grand.received)}</strong></div><div class="promotion-summary-card"><small>Total Expenses</small><strong>${money(grand.expenses)}</strong></div><div class="promotion-summary-card"><small>Global Balance</small><strong>${money(grand.balance)}</strong></div><div class="promotion-summary-card"><small>Registration Total</small><strong>${money(grand.registration)}</strong></div><div class="promotion-summary-card"><small>School Fees Total</small><strong>${money(grand.school)}</strong></div><div class="promotion-summary-card"><small>Exam + Certificate</small><strong>${money(grand.exam+grand.certificate)}</strong></div></div>${blocks}`}
+
 const money=v=>Number(v||0).toLocaleString('fr-FR')+' Ar';
 function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function getFee(k){return Number(localStorage.getItem(k)||0)} function saveStudents(){localStorage.setItem(KEYS.students,JSON.stringify(students))} function saveExpenses(){localStorage.setItem(KEYS.expenses,JSON.stringify(expenses))}
-function loadFees(){standardRegistrationFee.value=getFee(KEYS.standardRegistration);specialRegistrationFee.value=getFee(KEYS.specialRegistration);monthlyFee.value=getFee(KEYS.monthly);examRegistrationFee.value=getFee(KEYS.examRegistration);examFee.value=getFee(KEYS.exam);certificateFee.value=getFee(KEYS.certificate);schoolAmount.value=getFee(KEYS.monthly);updateAutomaticRegistrationFee();autoFillPaymentAmount()}
-function saveFees(){localStorage.setItem(KEYS.standardRegistration,+standardRegistrationFee.value||0);localStorage.setItem(KEYS.specialRegistration,+specialRegistrationFee.value||0);localStorage.setItem(KEYS.monthly,+monthlyFee.value||0);localStorage.setItem(KEYS.examRegistration,+examRegistrationFee.value||0);localStorage.setItem(KEYS.exam,+examFee.value||0);localStorage.setItem(KEYS.certificate,+certificateFee.value||0);loadFees();alert('PCLM fees saved.')}
+
+function toggleStudentTableau(){
+    const panel=document.getElementById('studentTableauPanel');
+    if(!panel)return;
+    panel.classList.toggle('active');
+    if(panel.classList.contains('active')){
+        renderStudentTableau();
+        setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}),50);
+    }
+}
+function tableauMonthInfo(payment){
+    const en=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const fr=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+    let monthIndex=-1,year=Number(payment&&payment.year)||0;
+    if(payment&&payment.month){
+        monthIndex=en.indexOf(String(payment.month));
+        if(monthIndex<0){
+            monthIndex=fr.map(x=>x.toLowerCase()).indexOf(String(payment.month).toLowerCase());
+        }
+    }
+    if((monthIndex<0||!year)&&payment&&payment.date){
+        const d=new Date(String(payment.date)+'T00:00:00');
+        if(!isNaN(d.getTime())){if(monthIndex<0)monthIndex=d.getMonth();if(!year)year=d.getFullYear()}
+    }
+    if(monthIndex<0)monthIndex=0;
+    if(!year)year=new Date().getFullYear();
+    return {key:year+'-'+String(monthIndex+1).padStart(2,'0'),label:fr[monthIndex]+' '+year,year,monthIndex};
+}
+function studentMonthlyTableau(student){
+    const grouped={};
+    (student.payments||[]).forEach(p=>{
+        if(p.type!=='school'&&p.type!=='registration')return;
+        const m=tableauMonthInfo(p);
+        if(!grouped[m.key])grouped[m.key]={key:m.key,label:m.label,year:m.year,monthIndex:m.monthIndex,school:0,right:0};
+        if(p.type==='school')grouped[m.key].school+=(+p.amount||0);
+        if(p.type==='registration')grouped[m.key].right+=(+p.amount||0);
+    });
+    return Object.values(grouped).sort((a,b)=>a.key.localeCompare(b.key));
+}
+function renderStudentTableau(){
+    const box=document.getElementById('studentTableauContent');
+    const subtitle=document.getElementById('studentTableauSubtitle');
+    if(!box)return;
+    if(subtitle)subtitle.textContent=promotionLabel(currentPromotion)+' — Monthly school fees and registration rights for each student';
+    if(!students.length){
+        box.innerHTML=`<div class="tableau-promotion-banner"><div><strong>${promotionLabel(currentPromotion)}</strong><br><span>Current promotion</span></div><span>0 student</span></div><div class="tableau-empty">No student recorded in this promotion.</div>`;
+        return;
+    }
+    let html=`<div class="tableau-promotion-banner"><div><strong>${promotionLabel(currentPromotion)}</strong><br><span>Current promotion</span></div><span>${students.length} student${students.length>1?'s':''}</span></div>`;
+    students.forEach(st=>{
+        const months=studentMonthlyTableau(st);
+        const schoolTotal=months.reduce((a,m)=>a+m.school,0);
+        const rightTotal=months.reduce((a,m)=>a+m.right,0);
+        let rows='';
+        months.forEach(m=>{
+            rows+=`<tr><td><strong>${escapePromotionHtml(m.label)}</strong></td><td>${money(m.school)}</td><td>${money(m.right)}</td></tr>`;
+        });
+        if(!rows)rows='<tr><td colspan="3" style="text-align:center;color:#667085">No school fee or registration-right payment recorded.</td></tr>';
+        html+=`<div class="tableau-student-zone"><div class="tableau-student-head"><div><div class="tableau-student-name">${escapePromotionHtml(st.name||'-')}</div><div class="tableau-student-meta">${escapePromotionHtml(st.studentId||'-')}${st.course?' • '+escapePromotionHtml(st.course):''}</div></div><div class="tableau-student-totals"><div class="tableau-total-chip">Total Écolage<strong>${money(schoolTotal)}</strong></div><div class="tableau-total-chip">Total Droit<strong>${money(rightTotal)}</strong></div><div class="tableau-total-chip">Écolage + Droit<strong>${money(schoolTotal+rightTotal)}</strong></div></div></div><div class="table-wrap"><table class="tableau-month-table"><thead><tr><th>Volana / Mois</th><th>Écolage</th><th>Droit</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+    });
+    box.innerHTML=html;
+}
+
+function loadFees(){standardRegistrationFee.value=getFee(KEYS.standardRegistration);monthlyFee.value=getFee(KEYS.monthly);examRegistrationFee.value=getFee(KEYS.examRegistration);examFee.value=getFee(KEYS.exam);certificateFee.value=getFee(KEYS.certificate);schoolAmount.value=getFee(KEYS.monthly);updateAutomaticRegistrationFee();autoFillPaymentAmount()}
+function saveFees(){localStorage.setItem(KEYS.standardRegistration,+standardRegistrationFee.value||0);localStorage.setItem(KEYS.monthly,+monthlyFee.value||0);localStorage.setItem(KEYS.examRegistration,+examRegistrationFee.value||0);localStorage.setItem(KEYS.exam,+examFee.value||0);localStorage.setItem(KEYS.certificate,+certificateFee.value||0);loadFees();alert('PCLM fees saved.')}
 function generateStudentId(){let max=0;students.forEach(s=>{const m=String(s.studentId||'').match(/^PCLM-(\d+)$/i);if(m)max=Math.max(max,+m[1])});return 'PCLM-'+String(max+1).padStart(4,'0')} function updateGeneratedId(){studentId.value=generateStudentId()}
-function currentRegistrationFee(){return registrationType.value==='special'?getFee(KEYS.specialRegistration):getFee(KEYS.standardRegistration)} function updateAutomaticRegistrationFee(){autoRegistrationFee.textContent=money(currentRegistrationFee());updateRegistrationCalculation()} function updateRegistrationCalculation(){const fee=currentRegistrationFee(),paid=+registrationPaid.value||0;autoRegistrationPaid.textContent=money(paid);autoRegistrationRemaining.textContent=money(Math.max(0,fee-paid))}
+function currentRegistrationFee(){return getFee(KEYS.standardRegistration)} function updateAutomaticRegistrationFee(){autoRegistrationFee.textContent=money(currentRegistrationFee());updateRegistrationCalculation()} function updateRegistrationCalculation(){const fee=currentRegistrationFee(),paid=+registrationPaid.value||0;autoRegistrationPaid.textContent=money(paid);autoRegistrationRemaining.textContent=money(Math.max(0,fee-paid))}
 studentPhoto.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=x=>{studentPhotoData=x.target.result;photoPreview.innerHTML=`<img src="${studentPhotoData}" alt="Student">`};r.readAsDataURL(f)});
-function addStudent(){const fn=firstName.value.trim(),ln=lastName.value.trim();if(!fn&&!ln)return alert('Enter student name.');const paid=+registrationPaid.value||0;const s={id:Date.now(),studentId:generateStudentId(),firstName:fn,lastName:ln,name:(fn+' '+ln).trim(),course:course.value.trim(),program:course.value.trim(),email:email.value.trim(),phone:phone.value.trim(),photo:studentPhotoData,about:studentAbout.value.trim(),registrationDate:registrationDate.value||today(),registrationType:registrationType.value,registrationFee:currentRegistrationFee(),payments:[]};if(paid>0)s.payments.push({id:Date.now()+1,type:'registration',amount:paid,date:today(),month:'',year:''});students.push(s);saveStudents();clearStudentForm();refreshAll()}
-function clearStudentForm(){firstName.value=lastName.value=course.value=email.value=phone.value=studentAbout.value='';registrationPaid.value=0;registrationType.value='standard';registrationDate.value=today();studentPhoto.value='';photoPreview.innerHTML='Student Photo';studentPhotoData='';updateGeneratedId();updateAutomaticRegistrationFee()}
+function addStudent(){const fn=firstName.value.trim(),ln=lastName.value.trim();if(!fn&&!ln)return alert('Enter student name.');const paid=+registrationPaid.value||0;const s={id:Date.now(),studentId:generateStudentId(),firstName:fn,lastName:ln,name:(fn+' '+ln).trim(),course:course.value.trim(),program:course.value.trim(),email:email.value.trim(),phone:phone.value.trim(),photo:studentPhotoData,about:studentAbout.value.trim(),registrationDate:registrationDate.value||today(),registrationType:'registration',registrationFee:currentRegistrationFee(),payments:[]};if(paid>0)s.payments.push({id:Date.now()+1,type:'registration',amount:paid,date:registrationDate.value||today(),month:'',year:''});students.push(s);saveStudents();clearStudentForm();refreshAll()}
+function clearStudentForm(){firstName.value=lastName.value=course.value=email.value=phone.value=studentAbout.value='';registrationPaid.value=0;registrationDate.value=today();studentPhoto.value='';photoPreview.innerHTML='Student Photo';studentPhotoData='';updateGeneratedId();updateAutomaticRegistrationFee()}
 function paymentTotal(s,t){return (s.payments||[]).filter(p=>p.type===t).reduce((a,p)=>a+(+p.amount||0),0)} function studentTotal(s){return (s.payments||[]).reduce((a,p)=>a+(+p.amount||0),0)}
-function autoFillPaymentAmount(){const t=paymentType.value,s=students.find(x=>x.id===+paymentStudent.value);let a=0;if(t==='examRegistration')a=getFee(KEYS.examRegistration);else if(t==='exam')a=getFee(KEYS.exam);else if(t==='certificate')a=getFee(KEYS.certificate);else if(t==='registration'&&s)a=Math.max(0,(+s.registrationFee||0)-paymentTotal(s,'registration'));paymentAmount.value=a}
-function addStudentPayment(){const s=students.find(x=>x.id===+paymentStudent.value);if(!s)return alert('Select student.');const a=+paymentAmount.value||0;if(a<=0)return alert('No payment amount.');s.payments.push({id:Date.now(),type:paymentType.value,amount:a,date:paymentDate.value||today(),month:'',year:''});saveStudents();refreshAll();autoFillPaymentAmount()}
+function autoFillPaymentAmount(){const t=paymentType.value,s=students.find(x=>x.id===+paymentStudent.value);let a=0;const otherGroup=document.getElementById('otherPaymentNameGroup'),amountLabel=document.getElementById('paymentAmountLabel');if(otherGroup)otherGroup.style.display=t==='other'?'block':'none';if(amountLabel)amountLabel.textContent=t==='other'?'Amount':'Amount — Automatic';if(t==='other'){paymentAmount.value='';return}if(t==='examRegistration')a=getFee(KEYS.examRegistration);else if(t==='exam')a=getFee(KEYS.exam);else if(t==='certificate')a=getFee(KEYS.certificate);else if(t==='registration'&&s)a=Math.max(0,(+s.registrationFee||0)-paymentTotal(s,'registration'));paymentAmount.value=a}
+function addStudentPayment(){const s=students.find(x=>x.id===+paymentStudent.value);if(!s)return alert('Select student.');const t=paymentType.value,a=+paymentAmount.value||0;if(a<=0)return alert('No payment amount.');let otherName='';if(t==='other'){otherName=(document.getElementById('otherPaymentName')?.value||'').trim();if(!otherName)return alert('Enter the other payment name.')}s.payments.push({id:Date.now(),type:t,otherName,amount:a,date:paymentDate.value||today(),month:'',year:''});saveStudents();if(t==='other'){const f=document.getElementById('otherPaymentName');if(f)f.value=''}refreshAll();autoFillPaymentAmount()}
 function addSchoolPayment(){const s=students.find(x=>x.id===+schoolStudent.value);if(!s)return alert('Select student.');const a=+schoolAmount.value||0;if(a<=0)return;s.payments.push({id:Date.now(),type:'school',amount:a,month:schoolMonth.value,year:+schoolYear.value,date:schoolPaymentDate.value||today()});saveStudents();refreshAll()}
 function deleteStudent(id){const s=students.find(x=>x.id===id);if(!s||!confirm('Delete '+s.name+'?'))return;students=students.filter(x=>x.id!==id);saveStudents();refreshAll()}
-function renderStudents(){studentTableBody.innerHTML='';const q=searchStudent.value.toLowerCase();students.filter(s=>(s.studentId+' '+s.name+' '+(s.course||'')).toLowerCase().includes(q)).forEach(s=>{const rp=paymentTotal(s,'registration'),rr=Math.max(0,(+s.registrationFee||0)-rp);const tr=document.createElement('tr');tr.innerHTML=`<td>${s.photo?`<img class="student-photo" src="${s.photo}">`:'-'}</td><td><strong>${s.studentId}</strong></td><td><strong>${s.name}</strong><br><small>${s.email||''}</small></td><td>${s.course||'-'}</td><td>${money(s.registrationFee)}</td><td>${money(rp)}</td><td>${money(rr)}</td><td>${money(paymentTotal(s,'school'))}</td><td>${money(paymentTotal(s,'examRegistration'))}</td><td>${money(paymentTotal(s,'exam'))}</td><td>${money(paymentTotal(s,'certificate'))}</td><td><strong>${money(studentTotal(s))}</strong></td><td><button class="btn-red small-btn" onclick="deleteStudent(${s.id})">Delete</button></td>`;studentTableBody.appendChild(tr)})}
+function formatPaymentDate(d){
+    if(!d)return '-';
+    const parts=String(d).split('-');
+    if(parts.length===3)return parts[2]+'/'+parts[1]+'/'+parts[0];
+    return d;
+}
+function paymentDatesHtml(s,type){
+    const dates=(s.payments||[]).filter(p=>p.type===type&&p.date).map(p=>formatPaymentDate(p.date));
+    const unique=[...new Set(dates)];
+    return unique.length?'<small class="payment-date-note">📅 '+unique.join('<br>📅 ')+'</small>':'<small class="payment-date-note no-date">No payment date</small>';
+}
+function schoolMonthsWithDatesHtml(s){
+    const groups={};
+    (s.payments||[]).filter(p=>p.type==='school').forEach(p=>{
+        const label=(p.month||'Month')+(p.year?' '+p.year:'');
+        if(!groups[label])groups[label]=[];
+        if(p.date&&!groups[label].includes(formatPaymentDate(p.date)))groups[label].push(formatPaymentDate(p.date));
+    });
+    const rows=Object.entries(groups).map(([label,dates])=>'<div><strong>'+label+'</strong>'+(dates.length?'<br><small class="payment-date-note">📅 '+dates.join(' · ')+'</small>':'')+'</div>');
+    return rows.length?rows.join(''): '-';
+}
+function renderStudents(){
+    studentTableBody.innerHTML='';
+    const q=searchStudent.value.toLowerCase();
+    students.filter(s=>(s.studentId+' '+s.name+' '+(s.course||'')).toLowerCase().includes(q)).forEach(s=>{
+        const rp=paymentTotal(s,'registration'),rr=Math.max(0,(+s.registrationFee||0)-rp);
+        const schoolMonthsText=schoolMonthsWithDatesHtml(s);
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${s.photo?`<img class="student-photo" src="${s.photo}">`:'-'}</td><td><strong>${s.studentId}</strong></td><td><strong>${s.name}</strong><br><small>${s.email||''}</small></td><td>${s.course||'-'}</td><td>${money(s.registrationFee)}</td><td><strong>${money(rp)}</strong><br>${paymentDatesHtml(s,'registration')}</td><td>${money(rr)}</td><td><strong>${money(paymentTotal(s,'school'))}</strong><br>${paymentDatesHtml(s,'school')}</td><td>${schoolMonthsText}</td><td><strong>${money(paymentTotal(s,'examRegistration'))}</strong><br>${paymentDatesHtml(s,'examRegistration')}</td><td><strong>${money(paymentTotal(s,'exam'))}</strong><br>${paymentDatesHtml(s,'exam')}</td><td><strong>${money(paymentTotal(s,'certificate'))}</strong><br>${paymentDatesHtml(s,'certificate')}</td><td><strong>${money(studentTotal(s))}</strong></td><td><button class="btn-red small-btn" onclick="deleteStudent(${s.id})">Delete</button></td>`;
+        studentTableBody.appendChild(tr)
+    })
+}
 function renderStudentSelects(){[paymentStudent,schoolStudent].forEach(sel=>{const old=sel.value;sel.innerHTML='';students.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.studentId+' - '+s.name;sel.appendChild(o)});if(old&&students.some(s=>String(s.id)===old))sel.value=old});autoFillPaymentAmount()}
 function addExpense(){const d=expenseDescription.value.trim(),a=+expenseAmount.value||0;if(!d||a<=0)return alert('Enter expense.');expenses.push({id:Date.now(),description:d,amount:a,date:expenseDate.value||today()});saveExpenses();expenseDescription.value=expenseAmount.value='';expenseDate.value=today();refreshAll()} function deleteExpense(id){expenses=expenses.filter(e=>e.id!==id);saveExpenses();refreshAll()}
-function updateDashboard(){let r=0,s=0,er=0,e=0,c=0;students.forEach(x=>{r+=paymentTotal(x,'registration');s+=paymentTotal(x,'school');er+=paymentTotal(x,'examRegistration');e+=paymentTotal(x,'exam');c+=paymentTotal(x,'certificate')});const rec=r+s+er+e+c,exp=expenses.reduce((a,x)=>a+(+x.amount||0),0);dashStudents.textContent=students.length;dashReceived.textContent=money(rec);dashExpenses.textContent=money(exp);dashBalance.textContent=money(rec-exp);dashRegistration.textContent=money(r);dashSchool.textContent=money(s);dashExam.textContent=money(er+e);dashCertificate.textContent=money(c)}
-function renderPaymentHistory(){let l=[];students.forEach(s=>(s.payments||[]).forEach(p=>l.push({...p,studentName:s.name,studentId:s.studentId})));l.sort((a,b)=>new Date(b.date)-new Date(a.date));paymentHistory.innerHTML=l.length?'':'<p>No payment recorded.</p>';l.slice(0,30).forEach(p=>{const d=document.createElement('div');d.className='history-item';d.innerHTML=`<div><strong>${p.studentName}</strong><br><small>${p.studentId} • ${p.type}${p.month?' • '+p.month+' '+p.year:''}</small></div><div style="text-align:right"><strong>${money(p.amount)}</strong><br><small>${p.date}</small></div>`;paymentHistory.appendChild(d)})}
+function updateDashboard(){let r=0,s=0,er=0,e=0,c=0,o=0;students.forEach(x=>{r+=paymentTotal(x,'registration');s+=paymentTotal(x,'school');er+=paymentTotal(x,'examRegistration');e+=paymentTotal(x,'exam');c+=paymentTotal(x,'certificate');o+=paymentTotal(x,'other')});const rec=r+s+er+e+c+o,exp=expenses.reduce((a,x)=>a+(+x.amount||0),0);dashStudents.textContent=students.length;dashReceived.textContent=money(rec);dashExpenses.textContent=money(exp);dashBalance.textContent=money(rec-exp);dashRegistration.textContent=money(r);dashSchool.textContent=money(s);dashExam.textContent=money(er+e);dashCertificate.textContent=money(c)}
+function renderPaymentHistory(){let l=[];students.forEach(s=>(s.payments||[]).forEach(p=>l.push({...p,studentName:s.name,studentId:s.studentId})));l.sort((a,b)=>new Date(b.date)-new Date(a.date));paymentHistory.innerHTML=l.length?'':'<p>No payment recorded.</p>';l.slice(0,30).forEach(p=>{const d=document.createElement('div');d.className='history-item';const label=p.type==='other'?(p.otherName||'Other Payment'):p.type;d.innerHTML=`<div><strong>${p.studentName}</strong><br><small>${p.studentId} • ${label}${p.month?' • '+p.month+' '+p.year:''}</small></div><div style="text-align:right"><strong>${money(p.amount)}</strong><br><small>${p.date}</small></div>`;paymentHistory.appendChild(d)})}
 function renderExpenseHistory(){expenseHistory.innerHTML=expenses.length?'':'<p>No expense recorded.</p>';expenses.slice().reverse().forEach(e=>{const d=document.createElement('div');d.className='history-item';d.innerHTML=`<div><strong>${e.description}</strong><br><small>${e.date}</small></div><div style="text-align:right"><strong>${money(e.amount)}</strong><br><button class="btn-red small-btn" onclick="deleteExpense(${e.id})">Delete</button></div>`;expenseHistory.appendChild(d)})}
 function exportBackup(){const data={institution:'PCLM - Proficiency Core Language Madagascar',date:new Date().toISOString(),fees:{standardRegistration:getFee(KEYS.standardRegistration),specialRegistration:getFee(KEYS.specialRegistration),monthly:getFee(KEYS.monthly),examRegistration:getFee(KEYS.examRegistration),exam:getFee(KEYS.exam),certificate:getFee(KEYS.certificate)},students,expenses};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='PCLM_Backup_'+today()+'.json';a.click();URL.revokeObjectURL(a.href)}
-function resetAllData(){if(!confirm('Delete ALL PCLM data?'))return;Object.values(KEYS).forEach(k=>localStorage.removeItem(k));students=[];expenses=[];loadFees();refreshAll()}
-function refreshAll(){updateGeneratedId();renderStudents();renderStudentSelects();updateDashboard();renderPaymentHistory();renderExpenseHistory();schoolAmount.value=getFee(KEYS.monthly)}
+function resetAllData(){if(!confirm('Delete ALL PCLM data?'))return;Object.values(KEYS).slice(0,6).forEach(k=>localStorage.removeItem(k));Object.keys(localStorage).filter(k=>k==='pclm_students_finance_v1'||k==='pclm_expenses_finance_v1'||k.startsWith('pclm_students_finance_v1_promotion_')||k.startsWith('pclm_expenses_finance_v1_promotion_')).forEach(k=>localStorage.removeItem(k));localStorage.removeItem('pclm_current_promotion');currentPromotion=1;loadPromotionData();students=[];expenses=[];loadFees();refreshAll()}
+function refreshAll(){updateGeneratedId();renderStudents();renderStudentSelects();updateDashboard();renderPaymentHistory();renderExpenseHistory();schoolAmount.value=getFee(KEYS.monthly);const ph=document.getElementById('promotionHistoryPanel');if(ph&&ph.classList.contains('active'))renderPromotionHistory();const tb=document.getElementById('studentTableauPanel');if(tb&&tb.classList.contains('active'))renderStudentTableau()}
 function setAutomaticDates(){registrationDate.value=paymentDate.value=schoolPaymentDate.value=expenseDate.value=today();schoolYear.value=new Date().getFullYear();schoolMonth.value=['January','February','March','April','May','June','July','August','September','October','November','December'][new Date().getMonth()]}
-setAutomaticDates();loadFees();refreshAll();updateAutomaticRegistrationFee();
+setAutomaticDates();loadPromotionData();loadFees();refreshAll();updateAutomaticRegistrationFee();
 </script>
 <script>
 function showPCLMSection(section){
@@ -2672,4 +2758,95 @@ window.addEventListener('load',()=>{
 });
 </script>
 
+
+<style id="pclmQualityEnhancements">
+/* ===== PCLM quality-of-life enhancements ===== */
+:root{--pclm-border:#d9e2ec;--pclm-muted:#667085;--pclm-soft:#f8fafc;--pclm-shadow:0 8px 24px rgba(15,23,42,.08)}
+.panel{transition:box-shadow .18s ease,transform .18s ease}.panel:hover{box-shadow:var(--pclm-shadow)}
+.dashboard .card{position:relative;overflow:hidden}.dashboard .card h2{word-break:break-word}.dashboard .card small{letter-spacing:.01em}
+#promotionQuickBanner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#fff;border:1px solid var(--pclm-border);border-radius:14px;padding:12px 16px;margin:0 0 18px;box-shadow:0 3px 12px rgba(15,23,42,.05)}
+#promotionQuickBanner .pq-main{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.pq-badge{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;background:#0f2747;color:#fff;font-weight:700;font-size:12px}.pq-meta{font-size:12px;color:var(--pclm-muted)}
+.enhanced-student-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}.enhanced-student-tools input[type=search]{min-width:210px}
+.pclm-tool-btn{border:0;border-radius:9px;padding:9px 12px;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap}.pclm-tool-btn:active{transform:translateY(1px)}
+.pclm-tool-light{background:#eef2f7;color:#23324a}.pclm-tool-dark{background:#0f2747;color:#fff}.pclm-tool-gold{background:#c99a23;color:#fff}
+.table-wrap{border-radius:10px}.table-wrap table{border-collapse:separate;border-spacing:0}.table-wrap thead th{position:sticky;top:0;z-index:3;background:#f5f7fa;box-shadow:0 1px 0 #dfe5ec}.table-wrap tbody tr:nth-child(even){background:#fbfcfe}.table-wrap tbody tr:hover{background:#f4f8ff}
+.payment-date-note{display:inline-block;margin-top:4px;line-height:1.4;color:#667085}.school-month-payment{padding:2px 0}
+#pclmToastContainer{position:fixed;right:18px;bottom:18px;z-index:999999;display:flex;flex-direction:column;gap:9px;pointer-events:none}.pclm-toast{min-width:240px;max-width:360px;background:#101828;color:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 12px 30px rgba(0,0,0,.18);font-size:13px;line-height:1.35;animation:pclmToastIn .2s ease}.pclm-toast.success{background:#116149}.pclm-toast.warn{background:#854d0e}@keyframes pclmToastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+#pclmScrollTop{position:fixed;right:20px;bottom:86px;width:42px;height:42px;border-radius:50%;border:0;background:#0f2747;color:#fff;font-size:18px;cursor:pointer;box-shadow:0 7px 20px rgba(15,39,71,.28);z-index:9990;display:none}
+.empty-student-row td{text-align:center!important;padding:30px 15px!important;color:#667085;background:#fff!important}.empty-student-row strong{display:block;color:#344054;margin-bottom:5px}
+.current-promo-inline{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:#edf4ff;color:#1849a9;font-size:11px;font-weight:700;margin-left:7px;vertical-align:middle}
+.actions{gap:8px;flex-wrap:wrap}.actions button{margin:0!important}
+button,input,select,textarea{outline-color:#3b82f6}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(59,130,246,.25);outline-offset:2px}
+@media(max-width:700px){
+  #promotionQuickBanner{padding:11px 12px}.enhanced-student-tools{width:100%;justify-content:stretch}.enhanced-student-tools input[type=search]{width:100%!important;max-width:none!important;min-width:0}.pclm-tool-btn{flex:1 1 auto}.panel-title{align-items:flex-start!important;flex-direction:column!important}.panel-title h2{width:100%}.dashboard{grid-template-columns:repeat(2,minmax(0,1fr))!important}.dashboard .card{min-width:0!important}.dashboard .card h2{font-size:18px!important}.table-wrap{overflow:auto;-webkit-overflow-scrolling:touch}.actions>button,.actions>strong{flex:1 1 calc(50% - 8px);text-align:center;justify-content:center}#pclmToastContainer{left:12px;right:12px;bottom:12px}.pclm-toast{min-width:0;max-width:none;width:100%}}
+@media(max-width:420px){.dashboard{grid-template-columns:1fr!important}.actions>button,.actions>strong{flex-basis:100%}}
+@media print{#pclmScrollTop,#pclmToastContainer,.enhanced-student-tools button,.header-actions,.actions{display:none!important}.panel{box-shadow:none!important}.table-wrap{overflow:visible!important}.table-wrap thead th{position:static!important}}
+</style>
+<script id="pclmQualityEnhancementsScript">
+(function(){
+  function byId(id){return document.getElementById(id)}
+  function toast(message,type){
+    let c=byId('pclmToastContainer');
+    if(!c){c=document.createElement('div');c.id='pclmToastContainer';document.body.appendChild(c)}
+    const d=document.createElement('div');d.className='pclm-toast '+(type||'success');d.textContent=message;c.appendChild(d);setTimeout(()=>{d.style.opacity='0';d.style.transform='translateY(8px)';setTimeout(()=>d.remove(),220)},2600)
+  }
+  window.pclmToast=toast;
+  function escCsv(v){v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
+  function schoolMonthsPlain(student){
+    const map={};(student.payments||[]).filter(p=>p.type==='school').forEach(p=>{const k=((p.month||'Unknown')+' '+(p.year||'')).trim();if(!map[k])map[k]=0;map[k]+=Number(p.amount||0)});
+    return Object.entries(map).map(([k,v])=>k+' ('+Number(v||0).toLocaleString('fr-FR')+' Ar)').join(' | ')
+  }
+  window.exportCurrentPromotionCSV=function(){
+    if(typeof students==='undefined')return;
+    const head=['Student ID','Student','Program','Email','Phone','Registration Fee','Registration Paid','Remaining','School Fees','School Months','Exam Registration','Exam','Certificate','Other Payments','Total'];
+    const rows=students.map(s=>{const reg=paymentTotal(s,'registration'), rem=Math.max(0,Number(s.registrationFee||0)-reg), school=paymentTotal(s,'school'), exr=paymentTotal(s,'examRegistration'), ex=paymentTotal(s,'exam'), cert=paymentTotal(s,'certificate'), other=paymentTotal(s,'other');return [s.studentId,s.name,s.course||'',s.email||'',s.phone||'',s.registrationFee||0,reg,rem,school,schoolMonthsPlain(s),exr,ex,cert,other,reg+school+exr+ex+cert+other]});
+    const csv='\ufeff'+[head,...rows].map(r=>r.map(escCsv).join(';')).join('\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='PCLM_'+(typeof promotionLabel==='function'?promotionLabel(currentPromotion):'students')+'_'+(typeof today==='function'?today():'')+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('Student list exported to CSV.')
+  }
+  window.printCurrentStudentList=function(){
+    const panel=[...document.querySelectorAll('.panel')].find(p=>p.querySelector('#studentTableBody'));if(!panel)return;
+    const w=window.open('','_blank');if(!w)return alert('Allow pop-ups to print the student list.');
+    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>PCLM Student List</title><style>body{font-family:Arial;padding:24px;color:#1f2937}h1{font-size:22px;margin:0 0 4px}p{margin:0 0 18px;color:#667085}table{width:100%;border-collapse:collapse;font-size:10px}th,td{border:1px solid #d8dee8;padding:6px;vertical-align:top}th{background:#f2f4f7}img{width:34px;height:34px;object-fit:cover;border-radius:5px}button{display:none}</style></head><body><h1>PCLM Students</h1><p>'+(typeof promotionLabel==='function'?promotionLabel(currentPromotion):'')+' • '+new Date().toLocaleDateString()+'</p>'+panel.querySelector('.table-wrap').outerHTML+'</body></html>');w.document.close();w.focus();setTimeout(()=>w.print(),250)
+  }
+  function enhanceStudentPanel(){
+    const panel=[...document.querySelectorAll('.panel')].find(p=>p.querySelector('#studentTableBody'));if(!panel)return;
+    const title=panel.querySelector('.panel-title');if(!title||title.dataset.enhanced)return;title.dataset.enhanced='1';
+    const h=title.querySelector('h2');if(h){const badge=document.createElement('span');badge.id='studentPanelPromotionBadge';badge.className='current-promo-inline';h.appendChild(badge)}
+    const search=byId('searchStudent');const tools=document.createElement('div');tools.className='enhanced-student-tools';
+    if(search){search.parentNode.insertBefore(tools,search);tools.appendChild(search)}
+    const clear=document.createElement('button');clear.type='button';clear.className='pclm-tool-btn pclm-tool-light';clear.textContent='Clear Search';clear.onclick=()=>{if(search){search.value='';renderStudents();search.focus()}};tools.appendChild(clear);
+    const csv=document.createElement('button');csv.type='button';csv.className='pclm-tool-btn pclm-tool-dark';csv.textContent='Export CSV';csv.onclick=window.exportCurrentPromotionCSV;tools.appendChild(csv);
+    const print=document.createElement('button');print.type='button';print.className='pclm-tool-btn pclm-tool-gold';print.textContent='Print List';print.onclick=window.printCurrentStudentList;tools.appendChild(print)
+  }
+  function addOtherDashboardCard(){
+    const dash=byId('dashCertificate')?.closest('.dashboard');if(!dash||byId('dashOther'))return;
+    const card=document.createElement('div');card.className='card';card.innerHTML='<small>Other Payments</small><h2 id="dashOther">0 Ar</h2>';dash.appendChild(card)
+  }
+  function ensureBanner(){
+    const admin=byId('adminSection'),dash=admin?.querySelector('.dashboard');if(!admin||!dash||byId('promotionQuickBanner'))return;
+    const b=document.createElement('div');b.id='promotionQuickBanner';b.innerHTML='<div class="pq-main"><span class="pq-badge" id="pqPromotion">Promotion</span><strong id="pqStudents">0 students</strong></div><div class="pq-meta" id="pqUpdated">Saved automatically in this browser</div>';dash.parentNode.insertBefore(b,dash)
+  }
+  function refreshEnhancements(){
+    try{if(byId('dashOther')&&typeof students!=='undefined')byId('dashOther').textContent=money(students.reduce((sum,s)=>sum+paymentTotal(s,'other'),0))}catch(e){}
+    try{if(byId('studentPanelPromotionBadge'))byId('studentPanelPromotionBadge').textContent=promotionLabel(currentPromotion);if(byId('pqPromotion'))byId('pqPromotion').textContent=promotionLabel(currentPromotion);if(byId('pqStudents'))byId('pqStudents').textContent=(students?.length||0)+' student'+((students?.length||0)===1?'':'s');if(byId('pqUpdated'))byId('pqUpdated').textContent='Auto-saved • '+new Date().toLocaleString()}catch(e){}
+    const body=byId('studentTableBody');if(body&&!body.children.length){const tr=document.createElement('tr');tr.className='empty-student-row';tr.innerHTML='<td colspan="14"><strong>No student in this promotion yet.</strong>Add a student or change promotion to view another list.</td>';body.appendChild(tr)}
+  }
+  function wrap(name,after){const fn=window[name];if(typeof fn!=='function'||fn.__pclmEnhanced)return;const wrapped=function(){const r=fn.apply(this,arguments);try{after.apply(this,arguments)}catch(e){}return r};wrapped.__pclmEnhanced=true;window[name]=wrapped}
+  function addDeleteConfirmations(){
+    const ds=window.deleteStudent;if(typeof ds==='function'&&!ds.__confirmEnhanced){const f=function(id){const s=(typeof students!=='undefined'?students.find(x=>x.id===id):null);if(!confirm('Delete '+(s?.name||'this student')+' from '+(typeof promotionLabel==='function'?promotionLabel(currentPromotion):'this promotion')+'?'))return;const r=ds.call(this,id);toast('Student deleted.','warn');return r};f.__confirmEnhanced=true;window.deleteStudent=f}
+    const de=window.deleteExpense;if(typeof de==='function'&&!de.__confirmEnhanced){const f=function(id){if(!confirm('Delete this expense?'))return;const r=de.call(this,id);toast('Expense deleted.','warn');return r};f.__confirmEnhanced=true;window.deleteExpense=f}
+  }
+  function installWrappers(){
+    wrap('refreshAll',refreshEnhancements);wrap('updateDashboard',refreshEnhancements);wrap('nextPromotion',()=>{refreshEnhancements();toast('Opened '+promotionLabel(currentPromotion)+'.')});
+    wrap('saveFees',()=>toast('Fees saved.'));
+    if(typeof window.addStudent==='function'){const fn=window.addStudent;window.addStudent=function(){const n=students.length,r=fn.apply(this,arguments);if(students.length>n)toast('Student added successfully.');return r}}
+    if(typeof window.addStudentPayment==='function'){const fn=window.addStudentPayment;window.addStudentPayment=function(){const before=JSON.stringify(students);const r=fn.apply(this,arguments);if(JSON.stringify(students)!==before)toast('Payment recorded successfully.');return r}}
+    if(typeof window.addSchoolPayment==='function'){const fn=window.addSchoolPayment;window.addSchoolPayment=function(){const before=JSON.stringify(students);const r=fn.apply(this,arguments);if(JSON.stringify(students)!==before)toast('School fee recorded successfully.');return r}}
+    if(typeof window.addExpense==='function'){const fn=window.addExpense;window.addExpense=function(){const n=expenses.length,r=fn.apply(this,arguments);if(expenses.length>n)toast('Expense recorded successfully.');return r}}
+  }
+  function scrollButton(){const b=document.createElement('button');b.id='pclmScrollTop';b.type='button';b.title='Back to top';b.textContent='↑';b.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});document.body.appendChild(b);window.addEventListener('scroll',()=>b.style.display=window.scrollY>500?'block':'none',{passive:true})}
+  function init(){enhanceStudentPanel();addOtherDashboardCard();ensureBanner();addDeleteConfirmations();installWrappers();scrollButton();refreshEnhancements();try{updateDashboard()}catch(e){}}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
 </body></html>
