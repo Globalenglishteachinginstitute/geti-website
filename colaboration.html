@@ -16,35 +16,51 @@
       scroll-behavior: smooth;
     }
 
+    html,
     body {
+      width: 100%;
+      min-height: 100%;
       margin: 0;
+    }
+
+    body {
       background: #f4f7fb;
       color: #1f2937;
+      overflow-x: hidden;
     }
 
     .hidden {
       display: none !important;
     }
 
-    /* =========================
+    /* =====================================================
        HEADER
-    ========================= */
+    ===================================================== */
 
     .site-header {
       width: 100%;
+      height: 72px;
+
       background: #ffffff;
+
       border-bottom: 1px solid #e5e7eb;
-      box-shadow: 0 3px 15px rgba(0,0,0,.06);
+
+      box-shadow:
+        0 3px 15px rgba(0, 0, 0, 0.06);
+
       position: sticky;
       top: 0;
+
       z-index: 9999;
     }
 
     .navbar {
-      max-width: 1200px;
-      min-height: 72px;
+      max-width: 1400px;
+      height: 72px;
+
       margin: auto;
-      padding: 0 20px;
+
+      padding: 0 22px;
 
       display: flex;
       align-items: center;
@@ -56,8 +72,11 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+
+      gap: 11px;
+
       text-decoration: none;
+
       color: #0b4ea2;
     }
 
@@ -70,7 +89,7 @@
       justify-content: center;
 
       background: #0b4ea2;
-      color: white;
+      color: #ffffff;
 
       border-radius: 10px;
 
@@ -89,28 +108,37 @@
     }
 
     .brand-text span {
-      font-size: 10px;
-      color: #6b7280;
       margin-top: 5px;
+
+      color: #6b7280;
+
+      font-size: 10px;
     }
 
-    /* =========================
+    /* =====================================================
        DESKTOP MENU
-    ========================= */
+    ===================================================== */
 
     .desktop-menu {
       display: flex;
       align-items: center;
+
       gap: 3px;
     }
 
     .desktop-menu a {
+      padding: 10px 12px;
+
       color: #374151;
+
+      border-radius: 8px;
+
       text-decoration: none;
+
       font-size: 14px;
       font-weight: 600;
-      padding: 10px 11px;
-      border-radius: 8px;
+
+      transition: .2s ease;
     }
 
     .desktop-menu a:hover {
@@ -118,18 +146,18 @@
       color: #0b4ea2;
     }
 
-    /* =========================
-       THREE LINE MENU
-    ========================= */
+    /* =====================================================
+       HAMBURGER
+    ===================================================== */
 
     .menu-toggle {
       width: 44px;
       height: 44px;
 
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
 
       gap: 5px;
 
@@ -153,7 +181,9 @@
     }
 
     .menu-toggle.active span:nth-child(1) {
-      transform: translateY(7px) rotate(45deg);
+      transform:
+        translateY(7px)
+        rotate(45deg);
     }
 
     .menu-toggle.active span:nth-child(2) {
@@ -161,28 +191,34 @@
     }
 
     .menu-toggle.active span:nth-child(3) {
-      transform: translateY(-7px) rotate(-45deg);
+      transform:
+        translateY(-7px)
+        rotate(-45deg);
     }
+
+    /* =====================================================
+       SIDE MENU
+    ===================================================== */
 
     .side-menu {
       position: absolute;
+
       top: 62px;
-      right: 20px;
+      right: 22px;
 
       width: 245px;
 
       padding: 10px;
 
-      background: white;
+      display: none;
+
+      background: #ffffff;
 
       border: 1px solid #e5e7eb;
       border-radius: 12px;
 
-      box-shadow: 0 15px 35px rgba(0,0,0,.12);
-
-      display: none;
-
-      z-index: 10000;
+      box-shadow:
+        0 15px 35px rgba(0,0,0,.13);
     }
 
     .side-menu.open {
@@ -194,11 +230,11 @@
 
       padding: 13px 14px;
 
+      color: #374151;
+
       border-radius: 8px;
 
       text-decoration: none;
-
-      color: #374151;
 
       font-size: 14px;
       font-weight: 600;
@@ -211,81 +247,123 @@
 
     .side-menu a.active {
       background: #0b4ea2;
-      color: white;
+      color: #ffffff;
     }
 
     .menu-divider {
       height: 1px;
-      background: #e5e7eb;
+
       margin: 8px 0;
+
+      background: #e5e7eb;
     }
 
-    /* =========================
+    /* =====================================================
        PAGE
-    ========================= */
+    ===================================================== */
 
     .page {
-      padding: 30px 15px 60px;
+      width: 100%;
+
+      min-height:
+        calc(100vh - 72px);
+
+      padding: 0;
     }
 
     .main-card {
-      max-width: 820px;
-      margin: auto;
+      width: 100%;
+      max-width: none;
 
-      background: white;
+      min-height:
+        calc(100vh - 72px);
 
-      border-radius: 20px;
+      margin: 0;
+
+      background: #ffffff;
+
+      border-radius: 0;
+
+      box-shadow: none;
 
       overflow: hidden;
-
-      box-shadow: 0 12px 40px rgba(0,0,0,.08);
     }
 
+    /* =====================================================
+       HERO
+    ===================================================== */
+
     .hero {
-      padding: 38px 25px;
+      width: 100%;
+
+      padding: 42px 40px;
 
       text-align: center;
 
       background: #0b4ea2;
 
-      color: white;
+      color: #ffffff;
     }
 
     .hero h1 {
-      margin: 0 0 9px;
-      font-size: 31px;
+      margin: 0 0 10px;
+
+      font-size:
+        clamp(26px, 3vw, 38px);
     }
 
     .hero p {
+      max-width: 820px;
+
       margin: auto;
-      max-width: 620px;
+
+      font-size:
+        clamp(14px, 1.5vw, 17px);
+
       line-height: 1.6;
+
       opacity: .95;
     }
 
+    /* =====================================================
+       NORMAL CONTENT
+    ===================================================== */
+
     .content {
-      padding: 32px;
+      width: 100%;
+
+      max-width: 1100px;
+
+      margin: auto;
+
+      padding: 40px;
     }
 
     .section-title {
       margin: 0 0 8px;
+
       color: #0b4ea2;
+
       font-size: 26px;
     }
 
     .section-subtitle {
-      color: #6b7280;
-      line-height: 1.6;
       margin-bottom: 25px;
+
+      color: #6b7280;
+
+      line-height: 1.6;
     }
 
-    /* =========================
-       STEPS
-    ========================= */
+    /* =====================================================
+       STEP INDICATOR
+    ===================================================== */
 
     .steps {
       display: grid;
-      grid-template-columns: repeat(4,1fr);
+
+      grid-template-columns:
+        repeat(4, 1fr);
 
       gap: 8px;
 
@@ -293,7 +371,7 @@
     }
 
     .step-indicator {
-      padding: 10px 5px;
+      padding: 11px 6px;
 
       background: #f3f4f6;
 
@@ -301,15 +379,15 @@
 
       text-align: center;
 
+      color: #6b7280;
+
       font-size: 12px;
       font-weight: 700;
-
-      color: #6b7280;
     }
 
     .step-indicator.active {
       background: #0b4ea2;
-      color: white;
+      color: #ffffff;
     }
 
     .step-indicator.completed {
@@ -317,9 +395,9 @@
       color: #166534;
     }
 
-    /* =========================
-       FORMS
-    ========================= */
+    /* =====================================================
+       FORM
+    ===================================================== */
 
     .form-group {
       margin-bottom: 18px;
@@ -328,9 +406,9 @@
     label {
       display: block;
 
-      font-weight: 700;
-
       margin-bottom: 7px;
+
+      font-weight: 700;
 
       line-height: 1.4;
     }
@@ -346,32 +424,35 @@
 
       padding: 13px 14px;
 
+      background: #ffffff;
+
       border: 1px solid #d1d5db;
-
       border-radius: 10px;
-
-      font-size: 15px;
 
       outline: none;
 
-      background: white;
+      font-size: 15px;
     }
 
     input:focus,
     textarea:focus,
     select:focus {
       border-color: #0b4ea2;
-      box-shadow: 0 0 0 4px rgba(11,78,162,.08);
+
+      box-shadow:
+        0 0 0 4px
+        rgba(11,78,162,.08);
     }
 
     textarea {
       min-height: 115px;
+
       resize: vertical;
     }
 
-    /* =========================
+    /* =====================================================
        BUTTONS
-    ========================= */
+    ===================================================== */
 
     .btn {
       width: 100%;
@@ -379,17 +460,18 @@
       padding: 14px 18px;
 
       border: none;
-
       border-radius: 10px;
 
       background: #0b4ea2;
 
-      color: white;
+      color: #ffffff;
 
       font-size: 16px;
       font-weight: 700;
 
       cursor: pointer;
+
+      transition: .2s ease;
     }
 
     .btn:hover {
@@ -407,33 +489,40 @@
 
     .button-row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+
+      grid-template-columns:
+        1fr 1fr;
+
       gap: 12px;
 
       margin-top: 15px;
     }
 
-    /* =========================
+    /* =====================================================
        CHECKBOX
-    ========================= */
+    ===================================================== */
 
     .checkbox-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+
+      grid-template-columns:
+        repeat(2, minmax(0,1fr));
+
       gap: 10px;
     }
 
     .check-card {
       display: flex;
       align-items: center;
+
       gap: 9px;
 
       padding: 11px;
 
+      background: #f8fafc;
+
       border: 1px solid #dbe3ed;
       border-radius: 9px;
-
-      background: #f8fafc;
 
       cursor: pointer;
 
@@ -445,26 +534,26 @@
       margin: 0;
     }
 
-    /* =========================
+    /* =====================================================
        REVIEW
-    ========================= */
+    ===================================================== */
 
     .review-box {
-      background: #f8fafc;
-
-      border: 1px solid #e5e7eb;
-
-      border-radius: 12px;
-
       padding: 18px;
 
       margin-bottom: 20px;
+
+      background: #f8fafc;
+
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
     }
 
     .review-row {
       padding: 10px 0;
 
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom:
+        1px solid #e5e7eb;
 
       line-height: 1.5;
 
@@ -479,6 +568,10 @@
       color: #0b4ea2;
     }
 
+    /* =====================================================
+       AGREEMENT
+    ===================================================== */
+
     .agreement {
       padding: 18px;
 
@@ -486,25 +579,25 @@
 
       background: #eef5ff;
 
-      border-left: 4px solid #0b4ea2;
+      border-left:
+        4px solid #0b4ea2;
 
       border-radius: 8px;
 
       line-height: 1.65;
     }
 
-    /* =========================
+    /* =====================================================
        SIGNATURE
-    ========================= */
+    ===================================================== */
 
     .signature-wrap {
       padding: 15px;
 
-      border: 2px dashed #aeb7c2;
-
-      border-radius: 12px;
-
       background: #fafafa;
+
+      border: 2px dashed #aeb7c2;
+      border-radius: 12px;
     }
 
     #signatureCanvas {
@@ -513,10 +606,9 @@
 
       display: block;
 
-      background: white;
+      background: #ffffff;
 
       border: 1px solid #cfd6df;
-
       border-radius: 8px;
 
       cursor: crosshair;
@@ -525,18 +617,18 @@
     }
 
     .signature-note {
+      margin-top: 8px;
+
       text-align: center;
 
       color: #6b7280;
 
       font-size: 13px;
-
-      margin-top: 8px;
     }
 
-    /* =========================
+    /* =====================================================
        SUCCESS
-    ========================= */
+    ===================================================== */
 
     .success {
       text-align: center;
@@ -548,15 +640,15 @@
 
       margin: 0 auto 20px;
 
-      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       background: #dcfce7;
 
       color: #15803d;
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border-radius: 50%;
 
       font-size: 44px;
       font-weight: 800;
@@ -567,69 +659,67 @@
 
       padding: 16px;
 
-      border-radius: 10px;
-
       background: #fff7ed;
 
       color: #9a3412;
 
+      border-radius: 10px;
+
       font-weight: 700;
     }
 
+    .success-text {
+      color: #15803d;
+    }
+
     /* =====================================================
-       COLLABORATION AREA - LIKE STUDENT AREA
+       COLLABORATION AREA
     ===================================================== */
 
     .collaboration-dashboard {
       width: 100%;
     }
 
-    .area-menu-toggle {
-      display: none;
-
-      width: 100%;
-
-      padding: 12px;
-
-      margin-bottom: 15px;
-
-      border: none;
-
-      border-radius: 8px;
-
-      background: #0b4ea2;
-
-      color: white;
-
-      font-weight: 700;
-
-      cursor: pointer;
-    }
-
     .collaboration-layout {
+      width: 100vw;
+
+      min-height:
+        calc(100vh - 72px);
+
       display: grid;
-      grid-template-columns: 245px 1fr;
 
-      min-height: 650px;
+      grid-template-columns:
+        260px minmax(0,1fr);
 
-      margin: -32px;
+      margin: -40px;
+
+      background: #f5f7fb;
     }
 
-    /* =========================
-       COLLAB SIDEBAR
-    ========================= */
+    /* =====================================================
+       AREA SIDEBAR
+    ===================================================== */
 
     .collaboration-sidebar {
+      min-height:
+        calc(100vh - 72px);
+
+      padding: 28px 16px;
+
       background: #0b4ea2;
 
-      color: white;
+      color: #ffffff;
 
-      padding: 25px 15px;
+      position: sticky;
+      top: 72px;
+
+      align-self: start;
     }
 
     .sidebar-profile {
       display: flex;
       align-items: center;
+
       gap: 11px;
 
       padding: 0 8px 18px;
@@ -639,15 +729,17 @@
       width: 46px;
       height: 46px;
 
-      border-radius: 50%;
-
-      background: white;
-
-      color: #0b4ea2;
+      flex: 0 0 46px;
 
       display: flex;
       align-items: center;
       justify-content: center;
+
+      background: #ffffff;
+
+      color: #0b4ea2;
+
+      border-radius: 50%;
 
       font-size: 20px;
       font-weight: 800;
@@ -656,15 +748,15 @@
     .sidebar-profile strong {
       display: block;
 
-      color: white;
+      max-width: 155px;
 
-      max-width: 150px;
-
-      white-space: nowrap;
+      color: #ffffff;
 
       overflow: hidden;
 
       text-overflow: ellipsis;
+
+      white-space: nowrap;
     }
 
     .sidebar-profile span {
@@ -682,7 +774,8 @@
 
       padding: 9px;
 
-      background: rgba(255,255,255,.12);
+      background:
+        rgba(255,255,255,.12);
 
       border-radius: 8px;
 
@@ -694,20 +787,26 @@
     .area-nav {
       display: flex;
       flex-direction: column;
+
       gap: 3px;
     }
 
     .area-nav-btn {
       width: 100%;
 
-      border: none;
+      padding: 12px 13px;
+
+      display: flex;
+      align-items: center;
+
+      gap: 10px;
 
       background: transparent;
 
-      color: rgba(255,255,255,.86);
+      color:
+        rgba(255,255,255,.86);
 
-      padding: 12px 13px;
-
+      border: none;
       border-radius: 8px;
 
       text-align: left;
@@ -716,44 +815,48 @@
       font-weight: 600;
 
       cursor: pointer;
-
-      display: flex;
-      gap: 10px;
-      align-items: center;
     }
 
     .area-nav-btn:hover {
-      background: rgba(255,255,255,.12);
-      color: white;
+      background:
+        rgba(255,255,255,.12);
+
+      color: #ffffff;
     }
 
     .area-nav-btn.active {
-      background: white;
+      background: #ffffff;
+
       color: #0b4ea2;
     }
 
     .sidebar-divider {
       height: 1px;
 
-      background: rgba(255,255,255,.18);
-
       margin: 12px 5px;
+
+      background:
+        rgba(255,255,255,.18);
     }
 
     .logout-btn {
       color: #ffd9d9;
     }
 
-    /* =========================
+    /* =====================================================
        AREA MAIN
-    ========================= */
+    ===================================================== */
 
     .collaboration-main {
-      background: #f5f7fb;
-
-      padding: 30px;
-
+      width: 100%;
       min-width: 0;
+
+      min-height:
+        calc(100vh - 72px);
+
+      padding: 36px 42px;
+
+      background: #f5f7fb;
     }
 
     .collab-section {
@@ -766,8 +869,8 @@
 
     .area-title {
       display: flex;
-      justify-content: space-between;
       align-items: flex-start;
+      justify-content: space-between;
 
       gap: 15px;
 
@@ -786,6 +889,10 @@
       color: #6b7280;
     }
 
+    /* =====================================================
+       BADGES
+    ===================================================== */
+
     .pending-badge {
       display: inline-block;
 
@@ -799,37 +906,45 @@
 
       font-size: 12px;
       font-weight: 700;
+
+      white-space: nowrap;
     }
 
     .big-status {
-      font-size: 14px;
-
       padding: 10px 15px;
+
+      font-size: 14px;
     }
 
-    /* =========================
+    /* =====================================================
        DASHBOARD SUMMARY
-    ========================= */
+    ===================================================== */
 
     .dashboard-summary {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
+      width: 100%;
 
-      background: white;
+      display: grid;
+
+      grid-template-columns:
+        repeat(3,minmax(0,1fr));
+
+      margin-bottom: 24px;
+
+      background: #ffffff;
 
       border: 1px solid #e5e7eb;
-
-      border-radius: 12px;
-
-      margin-bottom: 20px;
+      border-radius: 14px;
 
       overflow: hidden;
     }
 
     .summary-item {
-      padding: 18px;
+      min-width: 0;
 
-      border-right: 1px solid #e5e7eb;
+      padding: 22px;
+
+      border-right:
+        1px solid #e5e7eb;
     }
 
     .summary-item:last-child {
@@ -839,43 +954,40 @@
     .summary-label {
       display: block;
 
+      margin-bottom: 7px;
+
       color: #6b7280;
 
       font-size: 12px;
-
-      margin-bottom: 7px;
     }
 
-    .success-text {
-      color: #15803d;
-    }
-
-    /* =========================
+    /* =====================================================
        AREA PANELS
-    ========================= */
+    ===================================================== */
 
     .info-panel,
     .status-main,
     .message-item,
     .empty-state {
-      background: white;
-
-      border: 1px solid #e5e7eb;
-
-      border-radius: 12px;
+      width: 100%;
 
       padding: 20px;
+
+      background: #ffffff;
+
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
     }
 
     .info-panel h3 {
-      color: #0b4ea2;
-
       margin-top: 0;
+
+      color: #0b4ea2;
     }
 
-    /* =========================
+    /* =====================================================
        PROGRESS
-    ========================= */
+    ===================================================== */
 
     .progress-item {
       display: flex;
@@ -884,7 +996,8 @@
 
       padding: 15px 0;
 
-      border-bottom: 1px solid #eef0f3;
+      border-bottom:
+        1px solid #eef0f3;
     }
 
     .progress-item:last-child {
@@ -897,18 +1010,19 @@
 
       flex: 0 0 34px;
 
-      border-radius: 50%;
-
-      background: #e5e7eb;
-
       display: flex;
       align-items: center;
       justify-content: center;
 
+      background: #e5e7eb;
+
+      border-radius: 50%;
+
       font-weight: 700;
     }
 
-    .completed-progress .progress-circle {
+    .completed-progress
+    .progress-circle {
       background: #dcfce7;
 
       color: #15803d;
@@ -928,19 +1042,22 @@
       font-size: 13px;
     }
 
-    /* =========================
+    /* =====================================================
        INFO ROW
-    ========================= */
+    ===================================================== */
 
     .info-row {
       display: grid;
-      grid-template-columns: 180px 1fr;
+
+      grid-template-columns:
+        190px 1fr;
 
       gap: 15px;
 
       padding: 13px 0;
 
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom:
+        1px solid #e5e7eb;
     }
 
     .info-row:last-child {
@@ -951,15 +1068,16 @@
       color: #6b7280;
     }
 
-    /* =========================
+    /* =====================================================
        DOCUMENTS
-    ========================= */
+    ===================================================== */
 
     .document-list {
-      background: white;
+      width: 100%;
+
+      background: #ffffff;
 
       border: 1px solid #e5e7eb;
-
       border-radius: 12px;
 
       overflow: hidden;
@@ -969,11 +1087,13 @@
       padding: 17px 20px;
 
       display: flex;
+      align-items: center;
       justify-content: space-between;
 
       gap: 20px;
 
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom:
+        1px solid #e5e7eb;
     }
 
     .document-row:last-child {
@@ -987,16 +1107,16 @@
     .document-row div span {
       display: block;
 
-      color: #6b7280;
-
       margin-top: 5px;
+
+      color: #6b7280;
 
       font-size: 13px;
     }
 
-    /* =========================
+    /* =====================================================
        MESSAGES
-    ========================= */
+    ===================================================== */
 
     .message-item strong {
       color: #0b4ea2;
@@ -1016,15 +1136,16 @@
       line-height: 1.6;
     }
 
-    /* =========================
+    /* =====================================================
        PROGRAMS
-    ========================= */
+    ===================================================== */
 
     .simple-list {
-      background: white;
+      width: 100%;
+
+      background: #ffffff;
 
       border: 1px solid #e5e7eb;
-
       border-radius: 12px;
 
       overflow: hidden;
@@ -1033,80 +1154,284 @@
     .simple-list div {
       padding: 15px 18px;
 
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom:
+        1px solid #e5e7eb;
     }
 
     .simple-list div:last-child {
       border-bottom: none;
     }
 
-    /* =========================
-       EMPTY
-    ========================= */
+    /* =====================================================
+       EMPTY STATE
+    ===================================================== */
 
     .empty-state {
-      text-align: center;
-
       padding: 45px 20px;
+
+      text-align: center;
     }
 
     .empty-state p {
       color: #6b7280;
     }
 
-    /* =========================
+    /* =====================================================
+       MOBILE AREA MENU
+    ===================================================== */
+
+    .area-menu-toggle {
+      display: none;
+
+      width: 100%;
+
+      padding: 12px;
+
+      margin-bottom: 15px;
+
+      background: #0b4ea2;
+
+      color: #ffffff;
+
+      border: none;
+      border-radius: 8px;
+
+      font-weight: 700;
+
+      cursor: pointer;
+    }
+
+    /* =====================================================
        FOOTER
-    ========================= */
+    ===================================================== */
 
     footer {
-      margin-top: 60px;
+      width: 100%;
 
       padding: 25px 20px;
 
       text-align: center;
 
-      background: white;
+      background: #ffffff;
 
-      border-top: 1px solid #e5e7eb;
+      border-top:
+        1px solid #e5e7eb;
 
       color: #6b7280;
 
       font-size: 13px;
     }
 
-    /* =========================
-       RESPONSIVE
-    ========================= */
+    /* =====================================================
+       LARGE DESKTOP
+    ===================================================== */
 
-    @media(max-width:850px) {
-      .desktop-menu {
-        display: none;
+    @media(min-width:1400px) {
+
+      .content {
+        max-width: 1250px;
+
+        padding-left: 60px;
+        padding-right: 60px;
       }
 
-      .side-menu {
-        top: 68px;
-        left: 15px;
-        right: 15px;
-        width: auto;
+      .collaboration-layout {
+        grid-template-columns:
+          280px minmax(0,1fr);
+
+        margin: -40px -60px;
+      }
+
+      .collaboration-main {
+        padding: 45px 60px;
+      }
+
+    }
+
+    /* =====================================================
+       TABLET
+    ===================================================== */
+
+    @media(
+      min-width:769px
+    ) and (
+      max-width:1024px
+    ) {
+
+      .desktop-menu {
+        display: none;
       }
 
       .brand-text span {
         display: none;
       }
+
+      .content {
+        padding: 28px;
+      }
+
+      .collaboration-layout {
+        grid-template-columns:
+          215px minmax(0,1fr);
+
+        margin: -28px;
+
+        width:
+          calc(100vw);
+      }
+
+      .collaboration-sidebar {
+        padding: 22px 12px;
+      }
+
+      .collaboration-main {
+        padding: 28px 24px;
+      }
+
+      .area-nav-btn {
+        padding: 11px 10px;
+
+        font-size: 13px;
+      }
+
+      .sidebar-profile strong {
+        max-width: 120px;
+      }
+
+      .dashboard-summary {
+        grid-template-columns:
+          1fr 1fr;
+      }
+
+      .summary-item:nth-child(2) {
+        border-right: none;
+      }
+
+      .summary-item:last-child {
+        grid-column:
+          1 / -1;
+
+        border-top:
+          1px solid #e5e7eb;
+      }
+
     }
 
-    @media(max-width:760px) {
-      .collaboration-layout {
-        display: block;
-        margin: -20px;
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media(max-width:768px) {
+
+      .site-header {
+        height: 64px;
+      }
+
+      .navbar {
+        height: 64px;
+
+        padding: 0 14px;
+      }
+
+      .desktop-menu {
+        display: none;
+      }
+
+      .brand-logo {
+        width: 40px;
+        height: 40px;
+      }
+
+      .brand-text span {
+        display: none;
+      }
+
+      .side-menu {
+        top: 58px;
+
+        left: 10px;
+        right: 10px;
+
+        width: auto;
+      }
+
+      .page {
+        min-height:
+          calc(100vh - 64px);
+      }
+
+      .main-card {
+        min-height:
+          calc(100vh - 64px);
+      }
+
+      .hero {
+        padding: 28px 18px;
+      }
+
+      .hero h1 {
+        font-size: 25px;
+      }
+
+      .content {
+        max-width: none;
+
+        padding: 20px 15px;
+      }
+
+      .steps {
+        grid-template-columns:
+          1fr 1fr;
+      }
+
+      .checkbox-grid,
+      .button-row {
+        grid-template-columns:
+          1fr;
       }
 
       .area-menu-toggle {
         display: block;
+
+        position: sticky;
+
+        top: 75px;
+
+        z-index: 150;
+      }
+
+      .collaboration-layout {
+        width: auto;
+
+        min-height: auto;
+
+        display: block;
+
+        margin:
+          -20px -15px;
       }
 
       .collaboration-sidebar {
         display: none;
+
+        position: fixed;
+
+        top: 64px;
+        left: 0;
+        bottom: 0;
+
+        width:
+          min(82vw,290px);
+
+        min-height: auto;
+
+        overflow-y: auto;
+
+        z-index: 9998;
+
+        box-shadow:
+          10px 0 30px
+          rgba(0,0,0,.18);
       }
 
       .collaboration-sidebar.mobile-open {
@@ -1114,66 +1439,94 @@
       }
 
       .collaboration-main {
-        padding: 20px;
+        width: 100%;
+
+        min-height:
+          calc(100vh - 64px);
+
+        padding: 20px 15px;
       }
 
       .dashboard-summary {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+          1fr;
       }
 
       .summary-item {
         border-right: none;
-        border-bottom: 1px solid #e5e7eb;
+
+        border-bottom:
+          1px solid #e5e7eb;
       }
 
       .summary-item:last-child {
         border-bottom: none;
       }
 
+      .area-title {
+        flex-direction: column;
+
+        align-items: flex-start;
+      }
+
       .info-row {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+          1fr;
+
         gap: 5px;
       }
 
-      .area-title {
-        flex-direction: column;
+      .document-row {
+        align-items: flex-start;
       }
+
     }
 
-    @media(max-width:620px) {
-      .page {
-        padding: 18px 10px 40px;
+    /* =====================================================
+       SMALL MOBILE
+    ===================================================== */
+
+    @media(max-width:420px) {
+
+      .navbar {
+        padding: 0 10px;
       }
 
-      .content {
-        padding: 20px;
+      .brand-text strong {
+        font-size: 18px;
       }
 
       .hero {
-        padding: 30px 18px;
+        padding: 24px 14px;
       }
 
       .hero h1 {
-        font-size: 25px;
+        font-size: 23px;
       }
 
-      .steps {
-        grid-template-columns: 1fr 1fr;
+      .content {
+        padding: 17px 12px;
       }
 
-      .checkbox-grid,
-      .button-row {
-        grid-template-columns: 1fr;
+      .collaboration-layout {
+        margin:
+          -17px -12px;
       }
+
+      .collaboration-main {
+        padding: 18px 12px;
+      }
+
+      .section-title,
+      .area-title h2 {
+        font-size: 22px;
+      }
+
     }
   </style>
 </head>
 
 <body>
-
-<!-- =========================
-     HEADER
-========================= -->
 
 <header class="site-header">
 
@@ -1229,14 +1582,15 @@
       class="menu-toggle"
       aria-label="Open menu"
     >
-
       <span></span>
       <span></span>
       <span></span>
-
     </button>
 
-    <div id="sideMenu" class="side-menu">
+    <div
+      id="sideMenu"
+      class="side-menu"
+    >
 
       <a
         href="collaboration.html"
@@ -1265,15 +1619,14 @@
 
 </header>
 
-<!-- =========================
-     MAIN
-========================= -->
-
 <main class="page">
 
   <div class="main-card">
 
-    <div class="hero">
+    <div
+      id="mainHero"
+      class="hero"
+    >
 
       <h1>
         Collaboration with GETI
@@ -1281,39 +1634,54 @@
 
       <p>
         Submit your collaboration application,
-        prepare your dossier and access your
-        GETI Collaboration Area.
+        prepare your official dossier and access
+        your GETI Collaboration Area.
       </p>
 
     </div>
 
     <div class="content">
 
-      <!-- STEP INDICATORS -->
+      <!-- STEPS -->
 
-      <div id="stepsIndicator" class="steps">
+      <div
+        id="stepsIndicator"
+        class="steps"
+      >
 
-        <div id="indicator1" class="step-indicator active">
+        <div
+          id="indicator1"
+          class="step-indicator active"
+        >
           1. Registration
         </div>
 
-        <div id="indicator2" class="step-indicator">
+        <div
+          id="indicator2"
+          class="step-indicator"
+        >
           2. Dossier
         </div>
 
-        <div id="indicator3" class="step-indicator">
+        <div
+          id="indicator3"
+          class="step-indicator"
+        >
           3. Signature
         </div>
 
-        <div id="indicator4" class="step-indicator">
+        <div
+          id="indicator4"
+          class="step-indicator"
+        >
           4. Submission
         </div>
 
       </div>
 
-      <!-- =========================
+      <!-- =================================================
            STEP 1
-      ========================= -->
+      ================================================= -->
 
       <section id="step1">
 
@@ -1322,7 +1690,8 @@
         </h2>
 
         <p class="section-subtitle">
-          Complete the form below to start your collaboration application.
+          Complete the form below to begin
+          your collaboration application.
         </p>
 
         <div class="form-group">
@@ -1409,18 +1778,22 @@
 
       </section>
 
-      <!-- =========================
+      <!-- =================================================
            STEP 2
-      ========================= -->
+      ================================================= -->
 
-      <section id="step2" class="hidden">
+      <section
+        id="step2"
+        class="hidden"
+      >
 
         <h2 class="section-title">
           Fill This
         </h2>
 
         <p class="section-subtitle">
-          Complete this information before preparing your collaboration dossier.
+          Complete the following information
+          before preparing your collaboration dossier.
         </p>
 
         <div class="form-group">
@@ -1659,18 +2032,22 @@
 
       </section>
 
-      <!-- =========================
+      <!-- =================================================
            STEP 3
-      ========================= -->
+      ================================================= -->
 
-      <section id="step3" class="hidden">
+      <section
+        id="step3"
+        class="hidden"
+      >
 
         <h2 class="section-title">
           Review & Sign Your Dossier
         </h2>
 
         <p class="section-subtitle">
-          Review all information carefully before signing.
+          Review all information carefully
+          before signing.
         </p>
 
         <div class="review-box">
@@ -1759,13 +2136,15 @@
           </strong>
 
           <p>
-            I confirm that all information provided in this collaboration application
-            is accurate and complete.
+            I confirm that all information provided
+            in this collaboration application is accurate
+            and complete.
           </p>
 
           <p>
-            I express my intention to collaborate with the Global English Teaching
-            Institute (GETI) and authorize GETI to review this application
+            I express my intention to collaborate with
+            the Global English Teaching Institute (GETI)
+            and authorize GETI to review this application
             and contact me regarding the proposed collaboration.
           </p>
 
@@ -1781,7 +2160,8 @@
           <canvas id="signatureCanvas"></canvas>
 
           <p class="signature-note">
-            Sign inside the box using your mouse or finger.
+            Sign inside the box using your mouse,
+            stylus or finger.
           </p>
 
           <div class="button-row">
@@ -1820,11 +2200,14 @@
 
       </section>
 
-      <!-- =========================
+      <!-- =================================================
            STEP 4
-      ========================= -->
+      ================================================= -->
 
-      <section id="step4" class="hidden success">
+      <section
+        id="step4"
+        class="hidden success"
+      >
 
         <div class="success-icon">
           ✓
@@ -1835,10 +2218,14 @@
         </h2>
 
         <p class="section-subtitle">
-          Your signed collaboration dossier has been submitted successfully to GETI.
+          Your signed collaboration dossier
+          has been submitted successfully to GETI.
         </p>
 
-        <div class="review-box" style="text-align:left;">
+        <div
+          class="review-box"
+          style="text-align:left;"
+        >
 
           <div class="review-row">
 
@@ -2039,7 +2426,7 @@
 
           </aside>
 
-          <!-- MAIN -->
+          <!-- MAIN AREA -->
 
           <div class="collaboration-main">
 
@@ -2201,7 +2588,7 @@
 
             </section>
 
-            <!-- DOSSIER -->
+            <!-- MY DOSSIER -->
 
             <section
               id="myDossier"
@@ -2227,65 +2614,45 @@
               <div class="info-panel">
 
                 <div class="info-row">
-
-                  <span>
-                    Registration ID
-                  </span>
-
+                  <span>Registration ID</span>
                   <strong id="dossierAreaId"></strong>
-
                 </div>
 
                 <div class="info-row">
-
-                  <span>
-                    Applicant
-                  </span>
-
+                  <span>Applicant</span>
                   <strong id="dossierAreaName"></strong>
-
                 </div>
 
                 <div class="info-row">
-
-                  <span>
-                    Organization
-                  </span>
-
+                  <span>Organization</span>
                   <strong id="dossierAreaOrg"></strong>
-
                 </div>
 
                 <div class="info-row">
-
-                  <span>
-                    Position / Role
-                  </span>
-
+                  <span>Position / Role</span>
                   <strong id="dossierAreaRole"></strong>
-
                 </div>
 
                 <div class="info-row">
-
-                  <span>
-                    Collaboration Type
-                  </span>
-
+                  <span>Collaboration Type</span>
                   <strong id="dossierAreaType"></strong>
-
                 </div>
 
                 <div class="info-row">
+                  <span>Project</span>
+                  <strong id="dossierAreaProject"></strong>
+                </div>
 
-                  <span>
-                    Dossier Status
-                  </span>
+                <div class="info-row">
+                  <span>Preferred Starting Date</span>
+                  <strong id="dossierAreaDate"></strong>
+                </div>
 
+                <div class="info-row">
+                  <span>Dossier Status</span>
                   <strong class="success-text">
                     Signed
                   </strong>
-
                 </div>
 
               </div>
@@ -2322,8 +2689,10 @@
                 </span>
 
                 <p>
-                  GETI has received your signed collaboration dossier.
-                  Your application is currently waiting for administrative review.
+                  GETI has received your signed
+                  collaboration dossier.
+                  Your application is currently waiting
+                  for administrative review.
                 </p>
 
               </div>
@@ -2473,9 +2842,11 @@
                 </span>
 
                 <p>
-                  Your collaboration dossier has been received successfully.
-                  Our administration will review your application and
-                  contact you if additional information is required.
+                  Your collaboration dossier has been
+                  received successfully.
+                  Our administration will review your
+                  application and contact you if additional
+                  information is required.
                 </p>
 
               </div>
@@ -2573,8 +2944,9 @@
                 </strong>
 
                 <p>
-                  Meetings, training sessions and activities
-                  will appear here after your partnership is approved.
+                  Meetings, training sessions,
+                  partnership activities and events
+                  will appear here after approval.
                 </p>
 
               </div>
@@ -2607,83 +2979,43 @@
               <div class="info-panel">
 
                 <div class="info-row">
-
-                  <span>
-                    Full Name
-                  </span>
-
+                  <span>Full Name</span>
                   <strong id="profileName"></strong>
-
                 </div>
 
                 <div class="info-row">
-
-                  <span>
-                    Email
-                  </span>
-
+                  <span>Email</span>
                   <strong id="profileEmail"></strong>
-
                 </div>
 
                 <div class="info-row">
-
-                  <span>
-                    Phone
-                  </span>
-
+                  <span>Phone</span>
                   <strong id="profilePhone"></strong>
-
                 </div>
 
                 <div class="info-row">
-
-                  <span>
-                    Organization
-                  </span>
-
+                  <span>Organization</span>
                   <strong id="profileOrganization"></strong>
-
                 </div>
 
                 <div class="info-row">
-
-                  <span>
-                    Position / Role
-                  </span>
-
+                  <span>Position / Role</span>
                   <strong id="profileRole"></strong>
-
                 </div>
 
                 <div class="info-row">
-
-                  <span>
-                    Address
-                  </span>
-
+                  <span>Address</span>
                   <strong id="profileAddress"></strong>
-
                 </div>
 
                 <div class="info-row">
-
-                  <span>
-                    Country
-                  </span>
-
+                  <span>Country</span>
                   <strong id="profileCountry"></strong>
-
                 </div>
 
                 <div class="info-row">
-
-                  <span>
-                    Registration ID
-                  </span>
-
+                  <span>Registration ID</span>
                   <strong id="profileRegistrationId"></strong>
-
                 </div>
 
               </div>
@@ -2772,9 +3104,9 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-  /* =========================
+  /* =====================================================
      TOP MENU
-  ========================= */
+  ===================================================== */
 
   const menuToggle =
     document.getElementById("menuToggle");
@@ -2787,24 +3119,28 @@ document.addEventListener("DOMContentLoaded", function () {
     event.stopPropagation();
 
     sideMenu.classList.toggle("open");
+
     menuToggle.classList.toggle("active");
 
   });
 
   sideMenu.addEventListener("click", function (event) {
+
     event.stopPropagation();
+
   });
 
   document.addEventListener("click", function () {
 
     sideMenu.classList.remove("open");
+
     menuToggle.classList.remove("active");
 
   });
 
-  /* =========================
-     SECTIONS
-  ========================= */
+  /* =====================================================
+     MAIN ELEMENTS
+  ===================================================== */
 
   const step1 =
     document.getElementById("step1");
@@ -2824,12 +3160,25 @@ document.addEventListener("DOMContentLoaded", function () {
   const stepsIndicator =
     document.getElementById("stepsIndicator");
 
+  const mainHero =
+    document.getElementById("mainHero");
+
   const indicators = [
     document.getElementById("indicator1"),
     document.getElementById("indicator2"),
     document.getElementById("indicator3"),
     document.getElementById("indicator4")
   ];
+
+  let registrationId = "";
+
+  let selectedTypeText = "";
+
+  let hasSignature = false;
+
+  /* =====================================================
+     STEP FUNCTIONS
+  ===================================================== */
 
   function updateIndicators(activeStep) {
 
@@ -2841,11 +3190,19 @@ document.addEventListener("DOMContentLoaded", function () {
       );
 
       if (index + 1 < activeStep) {
-        indicator.classList.add("completed");
+
+        indicator.classList.add(
+          "completed"
+        );
+
       }
 
       if (index + 1 === activeStep) {
-        indicator.classList.add("active");
+
+        indicator.classList.add(
+          "active"
+        );
+
       }
 
     });
@@ -2855,12 +3212,18 @@ document.addEventListener("DOMContentLoaded", function () {
   function showStep(section, number) {
 
     step1.classList.add("hidden");
+
     step2.classList.add("hidden");
+
     step3.classList.add("hidden");
+
     step4.classList.add("hidden");
+
     collaborationArea.classList.add("hidden");
 
     section.classList.remove("hidden");
+
+    mainHero.classList.remove("hidden");
 
     stepsIndicator.classList.remove("hidden");
 
@@ -2873,13 +3236,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   }
 
-  let registrationId = "";
-
-  let selectedTypeText = "";
-
-  /* =========================
+  /* =====================================================
      STEP 1
-  ========================= */
+  ===================================================== */
 
   document
     .getElementById("submitRegistrationBtn")
@@ -2916,7 +3275,8 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (
-        !email.includes("@")
+        !email.includes("@") ||
+        !email.includes(".")
       ) {
 
         alert(
@@ -2929,29 +3289,25 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("orgName").value =
         organization;
 
-      showStep(
-        step2,
-        2
-      );
+      showStep(step2, 2);
 
     });
 
-  /* BACK */
+  /* =====================================================
+     BACK TO REGISTRATION
+  ===================================================== */
 
   document
     .getElementById("backRegistrationBtn")
     .addEventListener("click", function () {
 
-      showStep(
-        step1,
-        1
-      );
+      showStep(step1, 1);
 
     });
 
-  /* =========================
+  /* =====================================================
      STEP 2
-  ========================= */
+  ===================================================== */
 
   document
     .getElementById("continueDossierBtn")
@@ -2970,7 +3326,10 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("country").value.trim();
 
       const proposal =
-        document.getElementById("collaborationProposal").value.trim();
+        document
+          .getElementById("collaborationProposal")
+          .value
+          .trim();
 
       const project =
         document.getElementById("project").value.trim();
@@ -3018,21 +3377,25 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       selectedTypeText =
-        Array.from(selectedTypes)
+        Array
+          .from(selectedTypes)
           .map(function (item) {
             return item.value;
           })
           .join(", ");
 
-      registrationId =
-        "GETI-COL-" +
-        new Date().getFullYear() +
-        "-" +
-        Math.floor(
-          100000 +
-          Math.random() *
-          900000
-        );
+      if (!registrationId) {
+
+        registrationId =
+          "GETI-COL-" +
+          new Date().getFullYear() +
+          "-" +
+          Math.floor(
+            100000 +
+            Math.random() * 900000
+          );
+
+      }
 
       document.getElementById("rId").textContent =
         registrationId;
@@ -3079,10 +3442,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("rAdditional").textContent =
         additional || "None";
 
-      showStep(
-        step3,
-        3
-      );
+      showStep(step3, 3);
 
       setTimeout(
         setupCanvas,
@@ -3091,20 +3451,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
+  /* =====================================================
+     BACK TO DOSSIER
+  ===================================================== */
+
   document
     .getElementById("backDossierBtn")
     .addEventListener("click", function () {
 
-      showStep(
-        step2,
-        2
-      );
+      showStep(step2, 2);
 
     });
 
-  /* =========================
+  /* =====================================================
      SIGNATURE
-  ========================= */
+  ===================================================== */
 
   const canvas =
     document.getElementById("signatureCanvas");
@@ -3113,7 +3474,6 @@ document.addEventListener("DOMContentLoaded", function () {
     canvas.getContext("2d");
 
   let drawing = false;
-  let hasSignature = false;
 
   function setupCanvas() {
 
@@ -3124,7 +3484,7 @@ document.addEventListener("DOMContentLoaded", function () {
       window.devicePixelRatio || 1;
 
     canvas.width =
-      rect.width * ratio;
+      Math.max(1, rect.width * ratio);
 
     canvas.height =
       180 * ratio;
@@ -3146,6 +3506,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     ctx.strokeStyle =
       "#111827";
+
   }
 
   function getPosition(event) {
@@ -3223,7 +3584,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function stopDraw() {
+
     drawing = false;
+
   }
 
   canvas.addEventListener(
@@ -3263,6 +3626,10 @@ document.addEventListener("DOMContentLoaded", function () {
     stopDraw
   );
 
+  /* =====================================================
+     CLEAR SIGNATURE
+  ===================================================== */
+
   document
     .getElementById("clearSignatureBtn")
     .addEventListener("click", function () {
@@ -3278,17 +3645,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-  /* =========================
-     FINAL SUBMIT
-  ========================= */
+  /* =====================================================
+     SUBMIT DOSSIER
+  ===================================================== */
 
   document
     .getElementById("submitDossierBtn")
     .addEventListener("click", function () {
 
-      if (
-        !hasSignature
-      ) {
+      if (!hasSignature) {
 
         alert(
           "Please sign the dossier before submitting."
@@ -3303,31 +3668,31 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("finalName").textContent =
         document.getElementById("name").value;
 
-      showStep(
-        step4,
-        4
-      );
+      showStep(step4, 4);
 
     });
 
-  /* =========================
-     CONTINUE TO AREA
-  ========================= */
+  /* =====================================================
+     CONTINUE TO COLLABORATION AREA
+  ===================================================== */
 
   document
     .getElementById("continueAreaBtn")
     .addEventListener("click", function () {
 
       step1.classList.add("hidden");
+
       step2.classList.add("hidden");
+
       step3.classList.add("hidden");
+
       step4.classList.add("hidden");
 
       stepsIndicator.classList.add("hidden");
 
-      collaborationArea.classList.remove("hidden");
+      mainHero.classList.add("hidden");
 
-      /* PROFILE */
+      collaborationArea.classList.remove("hidden");
 
       const userName =
         document.getElementById("name").value;
@@ -3361,7 +3726,13 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("dossierAreaType").textContent =
         selectedTypeText;
 
-      /* INFORMATION */
+      document.getElementById("dossierAreaProject").textContent =
+        document.getElementById("project").value;
+
+      document.getElementById("dossierAreaDate").textContent =
+        document.getElementById("startDate").value;
+
+      /* PROFILE */
 
       document.getElementById("profileName").textContent =
         userName;
@@ -3394,9 +3765,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-  /* =========================
-     COLLABORATION AREA NAV
-  ========================= */
+  /* =====================================================
+     COLLABORATION MENU
+  ===================================================== */
 
   const areaMenuToggle =
     document.getElementById("areaMenuToggle");
@@ -3470,9 +3841,11 @@ document.addEventListener("DOMContentLoaded", function () {
             "active-section"
           );
 
-          collaborationSidebar.classList.remove(
-            "mobile-open"
-          );
+          collaborationSidebar
+            .classList
+            .remove(
+              "mobile-open"
+            );
 
           window.scrollTo({
             top: 0,
@@ -3485,25 +3858,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   );
 
-  /* =========================
+  /* =====================================================
      LOGOUT
-  ========================= */
+  ===================================================== */
 
   document
     .getElementById("logoutAreaBtn")
     .addEventListener("click", function () {
 
-      collaborationSidebar.classList.remove(
-        "mobile-open"
-      );
+      collaborationSidebar
+        .classList
+        .remove(
+          "mobile-open"
+        );
 
-      collaborationArea.classList.add(
-        "hidden"
-      );
+      collaborationArea
+        .classList
+        .add(
+          "hidden"
+        );
 
-      stepsIndicator.classList.remove(
-        "hidden"
-      );
+      mainHero
+        .classList
+        .remove(
+          "hidden"
+        );
+
+      stepsIndicator
+        .classList
+        .remove(
+          "hidden"
+        );
 
       showStep(
         step1,
@@ -3511,6 +3896,29 @@ document.addEventListener("DOMContentLoaded", function () {
       );
 
     });
+
+  /* =====================================================
+     RESIZE SIGNATURE
+  ===================================================== */
+
+  window.addEventListener(
+    "resize",
+    function () {
+
+      if (
+        !step3.classList.contains(
+          "hidden"
+        )
+      ) {
+
+        setupCanvas();
+
+        hasSignature = false;
+
+      }
+
+    }
+  );
 
 });
 </script>
