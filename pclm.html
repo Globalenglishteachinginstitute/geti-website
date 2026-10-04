@@ -2603,6 +2603,25 @@ renderPrintSheets();
   </div>
 </section>
 <script>
+/* PCLM DOM compatibility fix: make every real page element ID reliably accessible
+   even on browsers/hosting environments that do not create automatic ID globals. */
+(function(){
+  const ids=[
+    'adminSection','dashStudents','dashReceived','dashExpenses','dashBalance','dashRegistration','dashSchool','dashExam','dashCertificate',
+    'standardRegistrationFee','monthlyFee','examRegistrationFee','examFee','certificateFee','photoPreview','studentPhoto','firstName','lastName','studentId','course','email','phone','registrationDate','autoRegistrationFee','autoRegistrationPaid','autoRegistrationRemaining','registrationPaid','studentAbout',
+    'expenseDescription','expenseAmount','expenseDate','searchStudent','studentTableBody','paymentStudent','paymentType','otherPaymentNameGroup','otherPaymentName','paymentAmountLabel','paymentAmount','paymentDate','schoolStudent','schoolYear','schoolMonth','schoolAmount','schoolPaymentDate','paymentHistory','expenseHistory','currentPromotionLabel','promotionHistoryPanel','promotionHistoryContent','studentTableauPanel','studentTableauSubtitle','studentTableauContent','badgeSection','pclmBadgeFrame'
+  ];
+  ids.forEach(function(id){
+    if(!(id in window)){
+      try{
+        Object.defineProperty(window,id,{
+          configurable:true,
+          get:function(){ return document.getElementById(id); }
+        });
+      }catch(e){}
+    }
+  });
+})();
 let currentPromotion=Math.max(1,Number(localStorage.getItem('pclm_current_promotion')||1));
 function promotionStudentKey(n){return n===1?'pclm_students_finance_v1':'pclm_students_finance_v1_promotion_'+n}
 function promotionExpenseKey(n){return n===1?'pclm_expenses_finance_v1':'pclm_expenses_finance_v1_promotion_'+n}
@@ -2621,7 +2640,21 @@ function renderPromotionHistory(){const box=document.getElementById('promotionHi
 
 const money=v=>Number(v||0).toLocaleString('fr-FR')+' Ar';
 function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function getFee(k){return Number(localStorage.getItem(k)||0)} function saveStudents(){localStorage.setItem(KEYS.students,JSON.stringify(students))} function saveExpenses(){localStorage.setItem(KEYS.expenses,JSON.stringify(expenses))}
+function getFee(k){return Number(localStorage.getItem(k)||0)}
+function saveStudents(){
+  try{
+    localStorage.setItem(KEYS.students,JSON.stringify(students));
+    return true;
+  }catch(err){
+    console.error(err);
+    alert('Storage is full. The student photo may be too large or there may be too much saved data. Try a smaller photo or export a backup and remove old data.');
+    return false;
+  }
+}
+function saveExpenses(){
+  try{localStorage.setItem(KEYS.expenses,JSON.stringify(expenses));return true;}
+  catch(err){console.error(err);alert('Storage is full.');return false;}
+}
 
 function toggleStudentTableau(){
     const panel=document.getElementById('studentTableauPanel');
@@ -2689,8 +2722,42 @@ function loadFees(){standardRegistrationFee.value=getFee(KEYS.standardRegistrati
 function saveFees(){localStorage.setItem(KEYS.standardRegistration,+standardRegistrationFee.value||0);localStorage.setItem(KEYS.monthly,+monthlyFee.value||0);localStorage.setItem(KEYS.examRegistration,+examRegistrationFee.value||0);localStorage.setItem(KEYS.exam,+examFee.value||0);localStorage.setItem(KEYS.certificate,+certificateFee.value||0);loadFees();alert('PCLM fees saved.')}
 function generateStudentId(){let max=0;students.forEach(s=>{const m=String(s.studentId||'').match(/^PCLM-(\d+)$/i);if(m)max=Math.max(max,+m[1])});return 'PCLM-'+String(max+1).padStart(4,'0')} function updateGeneratedId(){studentId.value=generateStudentId()}
 function currentRegistrationFee(){return getFee(KEYS.standardRegistration)} function updateAutomaticRegistrationFee(){autoRegistrationFee.textContent=money(currentRegistrationFee());updateRegistrationCalculation()} function updateRegistrationCalculation(){const fee=currentRegistrationFee(),paid=+registrationPaid.value||0;autoRegistrationPaid.textContent=money(paid);autoRegistrationRemaining.textContent=money(Math.max(0,fee-paid))}
-studentPhoto.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=x=>{studentPhotoData=x.target.result;photoPreview.innerHTML=`<img src="${studentPhotoData}" alt="Student">`};r.readAsDataURL(f)});
-function addStudent(){const fn=firstName.value.trim(),ln=lastName.value.trim();if(!fn&&!ln)return alert('Enter student name.');const paid=+registrationPaid.value||0;const regDate=registrationDate.value||today();const s={id:Date.now(),studentId:generateStudentId(),firstName:fn,lastName:ln,name:(fn+' '+ln).trim(),course:course.value.trim(),program:course.value.trim(),email:email.value.trim(),phone:phone.value.trim(),photo:studentPhotoData,about:studentAbout.value.trim(),registrationDate:regDate,registrationType:'registration',registrationFee:currentRegistrationFee(),payments:[]};if(paid>0)s.payments.push({id:Date.now()+1,type:'registration',amount:paid,date:regDate,month:'',year:''});students.push(s);saveStudents();refreshAll();alert('Student added successfully. All entered information has been saved in '+promotionLabel(currentPromotion)+'.');clearStudentForm()}
+studentPhoto.addEventListener('change',e=>{
+  const f=e.target.files[0];
+  if(!f)return;
+  if(!f.type.startsWith('image/')){
+    alert('Please select an image file.');
+    studentPhoto.value='';
+    return;
+  }
+  const r=new FileReader();
+  r.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const MAX=420;
+      let w=img.width,h=img.height;
+      const scale=Math.min(1,MAX/Math.max(w,h));
+      w=Math.max(1,Math.round(w*scale));
+      h=Math.max(1,Math.round(h*scale));
+      const canvas=document.createElement('canvas');
+      canvas.width=w; canvas.height=h;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,w,h);
+      studentPhotoData=canvas.toDataURL('image/jpeg',0.78);
+      photoPreview.innerHTML=`<img src="${studentPhotoData}" alt="Student">`;
+    };
+    img.onerror=()=>{
+      alert('Unable to read this image. Please choose another photo.');
+      studentPhoto.value='';
+      studentPhotoData='';
+      photoPreview.innerHTML='Student Photo';
+    };
+    img.src=ev.target.result;
+  };
+  r.onerror=()=>alert('Unable to read this image.');
+  r.readAsDataURL(f);
+});
+function addStudent(){const fn=firstName.value.trim(),ln=lastName.value.trim();if(!fn&&!ln)return alert('Enter student name.');const paid=+registrationPaid.value||0;const regDate=registrationDate.value||today();const s={id:Date.now(),studentId:generateStudentId(),firstName:fn,lastName:ln,name:(fn+' '+ln).trim(),course:course.value.trim(),program:course.value.trim(),email:email.value.trim(),phone:phone.value.trim(),photo:studentPhotoData,about:studentAbout.value.trim(),registrationDate:regDate,registrationType:'registration',registrationFee:currentRegistrationFee(),payments:[]};if(paid>0)s.payments.push({id:Date.now()+1,type:'registration',amount:paid,date:regDate,month:'',year:''});students.push(s);if(!saveStudents()){students.pop();return;}refreshAll();alert('Student added successfully. All entered information has been saved in '+promotionLabel(currentPromotion)+'.');clearStudentForm()}
 function clearStudentForm(){firstName.value=lastName.value=course.value=email.value=phone.value=studentAbout.value='';registrationPaid.value=0;registrationDate.value=today();studentPhoto.value='';photoPreview.innerHTML='Student Photo';studentPhotoData='';updateGeneratedId();updateAutomaticRegistrationFee()}
 function paymentTotal(s,t){return (s.payments||[]).filter(p=>p.type===t).reduce((a,p)=>a+(+p.amount||0),0)} function studentTotal(s){return (s.payments||[]).reduce((a,p)=>a+(+p.amount||0),0)}
 function autoFillPaymentAmount(){const t=paymentType.value,s=students.find(x=>x.id===+paymentStudent.value);let a=0;const otherGroup=document.getElementById('otherPaymentNameGroup'),amountLabel=document.getElementById('paymentAmountLabel');if(otherGroup)otherGroup.style.display=t==='other'?'block':'none';if(amountLabel)amountLabel.textContent=t==='other'?'Amount':'Amount — Automatic';if(t==='other'){paymentAmount.value='';return}if(t==='examRegistration')a=getFee(KEYS.examRegistration);else if(t==='exam')a=getFee(KEYS.exam);else if(t==='certificate')a=getFee(KEYS.certificate);else if(t==='registration'&&s)a=Math.max(0,(+s.registrationFee||0)-paymentTotal(s,'registration'));paymentAmount.value=a}
