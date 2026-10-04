@@ -93,7 +93,7 @@ button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:7
 <div class="main-grid"><div>
 <div class="panel"><h2>PCLM Fees Settings</h2><div class="settings-grid">
 <div class="form-group"><label>Registration Fee</label><input type="number" id="standardRegistrationFee" min="0"></div><div class="form-group"><label>School Fee / Month</label><input type="number" id="monthlyFee" min="0"></div><div class="form-group"><label>Exam Registration Fee</label><input type="number" id="examRegistrationFee" min="0"></div><div class="form-group"><label>Exam Fee</label><input type="number" id="examFee" min="0"></div><div class="form-group"><label>Certificate Fee</label><input type="number" id="certificateFee" min="0"></div></div><button class="btn-gold" onclick="saveFees()">Save Fees</button></div>
-<div class="panel"><h2>Add Student</h2><div class="photo-preview" id="photoPreview">Student Photo</div><div class="form-group"><label>Student Photo</label><input type="file" id="studentPhoto" accept="image/*"></div><div class="form-row"><div class="form-group"><label>First Name</label><input id="firstName"></div><div class="form-group"><label>Last Name</label><input id="lastName"></div></div><div class="form-group"><label>Student ID — Automatic</label><input id="studentId" readonly></div><div class="form-group"><label>Program / Course</label><input id="course" placeholder="English Proficiency"></div><div class="form-row"><div class="form-group"><label>Email</label><input id="email" type="email"></div><div class="form-group"><label>Phone</label><input id="phone"></div></div><div class="form-group"><label>Registration Date — Automatic</label><input id="registrationDate" type="date"></div><div class="auto-info"><div class="auto-row"><span>Registration Fee</span><strong id="autoRegistrationFee">0 Ar</strong></div><div class="auto-row"><span>Amount Paid</span><strong id="autoRegistrationPaid">0 Ar</strong></div><div class="auto-row"><span>Remaining</span><strong id="autoRegistrationRemaining">0 Ar</strong></div></div><div class="form-group"><label>Registration Payment</label><input type="number" id="registrationPaid" min="0" value="0" oninput="updateRegistrationCalculation()"></div><div class="form-group"><label>About Student</label><textarea id="studentAbout"></textarea></div><button class="btn-dark" onclick="addStudent()">Add Student</button></div>
+<div class="panel"><h2>Add Student</h2><div class="photo-preview" id="photoPreview">Student Photo</div><div class="form-group"><label>Student Photo</label><input type="file" id="studentPhoto" accept="image/*"></div><div class="form-row"><div class="form-group"><label>First Name</label><input id="firstName"></div><div class="form-group"><label>Last Name</label><input id="lastName"></div></div><div class="form-group"><label>Student ID — Automatic</label><input id="studentId" readonly></div><div class="form-group"><label>Program / Course</label><input id="course" placeholder="English Proficiency"></div><div class="form-row"><div class="form-group"><label>Email</label><input id="email" type="email"></div><div class="form-group"><label>Phone</label><input id="phone"></div></div><div class="form-group"><label>Registration Date — Automatic</label><input id="registrationDate" type="date"></div><div class="auto-info"><div class="auto-row"><span>Registration Fee</span><strong id="autoRegistrationFee">0 Ar</strong></div><div class="auto-row"><span>Amount Paid</span><strong id="autoRegistrationPaid">0 Ar</strong></div><div class="auto-row"><span>Remaining</span><strong id="autoRegistrationRemaining">0 Ar</strong></div></div><div class="form-group"><label>Registration Payment</label><input type="number" id="registrationPaid" min="0" value="0" oninput="updateRegistrationCalculation()"></div><div class="form-group"><label>About Student</label><textarea id="studentAbout"></textarea></div><button class="btn-dark" id="addStudentBtn" onclick="addStudent()">Add Student</button></div>
 <div class="panel"><h2>Add Expense</h2><div class="form-group"><label>Description</label><input id="expenseDescription"></div><div class="form-group"><label>Amount</label><input id="expenseAmount" type="number" min="0"></div><div class="form-group"><label>Date — Automatic</label><input id="expenseDate" type="date"></div><button class="btn-red" onclick="addExpense()">Add Expense</button></div>
 </div><div>
 <div class="panel"><div class="panel-title"><h2>PCLM Students</h2><input type="search" id="searchStudent" placeholder="Search student..." oninput="renderStudents()" style="max-width:230px"></div><div class="table-wrap"><table><thead><tr><th>Photo</th><th>ID</th><th>Student</th><th>Program</th><th>Registration</th><th>Paid</th><th>Remaining</th><th>School</th><th>School Month</th><th>Exam Reg.</th><th>Exam</th><th>Certificate</th><th>Total</th><th>Action</th></tr></thead><tbody id="studentTableBody"></tbody></table></div></div>
@@ -2722,42 +2722,96 @@ function loadFees(){standardRegistrationFee.value=getFee(KEYS.standardRegistrati
 function saveFees(){localStorage.setItem(KEYS.standardRegistration,+standardRegistrationFee.value||0);localStorage.setItem(KEYS.monthly,+monthlyFee.value||0);localStorage.setItem(KEYS.examRegistration,+examRegistrationFee.value||0);localStorage.setItem(KEYS.exam,+examFee.value||0);localStorage.setItem(KEYS.certificate,+certificateFee.value||0);loadFees();alert('PCLM fees saved.')}
 function generateStudentId(){let max=0;students.forEach(s=>{const m=String(s.studentId||'').match(/^PCLM-(\d+)$/i);if(m)max=Math.max(max,+m[1])});return 'PCLM-'+String(max+1).padStart(4,'0')} function updateGeneratedId(){studentId.value=generateStudentId()}
 function currentRegistrationFee(){return getFee(KEYS.standardRegistration)} function updateAutomaticRegistrationFee(){autoRegistrationFee.textContent=money(currentRegistrationFee());updateRegistrationCalculation()} function updateRegistrationCalculation(){const fee=currentRegistrationFee(),paid=+registrationPaid.value||0;autoRegistrationPaid.textContent=money(paid);autoRegistrationRemaining.textContent=money(Math.max(0,fee-paid))}
+let studentPhotoProcessing=false;
+function setAddStudentPhotoState(processing){
+  studentPhotoProcessing=processing;
+  const b=document.getElementById('addStudentBtn');
+  if(b){
+    b.disabled=processing;
+    b.style.opacity=processing?'.65':'';
+    b.style.cursor=processing?'wait':'';
+    b.textContent=processing?'Preparing Photo...':'Add Student';
+  }
+}
+function dataUrlApproxBytes(dataUrl){
+  const i=dataUrl.indexOf(',');
+  const b64=i>=0?dataUrl.slice(i+1):dataUrl;
+  return Math.ceil(b64.length*3/4);
+}
+function compressStudentPhoto(img){
+  const MAX=320;
+  let w=img.naturalWidth||img.width,h=img.naturalHeight||img.height;
+  const scale=Math.min(1,MAX/Math.max(w,h));
+  w=Math.max(1,Math.round(w*scale));
+  h=Math.max(1,Math.round(h*scale));
+  const canvas=document.createElement('canvas');
+  canvas.width=w;canvas.height=h;
+  const ctx=canvas.getContext('2d',{alpha:false});
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);ctx.drawImage(img,0,0,w,h);
+  let quality=.72;
+  let out=canvas.toDataURL('image/jpeg',quality);
+  while(dataUrlApproxBytes(out)>85000 && quality>.36){
+    quality-=.08;
+    out=canvas.toDataURL('image/jpeg',quality);
+  }
+  if(dataUrlApproxBytes(out)>85000){
+    const small=document.createElement('canvas');
+    const ratio=Math.sqrt(85000/dataUrlApproxBytes(out));
+    small.width=Math.max(120,Math.round(w*ratio));
+    small.height=Math.max(120,Math.round(h*ratio));
+    const sctx=small.getContext('2d',{alpha:false});
+    sctx.fillStyle='#fff';sctx.fillRect(0,0,small.width,small.height);
+    sctx.drawImage(canvas,0,0,small.width,small.height);
+    out=small.toDataURL('image/jpeg',.58);
+  }
+  return out;
+}
 studentPhoto.addEventListener('change',e=>{
   const f=e.target.files[0];
-  if(!f)return;
+  studentPhotoData='';
+  photoPreview.innerHTML='Student Photo';
+  if(!f){setAddStudentPhotoState(false);return;}
   if(!f.type.startsWith('image/')){
     alert('Please select an image file.');
     studentPhoto.value='';
+    setAddStudentPhotoState(false);
     return;
   }
+  setAddStudentPhotoState(true);
   const r=new FileReader();
   r.onload=ev=>{
     const img=new Image();
     img.onload=()=>{
-      const MAX=420;
-      let w=img.width,h=img.height;
-      const scale=Math.min(1,MAX/Math.max(w,h));
-      w=Math.max(1,Math.round(w*scale));
-      h=Math.max(1,Math.round(h*scale));
-      const canvas=document.createElement('canvas');
-      canvas.width=w; canvas.height=h;
-      const ctx=canvas.getContext('2d');
-      ctx.drawImage(img,0,0,w,h);
-      studentPhotoData=canvas.toDataURL('image/jpeg',0.78);
-      photoPreview.innerHTML=`<img src="${studentPhotoData}" alt="Student">`;
+      try{
+        studentPhotoData=compressStudentPhoto(img);
+        photoPreview.innerHTML=`<img src="${studentPhotoData}" alt="Student">`;
+      }catch(err){
+        console.error(err);
+        alert('Unable to prepare this photo. Please choose another image.');
+        studentPhoto.value='';
+        studentPhotoData='';
+        photoPreview.innerHTML='Student Photo';
+      }finally{setAddStudentPhotoState(false);}
     };
     img.onerror=()=>{
       alert('Unable to read this image. Please choose another photo.');
       studentPhoto.value='';
       studentPhotoData='';
       photoPreview.innerHTML='Student Photo';
+      setAddStudentPhotoState(false);
     };
     img.src=ev.target.result;
   };
-  r.onerror=()=>alert('Unable to read this image.');
+  r.onerror=()=>{
+    alert('Unable to read this image.');
+    studentPhoto.value='';
+    studentPhotoData='';
+    photoPreview.innerHTML='Student Photo';
+    setAddStudentPhotoState(false);
+  };
   r.readAsDataURL(f);
 });
-function addStudent(){const fn=firstName.value.trim(),ln=lastName.value.trim();if(!fn&&!ln)return alert('Enter student name.');const paid=+registrationPaid.value||0;const regDate=registrationDate.value||today();const s={id:Date.now(),studentId:generateStudentId(),firstName:fn,lastName:ln,name:(fn+' '+ln).trim(),course:course.value.trim(),program:course.value.trim(),email:email.value.trim(),phone:phone.value.trim(),photo:studentPhotoData,about:studentAbout.value.trim(),registrationDate:regDate,registrationType:'registration',registrationFee:currentRegistrationFee(),payments:[]};if(paid>0)s.payments.push({id:Date.now()+1,type:'registration',amount:paid,date:regDate,month:'',year:''});students.push(s);if(!saveStudents()){students.pop();return;}refreshAll();alert('Student added successfully. All entered information has been saved in '+promotionLabel(currentPromotion)+'.');clearStudentForm()}
+function addStudent(){if(studentPhotoProcessing)return alert('Please wait until the photo is ready.');const fn=firstName.value.trim(),ln=lastName.value.trim();if(!fn&&!ln)return alert('Enter student name.');const paid=+registrationPaid.value||0;const regDate=registrationDate.value||today();const s={id:Date.now(),studentId:generateStudentId(),firstName:fn,lastName:ln,name:(fn+' '+ln).trim(),course:course.value.trim(),program:course.value.trim(),email:email.value.trim(),phone:phone.value.trim(),photo:studentPhotoData,about:studentAbout.value.trim(),registrationDate:regDate,registrationType:'registration',registrationFee:currentRegistrationFee(),payments:[]};if(paid>0)s.payments.push({id:Date.now()+1,type:'registration',amount:paid,date:regDate,month:'',year:''});students.push(s);if(!saveStudents()){students.pop();alert('The photo could not be saved because browser storage is full. Delete unused old data or use a smaller photo.');return;}refreshAll();alert('Student added successfully. All entered information has been saved in '+promotionLabel(currentPromotion)+'.');clearStudentForm()}
 function clearStudentForm(){firstName.value=lastName.value=course.value=email.value=phone.value=studentAbout.value='';registrationPaid.value=0;registrationDate.value=today();studentPhoto.value='';photoPreview.innerHTML='Student Photo';studentPhotoData='';updateGeneratedId();updateAutomaticRegistrationFee()}
 function paymentTotal(s,t){return (s.payments||[]).filter(p=>p.type===t).reduce((a,p)=>a+(+p.amount||0),0)} function studentTotal(s){return (s.payments||[]).reduce((a,p)=>a+(+p.amount||0),0)}
 function autoFillPaymentAmount(){const t=paymentType.value,s=students.find(x=>x.id===+paymentStudent.value);let a=0;const otherGroup=document.getElementById('otherPaymentNameGroup'),amountLabel=document.getElementById('paymentAmountLabel');if(otherGroup)otherGroup.style.display=t==='other'?'block':'none';if(amountLabel)amountLabel.textContent=t==='other'?'Amount':'Amount — Automatic';if(t==='other'){paymentAmount.value='';return}if(t==='examRegistration')a=getFee(KEYS.examRegistration);else if(t==='exam')a=getFee(KEYS.exam);else if(t==='certificate')a=getFee(KEYS.certificate);else if(t==='registration'&&s)a=Math.max(0,(+s.registrationFee||0)-paymentTotal(s,'registration'));paymentAmount.value=a}
