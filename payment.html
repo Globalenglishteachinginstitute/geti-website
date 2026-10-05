@@ -3,885 +3,305 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
   <title>GETI Secure Payment</title>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    *{
-      box-sizing:border-box;
-      margin:0;
-      padding:0;
-      font-family:Arial,Helvetica,sans-serif;
+    :root{
+      --blue:#0b4aa2;--blue2:#083675;--bg:#f4f7fb;--card:#fff;--text:#172033;
+      --muted:#667085;--line:#e5eaf2;--ok:#137a46;--warn:#9a6700;--bad:#b42318;
     }
-
-    body{
-      background:#f4f6f9;
-      min-height:100vh;
-      padding:30px 15px;
-      color:#111;
-    }
-
-    .payment-wrapper{
-      max-width:1000px;
-      margin:auto;
-    }
-
-    .payment-card{
-      background:#fff;
-      border-radius:22px;
-      padding:32px;
-      box-shadow:0 12px 35px rgba(0,0,0,.08);
-    }
-
-    .header{
-      text-align:center;
-      margin-bottom:28px;
-    }
-
-    .header h1{
-      font-size:30px;
-      margin-bottom:8px;
-    }
-
-    .header p{
-      color:#6f7480;
-      font-size:15px;
-    }
-
-    .progress{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px;
-      margin-bottom:28px;
-    }
-
-    .step{
-      text-align:center;
-      padding:11px;
-      border-radius:10px;
-      background:#f1f3f6;
-      font-size:13px;
-      font-weight:700;
-      color:#777;
-    }
-
-    .step.active{
-      background:#111;
-      color:#fff;
-    }
-
-    .amount-box{
-      background:#f7f8fb;
-      padding:22px;
-      border-radius:16px;
-      margin-bottom:28px;
-    }
-
-    .amount-row{
-      display:grid;
-      grid-template-columns:2fr 1fr;
-      gap:14px;
-    }
-
-    .input-group{
-      margin-bottom:16px;
-    }
-
-    .input-group label{
-      display:block;
-      margin-bottom:7px;
-      font-size:14px;
-      font-weight:700;
-    }
-
-    .input-group input,
-    .input-group select{
-      width:100%;
-      padding:13px 14px;
-      border:1px solid #d8dce2;
-      border-radius:10px;
-      font-size:15px;
-      outline:none;
-      background:#fff;
-    }
-
-    .section-title{
-      margin:28px 0 13px;
-      font-size:18px;
-      font-weight:800;
-    }
-
-    .methods-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-      gap:12px;
-    }
-
-    .method{
-      display:flex;
-      align-items:center;
-      gap:9px;
-      border:1px solid #dfe2e7;
-      border-radius:13px;
-      padding:15px;
-      cursor:pointer;
-      background:#fff;
-      transition:.2s;
-      min-height:54px;
-    }
-
-    .method:hover{
-      border-color:#111;
-    }
-
-    .method.selected{
-      border:2px solid #111;
-      background:#fafafa;
-    }
-
-    .method input{
-      accent-color:#111;
-    }
-
-    .payment-summary{
-      margin-top:28px;
-      background:#f7f8fb;
-      padding:20px;
-      border-radius:14px;
-      border:1px solid #eceff3;
-    }
-
-    .payment-summary div{
-      display:flex;
-      justify-content:space-between;
-      gap:20px;
-      margin-bottom:10px;
-      font-size:14px;
-    }
-
-    .payment-summary div:last-child{
-      margin-bottom:0;
-      padding-top:10px;
-      border-top:1px solid #ddd;
-      font-size:18px;
-      font-weight:800;
-    }
-
-    .pay-btn{
-      width:100%;
-      margin-top:22px;
-      padding:16px;
-      border:none;
-      border-radius:11px;
-      background:#111;
-      color:#fff;
-      font-size:16px;
-      font-weight:800;
-      cursor:pointer;
-    }
-
-    .secondary-btn{
-      width:100%;
-      margin-top:12px;
-      padding:14px;
-      border:1px solid #111;
-      border-radius:11px;
-      background:#fff;
-      color:#111;
-      font-weight:700;
-      cursor:pointer;
-    }
-
-    .secure{
-      text-align:center;
-      color:#8a8f99;
-      font-size:12px;
-      margin-top:14px;
-    }
-
-    #finalPaymentForm{
-      display:none;
-    }
-
-    .payment-details{
-      margin-top:22px;
-      padding:20px;
-      background:#fff;
-      border:1px solid #e1e4e8;
-      border-radius:13px;
-    }
-
-    .notice{
-      background:#fff;
-      border:1px solid #e1e4e8;
-      border-radius:12px;
-      padding:14px;
-      margin-top:15px;
-      font-size:13px;
-      color:#666;
-      line-height:1.6;
-    }
-
-    .row{
-      display:flex;
-      gap:14px;
-    }
-
-    .row .input-group{
-      flex:1;
-    }
-
-    .agreement{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      margin-top:20px;
-      font-size:14px;
-      line-height:1.5;
-    }
-
-    .error{
-      color:#c62828;
-      font-size:12px;
-      margin-top:6px;
-      display:none;
-    }
-
-    .success-box{
-      display:none;
-      margin-top:25px;
-      padding:25px;
-      border-radius:15px;
-      background:#f7f8fb;
-      border:1px solid #e1e4e8;
-      text-align:center;
-    }
-
-    @media(max-width:700px){
-      .payment-card{
-        padding:20px;
-      }
-
-      .amount-row{
-        grid-template-columns:1fr;
-      }
-
-      .row{
-        flex-direction:column;
-        gap:0;
-      }
-
-      .progress{
-        grid-template-columns:1fr;
-      }
-    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+    .topbar{background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;padding:18px 20px}
+    .topbar-inner{max-width:980px;margin:auto;display:flex;gap:14px;align-items:center;justify-content:space-between}
+    .brand{display:flex;gap:12px;align-items:center}.logo{width:48px;height:48px;border-radius:50%;background:#fff;color:var(--blue);display:grid;place-items:center;font-weight:900}
+    .brand h1{font-size:18px;margin:0}.brand p{font-size:12px;margin:4px 0 0;opacity:.85}
+    .back{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.45);padding:9px 12px;border-radius:9px;font-size:13px}
+    .wrap{max-width:980px;margin:28px auto;padding:0 16px 40px}
+    .hero{margin-bottom:20px}.hero h2{font-size:28px;margin:0 0 6px}.hero p{color:var(--muted);margin:0;line-height:1.6}
+    .grid{display:grid;grid-template-columns:1.25fr .75fr;gap:20px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 7px 24px rgba(16,24,40,.05);margin-bottom:18px}
+    .card h3{margin:0 0 16px;color:var(--blue2);font-size:18px}
+    .notice{padding:14px;border-radius:10px;background:#eef5ff;border:1px solid #cfe0ff;line-height:1.55;font-size:13px;color:#29466e}
+    .secure-row{display:flex;gap:12px;align-items:flex-start;margin-top:14px}.secure-icon{font-size:24px}
+    label{display:block;font-weight:700;font-size:13px;margin:0 0 7px}
+    input,textarea{width:100%;padding:13px 14px;border:1px solid #cfd7e4;border-radius:10px;font-size:15px;outline:none;background:#fff}
+    input:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(11,74,162,.09)}
+    textarea{min-height:90px;resize:vertical}
+    .field{margin-bottom:15px}.help{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5}
+    .amount-wrap{position:relative}.amount-wrap span{position:absolute;right:14px;top:13px;color:var(--muted);font-weight:700}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.chip{border:1px solid #cfd7e4;background:#fff;border-radius:999px;padding:8px 11px;cursor:pointer;font-weight:700;color:#344054}
+    .chip:hover{border-color:var(--blue);color:var(--blue)}
+    button.primary{width:100%;border:0;border-radius:11px;padding:15px 16px;background:var(--blue);color:#fff;font-size:15px;font-weight:800;cursor:pointer}
+    button.primary:hover{background:var(--blue2)}button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .identity{display:flex;gap:12px;align-items:center}.avatar{width:44px;height:44px;border-radius:50%;background:#edf2f9;color:var(--blue);display:grid;place-items:center;font-weight:800}
+    .name{font-weight:800}.muted{color:var(--muted);font-size:13px;line-height:1.5}
+    .provider{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .provider div{border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;font-weight:700;font-size:13px}
+    .status{display:inline-block;padding:6px 9px;border-radius:999px;font-size:11px;font-weight:800}.Paid{background:#e8f8ef;color:var(--ok)}.Failed{background:#fff0ee;color:var(--bad)}.Pending,.Creating,.Review{background:#fff7df;color:var(--warn)}
+    .payment{border-top:1px solid var(--line);padding:14px 0}.payment:first-child{border-top:0;padding-top:0}
+    .p-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.money{font-weight:900;color:var(--blue2)}
+    .small-btn{margin-top:9px;border:1px solid var(--blue);background:#fff;color:var(--blue);padding:8px 10px;border-radius:8px;font-weight:700;cursor:pointer}
+    .message{display:none;margin:0 0 18px;padding:14px;border-radius:10px;line-height:1.55;font-size:13px}.message.show{display:block}.message.ok{background:#e9f8ef;color:#11613a;border:1px solid #bee9cf}.message.err{background:#fff0ee;color:#8f2118;border:1px solid #ffd2cd}.message.info{background:#eef5ff;color:#29466e;border:1px solid #cfe0ff}
+    .loading{padding:40px 20px;text-align:center;color:var(--muted)}
+    .hidden{display:none!important}
+    footer{text-align:center;color:#7b8495;font-size:12px;padding:20px}
+    @media(max-width:780px){.grid{grid-template-columns:1fr}.hero h2{font-size:23px}.topbar-inner{align-items:flex-start}.provider{grid-template-columns:1fr 1fr}.card{padding:18px}}
+    @media(max-width:480px){.back{display:none}.provider{grid-template-columns:1fr}.logo{width:42px;height:42px}.brand h1{font-size:15px}}
   </style>
 </head>
-
 <body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo">G</div>
+        <div><h1>Global English Teaching Institute</h1><p>Secure real-payment checkout</p></div>
+      </div>
+      <a class="back" href="student.html">Back to Student Area</a>
+    </div>
+  </header>
 
-<div class="payment-wrapper">
-  <div class="payment-card">
-
-    <div class="header">
-      <h1>GETI Secure Payment</h1>
-      <p>Enter your amount, select a payment method and complete your payment securely.</p>
+  <main class="wrap">
+    <div class="hero">
+      <h2>Secure Payment</h2>
+      <p>GETI never asks you to type your card number or CVV on this page. Payment details are entered only on the authorized payment provider's secure checkout.</p>
     </div>
 
-    <div class="progress">
-      <div class="step active" id="step1">1. Amount</div>
-      <div class="step" id="step2">2. Payment Method</div>
-      <div class="step" id="step3">3. Information</div>
-    </div>
+    <div id="message" class="message"></div>
+    <div id="loading" class="loading">Checking your secure GETI session…</div>
 
-    <div id="paymentSelection">
-
-      <div class="amount-box">
-        <div class="amount-row">
-
-          <div class="input-group">
-            <label>Amount to Pay</label>
-            <input type="number" id="amount" min="1" step="0.01" placeholder="Enter amount">
-            <div class="error" id="amountError">Please enter a valid amount.</div>
+    <div id="app" class="grid hidden">
+      <section>
+        <div class="card">
+          <h3>Payment details</h3>
+          <div class="field">
+            <label for="amount">Amount to pay</label>
+            <div class="amount-wrap">
+              <input id="amount" type="number" min="1" max="100000" step="0.01" inputmode="decimal" placeholder="Example: 25.00">
+              <span>USD</span>
+            </div>
+            <div class="chips">
+              <button class="chip" type="button" data-amount="5">$5</button>
+              <button class="chip" type="button" data-amount="10">$10</button>
+              <button class="chip" type="button" data-amount="25">$25</button>
+              <button class="chip" type="button" data-amount="50">$50</button>
+              <button class="chip" type="button" data-amount="100">$100</button>
+            </div>
+            <div class="help">The final amount is confirmed again by GETI after the payment provider returns the transaction result.</div>
+          </div>
+          <div class="field">
+            <label for="note">Payment note</label>
+            <textarea id="note" maxlength="500" placeholder="Example: English course payment, certificate fee, lesson payment…"></textarea>
           </div>
 
-          <div class="input-group">
-            <label>Currency</label>
-
-            <select id="currency">
-              <option value="MGA">MGA - Malagasy Ariary</option>
-              <option value="USD">USD - US Dollar</option>
-              <option value="EUR">EUR - Euro</option>
-              <option value="GBP">GBP - British Pound</option>
-              <option value="CAD">CAD - Canadian Dollar</option>
-              <option value="AUD">AUD - Australian Dollar</option>
-              <option value="CHF">CHF - Swiss Franc</option>
-              <option value="JPY">JPY - Japanese Yen</option>
-              <option value="CNY">CNY - Chinese Yuan</option>
-              <option value="ZAR">ZAR - South African Rand</option>
-            </select>
+          <div class="notice">
+            <strong>How it works:</strong> click Pay Securely, then you will be redirected to the authorized hosted checkout. Available cards, mobile money, bank or local methods depend on your country and the GETI merchant account configuration.
           </div>
 
+          <div class="provider">
+            <div>💳 Card</div>
+            <div>📱 Mobile Money</div>
+            <div>🏦 Local / Bank methods</div>
+            <div>🔐 Hosted Checkout</div>
+          </div>
+
+          <div class="secure-row">
+            <div class="secure-icon">🔒</div>
+            <div class="muted"><strong>Important:</strong> GETI does not collect or store card numbers, CVV codes, or mobile-money PINs. Never send a PIN to GETI staff.</div>
+          </div>
+
+          <button id="payBtn" class="primary" type="button" style="margin-top:18px">Pay Securely</button>
         </div>
-      </div>
+      </section>
 
-      <div class="section-title">Mobile Money Madagascar</div>
-      <div class="methods-grid">
-        <label class="method"><input type="radio" name="payment" value="Orange Money"> 🟠 Orange Money</label>
-        <label class="method"><input type="radio" name="payment" value="MVola"> 🟡 MVola</label>
-        <label class="method"><input type="radio" name="payment" value="Airtel Money"> 🔴 Airtel Money</label>
-      </div>
+      <aside>
+        <div class="card">
+          <h3>Your account</h3>
+          <div class="identity">
+            <div id="avatar" class="avatar">G</div>
+            <div>
+              <div id="studentName" class="name">Student</div>
+              <div id="studentEmail" class="muted"></div>
+              <div id="teacherName" class="muted" style="margin-top:3px"></div>
+            </div>
+          </div>
+        </div>
 
-      <div class="section-title">Credit / Debit Cards</div>
-      <div class="methods-grid">
-        <label class="method"><input type="radio" name="payment" value="Visa"> 💳 Visa</label>
-        <label class="method"><input type="radio" name="payment" value="Mastercard"> 💳 Mastercard</label>
-        <label class="method"><input type="radio" name="payment" value="American Express"> 💳 American Express</label>
-        <label class="method"><input type="radio" name="payment" value="Discover"> 💳 Discover</label>
-        <label class="method"><input type="radio" name="payment" value="JCB"> 💳 JCB</label>
-        <label class="method"><input type="radio" name="payment" value="UnionPay"> 💳 UnionPay</label>
-        <label class="method"><input type="radio" name="payment" value="Maestro"> 💳 Maestro</label>
-        <label class="method"><input type="radio" name="payment" value="Diners Club"> 💳 Diners Club</label>
-      </div>
-
-      <div class="section-title">Digital Wallets</div>
-      <div class="methods-grid">
-        <label class="method"><input type="radio" name="payment" value="PayPal"> PayPal</label>
-        <label class="method"><input type="radio" name="payment" value="Apple Pay"> Apple Pay</label>
-        <label class="method"><input type="radio" name="payment" value="Google Pay"> Google Pay</label>
-        <label class="method"><input type="radio" name="payment" value="Samsung Pay"> Samsung Pay</label>
-        <label class="method"><input type="radio" name="payment" value="Skrill"> Skrill</label>
-        <label class="method"><input type="radio" name="payment" value="Neteller"> Neteller</label>
-        <label class="method"><input type="radio" name="payment" value="Wise"> Wise</label>
-        <label class="method"><input type="radio" name="payment" value="Revolut"> Revolut</label>
-        <label class="method"><input type="radio" name="payment" value="Payoneer"> Payoneer</label>
-      </div>
-
-      <div class="section-title">African & Regional Payment</div>
-      <div class="methods-grid">
-        <label class="method"><input type="radio" name="payment" value="M-Pesa"> M-Pesa</label>
-        <label class="method"><input type="radio" name="payment" value="Wave"> Wave</label>
-        <label class="method"><input type="radio" name="payment" value="MTN Mobile Money"> MTN Mobile Money</label>
-        <label class="method"><input type="radio" name="payment" value="Moov Money"> Moov Money</label>
-        <label class="method"><input type="radio" name="payment" value="Flutterwave"> Flutterwave</label>
-        <label class="method"><input type="radio" name="payment" value="Paystack"> Paystack</label>
-      </div>
-
-      <div class="section-title">Bank Payment</div>
-      <div class="methods-grid">
-        <label class="method"><input type="radio" name="payment" value="Bank Transfer"> 🏦 Bank Transfer</label>
-        <label class="method"><input type="radio" name="payment" value="SWIFT"> SWIFT</label>
-        <label class="method"><input type="radio" name="payment" value="SEPA"> SEPA</label>
-        <label class="method"><input type="radio" name="payment" value="ACH"> ACH</label>
-      </div>
-
-      <div class="section-title">Buy Now, Pay Later</div>
-      <div class="methods-grid">
-        <label class="method"><input type="radio" name="payment" value="Klarna"> Klarna</label>
-        <label class="method"><input type="radio" name="payment" value="Afterpay"> Afterpay</label>
-        <label class="method"><input type="radio" name="payment" value="Affirm"> Affirm</label>
-        <label class="method"><input type="radio" name="payment" value="Clearpay"> Clearpay</label>
-      </div>
-
-      <div class="section-title">Cryptocurrency</div>
-      <div class="methods-grid">
-        <label class="method"><input type="radio" name="payment" value="Bitcoin"> ₿ Bitcoin</label>
-        <label class="method"><input type="radio" name="payment" value="Ethereum"> Ethereum</label>
-        <label class="method"><input type="radio" name="payment" value="USDT"> USDT</label>
-        <label class="method"><input type="radio" name="payment" value="USDC"> USDC</label>
-        <label class="method"><input type="radio" name="payment" value="BNB"> BNB</label>
-        <label class="method"><input type="radio" name="payment" value="Litecoin"> Litecoin</label>
-      </div>
-
-      <div class="section-title">GETI Payment</div>
-      <div class="methods-grid">
-        <label class="method"><input type="radio" name="payment" value="Zopayo"> Zopayo</label>
-        <label class="method"><input type="radio" name="payment" value="GETI Wallet"> GETI Wallet</label>
-        <label class="method"><input type="radio" name="payment" value="Voucher"> Voucher Code</label>
-        <label class="method"><input type="radio" name="payment" value="Gift Card"> Gift Card</label>
-      </div>
-
-      <div class="payment-summary">
-        <div><span>Amount</span><span id="summaryAmount">0 MGA</span></div>
-        <div><span>Payment Method</span><span id="summaryMethod">Not selected</span></div>
-        <div><span>Total</span><span id="summaryTotal">0 MGA</span></div>
-      </div>
-
-      <button type="button" class="pay-btn" id="continuePaymentBtn">
-        Continue to Payment
-      </button>
-
-      <div class="secure">🔒 Secure encrypted payment</div>
-
+        <div class="card">
+          <h3>Recent payments</h3>
+          <div id="payments" class="muted">No payments yet.</div>
+        </div>
+      </aside>
     </div>
+  </main>
 
-    <div id="finalPaymentForm">
-
-      <div class="section-title">Payment Information</div>
-
-      <div class="input-group">
-        <label>Full Name</label>
-        <input type="text" id="payerName" placeholder="Enter your full name">
-      </div>
-
-      <div class="input-group">
-        <label>Email Address</label>
-        <input type="email" id="payerEmail" placeholder="example@email.com">
-      </div>
-
-      <div class="input-group">
-        <label>Phone Number</label>
-        <input type="tel" id="payerPhone" placeholder="+261 XX XX XXX XX">
-      </div>
-
-      <div class="input-group">
-        <label>Country</label>
-
-        <select id="payerCountry">
-          <option value="">Select your country</option>
-          <option>Madagascar</option>
-          <option>United States</option>
-          <option>United Kingdom</option>
-          <option>France</option>
-          <option>Canada</option>
-          <option>Australia</option>
-          <option>Germany</option>
-          <option>Italy</option>
-          <option>Spain</option>
-          <option>Belgium</option>
-          <option>Switzerland</option>
-          <option>South Africa</option>
-          <option>Mauritius</option>
-          <option>Kenya</option>
-          <option>Tanzania</option>
-          <option>Ghana</option>
-          <option>Nigeria</option>
-          <option>Senegal</option>
-          <option>China</option>
-          <option>India</option>
-          <option>Japan</option>
-          <option>Other</option>
-        </select>
-      </div>
-
-      <div class="input-group">
-        <label>Address</label>
-        <input type="text" id="payerAddress" placeholder="Street address">
-      </div>
-
-      <div class="row">
-        <div class="input-group">
-          <label>City</label>
-          <input type="text" id="payerCity" placeholder="City">
-        </div>
-
-        <div class="input-group">
-          <label>Postal Code</label>
-          <input type="text" id="postalCode" placeholder="Postal code">
-        </div>
-      </div>
-
-      <div id="selectedPaymentDetails" class="payment-details"></div>
-
-      <div class="payment-summary">
-        <div><span>Payment Method</span><span id="finalMethod">-</span></div>
-        <div><span>Total Amount</span><span id="finalAmount">0 MGA</span></div>
-      </div>
-
-      <label class="agreement">
-        <input type="checkbox" id="paymentAgreement">
-        <span>I confirm that the information provided is correct and I agree to proceed with this payment.</span>
-      </label>
-
-      <button type="button" class="pay-btn" id="payNowBtn">
-        Pay Now
-      </button>
-
-      <button type="button" class="secondary-btn" id="backBtn">
-        Back
-      </button>
-
-      <div class="secure">🔒 Your payment information is protected</div>
-
-    </div>
-
-    <div class="success-box" id="successBox"></div>
-
-  </div>
-</div>
+  <footer>GETI • Payments are marked Paid only after provider verification.</footer>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-
-  const paymentSelection = document.getElementById("paymentSelection");
-  const finalPaymentForm = document.getElementById("finalPaymentForm");
-  const amountInput = document.getElementById("amount");
-  const currencySelect = document.getElementById("currency");
-  const summaryAmount = document.getElementById("summaryAmount");
-  const summaryTotal = document.getElementById("summaryTotal");
-  const summaryMethod = document.getElementById("summaryMethod");
-  const continueBtn = document.getElementById("continuePaymentBtn");
-  const payNowBtn = document.getElementById("payNowBtn");
-  const backBtn = document.getElementById("backBtn");
-  const methods = document.querySelectorAll('input[name="payment"]');
-
-  function formatAmount(value, currency) {
-    if (!value) return "0 " + currency;
-
-    return new Intl.NumberFormat("en-US", {
-      maximumFractionDigits: 2
-    }).format(value) + " " + currency;
-  }
-
-  function updateAmount() {
-    const amount = amountInput.value || 0;
-    const currency = currencySelect.value;
-
-    summaryAmount.textContent = formatAmount(amount, currency);
-    summaryTotal.textContent = formatAmount(amount, currency);
-  }
-
-  amountInput.addEventListener("input", updateAmount);
-  currencySelect.addEventListener("change", updateAmount);
-
-  methods.forEach(function(method) {
-    method.addEventListener("change", function() {
-
-      document.querySelectorAll(".method").forEach(function(box) {
-        box.classList.remove("selected");
-      });
-
-      this.closest(".method").classList.add("selected");
-
-      summaryMethod.textContent = this.value;
-      document.getElementById("step2").classList.add("active");
-    });
-  });
-
-  continueBtn.addEventListener("click", function() {
-
-    const amount = parseFloat(amountInput.value);
-    const currency = currencySelect.value;
-    const selected = document.querySelector('input[name="payment"]:checked');
-    const errorBox = document.getElementById("amountError");
-
-    errorBox.style.display = "none";
-
-    if (!amount || amount <= 0) {
-      errorBox.style.display = "block";
-      amountInput.focus();
-      return;
-    }
-
-    if (!selected) {
-      alert("Please select a payment method.");
-      return;
-    }
-
-    document.getElementById("finalMethod").textContent = selected.value;
-    document.getElementById("finalAmount").textContent = formatAmount(amount, currency);
-
-    showPaymentFields(selected.value);
-
-    paymentSelection.style.display = "none";
-    finalPaymentForm.style.display = "block";
-
-    document.getElementById("step3").classList.add("active");
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  });
-
-  backBtn.addEventListener("click", function() {
-    finalPaymentForm.style.display = "none";
-    paymentSelection.style.display = "block";
-
-    document.getElementById("step3").classList.remove("active");
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  });
-
-  function showPaymentFields(method) {
-
-    const box = document.getElementById("selectedPaymentDetails");
-
-    const cardMethods = [
-      "Visa",
-      "Mastercard",
-      "American Express",
-      "Discover",
-      "JCB",
-      "UnionPay",
-      "Maestro",
-      "Diners Club"
-    ];
-
-    const mobileMethods = [
-      "Orange Money",
-      "MVola",
-      "Airtel Money",
-      "M-Pesa",
-      "Wave",
-      "MTN Mobile Money",
-      "Moov Money"
-    ];
-
-    const bankMethods = [
-      "Bank Transfer",
-      "SWIFT",
-      "SEPA",
-      "ACH"
-    ];
-
-    const cryptoMethods = [
-      "Bitcoin",
-      "Ethereum",
-      "USDT",
-      "USDC",
-      "BNB",
-      "Litecoin"
-    ];
-
-    if (cardMethods.includes(method)) {
-
-      box.innerHTML = `
-        <div class="section-title">Card Information</div>
-
-        <div class="input-group">
-          <label>Cardholder Name</label>
-          <input type="text" id="cardName" placeholder="Name on card">
-        </div>
-
-        <div class="input-group">
-          <label>Card Number</label>
-          <input type="text" id="cardNumber" maxlength="19" inputmode="numeric" placeholder="1234 5678 9012 3456">
-        </div>
-
-        <div class="row">
-          <div class="input-group">
-            <label>Expiry Date</label>
-            <input type="text" id="expiryDate" maxlength="5" placeholder="MM/YY">
-          </div>
-
-          <div class="input-group">
-            <label>CVV</label>
-            <input type="password" id="cvv" maxlength="4" inputmode="numeric" placeholder="123">
-          </div>
-        </div>
-      `;
-
-    }
-
-    else if (mobileMethods.includes(method)) {
-
-      box.innerHTML = `
-        <div class="section-title">${method}</div>
-
-        <div class="input-group">
-          <label>${method} Phone Number</label>
-          <input type="tel" id="mobilePaymentNumber" placeholder="+261 XX XX XXX XX">
-        </div>
-
-        <div class="notice">
-          A secure payment confirmation request will be sent to your mobile phone.
-        </div>
-      `;
-
-    }
-
-    else if (bankMethods.includes(method)) {
-
-      box.innerHTML = `
-        <div class="section-title">Bank Information</div>
-
-        <div class="input-group">
-          <label>Account Holder Name</label>
-          <input type="text" id="bankHolder" placeholder="Account holder name">
-        </div>
-
-        <div class="input-group">
-          <label>Bank Name</label>
-          <input type="text" id="bankName" placeholder="Bank name">
-        </div>
-
-        <div class="input-group">
-          <label>Account / IBAN Number</label>
-          <input type="text" id="iban" placeholder="Account or IBAN number">
-        </div>
-
-        <div class="input-group">
-          <label>SWIFT / BIC</label>
-          <input type="text" id="swift" placeholder="SWIFT / BIC">
-        </div>
-      `;
-
-    }
-
-    else if (cryptoMethods.includes(method)) {
-
-      box.innerHTML = `
-        <div class="section-title">${method}</div>
-
-        <div class="notice">
-          You will continue to the secure ${method} payment page after clicking Pay Now.
-        </div>
-      `;
-
-    }
-
-    else if (method === "GETI Wallet") {
-
-      box.innerHTML = `
-        <div class="section-title">GETI Wallet</div>
-
-        <div class="input-group">
-          <label>GETI Account Email</label>
-          <input type="email" id="getiWalletEmail" placeholder="Your GETI email">
-        </div>
-      `;
-
-    }
-
-    else if (method === "Voucher" || method === "Gift Card") {
-
-      box.innerHTML = `
-        <div class="section-title">${method}</div>
-
-        <div class="input-group">
-          <label>${method} Code</label>
-          <input type="text" id="voucherCode" placeholder="Enter your code">
-        </div>
-      `;
-
-    }
-
-    else {
-
-      box.innerHTML = `
-        <div class="section-title">${method}</div>
-
-        <div class="notice">
-          You will continue securely with ${method} after clicking Pay Now.
-        </div>
-      `;
-    }
-  }
-
-  payNowBtn.addEventListener("click", function() {
-
-    const name = document.getElementById("payerName").value.trim();
-    const email = document.getElementById("payerEmail").value.trim();
-    const phone = document.getElementById("payerPhone").value.trim();
-    const country = document.getElementById("payerCountry").value;
-    const agreement = document.getElementById("paymentAgreement").checked;
-
-    if (!name) {
-      alert("Please enter your full name.");
-      return;
-    }
-
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      alert("Please enter a valid email address.");
-      return;
-    }
-
-    if (!phone) {
-      alert("Please enter your phone number.");
-      return;
-    }
-
-    if (!country) {
-      alert("Please select your country.");
-      return;
-    }
-
-    if (!agreement) {
-      alert("Please confirm the payment agreement.");
-      return;
-    }
-
-    const selected = document.querySelector('input[name="payment"]:checked');
-    const amount = amountInput.value;
-    const currency = currencySelect.value;
-
-    finalPaymentForm.style.display = "none";
-
-    const successBox = document.getElementById("successBox");
-
-    successBox.innerHTML = `
-      <h2 style="
-        color:#c62828;
-        margin-bottom:10px;
-      ">
-        Payment Error
-      </h2>
-
-      <p style="
-        color:#666;
-        line-height:1.7;
-      ">
-        We were unable to complete your payment.
-      </p>
-
-      <p style="
-        margin-top:15px;
-        line-height:1.8;
-      ">
-        <strong>Customer:</strong> ${name}<br>
-        <strong>Amount:</strong> ${formatAmount(amount, currency)}<br>
-        <strong>Payment Method:</strong> ${selected.value}
-      </p>
-
-      <div style="
-        margin-top:20px;
-        padding:15px;
-        border-radius:10px;
-        background:#fff;
-        border:1px solid #e0e0e0;
-        color:#666;
-        line-height:1.6;
-      ">
-        Your payment could not be processed at this time.
-        Please verify your payment information or try another payment method.
-      </div>
-
-      <button
-        type="button"
-        class="pay-btn"
-        id="tryAgainBtn"
-      >
-        Try Again
-      </button>
-    `;
-
-    successBox.style.display = "block";
-
-    document.getElementById("tryAgainBtn").addEventListener("click", function() {
-      successBox.style.display = "none";
-      paymentSelection.style.display = "block";
-
-      document.getElementById("step3").classList.remove("active");
-
-      window.scrollTo({
-        top:0,
-        behavior:"smooth"
-      });
-    });
-
-    window.scrollTo({
-      top:0,
-      behavior:"smooth"
-    });
-  });
-
-  updateAmount();
-
+const SUPABASE_URL = "https://syawyulrelrhjprnxdyn.supabase.co";
+const SUPABASE_KEY = "sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
 });
-</script>
 
+const $ = id => document.getElementById(id);
+let session = null;
+let profile = null;
+let assignment = null;
+let teacher = null;
+
+function esc(v){
+  return String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function money(v){ return "$" + Number(v || 0).toFixed(2); }
+function initials(name){
+  const p=String(name||"G").trim().split(/\s+/).filter(Boolean);
+  return (p[0]?.[0]||"G")+(p[1]?.[0]||"");
+}
+function showMessage(text,type="info"){
+  const el=$("message"); el.textContent=text; el.className="message show "+type;
+}
+function clearMessage(){ $("message").className="message"; $("message").textContent=""; }
+
+async function init(){
+  const {data:{session:s}} = await sb.auth.getSession();
+  session=s;
+  if(!session){
+    $("loading").textContent="Please sign in to your GETI Student Area before making a payment.";
+    showMessage("Secure payment requires a signed-in GETI student account.","info");
+    setTimeout(()=>location.href="student.html",1400);
+    return;
+  }
+
+  const {data:p,error:pe}=await sb.from("geti_profiles").select("*").eq("id",session.user.id).single();
+  if(pe || !p || p.role!=="student"){
+    $("loading").textContent="This payment page is available to student accounts only.";
+    showMessage("Student account required.","err");
+    return;
+  }
+  profile=p;
+
+  const {data:a}=await sb.from("geti_assignments").select("*").eq("student_id",profile.id).maybeSingle();
+  assignment=a||null;
+  if(assignment?.teacher_id){
+    const {data:t}=await sb.from("geti_profiles").select("id,full_name").eq("id",assignment.teacher_id).maybeSingle();
+    teacher=t||null;
+  }
+
+  $("studentName").textContent=profile.full_name||"GETI Student";
+  $("studentEmail").textContent=profile.email||session.user.email||"";
+  $("avatar").textContent=initials(profile.full_name).toUpperCase();
+  $("teacherName").textContent=teacher ? "Teacher: "+teacher.full_name : "No teacher assigned yet";
+
+  $("loading").classList.add("hidden");
+  $("app").classList.remove("hidden");
+  await verifyReturn();
+  await loadPayments();
+}
+
+async function startPayment(){
+  clearMessage();
+  if(!assignment?.teacher_id){
+    showMessage("A teacher must be assigned to your student account before this payment can be created.","err");
+    return;
+  }
+  const amount=Number($("amount").value);
+  if(!Number.isFinite(amount) || amount<=0 || amount>100000){
+    showMessage("Enter a valid payment amount between USD 1 and USD 100,000.","err");
+    $("amount").focus();
+    return;
+  }
+
+  const btn=$("payBtn");
+  btn.disabled=true;
+  btn.textContent="Opening secure checkout…";
+
+  try{
+    const {data,error}=await sb.functions.invoke("geti-real-payment",{
+      body:{action:"create",amount_usd:amount,note:$("note").value.trim()}
+    });
+    if(error) throw error;
+    if(data?.error) throw new Error(data.error);
+    if(!data?.checkout_url) throw new Error("The payment provider did not return a secure checkout URL.");
+    location.assign(data.checkout_url);
+  }catch(err){
+    showMessage(err?.message||"Unable to start the payment. Please try again.","err");
+    btn.disabled=false;
+    btn.textContent="Pay Securely";
+  }
+}
+
+async function verifyReturn(){
+  const q=new URLSearchParams(location.search);
+  const paymentId=q.get("payment_id");
+  if(q.get("payment_return")!=="1" || !paymentId) return;
+
+  showMessage("Verifying your payment with the payment provider…","info");
+  try{
+    const {data,error}=await sb.functions.invoke("geti-real-payment",{body:{action:"verify",payment_id:paymentId}});
+    if(error) throw error;
+    const status=data?.status||"Unknown";
+    if(status==="Paid") showMessage("Payment confirmed successfully. Your GETI record is now marked Paid.","ok");
+    else if(status==="Review") showMessage("Payment was received but requires administrative review before it is marked Paid.","info");
+    else if(status==="Pending") showMessage("The provider reports that the payment is still pending. You can verify it again below.","info");
+    else if(status==="Failed") showMessage("The payment was not completed. No successful payment was recorded.","err");
+    else showMessage("Payment verification returned status: "+status,"info");
+  }catch(err){
+    showMessage(err?.message||"Could not verify the returned payment.","err");
+  }
+  history.replaceState({},document.title,location.pathname);
+}
+
+async function verifyPayment(id,button){
+  if(button){button.disabled=true;button.textContent="Verifying…";}
+  try{
+    const {data,error}=await sb.functions.invoke("geti-real-payment",{body:{action:"verify",payment_id:id}});
+    if(error) throw error;
+    const status=data?.status||"Unknown";
+    showMessage("Payment status: "+status, status==="Paid"?"ok":status==="Failed"?"err":"info");
+    await loadPayments();
+  }catch(err){
+    showMessage(err?.message||"Verification failed.","err");
+  }finally{
+    if(button){button.disabled=false;button.textContent="Verify";}
+  }
+}
+window.verifyPayment=verifyPayment;
+
+async function loadPayments(){
+  const {data,error}=await sb.from("geti_payments")
+    .select("id,amount_usd,currency,method,reference,status,provider_ref,created_at,paid_at,note")
+    .eq("student_id",profile.id)
+    .order("created_at",{ascending:false})
+    .limit(8);
+
+  if(error){
+    $("payments").textContent="Payment history is temporarily unavailable.";
+    return;
+  }
+  const rows=data||[];
+  if(!rows.length){
+    $("payments").innerHTML='<div class="muted">No payments yet.</div>';
+    return;
+  }
+
+  $("payments").innerHTML=rows.map(p=>{
+    const canVerify=["Pending","Creating","Review"].includes(p.status);
+    return '<div class="payment">'+
+      '<div class="p-top"><div><div class="money">'+money(p.amount_usd)+' '+esc(p.currency||"USD")+'</div>'+
+      '<div class="muted">'+new Date(p.created_at).toLocaleString()+'</div></div>'+
+      '<span class="status '+esc(p.status)+'">'+esc(p.status)+'</span></div>'+
+      (p.provider_ref?'<div class="muted" style="margin-top:6px">Reference: '+esc(p.provider_ref)+'</div>':'')+
+      (p.note?'<div class="muted" style="margin-top:4px">'+esc(p.note)+'</div>':'')+
+      (canVerify?'<button class="small-btn" type="button" onclick="verifyPayment(\''+esc(p.id)+'\',this)">Verify</button>':'')+
+    '</div>';
+  }).join("");
+}
+
+document.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{$("amount").value=b.dataset.amount;}));
+$("payBtn").addEventListener("click",startPayment);
+init();
+</script>
 </body>
 </html>
