@@ -1056,13 +1056,13 @@ PRINT SHEETS
     width:85.6mm;
     height:54mm;
     object-fit:contain;
-    object-position:center;
-    aspect-ratio:856 / 540;
+    object-position:center center;
     display:block;
     margin:0;
     padding:0;
     border:none;
-    background:#ffffff;
+    background:transparent;
+    image-rendering:auto;
 }
 
 @media screen{
@@ -2336,67 +2336,80 @@ CREATE BADGE PNG
 85.6 × 54 mm
 ================================================== */
 
-async function waitForBadgeAssets(root){
-    const images = Array.from(root.querySelectorAll("img"));
-    await Promise.all(
-        images.map(function(img){
-            if(img.complete && img.naturalWidth > 0){
-                return Promise.resolve();
-            }
-            return new Promise(function(resolve){
-                const done = function(){ resolve(); };
-                img.addEventListener("load",done,{once:true});
-                img.addEventListener("error",done,{once:true});
-                setTimeout(done,1200);
-            });
-        })
-    );
-
-    if(document.fonts && document.fonts.ready){
-        try{ await document.fonts.ready; }catch(e){}
-    }
-
-    await new Promise(function(resolve){
-        requestAnimationFrame(function(){
-            requestAnimationFrame(resolve);
-        });
-    });
-}
-
-
-/* ==================================================
-CREATE BADGE PNG
-EXACTLY THE SAME AS PREVIEW — 856 × 540
-================================================== */
-
 async function createBadgePNG(){
 
     updateBadge();
 
-    const badge =
-    document.getElementById(
-        "badge"
+    await new Promise(
+        resolve =&gt;
+        requestAnimationFrame(
+            () =&gt;
+            requestAnimationFrame(
+                resolve
+            )
+        )
     );
 
-    await waitForBadgeAssets(badge);
+    const badge =
+    document.getElementById(
+        &quot;badge&quot;
+    );
 
-    const canvas =
+    const exportWidth =
+    1011;
+
+    const exportHeight =
+    638;
+
+    const renderedCanvas =
     await html2canvas(
         badge,
         {
-            scale:1,
-            width:856,
-            height:540,
+            scale:
+            exportWidth / 856,
+
             useCORS:true,
+
             allowTaint:false,
-            backgroundColor:"#ffffff",
-            logging:false,
-            scrollX:0,
-            scrollY:0
+
+            backgroundColor:
+            &quot;#ffffff&quot;,
+
+            logging:false
         }
     );
 
-    return canvas;
+    const finalCanvas =
+    document.createElement(
+        &quot;canvas&quot;
+    );
+
+    finalCanvas.width =
+    exportWidth;
+
+    finalCanvas.height =
+    exportHeight;
+
+    const ctx =
+    finalCanvas.getContext(
+        &quot;2d&quot;
+    );
+
+    ctx.imageSmoothingEnabled =
+    true;
+
+    ctx.imageSmoothingQuality =
+    &quot;high&quot;;
+
+    ctx.drawImage(
+        renderedCanvas,
+        0,
+        0,
+        exportWidth,
+        exportHeight
+    );
+
+    return finalCanvas;
 }
 
 
@@ -2404,35 +2417,52 @@ async function createBadgeBackPNG(){
 
     updateBadge();
 
-    const badge =
-    document.getElementById(
-        "badgeBack"
+    await new Promise(
+        resolve =&gt;
+        requestAnimationFrame(
+            () =&gt;
+            requestAnimationFrame(
+                resolve
+            )
+        )
     );
 
-    await waitForBadgeAssets(badge);
+    const badge =
+    document.getElementById(
+        &quot;badgeBack&quot;
+    );
 
-    const canvas =
+    const exportWidth =
+    1011;
+
+    const exportHeight =
+    638;
+
+    const renderedCanvas =
     await html2canvas(
         badge,
         {
-            scale:1,
-            width:856,
-            height:540,
+            scale: exportWidth / 856,
             useCORS:true,
             allowTaint:false,
-            backgroundColor:"#ffffff",
-            logging:false,
-            scrollX:0,
-            scrollY:0
+            backgroundColor:&quot;#ffffff&quot;,
+            logging:false
         }
     );
 
-    return canvas;
+    const finalCanvas = document.createElement(&quot;canvas&quot;);
+    finalCanvas.width = exportWidth;
+    finalCanvas.height = exportHeight;
+
+    const ctx = finalCanvas.getContext(&quot;2d&quot;);
+    ctx.drawImage(renderedCanvas,0,0,exportWidth,exportHeight);
+
+    return finalCanvas;
 }
 
 
 /* ==================================================
-DOWNLOAD BADGE
+DOWNLOAD SINGLE BADGE PNG
 ================================================== */
 
 async function downloadBadge(){
@@ -2444,52 +2474,120 @@ async function downloadBadge(){
     await createBadgeBackPNG();
 
     const firstName =
-    document.getElementById("studentFirstName").value.trim();
+    document.getElementById(
+        &quot;studentFirstName&quot;
+    )
+    .value
+    .trim()
+    .replace(
+        /[^a-z0-9]/gi,
+        &quot;_&quot;
+    );
 
     const lastName =
-    document.getElementById("studentLastName").value.trim();
+    document.getElementById(
+        &quot;studentLastName&quot;
+    )
+    .value
+    .trim()
+    .replace(
+        /[^a-z0-9]/gi,
+        &quot;_&quot;
+    );
 
     const studentId =
-    document.getElementById("studentId").value.trim();
-
-    const safeName =
-    (
-        (studentId || "PCLM")
-        + "_"
-        + (firstName || "")
-        + "_"
-        + (lastName || "")
+    document.getElementById(
+        &quot;studentId&quot;
     )
-    .replace(/[^a-z0-9_-]+/gi,"_")
-    .replace(/_+/g,"_");
+    .value
+    .trim()
+    .replace(
+        /[^a-z0-9]/gi,
+        &quot;_&quot;
+    );
 
-    const rectoLink =
-    document.createElement("a");
+    const baseName =
+    &quot;PCLM_&quot;
+    +
+    (
+        studentId
+        ?
+        studentId + &quot;_&quot;
+        :
+        &quot;&quot;
+    )
+    +
+    (
+        firstName
+        ||
+        &quot;Student&quot;
+    )
+    +
+    (
+        lastName
+        ?
+        &quot;_&quot; + lastName
+        :
+        &quot;&quot;
+    );
 
-    rectoLink.download =
-    safeName + "_Front_85.6x54mm.png";
-
-    rectoLink.href =
-    frontCanvas.toDataURL("image/png");
-
+    const rectoLink = document.createElement(&quot;a&quot;);
+    rectoLink.download = baseName + &quot;_Recto_85.6x54mm.png&quot;;
+    rectoLink.href = frontCanvas.toDataURL(&quot;image/png&quot;,1);
     rectoLink.click();
 
-    setTimeout(function(){
-
-        const versoLink =
-        document.createElement("a");
-
-        versoLink.download =
-        safeName + "_Back_85.6x54mm.png";
-
-        versoLink.href =
-        backCanvas.toDataURL("image/png");
-
-        versoLink.click();
-
-    },200);
+    setTimeout(
+        function(){
+            const versoLink = document.createElement(&quot;a&quot;);
+            versoLink.download = baseName + &quot;_Verso_85.6x54mm.png&quot;;
+            versoLink.href = backCanvas.toDataURL(&quot;image/png&quot;,1);
+            versoLink.click();
+        },
+        200
+    );
 }
 
+
+/* ==================================================
+EXACT SNAPSHOT FOR PRINT SHEET
+Keeps the badge exactly as shown in preview.
+================================================== */
+async function waitForBadgeImages(root){
+    const images = Array.from(root.querySelectorAll("img"));
+    await Promise.all(images.map(img => {
+        if(img.complete && img.naturalWidth > 0) return Promise.resolve();
+        return new Promise(resolve => {
+            const done = () => resolve();
+            img.addEventListener("load", done, {once:true});
+            img.addEventListener("error", done, {once:true});
+            setTimeout(done, 1500);
+        });
+    }));
+}
+
+async function captureBadgeExactly(elementId){
+    const badge = document.getElementById(elementId);
+    if(!badge) throw new Error("Badge not found: " + elementId);
+
+    await waitForBadgeImages(badge);
+
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    const canvas = await html2canvas(badge, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: false,
+        backgroundColor: null,
+        logging: false,
+        width: 856,
+        height: 540,
+        windowWidth: document.documentElement.scrollWidth,
+        windowHeight: document.documentElement.scrollHeight,
+        removeContainer: true
+    });
+
+    return canvas.toDataURL("image/png");
+}
 
 /* ==================================================
 ADD BADGE TO PRINT QUEUE
@@ -2542,20 +2640,16 @@ async function addBadgeToSheets(event){
 
     try{
 
-        const frontCanvas =
-        await createBadgePNG();
-
-        const backCanvas =
-        await createBadgeBackPNG();
-
+        // Capture exactly what is currently visible in the preview.
+        // Do not rebuild, resize, recolor, or convert to JPEG.
         const frontImage =
-        frontCanvas.toDataURL(
-            &quot;image/png&quot;
+        await captureBadgeExactly(
+            &quot;badge&quot;
         );
 
         const backImage =
-        backCanvas.toDataURL(
-            &quot;image/png&quot;
+        await captureBadgeExactly(
+            &quot;badgeBack&quot;
         );
 
         badgePrintQueue.push({
