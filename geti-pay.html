@@ -41,11 +41,11 @@ main{max-width:1500px;margin:auto;padding:28px 3%}.hero{display:flex;justify-con
     <div class="field"><label>Phone number *</label><div class="input"><select><option>+261</option></select><input id="phone" type="tel" placeholder="34 00 000 00"></div><div class="hint">Enter the phone number linked to your selected Mobile Money account.</div></div>
     <div class="field"><label>Amount to pay</label><div class="input"><input value="50,000" readonly><select><option>Ar</option></select></div><div class="hint">The amount is automatically filled from your invoice.</div></div>
    </div>
-   <div id="paypalForm" class="form hidden"><div class="field"><label>PayPal account</label><input type="email" placeholder="your@email.com"><div class="hint">You will be redirected to PayPal for secure authorization.</div></div></div>
+   <div id="paypalForm" class="form hidden"><div class="field"><label>PayPal account</label><input id="payerEmail" type="email" placeholder="your@email.com" autocomplete="email" required><div class="hint">You will be redirected to PayPal for secure authorization.</div></div></div>
    <div id="cardForm" class="form hidden"><div class="field"><label>Cardholder name</label><input placeholder="Name on card"></div><div class="field"><label>Card payment</label><input value="Secure gateway / hosted checkout" readonly><div class="hint">For production, card number and CVV should be collected by the certified payment provider, not stored by GETI.</div></div></div>
    <div class="info"><b>ⓘ Important</b><br>• You may receive a payment confirmation request on your phone.<br>• Make sure your account is active.<br>• Never share your Mobile Money PIN, password or card security code.</div>
-   <div id="status" class="status">Payment request prepared. Connect this button to your secure backend/payment gateway to create a real transaction.</div>
-   <div class="actions"><button class="btn">← Back</button><button class="btn primary" onclick="pay()">Proceed to Payment →</button></div>
+   <div id="status" class="status">Your secure payment request will appear here.</div>
+   <div class="actions"><button class="btn" type="button" onclick="history.back()">← Back</button><button id="payBtn" class="btn primary" type="button" onclick="pay()">Proceed to Payment →</button></div>
   </section>
   <aside class="card summary">
    <h2>▣ Payment Summary</h2><div class="sub">Please verify the information before payment.</div>
@@ -69,6 +69,87 @@ function choose(el,name){
  const m=methods[name];chosenLogo.src=m.logo;chosenTitle.textContent=name+" Payment";chosenText.textContent=m.text;summaryMethod.textContent=name;
  mobileForm.classList.toggle("hidden",m.kind!=="mobile");paypalForm.classList.toggle("hidden",m.kind!=="paypal");cardForm.classList.toggle("hidden",m.kind!=="card");
 }
-function pay(){status.style.display="block";status.scrollIntoView({behavior:"smooth",block:"nearest"});}
+
+const FUNCTION_URL = "https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-zopayo-payment";
+
+async function pay(){
+  const statusBox = document.getElementById("status");
+  const payBtn = document.getElementById("payBtn");
+  const email = (document.getElementById("payerEmail")?.value || "").trim();
+
+  statusBox.style.display = "block";
+  statusBox.scrollIntoView({behavior:"smooth", block:"nearest"});
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    statusBox.textContent = "Please enter a valid email address before continuing.";
+    return;
+  }
+
+  payBtn.disabled = true;
+  payBtn.textContent = "Creating secure payment...";
+  statusBox.textContent = "Connecting securely to the payment service...";
+
+  try {
+    const response = await fetch(FUNCTION_URL, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        action: "create",
+        full_name: "Rakotonantenaina Juldiano",
+        email: email,
+        student_id: "GETI-STD-2026-001",
+        product: "Tuition Fee",
+        amount: 50000,
+        currency: "MGA"
+      })
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok || !data.payment_url) {
+      throw new Error(data.error || data.message || "Unable to create the payment.");
+    }
+
+    statusBox.textContent = "Secure payment link created. Redirecting to Zopayo...";
+    window.location.assign(data.payment_url);
+  } catch (error) {
+    statusBox.textContent = error?.message || "Payment service is temporarily unavailable.";
+    payBtn.disabled = false;
+    payBtn.textContent = "Proceed to Payment →";
+  }
+}
+
+async function checkReturnedPayment(){
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get("ref");
+  const returned = params.get("status");
+  if (!ref) return;
+
+  const statusBox = document.getElementById("status");
+  statusBox.style.display = "block";
+  statusBox.textContent = returned === "failed"
+    ? "The payment was cancelled or could not be completed."
+    : "Checking the final payment status...";
+
+  try {
+    const response = await fetch(FUNCTION_URL, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({action:"status", ref})
+    });
+    const data = await response.json().catch(() => ({}));
+    if (response.ok && data.payment) {
+      const p = data.payment;
+      if (p.status === "COMPLETED" || p.status === "PAID") {
+        statusBox.textContent = "Payment confirmed successfully. Reference: " + p.relation_id;
+      } else if (returned !== "failed") {
+        statusBox.textContent = "Payment received by the return page. Final confirmation is still pending.";
+      }
+    }
+  } catch (_) {}
+}
+
+document.addEventListener("DOMContentLoaded", checkReturnedPayment);
+
 </script>
 </body></html>
