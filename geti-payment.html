@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+
+  <title>Special Payment | GETI</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #0b4ca1;
+      --primary-dark: #073675;
+      --primary-soft: #eef5ff;
+
+      --green: #138a4b;
+      --green-soft: #eaf8f0;
+
+      --red: #c62828;
+      --red-soft: #fff0f0;
+
+      --white: #ffffff;
+      --background: #f5f7fb;
+
+      --text: #172033;
+      --muted: #667085;
+
+      --border: #dfe5ee;
+
+      --shadow:
+        0 12px 35px rgba(22, 34, 51, 0.08);
+    }
+
+    body {
+      min-height: 100vh;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      color: var(--text);
+
+      background:
+        linear-gradient(
+          180deg,
+          #edf4ff 0,
+          #f8fafc 250px,
+          var(--background) 100%
+        );
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* HEADER */
+
+    .header {
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary)
+        );
+
+      color: white;
+
+      box-shadow:
+        0 8px 30px rgba(7, 54, 117, 0.18);
+    }
+
+    .header-inner {
+      width: min(1180px, calc(100% - 30px));
+      min-height: 84px;
+
+      margin: auto;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+
+      gap: 13px;
+    }
+
+    .brand-logo {
+      width: 50px;
+      height: 50px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 14px;
+
+      background: white;
+      color: var(--primary);
+
+      font-size: 25px;
+      font-weight: 900;
+
+      box-shadow:
+        0 6px 20px rgba(0,0,0,.15);
+    }
+
+    .brand h1 {
+      margin-bottom: 3px;
+
+      font-size: 17px;
+    }
+
+    .brand p {
+      font-size: 11px;
+
+      opacity: .85;
+    }
+
+    .back-link {
+      color: white;
+
+      text-decoration: none;
+
+      padding: 10px 14px;
+
+      border:
+        1px solid rgba(255,255,255,.35);
+
+      border-radius: 10px;
+
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* PAGE */
+
+    .container {
+      width: min(1180px, calc(100% - 30px));
+
+      margin: 34px auto 60px;
+    }
+
+    .page-title {
+      margin-bottom: 24px;
+    }
+
+    .page-title h2 {
+      margin-bottom: 8px;
+
+      font-size: clamp(26px,4vw,34px);
+    }
+
+    .page-title p {
+      max-width: 760px;
+
+      color: var(--muted);
+
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    /* MESSAGE */
+
+    .message {
+      display: none;
+
+      margin-bottom: 20px;
+
+      padding: 15px 17px;
+
+      border-radius: 12px;
+
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.info {
+      background: var(--primary-soft);
+
+      border:
+        1px solid #cfe0ff;
+
+      color: #34557c;
+    }
+
+    .message.success {
+      background: var(--green-soft);
+
+      border:
+        1px solid #bce9cf;
+
+      color: #17623c;
+    }
+
+    .message.error {
+      background: var(--red-soft);
+
+      border:
+        1px solid #ffcaca;
+
+      color: #912323;
+    }
+
+    /* LOADING */
+
+    .loading-card {
+      min-height: 250px;
+
+      display: flex;
+      flex-direction: column;
+
+      align-items: center;
+      justify-content: center;
+
+      gap: 12px;
+
+      background: white;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 18px;
+
+      box-shadow: var(--shadow);
+
+      color: var(--muted);
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+
+      border:
+        4px solid #dce6f5;
+
+      border-top-color:
+        var(--primary);
+
+      border-radius: 50%;
+
+      animation:
+        spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform:
+          rotate(360deg);
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* PAYMENT CARD */
+
+    .payment-card {
+      max-width: 720px;
+
+      margin: auto;
+
+      background: white;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 20px;
+
+      padding: 30px;
+
+      box-shadow: var(--shadow);
+    }
+
+    .payment-card h2 {
+      color: var(--primary-dark);
+
+      margin-bottom: 6px;
+    }
+
+    .payment-subtitle {
+      color: var(--muted);
+
+      font-size: 14px;
+      line-height: 1.6;
+
+      margin-bottom: 26px;
+    }
+
+    /* STUDENT HEADER */
+
+    .student-summary {
+      display: flex;
+      align-items: center;
+
+      gap: 13px;
+
+      padding: 15px;
+
+      margin-bottom: 20px;
+
+      background:
+        #f8fafc;
+
+      border:
+        1px solid #e5eaf1;
+
+      border-radius: 13px;
+    }
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+
+      flex: 0 0 auto;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 50%;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+
+      color: white;
+
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .student-summary strong {
+      display: block;
+
+      margin-bottom: 3px;
+    }
+
+    .student-summary span {
+      display: block;
+
+      color: var(--muted);
+
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    /* SECTIONS */
+
+    .payment-section {
+      padding: 22px 0;
+
+      border-top:
+        1px solid #e6eaf0;
+    }
+
+    .payment-section:first-of-type {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .payment-section h3 {
+      margin-bottom: 16px;
+
+      color: #172b4d;
+
+      font-size: 15px;
+    }
+
+    /* FORM */
+
+    .form-grid {
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      display: block;
+
+      margin-bottom: 7px;
+
+      color: #344054;
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .required {
+      color: var(--red);
+    }
+
+    .form-control {
+      width: 100%;
+
+      min-height: 48px;
+
+      padding: 12px 14px;
+
+      border:
+        1px solid #ccd5e2;
+
+      border-radius: 10px;
+
+      background: white;
+
+      color: var(--text);
+
+      outline: none;
+
+      transition: .2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+
+      box-shadow:
+        0 0 0 4px rgba(11,76,161,.08);
+    }
+
+    .form-control[readonly] {
+      background:
+        #f8fafc;
+
+      color:
+        #667085;
+    }
+
+    textarea.form-control {
+      min-height: 90px;
+
+      resize: vertical;
+    }
+
+    /* AMOUNT */
+
+    .amount-box {
+      position: relative;
+    }
+
+    .amount-box input {
+      padding-right: 70px;
+
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .amount-box span {
+      position: absolute;
+
+      top: 50%;
+      right: 15px;
+
+      transform:
+        translateY(-50%);
+
+      color: var(--muted);
+
+      font-weight: 800;
+    }
+
+    .quick-amounts {
+      display: flex;
+      flex-wrap: wrap;
+
+      gap: 8px;
+
+      margin-top: 10px;
+    }
+
+    .quick-btn {
+      padding: 8px 12px;
+
+      border:
+        1px solid #cdd7e5;
+
+      border-radius: 999px;
+
+      background: white;
+
+      color: #344054;
+
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .quick-btn:hover {
+      border-color: var(--primary);
+
+      color: var(--primary);
+
+      background: var(--primary-soft);
+    }
+
+    .help-text {
+      margin-top: 7px;
+
+      color: var(--muted);
+
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    /* METHODS */
+
+    .payment-methods {
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 12px;
+    }
+
+    .payment-method {
+      display: flex;
+      align-items: center;
+
+      gap: 12px;
+
+      padding: 15px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 12px;
+
+      background: white;
+    }
+
+    .method-icon {
+      width: 43px;
+      height: 43px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 10px;
+
+      font-weight: 900;
+    }
+
+    .method-icon.orange {
+      background: #fff0df;
+      color: #f26b00;
+    }
+
+    .method-icon.mvola {
+      background: #fff8d8;
+      color: #9a7b00;
+    }
+
+    .payment-method strong {
+      display: block;
+
+      margin-bottom: 3px;
+
+      font-size: 14px;
+    }
+
+    .payment-method small {
+      color: var(--muted);
+
+      font-size: 11px;
+    }
+
+    /* SUMMARY */
+
+    .payment-summary {
+      background:
+        #f8fafc;
+
+      border:
+        1px solid #e3e8ef;
+
+      border-radius: 13px;
+
+      padding: 16px;
+    }
+
+    .summary-row {
+      display: flex;
+
+      justify-content: space-between;
+
+      gap: 14px;
+
+      padding: 9px 0;
+
+      font-size: 13px;
+
+      border-bottom:
+        1px dashed #dde4ec;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-row span {
+      color: var(--muted);
+    }
+
+    .summary-row strong {
+      text-align: right;
+    }
+
+    .payment-total {
+      display: flex;
+
+      justify-content: space-between;
+      align-items: center;
+
+      margin-top: 12px;
+
+      padding: 14px;
+
+      border-radius: 11px;
+
+      background: var(--primary-soft);
+    }
+
+    .payment-total span {
+      font-weight: 800;
+
+      color: var(--primary-dark);
+    }
+
+    .payment-total strong {
+      font-size: 20px;
+
+      color: var(--primary);
+    }
+
+    /* SECURITY */
+
+    .payment-security {
+      margin-top: 18px;
+
+      padding: 14px;
+
+      border:
+        1px solid #cfe0ff;
+
+      border-radius: 11px;
+
+      background: #f4f8ff;
+
+      color: #385477;
+
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    /* BUTTON */
+
+    .payment-button {
+      width: 100%;
+
+      min-height: 53px;
+
+      margin-top: 20px;
+
+      border: none;
+
+      border-radius: 11px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+
+      color: white;
+
+      font-size: 15px;
+      font-weight: 900;
+
+      box-shadow:
+        0 10px 24px rgba(11,76,161,.22);
+
+      transition: .2s;
+    }
+
+    .payment-button:hover {
+      transform:
+        translateY(-1px);
+    }
+
+    .payment-button:disabled {
+      opacity: .55;
+
+      cursor: not-allowed;
+
+      transform: none;
+    }
+
+    .payment-powered {
+      margin-top: 12px;
+
+      text-align: center;
+
+      color: #98a2b3;
+
+      font-size: 11px;
+    }
+
+    /* FOOTER */
+
+    footer {
+      padding: 24px;
+
+      text-align: center;
+
+      color: #8490a3;
+
+      font-size: 11px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 650px) {
+      .container {
+        width:
+          min(100% - 20px, 1180px);
+
+        margin-top: 24px;
+      }
+
+      .header-inner {
+        width:
+          min(100% - 20px, 1180px);
+
+        min-height: 76px;
+      }
+
+      .back-link {
+        display: none;
+      }
+
+      .brand-logo {
+        width: 44px;
+        height: 44px;
+
+        font-size: 20px;
+      }
+
+      .brand h1 {
+        font-size: 14px;
+      }
+
+      .brand p {
+        font-size: 10px;
+      }
+
+      .payment-card {
+        padding: 20px;
+
+        border-radius: 15px;
+      }
+
+      .form-grid {
+        grid-template-columns:
+          1fr;
+      }
+
+      .payment-methods {
+        grid-template-columns:
+          1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+
+  <header class="header">
+
+    <div class="header-inner">
+
+      <div class="brand">
+
+        <div class="brand-logo">
+          G
+        </div>
+
+        <div>
+
+          <h1>
+            Global English Teaching Institute
+          </h1>
+
+          <p>
+            Special Secure Payment
+          </p>
+
+        </div>
+
+      </div>
+
+      <a
+        href="student.html"
+        class="back-link"
+      >
+        ← Student Area
+      </a>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+
+  <main class="container">
+
+    <div class="page-title">
+
+      <h2>
+        Special Payment
+      </h2>
+
+      <p>
+        Complete your GETI payment securely.
+        After confirmation, you will be redirected
+        to the official Zopayo payment page.
+      </p>
+
+    </div>
+
+
+    <!-- MESSAGE -->
+
+    <div
+      id="message"
+      class="message"
+    ></div>
+
+
+    <!-- LOADER -->
+
+    <div
+      id="loadingCard"
+      class="loading-card"
+    >
+
+      <div class="spinner"></div>
+
+      <div>
+        Loading your GETI student account...
+      </div>
+
+    </div>
+
+
+    <!-- PAYMENT -->
+
+    <div
+      id="paymentContainer"
+      class="hidden"
+    >
+
+      <div class="payment-card">
+
+        <h2>
+          Special Payment
+        </h2>
+
+        <p class="payment-subtitle">
+          Complete the form below to create a secure
+          payment through Zopayo.
+        </p>
+
+
+        <!-- STUDENT SUMMARY -->
+
+        <div class="student-summary">
+
+          <div
+            id="avatar"
+            class="avatar"
+          >
+            G
+          </div>
+
+          <div>
+
+            <strong id="studentDisplayName">
+              GETI Student
+            </strong>
+
+            <span id="studentDisplayEmail"></span>
+
+            <span id="studentDisplayId"></span>
+
+          </div>
+
+        </div>
+
+
+        <form
+          id="paymentForm"
+          autocomplete="off"
+        >
+
+
+          <!-- STUDENT INFORMATION -->
+
+          <div class="payment-section">
+
+            <h3>
+              Student Information
+            </h3>
+
+
+            <div class="form-grid">
+
+              <div class="form-group">
+
+                <label>
+                  Student Name
+                </label>
+
+                <input
+                  id="studentName"
+                  class="form-control"
+                  type="text"
+                  readonly
+                >
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label>
+                  Email
+                </label>
+
+                <input
+                  id="studentEmail"
+                  class="form-control"
+                  type="email"
+                  readonly
+                >
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- PAYMENT DETAILS -->
+
+          <div class="payment-section">
+
+            <h3>
+              Payment Details
+            </h3>
+
+
+            <div class="form-group">
+
+              <label for="paymentReason">
+                Payment For
+                <span class="required">*</span>
+              </label>
+
+              <select
+                id="paymentReason"
+                class="form-control"
+                required
+              >
+
+                <option value="GETI Special Payment">
+                  Special Payment
+                </option>
+
+                <option value="GETI Registration Fee">
+                  Registration Fee
+                </option>
+
+                <option value="GETI Course Payment">
+                  Course Payment
+                </option>
+
+                <option value="GETI Certificate Fee">
+                  Certificate Fee
+                </option>
+
+                <option value="GETI Administrative Fee">
+                  Administrative Fee
+                </option>
+
+                <option value="GETI Teacher Training">
+                  Teacher Training
+                </option>
+
+                <option value="GETI Other Educational Payment">
+                  Other Educational Payment
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="paymentAmount">
+                Amount
+                <span class="required">*</span>
+              </label>
+
+
+              <div class="amount-box">
+
+                <input
+                  id="paymentAmount"
+                  class="form-control"
+
+                  type="number"
+
+                  min="100"
+                  step="1"
+
+                  placeholder="Example: 50000"
+
+                  required
+                >
+
+                <span>
+                  MGA
+                </span>
+
+              </div>
+
+
+              <div class="quick-amounts">
+
+                <button
+                  type="button"
+                  class="quick-btn"
+                  data-amount="10000"
+                >
+                  10 000 Ar
+                </button>
+
+                <button
+                  type="button"
+                  class="quick-btn"
+                  data-amount="25000"
+                >
+                  25 000 Ar
+                </button>
+
+                <button
+                  type="button"
+                  class="quick-btn"
+                  data-amount="50000"
+                >
+                  50 000 Ar
+                </button>
+
+                <button
+                  type="button"
+                  class="quick-btn"
+                  data-amount="100000"
+                >
+                  100 000 Ar
+                </button>
+
+              </div>
+
+
+              <div class="help-text">
+                The amount will be displayed again
+                on the official Zopayo checkout page.
+              </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="paymentNote">
+                Note
+              </label>
+
+              <textarea
+                id="paymentNote"
+                class="form-control"
+
+                maxlength="100"
+
+                placeholder="Optional information about this payment"
+              ></textarea>
+
+            </div>
+
+          </div>
+
+
+          <!-- METHODS -->
+
+          <div class="payment-section">
+
+            <h3>
+              Payment Method
+            </h3>
+
+
+            <div class="payment-methods">
+
+              <div class="payment-method">
+
+                <div class="method-icon orange">
+                  OM
+                </div>
+
+                <div>
+
+                  <strong>
+                    Orange Money
+                  </strong>
+
+                  <small>
+                    Payment through Zopayo
+                  </small>
+
+                </div>
+
+              </div>
+
+
+              <div class="payment-method">
+
+                <div class="method-icon mvola">
+                  M
+                </div>
+
+                <div>
+
+                  <strong>
+                    MVola
+                  </strong>
+
+                  <small>
+                    Payment through Zopayo
+                  </small>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- SUMMARY -->
+
+          <div class="payment-section">
+
+            <h3>
+              Payment Summary
+            </h3>
+
+
+            <div class="payment-summary">
+
+              <div class="summary-row">
+
+                <span>
+                  Provider
+                </span>
+
+                <strong>
+                  Zopayo
+                </strong>
+
+              </div>
+
+
+              <div class="summary-row">
+
+                <span>
+                  Currency
+                </span>
+
+                <strong>
+                  MGA
+                </strong>
+
+              </div>
+
+
+              <div class="summary-row">
+
+                <span>
+                  Payment For
+                </span>
+
+                <strong id="summaryReason">
+                  Special Payment
+                </strong>
+
+              </div>
+
+
+              <div class="summary-row">
+
+                <span>
+                  Payment Link
+                </span>
+
+                <strong>
+                  Valid for 30 minutes
+                </strong>
+
+              </div>
+
+
+              <div class="payment-total">
+
+                <span>
+                  Total
+                </span>
+
+                <strong id="paymentTotal">
+                  0 MGA
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- SECURITY -->
+
+          <div class="payment-security">
+
+            🔒 GETI does not collect or store your
+            Mobile Money PIN.
+
+            <br><br>
+
+            After clicking the payment button,
+            you will be redirected to the official
+            Zopayo secure checkout.
+
+          </div>
+
+
+          <!-- BUTTON -->
+
+          <button
+            id="payButton"
+            type="submit"
+            class="payment-button"
+          >
+            Continue to Secure Payment
+          </button>
+
+
+          <p class="payment-powered">
+            Secure payment powered by Zopayo
+          </p>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <footer>
+    Global English Teaching Institute • Secure Payment
+  </footer>
+
+
+  <script>
+
+    /* =========================
+       SUPABASE CONFIG
+    ========================== */
+
+    const SUPABASE_URL =
+      "https://syawyulrelrhjprnxdyn.supabase.co";
+
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8";
+
+
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+      );
+
+
+    /* =========================
+       STATE
+    ========================== */
+
+    let currentSession = null;
+    let currentProfile = null;
+
+
+    const $ = id =>
+      document.getElementById(id);
+
+
+    /* =========================
+       MESSAGE
+    ========================== */
+
+    function showMessage(
+      text,
+      type = "info"
+    ) {
+
+      const box =
+        $("message");
+
+
+      box.textContent =
+        text;
+
+
+      box.className =
+        "message show " + type;
+
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+    }
+
+
+    function hideMessage() {
+
+      $("message").className =
+        "message";
+
+    }
+
+
+    /* =========================
+       FORMAT MGA
+    ========================== */
+
+    function formatMGA(value) {
+
+      const amount =
+        Number(value || 0);
+
+
+      return new Intl.NumberFormat(
+        "fr-FR"
+      ).format(amount) +
+        " MGA";
+
+    }
+
+
+    /* =========================
+       INITIALS
+    ========================== */
+
+    function initials(name) {
+
+      const parts =
+        String(name || "GETI")
+          .trim()
+          .split(/\s+/);
+
+
+      return (
+        (parts[0]?.[0] || "G") +
+        (parts[1]?.[0] || "")
+      ).toUpperCase();
+
+    }
+
+
+    /* =========================
+       UPDATE SUMMARY
+    ========================== */
+
+    function updateSummary() {
+
+      const amount =
+        $("paymentAmount").value;
+
+
+      const reason =
+        $("paymentReason");
+
+
+      $("paymentTotal").textContent =
+        formatMGA(amount);
+
+
+      $("summaryReason").textContent =
+        reason.options[
+          reason.selectedIndex
+        ].text;
+
+    }
+
+
+    /* =========================
+       LOAD STUDENT
+    ========================== */
+
+    async function loadStudent() {
+
+      try {
+
+        const {
+          data: {
+            session
+          }
+        } =
+        await supabaseClient
+          .auth
+          .getSession();
+
+
+        currentSession =
+          session;
+
+
+        if (!session) {
+
+          $("loadingCard").innerHTML =
+            `
+              <strong>
+                Student sign-in required
+              </strong>
+
+              <div>
+                Please sign in to your GETI Student Area
+                before making a payment.
+              </div>
+
+              <a
+                href="student.html"
+                style="
+                  color:#0b4ca1;
+                  font-weight:800;
+                  text-decoration:none;
+                  margin-top:8px;
+                "
+              >
+                Go to Student Area
+              </a>
+            `;
+
+          return;
+
+        }
+
+
+        const {
+          data: profile,
+          error
+        } =
+        await supabaseClient
+          .from("geti_profiles")
+          .select("*")
+          .eq(
+            "id",
+            session.user.id
+          )
+          .single();
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        if (!profile) {
+
+          throw new Error(
+            "Student profile not found."
+          );
+
+        }
+
+
+        if (
+          profile.role &&
+          profile.role !== "student"
+        ) {
+
+          throw new Error(
+            "This payment page is reserved for GETI students."
+          );
+
+        }
+
+
+        currentProfile =
+          profile;
+
+
+        const fullName =
+          profile.full_name ||
+          profile.name ||
+          "GETI Student";
+
+
+        const email =
+          profile.email ||
+          session.user.email ||
+          "";
+
+
+        const studentCode =
+          profile.student_id ||
+          profile.registration_id ||
+          "";
+
+
+        $("studentName").value =
+          fullName;
+
+
+        $("studentEmail").value =
+          email;
+
+
+        $("studentDisplayName").textContent =
+          fullName;
+
+
+        $("studentDisplayEmail").textContent =
+          email;
+
+
+        $("studentDisplayId").textContent =
+          studentCode
+            ? "Student ID: " +
+              studentCode
+            : "";
+
+
+        $("avatar").textContent =
+          initials(fullName);
+
+
+        $("loadingCard")
+          .classList
+          .add("hidden");
+
+
+        $("paymentContainer")
+          .classList
+          .remove("hidden");
+
+
+        checkPaymentReturn();
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+
+        $("loadingCard").innerHTML =
+          `
+            <strong>
+              Unable to load payment page
+            </strong>
+
+            <div>
+              ${
+                error.message ||
+                "Unknown error."
+              }
+            </div>
+          `;
+
+      }
+
+    }
+
+
+    /* =========================
+       CREATE PAYMENT
+    ========================== */
+
+    async function createPayment() {
+
+      hideMessage();
+
+
+      if (
+        !currentSession ||
+        !currentProfile
+      ) {
+
+        showMessage(
+          "Please sign in before making a payment.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const amount =
+        Number(
+          $("paymentAmount").value
+        );
+
+
+      const reason =
+        $("paymentReason").value;
+
+
+      const note =
+        $("paymentNote")
+          .value
+          .trim();
+
+
+      if (
+        !Number.isFinite(amount) ||
+        amount < 100
+      ) {
+
+        showMessage(
+          "Please enter a valid payment amount.",
+          "error"
+        );
+
+
+        $("paymentAmount").focus();
+
+
+        return;
+
+      }
+
+
+      const button =
+        $("payButton");
+
+
+      const oldText =
+        button.textContent;
+
+
+      button.disabled =
+        true;
+
+
+      button.textContent =
+        "Creating secure payment...";
+
+
+      try {
+
+        const {
+          data,
+          error
+        } =
+        await supabaseClient
+          .functions
+          .invoke(
+            "geti-zopayo-payment",
+            {
+              body: {
+
+                action:
+                  "create",
+
+                payment_type:
+                  "special",
+
+                amount:
+                  amount,
+
+                currency:
+                  "MGA",
+
+                reason:
+                  reason,
+
+                note:
+                  note
+
+              }
+            }
+          );
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        if (
+          data?.success === false
+        ) {
+
+          throw new Error(
+            data.error ||
+            data.message ||
+            "Payment request failed."
+          );
+
+        }
+
+
+        if (
+          !data?.payment_url
+        ) {
+
+          throw new Error(
+            "Zopayo payment URL was not received."
+          );
+
+        }
+
+
+        window.location.href =
+          data.payment_url;
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+
+        showMessage(
+          error.message ||
+          "Unable to start the payment.",
+          "error"
+        );
+
+
+        button.disabled =
+          false;
+
+
+        button.textContent =
+          oldText;
+
+      }
+
+    }
+
+
+    /* =========================
+       PAYMENT RETURN
+    ========================== */
+
+    function checkPaymentReturn() {
+
+      const params =
+        new URLSearchParams(
+          window.location.search
+        );
+
+
+      const status =
+        params.get(
+          "payment_status"
+        );
+
+
+      if (!status) {
+        return;
+      }
+
+
+      if (
+        status === "success"
+      ) {
+
+        showMessage(
+          "Your payment was submitted successfully. GETI is verifying the payment before marking it as Paid.",
+          "success"
+        );
+
+      }
+
+      else {
+
+        showMessage(
+          "The payment was cancelled or could not be completed.",
+          "error"
+        );
+
+      }
+
+
+      window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+      );
+
+    }
+
+
+    /* =========================
+       QUICK AMOUNTS
+    ========================== */
+
+    document
+      .querySelectorAll(
+        ".quick-btn"
+      )
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            $("paymentAmount").value =
+              button.dataset.amount;
+
+
+            updateSummary();
+
+          }
+        );
+
+      });
+
+
+    /* =========================
+       EVENTS
+    ========================== */
+
+    $("paymentAmount")
+      .addEventListener(
+        "input",
+        updateSummary
+      );
+
+
+    $("paymentReason")
+      .addEventListener(
+        "change",
+        updateSummary
+      );
+
+
+    $("paymentForm")
+      .addEventListener(
+        "submit",
+        async event => {
+
+          event.preventDefault();
+
+          await createPayment();
+
+        }
+      );
+
+
+    /* =========================
+       START
+    ========================== */
+
+    updateSummary();
+
+    loadStudent();
+
+  </script>
+
+</body>
+</html>
