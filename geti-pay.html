@@ -57,27 +57,13 @@ main{max-width:1500px;margin:auto;padding:28px 3%}.hero{display:flex;justify-con
 <div id="mobileForm" class="form">
   <div class="field">
     <label>Payment purpose / Motif *</label>
-    <select id="paymentMotif" onchange="updatePaymentProduct()">
-<option value="p0" data-product="30 Hours" data-usd="2">30 Hours — $2</option>
-<option value="p1" data-product="40 Hours" data-usd="3">40 Hours — $3</option>
-<option value="p2" data-product="50 Hours" data-usd="4">50 Hours — $4</option>
-<option value="p3" data-product="60 Hours" data-usd="5">60 Hours — $5</option>
-<option value="p4" data-product="80 Hours" data-usd="6">80 Hours — $6</option>
-<option value="p5" data-product="100 Hours" data-usd="7">100 Hours — $7</option>
-<option value="p6" data-product="120 Hours" data-usd="8">120 Hours — $8</option>
-<option value="p7" data-product="140 Hours" data-usd="9">140 Hours — $9</option>
-<option value="p8" data-product="150 Hours" data-usd="10">150 Hours — $10</option>
-<option value="p9" data-product="168 Hours" data-usd="11">168 Hours — $11</option>
-<option value="p10" data-product="180 Hours" data-usd="12">180 Hours — $12</option>
-<option value="p11" data-product="200 Hours" data-usd="13">200 Hours — $13</option>
-<option value="p12" data-product="250 Hours" data-usd="14">250 Hours — $14</option>
-<option value="p13" data-product="300 Hours" data-usd="15">300 Hours — $15</option>
-<option value="p14" data-product="420 Hours" data-usd="16">420 Hours — $16</option>
-<option value="p15" data-product="Premium Course + Certificate — 20–168 Hours" data-usd="25">Premium Course + Certificate — 20–168 Hours — $25</option>
-<option value="p16" data-product="Premium Course + Certificate — 180–420 Hours" data-usd="40">Premium Course + Certificate — 180–420 Hours — $40</option>
-<option value="blucks" data-product="Blucks" data-usd="5">Blucks — $5 per student (minimum 5 students)</option>
-</select>
-    <div class="hint">Choose the service you want to pay for. The price is filled automatically.</div><div id="blucksStudentsWrap" style="display:none;margin-top:12px"><label>Number of students *</label><input id="blucksStudents" type="number" min="5" step="1" value="5" oninput="updatePaymentProduct()"><div class="hint">Blucks: $5 per student. Minimum 5 students.</div></div>
+    <select id="paymentMotif" onchange="updatePaymentProduct()"><option data-product="30 Hours" data-usd="2" data-bulk="0">30 Hours — $2</option><option data-product="40 Hours" data-usd="3" data-bulk="0">40 Hours — $3</option><option data-product="50 Hours" data-usd="4" data-bulk="0">50 Hours — $4</option><option data-product="60 Hours" data-usd="5" data-bulk="0">60 Hours — $5</option><option data-product="80 Hours" data-usd="6" data-bulk="0">80 Hours — $6</option><option data-product="100 Hours" data-usd="7" data-bulk="0">100 Hours — $7</option><option data-product="120 Hours" data-usd="8" data-bulk="0">120 Hours — $8</option><option data-product="140 Hours" data-usd="9" data-bulk="0">140 Hours — $9</option><option data-product="150 Hours" data-usd="10" data-bulk="0">150 Hours — $10</option><option data-product="168 Hours" data-usd="11" data-bulk="0">168 Hours — $11</option><option data-product="180 Hours" data-usd="12" data-bulk="0">180 Hours — $12</option><option data-product="200 Hours" data-usd="13" data-bulk="0">200 Hours — $13</option><option data-product="250 Hours" data-usd="14" data-bulk="0">250 Hours — $14</option><option data-product="300 Hours" data-usd="15" data-bulk="0">300 Hours — $15</option><option data-product="420 Hours" data-usd="16" data-bulk="0">420 Hours — $16</option><option data-product="Premium Course + Certificate — 20–168 Hours" data-usd="25" data-bulk="0">Premium Course + Certificate — 20–168 Hours — $25</option><option data-product="Premium Course + Certificate — 180–420 Hours" data-usd="40" data-bulk="0">Premium Course + Certificate — 180–420 Hours — $40</option><option data-product="Blucks" data-usd="5" data-bulk="1">Blucks — $5 per student (minimum 5 students)</option></select>
+    <div class="hint">Choose the service you want to pay for. The price is filled automatically.</div>
+  </div>
+  <div class="field" id="bulkStudentsField" style="display:none">
+    <label>Number of students *</label>
+    <input id="bulkStudents" type="number" min="5" step="1" value="5" inputmode="numeric" oninput="updatePaymentProduct()">
+    <div class="hint">Blucks is available only for 5 students or more — $5 per student.</div>
   </div>
   <div class="field">
     <label>Mobile Money</label>
@@ -136,25 +122,25 @@ const ORDER = {
 };
 
 function updatePaymentProduct(){
-  const select = document.getElementById("paymentMotif");
-  const option = select?.options[select.selectedIndex];
-  if (!option) return;
-  const unitUsd = Number(option.dataset.usd || 0);
-  const wrap = document.getElementById("blucksStudentsWrap");
-  const qty = document.getElementById("blucksStudents");
-  const isBlucks = option.value === "blucks";
-  if (wrap) wrap.style.display = isBlucks ? "block" : "none";
-  const students = Math.floor(Number(qty?.value || 0));
-  let usd = isBlucks ? (students >= 5 ? unitUsd * students : 0) : unitUsd;
-  if (qty) qty.setCustomValidity(isBlucks && students < 5 ? "Minimum 5 students required." : "");
-  const mga = Math.round(usd * GETI_USD_TO_MGA_RATE);
-  ORDER.product = isBlucks ? `Blucks — ${students} students` : (option.dataset.product || "GETI payment");
-  ORDER.amount = mga;
-  ORDER.currency = "MGA";
-  const usdEl = document.getElementById("displayUsdAmount");
-  const amountEl = document.getElementById("displayAmount");
-  if (usdEl) usdEl.value = "$" + usd.toFixed(2);
-  if (amountEl) amountEl.value = mga.toLocaleString("en-US");
+  const s=document.getElementById("paymentMotif"), o=s?.options[s.selectedIndex];
+  if(!o)return;
+  const bulk=o.dataset.bulk==="1", f=document.getElementById("bulkStudentsField"), q=document.getElementById("bulkStudents");
+  if(f)f.style.display=bulk?"":"none";
+  let usd=Number(o.dataset.usd||0);
+  if(bulk){
+    const students=Math.floor(Number(q?.value||0));
+    if(students<5){
+      ORDER.product="Blucks"; ORDER.amount=0; ORDER.currency="MGA";
+      document.getElementById("displayUsdAmount").value="Minimum 5 students";
+      document.getElementById("displayAmount").value="—";
+      return;
+    }
+    usd=5*students; ORDER.product=`Blucks — ${students} students`;
+  }else ORDER.product=o.dataset.product||"GETI payment";
+  const mga=Math.round(usd*GETI_USD_TO_MGA_RATE);
+  ORDER.amount=mga; ORDER.currency="MGA";
+  document.getElementById("displayUsdAmount").value="$"+usd.toFixed(2);
+  document.getElementById("displayAmount").value=mga.toLocaleString("en-US");
 }
 
 function showPaymentStatus(message, type="info"){
