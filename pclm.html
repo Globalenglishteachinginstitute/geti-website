@@ -281,7 +281,7 @@ button{
 }
 
 /* ==================================================
-BADGE 85.6 × 54 mm
+BADGE 90 × 60 mm
 Preview 856 × 540 px
 ================================================== */
 
@@ -580,7 +580,7 @@ Preview 856 × 540 px
 
 .program{
     color:#a97812;
-    font-size:14px;
+    font-size:16px;
     font-weight:900;
     text-transform:uppercase;
     letter-spacing:.45px;
@@ -596,18 +596,18 @@ Preview 856 × 540 px
     display:grid;
     grid-template-columns:100px 1fr;
     row-gap:9px;
-    font-size:12px;
+    font-size:13px;
     max-width:390px;
 }
 
 .detail-label{
     color:#7f8792;
-    font-weight:700;
+    font-weight:800;
 }
 
 .detail-value{
     color:#071526;
-    font-weight:800;
+    font-weight:900;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -624,9 +624,9 @@ Preview 856 × 540 px
 
 .student-id-box small{
     display:block;
-    font-size:8px;
+    font-size:9px;
     color:#857142;
-    font-weight:800;
+    font-weight:900;
     letter-spacing:1px;
     text-transform:uppercase;
 }
@@ -635,7 +635,8 @@ Preview 856 × 540 px
     display:block;
     margin-top:2px;
     color:#08182d;
-    font-size:15px;
+    font-size:17px;
+    font-weight:900;
     letter-spacing:.6px;
 }
 
@@ -873,17 +874,19 @@ Preview 856 × 540 px
     display:grid;
     grid-template-columns:100px 1fr;
     row-gap:10px;
-    font-size:12px;
+    font-size:14px;
 }
 
 .back-label{
     color:#cbd5e1;
-    font-weight:700;
+    font-weight:800;
+    font-size:14px;
 }
 
 .back-value{
     color:#fff;
-    font-weight:800;
+    font-weight:900;
+    font-size:15px;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -1009,7 +1012,7 @@ PRINT SHEETS
 }
 
 /* A4 210 × 297 mm
-   2 columns × 5 rows = 10 badges */
+   2 columns × 4 rows = 8 badges */
 
 .print-page.a4{
     width:210mm;
@@ -1018,10 +1021,10 @@ PRINT SHEETS
     display:grid;
 
     grid-template-columns:
-        repeat(2,85.6mm);
+        repeat(2,90mm);
 
     grid-template-rows:
-        repeat(5,54mm);
+        repeat(4,60mm);
 
     column-gap:8mm;
     row-gap:2mm;
@@ -1031,7 +1034,7 @@ PRINT SHEETS
 }
 
 /* A1 594 × 841 mm
-   6 columns × 14 rows = 84 badges */
+   6 columns × 13 rows = 78 badges */
 
 .print-page.a1{
     width:594mm;
@@ -1040,10 +1043,10 @@ PRINT SHEETS
     display:grid;
 
     grid-template-columns:
-        repeat(6,85.6mm);
+        repeat(6,90mm);
 
     grid-template-rows:
-        repeat(14,54mm);
+        repeat(13,60mm);
 
     column-gap:6mm;
     row-gap:4mm;
@@ -1053,8 +1056,8 @@ PRINT SHEETS
 }
 
 .sheet-badge{
-    width:85.6mm;
-    height:54mm;
+    width:90mm;
+    height:60mm;
     object-fit:fill;
     display:block;
     margin:0;
@@ -1305,8 +1308,8 @@ body{padding-top:0!important;}
 &lt;/div&gt;
 
 &lt;div class=&quot;help&quot;&gt;
-    &lt;strong&gt;Badge:&lt;/strong&gt; 85.6 × 54 mm&lt;br&gt;
-    &lt;strong&gt;PNG:&lt;/strong&gt; 1011 × 638 px&lt;br&gt;
+    &lt;strong&gt;Badge:&lt;/strong&gt; 90 × 60 mm&lt;br&gt;
+    &lt;strong&gt;PNG:&lt;/strong&gt; 1063 × 709 px&lt;br&gt;
     &lt;strong&gt;A4:&lt;/strong&gt; 10 badges/page&lt;br&gt;
     &lt;strong&gt;A1:&lt;/strong&gt; 84 badges/page
 &lt;/div&gt;
@@ -2326,7 +2329,7 @@ document.addEventListener(
 
 /* ==================================================
 CREATE BADGE PNG
-85.6 × 54 mm
+90 × 60 mm
 ================================================== */
 
 async function createBadgePNG(){
@@ -2349,10 +2352,10 @@ async function createBadgePNG(){
     );
 
     const exportWidth =
-    1011;
+    1063;
 
     const exportHeight =
-    638;
+    709;
 
     const renderedCanvas =
     await html2canvas(
@@ -2426,10 +2429,10 @@ async function createBadgeBackPNG(){
     );
 
     const exportWidth =
-    1011;
+    1063;
 
     const exportHeight =
-    638;
+    709;
 
     const renderedCanvas =
     await html2canvas(
@@ -2525,14 +2528,14 @@ async function downloadBadge(){
     );
 
     const rectoLink = document.createElement(&quot;a&quot;);
-    rectoLink.download = baseName + &quot;_Recto_85.6x54mm.png&quot;;
+    rectoLink.download = baseName + &quot;_Recto_90x60mm.png&quot;;
     rectoLink.href = frontCanvas.toDataURL(&quot;image/png&quot;,1);
     rectoLink.click();
 
     setTimeout(
         function(){
             const versoLink = document.createElement(&quot;a&quot;);
-            versoLink.download = baseName + &quot;_Verso_85.6x54mm.png&quot;;
+            versoLink.download = baseName + &quot;_Verso_90x60mm.png&quot;;
             versoLink.href = backCanvas.toDataURL(&quot;image/png&quot;,1);
             versoLink.click();
         },
@@ -2726,9 +2729,9 @@ function renderPrintSheets(){
     const capacity =
     currentSheetType === &quot;A1&quot;
     ?
-    84
+    78
     :
-    10;
+    8;
 
     const totalPagesPerSide =
     Math.ceil(
@@ -2741,7 +2744,7 @@ function renderPrintSheets(){
     `
     &lt;strong&gt;${currentSheetType} Paper&lt;/strong&gt;&lt;br&gt;
     Badge size:
-    &lt;strong&gt;85.6 × 54 mm&lt;/strong&gt;&lt;br&gt;
+    &lt;strong&gt;90 × 60 mm&lt;/strong&gt;&lt;br&gt;
     Total cards:
     &lt;strong&gt;${totalBadges}&lt;/strong&gt;&lt;br&gt;
     Capacity/page:
@@ -2950,9 +2953,9 @@ async function downloadAllPagesPNG(){
                 scale:
                 currentSheetType === &quot;A1&quot;
                 ?
-                1.2
+                2.5
                 :
-                2,
+                4,
 
                 backgroundColor:&quot;#ffffff&quot;,
 
@@ -3094,9 +3097,9 @@ async function downloadSheetsPDF(){
                 scale:
                 isA1
                 ?
-                1.2
+                2.5
                 :
-                2,
+                4,
 
                 backgroundColor:
                 &quot;#ffffff&quot;,
@@ -3109,13 +3112,13 @@ async function downloadSheetsPDF(){
 
         const imageData =
         canvas.toDataURL(
-            &quot;image/jpeg&quot;,
-            .97
+            &quot;image/png&quot;,
+            1
         );
 
         pdf.addImage(
             imageData,
-            &quot;JPEG&quot;,
+            &quot;PNG&quot;,
             0,
             0,
             pageWidth,
@@ -3130,7 +3133,7 @@ async function downloadSheetsPDF(){
         +
         currentSheetType
         +
-        &quot;_Badges_85.6x54mm.pdf&quot;
+        &quot;_Badges_90x60mm.pdf&quot;
     );
 }
 
