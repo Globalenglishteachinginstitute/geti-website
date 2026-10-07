@@ -378,6 +378,189 @@ h1,h2,h3{color:#071b63!important}
 #countryCode option{font-size:14px!important;font-weight:500!important}
 </style>
 
+
+<style id="payment-notification-style">
+.payment-notif-badge{display:inline-flex;min-width:19px;height:19px;padding:0 5px;align-items:center;justify-content:center;border-radius:20px;background:#e21b3c;color:#fff;font-size:11px;font-weight:800;margin-left:4px}
+.payment-notif-modal[hidden]{display:none!important}.payment-notif-modal{position:fixed;inset:0;z-index:99999}
+.payment-notif-backdrop{position:absolute;inset:0;background:rgba(5,19,58,.42)}
+.payment-notif-panel{position:absolute;top:78px;right:22px;width:min(440px,calc(100vw - 28px));max-height:75vh;overflow:auto;background:#fff;border:1px solid #d7e4f2;border-radius:16px;box-shadow:0 20px 55px rgba(5,30,80,.22)}
+.payment-notif-head{display:flex;align-items:center;justify-content:space-between;padding:17px 18px;border-bottom:1px solid #e7eef7}.payment-notif-head strong{display:block;color:#071b63;font-size:18px}.payment-notif-head small{display:block;color:#64748b;margin-top:3px}.payment-notif-head button{border:0;background:#edf5ff;width:34px;height:34px;border-radius:50%;font-size:24px;color:#17366d;cursor:pointer}
+.payment-notif-identity{padding:10px 18px;background:#f7fbff;color:#526684;font-size:12px}.payment-notif-list{padding:10px}
+.payment-notif-item{padding:13px;border:1px solid #dce7f3;border-radius:12px;margin-bottom:9px;background:#fff}.payment-notif-row{display:flex;justify-content:space-between;gap:10px}.payment-notif-product{font-weight:800;color:#10214f}.payment-notif-amount{font-weight:800;color:#071b63;white-space:nowrap}.payment-notif-meta{font-size:12px;color:#64748b;margin-top:6px;word-break:break-all}
+.payment-status{display:inline-block;margin-top:8px;padding:4px 9px;border-radius:20px;font-size:11px;font-weight:800}.status-PAID{background:#e7f8ee;color:#08783b}.status-PENDING{background:#fff4d9;color:#9a6400}.status-FAILED{background:#ffe9ed;color:#bd1835}.status-REVIEW{background:#eee9ff;color:#6040a8}
+.payment-notif-empty{padding:25px 12px;text-align:center;color:#64748b}
+@media(max-width:600px){.payment-notif-panel{top:12px;right:7px;left:7px;width:auto;max-height:92vh}}
+</style>
+
+
+<style id="phone-code-only-style">
+#countryCode{
+  width:105px!important;
+  min-width:105px!important;
+  max-width:105px!important;
+  text-align:center!important;
+  font-size:15px!important;
+  font-weight:700!important;
+}
+</style>
+
+
+<style id="geti-exam-selector-style">
+.geti-motif-exam-row{
+  grid-column:1/-1!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(280px,.62fr)!important;
+  gap:12px!important;
+  align-items:stretch!important;
+}
+.geti-motif-exam-row>.field{
+  grid-column:auto!important;
+  width:auto!important;
+  margin:0!important;
+}
+.geti-exam-field{
+  background:#eef8ff!important;
+  border:1.5px solid #b7d8f5!important;
+  border-radius:12px!important;
+  padding:14px 16px!important;
+}
+#examChoice{
+  display:block!important;
+  width:100%!important;
+  height:50px!important;
+  min-height:50px!important;
+  padding:0 40px 0 14px!important;
+  border:2px solid #4d8fd7!important;
+  border-radius:10px!important;
+  background:#fff!important;
+  color:#17234f!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:15px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+#examChoice:focus{
+  outline:none!important;
+  border-color:#176fc9!important;
+  box-shadow:0 0 0 4px rgba(23,111,201,.12)!important;
+}
+#examChoice option{font-size:14px!important;font-weight:500!important}
+@media(max-width:800px){
+  .geti-motif-exam-row{grid-template-columns:minmax(0,1fr) minmax(280px,.62fr)!important}
+}
+</style>
+
+
+<style id="geti-centered-full-payment-area">
+/* Center and fully align the complete Payment Area without changing its functions */
+main, .main, .container{
+  width:min(1180px,calc(100% - 32px))!important;
+  max-width:1180px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+.payment-area, .payment-wrap, .content, .page-content{
+  width:100%!important;
+  max-width:1180px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+h1,h2,h3,.subtitle,.steps{
+  text-align:center!important;
+}
+.steps{
+  width:100%!important;
+  max-width:900px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+.methods{
+  width:100%!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  align-items:stretch!important;
+}
+.method{
+  height:100%!important;
+  min-height:155px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+}
+.form{
+  width:100%!important;
+  max-width:1050px!important;
+  margin:18px auto 0!important;
+  box-sizing:border-box!important;
+}
+.geti-motif-exam-row{
+  width:100%!important;
+  box-sizing:border-box!important;
+}
+.form .field,.geti-motif-exam-row>.field{
+  box-sizing:border-box!important;
+}
+.geti-important-payment,.geti-payment-action-form{
+  width:100%!important;
+  max-width:1050px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+#payBtn{width:100%!important}
+@media(max-width:800px){
+  main,.main,.container{
+    width:1180px!important;
+    max-width:1180px!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+  body{min-width:1210px!important;overflow-x:auto!important}
+}
+</style>
+
+
+<style id="geti-clear-header-nav">
+/* Clear, high-contrast GETI header text */
+.brand-title, .brand h1, .brand strong,
+header .brand strong, header h1 {
+  color:#071b63!important;
+  font-weight:800!important;
+  opacity:1!important;
+}
+.brand-subtitle, .brand small, .brand p,
+header .brand small, header .brand p {
+  color:#334e7d!important;
+  font-weight:600!important;
+  opacity:1!important;
+}
+
+/* Navigation: clear text and visible active state */
+.nav a{
+  color:#17366d!important;
+  background:#f4f8fd!important;
+  border:1px solid #d8e5f2!important;
+  font-weight:800!important;
+  opacity:1!important;
+  text-decoration:none!important;
+}
+.nav a:hover{
+  color:#064fae!important;
+  background:#e8f3ff!important;
+  border-color:#9dc9f4!important;
+}
+.nav a.on,
+.nav a[href*="geti-pay"]{
+  color:#ffffff!important;
+  background:#086fe3!important;
+  border-color:#086fe3!important;
+}
+</style>
+
 </head>
 <body>
 <header>
@@ -386,7 +569,7 @@ h1,h2,h3{color:#071b63!important}
   <a href="index.html">⌂ Dashboard</a>
   <a href="programs.html">▣ Programs</a>
   <a href="geti-pay.html" class="on">▣ Payment Area</a>
-  <a href="my-payments.html">▤ My Payments</a>
+  <a href="my-payments.html" id="paymentNotificationsLink" href="javascript:void(0)" onclick="openPaymentNotifications(event)">🔔 Payments <span id="paymentNotifBadge" class="payment-notif-badge" hidden>0</span></a>
   <a href="student.html">● Student</a>
 </div>
 </header>
@@ -409,58 +592,83 @@ h1,h2,h3{color:#071b63!important}
   <div class="field">
     <label>Payer phone</label>
     <div class="input"><select id="countryCode" id="countryCode" aria-label="Country calling code">
-<option value="+261" selected>🇲🇬 Madagascar +261</option>
-<option value="+1">🇺🇸 United States +1</option>
-<option value="+1">🇨🇦 Canada +1</option>
-<option value="+33">🇫🇷 France +33</option>
-<option value="+44">🇬🇧 United Kingdom +44</option>
-<option value="+27">🇿🇦 South Africa +27</option>
-<option value="+230">🇲🇺 Mauritius +230</option>
-<option value="+262">🇷🇪 Réunion +262</option>
-<option value="+248">🇸🇨 Seychelles +248</option>
-<option value="+269">🇰🇲 Comoros +269</option>
-<option value="+254">🇰🇪 Kenya +254</option>
-<option value="+255">🇹🇿 Tanzania +255</option>
-<option value="+258">🇲🇿 Mozambique +258</option>
-<option value="+250">🇷🇼 Rwanda +250</option>
-<option value="+256">🇺🇬 Uganda +256</option>
-<option value="+243">🇨🇩 DR Congo +243</option>
-<option value="+242">🇨🇬 Congo +242</option>
-<option value="+237">🇨🇲 Cameroon +237</option>
-<option value="+225">🇨🇮 Côte d’Ivoire +225</option>
-<option value="+221">🇸🇳 Senegal +221</option>
-<option value="+233">🇬🇭 Ghana +233</option>
-<option value="+234">🇳🇬 Nigeria +234</option>
-<option value="+212">🇲🇦 Morocco +212</option>
-<option value="+213">🇩🇿 Algeria +213</option>
-<option value="+216">🇹🇳 Tunisia +216</option>
-<option value="+32">🇧🇪 Belgium +32</option>
-<option value="+41">🇨🇭 Switzerland +41</option>
-<option value="+49">🇩🇪 Germany +49</option>
-<option value="+39">🇮🇹 Italy +39</option>
-<option value="+34">🇪🇸 Spain +34</option>
-<option value="+351">🇵🇹 Portugal +351</option>
-<option value="+31">🇳🇱 Netherlands +31</option>
-<option value="+353">🇮🇪 Ireland +353</option>
-<option value="+61">🇦🇺 Australia +61</option>
-<option value="+64">🇳🇿 New Zealand +64</option>
-<option value="+91">🇮🇳 India +91</option>
-<option value="+86">🇨🇳 China +86</option>
-<option value="+81">🇯🇵 Japan +81</option>
-<option value="+82">🇰🇷 South Korea +82</option>
-<option value="+971">🇦🇪 UAE +971</option>
-<option value="+966">🇸🇦 Saudi Arabia +966</option>
-<option value="+974">🇶🇦 Qatar +974</option>
-<option value="+55">🇧🇷 Brazil +55</option>
+<option value="+261" selected>+261</option>
+<option value="+1">+1</option>
+<option value="+1">+1</option>
+<option value="+33">+33</option>
+<option value="+44">+44</option>
+<option value="+27">+27</option>
+<option value="+230">+230</option>
+<option value="+262">+262</option>
+<option value="+248">+248</option>
+<option value="+269">+269</option>
+<option value="+254">+254</option>
+<option value="+255">+255</option>
+<option value="+258">+258</option>
+<option value="+250">+250</option>
+<option value="+256">+256</option>
+<option value="+243">+243</option>
+<option value="+242">+242</option>
+<option value="+237">+237</option>
+<option value="+225">+225</option>
+<option value="+221">+221</option>
+<option value="+233">+233</option>
+<option value="+234">+234</option>
+<option value="+212">+212</option>
+<option value="+213">+213</option>
+<option value="+216">+216</option>
+<option value="+32">+32</option>
+<option value="+41">+41</option>
+<option value="+49">+49</option>
+<option value="+39">+39</option>
+<option value="+34">+34</option>
+<option value="+351">+351</option>
+<option value="+31">+31</option>
+<option value="+353">+353</option>
+<option value="+61">+61</option>
+<option value="+64">+64</option>
+<option value="+91">+91</option>
+<option value="+86">+86</option>
+<option value="+81">+81</option>
+<option value="+82">+82</option>
+<option value="+971">+971</option>
+<option value="+966">+966</option>
+<option value="+974">+974</option>
+<option value="+55">+55</option>
 </select><input id="payerPhone" type="tel" placeholder="Enter phone number" autocomplete="tel"></div>
     <div class="hint">Use the phone number associated with your payment account when applicable.</div>
   </div>
 </div>
 <div id="mobileForm" class="form">
-  <div class="field">
+  <div class="geti-motif-exam-row">
+<div class="field">
     <label>Payment purpose / Motif *</label>
     <select id="paymentMotif" onchange="updatePaymentProduct()"><option data-product="30 Hours" data-usd="2" data-bulk="0">30 Hours — $2</option><option data-product="40 Hours" data-usd="3" data-bulk="0">40 Hours — $3</option><option data-product="50 Hours" data-usd="4" data-bulk="0">50 Hours — $4</option><option data-product="60 Hours" data-usd="5" data-bulk="0">60 Hours — $5</option><option data-product="80 Hours" data-usd="6" data-bulk="0">80 Hours — $6</option><option data-product="100 Hours" data-usd="7" data-bulk="0">100 Hours — $7</option><option data-product="120 Hours" data-usd="8" data-bulk="0">120 Hours — $8</option><option data-product="140 Hours" data-usd="9" data-bulk="0">140 Hours — $9</option><option data-product="150 Hours" data-usd="10" data-bulk="0">150 Hours — $10</option><option data-product="168 Hours" data-usd="11" data-bulk="0">168 Hours — $11</option><option data-product="180 Hours" data-usd="12" data-bulk="0">180 Hours — $12</option><option data-product="200 Hours" data-usd="13" data-bulk="0">200 Hours — $13</option><option data-product="250 Hours" data-usd="14" data-bulk="0">250 Hours — $14</option><option data-product="300 Hours" data-usd="15" data-bulk="0">300 Hours — $15</option><option data-product="420 Hours" data-usd="16" data-bulk="0">420 Hours — $16</option><option data-product="Premium Course + Certificate — 20–168 Hours" data-usd="25" data-bulk="0">Premium Course + Certificate — 20–168 Hours — $25</option><option data-product="Premium Course + Certificate — 180–420 Hours" data-usd="40" data-bulk="0">Premium Course + Certificate — 180–420 Hours — $40</option><option data-product="Blucks" data-usd="5" data-bulk="1">Blucks — $5 per student (minimum 5 students)</option></select>
     <div class="hint">Choose the service you want to pay for. The price is filled automatically.</div>
+
+<div class="field geti-exam-field">
+  <label for="examChoice">Exam</label>
+  <select id="examChoice" name="exam_choice">
+    <option value="" selected>Choose an exam</option>
+    <option value="TEFL Exam">TEFL Exam</option>
+<option value="TESOL Exam">TESOL Exam</option>
+<option value="TEYL Exam">TEYL Exam</option>
+<option value="English Proficiency Exam">English Proficiency Exam</option>
+<option value="Expert Exam">Expert Exam</option>
+<option value="TESL – Teaching English as a Second Language Exam">TESL – Teaching English as a Second Language Exam</option>
+<option value="TEAL">TEAL</option>
+<option value="Tour Guide Formation Exam">Tour Guide Formation Exam</option>
+<option value="International Cuisine Exam">International Cuisine Exam</option>
+<option value="Digital Marketing Exam">Digital Marketing Exam</option>
+<option value="Tourism Exam">Tourism Exam</option>
+<option value="Computer Science Exam">Computer Science Exam</option>
+<option value="Leadership Exam">Leadership Exam</option>
+<option value="Entrepreneurship Exam">Entrepreneurship Exam</option>
+  </select>
+  <div class="hint">Select the exam concerned by your payment.</div>
+</div>
+
+</div>
   </div>
   <div class="field" id="bulkStudentsField" style="display:none">
     <label>Number of students *</label>
@@ -705,4 +913,70 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 </script>
+
+<div id="paymentNotifModal" class="payment-notif-modal" hidden>
+  <div class="payment-notif-backdrop" onclick="closePaymentNotifications()"></div>
+  <section class="payment-notif-panel" role="dialog" aria-modal="true" aria-labelledby="paymentNotifTitle">
+    <div class="payment-notif-head">
+      <div><strong id="paymentNotifTitle">🔔 Payment Notifications</strong><small>Your latest GETI payment activity</small></div>
+      <button type="button" onclick="closePaymentNotifications()" aria-label="Close">×</button>
+    </div>
+    <div id="paymentNotifIdentity" class="payment-notif-identity"></div>
+    <div id="paymentNotifList" class="payment-notif-list"><div class="payment-notif-empty">Loading payments…</div></div>
+  </section>
+</div>
+
+
+<script id="payment-notifications-script">
+const PAYMENT_NOTIFICATION_URL = "https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-zopayo-payment";
+
+function getiPayerEmail(){
+  const el = document.querySelector('input[type="email"], #payerEmail, [name="email"]');
+  return (el?.value || localStorage.getItem("geti_payer_email") || "").trim().toLowerCase();
+}
+function getiStudentId(){
+  return (window.ORDER?.student_id || localStorage.getItem("geti_student_id") || "").trim();
+}
+function rememberPaymentIdentity(){
+  const e=getiPayerEmail(); const s=getiStudentId();
+  if(e) localStorage.setItem("geti_payer_email",e);
+  if(s) localStorage.setItem("geti_student_id",s);
+}
+async function fetchPaymentNotifications(){
+  rememberPaymentIdentity();
+  const email=getiPayerEmail(), student_id=getiStudentId();
+  if(!email && !student_id) return [];
+  const r=await fetch(PAYMENT_NOTIFICATION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"notifications",email,student_id})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.error||"Unable to load payments.");
+  return j.payments||[];
+}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function fmtMoney(v,c){return new Intl.NumberFormat("en-US",{maximumFractionDigits:2}).format(Number(v||0))+" "+esc(c||"")}
+function fmtDate(v){if(!v)return "";try{return new Date(v).toLocaleString()}catch{return v}}
+function renderPaymentNotifications(items){
+  const list=document.getElementById("paymentNotifList"), badge=document.getElementById("paymentNotifBadge");
+  const active=items.filter(x=>["PAID","PENDING","FAILED","REVIEW"].includes(String(x.status).toUpperCase())).length;
+  if(active){badge.textContent=String(active);badge.hidden=false}else badge.hidden=true;
+  if(!items.length){list.innerHTML='<div class="payment-notif-empty">No payment notification yet.</div>';return}
+  list.innerHTML=items.map(p=>{
+    const st=String(p.status||"PENDING").toUpperCase();
+    return `<div class="payment-notif-item"><div class="payment-notif-row"><span class="payment-notif-product">${esc(p.product||"GETI payment")}</span><span class="payment-notif-amount">${fmtMoney(p.amount,p.currency)}</span></div><span class="payment-status status-${esc(st)}">${esc(st)}</span><div class="payment-notif-meta">Reference: ${esc(p.relation_id)}<br>${esc(fmtDate(p.paid_at||p.created_at))}</div></div>`
+  }).join("");
+}
+async function refreshPaymentNotificationBadge(){
+  try{renderPaymentNotifications(await fetchPaymentNotifications())}catch(e){}
+}
+async function openPaymentNotifications(ev){
+  if(ev)ev.preventDefault();
+  const modal=document.getElementById("paymentNotifModal"), list=document.getElementById("paymentNotifList"), ident=document.getElementById("paymentNotifIdentity");
+  modal.hidden=false; list.innerHTML='<div class="payment-notif-empty">Loading payments…</div>';
+  const email=getiPayerEmail(), sid=getiStudentId();
+  ident.textContent=email ? `Payments for ${email}` : (sid ? `Student ID: ${sid}` : "Enter your payer email first to see your payments.");
+  try{renderPaymentNotifications(await fetchPaymentNotifications())}catch(e){list.innerHTML=`<div class="payment-notif-empty">${esc(e.message)}</div>`}
+}
+function closePaymentNotifications(){document.getElementById("paymentNotifModal").hidden=true}
+document.addEventListener("DOMContentLoaded",()=>{refreshPaymentNotificationBadge();setInterval(refreshPaymentNotificationBadge,30000)});
+</script>
+
 </body></html>
