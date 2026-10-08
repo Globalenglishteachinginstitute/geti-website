@@ -1540,6 +1540,9 @@
       border-radius: 50%;
     }
 .dashboard-action-btn{border:1px solid #2563eb;background:#eff6ff;color:#174b9b;border-radius:9px;padding:9px 13px;font:inherit;font-weight:700;cursor:pointer;max-width:100%;overflow-wrap:anywhere;text-align:left}.dashboard-action-btn:hover{background:#dbeafe}.dashboard-action-btn:focus-visible{outline:3px solid #facc15;outline-offset:2px}
+
+    #sideMenu .geti-menu-admin { display:block; width:100%; text-align:left; padding:12px 16px; font:inherit; font-weight:700; background:transparent; color:inherit; border:0; cursor:pointer; border-radius:8px; }
+    #sideMenu .geti-menu-admin:hover, #sideMenu .geti-menu-admin:focus-visible { background:#eaf2ff; color:#1556a0; }
 </style>
 <style>
 .geti-cert-card{margin:22px 0;padding:25px;border:1px solid #c9dcf6;border-radius:18px;background:linear-gradient(125deg,#eff6ff,#fff);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;box-shadow:0 8px 24px #173b7412}
@@ -1548,6 +1551,15 @@
 </head>
 
 <body>
+<div id="getiReturningPanel" style="position:relative;z-index:3;max-width:900px;margin:16px auto;padding:15px;border:1px solid #b9d4f5;border-radius:12px;background:#f0f7ff;color:#164276">
+<strong>Already a GETI Collaboration member?</strong>
+<p style="margin:6px 0">You do not need to register again. Sign in to your GETI account to open your existing Collaboration Area.</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<input id="getiReturningEmail" type="email" placeholder="Your GETI email" style="padding:10px;flex:1;min-width:180px;border:1px solid #aac5e8;border-radius:8px">
+<button id="getiReturningSignIn" type="button" style="padding:10px;background:#0759ac;color:white;border:0;border-radius:8px">Send sign-in link</button>
+<button id="getiReturningOpen" type="button" style="padding:10px;background:#08786d;color:white;border:0;border-radius:8px">Open My Collaboration Area</button>
+</div><p id="getiReturningStatus" style="font-size:13px;margin:8px 0 0"></p></div>
+
 
 <header class="site-header">
 
@@ -1634,6 +1646,8 @@
         Main Website
       </a>
 
+      <button id="getiAdminBtn" type="button" title="GETI administration" class="geti-menu-admin">ADMIN</button>
+
     </div>
 
   </div>
@@ -1703,6 +1717,17 @@
       <!-- =================================================
            STEP 1
       ================================================= -->
+
+      <section class="geti-welcome-intro" aria-label="Welcome to GETI" style="margin:0 0 30px;padding:clamp(22px,4vw,38px);border-radius:20px;background:linear-gradient(135deg,#edf5ff 0%,#ffffff 65%);border:1px solid #cddff6;box-shadow:0 12px 30px rgba(10,58,116,.07);color:#163b68;line-height:1.7;">
+        <div style="display:inline-block;background:#0b56a3;color:#fff;padding:5px 15px;border-radius:999px;font-weight:800;font-size:13px;letter-spacing:.09em;margin-bottom:12px;">WELCOME TO GETI</div>
+        <h2 style="font-size:clamp(23px,3vw,34px);line-height:1.2;margin:4px 0 8px;color:#0b3873;">Global English Teaching Institute</h2>
+        <p style="font-weight:750;color:#a06a08;font-size:clamp(14px,1.7vw,17px);margin:0 0 18px;">Keep Learning. Keep Growing. English Opens Opportunities.</p>
+        <p>Welcome to GETI, your online platform for English learning, professional examinations, skills assessment, and international certification.</p>
+        <p>GETI provides students, teachers, schools, and educational institutions with opportunities to demonstrate their knowledge and obtain various certificates.</p>
+        <p>Our platform offers online tests, English proficiency examinations, TEFL, TESOL, TEYL, and other certification programs.</p>
+        <p>Every GETI certificate includes a <strong>unique verification code and QR code</strong>, allowing institutions and employers to verify its authenticity online.</p>
+        <p style="margin-bottom:0;">Whether you are a student, teacher, or educational partner, GETI is ready to support your educational journey.</p>
+      </section>
 
       <section id="step1">
 
@@ -2225,16 +2250,12 @@
             >
               Clear Signature
             </button>
-
-            <div style="width:100%;display:flex;justify-content:flex-end;margin:0 0 9px;">
-              <button id="getiAdminBtn" type="button" title="GETI administration" style="padding:5px 13px;font-size:11px;font-weight:700;letter-spacing:.7px;border:1px solid #1d4f91;background:#f1f6ff;color:#17467e;border-radius:7px;cursor:pointer;">ADMIN</button>
-            </div>
             <button
               id="submitDossierBtn"
               type="button"
               class="btn"
             >
-              Submit Signed Dossier $5
+              Submit Signed Dossier <span id="getiCollabSubmitPrice">$5.00</span>
             </button>
 
           </div>
@@ -3272,6 +3293,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let registrationId = "";
 
+  // Existing GETI members can return directly to their Collaboration Area.
+  window.getiRestoreCollaboration = function(record) {
+    if (!record || !record.id || !record.registration_id) return false;
+    registrationId = record.registration_id;
+    const d=record.application_data||{};
+    const values={name:record.full_name,email:record.email,phone:record.phone,
+      organization:record.organization,reason:d.reason,role:d.role,address:d.address,
+      country:d.country,proposal:d.proposal,project:d.project,startDate:d.startDate,additional:d.additional};
+    for(const [id,value] of Object.entries(values)){
+      const el=document.getElementById(id);
+      if(el && value!=null)el.value=value;
+    }
+    window.GETI_COLLABORATION_PAYMENT_VERIFIED=true;
+    document.getElementById("continueAreaBtn").click();
+    const status=document.getElementById("getiReturningStatus");
+    if(status)status.textContent="Welcome back. Your existing Collaboration Area has been restored.";
+    return true;
+  };
+
+
   let selectedTypeText = "";
 
   let hasSignature = false;
@@ -4270,6 +4311,7 @@ document.getElementById("getiCertificateOrder").addEventListener("submit",event=
 <dialog id="getiAdminWelcomeDialog" style="width:min(96vw,1060px);max-height:90vh;border:0;border-radius:18px;padding:0;box-shadow:0 25px 90px #0005;color:#152b4c">
 <div style="background:linear-gradient(110deg,#083a83,#1262bc);color:white;padding:22px 26px;display:flex;align-items:center;justify-content:space-between;gap:12px">
 <div><h2 style="margin:0;font-size:23px">GETI Collaboration — Admin Area</h2><div style="opacity:.85;margin-top:5px">Application and certificate order management</div></div>
+<button type="button" id="adminOpenCollaborationArea" style="background:#f5c542;border:0;border-radius:9px;padding:10px 16px;color:#17365e;font-weight:700;cursor:pointer">↗ Collaboration Area</button>
 <button type="button" id="adminLogout" style="background:white;border:0;border-radius:9px;padding:10px 16px;color:#083a83;font-weight:700;cursor:pointer">Log out</button></div>
 <div style="padding:22px;max-height:72vh;overflow:auto">
 <p style="background:#fff6df;padding:12px;border-radius:9px;font-size:13px">Local administration preview: records entered in this browser only. This panel is not connected to GETI's server, and does not verify Zopayo payments.</p>
@@ -4282,6 +4324,7 @@ document.getElementById("getiCertificateOrder").addEventListener("submit",event=
 </div>
 <div style="display:flex;flex-wrap:wrap;gap:10px;margin:20px 0">
 <button type="button" id="adminPriceButton" style="background:#0754a6;color:white;border:0;border-radius:9px;padding:12px;cursor:pointer">✎ Modify Certificate Price</button>
+<button type="button" id="adminCollabPriceButton" style="background:#7552a5;color:white;border:0;border-radius:9px;padding:12px;cursor:pointer">✎ Modify Collaboration Price</button>
 <button type="button" id="adminDeleteButton" style="background:#b42332;color:white;border:0;border-radius:9px;padding:12px;cursor:pointer">🗑 Delete Collaboration</button>
 <button type="button" id="adminMessagesButton" style="background:#086a73;color:white;border:0;border-radius:9px;padding:12px;cursor:pointer">✉ Client Messages</button>
 </div>
@@ -4289,6 +4332,15 @@ document.getElementById("getiCertificateOrder").addEventListener("submit",event=
 <h3>Certificate price settings</h3><label>Price per certificate (USD) <input id="adminCertificatePrice" type="number" min="0.01" max="10000" step="0.01" value="4.50" style="padding:10px;border:1px solid #bccbe0;border-radius:8px"></label>
 <button type="button" id="adminSaveCertificatePrice" style="padding:10px;background:#0754a6;color:white;border:0;border-radius:8px">Save price</button>
 <p style="font-size:12px;color:#79550b">This changes the price displayed in this browser only. It does not update the Zopayo server price.</p></section>
+<section id="adminCollabPriceSection" hidden style="border:1px solid #d7c7ec;padding:16px;border-radius:12px;margin:10px 0">
+<h3>Collaboration Dossier Price</h3>
+<p>Price shown on the <strong>Submit Signed Dossier</strong> button.</p>
+<label>Collaboration price (USD)
+<input id="adminCollabPriceInput" type="number" min="0.01" max="10000" step="0.01" value="5.00" style="padding:10px;border:1px solid #bccbe0;border-radius:8px">
+</label>
+<button id="adminCollabPriceSave" type="button" style="padding:10px;background:#7552a5;color:white;border:0;border-radius:8px">Save Collaboration Price</button>
+<p style="font-size:12px;color:#8a5200">Display-only setting in this browser. The Zopayo payment backend still charges its configured amount; update the server before accepting payments at a new price.</p>
+</section>
 <section id="adminDeleteSection" hidden style="border:1px solid #efc8c8;padding:16px;border-radius:12px;margin:10px 0">
 <h3>Delete collaboration</h3><p>Select an application below and use its Delete button, or remove all local applications.</p>
 <button type="button" id="adminDeleteAll" style="padding:10px;background:#b42332;color:white;border:0;border-radius:8px">Delete all local applications</button></section>
@@ -4501,5 +4553,81 @@ $("adminRefresh")?.addEventListener("click",adminDossiers);
 $("adminDossierRefresh")?.addEventListener("click",adminDossiers);
 $("adminDossierSave")?.addEventListener("click",async()=>{try{await window.getiSaveDossierToServer();alert("Dossier and PDF saved to GETI server.");adminDossiers()}catch(e){alert(e.message)}});
 })();
-</script></body>
+</script><script>
+(function(){
+const $=id=>document.getElementById(id);
+const url="https://syawyulrelrhjprnxdyn.supabase.co",key="sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8";
+const client=()=>window.getiDossierSupabase||(window.getiDossierSupabase=window.supabase.createClient(url,key,{auth:{persistSession:true,autoRefreshToken:true}}));
+async function restore(){
+ const status=$("getiReturningStatus");
+ try{
+  const {data:{user}}=await client().auth.getUser();
+  if(!user){status.textContent="Sign in first using the email linked to your collaboration dossier.";return}
+  const {data,error}=await client().from("collaboration_applications")
+    .select("id,registration_id,full_name,email,phone,organization,application_data,application_status,account_status")
+    .eq("owner_id",user.id).order("created_at",{ascending:false}).limit(1);
+  if(error)throw Error(error.message);
+  if(!data?.length){status.textContent="No active collaboration dossier found. If an administrator deleted your dossier, you must register again.";return}
+  if(data[0].account_status==="deactivated"){status.textContent="Your collaboration account is deactivated. Contact GETI.";return}
+  if(window.getiRestoreCollaboration?.(data[0])){
+    sessionStorage.setItem("geti_collaboration_restored_id",data[0].id);
+  }else status.textContent="Could not restore the Collaboration Area.";
+ }catch(e){status.textContent="Connection problem: "+e.message}
+}
+$("getiReturningOpen").onclick=restore;
+$("getiReturningSignIn").onclick=async()=>{
+ const email=$("getiReturningEmail").value.trim();
+ if(!email||!$("getiReturningEmail").checkValidity()){alert("Enter a valid email.");return}
+ const {error}=await client().auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname}});
+ $("getiReturningStatus").textContent=error?error.message:"Check your email for the secure sign-in link.";
+};
+window.addEventListener("load",async()=>{
+ if(!window.supabase?.createClient)return;
+ const {data:{session}}=await client().auth.getSession();
+ if(session)await restore();
+});
+})();
+</script><script>
+(function(){
+ const KEY="geti_collaboration_price_usd";
+ const $=id=>document.getElementById(id);
+ const current=()=>Number(localStorage.getItem(KEY)||"5");
+ const display=()=>{const p=$("getiCollabSubmitPrice");if(p)p.textContent="$"+current().toFixed(2)};
+ $("adminCollabPriceButton").addEventListener("click",()=>{
+   for(const id of ["adminPriceSection","adminDeleteSection","adminMessagesSection"])if($(id))$(id).hidden=true;
+   $("adminCollabPriceSection").hidden=false;
+   $("adminCollabPriceInput").value=current().toFixed(2);
+ });
+ $("adminCollabPriceSave").addEventListener("click",()=>{
+   const v=Number($("adminCollabPriceInput").value);
+   if(!Number.isFinite(v)||v<=0||v>10000){alert("Enter a valid price.");return}
+   localStorage.setItem(KEY,v.toFixed(2));display();
+   alert("Displayed collaboration price saved: $"+v.toFixed(2)+". The Zopayo server price has NOT changed.");
+ });
+ // Prevent a misleading checkout when displayed price differs from fixed server amount.
+ $("submitDossierBtn")?.addEventListener("click",event=>{
+   if(Math.abs(current()-5)>0.001){
+     event.stopImmediatePropagation();
+     event.preventDefault();
+     alert("The collaboration price was changed locally, but Zopayo is still configured for $5. Contact the administrator to synchronize the payment backend.");
+   }
+ },true);
+ display();
+})();
+</script><script>
+(function(){
+ const btn=document.getElementById('adminOpenCollaborationArea');
+ btn?.addEventListener('click',function(){
+   document.getElementById('getiAdminWelcomeDialog')?.close();
+   const area=document.getElementById('collaborationArea');
+   if(!area){alert('Collaboration Area not found.');return;}
+   // Navigation for admin preview; does not mark a payment as completed.
+   for(const id of ['step1','step2','step3','step4']) document.getElementById(id)?.classList.add('hidden');
+   area.classList.remove('hidden');
+   area.style.display='';
+   area.scrollIntoView({behavior:'smooth',block:'start'});
+ });
+})();
+</script>
+</body>
 </html>
