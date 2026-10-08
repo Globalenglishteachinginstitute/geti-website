@@ -1541,6 +1541,10 @@
     }
 .dashboard-action-btn{border:1px solid #2563eb;background:#eff6ff;color:#174b9b;border-radius:9px;padding:9px 13px;font:inherit;font-weight:700;cursor:pointer;max-width:100%;overflow-wrap:anywhere;text-align:left}.dashboard-action-btn:hover{background:#dbeafe}.dashboard-action-btn:focus-visible{outline:3px solid #facc15;outline-offset:2px}
 </style>
+<style>
+.geti-cert-card{margin:22px 0;padding:25px;border:1px solid #c9dcf6;border-radius:18px;background:linear-gradient(125deg,#eff6ff,#fff);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;box-shadow:0 8px 24px #173b7412}
+.geti-cert-card h3{margin:0 0 8px;color:#143b76;font-size:21px}.geti-cert-card p{margin:0;color:#53647c;line-height:1.5}.geti-cert-btn{border:0;border-radius:12px;background:#1456b8;color:#fff;padding:15px 23px;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 6px 14px #1456b830}.geti-cert-btn:hover{background:#0b3c8c}.geti-cert-dialog{border:0;border-radius:18px;padding:28px;max-width:440px;width:calc(100% - 32px);box-shadow:0 20px 65px #0a204055}.geti-cert-dialog::backdrop{background:#071a34a8}.geti-cert-dialog h3{color:#143b76;margin-top:0}.geti-cert-dialog p{line-height:1.6;color:#44546c}.geti-cert-dialog button{border:0;background:#1456b8;color:white;padding:11px 20px;border-radius:9px;cursor:pointer}
+</style>
 </head>
 
 <body>
@@ -2222,6 +2226,9 @@
               Clear Signature
             </button>
 
+            <div style="width:100%;display:flex;justify-content:flex-end;margin:0 0 9px;">
+              <button id="getiAdminBtn" type="button" title="GETI administration" style="padding:5px 13px;font-size:11px;font-weight:700;letter-spacing:.7px;border:1px solid #1d4f91;background:#f1f6ff;color:#17467e;border-radius:7px;cursor:pointer;">ADMIN</button>
+            </div>
             <button
               id="submitDossierBtn"
               type="button"
@@ -2542,7 +2549,11 @@
 
               </div>
 
-              <div class="info-panel">
+              <div class="geti-cert-card" aria-label="Collaboration certificate">
+<div><h3>🏅 GETI Collaboration Certificate</h3><p>Access your collaboration certificate after your application has been approved by GETI.</p></div>
+<button type="button" id="getCollaborationCertificate" class="geti-cert-btn">🏅 Get Certificate</button>
+</div>
+<div class="info-panel">
 
                 <h3>
                   Application Progress
@@ -3185,9 +3196,11 @@ document.addEventListener("DOMContentLoaded", function () {
     try{doc.addImage(document.getElementById('signatureCanvas').toDataURL('image/png'),'PNG',left,y,90,35);y+=40}catch(e){item('Signature','Not available')}
     item('Application Status','Pending Review');
     const filename=(registrationId||'GETI-COLLABORATION')+'-dossier.pdf';
+    if(download==='blob') return doc.output('blob');
     if(download){doc.save(filename);status.textContent='PDF downloaded.';return;}
     const frame=document.getElementById('dossierPdfFrame');if(frame.dataset.blobUrl)URL.revokeObjectURL(frame.dataset.blobUrl);const url=URL.createObjectURL(doc.output('blob'));frame.dataset.blobUrl=url;frame.src=url;frame.style.display='block';status.textContent='Your dossier PDF is ready.';
   }
+  window.getiCreateDossierPdfBlob=()=>generateApplicantDossier('blob');
   document.getElementById('viewOfficialDossier')?.addEventListener('click',()=>generateApplicantDossier(false));
   document.getElementById('downloadOfficialDossier')?.addEventListener('click',()=>generateApplicantDossier(true));
 
@@ -4182,7 +4195,12 @@ function drawBadge(){
       document.body.style.overflow="";
       document.getElementById("getiVerifyStatus").textContent="Payment verified. Opening Collaboration Area…";
       window.GETI_COLLABORATION_PAYMENT_VERIFIED=true;
-      document.getElementById("continueAreaBtn")?.click();
+      try {
+        await window.getiSaveDossierToServer?.();
+        document.getElementById("continueAreaBtn")?.click();
+      } catch(err) {
+        alert("Payment verified, but the dossier could not be saved. Please sign in and retry saving: "+err.message);
+      }
     }
     if(p?.status==="FAILED"){
       clearInterval(timer);timer=null;
@@ -4192,6 +4210,296 @@ function drawBadge(){
    finally{busy=false;}
   },5000);
  });
+})();
+</script><dialog id="getiCertificateDialog" class="geti-cert-dialog" aria-labelledby="getiCertificateTitle" style="width:min(94vw,510px);border:0;border-radius:18px;padding:28px;box-shadow:0 20px 65px #10264b55">
+<h3 id="getiCertificateTitle" style="color:#0b4ea2;margin:0 0 10px">🏅 Welcome Certificate</h3>
+<p style="color:#475569">Certificate fee: <strong>$4.50 per student</strong></p>
+<form id="getiCertificateOrder" style="display:grid;gap:15px">
+<label style="display:grid;gap:6px">Center / School / Club Name <input id="certCenter" required maxlength="160" placeholder="Enter institution name" style="padding:12px;border:1px solid #cbd5e1;border-radius:9px"></label>
+<label style="display:grid;gap:6px">Director Name <input id="certDirector" required maxlength="160" placeholder="Enter director name" style="padding:12px;border:1px solid #cbd5e1;border-radius:9px"></label>
+<label style="display:grid;gap:6px">Number of Certificates <input id="certQuantity" type="number" min="1" max="1000" step="1" value="2" required style="padding:12px;border:1px solid #cbd5e1;border-radius:9px"></label>
+<div style="display:flex;justify-content:space-between;background:#eff6ff;padding:14px;border-radius:10px"><span>Total: <strong id="certTotal">$9.00</strong></span><span><span id="certUnitLabel">$4.50</span> × <span id="certQtyLabel">2</span></span></div>
+<button type="submit" id="certSubmit" style="border:0;border-radius:10px;background:#0b4ea2;color:white;font-weight:700;padding:14px">Submit $9.00</button>
+<button type="button" id="closeGetiCertificateDialog" style="border:1px solid #cbd5e1;border-radius:10px;background:white;padding:10px">Cancel</button>
+</form>
+<p id="certPaymentNotice" role="status" style="font-size:12px;color:#64748b">The final amount must be confirmed by GETI's payment server before payment.</p>
+</dialog>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+const dialog=document.getElementById("getiCertificateDialog");
+const qty=document.getElementById("certQuantity");
+const money=n=>"$"+n.toFixed(2);
+const certUnitPrice=()=>Number(localStorage.getItem("geti_certificate_unit_usd")||"4.5");
+const refresh=()=>{
+ const n=Number(qty.value);
+ const valid=Number.isSafeInteger(n)&&n>=1&&n<=1000;
+ const amount=valid?n*certUnitPrice():0;
+ document.getElementById("certTotal").textContent=money(amount);
+ document.getElementById("certQtyLabel").textContent=valid?n:"—";
+ document.getElementById("certUnitLabel")&&(document.getElementById("certUnitLabel").textContent=money(certUnitPrice()));
+ document.getElementById("certSubmit").textContent="Submit "+money(amount);
+ document.getElementById("certSubmit").disabled=!valid;
+};
+qty.addEventListener("input",refresh);
+document.getElementById("getCollaborationCertificate")?.addEventListener("click",()=>{refresh();dialog.showModal();});
+document.getElementById("closeGetiCertificateDialog").addEventListener("click",()=>dialog.close());
+document.getElementById("getiCertificateOrder").addEventListener("submit",event=>{
+ event.preventDefault();refresh();
+ const n=Number(qty.value);
+ if(!Number.isSafeInteger(n)||n<1||n>1000)return;
+ const order={purpose:"welcome_certificate",center:document.getElementById("certCenter").value.trim(),director:document.getElementById("certDirector").value.trim(),quantity:n,unit_usd:certUnitPrice(),total_usd:n*certUnitPrice()};
+ if(!order.center||!order.director)return;
+ sessionStorage.setItem("geti_certificate_order",JSON.stringify(order));
+ dialog.close();
+ window.openGetiEmbeddedPayment();
+ document.getElementById("certPaymentNotice").textContent="Please verify the exact certificate total on the payment page before paying.";
+});
+});
+</script>
+<dialog id="getiAdminLoginDialog" style="width:min(92vw,390px);border:0;border-radius:16px;padding:26px;box-shadow:0 20px 60px #0004">
+ <h3 style="color:#17467e;margin-top:0">GETI Administration</h3>
+ <p>Enter the administrator password to continue.</p>
+ <form id="getiAdminLoginForm" style="display:grid;gap:12px">
+  <label for="getiAdminPassword">Admin password</label>
+  <input id="getiAdminPassword" type="password" required autocomplete="off" style="padding:12px;border:1px solid #b8c7d9;border-radius:8px">
+  <p id="getiAdminError" role="alert" style="color:#c52222;margin:0"></p>
+  <button type="submit" style="background:#17467e;color:white;border:0;border-radius:8px;padding:12px;cursor:pointer">Log in</button>
+  <button type="button" onclick="document.getElementById('getiAdminLoginDialog').close()" style="background:white;border:1px solid #b8c7d9;border-radius:8px;padding:10px;cursor:pointer">Cancel</button>
+ </form>
+</dialog>
+<dialog id="getiAdminWelcomeDialog" style="width:min(96vw,1060px);max-height:90vh;border:0;border-radius:18px;padding:0;box-shadow:0 25px 90px #0005;color:#152b4c">
+<div style="background:linear-gradient(110deg,#083a83,#1262bc);color:white;padding:22px 26px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+<div><h2 style="margin:0;font-size:23px">GETI Collaboration — Admin Area</h2><div style="opacity:.85;margin-top:5px">Application and certificate order management</div></div>
+<button type="button" id="adminLogout" style="background:white;border:0;border-radius:9px;padding:10px 16px;color:#083a83;font-weight:700;cursor:pointer">Log out</button></div>
+<div style="padding:22px;max-height:72vh;overflow:auto">
+<p style="background:#fff6df;padding:12px;border-radius:9px;font-size:13px">Local administration preview: records entered in this browser only. This panel is not connected to GETI's server, and does not verify Zopayo payments.</p>
+<div id="getiAdminMetrics" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0"></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin:12px 0">
+<button id="adminAddCurrent" type="button" style="padding:10px;border:0;border-radius:8px;background:#125eb4;color:white;cursor:pointer">Add current dossier</button>
+<button id="adminRefresh" type="button" style="padding:10px;border:1px solid #b7c9df;border-radius:8px;background:white;cursor:pointer">Refresh</button>
+<button id="adminExport" type="button" style="padding:10px;border:1px solid #b7c9df;border-radius:8px;background:white;cursor:pointer">Export CSV</button>
+<input id="adminSearch" placeholder="Search name, ID or institution" style="flex:1;min-width:210px;padding:10px;border:1px solid #b7c9df;border-radius:8px">
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:10px;margin:20px 0">
+<button type="button" id="adminPriceButton" style="background:#0754a6;color:white;border:0;border-radius:9px;padding:12px;cursor:pointer">✎ Modify Certificate Price</button>
+<button type="button" id="adminDeleteButton" style="background:#b42332;color:white;border:0;border-radius:9px;padding:12px;cursor:pointer">🗑 Delete Collaboration</button>
+<button type="button" id="adminMessagesButton" style="background:#086a73;color:white;border:0;border-radius:9px;padding:12px;cursor:pointer">✉ Client Messages</button>
+</div>
+<section id="adminPriceSection" hidden style="border:1px solid #c9dcf6;padding:16px;border-radius:12px;margin:10px 0">
+<h3>Certificate price settings</h3><label>Price per certificate (USD) <input id="adminCertificatePrice" type="number" min="0.01" max="10000" step="0.01" value="4.50" style="padding:10px;border:1px solid #bccbe0;border-radius:8px"></label>
+<button type="button" id="adminSaveCertificatePrice" style="padding:10px;background:#0754a6;color:white;border:0;border-radius:8px">Save price</button>
+<p style="font-size:12px;color:#79550b">This changes the price displayed in this browser only. It does not update the Zopayo server price.</p></section>
+<section id="adminDeleteSection" hidden style="border:1px solid #efc8c8;padding:16px;border-radius:12px;margin:10px 0">
+<h3>Delete collaboration</h3><p>Select an application below and use its Delete button, or remove all local applications.</p>
+<button type="button" id="adminDeleteAll" style="padding:10px;background:#b42332;color:white;border:0;border-radius:8px">Delete all local applications</button></section>
+<section id="adminMessagesSection" hidden style="border:1px solid #c9dcf6;padding:16px;border-radius:12px;margin:10px 0">
+<h3>Client messages</h3><p style="font-size:12px">Messages are saved locally in this browser, not delivered to clients. Use the email option to send via your mail application.</p>
+<label>Client name <input id="adminMessageName" placeholder="Client name" style="padding:10px;border:1px solid #bccbe0;border-radius:8px"></label>
+<label>Client email <input id="adminMessageEmail" type="email" placeholder="client@example.com" style="padding:10px;border:1px solid #bccbe0;border-radius:8px"></label>
+<textarea id="adminMessageText" placeholder="Write your message..." rows="4" style="display:block;width:100%;margin:10px 0;padding:10px;border:1px solid #bccbe0;border-radius:8px"></textarea>
+<button type="button" id="adminSaveMessage" style="padding:10px;background:#086a73;color:white;border:0;border-radius:8px">Save message</button>
+<button type="button" id="adminEmailMessage" style="padding:10px;border:1px solid #bccbe0;border-radius:8px;background:white">Open email app</button>
+<div id="adminMessageHistory" style="margin-top:12px"></div></section>
+<section style="border:1px solid #d0def1;border-radius:12px;padding:16px;margin:20px 0">
+<h3>All Collaboration Dossiers — GETI Server</h3>
+<p id="adminDossierStatus">Sign in with an authorized GETI administrator account to view all submitted dossiers.</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+<button type="button" id="adminDossierRefresh" style="padding:10px;background:#0a53a0;color:white;border:0;border-radius:8px">Refresh Server Dossiers</button>
+<button type="button" id="adminDossierSave" style="padding:10px;background:#087b6e;color:white;border:0;border-radius:8px">Save Current Dossier + PDF</button>
+</div><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr><th>ID</th><th>Full Name</th><th>Email</th><th>Organization</th><th>Status</th><th>Date</th><th>PDF</th></tr></thead><tbody id="adminDossierRows"></tbody></table></div></section><h3 style="margin:20px 0 8px">Collaboration applications</h3>
+<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="background:#eaf2fd"><th style="padding:10px">Registration ID</th><th>Name</th><th>Organization</th><th>Status</th><th>Action</th></tr></thead><tbody id="adminApplications"></tbody></table></div>
+<h3 style="margin:25px 0 8px">Certificate orders</h3>
+<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="background:#eaf2fd"><th style="padding:10px">Center / School / Club</th><th>Director</th><th>Certificates</th><th>Total</th><th>Payment</th></tr></thead><tbody id="adminCertificateOrders"></tbody></table></div>
+</div></dialog>
+<script>
+document.getElementById("getiAdminBtn")?.addEventListener("click",function(){
+  document.getElementById("getiAdminPassword").value="";
+  document.getElementById("getiAdminError").textContent="";
+  document.getElementById("getiAdminLoginDialog").showModal();
+  document.getElementById("getiAdminPassword").focus();
+});
+document.getElementById("getiAdminLoginForm")?.addEventListener("submit",function(event){
+  event.preventDefault();
+  if(document.getElementById("getiAdminPassword").value === "global"){
+    document.getElementById("getiAdminLoginDialog").close();
+    document.getElementById("getiAdminWelcomeDialog").showModal();
+    window.getiAdminRefresh?.();
+  }else{
+    document.getElementById("getiAdminError").textContent="Incorrect password. Please try again.";
+    document.getElementById("getiAdminPassword").value="";
+  }
+});
+</script>
+<script>
+(function(){
+const KEY="geti_collaboration_admin_local_v1";
+const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch{return []}};
+const save=a=>localStorage.setItem(KEY,JSON.stringify(a));
+const el=id=>document.getElementById(id);
+const cell=(row,value)=>{const td=document.createElement("td");td.textContent=String(value??"");td.style.padding="10px";td.style.borderBottom="1px solid #dce7f4";row.appendChild(td);return td};
+const pick=(...ids)=>ids.map(id=>el(id)?.value||el(id)?.textContent||"").find(v=>v.trim())||"";
+function render(){
+const records=load(),search=el("adminSearch").value.toLowerCase();
+const orders=(()=>{try{const o=JSON.parse(sessionStorage.getItem("geti_certificate_order")||"null");return o?[o]:[]}catch{return []}})();
+el("getiAdminMetrics").replaceChildren();
+for(const [label,value] of [["Applications",records.length],["Pending",records.filter(r=>r.status==="Pending Review").length],["Approved",records.filter(r=>r.status==="Approved").length],["Certificate orders (session)",orders.length]]){
+const d=document.createElement("div");d.style.cssText="border:1px solid #dce7f4;border-radius:12px;padding:15px;background:#f5f9ff";
+const v=document.createElement("div");v.style.cssText="font-size:25px;font-weight:800;color:#0b4fa5";v.textContent=value;
+const t=document.createElement("div");t.style.cssText="font-size:12px;margin-top:4px";t.textContent=label;d.append(v,t);el("getiAdminMetrics").append(d);
+}
+const tbody=el("adminApplications");tbody.replaceChildren();
+for(const r of records.filter(x=>[x.id,x.name,x.organization].join(" ").toLowerCase().includes(search))){
+const tr=document.createElement("tr");cell(tr,r.id);cell(tr,r.name);cell(tr,r.organization);
+const td=document.createElement("td");td.style.padding="8px";const sel=document.createElement("select");sel.style.cssText="padding:7px;border:1px solid #cbd5e1;border-radius:7px";
+for(const status of ["Pending Review","Approved","Rejected"]){const opt=document.createElement("option");opt.value=status;opt.textContent=status;sel.append(opt)}sel.value=r.status;sel.addEventListener("change",()=>{r.status=sel.value;save(records);render()});td.append(sel);tr.append(td);
+const action=document.createElement("td");action.style.padding="8px";const del=document.createElement("button");del.textContent="Delete";del.style.cssText="padding:7px;border:1px solid #e0a0a0;border-radius:6px;background:white;color:#a22;cursor:pointer";del.onclick=()=>{if(confirm("Delete this local record?")){save(records.filter(x=>x.id!==r.id));render()}};action.append(del);tr.append(action);tbody.append(tr);
+}
+if(!tbody.children.length){const tr=document.createElement("tr");const td=cell(tr,"No local applications available");td.colSpan=5;tbody.append(tr)}
+const ct=el("adminCertificateOrders");ct.replaceChildren();
+for(const o of orders){const tr=document.createElement("tr");for(const val of [o.center,o.director,o.quantity,"$"+Number(o.total_usd||0).toFixed(2),"Not verified"])cell(tr,val);ct.append(tr)}
+if(!orders.length){const tr=document.createElement("tr");cell(tr,"No certificate orders in this session").colSpan=5;ct.append(tr)}
+}
+window.getiAdminRefresh=render;
+el("adminRefresh").addEventListener("click",render);
+el("adminSearch").addEventListener("input",render);
+el("adminLogout").addEventListener("click",()=>el("getiAdminWelcomeDialog").close());
+el("adminAddCurrent").addEventListener("click",()=>{
+const records=load();const id=pick("sidebarRegistrationId","dashboardRegistrationId")||"GETI-LOCAL-"+Date.now();
+if(records.some(r=>r.id===id)){alert("This dossier is already in the local admin list.");return}
+records.push({id,name:pick("profileName","firstName","fullName"),organization:pick("profileOrganization","orgName"),status:"Pending Review"});
+save(records);render();
+});
+el("adminExport").addEventListener("click",()=>{
+const rows=[["Registration ID","Name","Organization","Status"],...load().map(r=>[r.id,r.name,r.organization,r.status])];
+const csv=rows.map(r=>r.map(v=>'"'+String(v??"").replaceAll('"','""')+'"').join(",")).join("\r\n");
+const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff",csv],{type:"text/csv;charset=utf-8"}));a.download="geti-collaboration-local.csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+});
+})();
+</script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const PRICE_KEY="geti_certificate_unit_usd", MSG_KEY="geti_collaboration_admin_messages_v1";
+const show=id=>{for(const k of ["adminPriceSection","adminDeleteSection","adminMessagesSection"])$(k).hidden=k!==id;};
+$("adminPriceButton").onclick=()=>{show("adminPriceSection");$("adminCertificatePrice").value=localStorage.getItem(PRICE_KEY)||"4.50";};
+$("adminDeleteButton").onclick=()=>show("adminDeleteSection");
+$("adminMessagesButton").onclick=()=>{show("adminMessagesSection");renderMessages();};
+$("adminSaveCertificatePrice").onclick=()=>{
+const p=Number($("adminCertificatePrice").value);
+if(!Number.isFinite(p)||p<=0||p>10000){alert("Enter a valid price.");return;}
+localStorage.setItem(PRICE_KEY,p.toFixed(2));
+alert("Local certificate price saved: $"+p.toFixed(2)+". The payment backend must be updated separately.");
+};
+$("adminDeleteAll").onclick=()=>{
+if(confirm("Permanently delete ALL locally saved collaboration applications in this browser?")){
+localStorage.removeItem("geti_collaboration_admin_local_v1");window.getiAdminRefresh?.();
+}};
+function messages(){try{return JSON.parse(localStorage.getItem(MSG_KEY)||"[]")}catch{return []}}
+function renderMessages(){
+const box=$("adminMessageHistory");box.replaceChildren();
+for(const m of messages().slice().reverse()){
+const item=document.createElement("div");item.style.cssText="padding:10px;margin:8px 0;background:#f2f7ff;border-radius:8px";
+item.textContent=m.date+" — "+m.name+" ("+m.email+"): "+m.text;box.append(item);
+}}
+$("adminSaveMessage").onclick=()=>{
+const name=$("adminMessageName").value.trim(),email=$("adminMessageEmail").value.trim(),body=$("adminMessageText").value.trim();
+if(!name||!email||!body||!$("adminMessageEmail").checkValidity()){alert("Enter a name, valid email and message.");return;}
+const list=messages();list.push({date:new Date().toLocaleString(),name,email,text:body});localStorage.setItem(MSG_KEY,JSON.stringify(list));renderMessages();alert("Message saved locally. Not sent.");
+};
+$("adminEmailMessage").onclick=()=>{
+const email=$("adminMessageEmail").value.trim();
+if(!email||!$("adminMessageEmail").checkValidity()){alert("Enter a valid client email.");return;}
+location.href="mailto:"+encodeURIComponent(email)+"?subject="+encodeURIComponent("GETI Collaboration")+"&body="+encodeURIComponent($("adminMessageText").value);
+};
+})();
+</script>
+<style>
+#getiChatDialog{border:0;border-radius:16px;padding:0;width:min(94vw,850px);max-height:92vh;box-shadow:0 20px 80px #0005;color:#17314c}#getiChatDialog header{background:#0c4c9d;color:#fff;padding:16px;display:flex;justify-content:space-between;align-items:center}#getiChatDialog .chat-inner{padding:18px}#getiChatMessages{height:min(45vh,390px);overflow:auto;border:1px solid #dae4f1;border-radius:10px;padding:12px;background:#f7faff}#getiChatMessages article{padding:10px;margin:8px 0;background:white;border-radius:9px;border:1px solid #e3ebf4;overflow-wrap:anywhere}#getiChatMessages article.mine{background:#e5f2ff;margin-left:12%}#getiChatDialog input,#getiChatDialog textarea,#getiChatDialog select{box-sizing:border-box;padding:10px;border:1px solid #bacde3;border-radius:8px;max-width:100%}#getiChatDialog button{padding:10px 14px;border:0;border-radius:8px;cursor:pointer}#getiChatDialog .primary{background:#0c4c9d;color:#fff}
+</style>
+<dialog id="getiChatDialog"><header><strong>GETI Collaboration — Secure Messages</strong><button type="button" id="getiChatClose">Close ✕</button></header><div class="chat-inner">
+<p id="getiChatStatus" role="status">Sign in with the email associated with your GETI collaboration account.</p>
+<div id="getiChatAuth" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><input id="getiChatEmail" type="email" placeholder="Your registered email" style="flex:1;min-width:170px"><button class="primary" id="getiChatOtp">Send sign-in link</button><button id="getiChatSignOut">Sign out</button></div>
+<div id="getiChatChoose" style="display:flex;gap:8px;margin-bottom:10px"><select id="getiChatApplication" style="flex:1"><option value="">Select collaboration dossier</option></select><button id="getiChatRefresh">Refresh</button></div>
+<div id="getiChatMessages" aria-live="polite"></div><form id="getiChatSend" style="margin-top:12px"><textarea id="getiChatText" placeholder="Write a message to GETI..." rows="3" style="width:100%"></textarea><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px"><input id="getiChatFile" type="file" accept="image/png,image/jpeg,image/webp,application/pdf"><button type="submit" class="primary">Send message / attachment</button></div><small>PNG, JPG, WEBP or PDF — maximum 10 MB. Messages are private to the account owner and authorized GETI administrators.</small></form>
+</div></dialog>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.10/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+const endpoint='https://syawyulrelrhjprnxdyn.supabase.co';
+const pub='sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8';
+const $=id=>document.getElementById(id);
+let client=null,session=null,admin=false,refreshTimer=null;
+const status=s=>{$('getiChatStatus').textContent=s};
+function api(){if(!client){if(!window.supabase?.createClient)throw Error('Supabase library unavailable. Check internet connection.');client=window.supabase.createClient(endpoint,pub,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}return client}
+async function getAuth(){const sb=api();const {data,error}=await sb.auth.getUser();if(error||!data.user){session=null;admin=false;return null}session=data.user;admin=data.user.app_metadata?.role==='admin';return data.user}
+async function listApps(){const user=await getAuth();if(!user){status('Please sign in with your GETI account email.');return}const {data,error}=await api().from('collaboration_applications').select('id,registration_id,full_name,organization').order('created_at',{ascending:false});if(error){status('Unable to list dossiers: '+error.message);return}const select=$('getiChatApplication'),previous=select.value;select.replaceChildren();const first=document.createElement('option');first.value='';first.textContent='Select collaboration dossier';select.append(first);for(const row of data||[]){const o=document.createElement('option');o.value=row.id;o.textContent=[row.registration_id,row.full_name,row.organization].filter(Boolean).join(' — ');select.append(o)}if([...select.options].some(o=>o.value===previous))select.value=previous;else if(data?.length===1)select.value=data[0].id;status((admin?'Administrator':'Client')+' signed in as '+user.email+'. '+(data?.length||0)+' dossier(s) accessible.');await loadMessages()}
+async function loadMessages(){const app=$('getiChatApplication').value,area=$('getiChatMessages');area.replaceChildren();if(!app)return;const {data,error}=await api().from('collaboration_messages').select('*').eq('application_id',app).order('created_at',{ascending:true}).limit(500);if(error){status(error.message);return}for(const m of data||[]){const article=document.createElement('article');if(m.sender_id===session?.id)article.className='mine';const title=document.createElement('strong');title.textContent=(m.sender_role==='admin'?'GETI Admin':'Collaboration Client')+' · '+new Date(m.created_at).toLocaleString();article.append(title);if(m.body){const p=document.createElement('p');p.textContent=m.body;article.append(p)}if(m.attachment_path){const a=document.createElement('button');a.type='button';a.textContent='📎 '+(m.attachment_name||'Open attachment');a.onclick=async()=>{const {data,error}=await api().storage.from('collaboration-chat').createSignedUrl(m.attachment_path,120);if(error)status(error.message);else window.open(data.signedUrl,'_blank','noopener,noreferrer')};article.append(a)}area.append(article)}area.scrollTop=area.scrollHeight}
+async function open(){ $('getiChatDialog').showModal();try{await listApps()}catch(e){status(e.message)}}
+$('getiChatClose').onclick=()=>{$('getiChatDialog').close()};$('getiChatRefresh').onclick=()=>listApps().catch(e=>status(e.message));$('getiChatApplication').onchange=()=>loadMessages();
+$('getiChatOtp').onclick=async()=>{try{const email=$('getiChatEmail').value.trim();if(!email||!$('getiChatEmail').checkValidity())return status('Enter a valid email.');const {error}=await api().auth.signInWithOtp({email,emailRedirectTo:location.origin+location.pathname});status(error?error.message:'Check your email for the secure sign-in link.')}catch(e){status(e.message)}};
+$('getiChatSignOut').onclick=async()=>{await api().auth.signOut();await listApps()};
+$('getiChatSend').onsubmit=async e=>{e.preventDefault();try{const user=await getAuth(),app=$('getiChatApplication').value,body=$('getiChatText').value.trim(),file=$('getiChatFile').files[0];if(!user||!app)return status('Sign in and select a dossier.');if(!body&&!file)return status('Write a message or attach a file.');let path=null;if(file){if(file.size>10485760)return status('File exceeds 10 MB.');if(!['image/png','image/jpeg','image/webp','application/pdf'].includes(file.type))return status('Only images and PDF files are accepted.');path=app+'/'+crypto.randomUUID()+'-'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');const {error}=await api().storage.from('collaboration-chat').upload(path,file,{contentType:file.type,upsert:false});if(error)return status('Upload failed: '+error.message)}const {error}=await api().from('collaboration_messages').insert({application_id:app,sender_id:user.id,sender_role:admin?'admin':'client',body,attachment_path:path,attachment_name:file?.name||null,attachment_mime:file?.type||null});if(error)return status('Message not sent: '+error.message);$('getiChatText').value='';$('getiChatFile').value='';status('Message sent.');await loadMessages()}catch(err){status(err.message)}};
+const button=document.createElement('button');button.type='button';button.id='getiClientMessages';button.textContent='✉ Messages with GETI';button.style.cssText='padding:12px 18px;margin:10px;border:0;border-radius:10px;background:#0754a6;color:white;font-weight:bold;cursor:pointer';button.onclick=open;
+const cert=$('getCollaborationCertificate');if(cert)cert.insertAdjacentElement('afterend',button);else document.body.append(button);
+const adminChatButton=document.createElement('button');adminChatButton.type='button';adminChatButton.textContent='✉ Open secure client chat';adminChatButton.style.cssText='padding:10px 14px;margin:8px 0;border:0;border-radius:8px;background:#0754a6;color:white;cursor:pointer';adminChatButton.onclick=open;$('adminMessagesSection')?.prepend(adminChatButton);
+$('getiChatDialog').addEventListener('close',()=>{if(refreshTimer)clearInterval(refreshTimer);refreshTimer=null});
+$('getiChatDialog').addEventListener('click',()=>{});
+const origOpen=open;button.onclick=()=>{origOpen();if(refreshTimer)clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if($('getiChatDialog').open&&$('getiChatApplication').value)loadMessages().catch(()=>{})},8000)};
+})();
+</script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const sb=()=>{if(!window.supabase?.createClient)throw Error("Supabase library unavailable");return window.getiDossierSupabase||(window.getiDossierSupabase=window.supabase.createClient("https://syawyulrelrhjprnxdyn.supabase.co","sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8",{auth:{persistSession:true,autoRefreshToken:true}}))};
+const field=id=>$(id)?.value?.trim()||"";
+window.getiSaveDossierToServer=async function(){
+ const {data:{user},error:authErr}=await sb().auth.getUser();
+ if(authErr||!user)throw Error("Sign in with your GETI account using the Messages sign-in link first.");
+ const registration_id=$("sidebarRegistrationId")?.textContent?.trim()||$("finalId")?.textContent?.trim();
+ if(!registration_id)throw Error("Registration ID missing.");
+ const application_data={reason:field("reason"),role:field("role"),address:field("address"),country:field("country"),proposal:field("proposal"),project:field("project"),startDate:field("startDate"),additional:field("additional")};
+ const payload={owner_id:user.id,registration_id,full_name:field("name"),email:field("email"),phone:field("phone"),organization:field("organization")||field("orgName"),application_data,application_status:"pending_review",account_status:"awaiting_admin"};
+ const {data:existing,error:lookupError}=await sb().from("collaboration_applications").select("id").eq("registration_id",registration_id).maybeSingle();
+ if(lookupError)throw Error(lookupError.message);
+ let record;
+ if(existing){const r=await sb().from("collaboration_applications").update(payload).eq("id",existing.id).select("id").single();if(r.error)throw Error(r.error.message);record=r.data}
+ else {const r=await sb().from("collaboration_applications").insert(payload).select("id").single();if(r.error)throw Error(r.error.message);record=r.data}
+ const pdf=await window.getiCreateDossierPdfBlob?.();
+ if(!pdf)throw Error("PDF generation unavailable.");
+ const path=record.id+"/signed-dossier.pdf";
+ const upload=await sb().storage.from("collaboration-dossiers").upload(path,pdf,{contentType:"application/pdf",upsert:true});
+ if(upload.error)throw Error(upload.error.message);
+ const upd=await sb().from("collaboration_applications").update({dossier_pdf:path}).eq("id",record.id);
+ if(upd.error)throw Error(upd.error.message);
+ return record;
+};
+async function adminDossiers(){
+ const status=$("adminDossierStatus"),table=$("adminDossierRows");
+ if(!table)return;
+ try{
+ const {data:{user}}=await sb().auth.getUser();
+ if(!user){status.textContent="Sign in to GETI using Messages to access server dossiers.";return}
+ const {data,error}=await sb().from("collaboration_applications").select("id,registration_id,full_name,email,organization,application_status,dossier_pdf,created_at").order("created_at",{ascending:false}).limit(500);
+ if(error)throw Error(error.message);
+ table.replaceChildren();
+ for(const r of data||[]){
+ const tr=document.createElement("tr");
+ for(const value of [r.registration_id,r.full_name,r.email,r.organization,r.application_status,new Date(r.created_at).toLocaleDateString()]){
+ const td=document.createElement("td");td.textContent=value||"—";td.style.padding="9px";tr.append(td)}
+ const td=document.createElement("td");td.style.padding="9px";
+ const btn=document.createElement("button");btn.type="button";btn.textContent="⬇ Download PDF";btn.disabled=!r.dossier_pdf;btn.onclick=async()=>{
+ const {data,error}=await sb().storage.from("collaboration-dossiers").createSignedUrl(r.dossier_pdf,120);
+ if(error)alert(error.message);else window.open(data.signedUrl,"_blank","noopener,noreferrer");
+ };
+ td.append(btn);tr.append(td);table.append(tr);
+ }
+ status.textContent=(data||[]).length+" accessible dossier(s) from GETI server.";
+ }catch(e){status.textContent="Unable to load dossiers: "+e.message}
+}
+window.getiLoadServerDossiers=adminDossiers;
+$("adminRefresh")?.addEventListener("click",adminDossiers);
+$("adminDossierRefresh")?.addEventListener("click",adminDossiers);
+$("adminDossierSave")?.addEventListener("click",async()=>{try{await window.getiSaveDossierToServer();alert("Dossier and PDF saved to GETI server.");adminDossiers()}catch(e){alert(e.message)}});
 })();
 </script></body>
 </html>
