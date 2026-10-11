@@ -1617,7 +1617,7 @@ async function collabRefreshToken(){
 async function api(path,options={},retry=true){
  if(session?.expires_at && Date.now()/1000 > session.expires_at-45)await collabRefreshToken();
  const headers={'apikey':key,...(session?{'Authorization':'Bearer '+session.access_token}:{}),...(options.headers||{})};
- const r=await fetch(root+path,{cache:'no-store',...options,headers});
+ const r=await fetch(root+path,{...options,headers});
  let out;const raw=await r.text();
  try{out=raw?JSON.parse(raw):null}catch{out=raw}
  if(r.status===401&&session&&retry){await collabRefreshToken();return api(path,options,false)}
@@ -1638,10 +1638,10 @@ async function collabLogin(){
  }catch(e){status(errorText(e),'bad')}
 }
 function collabLogout(){session=null;authorized=false;loaded=false;entries=[];messagesData=[];paymentsData=[];tariffs=[];openPage('collabsettings')}
-function authPage(){content('<div class="collab-auth"><h3>GETI Collaboration Administration</h3><label>Administrator email</label><input id="collabEmail" type="email" autocomplete="username" value="admin@getienglish.com" placeholder="Authorized GETI admin email"><label>Supabase password</label><input id="collabPassword" type="password" autocomplete="current-password" placeholder="Password" onkeydown="if(event.key===\'Enter\')collabLogin()"><div id="collabFeedback"></div><button class="btn primary" onclick="collabLogin()">VERIFY ADMIN ACCESS →</button></div>')}
+function authPage(){content('<div class="collab-auth"><h3>GETI Collaboration Administration</h3><p class="collab-muted">The existing GETI Admin Center stays intact. Collaboration data requires an additional authorized Supabase administrator session.</p><div class="collab-warning">To manage collaboration accounts, dossiers, prices, and payments, verify the GETI Supabase administrator account below. The main Admin login and Collaboration login use separate authentication.</div><label>Administrator email</label><input id="collabEmail" type="email" autocomplete="username" value="admin@getienglish.com" placeholder="Authorized GETI admin email"><small style="display:block;color:#667085;margin:5px 0 12px">GETI Collaboration administrator email. Enter your own Supabase password to verify access.</small><label>Supabase password</label><input id="collabPassword" type="password" autocomplete="current-password" placeholder="Password" onkeydown="if(event.key===\'Enter\')collabLogin()"><div id="collabFeedback"></div><button class="btn primary" onclick="collabLogin()">VERIFY ADMIN ACCESS →</button></div>')}
 async function collabLoad(force=false){
  if(!authorized){authPage();return false;}if(loaded&&!force)return true;
- // Preserve the current form while refreshing server data.
+ content(hdr('GETI Collaboration','Loading secure Supabase administration...'));
  const requests=await Promise.allSettled([
  api('/rest/v1/collaboration_applications?select=*&order=created_at.desc&limit=500'),
  api('/rest/v1/collaboration_messages?select=*&order=created_at.desc&limit=500'),
@@ -1657,20 +1657,19 @@ async function collabLoad(force=false){
  if(failed.length){collabLoadIssues=failed; }else{collabLoadIssues=[];}
  return true;
 }
-let collabPageGeneration=0;
-async function page(id,fn){if(!authorized){authPage();return}const generation=++collabPageGeneration;try{await collabLoad(true);if(generation!==collabPageGeneration)return;fn();if(collabLoadIssues.length){const warn=document.createElement('div');warn.className='collab-warning';warn.setAttribute('role','alert');warn.textContent='Some Supabase resources could not be loaded: '+collabLoadIssues.join(' | ');document.querySelector('.content')?.prepend(warn)}}catch(e){content(hdr(id,'Supabase connection error')+'<div class="collab-error">'+E(errorText(e))+'</div>')}}
+async function page(id,fn){if(!authorized){authPage();return}try{await collabLoad();fn();if(collabLoadIssues.length){const warn=document.createElement('div');warn.className='collab-warning';warn.setAttribute('role','alert');warn.textContent='Some Supabase resources could not be loaded: '+collabLoadIssues.join(' | ');document.querySelector('.content')?.prepend(warn)}}catch(e){content(hdr(id,'Supabase connection error')+'<div class="collab-error">'+E(errorText(e))+'</div>')}}
 function actionsBar(){return '<div class="collab-inline">'+btn("openPage('collabapps')",'Applications')+btn("openPage('collabaccounts')",'Account Control')+btn("openPage('collabpayments')",'Payment Records')+btn("openPage('collabprices')",'Prices')+'</div>'}
-function applicationRows(arr,action=false){return '<div class="collab-tbl"><table><thead><tr><th>Registration</th><th>Collaborator</th><th>Contact</th><th>Account</th><th>Application</th><th>Submitted</th><th>Action</th></tr></thead><tbody>'+(arr.length?arr.map(a=>'<tr><td>'+E(a.registration_id)+'</td><td><b>'+E(a.full_name)+'</b><br>'+E(a.organization||'')+'</td><td>'+E(a.email)+'<br>'+E(a.phone||'')+'</td><td>'+pill(a.account_status)+'</td><td>'+pill(a.application_status)+'</td><td>'+E(dat(a.created_at))+'</td><td class="collab-actions">'+btn('collabDetail('+jsArg(a.id)+')','DETAILS')+(action?btn('collabToggle('+jsArg(a.id)+')',['active','activated'].includes(a.account_status)?'DEACTIVATE':'ACTIVATE',['active','activated'].includes(a.account_status)?'danger':'success'):'')+btn('collabDeleteApplication('+jsArg(a.id)+')','DELETE','danger')+'</td></tr>').join(''):'<tr><td colspan="7" class="empty">No collaboration applications found.</td></tr>')+'</tbody></table></div>'}
+function applicationRows(arr,action=false){return '<div class="collab-tbl"><table><thead><tr><th>Registration</th><th>Collaborator</th><th>Contact</th><th>Account</th><th>Application</th><th>Submitted</th><th>Action</th></tr></thead><tbody>'+(arr.length?arr.map(a=>'<tr><td>'+E(a.registration_id)+'</td><td><b>'+E(a.full_name)+'</b><br>'+E(a.organization||'')+'</td><td>'+E(a.email)+'<br>'+E(a.phone||'')+'</td><td>'+pill(a.account_status)+'</td><td>'+pill(a.application_status)+'</td><td>'+E(dat(a.created_at))+'</td><td class="collab-actions">'+btn('collabDetail('+jsArg(a.id)+')','DETAILS')+(action?btn('collabToggle('+jsArg(a.id)+')',a.account_status==='active'?'DEACTIVATE':'ACTIVATE',a.account_status==='active'?'danger':'success'):'')+btn('collabDeleteApplication('+jsArg(a.id)+')','DELETE','danger')+'</td></tr>').join(''):'<tr><td colspan="7" class="empty">No collaboration applications found.</td></tr>')+'</tbody></table></div>'}
 function k(label,value){return '<div class="collab-kpi"><span>'+E(label)+'</span><b>'+E(value)+'</b></div>'}
 function collabOverview(){return page('Overview',()=>{
- const active=entries.filter(a=>['active','activated'].includes(a.account_status)).length;
+ const active=entries.filter(a=>a.account_status==='active').length;
  const paid=paymentsData.filter(x=>String(x.status).toUpperCase()==='PAID').length;
- const pending=entries.filter(a=>!['active','activated'].includes(a.account_status)).length;
+ const pending=entries.filter(a=>a.account_status!=='active').length;
  content(hdr('Collaboration Dashboard','Secure operational overview — real GETI Supabase data')+'<div class="collab-grid">'+k('Total collaborations',entries.length)+k('Active accounts',active)+k('Awaiting activation',pending)+k('Confirmed payments',paid)+'</div><div class="collab-panel"><h3>Recent Collaboration Applications</h3>'+applicationRows(entries.slice(0,8),true)+'</div><div class="collab-panel"><h3>Quick Administration</h3>'+actionsBar()+'</div>');
 })}
 function collabApplications(){return page('Applications',()=>{content(hdr('Collaboration Applications','Registration details, status and applicant history')+'<div class="collab-panel"><div class="collab-tools"><input id="collabSearch" placeholder="Search name, email, registration..." oninput="collabFilterApps()"><select id="collabFilter" onchange="collabFilterApps()"><option value="">All account statuses</option><option value="active">Active</option><option value="deactivated">Deactivated</option></select></div><div id="collabAppRows">'+applicationRows(entries)+'</div></div>')})}
 function collabFilterApps(){let q=(document.getElementById('collabSearch')?.value||'').toLowerCase(),st=document.getElementById('collabFilter')?.value||'';const rows=entries.filter(a=>(!st||a.account_status===st)&&(!q||[a.full_name,a.email,a.registration_id,a.organization].join(' ').toLowerCase().includes(q)));document.getElementById('collabAppRows').innerHTML=applicationRows(rows)}
-function collabDetail(id){const a=entries.find(x=>x.id===id);if(!a)return;selectedId=id;let fields=[['Full name',a.full_name],['Registration ID',a.registration_id],['Email',a.email],['Phone',a.phone],['Centre',a.organization],['Account',a.account_status],['Application review',a.application_status],['Created',dat(a.created_at)],['PDF',a.dossier_pdf||'Not submitted']];let extras=Object.entries(a.application_data||{}).filter(([k,v])=>!String(v).startsWith('data:')).slice(0,30).map(([k,v])=>[k,typeof v==='object'?JSON.stringify(v).slice(0,180):String(v).slice(0,260)]);content(hdr('Collaboration Dossier',a.registration_id||a.full_name)+'<div class="collab-panel"><h3>Applicant Information</h3><div class="collab-detail">'+[...fields,...extras].map(([k,v])=>'<div><b>'+E(k)+'</b>'+E(v||'—')+'</div>').join('')+'</div><div class="collab-inline" style="margin-top:14px">'+btn('collabSignedDossier('+jsArg(id)+')','OPEN SIGNED PDF')+btn('collabToggle('+jsArg(id)+')',['active','activated'].includes(a.account_status)?'DEACTIVATE':'ACTIVATE',['active','activated'].includes(a.account_status)?'danger':'success')+btn("openPage('collabreview')",'APPLICATION REVIEW')+'</div><div id="collabFeedback"></div></div>')}
+function collabDetail(id){const a=entries.find(x=>x.id===id);if(!a)return;selectedId=id;let fields=[['Full name',a.full_name],['Registration ID',a.registration_id],['Email',a.email],['Phone',a.phone],['Centre',a.organization],['Account',a.account_status],['Application review',a.application_status],['Created',dat(a.created_at)],['PDF',a.dossier_pdf||'Not submitted']];let extras=Object.entries(a.application_data||{}).filter(([k,v])=>!String(v).startsWith('data:')).slice(0,30).map(([k,v])=>[k,typeof v==='object'?JSON.stringify(v).slice(0,180):String(v).slice(0,260)]);content(hdr('Collaboration Dossier',a.registration_id||a.full_name)+'<div class="collab-panel"><h3>Applicant Information</h3><div class="collab-detail">'+[...fields,...extras].map(([k,v])=>'<div><b>'+E(k)+'</b>'+E(v||'—')+'</div>').join('')+'</div><div class="collab-inline" style="margin-top:14px">'+btn('collabSignedDossier('+jsArg(id)+')','OPEN SIGNED PDF')+btn('collabToggle('+jsArg(id)+')',a.account_status==='active'?'DEACTIVATE':'ACTIVATE',a.account_status==='active'?'danger':'success')+btn("openPage('collabreview')",'APPLICATION REVIEW')+'</div><div id="collabFeedback"></div></div>')}
 async function collabUpdate(id,values){
  if(!authorized)throw Error('Verified Supabase administrator session required.');
  const updated=await api('/rest/v1/collaboration_applications?id=eq.'+encodeURIComponent(id),{
@@ -1678,11 +1677,7 @@ async function collabUpdate(id,values){
   body:JSON.stringify(values)
  });
  if(!Array.isArray(updated)||updated.length!==1)throw Error('No account was updated. Verify GETI admin authorization and record access.');
- const check=await api('/rest/v1/collaboration_applications?id=eq.'+encodeURIComponent(id)+'&select=id,account_status,application_status');
- if(!Array.isArray(check)||check.length!==1)throw Error('Unable to verify saved status with Supabase.');
- const record=check[0];
- for(const field of ['account_status','application_status'])if(Object.prototype.hasOwnProperty.call(values,field)&&record[field]!==values[field])throw Error('Supabase status check failed: '+field);
- entries=entries.map(a=>a.id===id?{...a,...updated[0],...record}:a);
+ loaded=false;await collabLoad(true);
  return updated[0];
 }
 function collabPaymentFor(a){
@@ -1700,14 +1695,14 @@ function collabPaymentState(a){
 async function collabToggle(id){
  const a=entries.find(x=>x.id===id);
  if(!a){status('Collaboration application not found. Refresh the table.','bad');return}
- const active=['active','activated'].includes(a.account_status);
+ const active=a.account_status==='active';
  const action=active?'DEACTIVATE':'ACTIVATE';
  if(!confirm('GETI ADMIN — '+action+' '+a.full_name+' ('+a.registration_id+')?\nCurrent status: '+a.account_status+'\nThis action will be saved to Supabase by the authorized administrator.'))return;
  try{
   const expected=active?'deactivated':'active';
   const result=await collabUpdate(id,{account_status:expected});
   if(result.account_status!==expected)throw Error('Supabase did not confirm the requested account status.');
-  await collabAccounts();
+  collabAccounts();
   setTimeout(()=>status('SUCCESS: '+a.full_name+' is now '+expected.toUpperCase()+'. Manually updated by authorized GETI Admin.'),0);
  }catch(e){
   collabAccounts();
@@ -1716,7 +1711,6 @@ async function collabToggle(id){
   setTimeout(()=>status('Account status NOT changed. '+detail,'bad'),0);
  }
 }
-async function collabRefreshAccounts(){try{await collabLoad(true);await collabAccounts();status('Account list updated from Supabase.')}catch(e){status(errorText(e),'bad')}}
 function collabAccounts(){return page('Account Control',()=>content(hdr('Account Control','Manual account activation and deactivation by authorized admin only')+'<div class="collab-warning">The GETI administrator can activate or deactivate a collaboration account using the ACTIVATE / DEACTIVATE button. The account becomes ACTIVE once Supabase confirms the update.</div><div id="collabFeedback"></div><div class="collab-panel">'+applicationRows(entries,true)+'</div>'))}
 async function signedUrl(bucket,path){if(!path)throw Error('No PDF file has been submitted.');if(/^https?:\/\//i.test(path))throw Error('External file references must be reviewed separately.');const obj=await api('/storage/v1/object/sign/'+encodeURIComponent(bucket)+'/'+path.split('/').map(encodeURIComponent).join('/'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({expiresIn:120})});return root+'/storage/v1'+obj.signedURL;}
 async function collabSignedDossier(id){try{let a=entries.find(x=>x.id===id);if(!a?.dossier_pdf)throw Error('No submitted dossier PDF for this application.');let u=await signedUrl('collaboration-dossiers',a.dossier_pdf);window.open(u,'_blank','noopener')}catch(e){status(errorText(e),'bad')}}
@@ -1727,7 +1721,7 @@ function collabMessages(){return page('Collaboration Messages',()=>content(hdr('
 function collabThread(){let id=document.getElementById('collabRecipient')?.value;selectedId=id;let elem=document.getElementById('collabThreadBox');if(!id){elem.textContent='Select a collaborator.';return}let items=messagesData.filter(m=>m.application_id===id).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));elem.innerHTML='<div style="max-height:350px;overflow:auto">'+(items.length?items.map(m=>'<div class="collab-panel"><b>'+E(m.sender_role||'Sender')+'</b><span class="collab-muted"> · '+E(dat(m.created_at))+'</span><p>'+E(m.body||'')+'</p>'+(m.attachment_path?btn('collabMessageAttachment('+jsArg(m.id)+')','VIEW ATTACHMENT'):'')+btn('collabDeleteMessage('+jsArg(m.id)+')','DELETE MESSAGE','danger')+'</div>').join(''):'<p class="collab-muted">No messages yet.</p>')+'</div><label>Message to collaborator</label><textarea id="collabMessageBody" placeholder="Write your message..." style="font-size:13px"></textarea><label>Attachment (optional, JPG/PNG/PDF, max 20 MB)</label><input id="collabMessageAttachment" type="file" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf"><div id="collabFeedback"></div><button class="btn primary" onclick="collabSendMessage()">SEND MESSAGE</button>'}
 async function collabMessageAttachment(id){try{let m=messagesData.find(x=>x.id===id);let u=await signedUrl('collaboration-chat',m.attachment_path);window.open(u,'_blank','noopener')}catch(e){status(errorText(e),'bad')}}
 async function collabSendMessage(){const id=selectedId,body=document.getElementById('collabMessageBody')?.value.trim();const file=document.getElementById('collabMessageAttachment')?.files?.[0];if(!id||(!body&&!file)){status('Choose a collaborator and enter a message or attach a file.','bad');return}try{let attachment={};if(file){if(file.size>20*1024*1024)throw Error('Attachment exceeds 20 MB');let ext=file.name.split('.').pop().toLowerCase();if(!['png','jpg','jpeg','pdf'].includes(ext))throw Error('Unsupported attachment type.');let path=id+'/'+session.user.id+'/'+Date.now()+'-'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');await api('/storage/v1/object/collaboration-chat/'+path.split('/').map(encodeURIComponent).join('/'),{method:'POST',headers:{'Content-Type':file.type||'application/octet-stream','x-upsert':'false'},body:file});attachment={attachment_path:path,attachment_name:file.name,attachment_type:file.type}}
- await api('/rest/v1/collaboration_messages',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify({application_id:id,sender_id:session.user.id,sender_role:'admin',body:body||'',...attachment})});loaded=false;await collabLoad(true);await collabMessages();const recipient=document.getElementById('collabRecipient');if(recipient){recipient.value=id;collabThread()}status('Message sent.');}catch(e){status(errorText(e),'bad')}}
+ await api('/rest/v1/collaboration_messages',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({application_id:id,sender_id:session.user.id,sender_role:'admin',body:body||'',...attachment})});loaded=false;await collabLoad(true);collabMessages();status('Message sent.');}catch(e){status(errorText(e),'bad')}}
 let collabShowArchivedPayments=false;
 async function collabArchivePayment(id,archived){
  if(!authorized){status('Sign in as authorized GETI administrator.','bad');return}
@@ -1777,12 +1771,17 @@ async function collabSavePrices(){
    }catch(e){errors.push(change.key+': '+errorText(e))}
   }
   loaded=false;await collabLoad(true);collabPrices();
-  if(errors.length)setTimeout(()=>status('Some prices were NOT saved: '+errors.join(' | '),'bad'),0);
-  else setTimeout(()=>status('Official GETI prices updated and reloaded from Supabase.'),0);
+  for(const item of changes){
+   const persisted=tariffs.find(t=>t.key===item.key);
+   if(!persisted||Math.abs(Number(persisted.price_usd)-item.value)>0.0001)
+    errors.push(item.key+': price not confirmed after Supabase reload');
+  }
+  if(errors.length)setTimeout(()=>status('Price update NOT confirmed: '+errors.join(' | '),'bad'),0);
+  else setTimeout(()=>status('Prices saved and verified in Supabase. Collaboration visitors receive new prices on refresh.'),0);
  }catch(e){status(errorText(e),'bad')}
 }
 function collabStatistics(){return page('Statistics',()=>{const byStatus=(a,key)=>a.reduce((o,v)=>(o[String(v[key]||'unknown')]=(o[String(v[key]||'unknown')]||0)+1,o),{});let a=byStatus(entries,'account_status'),p=byStatus(paymentsData,'status');const rows=o=>Object.entries(o).map(([k,v])=>'<tr><td>'+E(k)+'</td><td><b>'+v+'</b></td></tr>').join('')||'<tr><td colspan="2">No records</td></tr>';content(hdr('Collaboration Statistics','Real-time counters computed from loaded GETI data')+'<div class="collab-grid">'+k('Applications',entries.length)+k('Messages',messagesData.length)+k('Payment records',paymentsData.length)+k('Tariff categories',tariffs.length)+'</div><div class="collab-panel"><h3>Account Status</h3><div class="collab-tbl"><table><thead><tr><th>Status</th><th>Count</th></tr></thead><tbody>'+rows(a)+'</tbody></table></div></div><div class="collab-panel"><h3>Zopayo Status</h3><div class="collab-tbl"><table><thead><tr><th>Status</th><th>Count</th></tr></thead><tbody>'+rows(p)+'</tbody></table></div></div>')})}
-function collabSettings(){if(!authorized){authPage();return}content(hdr('Collaboration Settings','Authenticated GETI Administration')+'<div class="collab-panel"><h3>Current authorized session</h3><p class="collab-muted">'+E(session?.user?.email||'')+'</p><div class="collab-inline">'+btn('collabReload()','REFRESH DATA')+btn('collabLogout()','SIGN OUT COLLABORATION ADMIN','danger')+'</div></div>')}
+function collabSettings(){if(!authorized){authPage();return}content(hdr('Collaboration Settings','Authenticated GETI Administration')+'<div class="collab-panel"><h3>Current authorized session</h3><p class="collab-muted">'+E(session?.user?.email||'')+'</p><div class="collab-inline">'+btn('collabReload()','REFRESH DATA')+btn('collabLogout()','SIGN OUT COLLABORATION ADMIN','danger')+'</div></div><div class="collab-warning">This module never makes a user an administrator automatically. Supabase administrator policies control all updates and private data. Account activation is controlled by authorized GETI administrators.</div>')}
 async function collabDeleteApplication(id){
  if(!authorized){status('Only an authorized GETI Supabase administrator may delete applications.','bad');return}
  const a=entries.find(x=>x.id===id);if(!a)return;
@@ -1802,7 +1801,7 @@ async function collabDeleteMessage(id){
  try{
   const result=await api('/rest/v1/collaboration_messages?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:{Prefer:'return=representation'}});
   if(!Array.isArray(result)||result.length!==1)throw Error('Message deletion was not confirmed.');
-  loaded=false;await collabLoad(true);await collabMessages();
+  loaded=false;await collabLoad(true);collabMessages();
   const select=document.getElementById('collabRecipient');if(select){select.value=m.application_id;collabThread()}
   status('Message removed from Supabase database.');
  }catch(e){status('Message deletion failed: '+errorText(e),'bad')}
@@ -1818,7 +1817,7 @@ async function collabDeleteDossier(id){
  }catch(e){collabDocuments();setTimeout(()=>status('Could not remove dossier PDF: '+errorText(e),'bad'),0)}
 }
 async function collabReload(){if(!authorized){authPage();return}try{await collabLoad(true);collabOverview()}catch(e){status(errorText(e),'bad')}}
-Object.assign(window,{collabLogin,collabLogout,collabReload,collabOverview,collabApplications,collabAccounts,collabDocuments,collabReview,collabMessages,collabPayments,collabPrices,collabStatistics,collabSettings,collabFilterApps,collabDetail,collabToggle,collabSignedDossier,collabReviewSave,collabThread,collabSendMessage,collabMessageAttachment,collabSavePrices,collabDeleteApplication,collabDeleteMessage,collabDeleteDossier,collabRefreshAccounts});
+Object.assign(window,{collabLogin,collabLogout,collabReload,collabOverview,collabApplications,collabAccounts,collabDocuments,collabReview,collabMessages,collabPayments,collabPrices,collabStatistics,collabSettings,collabFilterApps,collabDetail,collabToggle,collabSignedDossier,collabReviewSave,collabThread,collabSendMessage,collabMessageAttachment,collabSavePrices,collabDeleteApplication,collabDeleteMessage,collabDeleteDossier});
 })();
 </script>
 

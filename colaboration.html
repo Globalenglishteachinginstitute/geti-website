@@ -285,16 +285,24 @@ function getiMarkMessagesRead(){
  if(latest&&latest>(localStorage.getItem(key)||''))localStorage.setItem(key,latest);
  getiUpdateMessageBadge();
 }
-let adminLoginRequested=false;let user=null,application=null,messages=[],page='dashboard',uploading={},isRecovery=false;let tariffPrices={collaboration:5,certificate:4,bonus:2.50};let pendingCheckout=null;async function refreshTariffs(){
+let adminLoginRequested=false;let user=null,application=null,messages=[],page='dashboard',uploading={},isRecovery=false;let tariffPrices={collaboration:5,certificate:4,bonus:2.50};let getiTariffLoadError='';let pendingCheckout=null;function getiShowTariffProblem(){
+ const parent=document.getElementById('mainContent');
+ if(!parent)return;
+ let el=document.getElementById('getiTariffWarning');
+ if(!getiTariffLoadError){el?.remove();return;}
+ if(!el){el=document.createElement('div');el.id='getiTariffWarning';el.className='alert bad';el.setAttribute('role','alert');parent.prepend(el)}
+ el.textContent='GETI official prices could not be refreshed: '+getiTariffLoadError+'. Please reload before payment.';
+}
+async function refreshTariffs(){
  const {data,error}=await supabase.from('geti_collaboration_tariffs').select('key,price_usd');
- if(error){console.warn('GETI tariff sync failed:',error.message);return false;}
+ if(error){console.warn('GETI tariff sync failed:',error.message);getiTariffLoadError=error.message;getiShowTariffProblem();return false;}getiTariffLoadError='';
  let changed=false;
  for(const v of data||[]){
   if(!Object.prototype.hasOwnProperty.call(tariffPrices,v.key))continue;
   const n=Number(v.price_usd);
   if(Number.isFinite(n)&&n>0&&tariffPrices[v.key]!==n){tariffPrices[v.key]=n;changed=true;}
  }
- if(changed&&user){
+ if(user){
    // Do not clear a payment checkout or an in-progress certificate order.
    if(page==='payment'&&!pendingCheckout)render();
    else syncGetiTariffLabels();
