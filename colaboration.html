@@ -283,7 +283,7 @@ const hasDossier=()=>!!application?.full_name && !!application?.phone && !!appli
 const isSigned=()=>!!fieldData().signature;
 const docKeys=[['identity_photo','Identity Photo (JPG / PNG)'],['id_recto','ID Card Recto'],['id_verso','ID Card Verso'],['collaboration_form','Signed Collaboration Form (PDF)']];
 const regId=()=>application?.registration_id||'Not issued';
-function summary(){let done=hasDossier(),signed=isSigned();return `${!getiAccountActive()?`<div class="geti-activation-banner"><b>🔒 Account Deactivated — Waiting for GETI Admin activation.</b> Your administrator can activate the account directly. Payment does not automatically activate your account. <button type="button" class="btn alt" data-page="payment">Go to Payment →</button></div>`:""}<div class="hero"><small>GLOBAL ENGLISH TEACHING INSTITUTE</small><div class="hint">Keep Learning. Keep Growing. English Opens Opportunities.</div><h1>Welcome to GETI Collaboration Portal</h1></div><div class="statrow"><button type="button" class="stat stat-button stat-green" data-page="information" aria-label="View Account Status and My Information"><span class="bubble green">♙</span><span class="stat-copy"><span class="label">Account Status</span><strong>${isAccessActive()?'Active':'Deactivated'}</strong><small>${isAccessActive()?'Your collaboration access is active.':'Your collaboration access is deactivated by admin.'}</small></span><span class="stat-arrow" aria-hidden="true">↗</span></button><button type="button" class="stat stat-button stat-blue" data-page="dossier" aria-label="Open Collaboration Dossier"><span class="bubble">▤</span><span class="stat-copy"><span class="label">Collaboration Dossier</span><strong>${done?'Completed':'In Progress'}</strong><small>${done?'Basic details saved':'Complete your dossier'}</small></span><span class="stat-arrow" aria-hidden="true">↗</span></button><button type="button" class="stat stat-button stat-orange" data-page="status" aria-label="View Application Review status"><span class="bubble orange">◷</span><span class="stat-copy"><span class="label">Application Review</span><strong>${esc(appStatus()).replaceAll('_',' ')}</strong><small>View application status</small></span><span class="stat-arrow" aria-hidden="true">↗</span></button><button type="button" class="stat stat-button stat-purple" data-page="messages" aria-label="Open Collaboration Messages"><span class="bubble purple">✉</span><span class="stat-copy"><span class="label">Messages</span><strong>${messages.length}</strong><small>Messages in your conversation</small></span><span class="stat-arrow" aria-hidden="true">↗</span></button></div><div class="panel"><div class="panelhead"><h2>📊 Application Progress</h2><button class="link" data-page="status">View Application Details →</button></div><div class="steps">${[['Account Created',true,'Your GETI account is active.'],['Dossier Completed',done,'Complete and save your information.'],['Signature Submitted',signed,'Sign and submit the application.'],['Administrative Review',/approved|under.review|pending.review/i.test(appStatus()),'Await GETI administration decision.']].map(([name,ok,desc],i)=>{let target=['information','dossier','dossier','status'][i],tone=['green','blue','amber','purple'][i];let status=i===3?( /approved/i.test(appStatus())?'Approved':/review|pending/i.test(appStatus())?'Pending Review':appStatus().replaceAll('_',' ')):(ok?'Completed':'Not Started');return `<button type="button" class="step step-button step-${tone}" data-page="${target}" aria-label="Open ${name}: ${status}"><span class="step-arrow" aria-hidden="true">↗</span><span class="number ${ok?'done':i===1&&!done||i===2&&!signed?'current':''}">${ok?'✓':i+1}</span><b>${i+1}. ${name}</b><p>${desc}</p>${pill(status)}<span class="step-action">${['View My Account','Open My Dossier','Sign My Dossier','Check Application'][i]} →</span></button>`}).join('')}</div></div>`}
+function summary(){let done=hasDossier(),signed=isSigned();return `${!getiAccountActive()?`<div class="geti-activation-banner"><b>🔒 Account Deactivated — Payment required for activation.</b> Pay the Collaboration Fee (${money(tariffPrices.collaboration)}), wait for payment confirmation, then GETI Admin will activate your account. <button type="button" class="btn alt" data-page="payment">Go to Payment →</button></div>`:""}<div class="hero"><small>GLOBAL ENGLISH TEACHING INSTITUTE</small><div class="hint">Keep Learning. Keep Growing. English Opens Opportunities.</div><h1>Welcome to GETI Collaboration Portal</h1></div><div class="statrow"><button type="button" class="stat stat-button stat-green" data-page="information" aria-label="View Account Status and My Information"><span class="bubble green">♙</span><span class="stat-copy"><span class="label">Account Status</span><strong>${isAccessActive()?'Active':'Deactivated'}</strong><small>${isAccessActive()?'Your collaboration access is active.':'Your collaboration access is deactivated by admin.'}</small></span><span class="stat-arrow" aria-hidden="true">↗</span></button><button type="button" class="stat stat-button stat-blue" data-page="dossier" aria-label="Open Collaboration Dossier"><span class="bubble">▤</span><span class="stat-copy"><span class="label">Collaboration Dossier</span><strong>${done?'Completed':'In Progress'}</strong><small>${done?'Basic details saved':'Complete your dossier'}</small></span><span class="stat-arrow" aria-hidden="true">↗</span></button><button type="button" class="stat stat-button stat-orange" data-page="status" aria-label="View Application Review status"><span class="bubble orange">◷</span><span class="stat-copy"><span class="label">Application Review</span><strong>${esc(appStatus()).replaceAll('_',' ')}</strong><small>View application status</small></span><span class="stat-arrow" aria-hidden="true">↗</span></button><button type="button" class="stat stat-button stat-purple" data-page="messages" aria-label="Open Collaboration Messages"><span class="bubble purple">✉</span><span class="stat-copy"><span class="label">Messages</span><strong>${messages.length}</strong><small>Messages in your conversation</small></span><span class="stat-arrow" aria-hidden="true">↗</span></button></div><div class="panel"><div class="panelhead"><h2>📊 Application Progress</h2><button class="link" data-page="status">View Application Details →</button></div><div class="steps">${[['Account Created',true,'Your GETI account is active.'],['Dossier Completed',done,'Complete and save your information.'],['Signature Submitted',signed,'Sign and submit the application.'],['Administrative Review',/approved|under.review|pending.review/i.test(appStatus()),'Await GETI administration decision.']].map(([name,ok,desc],i)=>{let target=['information','dossier','dossier','status'][i],tone=['green','blue','amber','purple'][i];let status=i===3?( /approved/i.test(appStatus())?'Approved':/review|pending/i.test(appStatus())?'Pending Review':appStatus().replaceAll('_',' ')):(ok?'Completed':'Not Started');return `<button type="button" class="step step-button step-${tone}" data-page="${target}" aria-label="Open ${name}: ${status}"><span class="step-arrow" aria-hidden="true">↗</span><span class="number ${ok?'done':i===1&&!done||i===2&&!signed?'current':''}">${ok?'✓':i+1}</span><b>${i+1}. ${name}</b><p>${desc}</p>${pill(status)}<span class="step-action">${['View My Account','Open My Dossier','Sign My Dossier','Check Application'][i]} →</span></button>`}).join('')}</div></div>`}
 function getiDossierLock(){
  const stamp=application?.application_data?.pdf_submitted_at;
  if(!stamp)return {locked:false};
@@ -292,7 +292,7 @@ function getiDossierLock(){
  const unlock=new Date(date.getTime());unlock.setUTCMonth(unlock.getUTCMonth()+3);
  return {locked:Date.now()<unlock.getTime(),unlock,submitted:date};
 }
-function getiDossierLockMessage(){if(!getiAccountActive())return `<div class="notice geti-activation-guide" role="status"><h3>🔒 Waiting for GETI Admin Activation</h3><p>The GETI administrator can activate your Collaboration account even if no payment has been made. Payment does not automatically activate an account.</p><p><b>Current status: Deactivated.</b> Please contact GETI Admin if your activation is pending.</p><button type="button" class="btn alt" onclick="getiRefreshCollaborationStatus()">↻ Check Account Status</button></div>`;const l=getiDossierLock();return l.locked?`<div class="notice" style="border-left:5px solid #c88719;background:#fff8e8"><b>🔒 Dossier Submitted — Editing Locked</b><p>Your dossier has been submitted. You may complete or change your information again on <b>${esc(l.unlock.toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'numeric'}))}</b> (3 months after submission).</p><p>You can still download the submitted A4 PDF and read your messages.</p></div>`:''}
+function getiDossierLockMessage(){if(!getiAccountActive())return `<div class="notice geti-activation-guide" role="status"><h3>🔒 This section is locked — Collaboration Fee required</h3><p>To complete your GETI collaboration application, follow these steps:</p><ol><li><b>Pay the Collaboration Fee (${money(tariffPrices.collaboration)}).</b> Select Collaboration Fee in the GETI Payment Area.</li><li><b>Wait for payment confirmation.</b> GETI must verify the payment status as PAID.</li><li><b>Wait for GETI Admin to activate your account.</b> Your status will change from Deactivated to Active.</li><li><b>Complete your dossier.</b> You can then upload your identity photo, ID card and signature, and submit the A4 PDF.</li></ol><p><b>Current status: Deactivated.</b> Making a payment does not activate the account automatically.</p><button type="button" class="btn" data-page="payment" data-collab-pay="1">💳 Pay Collaboration Fee — ${money(tariffPrices.collaboration)} →</button></div>`;const l=getiDossierLock();return l.locked?`<div class="notice" style="border-left:5px solid #c88719;background:#fff8e8"><b>🔒 Dossier Submitted — Editing Locked</b><p>Your dossier has been submitted. You may complete or change your information again on <b>${esc(l.unlock.toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'numeric'}))}</b> (3 months after submission).</p><p>You can still download the submitted A4 PDF and read your messages.</p></div>`:''}
 function getiAccountActive(){return String(application?.account_status||'deactivated').toLowerCase()==='active';}
 function getiApplyDossierLockUI(){if(!['dossier','documents'].includes(page)|| (getiAccountActive()&&!getiDossierLock().locked))return;
  const root=E('mainContent');if(!root)return;
@@ -413,42 +413,27 @@ if(!application){
  application=create.data;
 }
 messages=[];if(application){const m=await supabase.from('collaboration_messages').select('*').eq('application_id',application.id).order('created_at',{ascending:true}).limit(100);if(m.error)console.warn('Messages unavailable:',m.error.message);else messages=m.data||[]}}
-let getiRefreshingStatus=false;
-async function getiRefreshCollaborationStatus(){
- if(!user||getiRefreshingStatus)return;
- getiRefreshingStatus=true;
+let getiStatusRefreshBusy=false;
+async function getiRefreshAccountStatus(){
+ if(getiStatusRefreshBusy||!user||!application||E('portal').classList.contains('hide'))return;
+ getiStatusRefreshBusy=true;
  try{
-  const [appResult,pricesResult]=await Promise.all([
-   supabase.from('collaboration_applications').select('*').eq('owner_id',user.id).order('created_at',{ascending:false}).limit(1).maybeSingle(),
-   supabase.from('geti_collaboration_tariffs').select('key,price_usd')
-  ]);
-  if(appResult.error)throw appResult.error;
-  if(appResult.data){
-   const before=String(application?.account_status||'').toLowerCase();
-   let pricesChanged=false;
-   application=appResult.data;
-   for(const t of pricesResult.data||[]){
-    const n=Number(t.price_usd);
-    if(Number.isFinite(n)&&n>=0){if(tariffPrices[t.key]!==n)pricesChanged=true;tariffPrices[t.key]=n;}
-   }
-   const changed=before!==String(application.account_status||'').toLowerCase();
-   if((changed||(pricesChanged&&['dashboard','payment','certificate','information','status'].includes(page)))&&!E('portal').classList.contains('hide')){
-    route(page);
-    if(changed){
-     const note=document.createElement('div');
-     note.className='alert good';
-     note.textContent='Account status updated by GETI Admin: '+application.account_status;
-     E('mainContent').prepend(note);
-    }
-   }
-  }
- }catch(e){console.warn('GETI Admin synchronization unavailable:',e.message||e)}
- finally{getiRefreshingStatus=false}
+  const result=await supabase.from('collaboration_applications')
+   .select('id,account_status,application_status,updated_at')
+   .eq('id',application.id).eq('owner_id',user.id).maybeSingle();
+  if(result.error)throw result.error;
+  if(!result.data)return;
+  const before=String(application.account_status||'').toLowerCase();
+  const after=String(result.data.account_status||'').toLowerCase();
+  application={...application,...result.data};
+  updateAccessLabel();
+  if(before!==after){render();}
+ }catch(ex){console.warn('Account status refresh failed:',ex.message||ex)}
+ finally{getiStatusRefreshBusy=false}
 }
-window.getiRefreshCollaborationStatus=getiRefreshCollaborationStatus;
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)getiRefreshCollaborationStatus()});
-window.addEventListener('focus',()=>getiRefreshCollaborationStatus());
-setInterval(()=>{if(!document.hidden&&!E('portal').classList.contains('hide'))getiRefreshCollaborationStatus()},45000);
+window.addEventListener('focus',()=>{void getiRefreshAccountStatus()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)void getiRefreshAccountStatus()});
+setInterval(()=>{if(!document.hidden)void getiRefreshAccountStatus()},15000);
 async function enter(){if(!user)return;E('auth').classList.add('hide');E('portal').classList.remove('hide');try{await load()}catch(e){console.error(e);E('mainContent').innerHTML=`<div class="alert bad">${esc(err(e))}. Check collaboration database permissions.</div>`;return}route(page)}
 async function saveDossier(form){if(!getiAccountActive())throw Error('Admin activation is required before filling your dossier.');const data=Object.fromEntries(new FormData(form).entries()),{full_name,phone,organization,...rest}=data,old=fieldData();const payload={owner_id:user.id,full_name:full_name.trim(),email:user.email,phone:phone.trim(),organization:organization.trim(),application_data:{...old,...rest}};let r;if(application)r=await supabase.from('collaboration_applications').update(payload).eq('id',application.id).eq('owner_id',user.id).select('*').single();else r=await supabase.from('collaboration_applications').insert(payload).select('*').single();if(r.error)throw r.error;application=r.data;return r.data}
 async function patchData(extra){if(!getiAccountActive())throw Error('Admin activation is required before changing your dossier.');const updated={...fieldData(),...extra};if(!application)throw Error('Save the collaboration dossier first.');const r=await supabase.from('collaboration_applications').update({application_data:updated}).eq('id',application.id).eq('owner_id',user.id).select('*').single();if(r.error)throw r.error;application=r.data}
