@@ -1653,11 +1653,11 @@ async function collabLoad(force=false){
  api('/rest/v1/geti_collaboration_tariffs?select=*&order=key.asc'),
  api('/rest/v1/rpc/geti_collaboration_admin_payments',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})
  ]);
- entries=requests[0].status==='fulfilled'?requests[0].value:[];
- messagesData=requests[1].status==='fulfilled'?requests[1].value:[];
- tariffs=requests[2].status==='fulfilled'?requests[2].value:[];
- paymentsData=requests[3].status==='fulfilled'?requests[3].value:[];
- loaded=requests.every(r=>r.status==='fulfilled');
+ if(requests[0].status==='fulfilled')entries=requests[0].value;
+ if(requests[1].status==='fulfilled')messagesData=requests[1].value;
+ if(requests[2].status==='fulfilled')tariffs=requests[2].value;
+ if(requests[3].status==='fulfilled')paymentsData=requests[3].value;
+ loaded=requests[0].status==='fulfilled'; // Applications are sufficient for Account Control; other modules show their own errors.
  const failed=requests.map((r,i)=>r.status==='rejected'?['Applications','Messages','Tariffs','Payments'][i]+': '+errorText(r.reason):null).filter(Boolean);
  if(failed.length){collabLoadIssues=failed; }else{collabLoadIssues=[];}
  return true;
@@ -1669,7 +1669,7 @@ function getiAccountDisplay(a){
  const raw=String(a?.account_status||'').trim().toLowerCase();
  return '<span class="geti-status-chip '+(getiAccountIsActive(a)?'geti-chip-active':'geti-chip-inactive')+'">'+(getiAccountIsActive(a)?'● ACTIVE':raw==='awaiting_admin'?'● AWAITING ADMIN':'● DEACTIVATED')+'</span>';
 }
-function applicationRows(arr,action=false){return '<div class="collab-tbl"><table><thead><tr><th>Registration</th><th>Collaborator</th><th>Contact</th><th>Account</th><th>Application</th><th>Submitted</th><th>Action</th></tr></thead><tbody>'+(arr.length?arr.map(a=>'<tr><td>'+E(a.registration_id)+'</td><td><b>'+E(a.full_name)+'</b><br>'+E(a.organization||'')+'</td><td>'+E(a.email)+'<br>'+E(a.phone||'')+'</td><td>'+pill(a.account_status)+'</td><td>'+pill(a.application_status)+'</td><td>'+E(dat(a.created_at))+'</td><td class="collab-actions">'+btn('collabDetail('+jsArg(a.id)+')','DETAILS')+(action?btn('collabSetAccountStatus('+jsArg(a.id)+',"active")','ACTIVE','success')+btn('collabSetAccountStatus('+jsArg(a.id)+',"deactivated")','DEACTIVATE','danger'):'')+btn('collabDeleteApplication('+jsArg(a.id)+')','DELETE','danger')+'</td></tr>').join(''):'<tr><td colspan="7" class="empty">No collaboration applications found.</td></tr>')+'</tbody></table></div>'}
+function applicationRows(arr,action=false){return '<div class="collab-tbl"><table><thead><tr><th>Registration</th><th>Collaborator</th><th>Contact</th><th>Account</th><th>Application</th><th>Submitted</th><th>Action</th></tr></thead><tbody>'+(arr.length?arr.map(a=>'<tr><td>'+E(a.registration_id)+'</td><td><b>'+E(a.full_name)+'</b><br>'+E(a.organization||'')+'</td><td>'+E(a.email)+'<br>'+E(a.phone||'')+'</td><td>'+getiAccountDisplay(a)+'</td><td>'+pill(a.application_status)+'</td><td>'+E(dat(a.created_at))+'</td><td class="collab-actions">'+btn('collabDetail('+jsArg(a.id)+')','DETAILS')+(action?btn('collabSetAccountStatus('+jsArg(a.id)+',"active")','ACTIVE','success')+btn('collabSetAccountStatus('+jsArg(a.id)+',"deactivated")','DEACTIVATE','danger'):'')+btn('collabDeleteApplication('+jsArg(a.id)+')','DELETE','danger')+'</td></tr>').join(''):'<tr><td colspan="7" class="empty">No collaboration applications found.</td></tr>')+'</tbody></table></div>'}
 function k(label,value){return '<div class="collab-kpi"><span>'+E(label)+'</span><b>'+E(value)+'</b></div>'}
 function collabOverview(){return page('Overview',()=>{
  const active=entries.filter(getiAccountIsActive).length;
@@ -1687,7 +1687,9 @@ async function collabUpdate(id,values){
   body:JSON.stringify(values)
  });
  if(!Array.isArray(updated)||updated.length!==1)throw Error('No account was updated. Verify GETI admin authorization and record access.');
- loaded=false;await collabLoad(true);
+ // The PATCH response is authoritative; a separate module's loading failure cannot roll back it.
+ const index=entries.findIndex(x=>x.id===id);
+ if(index!==-1)entries[index]={...entries[index],...updated[0]};
  return updated[0];
 }
 function collabPaymentFor(a){
@@ -1706,6 +1708,7 @@ async function collabSetAccountStatus(id, requested){
  if(!['active','deactivated'].includes(requested))return;
  const a=entries.find(x=>x.id===id);
  if(!a){status('Application not found. Refresh the list.','bad');return;}
+ if(!loaded){status('Supabase data is incomplete. Refresh the Admin modules before changing accounts.','bad');return;}
  if(String(a.account_status).toLowerCase()===requested){status('Account already '+requested.toUpperCase()+'.');return;}
  const verb=requested==='active'?'ACTIVATE':'DEACTIVATE';
  if(!confirm('GETI ADMIN — '+verb+' '+a.full_name+' ('+a.registration_id+')?\nNew status: '+requested.toUpperCase()))return;
@@ -1910,5 +1913,5 @@ Object.assign(window,{collabLogin,collabLogout,collabReload,collabOverview,colla
 })();
 </script>
 
-</body>
+<script>document.addEventListener('visibilitychange',()=>{if(!document.hidden&&typeof authorized!=='undefined'&&authorized&&typeof collabAccountsRefresh==='function'&&document.getElementById('collabAccountLiveTable'))void collabAccountsRefresh();});</script></body>
 </html>
