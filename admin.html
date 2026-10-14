@@ -1667,9 +1667,9 @@ function actionsBar(){return '<div class="collab-inline">'+btn("openPage('collab
 function getiAccountIsActive(a){return ['active','activated'].includes(String(a?.account_status||'').trim().toLowerCase())}
 function getiAccountDisplay(a){
  const raw=String(a?.account_status||'').trim().toLowerCase();
- return '<span class="geti-status-chip '+(getiAccountIsActive(a)?'geti-chip-active':'geti-chip-inactive')+'">'+(getiAccountIsActive(a)?'● ACTIVE':raw==='awaiting_admin'?'● AWAITING ADMIN':'● DEACTIVATED')+'</span>';
+ return '<span class="geti-status-chip '+(getiAccountIsActive(a)?'geti-chip-active':'geti-chip-inactive')+'">'+(getiAccountIsActive(a)?'● ACTIVE':raw==='awaiting_admin'?'● NOT ACTIVE':'● DEACTIVATED')+'</span>';
 }
-function applicationRows(arr,action=false){return '<div class="collab-tbl"><table><thead><tr><th>Registration</th><th>Collaborator</th><th>Contact</th><th>Account</th><th>Application</th><th>Submitted</th><th>Action</th></tr></thead><tbody>'+(arr.length?arr.map(a=>'<tr><td>'+E(a.registration_id)+'</td><td><b>'+E(a.full_name)+'</b><br>'+E(a.organization||'')+'</td><td>'+E(a.email)+'<br>'+E(a.phone||'')+'</td><td>'+getiAccountDisplay(a)+'</td><td>'+pill(a.application_status)+'</td><td>'+E(dat(a.created_at))+'</td><td class="collab-actions">'+btn('collabDetail('+jsArg(a.id)+')','DETAILS')+(action?btn('collabSetAccountStatus('+jsArg(a.id)+',"active")','ACTIVE','success')+btn('collabSetAccountStatus('+jsArg(a.id)+',"deactivated")','DEACTIVATE','danger'):'')+btn('collabDeleteApplication('+jsArg(a.id)+')','DELETE','danger')+'</td></tr>').join(''):'<tr><td colspan="7" class="empty">No collaboration applications found.</td></tr>')+'</tbody></table></div>'}
+function applicationRows(arr,action=false){return '<div class="collab-tbl"><table><thead><tr><th>Registration</th><th>Collaborator</th><th>Contact</th><th>Account</th><th>Application</th><th>Submitted</th><th>Action</th></tr></thead><tbody>'+(arr.length?arr.map(a=>'<tr><td>'+E(a.registration_id)+'</td><td><b>'+E(a.full_name)+'</b><br>'+E(a.organization||'')+'</td><td>'+E(a.email)+'<br>'+E(a.phone||'')+'</td><td>'+getiAccountDisplay(a)+'</td><td>'+pill(a.application_status==='pending_review'?'IN REVIEW':a.application_status)+'</td><td>'+E(dat(a.created_at))+'</td><td class="collab-actions">'+btn('collabDetail('+jsArg(a.id)+')','DETAILS')+(action?(getiAccountIsActive(a)?'<span class="geti-status-chip geti-chip-active">ACTIVE</span>':btn('collabSetAccountStatus('+jsArg(a.id)+',"active")','ACTIVE','success'))+(String(a.account_status||'').toLowerCase()==='deactivated'?'<span class="geti-status-chip geti-chip-inactive">DEACTIVATED</span>':btn('collabSetAccountStatus('+jsArg(a.id)+',"deactivated")','DEACTIVATE','danger')):'')+btn('collabDeleteApplication('+jsArg(a.id)+')','DELETE','danger')+'</td></tr>').join(''):'<tr><td colspan="7" class="empty">No collaboration applications found.</td></tr>')+'</tbody></table></div>'}
 function k(label,value){return '<div class="collab-kpi"><span>'+E(label)+'</span><b>'+E(value)+'</b></div>'}
 function collabOverview(){return page('Overview',()=>{
  const active=entries.filter(getiAccountIsActive).length;
@@ -1679,7 +1679,7 @@ function collabOverview(){return page('Overview',()=>{
 })}
 function collabApplications(){return page('Applications',()=>{content(hdr('Collaboration Applications','Registration details, status and applicant history')+'<div class="collab-panel"><div class="collab-tools"><input id="collabSearch" placeholder="Search name, email, registration..." oninput="collabFilterApps()"><select id="collabFilter" onchange="collabFilterApps()"><option value="">All account statuses</option><option value="active">Active</option><option value="deactivated">Deactivated</option></select></div><div id="collabAppRows">'+applicationRows(entries)+'</div></div>')})}
 function collabFilterApps(){let q=(document.getElementById('collabSearch')?.value||'').toLowerCase(),st=document.getElementById('collabFilter')?.value||'';const rows=entries.filter(a=>(!st||a.account_status===st)&&(!q||[a.full_name,a.email,a.registration_id,a.organization].join(' ').toLowerCase().includes(q)));document.getElementById('collabAppRows').innerHTML=applicationRows(rows)}
-function collabDetail(id){const a=entries.find(x=>x.id===id);if(!a)return;selectedId=id;let fields=[['Full name',a.full_name],['Registration ID',a.registration_id],['Email',a.email],['Phone',a.phone],['Centre',a.organization],['Account',a.account_status],['Application review',a.application_status],['Created',dat(a.created_at)],['PDF',a.dossier_pdf||'Not submitted']];let extras=Object.entries(a.application_data||{}).filter(([k,v])=>!String(v).startsWith('data:')).slice(0,30).map(([k,v])=>[k,typeof v==='object'?JSON.stringify(v).slice(0,180):String(v).slice(0,260)]);content(hdr('Collaboration Dossier',a.registration_id||a.full_name)+'<div class="collab-panel"><h3>Applicant Information</h3><div class="collab-detail">'+[...fields,...extras].map(([k,v])=>'<div><b>'+E(k)+'</b>'+E(v||'—')+'</div>').join('')+'</div><div class="collab-inline" style="margin-top:14px">'+btn('collabSignedDossier('+jsArg(id)+')','OPEN SIGNED PDF')+btn('collabToggle('+jsArg(id)+')',a.account_status==='active'?'DEACTIVATE':'ACTIVATE',a.account_status==='active'?'danger':'success')+btn("openPage('collabreview')",'APPLICATION REVIEW')+'</div><div id="collabFeedback"></div></div>')}
+function collabDetail(id){const a=entries.find(x=>x.id===id);if(!a)return;selectedId=id;let fields=[['Full name',a.full_name],['Registration ID',a.registration_id],['Email',a.email],['Phone',a.phone],['Centre',a.organization],['Account',a.account_status],['Application review',a.application_status],['Created',dat(a.created_at)],['PDF',a.dossier_pdf||'Not submitted']];let extras=Object.entries(a.application_data||{}).filter(([k,v])=>!String(v).startsWith('data:')).slice(0,30).map(([k,v])=>[k,typeof v==='object'?JSON.stringify(v).slice(0,180):String(v).slice(0,260)]);content(hdr('Collaboration Application File',a.registration_id||a.full_name)+'<div class="collab-panel"><h3>Applicant Information</h3><div class="collab-detail">'+[...fields,...extras].map(([k,v])=>'<div><b>'+E(k)+'</b>'+E(v||'—')+'</div>').join('')+'</div><div class="collab-inline" style="margin-top:14px">'+btn('collabSignedDossier('+jsArg(id)+')','OPEN SIGNED PDF')+btn('collabToggle('+jsArg(id)+')',a.account_status==='active'?'DEACTIVATE':'ACTIVATE',a.account_status==='active'?'danger':'success')+btn("openPage('collabreview')",'APPLICATION REVIEW')+'</div><div id="collabFeedback"></div></div>')}
 async function collabUpdate(id,values){
  if(!authorized)throw Error('Verified Supabase administrator session required.');
  const updated=await api('/rest/v1/collaboration_applications?id=eq.'+encodeURIComponent(id),{
@@ -1708,18 +1708,22 @@ async function collabSetAccountStatus(id, requested){
  if(!['active','deactivated'].includes(requested))return;
  const a=entries.find(x=>x.id===id);
  if(!a){status('Application not found. Refresh the list.','bad');return;}
- if(!loaded){status('Supabase data is incomplete. Refresh the Admin modules before changing accounts.','bad');return;}
  if(String(a.account_status).toLowerCase()===requested){status('Account already '+requested.toUpperCase()+'.');return;}
  const verb=requested==='active'?'ACTIVATE':'DEACTIVATE';
  if(!confirm('GETI ADMIN — '+verb+' '+a.full_name+' ('+a.registration_id+')?\nNew status: '+requested.toUpperCase()))return;
  try{
   const result=await collabUpdate(id,{account_status:requested});
   if(String(result.account_status).toLowerCase()!==requested)throw Error('Supabase did not confirm '+requested+'.');
-  collabAccounts();
-  setTimeout(()=>status('SUCCESS: '+a.full_name+' — '+requested.toUpperCase()+' (saved in Supabase).'),0);
+  const local=entries.find(x=>x.id===id);if(local)local.account_status=String(result.account_status).toLowerCase();
+  const immediate=document.getElementById('collabAccountLiveTable');if(immediate)immediate.innerHTML=applicationRows(entries,true);
+  const activeCount=document.getElementById('collabActiveCounter');if(activeCount)activeCount.textContent=String(entries.filter(getiAccountIsActive).length);
+  const freshOK=await collabAccountsRefresh(true);
+  if(!freshOK){status('Status saved as '+requested.toUpperCase()+', but list refresh failed. Retry REFRESH STATUS.','bad');return;}
+  const confirmed=entries.find(x=>x.id===id);
+  status(confirmed&&String(confirmed.account_status).toLowerCase()===requested?'SUCCESS: '+a.full_name+' — '+requested.toUpperCase()+' (verified).':'Server returned a different account status. Refresh and contact support.',confirmed&&String(confirmed.account_status).toLowerCase()===requested?'ok':'bad');
  }catch(e){
-  collabAccounts();
-  setTimeout(()=>status('Account NOT changed: '+errorText(e),'bad'),0);
+  await collabAccountsRefresh(true);
+  status('Account NOT changed: '+errorText(e),'bad');
  }
 }
 async function collabToggle(id){
@@ -1741,32 +1745,39 @@ setInterval(async()=>{
   }
  }catch(e){console.warn('Account status refresh:',e.message)}
 },15000);
-async function collabAccountsRefresh(){
- if(!authorized)return;
- const b=document.getElementById('collabAccountRefresh');if(b){b.disabled=true;b.textContent='Refreshing...'}
+async function collabAccountsRefresh(silent=false){
+ if(!authorized){if(!silent)status('Sign in to GETI Supabase Admin first.','bad');return false;}
+ const b=document.getElementById('collabAccountRefresh');
+ if(b){b.disabled=true;b.textContent='Refreshing...';}
  try{
-  loaded=false;
-  await collabLoad(true);
+  // Read live applications independently of Messages, Payments, and Tariffs.
+  const fresh=await api('/rest/v1/collaboration_applications?select=*&order=created_at.desc&limit=500');
+  if(!Array.isArray(fresh))throw Error('Invalid applications response from Supabase.');
+  entries=fresh;loaded=true;
   const list=document.getElementById('collabAccountLiveTable');
   if(list)list.innerHTML=applicationRows(entries,true);
   const counter=document.getElementById('collabActiveCounter');
-  if(counter)counter.textContent=String(entries.filter(a=>getiAccountIsActive(a)).length);
-  const total=document.getElementById('collabAccountsCounter');if(total)total.textContent=String(entries.length);
-  status('Account statuses refreshed from Supabase.');
- }catch(e){status(errorText(e),'bad')}finally{if(b){b.disabled=false;b.textContent='REFRESH STATUS'}}
+  if(counter)counter.textContent=String(entries.filter(getiAccountIsActive).length);
+  const total=document.getElementById('collabAccountsCounter');
+  if(total)total.textContent=String(entries.length);
+  if(!silent)status('Account statuses verified with GETI Supabase.');
+  return true;
+ }catch(e){if(!silent)status('Refresh failed: '+errorText(e),'bad');return false;}
+ finally{if(b){b.disabled=false;b.textContent='REFRESH STATUS';}}
 }
 function collabAccounts(){return page('Account Control',()=>{
  const n=entries.filter(a=>getiAccountIsActive(a)).length;
  content(hdr('Account Control','Current account status from GETI Supabase')+
  '<div id="collabFeedback"></div><div class="collab-panel"><div class="collab-inline" style="align-items:center;gap:14px;flex-wrap:wrap"><strong>ACTIVE: <span id="collabActiveCounter">'+n+'</span></strong><span>All accounts: <b id="collabAccountsCounter">'+entries.length+'</b></span><button id="collabAccountRefresh" type="button" class="collab-btn" onclick="collabAccountsRefresh()">REFRESH STATUS</button></div></div>'+
  '<div class="collab-panel" id="collabAccountLiveTable">'+applicationRows(entries,true)+'</div>');
+ setTimeout(()=>{if(document.getElementById('collabAccountLiveTable'))void collabAccountsRefresh(true)},0);
  })}
 
 async function signedUrl(bucket,path){if(!path)throw Error('No PDF file has been submitted.');if(/^https?:\/\//i.test(path))throw Error('External file references must be reviewed separately.');const obj=await api('/storage/v1/object/sign/'+encodeURIComponent(bucket)+'/'+path.split('/').map(encodeURIComponent).join('/'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({expiresIn:120})});return root+'/storage/v1'+obj.signedURL;}
-async function collabSignedDossier(id){try{let a=entries.find(x=>x.id===id);if(!a?.dossier_pdf)throw Error('No submitted dossier PDF for this application.');let u=await signedUrl('collaboration-dossiers',a.dossier_pdf);window.open(u,'_blank','noopener')}catch(e){status(errorText(e),'bad')}}
-function collabDocuments(){return page('Dossiers',()=>content(hdr('Signed Documents & Dossiers','Review submitted private A4 PDFs and signatures')+'<div id="collabFeedback"></div><div class="collab-panel"><div class="collab-tbl"><table><thead><tr><th>Collaborator</th><th>Registration</th><th>PDF dossier</th><th>Review</th></tr></thead><tbody>'+(entries.length?entries.map(a=>'<tr><td>'+E(a.full_name)+'</td><td>'+E(a.registration_id)+'</td><td>'+pill(a.dossier_pdf?'Submitted':'Missing')+'</td><td>'+btn('collabSignedDossier('+jsArg(a.id)+')','VIEW PDF')+(a.dossier_pdf?btn('collabDeleteDossier('+jsArg(a.id)+')','DELETE PDF','danger'):'')+'</td></tr>').join(''):'<tr><td colspan="4">No files found</td></tr>')+'</tbody></table></div></div>'))}
+async function collabSignedDossier(id){try{let a=entries.find(x=>x.id===id);if(!a?.dossier_pdf)throw Error('No submitted application PDF for this application.');let u=await signedUrl('collaboration-dossiers',a.dossier_pdf);window.open(u,'_blank','noopener')}catch(e){status(errorText(e),'bad')}}
+function collabDocuments(){return page('Dossiers',()=>content(hdr('Signed Documents & Dossiers','Review submitted private A4 PDFs and signatures')+'<div id="collabFeedback"></div><div class="collab-panel"><div class="collab-tbl"><table><thead><tr><th>Collaborator</th><th>Registration</th><th>Application PDF</th><th>Review</th></tr></thead><tbody>'+(entries.length?entries.map(a=>'<tr><td>'+E(a.full_name)+'</td><td>'+E(a.registration_id)+'</td><td>'+pill(a.dossier_pdf?'Submitted':'Missing')+'</td><td>'+btn('collabSignedDossier('+jsArg(a.id)+')','VIEW PDF')+(a.dossier_pdf?btn('collabDeleteDossier('+jsArg(a.id)+')','DELETE PDF','danger'):'')+'</td></tr>').join(''):'<tr><td colspan="4">No files found</td></tr>')+'</tbody></table></div></div>'))}
 async function collabReviewSave(id,st){if(!confirm('Change application review status to '+st+'?'))return;try{await collabUpdate(id,{application_status:st});collabReview();setTimeout(()=>status('Application review saved.'),0)}catch(e){collabReview();setTimeout(()=>status(errorText(e),'bad'),0)}}
-function collabReview(){return page('Application Review',()=>content(hdr('Application Review','Review applicant dossiers separately from account activation')+'<div id="collabFeedback"></div><div class="collab-panel"><div class="collab-tbl"><table><thead><tr><th>Applicant</th><th>Status</th><th>Dossier</th><th>Review action</th></tr></thead><tbody>'+entries.map(a=>'<tr><td>'+E(a.full_name)+'<br>'+E(a.registration_id)+'</td><td>'+pill(a.application_status)+'</td><td>'+btn('collabSignedDossier('+jsArg(a.id)+')','VIEW PDF')+'</td><td><div class="collab-actions">'+btn('collabReviewSave('+jsArg(a.id)+',\'approved\')','APPROVE','success')+btn('collabReviewSave('+jsArg(a.id)+',\'pending_review\')','PENDING')+btn('collabReviewSave('+jsArg(a.id)+',\'rejected\')','REJECT','danger')+'</div></td></tr>').join('')+'</tbody></table></div></div>'))}
+function collabReview(){return page('Application Review',()=>content(hdr('Application Review','Review applicant dossiers separately from account activation')+'<div id="collabFeedback"></div><div class="collab-panel"><div class="collab-tbl"><table><thead><tr><th>Applicant</th><th>Status</th><th>Dossier</th><th>Review action</th></tr></thead><tbody>'+entries.map(a=>'<tr><td>'+E(a.full_name)+'<br>'+E(a.registration_id)+'</td><td>'+pill(a.application_status)+'</td><td>'+btn('collabSignedDossier('+jsArg(a.id)+')','VIEW PDF')+'</td><td><div class="collab-actions">'+btn('collabReviewSave('+jsArg(a.id)+',\'approved\')','APPROVE','success')+btn('collabReviewSave('+jsArg(a.id)+',\'pending_review\')','IN REVIEW')+btn('collabReviewSave('+jsArg(a.id)+',\'rejected\')','REJECT','danger')+'</div></td></tr>').join('')+'</tbody></table></div></div>'))}
 function collabMessages(){return page('Collaboration Messages',()=>content(hdr('Collaboration Messages','Private conversations with registered collaboration applicants')+'<div class="collab-panel"><div class="collab-tools"><select id="collabRecipient" onchange="collabThread()"><option value="">Choose collaborator...</option>'+entries.map(a=>'<option value="'+E(a.id)+'">'+E(a.full_name)+' — '+E(a.registration_id)+'</option>').join('')+'</select></div><div id="collabThreadBox" class="collab-muted">Select a collaborator to open messages.</div></div>'))}
 function collabThread(){let id=document.getElementById('collabRecipient')?.value;selectedId=id;let elem=document.getElementById('collabThreadBox');if(!id){elem.textContent='Select a collaborator.';return}let items=messagesData.filter(m=>m.application_id===id).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));elem.innerHTML='<div style="max-height:350px;overflow:auto">'+(items.length?items.map(m=>'<div class="collab-panel"><b>'+E(m.sender_role||'Sender')+'</b><span class="collab-muted"> · '+E(dat(m.created_at))+'</span><p>'+E(m.body||'')+'</p>'+(m.attachment_path?btn('collabMessageAttachment('+jsArg(m.id)+')','VIEW ATTACHMENT'):'')+btn('collabDeleteMessage('+jsArg(m.id)+')','DELETE MESSAGE','danger')+'</div>').join(''):'<p class="collab-muted">No messages yet.</p>')+'</div><label>Message to collaborator</label><textarea id="collabMessageBody" placeholder="Write your message..." style="font-size:13px"></textarea><label>Attachment (optional, JPG/PNG/PDF, max 20 MB)</label><input id="collabMessageAttachment" type="file" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf"><div id="collabFeedback"></div><button class="btn primary" onclick="collabSendMessage()">SEND MESSAGE</button>'}
 async function collabMessageAttachment(id){try{let m=messagesData.find(x=>x.id===id);let u=await signedUrl('collaboration-chat',m.attachment_path);window.open(u,'_blank','noopener')}catch(e){status(errorText(e),'bad')}}
@@ -1811,65 +1822,62 @@ function collabPrices(){return page('Prices',()=>{
  '<p class="collab-muted" style="margin-top:12px">Certificate Fee is the price per certificate. All values are USD.</p></div>');
 });}
 let collabSavingPrices=false;
+const getiPriceKeys=['collaboration','certificate','bonus'];
+async function getiReadOfficialPrices(){
+ const rows=await api('/rest/v1/geti_collaboration_tariffs?select=key,price_usd,updated_at&order=key.asc&_geti_cache='+Date.now(),{cache:'no-store'});
+ if(!Array.isArray(rows)||getiPriceKeys.some(k=>!rows.some(r=>r.key===k&&Number.isFinite(Number(r.price_usd)))))throw Error('Missing or unreadable GETI tariff rows.');
+ return rows;
+}
+function getiShowVerifiedPrices(rows,message){
+ tariffs=rows; loaded=true;
+ const keys=getiPriceKeys;
+ for(const k of keys){const field=document.getElementById('collabPrice-'+k);if(field){field.value=Number(rows.find(r=>r.key===k).price_usd).toFixed(2);field.disabled=false;}}
+ if(message)status(message);
+}
 async function collabReloadPrices(){
- if(collabSavingPrices){status('Please wait until the current save finishes.');return}
- if(!authorized){status('Please sign in as GETI administrator.','bad');return}
- try{
-  const data=await api('/rest/v1/geti_collaboration_tariffs?select=key,price_usd&order=key.asc');
-  if(!Array.isArray(data)||data.length<3)throw Error('Official tariff list is incomplete.');
-  tariffs=data;
-  collabPrices();
-  setTimeout(()=>status('Current GETI prices refreshed from Supabase.'),0);
- }catch(e){status('Could not load prices: '+errorText(e),'bad')}
+ if(collabSavingPrices){status('Wait until saving finishes.');return}
+ if(!authorized){status('Sign in using the GETI Supabase administrator account.','bad');return}
+ const b=document.getElementById('collabPricesRefresh');if(b)b.disabled=true;
+ try{getiShowVerifiedPrices(await getiReadOfficialPrices(),'Current official prices have been loaded from Supabase.');}
+ catch(e){status('REFRESH FAILED: '+errorText(e),'bad')}
+ finally{if(b)b.disabled=false}
 }
 async function collabSavePrices(){
  if(collabSavingPrices)return;
- if(!authorized){status('Sign in with your authorized Supabase administrator account.','bad');return}
- const keys=['collaboration','certificate','bonus'];const prices={};
- for(const tariffKey of keys){
-  const field=document.getElementById('collabPrice-'+tariffKey);
-  if(!field){status('Missing price input: '+tariffKey,'bad');return}
-  const raw=field.value.trim();const value=Number(raw);
-  if(!raw||!Number.isFinite(value)||value<=0||value>100000||Math.abs(value*100-Math.round(value*100))>1e-6){
-   status('Enter a valid USD price (0.01 – 100000, max 2 decimals): '+tariffKey,'bad');field.focus();return;
-  }
-  prices[tariffKey]=Math.round(value*100)/100;
+ if(!authorized){status('Administrator authorization required.','bad');return}
+ const prices={};
+ for(const k of getiPriceKeys){
+  const field=document.getElementById('collabPrice-'+k);
+  if(!field){status('Price field missing: '+k,'bad');return}
+  const raw=field.value.trim(),v=Number(raw);
+  if(!raw||!Number.isFinite(v)||v<=0||v>100000||Math.abs(v*100-Math.round(v*100))>1e-6){status('Invalid price for '+k+'. Use USD (0.01–100000, max 2 decimals).','bad');field.focus();return}
+  prices[k]=Math.round(v*100)/100;
  }
- const changed=keys.some(k=>Math.abs(Number(tariffs.find(t=>t.key===k)?.price_usd)-prices[k])>0.00001);
- if(!changed){status('No price changes to save.');return}
- if(!confirm('Save official GETI prices?\n'+keys.map(k=>k+': $'+prices[k].toFixed(2)).join('\n')))return;
- const button=document.getElementById('collabPricesSave');
- collabSavingPrices=true;if(button){button.disabled=true;button.textContent='SAVING...'}
- const lockedInputs=['collaboration','certificate','bonus'].map(k=>document.getElementById('collabPrice-'+k)).filter(Boolean);
- lockedInputs.forEach(el=>el.disabled=true);
- const refreshButton=document.getElementById('collabPricesRefresh');if(refreshButton)refreshButton.disabled=true;
- let serverSaved=false;
+ if(!confirm('Save GETI service prices?\n'+getiPriceKeys.map(k=>k+': $'+prices[k].toFixed(2)).join('\n')))return;
+ const b=document.getElementById('collabPricesSave'),refresh=document.getElementById('collabPricesRefresh');
+ const fields=getiPriceKeys.map(k=>document.getElementById('collabPrice-'+k));
+ collabSavingPrices=true;
+ if(b){b.disabled=true;b.textContent='SAVING...'}if(refresh)refresh.disabled=true;
+ fields.forEach(f=>{if(f)f.disabled=true});
+ let acknowledged=null;
  try{
-  // Atomic server-side save returns the actual persisted values.
-  const saved=await api('/rest/v1/rpc/geti_admin_save_collaboration_prices',{
-   method:'POST',headers:{'Content-Type':'application/json','Cache-Control':'no-cache'},body:JSON.stringify({p_prices:prices})
-  });
-  if(!saved||keys.some(k=>!Number.isFinite(Number(saved[k]))||Math.abs(Number(saved[k])-prices[k])>0.001))throw Error('Server did not confirm the requested prices.');
-  serverSaved=true;
-  // Reflect the values acknowledged by the database immediately, even if the subsequent GET is stale.
-  tariffs=keys.map(k=>({key:k,price_usd:Number(saved[k])}));
-  collabPrices();
-  let fresh=null;
-  try{
-   fresh=await api('/rest/v1/geti_collaboration_tariffs?select=key,price_usd&order=key.asc',{
-    cache:'no-store',headers:{'Cache-Control':'no-cache','Pragma':'no-cache'}
-   });
-  }catch(reloadError){console.warn('GETI price reload delayed:',reloadError)}
-  const confirmed=Array.isArray(fresh)&&keys.every(k=>{
-   const row=fresh.find(x=>x.key===k);
-   return row&&Number.isFinite(Number(row.price_usd))&&Math.abs(Number(row.price_usd)-prices[k])<0.001;
-  });
-  if(confirmed){tariffs=fresh;collabPrices();}
-  setTimeout(()=>status(confirmed?'SUCCESS: Official prices saved and verified in Supabase.':'SAVED: Supabase confirmed your prices. The secondary refresh was not yet consistent; use REFRESH PRICES to check later.'),0);
- }catch(e){status((serverSaved?'Prices were saved, but a display update failed: ':'Price change failed: ')+errorText(e),'bad')}
- finally{collabSavingPrices=false;const b=document.getElementById('collabPricesSave');if(b){b.disabled=false;b.textContent='SAVE OFFICIAL PRICES'}
-  const r=document.getElementById('collabPricesRefresh');if(r)r.disabled=false;
-  ['collaboration','certificate','bonus'].forEach(k=>{const el=document.getElementById('collabPrice-'+k);if(el)el.disabled=false;});
+  acknowledged=await api('/rest/v1/rpc/geti_admin_save_collaboration_prices',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_prices:prices}),cache:'no-store'});
+  if(!acknowledged||getiPriceKeys.some(k=>Math.abs(Number(acknowledged[k])-prices[k])>0.001))throw Error('The server did not acknowledge the requested prices.');
+  tariffs=getiPriceKeys.map(k=>({key:k,price_usd:Number(acknowledged[k])}));
+  // Do not rebuild the entire page while the user is saving: a rerender can erase confirmation.
+  let readback=null;
+  try{readback=await getiReadOfficialPrices()}catch(e){console.warn('Read-back unavailable:',e)}
+  if(readback&&getiPriceKeys.every(k=>Math.abs(Number(readback.find(r=>r.key===k).price_usd)-prices[k])<0.001)){
+    getiShowVerifiedPrices(readback,'SUCCESS: GETI service prices saved and verified in Supabase.');
+  }else{
+    getiShowVerifiedPrices(tariffs,'SAVED: Supabase confirmed the new prices. Use REFRESH PRICES to check the latest values.');
+  }
+ }catch(e){
+   status((acknowledged?'The price update was acknowledged but could not be verified: ':'SAVE FAILED: ')+errorText(e),'bad');
+ }finally{
+  collabSavingPrices=false;
+  if(b){b.disabled=false;b.textContent='SAVE OFFICIAL PRICES'}if(refresh)refresh.disabled=false;
+  fields.forEach(f=>{if(f)f.disabled=false});
  }
 }
 function collabStatistics(){return page('Statistics',()=>{const byStatus=(a,key)=>a.reduce((o,v)=>(o[String(v[key]||'unknown')]=(o[String(v[key]||'unknown')]||0)+1,o),{});let a=byStatus(entries,'account_status'),p=byStatus(paymentsData,'status');const rows=o=>Object.entries(o).map(([k,v])=>'<tr><td>'+E(k)+'</td><td><b>'+v+'</b></td></tr>').join('')||'<tr><td colspan="2">No records</td></tr>';content(hdr('Collaboration Statistics','Real-time counters computed from loaded GETI data')+'<div class="collab-grid">'+k('Applications',entries.length)+k('Messages',messagesData.length)+k('Payment records',paymentsData.length)+k('Tariff categories',tariffs.length)+'</div><div class="collab-panel"><h3>Account Status</h3><div class="collab-tbl"><table><thead><tr><th>Status</th><th>Count</th></tr></thead><tbody>'+rows(a)+'</tbody></table></div></div><div class="collab-panel"><h3>Zopayo Status</h3><div class="collab-tbl"><table><thead><tr><th>Status</th><th>Count</th></tr></thead><tbody>'+rows(p)+'</tbody></table></div></div>')})}
@@ -1901,12 +1909,12 @@ async function collabDeleteMessage(id){
 async function collabDeleteDossier(id){
  if(!authorized){status('GETI administrator sign-in required.','bad');return}
  const a=entries.find(x=>x.id===id);if(!a||!a.dossier_pdf)return;
- if(!confirm('Remove the submitted dossier PDF reference for '+a.full_name+'? This does NOT delete the applicant account or unrelated messages.'))return;
+ if(!confirm('Remove the submitted application PDF reference for '+a.full_name+'? This does NOT delete the applicant account or unrelated messages.'))return;
  try{
   const result=await collabUpdate(id,{dossier_pdf:null});
   if(result.dossier_pdf!==null)throw Error('Dossier update was not confirmed.');
   collabDocuments();setTimeout(()=>status('Application PDF unlinked from the application. The private Storage object must be cleaned up separately if required.'),0);
- }catch(e){collabDocuments();setTimeout(()=>status('Could not remove dossier PDF: '+errorText(e),'bad'),0)}
+ }catch(e){collabDocuments();setTimeout(()=>status('Could not remove application PDF: '+errorText(e),'bad'),0)}
 }
 async function collabReload(){if(!authorized){authPage();return}try{await collabLoad(true);collabOverview()}catch(e){status(errorText(e),'bad')}}
 Object.assign(window,{collabLogin,collabLogout,collabReload,collabOverview,collabApplications,collabAccounts,collabDocuments,collabReview,collabMessages,collabPayments,collabPrices,collabStatistics,collabSettings,collabFilterApps,collabDetail,collabToggle,collabSignedDossier,collabReviewSave,collabThread,collabSendMessage,collabMessageAttachment,collabSavePrices,collabDeleteApplication,collabDeleteMessage,collabDeleteDossier});
