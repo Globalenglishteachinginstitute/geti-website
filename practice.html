@@ -1,0 +1,144 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>English Practice | GETI</title><style>
+:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#f3f7ff;color:#172a45;font:16px/1.6 system-ui,Arial,sans-serif}header{background:#102e70;color:white;padding:22px 4vw}.wrap{max-width:1050px;margin:auto;padding:26px 18px 70px}a{color:#1d4ed8}.back{display:inline-block;background:#dbeafe;color:#12366f;text-decoration:none;border-radius:9px;padding:9px 15px;font-weight:700}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.card{background:#fff;border:1px solid #ccd9ee;border-radius:13px;padding:18px}h1{margin:0;font-size:clamp(27px,4vw,38px)}h2{color:#123b84}button,select{padding:12px 15px;border-radius:8px;border:1px solid #a4b4d5;font:inherit}button{background:#1555b5;color:#fff;cursor:pointer}button:hover{background:#113d80}.note{background:#fff6d9;border-left:4px solid #d59d0b;padding:12px}.example{color:#18733c}.wrong{color:#a22c35}@media print{.back,button,select{display:none}body{background:white}.card{break-inside:avoid}} 
+/* GETI Voice Conversation extension */
+.voice-shell{margin:24px 0 34px;padding:clamp(16px,3vw,28px);background:linear-gradient(130deg,#e8f1ff,#fff);border:1px solid #bed3f2;border-radius:20px}
+.voice-shell h2{margin:0 0 5px;font-size:clamp(23px,3vw,30px)}.v-intro{color:#526780;margin:0 0 18px}.voice-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,300px);gap:18px}
+.voice-panel{background:#fff;border:1px solid #d6e3f6;border-radius:15px;padding:18px;min-width:0}.voice-panel label{display:block;font-weight:700;margin:0 0 7px}.voice-controls{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}.voice-controls button{min-height:46px}.voice-controls button:disabled{opacity:.5;cursor:not-allowed}
+.v-start{background:#1462ba}.v-stop{background:#9c2936}.v-light{background:#eaf2ff;color:#123b84}.v-light:hover{background:#d6e7ff}.v-status{padding:9px 12px;background:#eef4ff;border-left:4px solid #2c69bf;border-radius:7px;font-weight:700;margin:12px 0}.v-status.listening{background:#e5f7ed;border-color:#169650;color:#12643b}
+.chatlog{height:330px;overflow:auto;background:#f6f9ff;border:1px solid #dae5f6;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:12px}.bubble{max-width:91%;padding:10px 13px;border-radius:15px;overflow-wrap:anywhere}.bubble.teacher{align-self:flex-start;background:#dfebff;color:#13386e}.bubble.student{align-self:flex-end;background:#d9f5e5;color:#174d31}.bubble .who{font-size:.76rem;font-weight:800;letter-spacing:.03em;display:block;margin-bottom:3px}.bubble .correction{display:block;font-size:.9rem;margin-top:8px;padding-top:6px;border-top:1px solid #bdddc7}
+.voice-entry{display:flex;gap:9px;margin-top:12px}.voice-entry input{flex:1;min-width:0;padding:12px;border:1px solid #b5c9e3;border-radius:8px;font:inherit}.voice-entry button{white-space:nowrap}
+.voice-panel select{width:100%;background:#fff}.v-help{font-size:.88rem;color:#4f617a}.v-point{padding:12px 0;border-bottom:1px solid #edf1f7}.v-point:last-child{border:0}.v-point strong{color:#153b77}.v-auto{display:flex!important;align-items:center;gap:10px;margin:12px 0!important;color:#143c78}.v-auto input{width:20px;height:20px;accent-color:#1462ba;flex-shrink:0}.v-foot{font-size:.85rem;color:#5a6880;margin:14px 0 0}
+@media(max-width:750px){.voice-layout{grid-template-columns:1fr}.chatlog{height:300px}.voice-entry{flex-wrap:wrap}.voice-entry input{flex-basis:100%}.voice-shell{margin-top:20px}.voice-controls button{flex:1}}
+@media print{.voice-shell{display:none}}
+</style></head><body><header><h1>English Practice</h1><div>Global English Teaching Institute — GETI</div></header><main class="wrap"><a class="back" href="index.html">← Back to Premium Courses</a>
+<section class="voice-shell" id="voice-conversation" aria-labelledby="voice-title">
+ <h2 id="voice-title">🎙️ Voice Conversation Practice</h2>
+ <p class="v-intro">Speak English with your GETI practice tutor. Listen to a question, answer aloud, and hear a spoken response.</p>
+ <div class="voice-layout">
+  <div class="voice-panel">
+   <label for="voice-topic">Conversation topic</label>
+   <select id="voice-topic"><option value="daily">Daily Life & Introductions</option><option value="travel">Travel & Directions</option><option value="restaurant">Restaurant & Food</option><option value="work">Work & Job Interviews</option><option value="learning">Learning English</option></select>
+   <div class="voice-controls">
+    <button id="v-start" type="button" class="v-start">🎤 Start Automatic Conversation</button>
+    <button id="v-replay" type="button" class="v-light">🔊 Hear Question</button>
+    <button id="v-stop" type="button" class="v-stop">■ Stop</button>
+    <button id="v-reset" type="button" class="v-light">↺ New Conversation</button>
+   </div>
+   <label class="v-auto"><input type="checkbox" id="v-auto" checked> 🔄 Automatic replies & hands-free listening (after pressing Start)</label>
+   <div role="status" aria-live="polite" class="v-status" id="v-status">Press Start once; speak after the tutor finishes talking.</div>
+   <div class="chatlog" id="v-chat" role="log" aria-label="English conversation" aria-live="polite"></div>
+   <form class="voice-entry" id="v-text-form"><input id="v-text" aria-label="Type an English answer" placeholder="Or type your answer here..." autocomplete="off" maxlength="800"><button type="submit">Send ↗</button></form>
+  </div>
+  <aside class="voice-panel">
+   <label for="v-speed">Tutor speaking speed</label>
+   <select id="v-speed"><option value="0.76">Slow — Beginner</option><option value="0.9" selected>Learning — Clear</option><option value="1">Normal</option></select>
+   <label for="v-voice" style="margin-top:14px">English voice</label>
+   <select id="v-voice"><option value="">Automatic (English)</option></select>
+   <div class="v-point"><strong>1. Listen</strong><div class="v-help">The tutor asks an English question.</div></div>
+   <div class="v-point"><strong>2. Speak</strong><div class="v-help">Press Start once, then answer whenever the tutor finishes speaking. Allow microphone access when prompted.</div></div>
+   <div class="v-point"><strong>3. Hear the reply</strong><div class="v-help">The tutor replies automatically and listens again when it finishes speaking (if hands-free mode is enabled).</div></div>
+   <div class="v-point"><strong>4. Improve</strong><div class="v-help">Read simple suggestions for selected sentence mistakes.</div></div>
+   <p class="v-foot">Replies play automatically after your speech is recognized. Hands-free mode resumes listening after each tutor reply. This uses browser speech recognition and a guided conversation engine, not a live generative AI tutor. Replies are topic-aware but cannot understand every question. Microphone recognition and available voices depend on the browser; some recognition services process audio online.</p>
+  </aside>
+ </div>
+</section>
+<p>Practice with a short, interactive English quiz. Choose an answer and select <b>Check Answers</b> to see your result.</p><section class="card question" data-answer="1"><h2>1. She ___ English every day.</h2><label style="display:block;padding:7px 0"><input type="radio" name="q0" value="0"> study</label><label style="display:block;padding:7px 0"><input type="radio" name="q0" value="1"> studies</label><label style="display:block;padding:7px 0"><input type="radio" name="q0" value="2"> studying</label><p class="result" aria-live="polite"></p><small>He, she, and it take -s or -es in Present Simple.</small></section><section class="card question" data-answer="1"><h2>2. They ___ at school yesterday.</h2><label style="display:block;padding:7px 0"><input type="radio" name="q1" value="0"> are</label><label style="display:block;padding:7px 0"><input type="radio" name="q1" value="1"> were</label><label style="display:block;padding:7px 0"><input type="radio" name="q1" value="2"> is</label><p class="result" aria-live="polite"></p><small>Were is the past form of be used with they.</small></section><section class="card question" data-answer="1"><h2>3. I have ___ my homework.</h2><label style="display:block;padding:7px 0"><input type="radio" name="q2" value="0"> finish</label><label style="display:block;padding:7px 0"><input type="radio" name="q2" value="1"> finished</label><label style="display:block;padding:7px 0"><input type="radio" name="q2" value="2"> finishing</label><p class="result" aria-live="polite"></p><small>Present perfect uses have/has + past participle.</small></section><section class="card question" data-answer="1"><h2>4. If it rains, we ___ home.</h2><label style="display:block;padding:7px 0"><input type="radio" name="q3" value="0"> stay</label><label style="display:block;padding:7px 0"><input type="radio" name="q3" value="1"> will stay</label><label style="display:block;padding:7px 0"><input type="radio" name="q3" value="2"> stayed</label><p class="result" aria-live="polite"></p><small>First conditional uses if + present and will + base verb.</small></section><section class="card question" data-answer="1"><h2>5. She does not ___ coffee.</h2><label style="display:block;padding:7px 0"><input type="radio" name="q4" value="0"> likes</label><label style="display:block;padding:7px 0"><input type="radio" name="q4" value="1"> like</label><label style="display:block;padding:7px 0"><input type="radio" name="q4" value="2"> liked</label><p class="result" aria-live="polite"></p><small>After does not use the base form.</small></section><section class="card question" data-answer="0"><h2>6. Which expression means “make people comfortable”?</h2><label style="display:block;padding:7px 0"><input type="radio" name="q5" value="0"> break the ice</label><label style="display:block;padding:7px 0"><input type="radio" name="q5" value="1"> spill the beans</label><label style="display:block;padding:7px 0"><input type="radio" name="q5" value="2"> cost an arm and a leg</label><p class="result" aria-live="polite"></p><small>Break the ice means ease social tension.</small></section><section class="card question" data-answer="0"><h2>7. Please ___ the lights before you leave.</h2><label style="display:block;padding:7px 0"><input type="radio" name="q6" value="0"> turn off</label><label style="display:block;padding:7px 0"><input type="radio" name="q6" value="1"> turn into</label><label style="display:block;padding:7px 0"><input type="radio" name="q6" value="2"> turn up</label><p class="result" aria-live="polite"></p><small>Turn off means switch off.</small></section><section class="card question" data-answer="0"><h2>8. Which sound is often heard in American “water”?</h2><label style="display:block;padding:7px 0"><input type="radio" name="q7" value="0"> flap T</label><label style="display:block;padding:7px 0"><input type="radio" name="q7" value="1"> silent W</label><label style="display:block;padding:7px 0"><input type="radio" name="q7" value="2"> English TH</label><p class="result" aria-live="polite"></p><small>American English often uses a flap [ɾ] in water.</small></section><p><button type="button" onclick="checkAnswers()">Check Answers</button> <button type="button" onclick="window.location.reload()">Try Again</button></p><p id="score" aria-live="polite"></p><script>function checkAnswers(){let score=0;document.querySelectorAll(".question").forEach((el,i)=>{const chosen=el.querySelector(`input[name=q${i}]:checked`);const right=chosen&&Number(chosen.value)===Number(el.dataset.answer);if(right)score++;el.querySelector(".result").textContent=right?"✓ Correct":"✗ Incorrect. Review the note below.";el.querySelector(".result").style.color=right?"#18733c":"#a22c35"});document.getElementById("score").textContent=`Score: ${score} / ${document.querySelectorAll(".question").length}`}</script></main>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const chat=$('v-chat'), status=$('v-status'), input=$('v-text');
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+const synth=window.speechSynthesis;
+let recognition=null, listening=false, activeQuestion='', turn=0, lastTutor='', voiceList=[];
+let autoSession=false, speaking=false, recognizedThisTurn=false, failedSpeech=false, sessionId=0, shouldResume=false;
+const topics={
+ daily:["Hello! I'm your GETI English practice tutor. What is your name?", "Nice to meet you! Where are you from?", "What do you usually do in the morning?", "What do you like doing in your free time?", "Tell me about a goal you have this year."],
+ travel:["Welcome to travel practice! Where would you like to travel?", "How would you get there: by plane, bus, or another way?", "What would you pack for your trip?", "Imagine you are at a hotel. How would you ask for a room?", "What places would you like to visit there?"],
+ restaurant:["Welcome to our restaurant! What would you like to order?", "Would you like something to drink?", "Do you have any food preferences or allergies?", "How would you politely ask for the bill?", "What kind of restaurant do you enjoy?"],
+ work:["Welcome to interview practice. Could you introduce yourself?", "Why are you interested in this job?", "What are your strengths?", "Tell me how you handle a difficult customer.", "Do you have any questions for the interviewer?"],
+ learning:["Let's practice English together! Why do you want to learn English?", "How often do you practice speaking?", "Which English skill is most difficult for you?", "What do you do when you don't understand a word?", "What English goal would you like to achieve next?"]
+};
+const shortReplies=["Thanks for telling me. That's interesting!", "Good answer! Let's keep talking.", "I understand. Thank you for sharing.", "That sounds good. Here's another question."];
+function setStatus(message,on=false){status.textContent=message;status.classList.toggle('listening',on)}
+function bubble(role,text,correction=''){const item=document.createElement('div');item.className='bubble '+(role==='student'?'student':'teacher');const who=document.createElement('span');who.className='who';who.textContent=role==='student'?'YOU':'GETI TUTOR';const line=document.createElement('span');line.textContent=text;item.append(who,line);if(correction){const x=document.createElement('span');x.className='correction';x.textContent='Language tip: '+correction;item.append(x)}chat.append(item);chat.scrollTop=chat.scrollHeight}
+function voices(){if(!synth)return;voiceList=synth.getVoices().filter(x=>/^en([_-]|$)/i.test(x.lang));const v=$('v-voice'), old=v.value;v.replaceChildren(new Option('Automatic (English)',''));voiceList.sort((a,b)=>Number(/en[-_]US/i.test(b.lang))-Number(/en[-_]US/i.test(a.lang)));for(const vc of voiceList)v.add(new Option(vc.name+' ('+vc.lang+')',vc.voiceURI));if([...v.options].some(x=>x.value===old))v.value=old}
+if(synth){voices();synth.addEventListener?.('voiceschanged',voices)}
+function speak(text){
+ if(!synth){speaking=false;setStatus('Speech playback is unavailable. Please read the reply and press Start to answer.');return}
+ // Stop microphone before playback to prevent the tutor hearing its own voice.
+ if(recognition&&listening){try{recognition.abort()}catch(e){}}
+ listening=false; speaking=true; shouldResume=false;
+ synth.cancel();const mySession=sessionId;
+ const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=Number($('v-speed').value)||.9;
+ const chosen=voiceList.find(v=>v.voiceURI===$('v-voice').value)||voiceList.find(v=>/en[-_]US/i.test(v.lang));if(chosen)u.voice=chosen;
+ u.onstart=()=>setStatus('GETI Tutor is speaking. Listen, then answer.');
+ u.onend=()=>{speaking=false;if(mySession===sessionId&&autoSession&&$('v-auto').checked)startListening();else setStatus('Tutor finished. Press Start Speaking to answer.');};
+ u.onerror=()=>{speaking=false;setStatus('Audio playback failed. Try a different English voice or press Start Speaking.');};
+ synth.speak(u);
+}
+function nextQuestion(){const items=topics[$('voice-topic').value], q=items[turn%items.length];activeQuestion=q;lastTutor=q;bubble('tutor',q);speak(q);turn++}
+function feedback(raw){const t=raw.trim();if(/^i am agree\b/i.test(t))return 'Say “I agree”, not “I am agree”.';if(/^i am study\b/i.test(t))return 'Say “I study” for a routine or “I am studying” for something happening now.';if(/\bhe go\b/i.test(t))return 'Use “he goes” in the present simple.';if(/\bshe go\b/i.test(t))return 'Use “she goes” in the present simple.';if(/^my name (?!is\b)/i.test(t))return 'A common introduction is “My name is ...”.';if(/^i from\b/i.test(t))return 'Say “I am from ...”.';if(/\bi no understand\b/i.test(t))return 'Say “I do not understand” or “I don’t understand”.';return ''}
+function responseFor(t){let l=t.toLowerCase();if(/\b(hello|hi|good morning|good evening)\b/.test(l)&&l.length<35)return 'Hello! It is nice to speak with you.';if(/\b(how are you|how is it going)\b/.test(l))return "I'm doing well, thank you! How are you today?";if(/\b(thank you|thanks)\b/.test(l))return "You're very welcome!";if(/\b(i don.t know|not sure|can you repeat|repeat please)\b/.test(l))return "That's okay. You can take your time. Let me repeat the question.";if(/\b(what does|meaning of|what is the meaning)\b/.test(l))return "That's a useful question. Try asking it with a specific word; this guided tutor may not know every definition.";if(/\b(yes|no)\b/i.test(l)&&l.split(/\s+/).length<3)return 'Could you tell me a little more, in a full sentence?';
+ const topic=$('voice-topic').value;
+ if(topic==='daily'&&/\b(madagascar|antananarivo|toamasina)\b/.test(l))return 'Madagascar is an interesting place to talk about. Tell me more about your life there.';
+ if(topic==='restaurant'&&/\b(rice|chicken|fish|pizza|salad|coffee|tea)\b/.test(l))return 'Great choice! I can take your order.';
+ if(topic==='travel'&&/\b(france|america|japan|canada|travel|plane|bus)\b/.test(l))return 'That sounds like an exciting travel plan!';
+ if(topic==='work'&&/\b(customer|team|patient|communication|learn|hardworking)\b/.test(l))return 'That is relevant experience or a useful strength for a job interview.';
+ if(topic==='learning'&&/\b(speak|pronunciation|grammar|vocabulary|listen)\b/.test(l))return 'Regular practice will help. Try speaking a little English every day.';
+ return shortReplies[(turn-1)%shortReplies.length]}
+function handleAnswer(text){const answer=text.trim();if(!answer)return;setStatus('Answer received. Tutor is responding.');bubble('student',answer);const tip=feedback(answer);let reply=responseFor(answer);if(/\b(i don.t know|not sure|can you repeat|repeat please)\b/i.test(answer)){bubble('tutor',reply,tip);speak(reply+' '+activeQuestion);return}bubble('tutor',reply,tip);if(tip)reply+=' Language tip: '+tip;
+ // Ask a different question after the reply, speaking both naturally.
+ const items=topics[$('voice-topic').value];const q=items[turn%items.length];activeQuestion=q;lastTutor=q;turn++;bubble('tutor',q);speak(reply+' '+q)}
+function stopAll(){
+ autoSession=false;sessionId++;shouldResume=false; speaking=false;
+ if(recognition){try{recognition.abort()}catch(e){}} listening=false;
+ if(synth)synth.cancel();setStatus('Stopped. Press Start to begin a new automatic conversation.');
+}
+function startListening(){
+ if(!SpeechRecognition){autoSession=false;setStatus('Speech recognition is unavailable. Try Chrome or Edge over HTTPS, or type an answer below.');return}
+ if(listening||speaking)return;
+ const mySession=sessionId;
+ recognition=new SpeechRecognition();recognition.lang='en-US';recognition.interimResults=false;
+ recognition.maxAlternatives=1;recognition.continuous=false;
+ recognizedThisTurn=false;failedSpeech=false;shouldResume=false;
+ recognition.onstart=()=>{if(mySession!==sessionId)return;listening=true;setStatus('🎤 Listening… speak English now.',true)};
+ recognition.onresult=e=>{
+  if(mySession!==sessionId)return;
+  const said=e.results?.[0]?.[0]?.transcript||'';
+  if(said.trim()){
+   recognizedThisTurn=true;autoSession=autoSession&&$('v-auto').checked;
+   // First stop recognition; speech reply starts on recognition.onend.
+   recognition._getiAnswer=said;
+  }
+ };
+ recognition.onerror=e=>{
+  if(mySession!==sessionId)return;
+  failedSpeech=true;listening=false;
+  const messages={'not-allowed':'Microphone permission denied. Enable microphone access and restart.',
+   'no-speech':'No speech detected. Press Start and try again.',network:'Speech recognition needs a working internet connection.'};
+  setStatus(messages[e.error]||'Voice recognition error: '+e.error);
+  if(e.error==='not-allowed'||e.error==='audio-capture')autoSession=false;
+ };
+ recognition.onend=()=>{
+  if(mySession!==sessionId)return;
+  listening=false;
+  const answer=recognition._getiAnswer;
+  if(answer){handleAnswer(answer);return}
+  if(!failedSpeech)setStatus('Microphone ready. Press Start to answer.');
+  // Do not repeatedly reactivate listening on silence or errors.
+ };
+ try{recognition.start()}catch(e){listening=false;autoSession=false;setStatus('Could not start microphone: '+e.message)}
+}
+function startConversation(){
+ if(listening)return;
+ autoSession=$('v-auto').checked;
+ if(speaking){if(synth)synth.cancel();speaking=false}
+ startListening();
+}
+$('v-start').addEventListener('click',startConversation);$('v-stop').addEventListener('click',stopAll);$('v-replay').addEventListener('click',()=>speak(lastTutor||activeQuestion));$('v-reset').addEventListener('click',reset);$('voice-topic').addEventListener('change',reset);$('v-text-form').addEventListener('submit',e=>{e.preventDefault();const t=input.value;input.value='';handleAnswer(t)});
+function reset(){stopAll();chat.replaceChildren();turn=0;setStatus('Listen to the tutor, then press Start once to begin hands-free conversation.');nextQuestion()}
+reset();
+})();
+</script>
+</body></html>
