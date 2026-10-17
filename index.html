@@ -7471,6 +7471,14 @@ h1, h2, h3, h4, h5, h6,
               <button type="button" onclick="getiChangeSignupEmail()">CHANGE EMAIL</button>
             </div>
             <div id="getiSignupCodeStatus" class="geti-first-login-status" aria-live="polite"></div>
+            <section id="getiSignupCompletedStep" class="geti-signup-completed" hidden aria-live="polite">
+              <div class="geti-signup-completed-check" aria-hidden="true">✓</div>
+              <h3>Account Created Successfully!</h3>
+              <p>Congratulations, and welcome to the Global English Teaching Institute (GETI)! Your email address has been successfully verified, and your student account has now been created. We are delighted to welcome you to our online learning community, where you can build your English language skills, explore educational programs, and take meaningful steps toward your personal and professional goals.</p>
+              <p>With your GETI student account, you can access your Student Area, discover available learning resources, explore examinations and certificate-related services, and follow your educational progress through the features provided on our platform. We encourage you to learn consistently, stay curious, and make the most of every opportunity to improve your knowledge and confidence.</p>
+              <p>Your registration is complete, and you are ready to begin your GETI journey. When you are ready, select <strong>Next</strong> below to enter your Student Area. Thank you for choosing GETI — <strong>Keep Learning, Keep Growing. English Opens Opportunities.</strong></p>
+              <button id="getiSignupCompletedNext" type="button" class="geti-first-primary-auth full" onclick="getiFinishSignupToStudent()">NEXT → STUDENT AREA</button>
+            </section>
           </div>
           <div class="geti-email-verify-note">A real email address is required. GETI sends a confirmation code and the account cannot be used until the code is confirmed.</div>
         </div>
@@ -20556,14 +20564,25 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
   }
   function setTextStatus(id,html){var n=el(id);if(n)n.innerHTML=html}
   function savePending(email){
-    try{sessionStorage.setItem('GETI_PENDING_SIGNUP_EMAIL',email);sessionStorage.removeItem('GETI_PENDING_SIGNUP_PASSWORD')}catch(e){}
+    try{
+      sessionStorage.setItem('GETI_PENDING_SIGNUP_EMAIL',email);
+      sessionStorage.removeItem('GETI_PENDING_SIGNUP_PASSWORD');
+      localStorage.setItem('GETI_PENDING_EMAIL_VERIFY',JSON.stringify({email:email,createdAt:Date.now()}));
+    }catch(e){}
   }
   function readPending(){
     var email='';
-    try{email=sessionStorage.getItem('GETI_PENDING_SIGNUP_EMAIL')||''}catch(e){}
+    try{
+      var saved=JSON.parse(localStorage.getItem('GETI_PENDING_EMAIL_VERIFY')||'null');
+      if(saved&&saved.email&&Date.now()-Number(saved.createdAt)<24*60*60*1000){email=String(saved.email)}
+      else if(saved)localStorage.removeItem('GETI_PENDING_EMAIL_VERIFY');
+      email=email||sessionStorage.getItem('GETI_PENDING_SIGNUP_EMAIL')||'';
+    }catch(e){}
     return {email:email};
   }
-  function clearPending(){try{sessionStorage.removeItem('GETI_PENDING_SIGNUP_EMAIL');sessionStorage.removeItem('GETI_PENDING_SIGNUP_PASSWORD')}catch(e){}}
+  function clearPending(){
+    try{sessionStorage.removeItem('GETI_PENDING_SIGNUP_EMAIL');sessionStorage.removeItem('GETI_PENDING_SIGNUP_PASSWORD');localStorage.removeItem('GETI_PENDING_EMAIL_VERIFY')}catch(e){}
+  }
   function saveSessionDirect(session){
     if(!session||!session.access_token)return;
     var normalized={access_token:session.access_token,refresh_token:session.refresh_token||'',token_type:session.token_type||'bearer',expires_in:Number(session.expires_in||3600),expires_at:session.expires_at||Math.floor(Date.now()/1000)+Number(session.expires_in||3600),user:session.user||null};
@@ -20594,7 +20613,9 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     var form=document.querySelector('#getiFirstCreatePane .geti-first-create-form');
     var tabs=document.querySelector('#getiFirstAccountPanel .geti-first-auth-tabs');
     var step=el('getiSignupCodeStep'),mail=el('getiSignupCodeEmail'),input=el('getiSignupCodeInput');
-    if(form)form.hidden=true;if(tabs)tabs.hidden=true;if(step)step.hidden=false;if(mail)mail.textContent=email;if(input){input.value='';input.disabled=false;setTimeout(function(){input.focus()},80)}
+    if(form){form.hidden=true;form.style.display='none'}
+    if(tabs){tabs.hidden=true;tabs.style.display='none'}
+    if(step)step.hidden=false;if(mail)mail.textContent=email;if(input){input.value='';input.disabled=false;setTimeout(function(){input.focus()},80)}
     setTextStatus('getiFirstCreateStatus','');
     setTextStatus('getiSignupCodeStatus','<span class="ok">✓ Confirmation code sent. Enter the 6-digit code.</span>');
   }
@@ -20602,7 +20623,9 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     var form=document.querySelector('#getiFirstCreatePane .geti-first-create-form');
     var tabs=document.querySelector('#getiFirstAccountPanel .geti-first-auth-tabs');
     var step=el('getiSignupCodeStep');
-    if(step)step.hidden=true;if(form)form.hidden=false;if(tabs)tabs.hidden=false;
+    if(step)step.hidden=true;
+    if(form){form.hidden=false;form.style.display=''}
+    if(tabs){tabs.hidden=false;tabs.style.display=''}
   }
 
   var createBusy=false;
@@ -20639,9 +20662,21 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
       if(!data.session)throw new Error('Confirmation succeeded but the secure session was not returned.');
       await activateSession(data.session);
       clearPending();
-      if(status)status.innerHTML='<span class="ok">✓ Email confirmed. Opening Student Area...</span>';
+      if(status)status.innerHTML='';
       var login=el('getiFirstLoginEmail');if(login)login.value=p.email;
-      setTimeout(function(){if(typeof window.getiOpenSecondArea==='function')window.getiOpenSecondArea()},180);
+      /* Keep the verified student on a separate success step until Next is clicked. */
+      var codeStep=el('getiSignupCodeStep');
+      var success=el('getiSignupCompletedStep');
+      if(codeStep&&success){
+        Array.prototype.forEach.call(codeStep.children,function(child){
+          if(child!==success){child.hidden=true;child.style.display='none';}
+        });
+        success.hidden=false;success.style.display='block';
+        var next=el('getiSignupCompletedNext');if(next){next.disabled=false;next.focus();}
+      }else{
+        /* The verified account is preserved; do not navigate automatically. */
+        if(status)status.innerHTML='<span class="ok">✓ Account verified. Select NEXT to continue.</span>';
+      }
     }catch(e){
       var m=String(e.message||'Invalid or expired confirmation code.');
       if(/expired|invalid|token/i.test(m))m='Invalid or expired code. Tap SEND CODE AGAIN and use the newest 6-digit code.';
@@ -20740,7 +20775,18 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     finally{forgotSaveBusy=false;if(btn){btn.disabled=false;btn.textContent='SAVE NEW PASSWORD'}}
   };
 
-  function boot(){buildForgotPane();initPasswordToggles();showCreateForm()}
+  function restoreSignupCode(){
+    var p=readPending();
+    if(!p.email||!validEmail(p.email))return;
+    var input=el('getiFirstCreateEmail');if(input)input.value=p.email;
+    // The OTP screen is restored without keeping passwords or codes on the device.
+    if(typeof window.getiShowFirstArea==='function')window.getiShowFirstArea();
+    if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('create');
+    showSignupCode(p.email);
+    setTextStatus('getiSignupCodeStatus','<span class="ok">Enter the confirmation code sent to '+esc(p.email)+'. If the code expired, select SEND CODE AGAIN.</span>');
+  }
+  function boot(){buildForgotPane();initPasswordToggles();showCreateForm();restoreSignupCode()}
+  window.addEventListener('pageshow',function(event){if(event.persisted)restoreSignupCode()});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
@@ -24390,41 +24436,73 @@ body.geti-checkout-active{overflow:hidden!important}
 </style>
 <button id="getiRobotLaunch" type="button" aria-label="Open GETI Robot Chat" aria-controls="getiRobotPanel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="6" width="18" height="15" rx="4"/><path d="M12 3v3M9 3h6M8 13h.01M16 13h.01M8 17c2.5 2 5.5 2 8 0"/></svg> GETI Robot Chat</button>
 <section id="getiRobotPanel" hidden role="dialog" aria-modal="false" aria-label="GETI Robot Chat">
-<div class="geti-robot-head"><span aria-hidden="true" style="font-size:27px">🤖</span><div><strong>GETI Assistant</strong><small>Automatic GETI information • 24/7</small></div><button id="getiRobotClose" type="button" aria-label="Close chat">×</button></div>
+<div class="geti-robot-head"><span aria-hidden="true" style="font-size:27px">🤖</span><div><strong>GETI Assistant</strong><small>AI-powered answers • GETI & general questions</small></div><button id="getiRobotClose" type="button" aria-label="Close chat">×</button></div>
 <div id="getiRobotMessages" role="log" aria-live="polite" aria-relevant="additions"></div>
 <div class="geti-robot-quick" aria-label="Suggested questions"><button type="button" data-geti-question="What is GETI?">About GETI</button><button type="button" data-geti-question="What courses and exams are available?">Programs</button><button type="button" data-geti-question="How do I verify a certificate?">Certificates</button><button type="button" data-geti-question="How can I pay?">Payment</button></div>
-<form id="getiRobotForm"><input id="getiRobotInput" type="text" maxlength="450" placeholder="Ask about GETI..." aria-label="Your question about GETI" required autocomplete="off"><button type="submit">Send</button></form>
-<div class="geti-robot-disclaimer">Automated answers from GETI information. For account-specific help, contact GETI support.</div>
+<form id="getiRobotForm"><input id="getiRobotInput" type="text" maxlength="450" placeholder="Ask me anything..." aria-label="Your question" required autocomplete="off"><button type="submit">Send</button></form>
+<div class="geti-robot-disclaimer">AI-generated answers can be inaccurate. Do not share passwords or confirmation codes. For account-specific help, contact GETI support.</div>
 </section>
 <script id="getiRobotChatScript">
 (function(){
 'use strict';
 const trigger=document.getElementById('getiRobotLaunch'), panel=document.getElementById('getiRobotPanel'), close=document.getElementById('getiRobotClose'), log=document.getElementById('getiRobotMessages'), form=document.getElementById('getiRobotForm'), input=document.getElementById('getiRobotInput');
 if(!trigger||!panel||!close||!log||!form||!input)return;
-function bubble(message,who){const el=document.createElement('div');el.className='geti-robot-bubble '+who;el.textContent=message;log.appendChild(el);log.scrollTop=log.scrollHeight;}
-function openChat(){panel.hidden=false;trigger.setAttribute('aria-expanded','true');if(!log.children.length)bubble('Hello! 👋 Welcome to Global English Teaching Institute (GETI). Ask me about GETI programs, online exams, certificates or verification.','bot');input.focus();}
+const endpoint='https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-ai-chat';
+const publicKey='sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8';
+const history=[];
+let sending=false;
+function bubble(message,who){const el=document.createElement('div');el.className='geti-robot-bubble '+who;el.textContent=message;log.appendChild(el);log.scrollTop=log.scrollHeight;return el;}
+function openChat(){panel.hidden=false;trigger.setAttribute('aria-expanded','true');if(!log.children.length)bubble('Hello! 👋 I am the GETI AI Assistant. Ask me about GETI, English, school subjects, technology, or almost anything else. I can make mistakes, so verify important information.','bot');input.focus();}
 function hideChat(){panel.hidden=true;trigger.setAttribute('aria-expanded','false');trigger.focus();}
 trigger.addEventListener('click',()=>panel.hidden?openChat():hideChat());close.addEventListener('click',hideChat);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)hideChat();});
-function reply(raw){
- const q=raw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
- const has=(...terms)=>terms.some(term=>q.includes(term));
- if(has('bonjour','hello','hi ','salama','good morning','hey'))return 'Welcome to GETI! 🌟 Global English Teaching Institute helps learners develop English skills through online learning and assessment. What would you like to know?';
- if(has('price','cost','fee','tarif','prix','vidiny','vola firy','how much'))return 'GETI displays the relevant price in its payment area for each selected service. Please check the current amount there before making a payment; it may vary by service.';
- if(has('pay','payment','payer','paiement','fandoavana','mvola','orange money','airtel','zopayo','visa','mastercard','paypal'))return 'GETI provides a payment area for selected services. Available methods and the final amount are shown during checkout. Complete payment only through the official GETI payment process.';
- if(has('verify','verification','verifier','verifie','qr','authentic','valid','marina ve'))return 'GETI certificates support verification using certificate details, including unique codes and QR-based verification where available. Use the official verification feature on the GETI site to check a specific certificate.';
- if(has('certificate','certificat','taratasy','diploma'))return 'GETI offers certificates linked to its learning and assessment services. Certificate details can be checked through GETI’s verification system. Please review the requirements for your selected exam or course.';
- if(has('tefl','tesol','teyl','course','program','cours','lesona','training','formation','fampianarana','exam','test','fanadinana'))return 'GETI focuses on English learning and online assessment, including TEFL, TESOL, TEYL and English proficiency-related options. Explore the Programs section to see the exams, courses and requirements currently listed.';
- if(has('contact','support','help','admin','email','telephone','phone','olana','problem','issue'))return 'For personalized assistance, please use the GETI contact or support options on the official site. This robot provides general information and cannot access personal records or payments.';
- if(has('account','login','register','sign up','inscription','student','mpianatra','compte'))return 'GETI is designed for online learners. Use the student and registration features available on the official website, and keep your login details private.';
- if(has('recogniz','accredit','government','internationally','official','university','reconnu','agr','ekena'))return 'GETI issues certificates through its own platform and provides verification features. Recognition or acceptance depends on the receiving employer or institution; please confirm requirements directly with them.';
- if(has('what is','about','benefit','advantage','why geti','momba','inona','mahasoa','tsara ve','qui est','c’est quoi'))return 'GETI stands for Global English Teaching Institute. ✨ Key features include online English learning, accessible exams, teaching-related programs such as TEFL/TESOL and certificate verification tools. Its mission is to help learners build skills and demonstrate learning progress.';
- return 'Thanks for asking! GETI specializes in English learning, online exams and verifiable certificates. I can explain GETI programs, TEFL/TESOL/TEYL, payments, certificates and verification. Could you rephrase your question using one of those topics?';
+async function ask(message){
+ const value=String(message||'').trim();if(!value||sending)return;
+ sending=true;const sendBtn=form.querySelector('button[type="submit"]');if(sendBtn)sendBtn.disabled=true;
+ bubble(value,'user');const placeholder=bubble('Thinking…','bot');
+ try{
+  const control=new AbortController();const timer=setTimeout(()=>control.abort(),25000);
+  let response;
+  try{response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','apikey':publicKey},body:JSON.stringify({message:value,history:history.slice(-8)}),signal:control.signal});}
+  finally{clearTimeout(timer);}
+  const data=await response.json();
+  if(!response.ok)throw new Error(data.error||'Unable to answer right now.');
+  const answer=String(data.answer||'').trim();if(!answer)throw new Error('The AI did not return a reply.');
+  placeholder.textContent=answer;
+  history.push({role:'user',content:value},{role:'assistant',content:answer});if(history.length>16)history.splice(0,history.length-16);
+ }catch(error){placeholder.textContent=error.name==='AbortError'?'The AI request timed out. Please try again.':(error.message||'Unable to connect to the AI right now.');}
+ finally{sending=false;if(sendBtn)sendBtn.disabled=false;log.scrollTop=log.scrollHeight;input.focus();}
 }
-function ask(message){const value=String(message||'').trim();if(!value)return;bubble(value,'user');bubble(reply(value),'bot');}
-form.addEventListener('submit',e=>{e.preventDefault();const value=input.value;input.value='';ask(value);input.focus();});
+form.addEventListener('submit',e=>{e.preventDefault();const value=input.value;input.value='';ask(value);});
 panel.querySelectorAll('[data-geti-question]').forEach(btn=>btn.addEventListener('click',()=>ask(btn.getAttribute('data-geti-question'))));
 })();
+</script>
+
+<style id="geti-signup-completed-style">
+#getiSignupCompletedStep[hidden]{display:none!important}
+#getiSignupCompletedStep{max-width:440px;margin:18px auto 12px;padding:26px 20px;background:#f5f9ff;border:1px solid #c9dcf7;border-radius:18px;text-align:center;color:#12345a}
+#getiSignupCompletedStep h3{font-size:23px;line-height:1.3;margin:14px 0 10px;color:#0a3d7c}
+#getiSignupCompletedStep p{font-size:15px;line-height:1.65;margin:0 0 12px}
+#getiSignupCompletedStep .geti-signup-completed-check{display:grid;place-items:center;width:72px;height:72px;border-radius:50%;margin:auto;background:#1668ba;color:#fff;font-size:38px;font-weight:800}
+#getiSignupCompletedNext{margin-top:10px;cursor:pointer}
+@media(max-width:520px){#getiSignupCompletedStep{padding:22px 14px}#getiSignupCompletedStep h3{font-size:20px}}
+</style>
+<script id="geti-signup-completed-next-script">
+window.getiFinishSignupToStudent=function(){
+  var button=document.getElementById('getiSignupCompletedNext');
+  if(button){button.disabled=true;button.textContent='OPENING STUDENT AREA...';}
+  try{
+    if(typeof window.getiOpenSecondArea==='function'){
+      window.getiOpenSecondArea();
+    }else{
+      window.location.href='student.html';
+    }
+  }catch(e){
+    if(button){button.disabled=false;button.textContent='NEXT → STUDENT AREA';}
+    var status=document.getElementById('getiSignupCodeStatus');
+    if(status){status.hidden=false;status.style.display='block';status.textContent='Unable to open Student Area. Please try again.';}
+  }
+};
 </script>
 </body>
 </html>
