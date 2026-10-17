@@ -7324,6 +7324,11 @@ h1, h2, h3, h4, h5, h6,
 .stats .stat strong,
 .stats .stat span{color:#0b2d5c !important;}
 </style>
+<style id="geti-learning-area-links">
+/* GETI four learning area links: same pill layout, now clickable */
+.geti-long-v3-pills a{display:inline-flex;align-items:center;justify-content:center;padding:9px 12px;background:#fff;border:1px solid var(--g3line);border-radius:999px;font-size:11px;font-weight:800;color:#3b4d61;text-decoration:none;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.geti-long-v3-pills a:hover,.geti-long-v3-pills a:focus-visible{background:#eaf3ff;border-color:#215d9d;color:#123c70;text-decoration:none;outline-offset:2px}
+</style>
 </head>
 
 <body translate="no" class="notranslate">
@@ -7354,7 +7359,7 @@ h1, h2, h3, h4, h5, h6,
       <li><button type="button" onclick="document.getElementById('navMenu').classList.remove('show');var el=document.getElementById('getiProgramEnglish');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});">English Programs</button></li>
       <li><button type="button" onclick="document.getElementById('navMenu').classList.remove('show');var el=document.getElementById('getiProgramExams');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});">Exams</button></li>
       <li><button type="button" onclick="document.getElementById('navMenu').classList.remove('show');openGetiCertificateInfo()">Certificate</button></li>
-      <li><a href="#verify" onclick="document.getElementById('navMenu').classList.remove('show')">Certificate Verification</a></li>
+      <li><button type="button" onclick="document.getElementById('navMenu').classList.remove('show');window.location.hash='verify';var el=document.getElementById('verify');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});">Certificate Verification</button></li>
       <li><button type="button" onclick="document.getElementById('navMenu').classList.remove('show');var el=document.getElementById('getiHomeContact');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});">Contact</button></li>
       <li><button type="button" class="geti-home-nav-signin" onclick="document.getElementById('navMenu').classList.remove('show');getiFocusFirstAccount('signin')">Student Account</button></li>
       <li><button type="button" class="geti-home-nav-create" onclick="document.getElementById('navMenu').classList.remove('show');getiFocusFirstAccount('create')">Create Account</button></li>
@@ -7457,7 +7462,7 @@ h1, h2, h3, h4, h5, h6,
             </div>
             <label class="geti-signup-code-field" for="getiSignupCodeInput">
               <span>Confirmation code</span>
-              <input id="getiSignupCodeInput" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="Enter code" aria-label="Confirmation code" onkeydown="if(event.key==='Enter'){event.preventDefault();getiConfirmSignupCode();}">
+              <input id="getiSignupCodeInput" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter code" aria-label="Confirmation code" onkeydown="if(event.key==='Enter'){event.preventDefault();getiConfirmSignupCode();}">
             </label>
             <button id="getiConfirmCodeBtn" class="geti-first-primary-auth full geti-signup-continue" type="button" onclick="getiConfirmSignupCode()">CONTINUE</button>
             <p class="geti-signup-help">Enter the code from the email we sent you. The newest code is the one that works.</p>
@@ -7681,10 +7686,10 @@ h1, h2, h3, h4, h5, h6,
       <h2>Build knowledge you can carry into real learning environments.</h2>
       <p>GETI content is organized around practical learning goals: communication, language awareness, teaching methods, planning, assessment and professional development. The aim is to help learners understand the subject and apply what they learn with greater confidence.</p>
       <div class="geti-long-v3-pills">
-        <span>English Skills</span>
-        <span>Teaching Knowledge</span>
-        <span>Assessment</span>
-        <span>Professional Development</span>
+        <a href="/english-skills/" title="Explore English Skills">English Skills</a>
+        <a href="/teaching-knowledge/" title="Explore Teaching Knowledge">Teaching Knowledge</a>
+        <a href="/assessment/" title="Explore Assessment">Assessment</a>
+        <a href="/professional-development/" title="Explore Professional Development">Professional Development</a>
       </div>
     </div>
   </section>
@@ -20785,109 +20790,7 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
 </script>
 
 
-<script id="geti-direct-account-no-email-confirmation-final">
-(function(){
-  'use strict';
-  function el(id){return document.getElementById(id)}
-  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-  function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)}
 
-  async function accountApiDirect(body){
-    if(typeof getiFetchJson!=='function'||typeof GETI_ACCOUNT_FUNCTION==='undefined')throw new Error('GETI account service is unavailable.');
-    return getiFetchJson(GETI_ACCOUNT_FUNCTION,{
-      method:'POST',
-      headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY},
-      body:JSON.stringify(body)
-    });
-  }
-
-  async function activateDirectSession(session){
-    if(!session||!session.access_token)throw new Error('Secure session was not returned.');
-    try{
-      localStorage.setItem('GETI_DIRECT_AUTH_SESSION',JSON.stringify(session));
-      localStorage.setItem('sb-syawyulrelrhjprnxdyn-auth-token',JSON.stringify(session));
-      localStorage.setItem('GETI_CERT_EVER_CREATED','yes');
-      sessionStorage.removeItem('GETI_PENDING_SIGNUP_EMAIL');
-      sessionStorage.removeItem('GETI_PENDING_SIGNUP_PASSWORD');
-    }catch(e){}
-    if(window.GETI_SB&&GETI_SB.auth&&typeof GETI_SB.auth.setSession==='function'){
-      var r=await GETI_SB.auth.setSession({
-        access_token:session.access_token,
-        refresh_token:session.refresh_token
-      });
-      if(r&&r.error)throw r.error;
-    }
-  }
-
-  function hideOldCodeStep(){
-    var step=el('getiSignupCodeStep');
-    if(step)step.style.display='none';
-  }
-
-  var createDirectBusy=false;
-  window.getiFirstAreaCreateAccount=async function(){
-    if(createDirectBusy)return;
-    var name=el('getiFirstCreateName'),email=el('getiFirstCreateEmail'),
-        pw=el('getiFirstCreatePassword'),confirm=el('getiFirstCreateConfirm'),
-        status=el('getiFirstCreateStatus');
-    if(!name||!email||!pw||!confirm||!status)return;
-
-    var fullName=String(name.value||'').trim().replace(/\s+/g,' ');
-    var address=String(email.value||'').trim().toLowerCase();
-    var password=String(pw.value||'');
-    var confirmPassword=String(confirm.value||'');
-
-    if(fullName.length<2){status.innerHTML='<span class="bad">Please enter your full name.</span>';return}
-    if(!validEmail(address)){status.innerHTML='<span class="bad">Please enter a valid email address.</span>';return}
-    if(password.length<6||password.length>12){status.innerHTML='<span class="bad">Password must contain 6 to 12 characters.</span>';return}
-    if(password!==confirmPassword){status.innerHTML='<span class="bad">Passwords do not match.</span>';return}
-
-    createDirectBusy=true;
-    status.innerHTML='<span class="ok">Creating your GETI account...</span>';
-    try{
-      var data=await accountApiDirect({
-        action:'create_account',
-        full_name:fullName,
-        email:address,
-        password:password
-      });
-      if(!data||!data.session)throw new Error((data&&data.error)||'Secure sign-in did not complete.');
-      await activateDirectSession(data.session);
-
-      pw.value='';
-      confirm.value='';
-      status.innerHTML='<span class="ok">✓ Account created successfully. Opening Student Area...</span>';
-      hideOldCodeStep();
-
-      var loginEmail=el('getiFirstLoginEmail');if(loginEmail)loginEmail.value=address;
-      var loginStatus=el('getiFirstLoginStatus');if(loginStatus)loginStatus.innerHTML='<span class="ok">✓ Account active and signed in.</span>';
-
-      setTimeout(function(){
-        if(typeof window.getiOpenSecondArea==='function')window.getiOpenSecondArea();
-        else document.body.classList.add('geti-second-area-open');
-      },180);
-    }catch(e){
-      status.innerHTML='<span class="bad">'+esc((e&&e.message)||'Unable to create account.')+'</span>';
-    }finally{
-      createDirectBusy=false;
-    }
-  };
-
-  window.getiConfirmSignupCode=function(){
-    var s=el('getiSignupCodeStatus');
-    if(s)s.innerHTML='<span class="ok">Confirmation code is no longer required.</span>';
-    hideOldCodeStep();
-  };
-  window.getiResendSignupCode=function(){
-    var s=el('getiSignupCodeStatus');
-    if(s)s.innerHTML='<span class="ok">Confirmation code is no longer required.</span>';
-    hideOldCodeStep();
-  };
-
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',hideOldCodeStep);
-  else hideOldCodeStep();
-})();
-</script>
 
 
 <style id="geti-certificate-direct-admin-request-style">
@@ -23907,9 +23810,22 @@ document.addEventListener(&quot;DOMContentLoaded&quot;,()=&gt;{refreshPaymentNot
   }
   function insertPayment(panel){
     if(!panel || !panel.classList.contains('active') && panel.id==='geti30ExamPanel' && !panel.querySelector('.result-box'))return;
-    const hasExam=!!panel.querySelector('#g30Hours,.geti-exam-registration,.result-box,.registration-form');
     const existing=panel.querySelector('.geti-exam-certificate-payment');
-    if(!hasExam){ if(existing)existing.remove();return; }
+    // Do not show certificate prices or payment buttons during registration or questions.
+    // The final examination result includes a score and a pass/fail status.
+    const finalResult=Array.from(panel.querySelectorAll('.result-box')).find(box =>
+      box.querySelector('.final-score') && box.querySelector('h2.pass, h2.fail')
+    );
+    if(!finalResult){
+      // Remove only the early payment widget created by this script.
+      if(existing?.dataset.signature)existing.remove();
+      return;
+    }
+    // Passed-history and special-exam results already render their own payment UI.
+    if(finalResult.querySelector('.geti-exam-certificate-payment:not([data-signature])')){
+      if(existing?.dataset.signature)existing.remove();
+      return;
+    }
     const info=examInfo(panel);
     const price=feeFor(info.exam+' '+info.fullTitle,info.hours);
     const signature=info.exam+'|'+info.hours+'|'+price;
@@ -23928,11 +23844,7 @@ document.addEventListener(&quot;DOMContentLoaded&quot;,()=&gt;{refreshPaymentNot
       button.addEventListener('click',()=>window.getiOpenExamCertificatePayment(info.exam,info.hours,price));
       box.appendChild(button);
     }
-    if(!existing){
-      const registration=panel.querySelector('.registration-form');
-      if(registration)registration.insertAdjacentElement('afterend',box);
-      else panel.appendChild(box);
-    }
+    if(!existing)finalResult.appendChild(box);
   }
   function render(){scheduled=false;insertPayment(qs('geti30ExamPanel'));insertPayment(qs('examPanel'));}
   function queue(){if(scheduled)return;scheduled=true;requestAnimationFrame(render);}
@@ -24453,6 +24365,65 @@ body.geti-checkout-active{overflow:hidden!important}
      return result;
    };
  }
+})();
+</script>
+
+<!-- GETI ROBOT HELP CHAT: standalone, no changes to existing functions -->
+<style id="getiRobotChatStyles">
+#getiRobotLaunch{position:fixed;bottom:20px;left:20px;z-index:2147482000;display:flex;align-items:center;justify-content:center;gap:9px;background:#073d83;color:#fff;border:2px solid #f2c94c;border-radius:40px;padding:12px 15px;font:700 14px Arial,sans-serif;cursor:pointer;box-shadow:0 6px 20px #082e5d55}
+#getiRobotLaunch svg{width:25px;height:25px;flex:none}#getiRobotLaunch:hover{background:#0755a5}
+#getiRobotPanel{position:fixed;bottom:83px;left:20px;width:min(370px,calc(100vw - 24px));height:min(530px,calc(100dvh - 105px));background:#fff;color:#172b49;border:1px solid #cad6e7;border-radius:17px;box-shadow:0 16px 50px #102e5159;z-index:2147482000;display:flex;flex-direction:column;overflow:hidden;font:14px/1.45 Arial,sans-serif}
+#getiRobotPanel[hidden]{display:none!important}
+.geti-robot-head{padding:13px 14px;background:#073d83;color:#fff;display:flex;align-items:center;gap:10px}
+.geti-robot-head strong{font-size:16px}.geti-robot-head small{display:block;color:#dcecff;font-size:11px}.geti-robot-head button{margin-left:auto;background:transparent;color:white;border:0;font-size:26px;cursor:pointer;line-height:1}
+#getiRobotMessages{flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:9px;background:#f7faff;min-height:0}
+.geti-robot-bubble{max-width:92%;padding:10px 12px;border-radius:13px;white-space:pre-wrap;overflow-wrap:anywhere}
+.geti-robot-bubble.bot{align-self:flex-start;background:#e7f0fe;color:#17345a;border-bottom-left-radius:3px}
+.geti-robot-bubble.user{align-self:flex-end;background:#073d83;color:#fff;border-bottom-right-radius:3px}
+.geti-robot-quick{padding:8px 11px;display:flex;gap:6px;overflow-x:auto;border-top:1px solid #e2eaf5}
+.geti-robot-quick button{white-space:nowrap;border:1px solid #9ab9df;background:#fff;color:#073d83;border-radius:20px;padding:7px 10px;font:12px Arial,sans-serif;cursor:pointer}
+#getiRobotForm{display:flex;gap:7px;padding:10px;border-top:1px solid #e2eaf5}
+#getiRobotInput{flex:1;min-width:0;border:1px solid #a6bad6;border-radius:10px;padding:11px;font:14px Arial,sans-serif}
+#getiRobotForm button{border:0;border-radius:9px;background:#073d83;color:#fff;padding:0 14px;font-weight:bold;cursor:pointer}
+.geti-robot-disclaimer{font-size:10px;padding:0 12px 8px;color:#58677c}
+@media(max-width:520px){#getiRobotLaunch{left:12px;bottom:12px;padding:11px 13px}#getiRobotPanel{left:12px;bottom:72px;height:min(520px,calc(100dvh - 88px))}}
+</style>
+<button id="getiRobotLaunch" type="button" aria-label="Open GETI Robot Chat" aria-controls="getiRobotPanel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="6" width="18" height="15" rx="4"/><path d="M12 3v3M9 3h6M8 13h.01M16 13h.01M8 17c2.5 2 5.5 2 8 0"/></svg> GETI Robot Chat</button>
+<section id="getiRobotPanel" hidden role="dialog" aria-modal="false" aria-label="GETI Robot Chat">
+<div class="geti-robot-head"><span aria-hidden="true" style="font-size:27px">🤖</span><div><strong>GETI Assistant</strong><small>Automatic GETI information • 24/7</small></div><button id="getiRobotClose" type="button" aria-label="Close chat">×</button></div>
+<div id="getiRobotMessages" role="log" aria-live="polite" aria-relevant="additions"></div>
+<div class="geti-robot-quick" aria-label="Suggested questions"><button type="button" data-geti-question="What is GETI?">About GETI</button><button type="button" data-geti-question="What courses and exams are available?">Programs</button><button type="button" data-geti-question="How do I verify a certificate?">Certificates</button><button type="button" data-geti-question="How can I pay?">Payment</button></div>
+<form id="getiRobotForm"><input id="getiRobotInput" type="text" maxlength="450" placeholder="Ask about GETI..." aria-label="Your question about GETI" required autocomplete="off"><button type="submit">Send</button></form>
+<div class="geti-robot-disclaimer">Automated answers from GETI information. For account-specific help, contact GETI support.</div>
+</section>
+<script id="getiRobotChatScript">
+(function(){
+'use strict';
+const trigger=document.getElementById('getiRobotLaunch'), panel=document.getElementById('getiRobotPanel'), close=document.getElementById('getiRobotClose'), log=document.getElementById('getiRobotMessages'), form=document.getElementById('getiRobotForm'), input=document.getElementById('getiRobotInput');
+if(!trigger||!panel||!close||!log||!form||!input)return;
+function bubble(message,who){const el=document.createElement('div');el.className='geti-robot-bubble '+who;el.textContent=message;log.appendChild(el);log.scrollTop=log.scrollHeight;}
+function openChat(){panel.hidden=false;trigger.setAttribute('aria-expanded','true');if(!log.children.length)bubble('Hello! 👋 Welcome to Global English Teaching Institute (GETI). Ask me about GETI programs, online exams, certificates or verification.','bot');input.focus();}
+function hideChat(){panel.hidden=true;trigger.setAttribute('aria-expanded','false');trigger.focus();}
+trigger.addEventListener('click',()=>panel.hidden?openChat():hideChat());close.addEventListener('click',hideChat);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)hideChat();});
+function reply(raw){
+ const q=raw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ const has=(...terms)=>terms.some(term=>q.includes(term));
+ if(has('bonjour','hello','hi ','salama','good morning','hey'))return 'Welcome to GETI! 🌟 Global English Teaching Institute helps learners develop English skills through online learning and assessment. What would you like to know?';
+ if(has('price','cost','fee','tarif','prix','vidiny','vola firy','how much'))return 'GETI displays the relevant price in its payment area for each selected service. Please check the current amount there before making a payment; it may vary by service.';
+ if(has('pay','payment','payer','paiement','fandoavana','mvola','orange money','airtel','zopayo','visa','mastercard','paypal'))return 'GETI provides a payment area for selected services. Available methods and the final amount are shown during checkout. Complete payment only through the official GETI payment process.';
+ if(has('verify','verification','verifier','verifie','qr','authentic','valid','marina ve'))return 'GETI certificates support verification using certificate details, including unique codes and QR-based verification where available. Use the official verification feature on the GETI site to check a specific certificate.';
+ if(has('certificate','certificat','taratasy','diploma'))return 'GETI offers certificates linked to its learning and assessment services. Certificate details can be checked through GETI’s verification system. Please review the requirements for your selected exam or course.';
+ if(has('tefl','tesol','teyl','course','program','cours','lesona','training','formation','fampianarana','exam','test','fanadinana'))return 'GETI focuses on English learning and online assessment, including TEFL, TESOL, TEYL and English proficiency-related options. Explore the Programs section to see the exams, courses and requirements currently listed.';
+ if(has('contact','support','help','admin','email','telephone','phone','olana','problem','issue'))return 'For personalized assistance, please use the GETI contact or support options on the official site. This robot provides general information and cannot access personal records or payments.';
+ if(has('account','login','register','sign up','inscription','student','mpianatra','compte'))return 'GETI is designed for online learners. Use the student and registration features available on the official website, and keep your login details private.';
+ if(has('recogniz','accredit','government','internationally','official','university','reconnu','agr','ekena'))return 'GETI issues certificates through its own platform and provides verification features. Recognition or acceptance depends on the receiving employer or institution; please confirm requirements directly with them.';
+ if(has('what is','about','benefit','advantage','why geti','momba','inona','mahasoa','tsara ve','qui est','c’est quoi'))return 'GETI stands for Global English Teaching Institute. ✨ Key features include online English learning, accessible exams, teaching-related programs such as TEFL/TESOL and certificate verification tools. Its mission is to help learners build skills and demonstrate learning progress.';
+ return 'Thanks for asking! GETI specializes in English learning, online exams and verifiable certificates. I can explain GETI programs, TEFL/TESOL/TEYL, payments, certificates and verification. Could you rephrase your question using one of those topics?';
+}
+function ask(message){const value=String(message||'').trim();if(!value)return;bubble(value,'user');bubble(reply(value),'bot');}
+form.addEventListener('submit',e=>{e.preventDefault();const value=input.value;input.value='';ask(value);input.focus();});
+panel.querySelectorAll('[data-geti-question]').forEach(btn=>btn.addEventListener('click',()=>ask(btn.getAttribute('data-geti-question'))));
 })();
 </script>
 </body>

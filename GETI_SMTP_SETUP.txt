@@ -1,0 +1,48 @@
+GETI — CONFIGURATION FINALE EMAIL DE CONFIRMATION
+Project Supabase: GETI Online (syawyulrelrhjprnxdyn)
+Expéditeur souhaité: admin@getienglish.com
+Nom d'expéditeur: GETI — Global English Teaching Institute
+
+ETAPE 1 — BREVO (https://app.brevo.com/)
+- Vérifier que admin@getienglish.com est un expéditeur autorisé.
+- Vérifier/authentifier getienglish.com : SPF, DKIM et, idéalement, DMARC selon les enregistrements que Brevo vous fournit. Ne pas écraser des enregistrements existants sans contrôle.
+- Dans SMTP & API, relever l'identifiant SMTP exact et créer/copier une clé SMTP (différente de la clé API).
+- Ne jamais insérer cette clé dans le HTML public, ni la partager par chat.
+
+ETAPE 2 — SUPABASE (https://supabase.com/dashboard/project/syawyulrelrhjprnxdyn/auth/smtp)
+- Activer Custom SMTP.
+- Sender email : admin@getienglish.com
+- Sender name : GETI — Global English Teaching Institute
+- SMTP host : smtp-relay.brevo.com
+- SMTP port : 587
+- SMTP username : identifiant SMTP donné par Brevo (ne pas supposer que c'est admin@getienglish.com)
+- SMTP password : clé SMTP Brevo (pas une clé API)
+- Enregistrer.
+
+ETAPE 3 — CONFIRM EMAIL
+- Dans Supabase Authentication > Providers > Email, activer Email et Confirm email.
+- Dans Authentication > Email Templates > Confirm signup :
+  Subject : GETI — Verify Your Email Address
+  Body : copier le contenu de GETI_confirm_signup_email.html
+- Attention: le template utilise {{ .Token }} : Supabase doit générer le code réel.
+- Vérifier Site URL = https://getienglish.com et la configuration des redirects.
+
+ETAPE 4 — INSTALLATION DU SITE
+- Décompresser GETI_email_confirmation_site.zip.
+- Déployer index.html et les quatre sous-dossiers en conservant leurs chemins.
+- Le backend Supabase geti-account a été mis à jour pour signUp, verifyOtp signup et resend signup. Le HTML du site est prévu pour ce flux. Les comptes anciens déjà confirmés restent utilisables.
+
+ETAPE 5 — TEST REEL (OBLIGATOIRE)
+- Créer un nouveau compte avec une adresse email jamais utilisée sur GETI.
+- Vérifier la réception du mail depuis admin@getienglish.com (y compris dossier spam).
+- Saisir le code reçu; vérifier que l'accès Student Area fonctionne seulement après confirmation.
+- Vérifier le renvoi de code et la connexion après déconnexion.
+- Vérifier également login ancien, examen, paiement et autres fonctions.
+
+LIMITES
+- La configuration SMTP / le template hébergé Supabase et les DNS Brevo n'ont PAS été modifiés depuis ce chat, faute d'accès à ces réglages et aux identifiants SMTP.
+- Ne pas annoncer que des emails ont été effectivement envoyés avant un test en conditions réelles.
+
+Docs :
+https://supabase.com/docs/guides/auth/auth-smtp
+https://developers.brevo.com/docs/smtp-integration
