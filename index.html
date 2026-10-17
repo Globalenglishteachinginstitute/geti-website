@@ -24418,6 +24418,15 @@ body.geti-checkout-active{overflow:hidden!important}
    modal.removeAttribute('hidden');
    modal.setAttribute('aria-hidden','false');
    document.body.classList.add('geti-checkout-active');
+   // Keep page scrolling in sync when other existing GETI actions hide checkout.
+   if(!modal.dataset.getiVisibilityPatched){
+     modal.dataset.getiVisibilityPatched='1';
+     new MutationObserver(()=>{
+       const open=!modal.hidden;
+       document.body.classList.toggle('geti-checkout-active',open);
+       modal.setAttribute('aria-hidden',String(!open));
+     }).observe(modal,{attributes:true,attributeFilter:['hidden']});
+   }
    const close=document.getElementById('getiPaymentClose');
    if(close&&!close.dataset.getiClosePatched){
      close.dataset.getiClosePatched='1';
