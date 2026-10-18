@@ -9578,7 +9578,64 @@ var clone=certificate.cloneNode(true);
 var originalImages=certificate.querySelectorAll("img"),clonedImages=clone.querySelectorAll("img");
 for(var i=0;i<originalImages.length;i++)clonedImages[i].setAttribute("src",originalImages[i].src);
 win.document.open();
-win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){var images=Array.from(document.images);Promise.all(images.map(function(img){return img.complete?Promise.resolve():new Promise(function(done){img.onload=img.onerror=done})})).then(function(){setTimeout(function(){window.print()},250)})}<\/script></body></html>');
+win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){var images=Array.from(document.images);Promise.all(images.map(function(img){return img.complete?Promise.resolve():new Promise(function(done){img.onload=img.onerror=done})})).then(function(){setTimeout(function(){window.print()},250)})}<\/script>
+<script id="geti-student-session-restore-v2">
+/* Persist login like common social sites: the session lasts until explicit logout,
+   account revocation or token expiry. Do not store passwords/OTP. */
+(function(){
+  'use strict';
+  var restoring=false, complete=false;
+  function ready(){return window.GETI_SB&&window.GETI_SB.auth&&typeof window.GETI_SB.auth.getSession==='function';}
+  function showVerifiedWelcome(){
+    var codeStep=document.getElementById('getiSignupCodeStep');
+    var success=document.getElementById('getiSignupCompletedStep');
+    if(!codeStep||!success)return;
+    if(typeof window.getiShowFirstArea==='function')window.getiShowFirstArea();
+    if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('create');
+    var form=document.querySelector('#getiFirstCreatePane .geti-first-create-form');
+    var tabs=document.querySelector('#getiFirstAccountPanel .geti-first-auth-tabs');
+    if(form){form.hidden=true;form.style.display='none';}
+    if(tabs){tabs.hidden=true;tabs.style.display='none';}
+    codeStep.hidden=false;codeStep.style.display='';
+    Array.prototype.forEach.call(codeStep.children,function(child){
+      if(child!==success){child.hidden=true;child.style.display='none';}
+    });
+    success.hidden=false;success.style.display='block';
+    var shell=document.querySelector('#getiFirstAccountPanel .geti-home-v2-account-form-shell');
+    if(shell)shell.classList.add('geti-confirm-email-mode');
+  }
+  async function restore(){
+    if(restoring||!ready())return;
+    restoring=true;
+    try{
+      var result=await window.GETI_SB.auth.getSession();
+      var session=result&&result.data&&result.data.session;
+      if(!session||!session.user)return;
+      /* Never use a stale, unconfirmed signup as a logged-in account. */
+      if(!session.user.email_confirmed_at)return;
+      var waitingForNext=false;
+      try{waitingForNext=sessionStorage.getItem('GETI_SIGNUP_VERIFIED_NEXT')==='1';}catch(e){}
+      if(waitingForNext){showVerifiedWelcome();return;}
+      if(document.body&&!document.body.classList.contains('geti-second-area-open')){
+        if(typeof window.getiOpenSecondArea==='function')window.getiOpenSecondArea();
+      }
+      complete=true;
+    }catch(e){console.warn('GETI session restoration unavailable:',e&&e.message||e);}
+    finally{restoring=false;}
+  }
+  function kick(){setTimeout(restore,250);}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',kick);
+  else kick();
+  window.addEventListener('pageshow',function(){if(!complete)kick();});
+  if(ready()&&typeof window.GETI_SB.auth.onAuthStateChange==='function'){
+    window.GETI_SB.auth.onAuthStateChange(function(event){
+      if(event==='SIGNED_IN'||event==='INITIAL_SESSION')kick();
+      if(event==='SIGNED_OUT'){complete=false;}
+    });
+  }
+})();
+</script>
+</body></html>');
 win.document.close();
 }
 </script>
@@ -20590,11 +20647,12 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
   }
   async function activateSession(session){
     if(!session||!session.access_token)throw new Error('Secure session was not returned. Please request a new code.');
-    saveSessionDirect(session);
-    if(window.GETI_SB&&GETI_SB.auth&&typeof GETI_SB.auth.setSession==='function'){
-      var sr=await GETI_SB.auth.setSession({access_token:session.access_token,refresh_token:session.refresh_token});
-      if(sr&&sr.error)throw sr.error;
-    }
+    if(!window.GETI_SB||!GETI_SB.auth||typeof GETI_SB.auth.setSession!=='function')throw new Error('GETI authentication is unavailable.');
+    /* Let the Supabase client persist and refresh the session; never write auth tokens by hand. */
+    var sr=await GETI_SB.auth.setSession({access_token:session.access_token,refresh_token:session.refresh_token});
+    if(sr&&sr.error)throw sr.error;
+    if(!sr||!sr.data||!sr.data.session||!sr.data.user||!sr.data.user.email_confirmed_at)throw new Error('Email confirmation or secure login was not completed.');
+    try{localStorage.setItem('GETI_CERT_EVER_CREATED','yes');}catch(e){}
     return true;
   }
   function addToggle(input){
@@ -20643,6 +20701,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
       var signupReply=await accountApi({action:'create_account',full_name:fullName,email:address,password:password});
       if(!signupReply||signupReply.verification_required!==true)throw new Error('No confirmation email was requested. Please try SIGN IN if you already have an account.');
       savePending(address);
+      try{sessionStorage.removeItem('GETI_SIGNUP_VERIFIED_NEXT');}catch(e){}
       pw.value='';confirm.value='';
       showSignupCode(address);
     }catch(e){status.innerHTML='<span class="bad">'+esc(e.message||'Unable to create account.')+'</span>'}
@@ -20661,7 +20720,12 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     try{
       var data=await accountApi({action:'verify_signup_code',email:p.email,code:code});
       if(!data.session)throw new Error('Confirmation succeeded but the secure session was not returned.');
-      await activateSession(data.session);
+      /* Set the welcome gate BEFORE setSession emits SIGNED_IN, preventing an auto-open race. */
+      try{sessionStorage.setItem('GETI_SIGNUP_VERIFIED_NEXT','1');}catch(e){}
+      try{await activateSession(data.session)}catch(sessionError){
+        try{sessionStorage.removeItem('GETI_SIGNUP_VERIFIED_NEXT')}catch(e){}
+        throw sessionError;
+      }
       clearPending();
       if(status)status.innerHTML='';
       var login=el('getiFirstLoginEmail');if(login)login.value=p.email;
@@ -24490,6 +24554,7 @@ panel.querySelectorAll('[data-geti-question]').forEach(btn=>btn.addEventListener
 </style>
 <script id="geti-signup-completed-next-script">
 window.getiFinishSignupToStudent=function(){
+  try{sessionStorage.removeItem('GETI_SIGNUP_VERIFIED_NEXT');}catch(e){}
   var button=document.getElementById('getiSignupCompletedNext');
   if(button){button.disabled=true;button.textContent='OPENING STUDENT AREA...';}
   try{
