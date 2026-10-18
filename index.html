@@ -7455,14 +7455,14 @@ h1, h2, h3, h4, h5, h6,
             </div>
             <div class="geti-signup-code-icon">✉</div>
             <h3>Confirm your email</h3>
-            <p id="getiSignupCodeText">We sent a 6-digit confirmation code to your email.</p>
+            <p id="getiSignupCodeText">We sent a confirmation code to your email. Enter all 8 digits if your email contains 8 digits.</p>
             <div class="geti-signup-email-box">
               <span>Email</span>
               <strong id="getiSignupCodeEmail">—</strong>
             </div>
             <label class="geti-signup-code-field" for="getiSignupCodeInput">
               <span>Confirmation code</span>
-              <input id="getiSignupCodeInput" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter code" aria-label="Confirmation code" onkeydown="if(event.key==='Enter'){event.preventDefault();getiConfirmSignupCode();}">
+              <input id="getiSignupCodeInput" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="Enter code" aria-label="Confirmation code" onkeydown="if(event.key==='Enter'){event.preventDefault();getiConfirmSignupCode();}">
             </label>
             <button id="getiConfirmCodeBtn" class="geti-first-primary-auth full geti-signup-continue" type="button" onclick="getiConfirmSignupCode()">CONTINUE</button>
             <p class="geti-signup-help">Enter the code from the email we sent you. The newest code is the one that works.</p>
@@ -19198,7 +19198,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     if(shell)shell.classList.toggle('geti-confirm-email-mode',!!open);
     var note=el('getiSignupCodeText');
     var emailBox=el('getiSignupCodeEmail');
-    if(note&&open)note.textContent='We sent a 6-digit confirmation code to your email. Enter it below to finish creating your GETI account.';
+    if(note&&open)note.textContent='We sent a confirmation code to your email. Enter all 8 digits if your email contains 8 digits. Enter it below to finish creating your GETI account.';
     if(emailBox)emailBox.textContent=email||'—';
     if(open){
       try{step.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}
@@ -20541,7 +20541,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     var code=String(input&&input.value||'').replace(/\s+/g,'').trim();
     var p=pending();
     if(!p.email||!p.password){if(status)status.innerHTML='<span class="bad">Please create your account again before entering the confirmation code.</span>';return;}
-    if(!/^\d{6}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the 6-digit confirmation code from the newest email.</span>';return;}
+    if(!/^\d{6,8}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the full 6- or 8-digit confirmation code from the newest email.</span>';return;}
     busy=true;if(btn){btn.disabled=true;btn.textContent='CONFIRMING...';}if(input)input.disabled=true;
     if(status)status.innerHTML='<span class="ok">Checking your confirmation code...</span>';
     try{
@@ -20714,7 +20714,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     var input=el('getiSignupCodeInput'),status=el('getiSignupCodeStatus'),btn=el('getiConfirmCodeBtn'),p=readPending();
     var code=String(input&&input.value||'').replace(/\s+/g,'').trim();
     if(!p.email){if(status)status.innerHTML='<span class="bad">We could not find your pending email. Open Create Account and request a new code.</span>';return}
-    if(!/^\d{6}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the 6-digit confirmation code.</span>';return}
+    if(!/^\d{6,8}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the complete 6- or 8-digit confirmation code.</span>';return}
     confirmBusy=true;if(btn){btn.disabled=true;btn.textContent='CONFIRMING...'}if(input)input.disabled=true;
     if(status)status.innerHTML='<span class="ok">Checking code for '+esc(p.email)+'...</span>';
     try{
@@ -20744,7 +20744,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
       }
     }catch(e){
       var m=String(e.message||'Invalid or expired confirmation code.');
-      if(/expired|invalid|token|otp_expired/i.test(m))m='The server rejected this code for '+p.email+'. If you already registered with this email, use SIGN IN. Otherwise press SEND CODE AGAIN, wait for the NEW email, and enter its 6 digits. Check Spam and do not reuse an older code.';
+      if(/expired|invalid|token|otp_expired/i.test(m))m='The server rejected this code for '+p.email+'. If you already registered with this email, use SIGN IN. Otherwise press SEND CODE AGAIN, wait for the NEW email, and enter all its digits (6 or 8). Check Spam and do not reuse an older code.';
       if(status)status.innerHTML='<span class="bad">'+esc(m)+'</span>';
     }finally{confirmBusy=false;if(btn){btn.disabled=false;btn.textContent='CONTINUE'}if(input)input.disabled=false}
   };
@@ -20774,7 +20774,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
       +'</div>'
       +'<div id="getiSimpleForgotCodeStep" hidden>'
       +'<div class="geti-simple-forgot-email"><span>Email</span><strong id="getiSimpleForgotEmailDisplay"></strong></div>'
-      +'<label class="geti-first-field full"><span>Confirmation Code</span><input id="getiSimpleForgotCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6-digit code"></label>'
+      +'<label class="geti-first-field full"><span>Confirmation Code</span><input id="getiSimpleForgotCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="6- or 8-digit code"></label>'
       +'<button id="getiSimpleForgotVerifyBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotVerifyCode()">CONTINUE</button>'
       +'<div class="geti-first-account-links"><button type="button" onclick="getiSimpleForgotSendCode(true)">SEND CODE AGAIN</button></div>'
       +'</div>'
@@ -20800,7 +20800,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
       try{sessionStorage.setItem('GETI_RESET_EMAIL',email);sessionStorage.removeItem('GETI_RESET_TICKET')}catch(e){}
       var a=el('getiSimpleForgotEmailStep'),b=el('getiSimpleForgotCodeStep'),c=el('getiSimpleForgotPasswordStep'),d=el('getiSimpleForgotEmailDisplay'),code=el('getiSimpleForgotCode');
       if(a)a.hidden=true;if(b)b.hidden=false;if(c)c.hidden=true;if(d)d.textContent=email;if(code){code.value='';setTimeout(function(){code.focus()},80)}
-      if(status)status.innerHTML='<span class="ok">✓ Code sent. Enter the newest 6-digit code.</span>';
+      if(status)status.innerHTML='<span class="ok">✓ Code sent. Enter the complete code from the newest email.</span>';
     }catch(e){if(status)status.innerHTML='<span class="bad">'+esc(e.message||'Unable to send reset code.')+'</span>'}
     finally{forgotSendBusy=false;if(btn)btn.disabled=false}
   };
@@ -20808,7 +20808,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
   window.getiSimpleForgotVerifyCode=async function(){
     if(forgotVerifyBusy)return;
     var email=forgotEmail(),code=String((el('getiSimpleForgotCode')||{}).value||'').replace(/\s+/g,'').trim(),status=el('getiFirstResetStatus'),btn=el('getiSimpleForgotVerifyBtn');
-    if(!/^\d{6}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the 6-digit confirmation code.</span>';return}
+    if(!/^\d{6,8}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the complete 6- or 8-digit confirmation code.</span>';return}
     forgotVerifyBusy=true;if(btn){btn.disabled=true;btn.textContent='CONFIRMING...'}if(status)status.innerHTML='<span class="ok">Confirming code...</span>';
     try{
       var d=await accountApi({action:'verify_password_reset_code',email:email,code:code});
