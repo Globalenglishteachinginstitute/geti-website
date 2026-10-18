@@ -20653,10 +20653,10 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     if(confirmBusy)return;
     var input=el('getiSignupCodeInput'),status=el('getiSignupCodeStatus'),btn=el('getiConfirmCodeBtn'),p=readPending();
     var code=String(input&&input.value||'').replace(/\s+/g,'').trim();
-    if(!p.email){if(status)status.innerHTML='<span class="bad">Create your account again first.</span>';return}
+    if(!p.email){if(status)status.innerHTML='<span class="bad">We could not find your pending email. Open Create Account and request a new code.</span>';return}
     if(!/^\d{6}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the 6-digit confirmation code.</span>';return}
     confirmBusy=true;if(btn){btn.disabled=true;btn.textContent='CONFIRMING...'}if(input)input.disabled=true;
-    if(status)status.innerHTML='<span class="ok">Confirming...</span>';
+    if(status)status.innerHTML='<span class="ok">Checking code for '+esc(p.email)+'...</span>';
     try{
       var data=await accountApi({action:'verify_signup_code',email:p.email,code:code});
       if(!data.session)throw new Error('Confirmation succeeded but the secure session was not returned.');
@@ -20679,7 +20679,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
       }
     }catch(e){
       var m=String(e.message||'Invalid or expired confirmation code.');
-      if(/expired|invalid|token/i.test(m))m='Invalid or expired code. Tap SEND CODE AGAIN and use the newest 6-digit code.';
+      if(/expired|invalid|token|otp_expired/i.test(m))m='This code was rejected or has expired for '+p.email+'. Select SEND CODE AGAIN once, check the newest email (also Spam), and enter only its 6 digits. Older codes will not work.';
       if(status)status.innerHTML='<span class="bad">'+esc(m)+'</span>';
     }finally{confirmBusy=false;if(btn){btn.disabled=false;btn.textContent='CONTINUE'}if(input)input.disabled=false}
   };
