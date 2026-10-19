@@ -7329,6 +7329,15 @@ h1, h2, h3, h4, h5, h6,
 .geti-long-v3-pills a{display:inline-flex;align-items:center;justify-content:center;padding:9px 12px;background:#fff;border:1px solid var(--g3line);border-radius:999px;font-size:11px;font-weight:800;color:#3b4d61;text-decoration:none;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
 .geti-long-v3-pills a:hover,.geti-long-v3-pills a:focus-visible{background:#eaf3ff;border-color:#215d9d;color:#123c70;text-decoration:none;outline-offset:2px}
 </style>
+<style id="geti-precreate-action-style">
+.geti-precreate-action{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;padding:12px 16px;margin:0 0 15px;border:1px solid #b8d7fa;border-radius:13px;background:linear-gradient(105deg,#edf6ff,#f8fbff);color:#144b87;font-weight:700;font-size:14px;line-height:1.4;font-family:inherit;letter-spacing:.01em;text-align:center;cursor:pointer;box-shadow:0 3px 10px rgba(22,77,140,.08);transition:background .2s,transform .2s,border-color .2s}
+.geti-precreate-action:hover{background:#dceeff;border-color:#75aeee;transform:translateY(-1px)}
+.geti-precreate-action:focus-visible{outline:3px solid #377ce8;outline-offset:3px}
+.geti-precreate-action-icon{font-size:20px;color:#3478c5;flex:0 0 auto}
+.geti-precreate-action-label{flex:0 1 auto}
+.geti-precreate-action-arrow{font-size:22px;line-height:1;flex:0 0 auto}
+@media(max-width:520px){.geti-precreate-action{font-size:13px;min-height:54px;padding:10px 12px;gap:7px}}
+</style>
 </head>
 
 <body translate="no" class="notranslate">
@@ -7427,6 +7436,17 @@ h1, h2, h3, h4, h5, h6,
         </article>
       </div>
       <div class="geti-home-v2-account-form-shell">
+        <button type="button" class="geti-precreate-action" onclick="getiToggleSocialShare()" aria-expanded="false" aria-controls="getiSocialSharePanel" aria-label="Show social sharing options">
+          <span class="geti-precreate-action-icon" aria-hidden="true">✦</span>
+          <span class="geti-precreate-action-label">Click here before creating an account</span>
+          <span class="geti-precreate-action-arrow" aria-hidden="true">→</span>
+        </button>
+<div id="getiSocialSharePanel" class="geti-social-share-panel" hidden>
+<p class="geti-social-share-title">Share GETI with your friends</p>
+<div class="geti-social-share-actions"><button type="button" class="geti-social-facebook" onclick="getiShareFacebook()">ⓕ Facebook</button><button type="button" class="geti-social-instagram" onclick="getiShareInstagram()">◎ Instagram</button></div>
+<p class="geti-social-share-help">Facebook opens a sharing window. Instagram requires you to finish posting in your account.</p>
+<textarea id="getiSocialShareCaption" readonly rows="6" aria-label="GETI social post caption"></textarea>
+<button type="button" class="geti-social-copy" onclick="getiCopyShareCaption()">Copy caption</button><span id="getiSocialShareStatus" role="status" aria-live="polite"></span></div>
         <div class="geti-first-auth-tabs" role="tablist" aria-label="GETI account access">
           <button type="button" id="getiFirstSignInTab" class="active" role="tab" aria-selected="true" onclick="getiSwitchFirstAccount('signin')">SIGN IN</button>
           <button type="button" id="getiFirstCreateTab" role="tab" aria-selected="false" onclick="getiSwitchFirstAccount('create')">CREATE ACCOUNT</button>
@@ -8557,13 +8577,21 @@ h1, h2, h3, h4, h5, h6,
         <h3>English Teaching Certificates</h3>
         <p>GETI currently highlights two main certificate pathways on this page: TEFL and TESOL. These pathways are designed for future English teachers and trainers and can be followed through hour-based options such as 20, 40, 60, 80, 100, 120, 140, 150, 180, 200, 250, 300 and 420 hours depending on the selected exam option.</p>
         <div class="geti-cert-badge-grid">
-          <div class="geti-cert-badge"><span>TEFL<small>Teaching English as a Foreign Language</small></span></div>
-          <div class="geti-cert-badge"><span>TESOL<small>Teaching English to Speakers of Other Languages</small></span></div>
+          <button type="button" class="geti-cert-badge geti-cert-choice" onclick="getiChooseCertificatePathway('TEFL')" aria-label="Explore TEFL program"><span>TEFL<small>Teaching English as a Foreign Language</small></span><span aria-hidden="true">→</span></button>
+          <button type="button" class="geti-cert-badge geti-cert-choice" onclick="getiChooseCertificatePathway('TESOL')" aria-label="Explore TESOL program"><span>TESOL<small>Teaching English to Speakers of Other Languages</small></span><span aria-hidden="true">→</span></button>
+        </div>
+        <div id="getiCertificatePathwayDetails" class="geti-certificate-interactive-box" hidden aria-live="polite">
+          <h4 id="getiCertificatePathwayHeading">Explore a GETI Program</h4>
+          <p id="getiCertificatePathwayText"></p>
+          <div class="geti-certificate-action-row">
+            <button type="button" onclick="getiCertificateOpenProgramLessons()">EXPLORE PROGRAM LESSONS →</button>
+            <button type="button" onclick="getiCertificateStartExam()">TAKE AN EXAM →</button>
+          </div>
         </div>
       </div>
     </section>
     <section class="geti-cert-info-section"><h2>How should I start a GETI certificate program?</h2><div class="geti-cert-route-grid"><div class="geti-cert-route-step"><strong>Step 1 — Create a Student Account</strong><p>Open a GETI account to access lessons, exams, results and certificate services.</p></div><div class="geti-cert-route-step"><strong>Step 2 — Choose Your Program</strong><p>Select either the TEFL or TESOL pathway that matches your learning goal.</p></div><div class="geti-cert-route-step"><strong>Step 3 — Study and Complete Assessments</strong><p>Follow the lessons and complete the examinations connected to your selected TEFL or TESOL program.</p></div><div class="geti-cert-route-step"><strong>Step 4 — Receive and Verify Your Certificate</strong><p>After passing, use GETI result and certificate services, then verify the issued record online with the Certificate ID.</p></div></div><div class="geti-cert-start-box"><p>Start with one of the main GETI certificate pathways: TEFL or TESOL.</p><button type="button" onclick="getiCertificateGoToAccount('create')">CREATE ACCOUNT and START</button></div></section>
-    <section class="geti-cert-info-section"><h2>Program Breakdown</h2><div class="geti-cert-course-grid"><div>Lesson Planning and Teaching Skills</div><div>Listening, Reading, Speaking and Writing</div><div>Grammar, Pronunciation and Communication</div><div>Assessment, Feedback and Classroom Practice</div><div>Teaching Methodology and Classroom Strategies</div><div>Practical English Teaching Development</div></div></section>
+    <section class="geti-cert-info-section"><h2>Program Breakdown</h2><div class="geti-cert-course-grid"><details class="geti-cert-interactive-topic"><summary>Lesson Planning and Teaching Skills</summary><p>Explore lesson objectives, classroom activities, sequencing, and planning a clear English lesson.</p></details><details class="geti-cert-interactive-topic"><summary>Listening, Reading, Speaking and Writing</summary><p>Practice the four core English skills through guided exercises and learning activities.</p></details><details class="geti-cert-interactive-topic"><summary>Grammar, Pronunciation and Communication</summary><p>Review sentence structure, spoken clarity, vocabulary usage, and communication techniques.</p></details><details class="geti-cert-interactive-topic"><summary>Assessment, Feedback and Classroom Practice</summary><p>Learn how to check understanding, give feedback, and strengthen teaching practice.</p></details><details class="geti-cert-interactive-topic"><summary>Teaching Methodology and Classroom Strategies</summary><p>Explore approaches to teaching languages and managing learning activities.</p></details><details class="geti-cert-interactive-topic"><summary>Practical English Teaching Development</summary><p>Continue developing practical skills through lessons, study, and assessments.</p></details></div><div class="geti-certificate-action-row geti-certificate-below-topics"><button type="button" onclick="getiCertificateOpenProgramLessons()">EXPLORE LESSONS →</button><button type="button" onclick="getiCertificateStartExam()">EXPLORE EXAMS →</button></div></section>
     <section class="geti-cert-info-section" id="getiCertificateSamples"><div class="geti-cert-sample-intro"><div><h2>What Will GETI Certificates Look Like?</h2><p>Below are small sample views of the TEFL and TESOL certificate formats used by GETI.</p></div></div><div id="getiCertificateSampleGrid" class="geti-cert-sample-grid" aria-live="polite"></div><p class="geti-cert-sample-note">Samples are shown for reference only. Official issued certificates display the learner's name, certificate title, issue date, Certificate ID and verification data associated with the GETI record.</p></section>
     <section class="geti-cert-info-section"><div class="geti-cert-verify-box"><div><h3>Verify a GETI Certificate</h3><p>Use the official GETI verification form to search any GETI certificate by Certificate ID, holder name or nationality.</p></div><button type="button" onclick="getiOpenCertificateVerification()">CERTIFICATE VERIFICATION</button></div></section>
   </div>
@@ -8607,6 +8635,16 @@ h1, h2, h3, h4, h5, h6,
           <span><strong>Professional Lessons</strong><small>Open structured learning programs</small></span>
           <b>›</b>
         </button>
+        <a class="geti-first-quick-card" href="https://getienglish.com/practice" style="text-decoration:none;color:inherit;" aria-label="Practice — Open GETI practice">
+          <span class="geti-first-quick-icon">✎</span>
+          <span><strong>Practice</strong><small>Practice your English skills</small></span>
+          <b>›</b>
+        </a>
+        <a class="geti-first-quick-card" href="https://getienglish.com/library" style="text-decoration:none;color:inherit;" aria-label="Library — Open GETI library">
+          <span class="geti-first-quick-icon">▤</span>
+          <span><strong>Library</strong><small>Explore learning resources and books</small></span>
+          <b>›</b>
+        </a>
         <button type="button" class="geti-first-quick-card" onclick="openMyResult()">
           <span class="geti-first-quick-icon">A+</span>
           <span><strong>My Result</strong><small>Check your examination result</small></span>
@@ -18113,7 +18151,74 @@ const originalOpenLesson=window.openGetiLesson;
 window.openGetiLesson=function(exam,subject){const c=cfg(exam);if(!c)return originalOpenLesson(exam,subject);getiLessonState.exam=exam;getiLessonState.subject=subject;const panel=document.getElementById("lessonPanel"),nativeSubject=window.getLocalizedCourseSubject(exam,subject),level=window.getGeti200SubjectLevel(exam,subject);panel.classList.add("active");panel.innerHTML='<div class="geti-200-book-shell"><div class="geti-200-book-cover"><span class="geti-200-kicker">GETI · '+escapeHTML(c.ui.textbook)+'</span><h2>'+escapeHTML(nativeSubject)+'</h2><p>'+escapeHTML(c.ui.bookDesc)+'</p><div class="geti-200-meta"><span>'+escapeHTML(level)+'</span><span>'+escapeHTML(c.ui.chaptersLabel)+'</span><span>'+escapeHTML(c.ui.pagesLabel)+'</span><span>'+escapeHTML(c.ui.pagesPer)+'</span></div></div><div class="geti-200-resource-row"><button class="geti-200-resource" onclick="openGetiLessonPDF()"><strong>'+escapeHTML(c.ui.openPdf)+'</strong><span>'+escapeHTML(c.ui.openPdfSub)+'</span><em>'+escapeHTML(c.ui.openPdf)+'</em></button><button class="geti-200-resource" onclick="downloadLessonPDF()"><strong>'+escapeHTML(c.ui.downloadPdf)+'</strong><span>'+escapeHTML(c.ui.downloadPdfSub)+'</span><em>'+escapeHTML(c.ui.downloadPdf)+'</em></button></div>'+window.getGeti200OutlineHTML(exam,subject)+'</div>';panel.scrollIntoView({behavior:"smooth",block:"start"});};
 
 function nativePrintableBook(exam,subject,autoPrint){const c=cfg(exam);if(!c)return false;const w=window.open("","_blank");if(!w){alert("Popup blocked");return true;}const nativeSubject=window.getLocalizedCourseSubject(exam,subject);let pages="";for(let n=1;n<=200;n++){const d=nativePageText(exam,subject,n);pages+='<section class="pdfpage"><header>'+escapeHTML(c.ui.bookHeader)+'</header><h1>'+escapeHTML(nativeSubject)+'</h1><div class="meta">'+escapeHTML(c.exam)+' · '+escapeHTML(d.level)+' · '+escapeHTML(d.stage)+'</div><h2>'+escapeHTML(c.ui.chapter+' '+d.chapter+' · '+d.role)+'</h2>'+d.paragraphs.map(function(x){return '<p>'+escapeHTML(x)+'</p>';}).join("")+'<footer>'+escapeHTML(c.ui.page)+' '+n+' / 200</footer></section>';}
-  const html='<!doctype html><html lang="'+c.code+'"><head><meta charset="utf-8"><title>'+escapeHTML(nativeSubject)+' · 200</title><style>@page{size:A4;margin:0}*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans",sans-serif;color:#18283b}.pdfpage{width:210mm;height:297mm;padding:15mm 16mm 13mm;page-break-after:always;position:relative;overflow:hidden;background:#fff}.pdfpage:last-child{page-break-after:auto}header{background:#0b2d5c;color:#fff;padding:8px 10px;font-size:9pt;font-weight:700;letter-spacing:.03em}h1{font-size:18pt;margin:12px 0 3px;color:#0b2d5c}h2{font-size:12pt;color:#294d73;border-bottom:1px solid #d7e0ea;padding-bottom:5px;margin:12px 0 8px}.meta{font-size:8.5pt;color:#5b6c7d}p{font-size:9.7pt;line-height:1.48;margin:7px 0;text-align:justify}footer{position:absolute;bottom:6mm;left:16mm;right:16mm;border-top:1px solid #d7e0ea;padding-top:4px;font-size:8pt;color:#5c6b78;text-align:right}@media print{body{background:#fff}.pdfpage{box-shadow:none}}</style></head><body>'+pages+'</body></html>';
+  const html='<!doctype html><html lang="'+c.code+'"><head><meta charset="utf-8"><title>'+escapeHTML(nativeSubject)+' · 200</title><style>@page{size:A4;margin:0}*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans",sans-serif;color:#18283b}.pdfpage{width:210mm;height:297mm;padding:15mm 16mm 13mm;page-break-after:always;position:relative;overflow:hidden;background:#fff}.pdfpage:last-child{page-break-after:auto}header{background:#0b2d5c;color:#fff;padding:8px 10px;font-size:9pt;font-weight:700;letter-spacing:.03em}h1{font-size:18pt;margin:12px 0 3px;color:#0b2d5c}h2{font-size:12pt;color:#294d73;border-bottom:1px solid #d7e0ea;padding-bottom:5px;margin:12px 0 8px}.meta{font-size:8.5pt;color:#5b6c7d}p{font-size:9.7pt;line-height:1.48;margin:7px 0;text-align:justify}footer{position:absolute;bottom:6mm;left:16mm;right:16mm;border-top:1px solid #d7e0ea;padding-top:4px;font-size:8pt;color:#5c6b78;text-align:right}@media print{body{background:#fff}.pdfpage{box-shadow:none}}</style>
+<style id="geti-forgot-email-create-style">
+/* Forgot-password first step styled like Create Account; functionality unchanged. */
+#getiFirstForgotPane #getiSimpleForgotEmailStep.geti-simple-forgot-email-form {
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:15px!important;
+  width:100%!important;
+  max-width:720px!important;
+  margin:0 auto!important;
+  align-items:stretch!important;
+}
+#getiFirstForgotPane #getiSimpleForgotEmailStep .geti-first-field {
+  display:flex!important;
+  flex-direction:column!important;
+  gap:9px!important;
+  width:100%!important;
+  grid-column:1 / -1!important;
+}
+#getiFirstForgotPane #getiSimpleForgotEmailStep .geti-first-field span {
+  font-size:13px!important;
+  font-weight:800!important;
+  color:#123c70!important;
+}
+#getiFirstForgotPane #getiSimpleForgotEmail {
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:52px!important;
+  padding:13px 15px!important;
+  font-size:15px!important;
+  border:1px solid #cbd9e8!important;
+  border-radius:12px!important;
+  background:#fff!important;
+  color:#143559!important;
+}
+#getiFirstForgotPane #getiSimpleForgotEmail:focus {
+  outline:2px solid #5297df!important;
+  outline-offset:1px!important;
+  border-color:#276cad!important;
+}
+#getiFirstForgotPane #getiSimpleForgotSendBtn {
+  display:block!important;
+  box-sizing:border-box!important;
+  grid-column:1 / -1!important;
+  width:100%!important;
+  min-height:52px!important;
+  margin:2px 0 0!important;
+  padding:13px 20px!important;
+  border:0!important;
+  border-radius:12px!important;
+  background:#0b4b90!important;
+  color:#fff!important;
+  font-size:14px!important;
+  font-weight:900!important;
+  letter-spacing:.05em!important;
+  cursor:pointer;
+}
+#getiFirstForgotPane #getiSimpleForgotSendBtn:disabled {opacity:.62!important;cursor:not-allowed!important;}
+#getiFirstForgotPane #getiSimpleForgotSendBtn:not(:disabled):hover {background:#083869!important;}
+@media(max-width:520px){
+  #getiFirstForgotPane #getiSimpleForgotEmailStep.geti-simple-forgot-email-form {gap:12px!important;}
+  #getiFirstForgotPane #getiSimpleForgotEmail,
+  #getiFirstForgotPane #getiSimpleForgotSendBtn {min-height:50px!important;}
+}
+</style>
+</head><body>'+pages+'</body></html>';
   w.document.open();w.document.write(html);w.document.close();if(autoPrint)setTimeout(function(){w.focus();w.print();},500);return true;}
 const originalOpenPDF=window.openGetiLessonPDF;
 window.openGetiLessonPDF=function(){if(cfg(getiLessonState.exam))return nativePrintableBook(getiLessonState.exam,getiLessonState.subject,false);return originalOpenPDF();};
@@ -20687,7 +20792,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     pane.innerHTML=''
       +'<div class="geti-first-forgot-heading"><h3>Reset Password</h3><p>Enter your email. GETI will send a confirmation code.</p></div>'
       +'<div class="geti-simple-forgot-box">'
-      +'<div id="getiSimpleForgotEmailStep">'
+      +'<div id="getiSimpleForgotEmailStep" class="geti-first-auth-form geti-first-create-form geti-simple-forgot-email-form">'
       +'<label class="geti-first-field full"><span>Email Address</span><input id="getiSimpleForgotEmail" type="email" autocomplete="email" placeholder="admin@getienglish.com"></label>'
       +'<button id="getiSimpleForgotSendBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotSendCode()">SEND CODE</button>'
       +'</div>'
@@ -24553,6 +24658,86 @@ body.geti-second-area-open:not(.geti-portal-mode) #getiSecondArea .geti-second-a
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();
+})();
+</script>
+<style id="geti-social-share-style">
+.geti-social-share-panel{margin:-5px 0 16px;padding:16px;border:1px solid #c6d9f0;border-radius:14px;background:#f8fbff;box-shadow:0 6px 20px rgba(18,60,112,.07)}
+.geti-social-share-panel[hidden]{display:none!important}
+.geti-social-share-title{margin:0 0 12px;color:#123c70;font-size:15px;font-weight:800}
+.geti-social-share-actions{display:flex;flex-wrap:wrap;gap:10px}
+.geti-social-share-actions button,.geti-social-copy{border:0;border-radius:10px;padding:11px 14px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer}
+.geti-social-facebook{background:#1877f2;color:#fff}.geti-social-instagram{background:linear-gradient(110deg,#833ab4,#e1306c,#f77737);color:#fff}
+.geti-social-copy{background:#134b87;color:#fff;margin-top:10px}.geti-social-share-help{font-size:12px;color:#365b82;margin:10px 0}
+#getiSocialShareCaption{display:block;width:100%;box-sizing:border-box;resize:vertical;border:1px solid #b8d7fa;border-radius:10px;padding:12px;color:#223b58;background:#fff;font:13px/1.55 inherit}
+#getiSocialShareStatus{font-size:12px;color:#155e42;margin-left:8px}
+</style><script id="geti-social-share-script">(function(){
+var caption="Join GETI and take a confident step toward your English learning goals! The Global English Teaching Institute (GETI) is an online educational platform where learners can explore English programs, develop communication skills, and discover opportunities for continued learning. Through GETI, students can learn about available courses, explore teaching knowledge, access practice resources, and find information about examinations and certificates. The platform also provides a Student Area and certificate verification features to support its educational services. Whether you want to strengthen your vocabulary, improve your confidence, or learn more about English teaching, GETI welcomes you to discover its learning community. Visit our website, explore the programs, and begin your learning journey with GETI. Keep Learning, Keep Growing! English Opens Opportunities. https://getienglish.com"; var website='https://getienglish.com/';
+function status(t){var e=document.getElementById('getiSocialShareStatus');if(e)e.textContent=t;}
+window.getiToggleSocialShare=function(){var p=document.getElementById('getiSocialSharePanel');if(!p)return;var opening=p.hidden;p.hidden=!opening;var b=document.querySelector('.geti-precreate-action');if(b)b.setAttribute('aria-expanded',String(opening));if(opening){var f=document.getElementById('getiSocialShareCaption');if(f)f.value=caption;}};
+window.getiCopyShareCaption=async function(){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(caption);}else{var e=document.getElementById('getiSocialShareCaption');if(!e)return;e.focus();e.select();if(!document.execCommand('copy'))throw Error('unavailable');}status('Caption copied. Paste it into your post.');}catch(e){status('Select and copy the caption manually.');}};
+window.getiShareFacebook=function(){window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(website),'_blank','noopener,noreferrer');status('Facebook sharing opened. Copy the caption if needed.');};
+window.getiShareInstagram=function(){window.getiCopyShareCaption();window.open('https://www.instagram.com/','_blank','noopener,noreferrer');status('Instagram opened. Paste the caption when you create your post.');};
+})();</script>
+<style id="geti-certificate-interactivity-style">
+#getiCertificateInfoView .geti-cert-choice{width:100%;text-align:left;justify-content:space-between;gap:12px;cursor:pointer;font:inherit;transition:border-color .15s,box-shadow .15s,transform .15s}
+#getiCertificateInfoView .geti-cert-choice:hover,#getiCertificateInfoView .geti-cert-choice:focus-visible{border-color:#2473c5;box-shadow:0 6px 18px rgba(22,80,146,.16);transform:translateY(-1px)}
+#getiCertificateInfoView .geti-cert-choice:focus-visible,#getiCertificateInfoView .geti-certificate-action-row button:focus-visible{outline:3px solid #76b5fd;outline-offset:2px}
+#getiCertificateInfoView .geti-cert-interactive-topic{background:#f8fbff;border:1px solid #dce6f0;border-radius:12px;padding:0 14px;min-height:56px;color:#16385f}
+#getiCertificateInfoView .geti-cert-interactive-topic summary{cursor:pointer;padding:16px 4px;font-weight:700;line-height:1.45}
+#getiCertificateInfoView .geti-cert-interactive-topic p{font-size:13px;line-height:1.65;color:#556e84;margin:0 0 14px}
+#getiCertificateInfoView .geti-certificate-interactive-box{border:1px solid #c5daed;background:#eef6ff;border-radius:14px;padding:17px;margin-top:15px}
+#getiCertificateInfoView .geti-certificate-interactive-box[hidden]{display:none!important}
+#getiCertificateInfoView .geti-certificate-interactive-box h4{margin:0 0 8px;color:#103d6e;font-size:20px}
+#getiCertificateInfoView .geti-certificate-interactive-box p{margin:0 0 13px;font-size:14px;line-height:1.55;color:#34516b}
+#getiCertificateInfoView .geti-certificate-action-row{display:flex;flex-wrap:wrap;gap:10px}
+#getiCertificateInfoView .geti-certificate-action-row button{border:0;background:#104b87;color:white;border-radius:10px;min-height:44px;padding:10px 16px;cursor:pointer;font-weight:800}
+#getiCertificateInfoView .geti-certificate-action-row button:hover{background:#0a3767}
+#getiCertificateInfoView .geti-certificate-below-topics{margin-top:16px}
+@media(max-width:520px){#getiCertificateInfoView .geti-certificate-action-row{flex-direction:column}#getiCertificateInfoView .geti-certificate-action-row button{width:100%}}
+</style>
+
+<script id="geti-certificate-interactivity-script">
+(function(){
+ var selected='TEFL';
+ var descriptions={
+  TEFL:'Teaching English as a Foreign Language: explore teaching methods, lesson planning, communication skills, and available GETI learning and assessment pathways.',
+  TESOL:'Teaching English to Speakers of Other Languages: explore language learning, teaching strategies, student support, and available GETI learning and assessment pathways.'
+ };
+ window.getiChooseCertificatePathway=function(program){
+  if(!Object.prototype.hasOwnProperty.call(descriptions,program))return false;
+  selected=program;
+  var box=document.getElementById('getiCertificatePathwayDetails');
+  var title=document.getElementById('getiCertificatePathwayHeading');
+  var para=document.getElementById('getiCertificatePathwayText');
+  if(title)title.textContent=program+' — GETI Program';
+  if(para)para.textContent=descriptions[program];
+  if(box){box.hidden=false;box.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  return false;
+ };
+ // Reuse the real GETI program and exam navigation rather than creating fake content.
+ function returnHome(){
+  if(typeof window.closeGetiCertificateInfo==='function')window.closeGetiCertificateInfo();
+  var section=document.querySelector('.geti-first-area');
+  if(section)section.style.display='';
+ }
+ window.getiCertificateOpenProgramLessons=function(){
+  returnHome();
+  window.setTimeout(function(){
+    var target=document.getElementById(selected==='TEFL'?'getiProgramTEFL':'getiProgramTESOL');
+    if(target){target.click();}
+    else {var programs=document.getElementById('getiHomePrograms');if(programs)programs.scrollIntoView({behavior:'smooth'});}
+  },80);
+  return false;
+ };
+ window.getiCertificateStartExam=function(){
+  returnHome();
+  window.setTimeout(function(){
+    var btn=document.querySelector('.geti-home-v2-level button');
+    if(btn){btn.click();return;}
+    if(typeof window.getiFocusFirstAccount==='function')window.getiFocusFirstAccount('signin');
+  },80);
+  return false;
+ };
 })();
 </script>
 </body>
