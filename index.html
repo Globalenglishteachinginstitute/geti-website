@@ -7338,6 +7338,19 @@ h1, h2, h3, h4, h5, h6,
 .geti-precreate-action-arrow{font-size:22px;line-height:1;flex:0 0 auto}
 @media(max-width:520px){.geti-precreate-action{font-size:13px;min-height:54px;padding:10px 12px;gap:7px}}
 </style>
+
+<style id="geti-account-email-preferences-style">
+#getiDailyAccountPreferences{max-width:1030px;margin:18px auto 24px;padding:22px 26px;background:linear-gradient(135deg,#f0f7ff,#fff);border:1px solid #bcd6f5;border-radius:16px;box-shadow:0 5px 22px rgba(15,62,111,.08);font:15px/1.6 system-ui,Arial,sans-serif;color:#193755}
+#getiDailyAccountPreferences .geti-pref-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+#getiDailyAccountPreferences h3{font-size:19px;margin:0;color:#103c75;font-weight:800}
+#getiDailyAccountPreferences p{margin:5px 0;font-size:14px}
+#getiDailyAccountPreferences .geti-pref-email{font-size:13px;color:#536983;word-break:break-all}
+#getiDailyPrefToggle{padding:12px 23px;border:0;border-radius:24px;background:#cbd5e1;color:#19304a;cursor:pointer;font:800 14px system-ui,Arial,sans-serif;min-width:126px}
+#getiDailyPrefToggle[aria-checked="true"]{background:#0b63bf;color:white}
+#getiDailyPrefToggle:disabled{opacity:.65;cursor:wait}
+#getiDailyPrefMsg{font-size:13px;margin-top:11px;min-height:22px}
+@media(max-width:600px){#getiDailyAccountPreferences{margin:14px;padding:16px}#getiDailyPrefToggle{width:100%}}
+</style>
 </head>
 
 <body translate="no" class="notranslate">
@@ -9616,7 +9629,87 @@ var clone=certificate.cloneNode(true);
 var originalImages=certificate.querySelectorAll("img"),clonedImages=clone.querySelectorAll("img");
 for(var i=0;i<originalImages.length;i++)clonedImages[i].setAttribute("src",originalImages[i].src);
 win.document.open();
-win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){var images=Array.from(document.images);Promise.all(images.map(function(img){return img.complete?Promise.resolve():new Promise(function(done){img.onload=img.onerror=done})})).then(function(){setTimeout(function(){window.print()},250)})}<\/script></body></html>');
+win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){var images=Array.from(document.images);Promise.all(images.map(function(img){return img.complete?Promise.resolve():new Promise(function(done){img.onload=img.onerror=done})})).then(function(){setTimeout(function(){window.print()},250)})}<\/script>
+<!-- GETI Daily Learning Newsletter: standalone opt-in form; certificate verification untouched -->
+<style id="geti-daily-newsletter-styles">
+#getiDailyEmailLauncher{position:fixed;right:22px;bottom:22px;z-index:2147482000;display:flex;align-items:center;gap:9px;padding:14px 18px;border:0;border-radius:100px;background:linear-gradient(135deg,#0756a7,#0d3e78);color:white;font:700 14px/1.25 system-ui,sans-serif;box-shadow:0 8px 24px #08356855;cursor:pointer;max-width:calc(100vw - 30px)}
+#getiDailyEmailLauncher:hover{filter:brightness(1.11)}
+#getiDailyEmailLauncher:focus-visible,#getiDailyEmailDialog :focus-visible{outline:3px solid #f2b546;outline-offset:3px}
+#getiDailyEmailDialog[hidden]{display:none!important}
+#getiDailyEmailDialog{position:fixed;inset:0;z-index:2147482001;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(7,24,50,.7);font-family:system-ui,Arial,sans-serif;box-sizing:border-box}
+#getiDailyEmailDialog *{box-sizing:border-box}
+#getiDailyEmailCard{position:relative;width:min(100%,510px);max-height:min(740px,calc(100vh - 44px));overflow:auto;background:#fff;border-radius:22px;padding:32px;box-shadow:0 24px 90px #0005;color:#18324f}
+#getiDailyEmailDismiss{position:absolute;right:15px;top:15px;border:none;border-radius:50%;width:34px;height:34px;background:#e8f0f9;color:#193955;font-size:23px;cursor:pointer}
+.geti-daily-kicker{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#0756a7;font-weight:800;margin:0 0 8px}
+#getiDailyEmailHeading{font-size:27px;line-height:1.18;margin:0 0 9px;color:#123c72;font-weight:850}
+.geti-daily-intro{color:#4d6075;font-size:14px;line-height:1.65;margin:0 0 20px}
+#getiDailyEmailCard label.geti-daily-label{display:block;font-size:13px;font-weight:700;margin:14px 0 7px}
+#getiDailyEmailCard input.geti-daily-input{width:100%;border:1.5px solid #b9cce2;border-radius:11px;font:15px system-ui,sans-serif;padding:12px 14px;background:#fff;color:#1d354e}
+.geti-daily-consent{display:flex;align-items:flex-start;gap:10px;margin:17px 0 18px;font-size:12px;line-height:1.5;color:#44576c}
+.geti-daily-consent input{width:17px;height:17px;flex-shrink:0;margin-top:1px;accent-color:#0756a7}
+#getiDailyEmailSubmit{width:100%;padding:14px;border:0;border-radius:12px;background:#0756a7;color:white;font:700 15px system-ui,sans-serif;cursor:pointer}
+#getiDailyEmailSubmit:disabled{opacity:.66;cursor:wait}
+#getiDailyEmailFeedback{min-height:24px;font-size:13px;line-height:1.45;margin:12px 0 0;color:#0756a7}
+.geti-daily-foot{margin-top:15px;color:#66768a;font-size:11px;line-height:1.5;text-align:center}
+.geti-daily-hide{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
+@media(max-width:520px){#getiDailyEmailLauncher{right:13px;bottom:13px;padding:12px 15px;font-size:12px}#getiDailyEmailDialog{padding:12px}#getiDailyEmailCard{padding:25px 20px;border-radius:18px}#getiDailyEmailHeading{font-size:24px}}
+</style>
+<button id="getiDailyEmailLauncher" type="button" aria-haspopup="dialog" aria-controls="getiDailyEmailDialog" aria-expanded="false">✉ Daily English Emails</button>
+<div id="getiDailyEmailDialog" role="dialog" aria-modal="true" aria-labelledby="getiDailyEmailHeading" aria-hidden="true" hidden>
+ <section id="getiDailyEmailCard">
+  <button id="getiDailyEmailDismiss" type="button" aria-label="Close newsletter form">×</button>
+  <p class="geti-daily-kicker">Global English Teaching Institute</p>
+  <h2 id="getiDailyEmailHeading">Keep learning, every day.</h2>
+  <p class="geti-daily-intro">Join the GETI email learning list for English tips, short lessons, practice ideas and important platform updates. Daily delivery will begin when our email series launches.</p>
+  <form id="getiDailyEmailForm" novalidate>
+    <label class="geti-daily-label" for="getiDailyName">Full name</label>
+    <input class="geti-daily-input" id="getiDailyName" name="full_name" type="text" placeholder="Enter your full name" autocomplete="name" maxlength="120" minlength="2" required>
+    <label class="geti-daily-label" for="getiDailyAddress">Email address</label>
+    <input class="geti-daily-input" id="getiDailyAddress" name="email" type="email" placeholder="example@gmail.com" autocomplete="email" maxlength="254" required>
+    <div class="geti-daily-hide" aria-hidden="true"><label for="getiDailyWeb">Leave this field empty</label><input id="getiDailyWeb" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+    <label class="geti-daily-consent" for="getiDailyConsent"><input type="checkbox" id="getiDailyConsent" name="consent" required><span>I agree to receive GETI learning emails and updates. This is optional and separate from my student account. I can request to stop receiving these emails.</span></label>
+    <button id="getiDailyEmailSubmit" type="submit">Subscribe to GETI emails →</button>
+    <p id="getiDailyEmailFeedback" role="status" aria-live="polite"></p>
+  </form>
+  <p class="geti-daily-foot">GETI · Keep Learning, Keep Growing · <a href="https://getienglish.com" target="_blank" rel="noopener noreferrer">getienglish.com</a></p>
+ </section>
+</div>
+<script id="geti-daily-newsletter-script">
+(function(){
+ 'use strict';
+ const box=document.getElementById('getiDailyEmailDialog');
+ const launcher=document.getElementById('getiDailyEmailLauncher');
+ const close=document.getElementById('getiDailyEmailDismiss');
+ const form=document.getElementById('getiDailyEmailForm');
+ const submit=document.getElementById('getiDailyEmailSubmit');
+ const feedback=document.getElementById('getiDailyEmailFeedback');
+ let focusBefore=null;
+ function openForm(){focusBefore=document.activeElement;box.hidden=false;box.setAttribute('aria-hidden','false');launcher.setAttribute('aria-expanded','true');document.getElementById('getiDailyName').focus()}
+ function closeForm(){box.hidden=true;box.setAttribute('aria-hidden','true');launcher.setAttribute('aria-expanded','false');if(focusBefore&&focusBefore.focus)focusBefore.focus()}
+ launcher.addEventListener('click',openForm);
+ close.addEventListener('click',closeForm);
+ box.addEventListener('click',e=>{if(e.target===box)closeForm()});
+ document.addEventListener('keydown',e=>{if(!box.hidden&&e.key==='Escape')closeForm()});
+ form.addEventListener('submit',async(e)=>{
+   e.preventDefault();feedback.textContent='';
+   if(!form.reportValidity())return;
+   submit.disabled=true;submit.textContent='Saving your preferences…';
+   try{
+     const payload={full_name:document.getElementById("getiDailyName").value.trim(),email:document.getElementById("getiDailyAddress").value.trim(),consent:document.getElementById("getiDailyConsent").checked,website:document.getElementById("getiDailyWeb").value};
+     const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),12000);
+     let r;
+     try{r=await fetch('https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-daily-subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:controller.signal})}
+     finally{clearTimeout(timeout)}
+     const data=await r.json().catch(()=>({}));
+     if(!r.ok||!data.success)throw new Error(data.error||'Subscription could not be saved.');
+     feedback.textContent=data.message||'Your subscription preference has been saved.';
+     form.reset();
+   }catch(err){feedback.textContent=err&&err.name==='AbortError'?'Request timed out. Please try again.':(err.message||'Could not save your subscription. Please try again.')}
+   finally{submit.disabled=false;submit.textContent='Subscribe to GETI emails →'}
+ });
+})();
+</script>
+</body></html>');
 win.document.close();
 }
 </script>
@@ -24738,6 +24831,42 @@ window.getiShareInstagram=function(){window.getiCopyShareCaption();window.open('
   },80);
   return false;
  };
+})();
+</script>
+
+<script id="geti-account-email-preferences-script">
+(function(){
+ 'use strict';
+ var fn='https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-daily-preferences';
+ var rendered=false;
+ function card(){
+  var section=document.getElementById('getiSecondArea');
+  if(!section)return null;
+  var existing=document.getElementById('getiDailyAccountPreferences');if(existing)return existing;
+  var panel=document.createElement('section');panel.id='getiDailyAccountPreferences';
+  panel.setAttribute('aria-label','Daily GETI email preferences');
+  panel.innerHTML='<div class="geti-pref-head"><div><h3>Daily GETI Emails</h3><p>Receive GETI English learning tips, TEFL/TESOL information, exams and program news every day.</p><div class="geti-pref-email" id="getiDailyPrefEmail"></div></div><button type="button" role="switch" aria-checked="false" id="getiDailyPrefToggle" disabled>Loading...</button></div><div id="getiDailyPrefMsg" aria-live="polite">Sign in to manage email preferences. You can unsubscribe at any time.</div>';
+  var entry=section.querySelector('.geti-second-area-entrybar');
+  if(entry&&entry.parentNode)entry.insertAdjacentElement('afterend',panel);else section.insertBefore(panel,section.firstChild);
+  panel.querySelector('#getiDailyPrefToggle').addEventListener('click',save);
+  return panel;
+ }
+ async function currentSession(){var sb=window.GETI_SB;if(!sb||!sb.auth)return null;var res=await sb.auth.getSession();return res&&res.data&&res.data.session;}
+ async function request(session,payload){
+  var controller=new AbortController();var timer=setTimeout(function(){controller.abort()},12000);
+  try{var resp=await fetch(fn,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify(payload),signal:controller.signal});
+    var data=await resp.json().catch(function(){return {}});if(!resp.ok)throw Error(data.error||'Could not reach GETI email preferences.');return data;
+  }finally{clearTimeout(timer);}
+ }
+ function show(on){var t=document.getElementById('getiDailyPrefToggle');if(!t)return;t.disabled=false;t.setAttribute('aria-checked',on?'true':'false');t.textContent=on?'ON — Disable':'OFF — Enable';}
+ async function load(){var p=card();if(!p)return;var toggle=p.querySelector('#getiDailyPrefToggle');var msg=p.querySelector('#getiDailyPrefMsg');try{var session=await currentSession();if(!session||!session.access_token){toggle.disabled=true;toggle.textContent='Sign in first';msg.textContent='Sign in to your GETI Student Account to choose whether to receive daily emails.';return;}
+  var data=await request(session,{action:'status'});p.querySelector('#getiDailyPrefEmail').textContent='Account email: '+(data.email||'');show(!!data.subscribed);msg.textContent=data.subscribed?'Daily GETI emails are enabled. You can turn them off at any time.':'Daily GETI emails are off. Enable them to receive GETI learning emails each day.';
+ }catch(e){toggle.disabled=true;toggle.textContent='Try again';toggle.disabled=false;msg.textContent=e.message||'Unable to load preferences.';}}
+ async function save(){var t=document.getElementById('getiDailyPrefToggle');var m=document.getElementById('getiDailyPrefMsg');if(!t||!m)return;var enabled=t.getAttribute('aria-checked')!=='true';t.disabled=true;t.textContent='Saving...';try{var session=await currentSession();if(!session)throw Error('Please sign in again.');await request(session,{action:'update',enabled:enabled});show(enabled);m.textContent=enabled?'Success! Daily GETI emails are now enabled for your account email.':'Success! Daily GETI emails have been disabled.';}catch(e){t.disabled=false;t.textContent='Try again';m.textContent=e.message||'Could not save.';}}
+ function init(){if(!card())return;load();}
+ document.addEventListener('DOMContentLoaded',function(){init();});
+ document.addEventListener('click',function(evt){if(evt.target&&evt.target.closest&&evt.target.closest('#getiDailyPrefToggle'))return;if(document.body.classList.contains('geti-second-area-open')){var now=Date.now();if(!window._getiDailyPrefLastLoad||now-window._getiDailyPrefLastLoad>15000){window._getiDailyPrefLastLoad=now;setTimeout(load,200);}}},true);
+ window.getiReloadDailyEmailPreference=load;
 })();
 </script>
 </body>
