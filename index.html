@@ -7985,7 +7985,7 @@ body.geti-portal-mode #geti-lessons .lesson-panel.active {
             <li>QR authenticity verification</li>
             <li>Digital certificate delivery</li>
           </ul>
-          <button type="button" class="geti-home-certificate-fee-btn" onclick="getiOpenCertificateServicePayment()">Get Certificate →</button>
+          <button type="button" class="geti-home-certificate-fee-btn" disabled aria-disabled="true" title="Get Certificate is currently unavailable">Get Certificate →</button>
         </article>
       </div>
 
@@ -18795,6 +18795,9 @@ function nativePrintableBook(exam,subject,autoPrint){const c=cfg(exam);if(!c)ret
   text-decoration:none;box-sizing:border-box;cursor:pointer;
 }
 </style>
+<style id="geti-certificate-only-button-disabled-style">
+.geti-home-certificate-fee-card.certificate-only .geti-home-certificate-fee-btn:disabled {cursor:not-allowed!important;pointer-events:none!important;opacity:.58!important;filter:grayscale(.75)!important;box-shadow:none!important;transform:none!important;}
+</style>
 </head><body>'+pages+'</body></html>';
   w.document.open();w.document.write(html);w.document.close();if(autoPrint)setTimeout(function(){w.focus();w.print();},500);return true;}
 const originalOpenPDF=window.openGetiLessonPDF;
@@ -24308,45 +24311,6 @@ document.addEventListener(&quot;DOMContentLoaded&quot;,()=&gt;{refreshPaymentNot
   const minimum = 16, maximum = 25;
   const prefix = 'GETI Certificate Service - USD ';
   const iframe = document.getElementById('getiPaymentEmbedded');
-  // Disable checkout only for the certificate-service option next to Premium.
-  function disableCertificateCheckout(){
-    let doc;
-    try { doc = iframe?.contentDocument; } catch(e) { return; }
-    if (!doc) return;
-    const select = doc.getElementById('paymentMotif');
-    const btn = doc.getElementById('payBtn');
-    if (!select || !btn) return;
-    const chosen = select.options[select.selectedIndex];
-    const certificateOnly = !!chosen?.dataset?.product?.startsWith(prefix);
-    if (certificateOnly) {
-      btn.disabled = true;
-      btn.setAttribute('aria-disabled','true');
-      btn.title = 'Secure payment is currently unavailable for this certificate service.';
-      btn.style.cursor = 'not-allowed';
-    } else if (btn.dataset.getiCertificateDisabled === '1') {
-      btn.disabled = false;
-      btn.removeAttribute('aria-disabled');
-      btn.removeAttribute('title');
-      btn.style.cursor = '';
-    }
-    btn.dataset.getiCertificateDisabled = certificateOnly ? '1' : '0';
-  }
-  function protectCertificateCheckout(){
-    let doc;
-    try { doc = iframe?.contentDocument; } catch(e) { return; }
-    const select = doc?.getElementById('paymentMotif');
-    if (!select || select.dataset.getiCertificateLockInstalled === '1') return;
-    select.dataset.getiCertificateLockInstalled = '1';
-    select.addEventListener('change', disableCertificateCheckout);
-    doc.addEventListener('submit', function(event){
-      const chosen = select.options[select.selectedIndex];
-      if (chosen?.dataset?.product?.startsWith(prefix)) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-      }
-    }, true);
-    disableCertificateCheckout();
-  }
   let initialized = false;
 
   function prepareCertificateChoices(){
@@ -24354,7 +24318,6 @@ document.addEventListener(&quot;DOMContentLoaded&quot;,()=&gt;{refreshPaymentNot
     try { doc = iframe?.contentDocument; } catch(e) { return false; }
     const selector = doc?.getElementById('paymentMotif');
     if (!selector) return false;
-    protectCertificateCheckout();
 
     for(let fee = minimum; fee <= maximum; fee++){
       const product = prefix + fee;
@@ -24397,7 +24360,6 @@ document.addEventListener(&quot;DOMContentLoaded&quot;,()=&gt;{refreshPaymentNot
     if(typeof iframe.contentWindow.updatePaymentProduct==='function'){
       iframe.contentWindow.updatePaymentProduct();
     }
-    disableCertificateCheckout();
     return true;
   }
 
@@ -24413,7 +24375,7 @@ document.addEventListener(&quot;DOMContentLoaded&quot;,()=&gt;{refreshPaymentNot
       iframe?.addEventListener('load', chooseFirstFee, {once:true});
     }
   };
-  iframe?.addEventListener('load',()=>{initialized=false;prepareCertificateChoices();disableCertificateCheckout();});
+  iframe?.addEventListener('load',()=>{initialized=false;prepareCertificateChoices();});
 })();
 </script>
 
