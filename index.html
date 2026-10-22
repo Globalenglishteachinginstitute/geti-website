@@ -9529,30 +9529,53 @@ var getiVerificationSerial=0;
 var getiVerificationLiveTimer=null;
 
 function getiVerificationRequest(type,value,serial){
-return new Promise(function(resolve,reject){
-var callbackName="getiVerificationAuto_"+Date.now()+"_"+Math.random().toString(36).slice(2);
-var script=document.createElement("script");
-var finished=false;
-var timer=setTimeout(function(){
-if(finished)return;finished=true;
-try{delete window[callbackName];}catch(e){}
-if(script.parentNode)script.parentNode.removeChild(script);
-reject(new Error("Verification request timed out"));
-},9000);
-window[callbackName]=function(data){
-if(finished)return;finished=true;clearTimeout(timer);
-try{delete window[callbackName];}catch(e){}
-if(script.parentNode)script.parentNode.removeChild(script);
-resolve({type:type,data:data,serial:serial});
-};
-script.onerror=function(){
-if(finished)return;finished=true;clearTimeout(timer);
-try{delete window[callbackName];}catch(e){}
-if(script.parentNode)script.parentNode.removeChild(script);
-reject(new Error("Unable to connect to GETI verification server"));
-};
-script.src=API_URL+"?type="+encodeURIComponent(type)+"&value="+encodeURIComponent(value)+"&callback="+encodeURIComponent(callbackName);
-document.body.appendChild(script);
+/* Verify against the original Google Sheets Apps Script AND the Supabase register.
+   Both sources are read-only; never declare a certificate verified from a timeout. */
+var endpoint="https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-verify-certificate";
+function fromSupabase(){
+ var controller=new AbortController();
+ var timer=setTimeout(function(){controller.abort();},14000);
+ return fetch(endpoint+"?type="+encodeURIComponent(type)+"&value="+encodeURIComponent(value),
+  {method:"GET",mode:"cors",cache:"no-store",signal:controller.signal})
+ .then(function(r){if(!r.ok)throw Error("Supabase HTTP "+r.status);return r.json();})
+ .then(function(data){if(!data||data.success!==true||!Array.isArray(data.results))throw Error("Invalid Supabase response");return data;})
+ .finally(function(){clearTimeout(timer);});
+}
+function fromGoogleSheet(){
+ return new Promise(function(resolve,reject){
+  var callback="getiSheetsVerify_"+Date.now()+"_"+Math.random().toString(36).slice(2);
+  var script=document.createElement("script"),done=false;
+  var timer=setTimeout(function(){finish(new Error("Google Sheets timeout"));},14000);
+  function finish(error,data){
+   if(done)return;done=true;clearTimeout(timer);
+   try{delete window[callback];}catch(e){window[callback]=undefined;}
+   if(script.parentNode)script.parentNode.removeChild(script);
+   if(error)reject(error);else resolve(data);
+  }
+  window[callback]=function(data){
+   if(!data||data.success!==true||!Array.isArray(data.results)){
+    finish(new Error("Invalid Google Sheets response"));return;
+   }
+   finish(null,data);
+  };
+  script.onerror=function(){finish(new Error("Google Sheets unavailable"));};
+  script.async=true;
+  script.src=API_URL+(API_URL.indexOf('?')>=0?'&':'?')+
+   "type="+encodeURIComponent(type)+"&value="+encodeURIComponent(value)+
+   "&callback="+encodeURIComponent(callback)+"&_="+Date.now();
+  (document.head||document.documentElement).appendChild(script);
+ });
+}
+return Promise.allSettled([fromGoogleSheet(),fromSupabase()]).then(function(settled){
+ var sources=settled.filter(function(r){return r.status==='fulfilled';}).map(function(r){return r.value;});
+ if(!sources.length)throw new Error("Both verification sources unavailable");
+ var results=[],seen={};
+ sources.forEach(function(source){source.results.forEach(function(record){
+  var id=String(record&&record.id||'').trim().toUpperCase();
+  if(!id||seen[id])return;
+  seen[id]=true;results.push(record);
+ });});
+ return {type:type,serial:serial,data:{success:true,results:results}};
 });
 }
 
@@ -20046,7 +20069,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     }catch(e){
       if(my!==serial)return;
       console.warn('GETI certificate search:',e);
-      show('<div class="error">Unable to connect to the GETI verification server. Please try again.</div>');
+      show('<div class="error">The official GETI verification server is not responding. Please try again later. If this continues, the Google Apps Script deployment needs to be checked by the administrator.</div>');
     }
   };
   window.getiLiveCertificateSearch=function(value){
