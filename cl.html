@@ -23,8 +23,8 @@
 <div class="portal-main"><header class="topbar"><strong>Collaboration Area</strong><span class="email-chip" id="top-email"></span></header><div class="content"><div id="page-content"></div></div></div></div>
 <script type="module">
 // Configure using Supabase Project Settings → API. Use ONLY the publishable/anon key, never service_role.
-const SUPABASE_URL = '';
-const SUPABASE_ANON_KEY = '';
+const SUPABASE_URL = 'https://syawyulrelrhjprnxdyn.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8';
 const configured=Boolean(SUPABASE_URL.trim()&&SUPABASE_ANON_KEY.trim());
 let client=null,currentUser=null;
 const $=id=>document.getElementById(id),views=['login','signup','forgot','reset'];
@@ -36,7 +36,48 @@ function busy(form,yes){const btn=form.querySelector('[type="submit"]');btn.disa
 async function submit(form,work){if(form.dataset.working==='1')return;form.dataset.working='1';busy(form,true);try{await work();}catch(err){notice(err.message||'An error occurred. Please try again.');}finally{form.dataset.working='0';busy(form,false);}}
 document.querySelectorAll('form').forEach(f=>{f.querySelector('[type="submit"]').dataset.label=f.querySelector('[type="submit"]').textContent.trim();});
 const pages={dossier:['My Dossier','Your collaboration application dossier will appear here when the dossier form and database are connected.'],status:['Application Status','Your application review status will appear here once it is connected to the administration system.'],documents:['Documents','Upload and manage collaboration documents here after document storage has been connected.'],messages:['Messages','Messages from the GETI administration will appear here when messaging is connected.'],programs:['Programs','Browse eligible GETI collaboration programs once your program data is connected.'],activities:['Activities','Your collaboration activities will appear here after activation.'],support:['Support','Contact GETI administration for collaboration support.']};
-function renderPage(page){document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));const email=escapeHTML(currentUser?.email||'');if(page==='dashboard'){$('page-content').innerHTML=`<h2>Collaboration Dashboard</h2><p class="sub">Welcome to the GETI Collaboration Portal.</p><div class="tiles"><div class="tile"><small>Account</small><b>Active</b></div><div class="tile"><small>Collaboration Dossier</small><b>Not submitted</b></div><div class="tile"><small>Application Review</small><span class="status">Not started</span></div></div><div class="panel"><h3>Collaboration Process</h3><p>Start with your account, then complete your application documents. Submission and administrative review require the next system integration.</p><div class="steps"><div class="step"><b>✓ 1. Account</b><span>Your sign-in is active.</span></div><div class="step"><b>2. Dossier</b><span>Complete the collaboration application.</span></div><div class="step"><b>3. Signature</b><span>Sign the collaboration documents.</span></div><div class="step"><b>4. Review</b><span>Await GETI administrative review.</span></div></div></div>`;return;}if(page==='information'){$('page-content').innerHTML=`<h2>My Information</h2><p class="sub">Your authenticated account details</p><div class="panel"><dl class="info-grid"><dt>Email Address</dt><dd>${email}</dd><dt>Account ID</dt><dd>${escapeHTML(currentUser?.id||'')}</dd><dt>Access</dt><dd>GETI Collaboration</dd></dl></div>`;return;}const [title,description]=pages[page]||pages.support;$('page-content').innerHTML=`<h2>${title}</h2><p class="sub">GETI Collaboration Portal</p><div class="panel placeholder"><h3>${title}</h3><p>${description}</p></div>`;}
+let activeApplication=null;
+async function refreshApplication(){
+ const c=await getClient();const {data,error}=await c.from('collaboration_applications').select('*').eq('owner_id',currentUser.id).order('created_at',{ascending:false}).limit(1).maybeSingle();
+ if(error)throw error;activeApplication=data;return data;
+}
+function noticeInPage(t,good=false){let x=$('collab-feedback');if(x){x.textContent=t;x.style.color=good?'#087b55':'#ae2732';}}
+function collabSummary(a){return a?'<p><b>Registration:</b> '+escapeHTML(a.registration_id||a.id)+'</p><p><b>Application:</b> '+escapeHTML(a.application_status)+'</p><p><b>Account:</b> '+escapeHTML(a.account_status)+'</p>':'<p>No application submitted yet.</p>';}
+async function renderPage(page){
+ document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+ const el=$('page-content');el.innerHTML='<h2>Loading...</h2>';
+ try{
+  if(page==='information'){el.innerHTML='<h2>My Information</h2><div class="panel"><p>'+escapeHTML(currentUser?.email)+'</p><p>GETI Collaboration Account</p></div>';return;}
+  const a=await refreshApplication();
+  if(page==='dashboard'||page==='status'){
+    el.innerHTML='<h2>'+ (page==='dashboard'?'Collaboration Dashboard':'Application Status') +'</h2><div class="panel">'+collabSummary(a)+'</div><div class="panel"><button class="primary" id="goDossier">My Dossier</button> <button class="primary" id="goMessages">Messages</button></div>';
+    $('goDossier').onclick=()=>renderPage('dossier');$('goMessages').onclick=()=>renderPage('messages');return;
+  }
+  if(page==='dossier'){
+   el.innerHTML='<h2>My Collaboration Dossier</h2><div class="panel">'+collabSummary(a)+
+   '<form id="dossierForm"><label>Full Name</label><input name="full_name" required maxlength="160"><label>Phone</label><input name="phone" maxlength="60"><label>Organization</label><input name="organization" maxlength="180"><label>Collaboration Request</label><textarea name="request" maxlength="4000" rows="5" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px"></textarea><p><button class="primary" type="submit">'+(a?'Update dossier':'Submit dossier to admin')+'</button></p></form><p id="collab-feedback" role="status"></p></div>';
+   const form=$('dossierForm');
+   if(a){form.elements.full_name.value=a.full_name||'';form.elements.phone.value=a.phone||'';form.elements.organization.value=a.organization||'';form.elements.request.value=a.application_data?.request||'';}
+   form.onsubmit=async e=>{e.preventDefault();const btn=form.querySelector('[type=submit]');btn.disabled=true;try{
+    const c=await getClient();const values={full_name:form.elements.full_name.value.trim(),phone:form.elements.phone.value.trim(),organization:form.elements.organization.value.trim()};
+    let result;
+    if(a){result=await c.from('collaboration_applications').update({...values,application_data:{...(a.application_data||{}),request:form.elements.request.value.trim()}}).eq('id',a.id).eq('owner_id',currentUser.id).select('id').single();}
+    else {result=await c.from('collaboration_applications').insert({...values,email:currentUser.email,owner_id:currentUser.id,application_data:{request:form.elements.request.value.trim()},application_status:'pending_review',account_status:'awaiting_admin'}).select('id').single();}
+    if(result.error)throw result.error;noticeInPage('Saved in GETI database. Admin can now review your dossier.',true);await refreshApplication();
+   }catch(ex){noticeInPage('Error: '+ex.message);}finally{btn.disabled=false;}};
+   return;
+  }
+  if(page==='messages'){
+    if(!a){el.innerHTML='<h2>Messages</h2><div class="panel"><p>Submit your dossier before contacting the admin.</p><button class="primary" id="goDossier">My Dossier</button></div>';$('goDossier').onclick=()=>renderPage('dossier');return;}
+    const c=await getClient();const {data:msgs,error}=await c.from('collaboration_messages').select('id,sender_role,body,created_at').eq('application_id',a.id).order('created_at',{ascending:true}).limit(200);if(error)throw error;
+    el.innerHTML='<h2>Messages with GETI Admin</h2><div class="panel" style="max-height:460px;overflow:auto">'+(msgs||[]).map(m=>'<div style="padding:12px;margin:8px 0;background:'+(m.sender_role==='admin'?'#e9f1ff':'#e9f8f2')+';border-radius:8px"><b>'+escapeHTML(m.sender_role==='admin'?'GETI Admin':'You')+'</b><p style="white-space:pre-wrap">'+escapeHTML(m.body)+'</p><small>'+new Date(m.created_at).toLocaleString()+'</small></div>').join('')+'</div><form id="collabChat" class="panel"><label>Write to GETI Admin</label><textarea name="body" required maxlength="4000" rows="3" style="width:100%;padding:12px"></textarea><p><button type="submit" class="primary">Send Message</button></p><p id="collab-feedback" role="status"></p></form>';
+    $('collabChat').onsubmit=async e=>{e.preventDefault();const b=e.currentTarget.querySelector('button');b.disabled=true;const {error:err}=await c.from('collaboration_messages').insert({application_id:a.id,sender_id:currentUser.id,sender_role:'client',body:e.currentTarget.elements.body.value.trim()});if(err){noticeInPage(err.message);b.disabled=false;}else await renderPage('messages');};return;
+  }
+  const titles={documents:'Documents',programs:'Programs',activities:'Activities',support:'Support'};
+  el.innerHTML='<h2>'+escapeHTML(titles[page]||'GETI Collaboration')+'</h2><div class="panel">'+collabSummary(a)+'<p>For questions or document requests, contact the admin through Messages.</p><button class="primary" id="goMessages">Open Messages</button></div>';
+  $('goMessages').onclick=()=>renderPage('messages');
+ }catch(ex){el.innerHTML='<h2>GETI Collaboration</h2><div class="panel" style="color:#b42318">Connection error: '+escapeHTML(ex.message)+'</div>';}
+}
 document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.view)));
 document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>renderPage(b.dataset.page)));
 async function getClient(){if(!configured)throw Error('Supabase authentication is not configured. Add your Supabase URL and publishable (anon) key inside this HTML file.');if(!client){const mod=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');client=mod.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);}return client;}
