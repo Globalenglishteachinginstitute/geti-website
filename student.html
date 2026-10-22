@@ -209,6 +209,10 @@ $("signupForm").onsubmit=async e=>{
     options:{data:{role:"student",full_name:$("signupName").value.trim(),course:$("signupCourse").value.trim(),level:$("signupLevel").value.trim()}}
   });
   if(error){msg(error.message);return}
+  if(data.user?.id){
+    try{await fetch(SUPABASE_URL+"/functions/v1/geti-student-signup-notify",{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify({user_id:data.user.id,email:$("signupEmail").value.trim()})});}
+    catch(err){console.warn("GETI registration notification unavailable",err);}
+  }
   if(data.session){await init()}else msg("Account created. Confirm your email, then sign in.",true);
 };
 
