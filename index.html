@@ -9528,7 +9528,15 @@ var settled=await Promise.allSettled([getiVerificationRequest(chosenType,value,s
 if(serial!==getiVerificationSerial)return;
 var response=(settled[0]&&settled[0].status==='fulfilled'&&settled[0].value&&settled[0].value.data)||null;
 if(!response){if(box)box.innerHTML='<div class="error">❌ Unable to connect to GETI verification server.</div>';return;}
-var records=(response.success&&Array.isArray(response.results))?response.results.slice():[];
+if(response.success!==true){
+  if(box)box.innerHTML='<div class="error">❌ '+escapeHTML(response.message||'GETI verification server returned an error. Please try again.')+'</div>';
+  return;
+}
+if(!Array.isArray(response.results)){
+  if(box)box.innerHTML='<div class="error">❌ Invalid response from GETI verification server. Please try again.</div>';
+  return;
+}
+var records=response.results.slice();
 var seen={};
 records=records.filter(function(record){
 var key=String(record&&record.id||"").trim().toUpperCase();
