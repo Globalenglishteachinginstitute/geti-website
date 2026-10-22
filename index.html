@@ -9534,7 +9534,7 @@ function getiVerificationRequest(type,value,serial){
 var endpoint="https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-verify-certificate";
 function fromSupabase(){
  var controller=new AbortController();
- var timer=setTimeout(function(){controller.abort();},14000);
+ var timer=setTimeout(function(){controller.abort();},9000);
  return fetch(endpoint+"?type="+encodeURIComponent(type)+"&value="+encodeURIComponent(value),
   {method:"GET",mode:"cors",cache:"no-store",signal:controller.signal})
  .then(function(r){if(!r.ok)throw Error("Supabase HTTP "+r.status);return r.json();})
@@ -9545,7 +9545,7 @@ function fromGoogleSheet(){
  return new Promise(function(resolve,reject){
   var callback="getiSheetsVerify_"+Date.now()+"_"+Math.random().toString(36).slice(2);
   var script=document.createElement("script"),done=false;
-  var timer=setTimeout(function(){finish(new Error("Google Sheets timeout"));},14000);
+  var timer=setTimeout(function(){finish(new Error("Google Sheets timeout"));},7000);
   function finish(error,data){
    if(done)return;done=true;clearTimeout(timer);
    try{delete window[callback];}catch(e){window[callback]=undefined;}
@@ -9568,7 +9568,7 @@ function fromGoogleSheet(){
 }
 return Promise.allSettled([fromGoogleSheet(),fromSupabase()]).then(function(settled){
  var sources=settled.filter(function(r){return r.status==='fulfilled';}).map(function(r){return r.value;});
- if(!sources.length)throw new Error("Both verification sources unavailable");
+ if(!sources.length)throw new Error("Neither Supabase nor Google Sheets responded successfully");
  var results=[],seen={};
  sources.forEach(function(source){source.results.forEach(function(record){
   var id=String(record&&record.id||'').trim().toUpperCase();
@@ -20069,7 +20069,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     }catch(e){
       if(my!==serial)return;
       console.warn('GETI certificate search:',e);
-      show('<div class="error">The official GETI verification server is not responding. Please try again later. If this continues, the Google Apps Script deployment needs to be checked by the administrator.</div>');
+      show('<div class="error">GETI certificate verification is temporarily unavailable. Supabase and Google Sheets could not be reached. Please try again later.</div>');
     }
   };
   window.getiLiveCertificateSearch=function(value){
