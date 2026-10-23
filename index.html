@@ -9749,42 +9749,7 @@ var clone=certificate.cloneNode(true);
 var originalImages=certificate.querySelectorAll("img"),clonedImages=clone.querySelectorAll("img");
 for(var i=0;i<originalImages.length;i++)clonedImages[i].setAttribute("src",originalImages[i].src);
 win.document.open();
-win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){var images=Array.from(document.images);Promise.all(images.map(function(img){return img.complete?Promise.resolve():new Promise(function(done){img.onload=img.onerror=done})})).then(function(){setTimeout(function(){window.print()},250)})}<\/script><script id="geti-pass-google-sheet-sync-guard">
-/* GETI PASSED -> official ExamResults Google Sheet.
-   Keep the existing Apps Script endpoint and certificate verification unchanged.
-   Deduplicate identical PASS events (the exam engine can invoke multiple sync paths),
-   but allow another update after an official Certificate ID has been assigned. */
-(function(){
-  'use strict';
-  var original=window.saveGetiResultToGoogleSheet;
-  if(typeof original!=='function')return;
-  var sent=Object.create(null);
-  window.saveGetiResultToGoogleSheet=function(record){
-    if(!record || String(record.status||'').toUpperCase()!=='PASSED'){
-      return original.apply(this,arguments);
-    }
-    var id=String(record.id||record.candidate_id||'').trim();
-    if(!id)return Promise.resolve(false);
-    var percentage=Number(record.percentage);
-    if(!Number.isFinite(percentage)||percentage!==100){
-      console.warn('GETI: only a verified 100% PASSED result is eligible for PASSED sync.');
-      return Promise.resolve(false);
-    }
-    var key=[id,String(record.exam||record.program||''),String(record.certificate_id||'')].join('|');
-    if(sent[key])return sent[key];
-    var task;
-    try{task=Promise.resolve(original.call(this,record));}
-    catch(err){return Promise.reject(err);}
-    sent[key]=task.then(function(ok){
-      if(ok===false){delete sent[key];return false;}
-      /* no-cors cannot confirm server-side insertion; this only confirms dispatch. */
-      return true;
-    },function(err){delete sent[key];throw err;});
-    return sent[key];
-  };
-})();
-</script>
-</body></html>');
+win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){var images=Array.from(document.images);Promise.all(images.map(function(img){return img.complete?Promise.resolve():new Promise(function(done){img.onload=img.onerror=done})})).then(function(){setTimeout(function(){window.print()},250)})}<\/script></body></html>');
 win.document.close();
 }
 </script>
@@ -21845,7 +21810,7 @@ function getiExamAcademicGrade(percentage){
 (function(){
   "use strict";
   // Set this to the /exec URL of the GETI Exam Email Google Apps Script deployment.
-  // Its backend source is provided separately in GETI_Exam_Email_Apps_Script.gs.
+  // Its backend source is provided separately in GETI_Exam_Email_OFFICIAL_FINAL.gs.
   var EMAIL_SERVICE_URL="PASTE_YOUR_GETI_EXAM_EMAIL_WEB_APP_URL_HERE";
   var PREFIX="GETI_RESULT_EMAIL_QUEUED_V2::";
   var pending=Object.create(null);
@@ -25057,5 +25022,41 @@ body.geti-inside-portal-open #geti30ExamPanel .registration-form{max-width:100%!
 })();
 </script>
 
+
+<script id="geti-pass-google-sheet-sync-guard">
+/* GETI PASSED -> official ExamResults Google Sheet.
+   Keep the existing Apps Script endpoint and certificate verification unchanged.
+   Deduplicate identical PASS events (the exam engine can invoke multiple sync paths),
+   but allow another update after an official Certificate ID has been assigned. */
+(function(){
+  'use strict';
+  var original=window.saveGetiResultToGoogleSheet;
+  if(typeof original!=='function')return;
+  var sent=Object.create(null);
+  window.saveGetiResultToGoogleSheet=function(record){
+    if(!record || String(record.status||'').toUpperCase()!=='PASSED'){
+      return original.apply(this,arguments);
+    }
+    var id=String(record.id||record.candidate_id||'').trim();
+    if(!id)return Promise.resolve(false);
+    var percentage=Number(record.percentage);
+    if(!Number.isFinite(percentage)||percentage!==100){
+      console.warn('GETI: only a verified 100% PASSED result is eligible for PASSED sync.');
+      return Promise.resolve(false);
+    }
+    var key=[id,String(record.exam||record.program||''),String(record.certificate_id||'')].join('|');
+    if(sent[key])return sent[key];
+    var task;
+    try{task=Promise.resolve(original.call(this,record));}
+    catch(err){return Promise.reject(err);}
+    sent[key]=task.then(function(ok){
+      if(ok===false){delete sent[key];return false;}
+      /* no-cors cannot confirm server-side insertion; this only confirms dispatch. */
+      return true;
+    },function(err){delete sent[key];throw err;});
+    return sent[key];
+  };
+})();
+</script>
 </body>
 </html>
