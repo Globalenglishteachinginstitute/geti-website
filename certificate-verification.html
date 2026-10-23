@@ -298,6 +298,7 @@ body > *:not(.topbar):not(main):not(script):not(style){
 
 var API_URL='https://script.google.com/macros/s/AKfycbzQ_YczGnSdh4GJZ73XTt8LfrUtdjJFAlUZGUx3Chhlk-0Es3rskQkun5LgrZYhkKRF/exec';
 var cache={records:null,time:0};
+var pendingRecords=null;
 var serial=0;
 var liveTimer=null;
 
@@ -350,14 +351,16 @@ function requestList(){
 
 async function records(){
   var now=Date.now();
-  if(cache.records&&now-cache.time<30000)return cache.records;
-  var data=await requestList();
-  if(!data||data.success===false){
-    throw new Error((data&&data.message)||"Unable to read GETI certificate register.");
+  if(cache.records&&now-cache.time<300000)return cache.records;
+  if(!pendingRecords){
+    pendingRecords=requestList().then(function(data){
+      if(!data||data.success===false)throw new Error((data&&data.message)||"Unable to read GETI certificate register.");
+      var list=Array.isArray(data.records)?data.records:(Array.isArray(data.results)?data.results:[]);
+      cache={records:list,time:Date.now()};
+      return list;
+    }).finally(function(){pendingRecords=null;});
   }
-  var list=Array.isArray(data.records)?data.records:(Array.isArray(data.results)?data.results:[]);
-  cache={records:list,time:now};
-  return list;
+  return pendingRecords;
 }
 
 function matches(list,q){
@@ -454,12 +457,16 @@ window.verifyCertificate=async function(){
     box.innerHTML='<div class="status bad">Please enter a Certificate ID, certificate holder name, or nationality.</div>';
     return;
   }
-  box.innerHTML='<div class="status loading">⏳ Searching the official GETI certificate register...</div>';
+  var loadingTimer=setTimeout(function(){
+    if(my===serial)box.innerHTML='<div class="status loading">⏳ Searching the official GETI certificate register...</div>';
+  },200);
   try{
     var list=await records();
+    clearTimeout(loadingTimer);
     if(my!==serial)return;
     render(matches(list,q),q);
   }catch(err){
+    clearTimeout(loadingTimer);
     if(my!==serial)return;
     console.warn("GETI certificate verification:",err);
     box.innerHTML='<div class="status bad">❌ Unable to connect to the GETI verification server. Please try again.</div>';
@@ -476,7 +483,7 @@ if(input){
       document.getElementById("verifyResult").innerHTML="";
       return;
     }
-    liveTimer=setTimeout(function(){window.verifyCertificate();},500);
+    liveTimer=setTimeout(function(){window.verifyCertificate();},120);
   });
 }
 
@@ -484,8 +491,10 @@ var params=new URLSearchParams(location.search);
 var initial=params.get("verify")||params.get("certificate")||params.get("id");
 if(initial&&input){
   input.value=initial;
-  setTimeout(function(){window.verifyCertificate();},150);
+  window.verifyCertificate();
 }
+  // Warm the register as the verification page opens; share the same request with searches.
+  records().catch(function(){ /* The next search will retry and show its own error. */ });
 })();
 </script>
 </body>
