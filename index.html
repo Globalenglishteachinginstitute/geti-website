@@ -42,7 +42,11 @@ content="Global English Teaching Institute (GETI) offers online English learning
 <link rel="sitemap" type="application/xml" title="Sitemap" href="https://getienglish.com/sitemap.xml">
 <link rel="alternate" hreflang="en" href="https://getienglish.com/">
 <link rel="alternate" hreflang="x-default" href="https://getienglish.com/">
-<!-- GETI INLINE ROUND FAVICON FALLBACK -->
+<!-- GETI search result/favicon: square official emblem, root-relative public files -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
 
 
@@ -7156,9 +7160,8 @@ h1, h2, h3, h4, h5, h6,
 }
 </script>
 <!-- GETI favicon -->
-<link rel="icon" type="image/png" href="/geti-logo.png">
-<link rel="shortcut icon" type="image/png" href="/geti-logo.png">
-<link rel="apple-touch-icon" href="/geti-logo.png">
+
+
 
 <style id="geti-second-area-wordpress-design">
 /* SECOND AREA visual redesign — WordPress-style professional interface.
@@ -9749,7 +9752,42 @@ var clone=certificate.cloneNode(true);
 var originalImages=certificate.querySelectorAll("img"),clonedImages=clone.querySelectorAll("img");
 for(var i=0;i<originalImages.length;i++)clonedImages[i].setAttribute("src",originalImages[i].src);
 win.document.open();
-win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){var images=Array.from(document.images);Promise.all(images.map(function(img){return img.complete?Promise.resolve():new Promise(function(done){img.onload=img.onerror=done})})).then(function(){setTimeout(function(){window.print()},250)})}<\/script></body></html>');
+win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){var images=Array.from(document.images);Promise.all(images.map(function(img){return img.complete?Promise.resolve():new Promise(function(done){img.onload=img.onerror=done})})).then(function(){setTimeout(function(){window.print()},250)})}<\/script><script id="geti-pass-google-sheet-sync-guard">
+/* GETI PASSED -> official ExamResults Google Sheet.
+   Keep the existing Apps Script endpoint and certificate verification unchanged.
+   Deduplicate identical PASS events (the exam engine can invoke multiple sync paths),
+   but allow another update after an official Certificate ID has been assigned. */
+(function(){
+  'use strict';
+  var original=window.saveGetiResultToGoogleSheet;
+  if(typeof original!=='function')return;
+  var sent=Object.create(null);
+  window.saveGetiResultToGoogleSheet=function(record){
+    if(!record || String(record.status||'').toUpperCase()!=='PASSED'){
+      return original.apply(this,arguments);
+    }
+    var id=String(record.id||record.candidate_id||'').trim();
+    if(!id)return Promise.resolve(false);
+    var percentage=Number(record.percentage);
+    if(!Number.isFinite(percentage)||percentage!==100){
+      console.warn('GETI: only a verified 100% PASSED result is eligible for PASSED sync.');
+      return Promise.resolve(false);
+    }
+    var key=[id,String(record.exam||record.program||''),String(record.certificate_id||'')].join('|');
+    if(sent[key])return sent[key];
+    var task;
+    try{task=Promise.resolve(original.call(this,record));}
+    catch(err){return Promise.reject(err);}
+    sent[key]=task.then(function(ok){
+      if(ok===false){delete sent[key];return false;}
+      /* no-cors cannot confirm server-side insertion; this only confirms dispatch. */
+      return true;
+    },function(err){delete sent[key];throw err;});
+    return sent[key];
+  };
+})();
+</script>
+</body></html>');
 win.document.close();
 }
 </script>
@@ -11603,14 +11641,6 @@ function showFinalResult(timeExpired){
         '%'+
         '</div>'+
 
-        '<div class="geti-grade-summary" style="margin:16px 0;padding:16px;border-radius:10px;background:#f0f5fb;border:1px solid #dce5f2">'+
-        '<strong>Percentage:</strong> '+percentage+'% &nbsp; | &nbsp; '+
-        '<strong>Grade:</strong> '+getiExamAcademicGrade(percentage).grade+' &nbsp; | &nbsp; '+
-        '<strong>GPA (4.0 scale):</strong> '+getiExamAcademicGrade(percentage).gpa.toFixed(2)+'<br>'+
-        '<strong>Correct answers:</strong> '+totalScore+' / '+totalQuestions+' &nbsp; | &nbsp; '+
-        '<strong>Required to pass:</strong> 100%'+
-        '</div>'+
-
         (timeExpired ? '<div class="exam-fail-message"><strong>TIME EXPIRED.</strong> The 1-hour examination period has ended. The examination was submitted automatically.</div>' : '')+
 
         '<h2 class="pass">PASSED</h2>'+
@@ -11659,14 +11689,6 @@ function showFinalResult(timeExpired){
         '<div class="final-score">'+
         percentage+
         '%'+
-        '</div>'+
-
-        '<div class="geti-grade-summary" style="margin:16px 0;padding:16px;border-radius:10px;background:#f0f5fb;border:1px solid #dce5f2">'+
-        '<strong>Percentage:</strong> '+percentage+'% &nbsp; | &nbsp; '+
-        '<strong>Grade:</strong> '+getiExamAcademicGrade(percentage).grade+' &nbsp; | &nbsp; '+
-        '<strong>GPA (4.0 scale):</strong> '+getiExamAcademicGrade(percentage).gpa.toFixed(2)+'<br>'+
-        '<strong>Correct answers:</strong> '+totalScore+' / '+totalQuestions+' &nbsp; | &nbsp; '+
-        '<strong>Required to pass:</strong> 100%'+
         '</div>'+
 
         (timeExpired ? '<div class="exam-fail-message"><strong>TIME EXPIRED.</strong> The 1-hour examination period has ended. Unanswered questions were counted as incorrect and the examination was submitted automatically.</div>' : '')+
@@ -21791,94 +21813,136 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
 </script>
 
 
-<script id="geti-result-academic-grading">
-// GETI descriptive GPA equivalent (4.0 scale); passing still REQUIRES 100%.
-function getiExamAcademicGrade(percentage){
-  var p=Number(percentage);
-  if(!Number.isFinite(p))return {grade:"N/A",gpa:0};
-  if(p===100)return {grade:"A+",gpa:4.00};
-  if(p>=90)return {grade:"A",gpa:4.00};
-  if(p>=85)return {grade:"B+",gpa:3.50};
-  if(p>=80)return {grade:"B",gpa:3.00};
-  if(p>=75)return {grade:"C+",gpa:2.50};
-  if(p>=70)return {grade:"C",gpa:2.00};
-  if(p>=60)return {grade:"D",gpa:1.00};
-  return {grade:"F",gpa:0.00};
-}
-</script>
-<script id="geti-exam-result-email-integration">
+<script id="geti-google-script-passed-email-integration">
 (function(){
-  "use strict";
-  // Set this to the /exec URL of the GETI Exam Email Google Apps Script deployment.
-  // Its backend source is provided separately in GETI_Exam_Email_OFFICIAL_FINAL.gs.
-  var EMAIL_SERVICE_URL="PASTE_YOUR_GETI_EXAM_EMAIL_WEB_APP_URL_HERE";
-  var PREFIX="GETI_RESULT_EMAIL_QUEUED_V2::";
-  var pending=Object.create(null);
-  function val(x){return String(x==null?"":x).trim();}
-  function validEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);}
-  function emailReady(){return /^https:\/\/script\.google\.com\/macros\/s\/.+\/exec(?:\?|$)/.test(EMAIL_SERVICE_URL);}
-  function eligible(r){
-    if(!r || !/^(PASSED|FAILED)$/i.test(val(r.status)))return false;
-    if(!validEmail(val(r.email)) || !val(r.id||r.candidate_id))return false;
-    return Number.isFinite(Number(r.percentage));
-  }
-  function keyFor(r){
-    return [val(r.id||r.candidate_id),val(r.exam||r.program),val(r.date||r.completed_at),val(r.status)].join("::");
-  }
-  function submitResultEmail(r){
-    if(!eligible(r))return Promise.resolve(false);
-    if(!emailReady()){
-      console.warn("GETI result email setup required: add your deployed Google Apps Script /exec URL.");
-      return Promise.resolve(false);
+    "use strict";
+
+    var GETI_PASSED_EMAIL_SCRIPT_URL="https://script.google.com/macros/s/AKfycbw-AGtryy9iOiCqXJi584O4gqDOEgqlSwWAzjGFIC6kjBJQZ1mK1xqdsI0NyF9UO-XN/exec";
+
+    function getiGasEmailKey(record){
+        return "GETI_GAS_PASS_EMAIL_SENT::"+
+            String(record&&record.id||record&&record.candidate_id||"").trim()+"::"+
+            String(record&&record.program||record&&record.exam||"").trim();
     }
-    var k=keyFor(r), storageKey=PREFIX+k;
-    try{if(localStorage.getItem(storageKey)==="queued")return Promise.resolve(true);}catch(e){}
-    if(pending[k])return pending[k];
-    var data=new URLSearchParams();
-    data.set("action","sendExamResultEmail");
-    data.set("candidateId",val(r.id||r.candidate_id));
-    data.set("name",val(r.name||r.full_name||"GETI Student"));
-    data.set("email",val(r.email).toLowerCase());
-    data.set("exam",val(r.exam||r.program||"GETI Examination"));
-    data.set("status",val(r.status).toUpperCase());
-    data.set("percentage",val(r.percentage));
-    data.set("totalScore",val(r.totalScore));
-    data.set("totalQuestions",val(r.totalQuestions));
-    data.set("date",val(r.date||r.completed_at||new Date().toISOString()));
-    data.set("attempt",val(r.attempt||""));
-    data.set("certificateId",val(r.certificate_id||""));
-    // no-cors produces an opaque response: queued means a request was dispatched,
-    // NOT that an email was confirmed delivered. Google Apps Script must verify the result.
-    pending[k]=fetch(EMAIL_SERVICE_URL,{
-      method:"POST",mode:"no-cors",cache:"no-store",keepalive:true,
-      headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
-      body:data.toString()
-    }).then(function(){
-      try{localStorage.setItem(storageKey,"queued");}catch(e){}
-      return true;
-    }).catch(function(err){
-      console.error("GETI result email request failed",err);
-      return false;
-    }).finally(function(){delete pending[k];});
-    return pending[k];
-  }
-  window.getiSendExamResultEmail=submitResultEmail;
-  function wrap(name){
-    var prior=window[name];
-    if(typeof prior!=="function")return;
-    window[name]=function(record){
-      var result=prior.apply(this,arguments);
-      if(eligible(record)){
-        // Write the examination result first, before requesting its email.
-        Promise.resolve(result).catch(function(){}).then(function(){
-          setTimeout(function(){submitResultEmail(record);},1200);
-        });
-      }
-      return result;
-    };
-  }
-  wrap("saveGetiResultToGoogleSheet");
-  wrap("saveExamRecord");
+
+    function getiGasValidEmail(value){
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value||"").trim());
+    }
+
+    function getiGasExamHours(record){
+        var direct=String(record&&record.hours||record&&record.examHours||"").match(/\d{1,4}/);
+        if(direct)return direct[0];
+        try{
+            if(typeof getGetiExamHoursFromTitle==="function"){
+                return String(getGetiExamHoursFromTitle(record&&record.program||record&&record.exam||"")||"");
+            }
+        }catch(e){}
+        var m=String(record&&record.program||record&&record.exam||"").match(/\b(\d{1,4})\s*(?:hours?|h)\b/i);
+        return m?m[1]:"";
+    }
+
+    /*
+      Reads the EXISTING embedded certificate template through the current
+      verification renderer. No verification/QR/Certificate ID function is edited.
+    */
+    function getiGasCertificateTemplate(record){
+        try{
+            if(typeof buildVerifiedCertificateSection!=="function")return "";
+            var program=String(record&&record.program||record&&record.exam||"").trim();
+            var certificateId=String(record&&record.certificate_id||record&&record.id||record&&record.candidate_id||"").trim();
+            var certificateRecord={
+                id:certificateId,
+                name:String(record&&record.name||"GETI Student"),
+                nationality:String(record&&record.nationality||""),
+                certificate:program,
+                type:program,
+                exam:program,
+                program:program,
+                hours:getiGasExamHours(record),
+                issue_date:String(record&&record.date||new Date().toISOString())
+            };
+            var details={title:program,description:program};
+            var markup=buildVerifiedCertificateSection(certificateRecord,details,"GoogleScriptEmailPreview");
+            if(!markup)return "";
+            var doc=new DOMParser().parseFromString(markup,"text/html");
+            var img=doc.querySelector(
+                ".tesol-certificate-template[src^='data:image/'],"+
+                ".tefl-certificate-template[src^='data:image/'],"+
+                ".tesl-certificate-template[src^='data:image/'],"+
+                ".tour-guide-certificate-template[src^='data:image/'],"+
+                ".proficiency-certificate-template[src^='data:image/'],"+
+                ".verified-certificate-preview img[src^='data:image/']"
+            );
+            return img?String(img.getAttribute("src")||""):"";
+        }catch(err){
+            console.warn("GETI certificate template could not be prepared for Google Script email:",err);
+            return "";
+        }
+    }
+
+    async function getiSendPassedEmailWithGoogleScript(record){
+        if(!record || String(record.status||"").toUpperCase()!=="PASSED")return false;
+
+        var recipient=String(record.email||"").trim().toLowerCase();
+        if(!getiGasValidEmail(recipient))return false;
+
+        var candidateId=String(record.id||record.candidate_id||"").trim();
+        if(!candidateId)return false;
+
+        var key=getiGasEmailKey(record);
+        try{
+            if(localStorage.getItem(key)==="sent")return true;
+            if(localStorage.getItem(key)==="sending")return true;
+            localStorage.setItem(key,"sending");
+        }catch(e){}
+
+        var params=new URLSearchParams();
+        params.set("action","sendPassedEmail");
+        params.set("status","PASSED");
+        params.set("candidateId",candidateId);
+        params.set("certificateId",String(record.certificate_id||"").trim());
+        params.set("name",String(record.name||"GETI Student").trim());
+        params.set("email",recipient);
+        params.set("program",String(record.program||record.exam||"GETI Examination").trim());
+
+        var template=getiGasCertificateTemplate(record);
+        if(template)params.set("certificateTemplate",template);
+
+        try{
+            await fetch(GETI_PASSED_EMAIL_SCRIPT_URL,{
+                method:"POST",
+                mode:"no-cors",
+                cache:"no-store",
+                keepalive:true,
+                headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
+                body:params.toString()
+            });
+            try{localStorage.setItem(key,"sent");}catch(e){}
+            console.info("GETI PASSED email submitted to Google Apps Script:",recipient);
+            return true;
+        }catch(err){
+            console.error("GETI Google Apps Script PASSED email failed:",err);
+            try{localStorage.removeItem(key);}catch(e){}
+            return false;
+        }
+    }
+
+    window.getiSendPassedEmailWithGoogleScript=getiSendPassedEmailWithGoogleScript;
+
+    var previousSaveExamRecord=window.saveExamRecord;
+    if(typeof previousSaveExamRecord==="function"){
+        window.saveExamRecord=function(record){
+            var result=previousSaveExamRecord.apply(this,arguments);
+            if(record && String(record.status||"").toUpperCase()==="PASSED"){
+                setTimeout(function(){
+                    try{getiSendPassedEmailWithGoogleScript(record);}catch(e){
+                        console.error("GETI automatic Google Script PASSED email failed:",e);
+                    }
+                },700);
+            }
+            return result;
+        };
+    }
 })();
 </script>
 
@@ -25022,41 +25086,5 @@ body.geti-inside-portal-open #geti30ExamPanel .registration-form{max-width:100%!
 })();
 </script>
 
-
-<script id="geti-pass-google-sheet-sync-guard">
-/* GETI PASSED -> official ExamResults Google Sheet.
-   Keep the existing Apps Script endpoint and certificate verification unchanged.
-   Deduplicate identical PASS events (the exam engine can invoke multiple sync paths),
-   but allow another update after an official Certificate ID has been assigned. */
-(function(){
-  'use strict';
-  var original=window.saveGetiResultToGoogleSheet;
-  if(typeof original!=='function')return;
-  var sent=Object.create(null);
-  window.saveGetiResultToGoogleSheet=function(record){
-    if(!record || String(record.status||'').toUpperCase()!=='PASSED'){
-      return original.apply(this,arguments);
-    }
-    var id=String(record.id||record.candidate_id||'').trim();
-    if(!id)return Promise.resolve(false);
-    var percentage=Number(record.percentage);
-    if(!Number.isFinite(percentage)||percentage!==100){
-      console.warn('GETI: only a verified 100% PASSED result is eligible for PASSED sync.');
-      return Promise.resolve(false);
-    }
-    var key=[id,String(record.exam||record.program||''),String(record.certificate_id||'')].join('|');
-    if(sent[key])return sent[key];
-    var task;
-    try{task=Promise.resolve(original.call(this,record));}
-    catch(err){return Promise.reject(err);}
-    sent[key]=task.then(function(ok){
-      if(ok===false){delete sent[key];return false;}
-      /* no-cors cannot confirm server-side insertion; this only confirms dispatch. */
-      return true;
-    },function(err){delete sent[key];throw err;});
-    return sent[key];
-  };
-})();
-</script>
 </body>
 </html>
