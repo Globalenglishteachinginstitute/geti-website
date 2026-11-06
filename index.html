@@ -2,6 +2,16 @@
 <!-- GETI EMBEDDED CERTIFICATES BUILD 2026-08-26: TEFL AND TESOL TEMPLATES INCLUDED INSIDE THIS FILE -->
 <html lang="en" translate="no" class="notranslate">
 <head>
+
+<meta name="description" content="Global English Teaching Institute (GETI): official English teaching programs, educational resources, announcements and publications.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:site_name" content="Global English Teaching Institute">
+<meta property="og:title" content="Global English Teaching Institute (GETI)">
+<meta property="og:description" content="Official GETI educational resources, announcements and publications.">
+<script type="application/ld+json" id="geti-index-publication-schema">
+{"@context":"https://schema.org","@type":"EducationalOrganization","name":"Global English Teaching Institute (GETI)","url":"https://getienglish.com/","hasPart":{"@type":"CollectionPage","name":"GETI Publications","url":"https://getienglish.com/#geti-publications-index"}}
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google" content="notranslate">
@@ -8901,11 +8911,6 @@ h1, h2, h3, h4, h5, h6,
           <span><strong>Professional Lessons</strong><small>Open structured learning programs</small></span>
           <b>›</b>
         </button>
-        <a class="geti-first-quick-card" href="https://getienglish.com/practice" style="text-decoration:none;color:inherit;" aria-label="Practice — Open GETI practice">
-          <span class="geti-first-quick-icon">✎</span>
-          <span><strong>Practice</strong><small>Practice your English skills</small></span>
-          <b>›</b>
-        </a>
         <a class="geti-first-quick-card" href="https://getienglish.com/library" style="text-decoration:none;color:inherit;" aria-label="Library — Open GETI library">
           <span class="geti-first-quick-icon">▤</span>
           <span><strong>Library</strong><small>Explore learning resources and books</small></span>
@@ -8914,11 +8919,6 @@ h1, h2, h3, h4, h5, h6,
         <button type="button" class="geti-first-quick-card" onclick="openMyResult()">
           <span class="geti-first-quick-icon">A+</span>
           <span><strong>My Result</strong><small>Check your examination result</small></span>
-          <b>›</b>
-        </button>
-        <button type="button" id="getiIdentityCardIdBtn" class="geti-first-quick-card" onclick="getiOpenIdentityCardId()">
-          <span class="geti-first-quick-icon">ID</span>
-          <span><strong>My Identity Card ID</strong><small>Open your GETI student identity card</small></span>
           <b>›</b>
         </button>
         <button type="button" id="getiCollaborationBtn" class="geti-first-quick-card" onclick="getiOpenCollaboration()">
@@ -9905,7 +9905,11 @@ var clone=cert.cloneNode(true);
 var images=cert.querySelectorAll("img"),clones=clone.querySelectorAll("img");
 for(var i=0;i<images.length;i++)clones[i].src=images[i].src;
 win.document.open();
-win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'
+win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'</body></html>');
+win.document.close();
+win.onload=function(){setTimeout(function(){win.print();},400);};
+}
+</script>
 <script id="geti-password-recovery-final-fix">
 (function(){
   function node(id){return document.getElementById(id);}
@@ -9914,7 +9918,7 @@ win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI
   window.getiFirstAreaResetPasswordInline=async function(){
     var emailNode=node('getiFirstResetEmail');
     var email=String(emailNode&&emailNode.value||'').trim().toLowerCase();
-    if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){message('<span class="bad">Please enter a valid email address.</span>');return;}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){message('<span class="bad">Please enter a valid email address.</span>');return;}
     if(!window.GETI_SB||!GETI_SB.auth||typeof GETI_SB.auth.resetPasswordForEmail!=='function'){message('<span class="bad">Account service is unavailable. Please contact GETI Student Support.</span>');return;}
     message('<span class="ok">Requesting your secure recovery code...</span>');
     try{
@@ -9927,9 +9931,9 @@ win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI
     }catch(err){message('<span class="bad">'+safe(err&&err.message||'Unable to request a recovery email. Please try again later.')+'</span>');}
   };
   window.getiVerifyPasswordRecoveryCode=async function(){
-    var otp=node('getiRecoveryOtp'),token=String(otp&&otp.value||'').replace(/\\s+/g,'');
+    var otp=node('getiRecoveryOtp'),token=String(otp&&otp.value||'').replace(/\s+/g,'');
     var email='';try{email=sessionStorage.getItem('GETI_RECOVERY_EMAIL')||'';}catch(e){}
-    if(!/^\\d{6}$/.test(token)){message('<span class="bad">Enter the 6-digit code from your email.</span>');return;}
+    if(!/^\d{6}$/.test(token)){message('<span class="bad">Enter the 6-digit code from your email.</span>');return;}
     if(!email){message('<span class="bad">Please request a new recovery code first.</span>');return;}
     if(!window.GETI_SB||!GETI_SB.auth||typeof GETI_SB.auth.verifyOtp!=='function'){message('<span class="bad">Account verification service is unavailable.</span>');return;}
     message('<span class="ok">Verifying your code...</span>');
@@ -18100,7 +18104,7 @@ async function publishBaamImage(){
             image:{data:dataUrl,name:file.name,type:file.type}
         });
         if(!result||result.error)throw new Error((result&&result.error)||"Unable to publish image.");
-        if(status)status.innerHTML='<div class="success"><strong>Published successfully.</strong><br>The image is now available in the public GETI publications section.</div>';
+        if(status)status.innerHTML='<div class="success"><strong>Published successfully.</strong><br>The post is now available inside the password-protected PUB area only.</div>';
         ["baamPublishTitle","baamPublishAlt","baamPublishDescription","baamPublishKeywords"].forEach(function(id){const el=document.getElementById(id);if(el)el.value="";});
         if(input)input.value="";
         const preview=document.getElementById("baamPublishPreview");if(preview)preview.classList.remove("show");
@@ -18179,37 +18183,14 @@ function updateGetiPublicationStructuredData(images){
 async function loadGetiPublishedImages(){
     const section=document.getElementById("geti-publications");
     const grid=document.getElementById("getiPublicationsGrid");
-    if(!section||!grid||typeof GETI_SB==="undefined")return;
-    try{
-        const {data,error}=await GETI_SB
-          .from("published_images")
-          .select("id,title,alt_text,description,keywords,image_url,created_at")
-          .eq("published",true)
-          .order("created_at",{ascending:false})
-          .limit(500);
-        if(error)throw error;
-        const images=data||[];
-        if(!images.length){section.classList.remove("show");grid.innerHTML="";updateGetiPublicationStructuredData([]);return;}
-        section.classList.add("show");
-        grid.innerHTML=images.map(function(item,index){
-            const title=item.title||"GETI Publication";
-            const alt=item.alt_text||title;
-            const desc=item.description||alt;
-            return '<figure class="geti-publication-card" itemscope itemtype="https://schema.org/ImageObject">'+
-              '<a href="'+escapeHTML(item.image_url||'')+'" target="_blank" rel="noopener" itemprop="contentUrl">'+
-                '<img src="'+escapeHTML(item.image_url||'')+'" alt="'+escapeHTML(alt)+'" title="'+escapeHTML(title)+'" '+(index===0?'fetchpriority="high"':'loading="lazy"')+' decoding="async" itemprop="contentUrl">'+
-              '</a>'+
-              '<figcaption class="geti-publication-copy"><h3 itemprop="name">'+escapeHTML(title)+'</h3><p itemprop="caption">'+escapeHTML(desc)+'</p><span class="geti-publication-meta">Published by GETI'+(item.created_at?' · '+escapeHTML(formatGetiPublicationDate(item.created_at)):'')+'</span></figcaption>'+
-            '</figure>';
-        }).join('');
-        updateGetiPublicationStructuredData(images);
-    }catch(err){
-        console.warn("GETI publications could not be loaded",err);
-        section.classList.remove("show");
-    }
+    if(section)section.classList.remove("show");
+    if(grid)grid.innerHTML="";
+    updateGetiPublicationStructuredData([]);
 }
-
-document.addEventListener("DOMContentLoaded",function(){setTimeout(loadGetiPublishedImages,250);});
+document.addEventListener("DOMContentLoaded",function(){
+    const section=document.getElementById("geti-publications");
+    if(section)section.classList.remove("show");
+});
 
 </script>
 
@@ -18529,74 +18510,7 @@ const originalOpenLesson=window.openGetiLesson;
 window.openGetiLesson=function(exam,subject){const c=cfg(exam);if(!c)return originalOpenLesson(exam,subject);getiLessonState.exam=exam;getiLessonState.subject=subject;const panel=document.getElementById("lessonPanel"),nativeSubject=window.getLocalizedCourseSubject(exam,subject),level=window.getGeti200SubjectLevel(exam,subject);panel.classList.add("active");panel.innerHTML='<div class="geti-200-book-shell"><div class="geti-200-book-cover"><span class="geti-200-kicker">GETI · '+escapeHTML(c.ui.textbook)+'</span><h2>'+escapeHTML(nativeSubject)+'</h2><p>'+escapeHTML(c.ui.bookDesc)+'</p><div class="geti-200-meta"><span>'+escapeHTML(level)+'</span><span>'+escapeHTML(c.ui.chaptersLabel)+'</span><span>'+escapeHTML(c.ui.pagesLabel)+'</span><span>'+escapeHTML(c.ui.pagesPer)+'</span></div></div><div class="geti-200-resource-row"><button class="geti-200-resource" onclick="openGetiLessonPDF()"><strong>'+escapeHTML(c.ui.openPdf)+'</strong><span>'+escapeHTML(c.ui.openPdfSub)+'</span><em>'+escapeHTML(c.ui.openPdf)+'</em></button><button class="geti-200-resource" onclick="downloadLessonPDF()"><strong>'+escapeHTML(c.ui.downloadPdf)+'</strong><span>'+escapeHTML(c.ui.downloadPdfSub)+'</span><em>'+escapeHTML(c.ui.downloadPdf)+'</em></button></div>'+window.getGeti200OutlineHTML(exam,subject)+'</div>';panel.scrollIntoView({behavior:"smooth",block:"start"});};
 
 function nativePrintableBook(exam,subject,autoPrint){const c=cfg(exam);if(!c)return false;const w=window.open("","_blank");if(!w){alert("Popup blocked");return true;}const nativeSubject=window.getLocalizedCourseSubject(exam,subject);let pages="";for(let n=1;n<=200;n++){const d=nativePageText(exam,subject,n);pages+='<section class="pdfpage"><header>'+escapeHTML(c.ui.bookHeader)+'</header><h1>'+escapeHTML(nativeSubject)+'</h1><div class="meta">'+escapeHTML(c.exam)+' · '+escapeHTML(d.level)+' · '+escapeHTML(d.stage)+'</div><h2>'+escapeHTML(c.ui.chapter+' '+d.chapter+' · '+d.role)+'</h2>'+d.paragraphs.map(function(x){return '<p>'+escapeHTML(x)+'</p>';}).join("")+'<footer>'+escapeHTML(c.ui.page)+' '+n+' / 200</footer></section>';}
-  const html='<!doctype html><html lang="'+c.code+'"><head><meta charset="utf-8"><title>'+escapeHTML(nativeSubject)+' · 200</title><style>@page{size:A4;margin:0}*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans",sans-serif;color:#18283b}.pdfpage{width:210mm;height:297mm;padding:15mm 16mm 13mm;page-break-after:always;position:relative;overflow:hidden;background:#fff}.pdfpage:last-child{page-break-after:auto}header{background:#0b2d5c;color:#fff;padding:8px 10px;font-size:9pt;font-weight:700;letter-spacing:.03em}h1{font-size:18pt;margin:12px 0 3px;color:#0b2d5c}h2{font-size:12pt;color:#294d73;border-bottom:1px solid #d7e0ea;padding-bottom:5px;margin:12px 0 8px}.meta{font-size:8.5pt;color:#5b6c7d}p{font-size:9.7pt;line-height:1.48;margin:7px 0;text-align:justify}footer{position:absolute;bottom:6mm;left:16mm;right:16mm;border-top:1px solid #d7e0ea;padding-top:4px;font-size:8pt;color:#5c6b78;text-align:right}@media print{body{background:#fff}.pdfpage{box-shadow:none}}</style>
-<style id="geti-forgot-email-create-style">
-/* Forgot-password first step styled like Create Account; functionality unchanged. */
-#getiFirstForgotPane #getiSimpleForgotEmailStep.geti-simple-forgot-email-form {
-  display:grid!important;
-  grid-template-columns:minmax(0,1fr)!important;
-  gap:15px!important;
-  width:100%!important;
-  max-width:720px!important;
-  margin:0 auto!important;
-  align-items:stretch!important;
-}
-#getiFirstForgotPane #getiSimpleForgotEmailStep .geti-first-field {
-  display:flex!important;
-  flex-direction:column!important;
-  gap:9px!important;
-  width:100%!important;
-  grid-column:1 / -1!important;
-}
-#getiFirstForgotPane #getiSimpleForgotEmailStep .geti-first-field span {
-  font-size:13px!important;
-  font-weight:800!important;
-  color:#123c70!important;
-}
-#getiFirstForgotPane #getiSimpleForgotEmail {
-  display:block!important;
-  box-sizing:border-box!important;
-  width:100%!important;
-  min-width:0!important;
-  min-height:52px!important;
-  padding:13px 15px!important;
-  font-size:15px!important;
-  border:1px solid #cbd9e8!important;
-  border-radius:12px!important;
-  background:#fff!important;
-  color:#143559!important;
-}
-#getiFirstForgotPane #getiSimpleForgotEmail:focus {
-  outline:2px solid #5297df!important;
-  outline-offset:1px!important;
-  border-color:#276cad!important;
-}
-#getiFirstForgotPane #getiSimpleForgotSendBtn {
-  display:block!important;
-  box-sizing:border-box!important;
-  grid-column:1 / -1!important;
-  width:100%!important;
-  min-height:52px!important;
-  margin:2px 0 0!important;
-  padding:13px 20px!important;
-  border:0!important;
-  border-radius:12px!important;
-  background:#0b4b90!important;
-  color:#fff!important;
-  font-size:14px!important;
-  font-weight:900!important;
-  letter-spacing:.05em!important;
-  cursor:pointer;
-}
-#getiFirstForgotPane #getiSimpleForgotSendBtn:disabled {opacity:.62!important;cursor:not-allowed!important;}
-#getiFirstForgotPane #getiSimpleForgotSendBtn:not(:disabled):hover {background:#083869!important;}
-@media(max-width:520px){
-  #getiFirstForgotPane #getiSimpleForgotEmailStep.geti-simple-forgot-email-form {gap:12px!important;}
-  #getiFirstForgotPane #getiSimpleForgotEmail,
-  #getiFirstForgotPane #getiSimpleForgotSendBtn {min-height:50px!important;}
-}
-</style>
-</head><body>'+pages+'</body></html>';
+  const html='<!doctype html><html lang="'+c.code+'"><head><meta charset="utf-8"><title>'+escapeHTML(nativeSubject)+' · 200</title><style>@page{size:A4;margin:0}*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans",sans-serif;color:#18283b}.pdfpage{width:210mm;height:297mm;padding:15mm 16mm 13mm;page-break-after:always;position:relative;overflow:hidden;background:#fff}.pdfpage:last-child{page-break-after:auto}header{background:#0b2d5c;color:#fff;padding:8px 10px;font-size:9pt;font-weight:700;letter-spacing:.03em}h1{font-size:18pt;margin:12px 0 3px;color:#0b2d5c}h2{font-size:12pt;color:#294d73;border-bottom:1px solid #d7e0ea;padding-bottom:5px;margin:12px 0 8px}.meta{font-size:8.5pt;color:#5b6c7d}p{font-size:9.7pt;line-height:1.48;margin:7px 0;text-align:justify}footer{position:absolute;bottom:6mm;left:16mm;right:16mm;border-top:1px solid #d7e0ea;padding-top:4px;font-size:8pt;color:#5c6b78;text-align:right}@media print{body{background:#fff}.pdfpage{box-shadow:none}}</style></head><body>'+pages+'</body></html>';
   w.document.open();w.document.write(html);w.document.close();if(autoPrint)setTimeout(function(){w.focus();w.print();},500);return true;}
 const originalOpenPDF=window.openGetiLessonPDF;
 window.openGetiLessonPDF=function(){if(cfg(getiLessonState.exam))return nativePrintableBook(getiLessonState.exam,getiLessonState.subject,false);return originalOpenPDF();};
@@ -21159,28 +21073,44 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
   function buildForgotPane(){
     var pane=el('getiFirstForgotPane');if(!pane)return;
     pane.innerHTML=''
-      +'<div class="geti-first-forgot-heading"><h3>Reset Password</h3><p>Enter your email. GETI will send a confirmation code.</p></div>'
+      +'<div class="geti-first-forgot-heading"><h3>Reset Password</h3><p>Enter your email address. GETI will send a confirmation code, just like account registration.</p></div>'
       +'<div class="geti-simple-forgot-box">'
       +'<div id="getiSimpleForgotEmailStep" class="geti-first-auth-form geti-first-create-form geti-simple-forgot-email-form">'
-      +'<label class="geti-first-field full"><span>Email Address</span><input id="getiSimpleForgotEmail" type="email" autocomplete="email" placeholder="admin@getienglish.com"></label>'
-      +'<button id="getiSimpleForgotSendBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotSendCode()">SEND CODE</button>'
+      +'<label class="geti-first-field full"><span>Email Address</span><input id="getiSimpleForgotEmail" type="email" autocomplete="email" placeholder="Enter your GETI account email"></label>'
+      +'<button id="getiSimpleForgotSendBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotSendCode()">SEND CONFIRMATION CODE</button>'
       +'</div>'
-      +'<div id="getiSimpleForgotCodeStep" hidden>'
-      +'<div class="geti-simple-forgot-email"><span>Email</span><strong id="getiSimpleForgotEmailDisplay"></strong></div>'
-      +'<label class="geti-first-field full"><span>Confirmation Code</span><input id="getiSimpleForgotCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" pattern="[0-9]{6,8}" placeholder="6- or 8-digit code"></label>'
-      +'<button id="getiSimpleForgotVerifyBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotVerifyCode()">CONTINUE</button>'
-      +'<div class="geti-first-account-links"><button type="button" onclick="getiSimpleForgotSendCode(true)">SEND CODE AGAIN</button></div>'
+      +'<div id="getiSimpleForgotCodeStep" class="geti-signup-code-step" hidden>'
+      +'<div class="geti-signup-progress" aria-hidden="true"><span class="done">✓</span><i></i><span class="active">2</span></div>'
+      +'<div class="geti-signup-code-icon" aria-hidden="true">✉</div>'
+      +'<h3>Confirm your email</h3>'
+      +'<p id="getiSimpleForgotCodeText">We sent a confirmation code to your email (6 or 8 digits). Enter it below to verify your account and reset your password.</p>'
+      +'<div class="geti-signup-email-box"><span>Email</span><strong id="getiSimpleForgotEmailDisplay">—</strong></div>'
+      +'<label class="geti-signup-code-field" for="getiSimpleForgotCode"><span>Confirmation code</span>'
+      +'<input id="getiSimpleForgotCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" pattern="[0-9]{6,8}" placeholder="Enter 6- or 8-digit code" ></label>'
+      +'<button id="getiSimpleForgotVerifyBtn" class="geti-first-primary-auth full geti-signup-continue" type="button" onclick="getiSimpleForgotVerifyCode()">CONTINUE</button>'
+      +'<p class="geti-signup-help">Enter the newest code sent to your email. Older codes may no longer work.</p>'
+      +'<div class="geti-signup-code-actions"><button type="button" id="getiSimpleForgotResendBtn" onclick="getiSimpleForgotSendCode(true)">SEND CODE AGAIN</button><button type="button" onclick="getiSimpleForgotChangeEmail()">CHANGE EMAIL</button></div>'
       +'</div>'
       +'<div id="getiSimpleForgotPasswordStep" hidden>'
+      +'<div class="geti-signup-progress" aria-hidden="true"><span class="done">✓</span><i></i><span class="done">✓</span></div>'
+      +'<div class="geti-signup-code-icon" aria-hidden="true">✓</div>'
+      +'<h3>Choose a new password</h3>'
+      +'<p>Your confirmation code has been verified. Create a new password for your GETI account.</p>'
       +'<label class="geti-first-field full"><span>New Password</span><input id="getiSimpleForgotNewPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="6 to 12 characters"></label>'
-      +'<label class="geti-first-field full"><span>Confirm New Password</span><input id="getiSimpleForgotConfirmPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="Repeat new password"></label>'
+      +'<label class="geti-first-field full"><span>Confirm New Password</span><input id="getiSimpleForgotConfirmPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="Repeat your new password"></label>'
       +'<button id="getiSimpleForgotSaveBtn" class="geti-first-primary-auth full" type="button" onclick="getiSimpleForgotSavePassword()">SAVE NEW PASSWORD</button>'
       +'</div>'
       +'<div id="getiFirstResetStatus" class="geti-first-login-status" aria-live="polite"></div>'
-      +'<div class="geti-first-account-links"><button type="button" onclick="getiSwitchFirstAccount(\'signin\')">← BACK TO SIGN IN</button></div>'
+      +'<div class="geti-first-account-links"><button type="button" onclick="window.getiSwitchFirstAccount(&quot;signin&quot;)">← BACK TO SIGN IN</button></div>'
       +'</div>';
     initPasswordToggles();
   }
+  window.getiSimpleForgotChangeEmail=function(){
+    var a=el('getiSimpleForgotEmailStep'),b=el('getiSimpleForgotCodeStep'),c=el('getiSimpleForgotPasswordStep'),status=el('getiFirstResetStatus');
+    if(a)a.hidden=false;if(b)b.hidden=true;if(c)c.hidden=true;
+    if(status)status.innerHTML='';
+    var input=el('getiSimpleForgotEmail');if(input)setTimeout(function(){input.focus()},80);
+  };
   function forgotEmail(){var e=el('getiSimpleForgotEmail');var v=String(e&&e.value||'').trim().toLowerCase();if(!v){try{v=sessionStorage.getItem('GETI_RESET_EMAIL')||''}catch(x){}}return v}
   var forgotSendBusy=false;
   window.getiSimpleForgotSendCode=async function(resend){
@@ -21193,7 +21123,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
       try{sessionStorage.setItem('GETI_RESET_EMAIL',email);sessionStorage.removeItem('GETI_RESET_TICKET')}catch(e){}
       var a=el('getiSimpleForgotEmailStep'),b=el('getiSimpleForgotCodeStep'),c=el('getiSimpleForgotPasswordStep'),d=el('getiSimpleForgotEmailDisplay'),code=el('getiSimpleForgotCode');
       if(a)a.hidden=true;if(b)b.hidden=false;if(c)c.hidden=true;if(d)d.textContent=email;if(code){code.value='';setTimeout(function(){code.focus()},80)}
-      if(status)status.innerHTML='<span class="ok">✓ Code sent. Enter the newest 6- or 8-digit code.</span>';
+      if(status)status.innerHTML='<span class="ok">✓ Confirmation code sent. Check your Inbox or Spam/Junk, then enter the newest 6- or 8-digit code below.</span>';
     }catch(e){if(status)status.innerHTML='<span class="bad">'+esc(e.message||'Unable to send reset code.')+'</span>'}
     finally{forgotSendBusy=false;if(btn)btn.disabled=false}
   };
@@ -21210,7 +21140,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
       var b=el('getiSimpleForgotCodeStep'),c=el('getiSimpleForgotPasswordStep');if(b)b.hidden=true;if(c)c.hidden=false;
       if(status)status.innerHTML='<span class="ok">✓ Code confirmed. Enter your new password.</span>';
       initPasswordToggles();var np=el('getiSimpleForgotNewPassword');if(np)setTimeout(function(){np.focus()},80);
-    }catch(e){var m=String(e.message||'Invalid or expired code.');if(/expired|invalid|token/i.test(m))m='Invalid or expired code. Tap SEND CODE AGAIN and use the newest code.';if(status)status.innerHTML='<span class="bad">'+esc(m)+'</span>'}
+    }catch(e){var m=String(e.message||'Invalid or expired code.');if(/expired|invalid|token/i.test(m))m='This confirmation code is invalid or expired. Select SEND CODE AGAIN and enter the newest code from your email.';if(status)status.innerHTML='<span class="bad">'+esc(m)+'</span>'}
     finally{forgotVerifyBusy=false;if(btn){btn.disabled=false;btn.textContent='CONTINUE'}}
   };
   var forgotSaveBusy=false;
@@ -22512,6 +22442,14 @@ a[href],
 <script id="geti-collaboration-access">
 (function(){
   window.getiOpenCollaboration = async function(){
+    /* Require the collaboration access password before checking the student session. */
+    var enteredPassword = window.prompt('Enter the Collaboration access password:');
+    if(enteredPassword === null) return;
+    if(enteredPassword !== 'certificate'){
+      window.alert('Incorrect password. Access to Collaboration is denied.');
+      return;
+    }
+
     var btn = document.getElementById('getiCollaborationBtn');
     var oldText = btn ? btn.innerHTML : 'COLLABORATION WITH GETI';
     if(btn){btn.disabled=true;btn.textContent='OPENING...';}
@@ -25356,5 +25294,193 @@ body.geti-inside-portal-open #geti30ExamPanel .registration-form{max-width:100%!
   };
 })();
 </script>
+
+<style id="geti-pub-private-panel-style">
+#geti-publications{display:none!important}
+#getiPubOverlay{display:none;position:fixed;inset:0;z-index:20000;background:rgba(3,16,36,.88);overflow:auto;padding:24px 12px}
+#getiPubOverlay.show{display:block}
+.geti-pub-panel{width:min(1050px,100%);margin:22px auto;background:#f5f8fc;border-radius:16px;overflow:hidden;box-shadow:0 25px 80px rgba(0,0,0,.35)}
+.geti-pub-panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 22px;background:linear-gradient(135deg,#082e5d,#126cab);color:#fff}
+.geti-pub-panel-head strong{font-size:1.1rem;letter-spacing:.08em}
+.geti-pub-panel-head button{border:0;background:transparent;color:#fff;font-size:30px;cursor:pointer}
+.geti-pub-panel-body{padding:22px}
+.geti-pub-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.geti-pub-card{overflow:hidden;border:1px solid #d9e3ed;border-radius:12px;background:#fff;box-shadow:0 8px 22px rgba(8,46,93,.07)}
+.geti-pub-card img{display:block;width:100%;height:220px;object-fit:cover;background:#eef3f8}
+.geti-pub-card-copy{padding:14px}
+.geti-pub-card-copy h3{margin:0 0 7px;color:#082e5d;font-size:1rem}
+.geti-pub-card-copy p{margin:0;color:#5f7083;font-size:.88rem;line-height:1.55}
+.geti-pub-card-copy small{display:block;margin-top:10px;color:#8a6b22;font-weight:800}
+.geti-pub-status{padding:22px;text-align:center;color:#52657a;background:#fff;border:1px dashed #cbd7e4;border-radius:10px}
+.geti-pub-email-btn{display:inline-flex;align-items:center;justify-content:center;margin:3px 0 3px 8px;padding:5px 11px;border:1px solid #c49a35;border-radius:7px;background:linear-gradient(135deg,#0b3b75,#082e5d);color:#fff!important;font-size:11px;font-weight:900;letter-spacing:.08em;line-height:1.3;cursor:pointer;vertical-align:middle;box-shadow:0 3px 9px rgba(8,46,93,.15)}
+.geti-pub-email-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
+@media(max-width:760px){.geti-pub-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.geti-pub-panel-body{padding:14px}}
+@media(max-width:520px){.geti-pub-grid{grid-template-columns:1fr}.geti-pub-card img{height:230px}}
+</style>
+
+
+  </section>
+</div>
+
+<script id="geti-pub-email-password-gate">
+(function(){
+  "use strict";
+  var PUB_PASSWORD="pub123";
+
+  function safeText(value){
+    return String(value==null?"":value).replace(/[&<>"']/g,function(ch){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch];
+    });
+  }
+
+  window.getiClosePub=function(){
+    var overlay=document.getElementById("getiPubOverlay");
+    if(overlay)overlay.classList.remove("show");
+    document.body.style.overflow="";
+  };
+
+  async function loadPubPosts(){
+    var host=document.getElementById("getiPubPosts");
+    if(!host)return;
+    host.innerHTML='<div class="geti-pub-status">Loading all administrator publications…</div>';
+    try{
+      if(typeof GETI_SB==="undefined"||!GETI_SB)throw new Error("Publication service is unavailable.");
+      var response=await GETI_SB.from("published_images")
+        .select("id,title,alt_text,description,image_url,created_at")
+        .eq("published",true)
+        .order("created_at",{ascending:false})
+        .limit(500);
+      if(response.error)throw response.error;
+      var posts=response.data||[];
+      if(!posts.length){
+        host.innerHTML='<div class="geti-pub-status">There are no published posts yet.</div>';
+        return;
+      }
+      host.innerHTML=posts.map(function(post){
+        var title=post.title||"GETI Publication";
+        var desc=post.description||post.alt_text||"";
+        var date="";
+        try{date=post.created_at?new Date(post.created_at).toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"}):"";}catch(e){}
+        return '<article class="geti-pub-card">'+
+          '<a href="'+safeText(post.image_url||"#")+'" target="_blank" rel="noopener">'+
+          '<img src="'+safeText(post.image_url||"")+'" alt="'+safeText(post.alt_text||title)+'" loading="lazy" decoding="async"></a>'+
+          '<div class="geti-pub-card-copy"><h3>'+safeText(title)+'</h3><p>'+safeText(desc)+'</p><small>Published by GETI'+(date?' · '+safeText(date):'')+'</small></div>'+
+          '</article>';
+      }).join("");
+    }catch(error){
+      host.innerHTML='<div class="geti-pub-status">Unable to load posts: '+safeText(error&&error.message||error)+'</div>';
+    }
+  }
+
+  window.getiOpenPub=function(){
+    var section=document.getElementById("geti-publications-index");
+    if(section){section.scrollIntoView({behavior:"smooth",block:"start"});}
+  };
+
+  function requestPubAccess(){
+    var entered=window.prompt("Enter the PUB password:");
+    if(entered===null)return;
+    if(entered!==PUB_PASSWORD){window.alert("Incorrect password. Access denied.");return;}
+    window.getiOpenPub();
+  }
+
+  function addPubButtons(root){
+    var scope=root&&root.querySelectorAll?root:document;
+    var links=[];
+    if(scope.matches&&scope.matches('a[href^="mailto:"]'))links.push(scope);
+    links=links.concat(Array.prototype.slice.call(scope.querySelectorAll('a[href^="mailto:"]')));
+    links.forEach(function(link){
+      if(link.dataset.getiPubReady==="1")return;
+      link.dataset.getiPubReady="1";
+      var button=document.createElement("button");
+      button.type="button";
+      button.className="geti-pub-email-btn";
+      button.textContent="PUB";
+      button.setAttribute("aria-label","Open password-protected GETI publications");
+      button.addEventListener("click",requestPubAccess);
+      link.insertAdjacentElement("afterend",button);
+    });
+  }
+
+  function init(){
+    addPubButtons(document);
+    if(window.MutationObserver){
+      var observer=new MutationObserver(function(records){
+        records.forEach(function(record){
+          record.addedNodes.forEach(function(node){if(node.nodeType===1)addPubButtons(node);});
+        });
+      });
+      observer.observe(document.body,{childList:true,subtree:true});
+    }
+    document.addEventListener("keydown",function(event){if(event.key==="Escape")window.getiClosePub();});
+    var overlay=document.getElementById("getiPubOverlay");
+    if(overlay)overlay.addEventListener("click",function(event){if(event.target===overlay)window.getiClosePub();});
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
+  else init();
+})();
+</script>
+
+
+<!-- Public, Google-crawlable publication gallery integrated into the main GETI index -->
+<section id="geti-publications-index" aria-labelledby="geti-publications-index-title" style="display:block!important;visibility:visible!important">
+  <div style="max-width:1180px;width:94%;margin:42px auto 60px">
+    <div style="text-align:center;padding:30px 18px;background:linear-gradient(135deg,#082e5d,#126cab);color:#fff;border-bottom:4px solid #c49a35;border-radius:14px 14px 0 0">
+      <div style="font-size:.75rem;letter-spacing:.16em;font-weight:800;color:#f2d889">GLOBAL ENGLISH TEACHING INSTITUTE</div>
+      <h2 id="geti-publications-index-title" style="font-size:clamp(1.7rem,4vw,2.5rem);margin:8px 0">GETI Publications</h2>
+      <p style="max-width:760px;margin:auto;color:#e8f1fb">Official announcements, educational resources and images published by Global English Teaching Institute.</p>
+    </div>
+    <div id="geti-index-publications-status" role="status" style="padding:20px;text-align:center;background:#fff;border:1px solid #dbe4ee;color:#5c6e82">Loading GETI publications…</div>
+    <div id="geti-index-publications-grid" class="geti-index-publications-grid"></div>
+  </div>
+</section>
+<style id="geti-index-publications-css">
+.geti-index-publications-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;max-width:1180px;width:94%;margin:-1px auto 50px}
+.geti-index-publications-grid article{overflow:hidden;background:#fff;border:1px solid #dbe4ee;border-radius:14px;box-shadow:0 8px 24px rgba(8,46,93,.07)}
+.geti-index-publications-grid article a{display:block;background:#eaf0f6}
+.geti-index-publications-grid article img{display:block;width:100%;height:260px;object-fit:contain;background:#eef3f8}
+.geti-index-publications-grid .copy{padding:15px}
+.geti-index-publications-grid h3{font-size:1.05rem;color:#082e5d;margin:0 0 7px}
+.geti-index-publications-grid p{margin:0;color:#52657a;font-size:.92rem;line-height:1.55}
+.geti-index-publications-grid small{display:block;margin-top:11px;color:#8a6b22;font-weight:800}
+@media(max-width:850px){.geti-index-publications-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.geti-index-publications-grid{grid-template-columns:1fr}.geti-index-publications-grid article img{height:230px}}
+</style>
+<script id="geti-index-publications-loader">
+(function(){
+  const SUPABASE_URL='https://syawyulrelrhjprnxdyn.supabase.co';
+  const SUPABASE_KEY='sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8';
+  const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  const host=document.getElementById("geti-index-publications-grid");
+  const status=document.getElementById("geti-index-publications-status");
+  function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+  function fmtDate(v){if(!v)return "";const d=new Date(v);return isNaN(d)? "":d.toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});}
+  async function load(){
+    try{
+      const result=await client.from("published_images").select("id,title,alt_text,description,keywords,image_url,created_at").eq("published",true).order("created_at",{ascending:false}).limit(1000);
+      if(result.error)throw result.error;
+      const posts=result.data||[];
+      if(!posts.length){status.textContent="No public GETI publications are available yet.";return;}
+      status.remove();
+      host.innerHTML=posts.map((p,i)=>{
+        const title=p.title||"GETI Publication";
+        const alt=p.alt_text||p.description||title;
+        const desc=p.description||p.alt_text||"Official publication from Global English Teaching Institute.";
+        return `<article itemscope itemtype="https://schema.org/ImageObject">
+          <a href="${esc(p.image_url)}" target="_blank" rel="noopener">
+            <img src="${esc(p.image_url)}" alt="${esc(alt)}" title="${esc(title)}" itemprop="contentUrl" ${i===0?'fetchpriority="high"':'loading="lazy"'} decoding="async">
+          </a>
+          <div class="copy"><h3 itemprop="name">${esc(title)}</h3><p itemprop="caption">${esc(desc)}</p><small>Published by GETI${p.created_at?' · '+esc(fmtDate(p.created_at)):''}</small></div>
+        </article>`;
+      }).join("");
+      const graph=posts.slice(0,1000).map(p=>({"@type":"ImageObject","contentUrl":p.image_url,"url":p.image_url,"name":p.title||p.alt_text||"GETI Publication","caption":p.description||p.alt_text||p.title||"GETI Publication","description":p.description||p.alt_text||p.title||"GETI Publication","keywords":p.keywords||"GETI, Global English Teaching Institute","datePublished":p.created_at||undefined,"creditText":"Global English Teaching Institute (GETI)"}));
+      const schema=document.createElement("script");schema.type="application/ld+json";schema.text=JSON.stringify({"@context":"https://schema.org","@graph":graph});document.head.appendChild(schema);
+    }catch(e){status.textContent="GETI publications are temporarily unavailable.";console.error(e);}
+  }
+  if(window.supabase)load();
+  else status.textContent="Publication service is unavailable.";
+})();
+</script>
+
 </body>
 </html>
