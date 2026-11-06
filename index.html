@@ -68,11 +68,14 @@ content="Global English Teaching Institute (GETI) offers online English learning
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "Organization",
+      "@type": [
+        "Organization",
+        "EducationalOrganization"
+      ],
       "@id": "https://getienglish.com/#organization",
       "name": "Global English Teaching Institute (GETI)",
       "alternateName": "GETI",
-      "description": "Global English Teaching Institute (GETI) provides English learning, free TEFL and TESOL courses, teaching exams, proficiency tests, certificates and certificate verification.",
+      "description": "Global English Teaching Institute (GETI) provides online English education, TEFL and TESOL training pathways, examinations and certificate verification. GETI reports an Approved Provider membership with CPD Accreditation International (CPD-10029); this does not imply individual course accreditation.",
       "knowsAbout": [
         "English language learning",
         "TEFL courses and exams",
@@ -85,8 +88,30 @@ content="Global English Teaching Institute (GETI) offers online English learning
       "url": "https://getienglish.com/",
       "logo": "https://getienglish.com/geti-logo.png",
       "email": "admin@getienglish.com",
-      "sameAs": [
-        
+      "sameAs": [],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "general inquiries",
+          "email": "info@getienglish.com"
+        },
+        {
+          "@type": "ContactPoint",
+          "contactType": "certificate verification",
+          "email": "certificate@getienglish.com"
+        }
+      ],
+      "subjectOf": [
+        {
+          "@type": "WebPage",
+          "name": "GETI CPD Approved Provider verification",
+          "url": "https://cpdai.org/verify?centre=CPD-10029"
+        },
+        {
+          "@type": "WebPage",
+          "name": "GETI Recognition and Verification",
+          "url": "https://getienglish.com/recognition.html"
+        }
       ]
     },
     {
@@ -7540,10 +7565,28 @@ h1, h2, h3, h4, h5, h6,
 
 <style>
 
-/* GETI CPD approved provider panel: isolated, responsive and compact */
-.geti-cpd-panel{box-sizing:border-box;display:grid;grid-template-columns:minmax(125px,200px) minmax(0,1fr);align-items:center;gap:clamp(14px,2.4vw,32px);padding:20px clamp(16px,3vw,34px);margin:0 auto 20px;width:min(100%,1120px);border:1px solid rgba(211,169,71,.45);border-radius:16px;background:linear-gradient(115deg,#fff 0%,#f5f8ff 100%);color:#102851;box-shadow:0 8px 26px rgba(4,25,56,.1)}
-.geti-cpd-panel *{box-sizing:border-box}.geti-cpd-badge-link{display:block;max-width:200px;line-height:0}.geti-cpd-badge-link img{max-width:100%;height:auto;display:block;object-fit:contain}.geti-cpd-details{min-width:0}.geti-cpd-details h2{font-size:clamp(17px,2.3vw,23px);line-height:1.28;color:#0d2d61;margin:0 0 10px}.geti-cpd-details p{font-size:14px;line-height:1.55;color:#263b5c;margin:0 0 8px}.geti-cpd-details .geti-cpd-note{font-size:12px;opacity:.86}.geti-cpd-links{display:flex;gap:10px 20px;flex-wrap:wrap;margin-top:12px}.geti-cpd-links a{font-weight:700;font-size:13px;color:#1249a1;text-decoration:underline;text-underline-offset:3px}.geti-cpd-links a:hover{color:#ac7511}
-@media(max-width:650px){.geti-cpd-panel{grid-template-columns:1fr;gap:8px;padding:18px 16px;text-align:center}.geti-cpd-badge-link{width:140px;margin:0 auto}.geti-cpd-links{justify-content:center}}
+
+/* Refined CPD membership panel */
+.geti-cpd-panel{box-sizing:border-box;display:grid;grid-template-columns:minmax(150px,220px) minmax(0,1fr);align-items:center;gap:clamp(20px,3vw,38px);padding:clamp(20px,3vw,34px);margin:0 auto 24px;width:min(100% - 28px,1120px);border:1px solid #e2d4ad;border-radius:20px;background:linear-gradient(135deg,#fff 0%,#f8faff 58%,#f2f6ff 100%);color:#102851;box-shadow:0 12px 34px rgba(7,31,69,.10);position:relative;overflow:hidden}
+.geti-cpd-panel:before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:linear-gradient(180deg,#d5a63b,#183b79)}
+.geti-cpd-panel *{box-sizing:border-box}
+.geti-cpd-badge-link{display:flex;align-items:center;justify-content:center;max-width:220px;min-width:0;line-height:0;padding:10px;background:#fff;border:1px solid #edf0f5;border-radius:16px;box-shadow:0 5px 18px rgba(10,36,75,.08)}
+.geti-cpd-badge-link img{width:100%;max-width:100%;height:auto;max-height:230px;display:block;object-fit:contain}
+.geti-cpd-details{min-width:0}
+.geti-cpd-kicker{display:inline-flex;align-items:center;gap:7px;margin:0 0 9px;padding:5px 10px;border-radius:999px;background:#eaf2ff;color:#17427e;font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.geti-cpd-details h2{font-size:clamp(19px,2.4vw,27px);line-height:1.2;color:#102e61;margin:0 0 11px;font-weight:800;letter-spacing:-.02em}
+.geti-cpd-details p{font-size:14px;line-height:1.65;color:#344761;margin:0 0 11px}
+.geti-cpd-facts{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 13px}
+.geti-cpd-fact{display:inline-flex;flex-direction:column;gap:3px;padding:9px 12px;min-width:130px;border:1px solid #e4e9f1;border-radius:10px;background:rgba(255,255,255,.85)}
+.geti-cpd-fact span{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#748198}
+.geti-cpd-fact strong{font-size:13px;color:#142f5d}
+.geti-cpd-details .geti-cpd-note{font-size:12px;line-height:1.55;color:#58677d;background:#f0f3f8;border-left:3px solid #c8a04a;padding:9px 12px;border-radius:0 8px 8px 0;margin-top:10px}
+.geti-cpd-links{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.geti-cpd-links a{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:39px;padding:9px 13px;border:1px solid #d7e0ee;border-radius:9px;background:#fff;color:#16427f;text-decoration:none;font-weight:750;font-size:12px;line-height:1.25;transition:background .15s ease,border-color .15s ease,transform .15s ease}
+.geti-cpd-links a:first-child{background:#183b83;border-color:#183b83;color:#fff}
+.geti-cpd-links a:hover{border-color:#c49a3b;background:#fff8e8;color:#102e61;transform:translateY(-1px)}
+.geti-cpd-links a:first-child:hover{background:#102e61;color:#fff}
+@media(max-width:680px){.geti-cpd-panel{grid-template-columns:1fr;gap:15px;padding:19px 16px;text-align:left}.geti-cpd-badge-link{width:min(170px,55%);margin:0 auto}.geti-cpd-badge-link img{max-height:175px}.geti-cpd-facts{justify-content:flex-start}.geti-cpd-fact{flex:1 1 135px}.geti-cpd-links{display:grid;grid-template-columns:1fr}.geti-cpd-links a{width:100%;min-height:42px}}
 
 </style>
 </head>
@@ -8637,16 +8680,22 @@ h1, h2, h3, h4, h5, h6,
 
     <footer class="geti-home-v2-footer" id="getiHomeContact">
 
-<!-- GETI CPD Accreditation International: approved provider membership (not course accreditation) -->
+<!-- GETI CPD provider membership: provider status only; not individual course accreditation -->
 <section class="geti-cpd-panel" aria-labelledby="geti-cpd-title">
-  <a class="geti-cpd-badge-link" href="https://cpdai.org/verify?centre=CPD-10029" target="_blank" rel="noopener noreferrer" aria-label="Verify GETI Approved Provider status at CPD Accreditation International">
-    <img src="approved-provider-badge-CPD-10029.png" alt="CPD Accreditation International — Approved Provider CPD-10029, valid until November 2027" loading="lazy" decoding="async">
+  <a class="geti-cpd-badge-link" href="https://cpdai.org/verify?centre=CPD-10029" target="_blank" rel="noopener noreferrer" aria-label="Verify GETI Approved Provider membership at CPD Accreditation International">
+    <img src="approved-provider-badge-CPD-10029.png" alt="CPD Accreditation International Approved Provider badge, provider number CPD-10029" loading="lazy" decoding="async">
   </a>
   <div class="geti-cpd-details">
-    <h2 id="geti-cpd-title">CPD Accreditation International — Approved Provider</h2>
-    <p>Global English Teaching Institute (GETI) holds an <strong>Approved CPD Provider membership</strong> with CPD Accreditation International, provider number <strong>CPD-10029</strong>. Membership is recorded from <strong>3 November 2026</strong> to <strong>3 November 2027</strong>.</p>
-    <p class="geti-cpd-note">Approved Provider status concerns GETI’s provider membership and does not, by itself, mean every GETI course or student certificate has been individually CPD-accredited.</p>
-    <div class="geti-cpd-links"><a href="https://cpdai.org/verify?centre=CPD-10029" target="_blank" rel="noopener noreferrer">Verify GETI Provider Status ↗</a><a href="https://cpdai.org/" target="_blank" rel="noopener noreferrer">Visit CPDAI.org ↗</a><a href="membership-certificate-global-eglish-teaching-institute.pdf" target="_blank" rel="noopener noreferrer">View membership certificate (PDF) ↗</a></div>
+    <div class="geti-cpd-kicker"><span aria-hidden="true">✓</span> Approved Provider Membership</div>
+    <h2 id="geti-cpd-title">CPD Accreditation International</h2>
+    <p><strong>Global English Teaching Institute (GETI)</strong> holds an <strong>Approved CPD Provider membership</strong> with CPD Accreditation International. This provider membership is recorded under the details below.</p>
+    <div class="geti-cpd-facts" aria-label="GETI CPD provider membership details">
+      <div class="geti-cpd-fact"><span>Provider number</span><strong>CPD-10029</strong></div>
+      <div class="geti-cpd-fact"><span>Membership recorded</span><strong>3 November 2026</strong></div>
+      <div class="geti-cpd-fact"><span>Valid until</span><strong>3 November 2027</strong></div>
+    </div>
+    <p class="geti-cpd-note"><strong>Scope of recognition:</strong> Approved Provider status relates to GETI’s provider membership. It does not, by itself, mean that every GETI course or student certificate has been individually CPD-accredited. Please use the verification link to check the provider record.</p>
+    <nav class="geti-cpd-links" aria-label="CPD membership resources"><a href="/recognition.html">Recognition &amp; Verification Details <span aria-hidden="true">↗</span></a><a href="https://cpdai.org/verify?centre=CPD-10029" target="_blank" rel="noopener noreferrer">Verify GETI Provider Status <span aria-hidden="true">↗</span></a><a href="https://cpdai.org/" target="_blank" rel="noopener noreferrer">Visit CPDAI.org <span aria-hidden="true">↗</span></a><a href="membership-certificate-global-eglish-teaching-institute.pdf" target="_blank" rel="noopener noreferrer">View Membership Certificate (PDF) <span aria-hidden="true">↗</span></a></nav>
   </div>
 </section>
 
@@ -9199,16 +9248,22 @@ employment and global communication.
 </main>
 <footer class="footer" id="contact">
 
-<!-- GETI CPD Accreditation International: approved provider membership (not course accreditation) -->
+<!-- GETI CPD provider membership: provider status only; not individual course accreditation -->
 <section class="geti-cpd-panel" aria-labelledby="geti-cpd-title-portal">
-  <a class="geti-cpd-badge-link" href="https://cpdai.org/verify?centre=CPD-10029" target="_blank" rel="noopener noreferrer" aria-label="Verify GETI Approved Provider status at CPD Accreditation International">
-    <img src="approved-provider-badge-CPD-10029.png" alt="CPD Accreditation International — Approved Provider CPD-10029, valid until November 2027" loading="lazy" decoding="async">
+  <a class="geti-cpd-badge-link" href="https://cpdai.org/verify?centre=CPD-10029" target="_blank" rel="noopener noreferrer" aria-label="Verify GETI Approved Provider membership at CPD Accreditation International">
+    <img src="approved-provider-badge-CPD-10029.png" alt="CPD Accreditation International Approved Provider badge, provider number CPD-10029" loading="lazy" decoding="async">
   </a>
   <div class="geti-cpd-details">
-    <h2 id="geti-cpd-title-portal">CPD Accreditation International — Approved Provider</h2>
-    <p>Global English Teaching Institute (GETI) holds an <strong>Approved CPD Provider membership</strong> with CPD Accreditation International, provider number <strong>CPD-10029</strong>. Membership is recorded from <strong>3 November 2026</strong> to <strong>3 November 2027</strong>.</p>
-    <p class="geti-cpd-note">Approved Provider status concerns GETI’s provider membership and does not, by itself, mean every GETI course or student certificate has been individually CPD-accredited.</p>
-    <div class="geti-cpd-links"><a href="https://cpdai.org/" target="_blank" rel="noopener noreferrer">Visit CPDAI.org ↗</a><a href="membership-certificate-global-eglish-teaching-institute.pdf" target="_blank" rel="noopener noreferrer">View membership certificate (PDF) ↗</a></div>
+    <div class="geti-cpd-kicker"><span aria-hidden="true">✓</span> Approved Provider Membership</div>
+    <h2 id="geti-cpd-title-portal">CPD Accreditation International</h2>
+    <p><strong>Global English Teaching Institute (GETI)</strong> holds an <strong>Approved CPD Provider membership</strong> with CPD Accreditation International. This provider membership is recorded under the details below.</p>
+    <div class="geti-cpd-facts" aria-label="GETI CPD provider membership details">
+      <div class="geti-cpd-fact"><span>Provider number</span><strong>CPD-10029</strong></div>
+      <div class="geti-cpd-fact"><span>Membership recorded</span><strong>3 November 2026</strong></div>
+      <div class="geti-cpd-fact"><span>Valid until</span><strong>3 November 2027</strong></div>
+    </div>
+    <p class="geti-cpd-note"><strong>Scope of recognition:</strong> Approved Provider status relates to GETI’s provider membership. It does not, by itself, mean that every GETI course or student certificate has been individually CPD-accredited. Please use the verification link to check the provider record.</p>
+    <nav class="geti-cpd-links" aria-label="CPD membership resources"><a href="https://cpdai.org/verify?centre=CPD-10029" target="_blank" rel="noopener noreferrer">Verify GETI Provider Status <span aria-hidden="true">↗</span></a><a href="https://cpdai.org/" target="_blank" rel="noopener noreferrer">Visit CPDAI.org <span aria-hidden="true">↗</span></a><a href="membership-certificate-global-eglish-teaching-institute.pdf" target="_blank" rel="noopener noreferrer">View Membership Certificate (PDF) <span aria-hidden="true">↗</span></a></nav>
   </div>
 </section>
 
