@@ -7587,6 +7587,22 @@ h1, h2, h3, h4, h5, h6,
 .geti-cpd-links a:hover{border-color:#c49a3b;background:#fff8e8;color:#102e61;transform:translateY(-1px)}
 .geti-cpd-links a:first-child:hover{background:#102e61;color:#fff}
 @media(max-width:680px){.geti-cpd-panel{grid-template-columns:1fr;gap:15px;padding:19px 16px;text-align:left}.geti-cpd-badge-link{width:min(170px,55%);margin:0 auto}.geti-cpd-badge-link img{max-height:175px}.geti-cpd-facts{justify-content:flex-start}.geti-cpd-fact{flex:1 1 135px}.geti-cpd-links{display:grid;grid-template-columns:1fr}.geti-cpd-links a{width:100%;min-height:42px}}
+/* Keep CPD section typography consistent across phones, regardless of device font settings. */
+.geti-cpd-panel,
+.geti-cpd-panel *{
+  font-family:Arial, Helvetica, sans-serif !important;
+  font-synthesis:none;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+.geti-cpd-panel .geti-cpd-kicker{font-size:11px !important;line-height:1.35 !important}
+.geti-cpd-panel .geti-cpd-details h2{font-size:25px !important;line-height:1.25 !important}
+.geti-cpd-panel .geti-cpd-details p{font-size:14px !important;line-height:1.6 !important}
+.geti-cpd-panel .geti-cpd-fact span{font-size:10px !important;line-height:1.3 !important}
+.geti-cpd-panel .geti-cpd-fact strong{font-size:13px !important;line-height:1.35 !important}
+.geti-cpd-panel .geti-cpd-details .geti-cpd-note{font-size:12px !important;line-height:1.55 !important}
+.geti-cpd-panel .geti-cpd-links a{font-size:12px !important;line-height:1.3 !important}
+
 
 </style>
 </head>
@@ -7756,10 +7772,8 @@ h1, h2, h3, h4, h5, h6,
         <div class="geti-first-auth-pane geti-first-forgot-pane" id="getiFirstForgotPane" role="tabpanel" hidden>
           <div class="geti-first-forgot-heading"><h3>Reset Password</h3><p>Use the email address linked to your GETI account.</p></div>
           <div class="geti-first-auth-form geti-first-reset-form">
-            <label class="geti-first-field full"><span>Email Address</span><input id="getiFirstResetEmail" type="email" autocomplete="email" placeholder="admin@getienglish.com"></label>
-            <label class="geti-first-field"><span>New Password</span><input id="getiFirstResetPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="6 to 12 characters"></label>
-            <label class="geti-first-field"><span>Confirm Password</span><input id="getiFirstResetConfirm" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="Repeat password"></label>
-            <button class="geti-first-primary-auth full" type="button" onclick="getiFirstAreaResetPasswordInline()">RESET PASSWORD</button>
+            <label class="geti-first-field full"><span>Email Address</span><input id="getiFirstResetEmail" type="email" autocomplete="email" placeholder="Enter the email linked to your GETI account" required></label>
+            <button class="geti-first-primary-auth full" type="button" onclick="getiFirstAreaResetPasswordInline()">SEND RECOVERY CODE</button>
           </div>
           <div class="geti-first-account-links"><button type="button" onclick="getiSwitchFirstAccount('signin')">← BACK TO SIGN IN</button></div>
           <div id="getiFirstResetStatus" class="geti-first-login-status" aria-live="polite"></div>
@@ -9891,7 +9905,61 @@ var clone=cert.cloneNode(true);
 var images=cert.querySelectorAll("img"),clones=clone.querySelectorAll("img");
 for(var i=0;i<images.length;i++)clones[i].src=images[i].src;
 win.document.open();
-win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'</body></html>');
+win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'
+<script id="geti-password-recovery-final-fix">
+(function(){
+  function node(id){return document.getElementById(id);}
+  function safe(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function message(html){var n=node('getiFirstResetStatus');if(n)n.innerHTML=html;}
+  window.getiFirstAreaResetPasswordInline=async function(){
+    var emailNode=node('getiFirstResetEmail');
+    var email=String(emailNode&&emailNode.value||'').trim().toLowerCase();
+    if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){message('<span class="bad">Please enter a valid email address.</span>');return;}
+    if(!window.GETI_SB||!GETI_SB.auth||typeof GETI_SB.auth.resetPasswordForEmail!=='function'){message('<span class="bad">Account service is unavailable. Please contact GETI Student Support.</span>');return;}
+    message('<span class="ok">Requesting your secure recovery code...</span>');
+    try{
+      var result=await GETI_SB.auth.resetPasswordForEmail(email);
+      if(result&&result.error)throw result.error;
+      try{sessionStorage.setItem('GETI_RECOVERY_EMAIL',email);}catch(e){}
+      message('<div class="ok">If this email belongs to a GETI account, a recovery email has been requested. Check Inbox and Spam/Junk.</div>'+
+        '<label class="geti-first-field full" style="display:block;margin-top:12px"><span>6-digit confirmation code</span><input id="getiRecoveryOtp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000"></label>'+
+        '<button type="button" class="geti-first-primary-auth full" style="margin-top:10px" onclick="getiVerifyPasswordRecoveryCode()">VERIFY CODE</button>');
+    }catch(err){message('<span class="bad">'+safe(err&&err.message||'Unable to request a recovery email. Please try again later.')+'</span>');}
+  };
+  window.getiVerifyPasswordRecoveryCode=async function(){
+    var otp=node('getiRecoveryOtp'),token=String(otp&&otp.value||'').replace(/\\s+/g,'');
+    var email='';try{email=sessionStorage.getItem('GETI_RECOVERY_EMAIL')||'';}catch(e){}
+    if(!/^\\d{6}$/.test(token)){message('<span class="bad">Enter the 6-digit code from your email.</span>');return;}
+    if(!email){message('<span class="bad">Please request a new recovery code first.</span>');return;}
+    if(!window.GETI_SB||!GETI_SB.auth||typeof GETI_SB.auth.verifyOtp!=='function'){message('<span class="bad">Account verification service is unavailable.</span>');return;}
+    message('<span class="ok">Verifying your code...</span>');
+    try{
+      var result=await GETI_SB.auth.verifyOtp({email:email,token:token,type:'recovery'});
+      if(result&&result.error)throw result.error;
+      if(!result||!result.data||!result.data.session)throw new Error('The code is invalid or expired. Request a new code.');
+      message('<div class="ok">Code verified. Create your new password.</div>'+
+        '<label class="geti-first-field full" style="display:block;margin-top:12px"><span>New Password</span><input id="getiRecoveryNewPassword" type="password" autocomplete="new-password" minlength="8" maxlength="72"></label>'+
+        '<label class="geti-first-field full" style="display:block;margin-top:10px"><span>Confirm New Password</span><input id="getiRecoveryConfirmPassword" type="password" autocomplete="new-password" minlength="8" maxlength="72"></label>'+
+        '<button type="button" class="geti-first-primary-auth full" style="margin-top:10px" onclick="getiCompletePasswordRecovery()">UPDATE PASSWORD</button>');
+    }catch(err){message('<span class="bad">'+safe(err&&err.message||'Invalid or expired recovery code.')+'</span>');}
+  };
+  window.getiCompletePasswordRecovery=async function(){
+    var pw=node('getiRecoveryNewPassword'),confirm=node('getiRecoveryConfirmPassword');
+    if(!pw||!confirm)return;
+    if(pw.value.length<8||pw.value.length>72){message('<span class="bad">Use a password between 8 and 72 characters.</span>');return;}
+    if(pw.value!==confirm.value){message('<span class="bad">Passwords do not match.</span>');return;}
+    message('<span class="ok">Updating your password securely...</span>');
+    try{var result=await GETI_SB.auth.updateUser({password:pw.value});if(result&&result.error)throw result.error;
+      try{sessionStorage.removeItem('GETI_RECOVERY_EMAIL');}catch(e){}
+      await GETI_SB.auth.signOut();
+      message('<span class="ok">Password updated. You can now sign in with your new password.</span>');
+      if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('signin');
+    }catch(err){message('<span class="bad">'+safe(err&&err.message||'Unable to update password.')+'</span>');}
+  };
+})();
+</script>
+
+</body></html>');
 win.document.close();
 win.onload=function(){setTimeout(function(){win.print();},400);};
 }
@@ -25223,5 +25291,70 @@ body.geti-inside-portal-open #geti30ExamPanel .registration-form{max-width:100%!
 })();
 </script>
 
+
+<script id="geti-password-recovery-otp-fix">
+(function(){
+  'use strict';
+  function byId(id){return document.getElementById(id);}
+  function safeText(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function statusMessage(node,html){if(node)node.innerHTML=html;}
+  window.getiFirstAreaResetPasswordInline=async function(){
+    var email=byId('getiFirstResetEmail'),status=byId('getiFirstResetStatus');
+    if(!email||!status)return;
+    var address=String(email.value||'').trim().toLowerCase();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)){
+      statusMessage(status,'<span class="bad">Please enter a valid email address.</span>');return;
+    }
+    statusMessage(status,'<span class="ok">Requesting a secure password reset code...</span>');
+    try{
+      if(!window.GETI_SB||!GETI_SB.auth)throw new Error('GETI account service is unavailable.');
+      var result=await GETI_SB.auth.resetPasswordForEmail(address,{redirectTo:'https://getienglish.com/'});
+      if(result&&result.error)throw result.error;
+      statusMessage(status,
+        '<div class="ok">A password reset code has been requested for <strong>'+safeText(address)+'</strong>. Check your inbox and spam folder, then enter the code below.</div>'+
+        '<label class="geti-first-field full" style="display:block;margin-top:12px"><span>6-digit recovery code</span><input id="getiRecoveryOtp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="Enter the 6-digit code"></label>'+
+        '<button type="button" class="geti-first-primary-auth full" style="margin-top:10px" onclick="getiVerifyPasswordRecoveryCode()">VERIFY CODE</button>'+
+        '<p style="font-size:12px;margin-top:8px">If no code arrives, check Spam/Junk or contact GETI support.</p>');
+      try{sessionStorage.setItem('GETI_RECOVERY_EMAIL',address);}catch(e){}
+    }catch(err){
+      statusMessage(status,'<span class="bad">'+safeText(err&&err.message||'Unable to send the recovery email. Please try again later.')+'</span>');
+    }
+  };
+  window.getiVerifyPasswordRecoveryCode=async function(){
+    var status=byId('getiFirstResetStatus'),otp=byId('getiRecoveryOtp'),email='';
+    try{email=sessionStorage.getItem('GETI_RECOVERY_EMAIL')||'';}catch(e){}
+    var token=String(otp&&otp.value||'').replace(/\s+/g,'');
+    if(!/^\d{6}$/.test(token)){statusMessage(status,'<span class="bad">Enter the 6-digit code from your email.</span>');return;}
+    if(!email){statusMessage(status,'<span class="bad">Please request a new recovery code first.</span>');return;}
+    statusMessage(status,'<span class="ok">Verifying your recovery code...</span>');
+    try{
+      var result=await GETI_SB.auth.verifyOtp({email:email,token:token,type:'recovery'});
+      if(result&&result.error)throw result.error;
+      if(!result||!result.data||!result.data.session)throw new Error('The recovery code could not be verified. Request a new code and try again.');
+      statusMessage(status,'<div class="ok">Code verified. Create your new password below.</div>'+
+        '<label class="geti-first-field full" style="display:block;margin-top:12px"><span>New Password</span><input id="getiRecoveryNewPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="6 to 12 characters"></label>'+
+        '<label class="geti-first-field full" style="display:block;margin-top:10px"><span>Confirm New Password</span><input id="getiRecoveryConfirmPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="Repeat your new password"></label>'+
+        '<button type="button" class="geti-first-primary-auth full" style="margin-top:10px" onclick="getiCompletePasswordRecovery()">UPDATE PASSWORD</button>');
+    }catch(err){statusMessage(status,'<span class="bad">'+safeText(err&&err.message||'Invalid or expired recovery code.')+'</span>');}
+  };
+  window.getiCompletePasswordRecovery=async function(){
+    var pw=byId('getiRecoveryNewPassword'),confirm=byId('getiRecoveryConfirmPassword'),status=byId('getiFirstResetStatus');
+    if(!pw||!confirm||!status)return;
+    if(pw.value.length<6||pw.value.length>12){statusMessage(status,'<span class="bad">Password must contain 6 to 12 characters.</span>');return;}
+    if(pw.value!==confirm.value){statusMessage(status,'<span class="bad">Passwords do not match.</span>');return;}
+    statusMessage(status,'<span class="ok">Updating your password securely...</span>');
+    try{
+      var result=await GETI_SB.auth.updateUser({password:pw.value});
+      if(result&&result.error)throw result.error;
+      await GETI_SB.auth.signOut();
+      try{sessionStorage.removeItem('GETI_RECOVERY_EMAIL');}catch(e){}
+      statusMessage(status,'<span class="ok">Password updated successfully. You can now sign in with your new password.</span>');
+      var loginStatus=byId('getiFirstLoginStatus');
+      if(loginStatus)loginStatus.innerHTML='<span class="ok">Password updated securely. Sign in with your new password.</span>';
+      if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('signin');
+    }catch(err){statusMessage(status,'<span class="bad">'+safeText(err&&err.message||'Unable to update the password.')+'</span>');}
+  };
+})();
+</script>
 </body>
 </html>
