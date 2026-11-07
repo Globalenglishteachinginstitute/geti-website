@@ -9,7 +9,7 @@
 <meta property="og:title" content="Global English Teaching Institute (GETI)">
 <meta property="og:description" content="Official GETI educational resources, announcements and publications.">
 <script type="application/ld+json" id="geti-index-publication-schema">
-{"@context":"https://schema.org","@type":"EducationalOrganization","name":"Global English Teaching Institute (GETI)","url":"https://getienglish.com/","hasPart":{"@type":"CollectionPage","name":"GETI Publications","url":"https://getienglish.com/#geti-publications-index"}}
+{"@context":"https://schema.org","@type":"EducationalOrganization","name":"Global English Teaching Institute (GETI)","url":"https://getienglish.com/"}
 </script>
 
 <meta charset="UTF-8">
@@ -7625,6 +7625,33 @@ h1, h2, h3, h4, h5, h6,
 .geti-cpd-panel .geti-cpd-links a{font-size:12px !important;line-height:1.3 !important}
 
 
+</style>
+<style id="geti-large-confirmation-code-styles">
+/* GETI: large, clearly separated 6/8-digit verification code fields, matching Email width */
+#getiSignupCodeStep .geti-signup-code-field,
+#getiSimpleForgotCodeStep .geti-signup-code-field{display:block!important;width:100%!important;max-width:none!important;box-sizing:border-box!important;margin:16px 0 20px!important;text-align:left!important}
+#getiSignupCodeStep .geti-signup-code-field>span,
+#getiSimpleForgotCodeStep .geti-signup-code-field>span{display:block!important;margin:0 0 10px!important;font-size:16px!important;line-height:1.45!important;font-weight:800!important}
+#getiSignupCodeStep #getiSignupCodeInput,
+#getiSimpleForgotCodeStep #getiSimpleForgotCode{display:block!important;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;height:72px!important;min-height:72px!important;padding:14px 18px!important;border:2px solid #aebed2!important;border-radius:12px!important;background:#fff!important;color:#102c54!important;text-align:center!important;font-size:clamp(24px,5vw,34px)!important;font-weight:800!important;line-height:1.3!important;letter-spacing:.16em!important;outline:none!important;box-shadow:0 3px 12px rgba(8,45,91,.06)!important;opacity:1!important}
+#getiSignupCodeStep #getiSignupCodeInput:focus,
+#getiSimpleForgotCodeStep #getiSimpleForgotCode:focus{border-color:#0866ff!important;box-shadow:0 0 0 4px rgba(8,102,255,.16)!important}
+#getiSignupCodeStep .geti-signup-continue,
+#getiSimpleForgotCodeStep .geti-signup-continue{display:block!important;width:100%!important;min-height:54px!important;margin:18px 0 12px!important;padding:13px 18px!important;box-sizing:border-box!important;font-size:16px!important;font-weight:800!important;letter-spacing:.05em!important;border-radius:10px!important;white-space:normal!important}
+#getiSignupCodeStep .geti-signup-email-box,
+#getiSimpleForgotCodeStep .geti-signup-email-box{width:100%!important;box-sizing:border-box!important;min-height:58px!important;padding:13px 16px!important}
+@media(max-width:480px){
+ #getiSignupCodeStep #getiSignupCodeInput,#getiSimpleForgotCodeStep #getiSimpleForgotCode{height:66px!important;min-height:66px!important;font-size:26px!important;letter-spacing:.10em!important}
+}
+</style>
+<style id="geti-reset-code-verified-layout-fix">
+#getiSimpleForgotCodeStep .geti-signup-code-field{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:10px!important;width:100%!important;margin:16px 0!important}
+#getiSimpleForgotCodeStep .geti-signup-code-field>span{display:block!important;font-weight:700!important;font-size:1rem!important}
+#getiSimpleForgotCodeStep #getiSimpleForgotCode{display:block!important;box-sizing:border-box!important;width:100%!important;min-width:0!important;min-height:58px!important;padding:15px 17px!important;font-size:1.35rem!important;letter-spacing:.08em!important;text-align:center!important;border:2px solid #b8c9e0!important;border-radius:12px!important}
+#getiSimpleForgotCodeStep #getiSimpleForgotVerifyBtn{display:block!important;box-sizing:border-box!important;width:100%!important;margin:14px 0 18px!important;min-height:54px!important;font-weight:800!important}
+#getiSimpleForgotCodeStep .geti-signup-email-box{overflow-wrap:anywhere!important;word-break:break-word!important}
+#getiSimpleForgotCodeStep .geti-signup-code-actions{display:flex!important;flex-wrap:wrap!important;gap:12px!important;margin-top:15px!important}
+#getiSimpleForgotCodeStep .geti-signup-code-actions button{min-height:44px!important;padding:10px 15px!important;flex:1 1 145px!important}
 </style>
 </head>
 
@@ -21125,6 +21152,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     initPasswordToggles();
   }
   window.getiSimpleForgotChangeEmail=function(){
+    recoveryVerifiedEmail='';
     var a=el('getiSimpleForgotEmailStep'),b=el('getiSimpleForgotCodeStep'),c=el('getiSimpleForgotPasswordStep'),status=el('getiFirstResetStatus');
     if(a)a.hidden=false;if(b)b.hidden=true;if(c)c.hidden=true;
     if(status)status.innerHTML='';
@@ -21138,6 +21166,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     if(!validEmail(email)){if(status)status.innerHTML='<span class="bad">Enter a valid email address.</span>';return}
     forgotSendBusy=true;if(btn)btn.disabled=true;if(status)status.innerHTML='<span class="ok">Sending confirmation code...</span>';
     try{
+      recoveryVerifiedEmail='';
       await accountApi({action:'send_password_reset_code',email:email});
       try{sessionStorage.setItem('GETI_RESET_EMAIL',email);sessionStorage.removeItem('GETI_RESET_TICKET')}catch(e){}
       var a=el('getiSimpleForgotEmailStep'),b=el('getiSimpleForgotCodeStep'),c=el('getiSimpleForgotPasswordStep'),d=el('getiSimpleForgotEmailDisplay'),code=el('getiSimpleForgotCode');
@@ -21147,38 +21176,84 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     finally{forgotSendBusy=false;if(btn)btn.disabled=false}
   };
   var forgotVerifyBusy=false;
+  var recoveryVerifiedEmail='';
   window.getiSimpleForgotVerifyCode=async function(){
     if(forgotVerifyBusy)return;
     var email=forgotEmail(),code=String((el('getiSimpleForgotCode')||{}).value||'').replace(/\s+/g,'').trim(),status=el('getiFirstResetStatus'),btn=el('getiSimpleForgotVerifyBtn');
     if(!/^\d{6,8}$/.test(code)){if(status)status.innerHTML='<span class="bad">Enter the complete 6- or 8-digit confirmation code.</span>';return}
-    forgotVerifyBusy=true;if(btn){btn.disabled=true;btn.textContent='CONFIRMING...'}if(status)status.innerHTML='<span class="ok">Confirming code...</span>';
+    if(!validEmail(email)){if(status)status.innerHTML='<span class="bad">Please enter a valid email address.</span>';return}
+    var sb=window.GETI_SB;
+    if(!sb||!sb.auth||typeof sb.auth.verifyOtp!=='function'){
+      if(status)status.innerHTML='<span class="bad">Secure password recovery service is unavailable. Please reload the page.</span>';return;
+    }
+    forgotVerifyBusy=true;
+    if(btn){btn.disabled=true;btn.textContent='CONFIRMING...'}
+    if(status)status.innerHTML='<span class="ok">Confirming your code securely...</span>';
     try{
-      var d=await accountApi({action:'verify_password_reset_code',email:email,code:code});
-      if(!d.reset_ticket)throw new Error('Reset authorization was not returned.');
-      try{sessionStorage.setItem('GETI_RESET_TICKET',d.reset_ticket)}catch(e){}
-      var b=el('getiSimpleForgotCodeStep'),c=el('getiSimpleForgotPasswordStep');if(b)b.hidden=true;if(c)c.hidden=false;
-      if(status)status.innerHTML='<span class="ok">✓ Code confirmed. Enter your new password.</span>';
-      initPasswordToggles();var np=el('getiSimpleForgotNewPassword');if(np)setTimeout(function(){np.focus()},80);
-    }catch(e){var m=String(e.message||'Invalid or expired code.');if(/expired|invalid|token/i.test(m))m='This confirmation code is invalid or expired. Select SEND CODE AGAIN and enter the newest code from your email.';if(status)status.innerHTML='<span class="bad">'+esc(m)+'</span>'}
-    finally{forgotVerifyBusy=false;if(btn){btn.disabled=false;btn.textContent='CONTINUE'}}
+      // Supabase Auth itself verifies the recovery OTP and creates a recovery session.
+      // Do not call geti-account.verify_password_reset_code: its database ticket insertion
+      // can return HTTP 401 after a valid OTP, consuming the one-time code.
+      var result=await sb.auth.verifyOtp({email:email,token:code,type:'recovery'});
+      if(result&&result.error)throw result.error;
+      if(!result||!result.data||!result.data.session||!result.data.session.access_token)
+        throw new Error('Recovery session was not received. Request a new confirmation code.');
+      recoveryVerifiedEmail=email;
+      try{sessionStorage.setItem('GETI_RESET_EMAIL',email);sessionStorage.removeItem('GETI_RESET_TICKET')}catch(e){}
+      var b=el('getiSimpleForgotCodeStep'),c=el('getiSimpleForgotPasswordStep');
+      if(b)b.hidden=true;
+      if(c)c.hidden=false;
+      if(status)status.innerHTML='<span class="ok">✓ Code verified. Choose your new password.</span>';
+      var codeInput=el('getiSimpleForgotCode');if(codeInput)codeInput.value='';
+      initPasswordToggles();
+      var np=el('getiSimpleForgotNewPassword');if(np)setTimeout(function(){np.focus()},80);
+    }catch(e){
+      recoveryVerifiedEmail='';
+      var m=String(e&&e.message||'Unable to verify your recovery code.');
+      if(/expired|invalid|token|otp|already used/i.test(m))m='The code is invalid, expired or already used. Select SEND CODE AGAIN and enter the newest code.';
+      if(status)status.innerHTML='<span class="bad">'+esc(m)+'</span>';
+    }finally{forgotVerifyBusy=false;if(btn){btn.disabled=false;btn.textContent='CONTINUE'}}
   };
   var forgotSaveBusy=false;
   window.getiSimpleForgotSavePassword=async function(){
     if(forgotSaveBusy)return;
-    var p=String((el('getiSimpleForgotNewPassword')||{}).value||''),c=String((el('getiSimpleForgotConfirmPassword')||{}).value||''),status=el('getiFirstResetStatus'),btn=el('getiSimpleForgotSaveBtn'),ticket='';
-    try{ticket=sessionStorage.getItem('GETI_RESET_TICKET')||''}catch(e){}
+    var p=String((el('getiSimpleForgotNewPassword')||{}).value||''),c=String((el('getiSimpleForgotConfirmPassword')||{}).value||''),status=el('getiFirstResetStatus'),btn=el('getiSimpleForgotSaveBtn');
     if(p.length<6||p.length>12){if(status)status.innerHTML='<span class="bad">Password must contain 6 to 12 characters.</span>';return}
     if(p!==c){if(status)status.innerHTML='<span class="bad">Passwords do not match.</span>';return}
-    if(!ticket){if(status)status.innerHTML='<span class="bad">Request a new reset code first.</span>';return}
-    forgotSaveBusy=true;if(btn){btn.disabled=true;btn.textContent='SAVING...'}if(status)status.innerHTML='<span class="ok">Saving new password...</span>';
+    if(!recoveryVerifiedEmail){if(status)status.innerHTML='<span class="bad">Verify a fresh reset code before choosing a new password.</span>';return}
+    var sb=window.GETI_SB;
+    if(!sb||!sb.auth||typeof sb.auth.updateUser!=='function'){
+      if(status)status.innerHTML='<span class="bad">Secure password recovery service is unavailable. Reload the page and try again.</span>';return;
+    }
+    forgotSaveBusy=true;if(btn){btn.disabled=true;btn.textContent='SAVING...'}
+    if(status)status.innerHTML='<span class="ok">Saving your new password...</span>';
     try{
-      await accountApi({action:'set_new_password',reset_ticket:ticket,password:p});
-      var email=forgotEmail();try{sessionStorage.removeItem('GETI_RESET_TICKET');sessionStorage.removeItem('GETI_RESET_EMAIL')}catch(e){}
-      if(window.GETI_SB&&GETI_SB.auth)try{await GETI_SB.auth.signOut()}catch(e){}
-      var le=el('getiFirstLoginEmail');if(le)le.value=email;
-      if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('signin');
-      setTextStatus('getiFirstLoginStatus','<span class="ok">✓ Password updated. Sign in with your new password.</span>');
-    }catch(e){if(status)status.innerHTML='<span class="bad">'+esc(e.message||'Unable to update password.')+'</span>'}
+      var existing=await sb.auth.getSession();
+      if(existing.error||!existing.data||!existing.data.session||!existing.data.session.user||String(existing.data.session.user.email||'').toLowerCase()!==recoveryVerifiedEmail)
+        throw new Error('Your recovery session has expired. Please request and verify a new code.');
+      var result=await sb.auth.updateUser({password:p});
+      if(result&&result.error)throw result.error;
+      var email=recoveryVerifiedEmail;
+      // A successful password update retains the verified Supabase Auth session.
+      // Do not sign out: this recovery session is the user's authenticated session
+      // and the Student Area's access guard validates it before opening.
+      var verified=await sb.auth.getUser();
+      if(verified.error||!verified.data||!verified.data.user||String(verified.data.user.email||'').toLowerCase()!==email)
+        throw new Error('Password saved, but your session could not be confirmed. Please sign in with your new password.');
+      recoveryVerifiedEmail='';
+      try{sessionStorage.removeItem('GETI_RESET_TICKET');sessionStorage.removeItem('GETI_RESET_EMAIL')}catch(e){}
+      if(status)status.innerHTML='<span class="ok">✓ Password updated successfully. Opening your GETI Student Area...</span>';
+      // Open only after server-side updateUser and getUser both succeed.
+      if(typeof window.getiOpenSecondArea==='function'){
+        var opened=await window.getiOpenSecondArea();
+        if(opened===false){
+          if(status)status.innerHTML='<span class="bad">Password updated. Please sign in with your new password to enter the Student Area.</span>';
+        }
+      }else{
+        var le=el('getiFirstLoginEmail');if(le)le.value=email;
+        if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('signin');
+        setTextStatus('getiFirstLoginStatus','<span class="ok">✓ Password updated. Sign in with your new password.</span>');
+      }
+    }catch(e){if(status)status.innerHTML='<span class="bad">'+esc(e&&e.message||'Unable to update password.')+'</span>'}
     finally{forgotSaveBusy=false;if(btn){btn.disabled=false;btn.textContent='SAVE NEW PASSWORD'}}
   };
 
@@ -25393,8 +25468,23 @@ body.geti-inside-portal-open #geti30ExamPanel .registration-form{max-width:100%!
 
   window.getiOpenPub=function(){
     var section=document.getElementById("geti-publications-index");
-    if(section){section.scrollIntoView({behavior:"smooth",block:"start"});}
-    if(typeof window.getiRefreshPublications==='function')window.getiRefreshPublications();
+    if(!section)return;
+    section.classList.add("geti-pub-visible");
+    section.setAttribute("aria-hidden","false");
+    document.body.classList.add("geti-pub-body-open");
+    var closeButton=document.getElementById("getiPubCloseButton");
+    if(closeButton)closeButton.focus();
+    if(typeof window.getiRefreshPublications==="function")window.getiRefreshPublications();
+  };
+  window.getiClosePub=function(){
+    var section=document.getElementById("geti-publications-index");
+    if(section){
+      section.classList.remove("geti-pub-visible");
+      section.setAttribute("aria-hidden","true");
+    }
+    document.body.classList.remove("geti-pub-body-open");
+    var pubButton=document.getElementById("getiSinglePubButton");
+    if(pubButton)pubButton.focus();
   };
 
   function requestPubAccess(){
@@ -25450,6 +25540,8 @@ body.geti-inside-portal-open #geti30ExamPanel .registration-form{max-width:100%!
       observer.observe(document.body,{childList:true,subtree:true});
     }
     document.addEventListener("keydown",function(event){if(event.key==="Escape")window.getiClosePub();});
+    var dialog=document.getElementById("geti-publications-index");
+    if(dialog)dialog.addEventListener("click",function(event){if(event.target===dialog)window.getiClosePub();});
     var overlay=document.getElementById("getiPubOverlay");
     if(overlay)overlay.addEventListener("click",function(event){if(event.target===overlay)window.getiClosePub();});
   }
@@ -25459,10 +25551,11 @@ body.geti-inside-portal-open #geti30ExamPanel .registration-form{max-width:100%!
 </script>
 
 
-<!-- Public, Google-crawlable publication gallery integrated into the main GETI index -->
-<section id="geti-publications-index" aria-labelledby="geti-publications-index-title" style="display:block!important;visibility:visible!important">
-  <div style="max-width:1180px;width:94%;margin:42px auto 60px">
-    <div style="text-align:center;padding:30px 18px;background:linear-gradient(135deg,#082e5d,#126cab);color:#fff;border-bottom:4px solid #c49a35;border-radius:14px 14px 0 0">
+<!-- GETI publications dialog: hidden until the PUB button is unlocked -->
+<section id="geti-publications-index" aria-labelledby="geti-publications-index-title" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="geti-pub-dialog-inner" style="max-width:1180px;width:94%;margin:42px auto 60px">
+    <div class="geti-pub-header" style="text-align:center;padding:30px 18px;background:linear-gradient(135deg,#082e5d,#126cab);color:#fff;border-bottom:4px solid #c49a35;border-radius:14px 14px 0 0">
+      <button type="button" id="getiPubCloseButton" onclick="window.getiClosePub()" aria-label="Close GETI Publications">← Back / Close</button>
       <div style="font-size:.75rem;letter-spacing:.16em;font-weight:800;color:#f2d889">GLOBAL ENGLISH TEACHING INSTITUTE</div>
       <h2 id="geti-publications-index-title" style="font-size:clamp(1.7rem,4vw,2.5rem);margin:8px 0">GETI Publications</h2>
       <p style="max-width:760px;margin:auto;color:#e8f1fb">Official announcements, educational resources and images published by Global English Teaching Institute.</p>
@@ -25471,6 +25564,18 @@ body.geti-inside-portal-open #geti30ExamPanel .registration-form{max-width:100%!
     <div id="geti-index-publications-grid" class="geti-index-publications-grid"></div>
   </div>
 </section>
+<style id="geti-publications-only-inside-pub">
+#geti-publications-index{display:none!important;position:fixed!important;inset:0!important;z-index:2147482000!important;overflow-y:auto!important;overscroll-behavior:contain;background:#edf3fa!important;visibility:hidden!important}
+#geti-publications-index.geti-pub-visible{display:block!important;visibility:visible!important}
+body.geti-pub-body-open{overflow:hidden!important}
+#geti-publications-index .geti-pub-dialog-inner{padding-bottom:30px}
+#getiPubCloseButton{display:block;margin:0 0 12px auto;padding:11px 18px;background:#fff;color:#082e5d;border:2px solid #d2b76f;border-radius:10px;font:700 15px/1.2 system-ui,sans-serif;cursor:pointer}
+#getiPubCloseButton:hover,#getiPubCloseButton:focus-visible{background:#ffeab8;outline:2px solid #fff;outline-offset:2px}
+@media(max-width:600px){
+ #geti-publications-index .geti-pub-dialog-inner{width:96%!important;margin:12px auto 40px!important}
+ #geti-publications-index .geti-pub-header{padding:18px 12px!important}
+}
+</style>
 <style id="geti-index-publications-css">
 .geti-index-publications-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;max-width:1180px;width:94%;margin:-1px auto 50px}
 .geti-index-publications-grid article{overflow:hidden;background:#fff;border:1px solid #dbe4ee;border-radius:14px;box-shadow:0 8px 24px rgba(8,46,93,.07)}
