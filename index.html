@@ -7711,6 +7711,33 @@ h1, h2, h3, h4, h5, h6,
 @media(max-width:600px){.geti-cpd-panel{grid-template-columns:1fr!important}.geti-cpd-badge-link{max-width:150px!important;margin:0 auto}.geti-cpd-details p.geti-cpd-summary{font-size:14px!important}}
 </style>
 
+<style id="geti-bmm-connect-share-style">
+.geti-footer-socials .geti-bmm-connect-share{
+  display:inline-flex;align-items:center;justify-content:center;
+  margin:8px 0 10px;padding:5px 12px;min-width:42px;
+  border:1px solid rgba(255,255,255,.28);border-radius:999px;
+  font-size:11px;font-weight:800;line-height:1.2;cursor:pointer;
+  vertical-align:middle;
+}
+</style>
+<style id="geti-bmm-password-toggle-style">
+.geti-bmm-password-field{position:relative;display:flex;align-items:center;min-width:0}
+.geti-bmm-password-field input{width:100%;min-width:0;padding-right:58px!important;box-sizing:border-box}
+.geti-bmm-password-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;padding:4px 2px!important;margin:0!important;color:#315b91!important;font-size:10px!important;font-weight:800!important;letter-spacing:.08em;line-height:1;cursor:pointer}
+.geti-bmm-password-toggle:hover{text-decoration:underline}
+.geti-bmm-password-toggle:focus-visible{outline:2px solid #315b91;outline-offset:3px}
+.geti-bmm-password-row{grid-template-columns:minmax(0,1fr) auto}
+@media(max-width:480px){.geti-bmm-password-row{grid-template-columns:1fr}.geti-bmm-unlock{width:100%}}
+</style>
+
+<style id="geti-login-password-toggle-polish">
+.geti-password-label{position:relative;display:block}
+.geti-password-label input{width:100%;box-sizing:border-box;padding-right:66px!important}
+.geti-password-toggle{position:absolute;right:12px;bottom:12px;z-index:2;display:inline-flex;align-items:center;justify-content:center;padding:3px 0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#315b91!important;font-size:10px!important;font-weight:800!important;letter-spacing:.09em;line-height:1.2;cursor:pointer}
+.geti-password-toggle:hover{text-decoration:underline}
+.geti-password-toggle:focus-visible{outline:2px solid #315b91;outline-offset:3px}
+</style>
+
 </head>
 
 <body translate="no" class="notranslate">
@@ -8842,10 +8869,6 @@ h1, h2, h3, h4, h5, h6,
 </div>
 
   </div>
-
-  <div class="geti-accreditation-admin">
-    <button type="button" class="geti-accreditation-admin-btn" title="Accreditation visibility management" aria-label="Open BMM accreditation management" onclick="getiOpenAccreditationAdmin()">BMM</button>
-  </div>
 </section>
 
       <div class="geti-home-v2-footer-grid">
@@ -8906,6 +8929,7 @@ h1, h2, h3, h4, h5, h6,
 
         <div class="geti-footer-trust-block geti-footer-socials">
           <div class="geti-footer-trust-title">CONNECT and SHARE</div>
+          <button type="button" class="geti-accreditation-admin-btn geti-bmm-connect-share" title="Accreditation visibility management" aria-label="Open BMM accreditation management" onclick="getiOpenAccreditationAdmin()">BMM</button>
           <div class="geti-social-row">
             <a class="geti-social-icon facebook"
                href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgetienglish.com%2F"
@@ -9428,10 +9452,6 @@ employment and global communication.
   </div>
 </div>
 
-  </div>
-
-  <div class="geti-accreditation-admin">
-    <button type="button" class="geti-accreditation-admin-btn" title="Accreditation visibility management" aria-label="Open BMM accreditation management" onclick="getiOpenAccreditationAdmin()">BMM</button>
   </div>
 </section>
 
@@ -21178,8 +21198,8 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     input.dataset.getiToggleReady='1';
     var label=input.closest('label')||input.parentElement;if(!label)return;
     label.classList.add('geti-password-label');
-    var b=document.createElement('button');b.type='button';b.className='geti-password-toggle';b.textContent='👁 SHOW';b.setAttribute('aria-label','Show password');
-    b.onclick=function(){var show=input.type==='password';input.type=show?'text':'password';b.textContent=show?'🙈 HIDE':'👁 SHOW';b.setAttribute('aria-label',show?'Hide password':'Show password')};
+    var b=document.createElement('button');b.type='button';b.className='geti-password-toggle';b.textContent='SHOW';b.setAttribute('aria-label','Show password');b.setAttribute('aria-pressed','false');
+    b.onclick=function(){var show=input.type==='password';input.type=show?'text':'password';b.textContent=show?'HIDE':'SHOW';b.setAttribute('aria-label',show?'Hide password':'Show password');b.setAttribute('aria-pressed',show?'true':'false')};
     label.appendChild(b);
   }
   function initPasswordToggles(){
@@ -25892,7 +25912,10 @@ body.geti-pub-body-open{overflow:hidden!important}
       The setting is saved in this browser. It does not create, cancel or change any external accreditation or membership.
     </div>
     <div class="geti-bmm-password-row" id="getiBmmPasswordRow">
-      <input id="getiAccreditationAdminPassword" type="password" autocomplete="current-password" placeholder="Administrator password" aria-label="Administrator password">
+      <div class="geti-bmm-password-field">
+        <input id="getiAccreditationAdminPassword" type="password" autocomplete="current-password" placeholder="Administrator password" aria-label="Administrator password">
+        <button type="button" class="geti-bmm-password-toggle" id="getiBmmPasswordToggle" onclick="getiToggleBmmPassword()" aria-controls="getiAccreditationAdminPassword" aria-pressed="false">SHOW</button>
+      </div>
       <button type="button" class="geti-bmm-unlock" onclick="getiUnlockAccreditationAdmin()">UNLOCK</button>
     </div>
     <div id="getiAccreditationAdminMessage" role="status" aria-live="polite"></div>
@@ -25932,7 +25955,9 @@ body.geti-pub-body-open{overflow:hidden!important}
     modal.classList.add('is-open');
     var input=document.getElementById('getiAccreditationAdminPassword');
     var controls=document.getElementById('getiAccreditationAdminControls');
-    if(input){input.value='';input.disabled=false;}
+    if(input){input.value='';input.type='password';input.disabled=false;}
+    var passwordToggle=document.getElementById('getiBmmPasswordToggle');
+    if(passwordToggle){passwordToggle.textContent='SHOW';passwordToggle.setAttribute('aria-pressed','false');passwordToggle.setAttribute('aria-label','Show password');}
     if(controls)controls.hidden=true;
     setMessage('',false);
     setTimeout(function(){if(input)input.focus();},40);
@@ -25951,6 +25976,16 @@ body.geti-pub-body-open{overflow:hidden!important}
     if(controls)controls.hidden=false;
     input.disabled=true;
     setMessage('Access granted. Choose an accreditation action below.',true);
+  };
+  window.getiToggleBmmPassword=function(){
+    var input=document.getElementById('getiAccreditationAdminPassword');
+    var toggle=document.getElementById('getiBmmPasswordToggle');
+    if(!input || !toggle)return;
+    var reveal=input.type==='password';
+    input.type=reveal?'text':'password';
+    toggle.textContent=reveal?'HIDE':'SHOW';
+    toggle.setAttribute('aria-pressed',reveal?'true':'false');
+    toggle.setAttribute('aria-label',reveal?'Hide password':'Show password');
   };
   window.getiCloseAccreditationAdmin=function(){
     var modal=document.getElementById('getiAccreditationAdminModal');
