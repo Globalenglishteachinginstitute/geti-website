@@ -1053,51 +1053,28 @@ PRINT SHEETS
     align-content:center;
 }
 
-/* A1 594 × 841 mm
-   6 columns × 13 rows = 78 badges */
-
-.print-page.a1{
-    width:594mm;
-    height:841mm;
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(6,90mm);
-
-    grid-template-rows:
-        repeat(13,60mm);
-
-    column-gap:6mm;
-    row-gap:4mm;
-
-    justify-content:center;
-    align-content:center;
-}
-
 .sheet-badge{
     width:90mm;
     height:60mm;
     object-fit:fill;
     display:block;
     margin:0;
-    padding:0;
+    padding:3mm; /* Safety zone: no design/text within 3mm of cutting edge */
     border:none;
+    box-sizing:border-box;
+    background:#ffffff;
+    outline:0.12mm dashed #b0b7c2;
+    outline-offset:-0.18mm;
 }
 
 @media screen{
 
     .print-page.a4{
-        transform:scale(.68);
+        transform:scale(.82);
         transform-origin:top center;
-        margin-bottom:-88mm;
+        margin-bottom:-54mm;
     }
 
-    .print-page.a1{
-        transform:scale(.28);
-        transform-origin:top center;
-        margin-bottom:-600mm;
-    }
 }
 
 @media(max-width:950px){
@@ -1106,8 +1083,9 @@ PRINT SHEETS
     }
 }
 
+@page { size: A4 portrait; margin: 0; }
 @media print{
-
+    html, body { width:210mm !important; margin:0 !important; padding:0 !important; }
     body *{
         visibility:hidden !important;
     }
@@ -1330,8 +1308,7 @@ body{padding-top:0!important;}
 &lt;div class=&quot;help&quot;&gt;
     &lt;strong&gt;Badge:&lt;/strong&gt; 90 × 60 mm&lt;br&gt;
     &lt;strong&gt;PNG:&lt;/strong&gt; 1063 × 709 px&lt;br&gt;
-    &lt;strong&gt;A4:&lt;/strong&gt; 10 badges/page&lt;br&gt;
-    &lt;strong&gt;A1:&lt;/strong&gt; 84 badges/page
+    &lt;strong&gt;A4:&lt;/strong&gt; 8 badges/page
 &lt;/div&gt;
 
 &lt;/div&gt;
@@ -1617,13 +1594,6 @@ body{padding-top:0!important;}
     &lt;/button&gt;
 
     &lt;button
-        class=&quot;btn-dark&quot;
-        onclick=&quot;showSheet(&#x27;A1&#x27;)&quot;
-    &gt;
-        A1
-    &lt;/button&gt;
-
-    &lt;button
         class=&quot;btn-gold&quot;
         onclick=&quot;printCurrentSheets()&quot;
     &gt;
@@ -1745,7 +1715,7 @@ PRINT QUEUE
 let badgePrintQueue =
 JSON.parse(
     localStorage.getItem(
-        &quot;pclm_badge_print_queue_86x54&quot;
+        &quot;pclm_badge_print_queue_90x60&quot;
     )
 )
 || [];
@@ -2690,7 +2660,7 @@ function saveBadgeQueue(){
     try{
 
         localStorage.setItem(
-            &quot;pclm_badge_print_queue_86x54&quot;,
+            &quot;pclm_badge_print_queue_90x60&quot;,
             JSON.stringify(
                 badgePrintQueue
             )
@@ -2708,17 +2678,12 @@ function saveBadgeQueue(){
 
 
 /* ==================================================
-SHOW A4 / A1
+SHOW A4
 ================================================== */
 
 function showSheet(type){
 
-    currentSheetType =
-    type === &quot;A1&quot;
-    ?
-    &quot;A1&quot;
-    :
-    &quot;A4&quot;;
+    currentSheetType = &quot;A4&quot;;
 
     renderPrintSheets();
 }
@@ -2746,12 +2711,7 @@ function renderPrintSheets(){
     const totalBadges =
     badgePrintQueue.length;
 
-    const capacity =
-    currentSheetType === &quot;A1&quot;
-    ?
-    78
-    :
-    8;
+    const capacity = 8;
 
     const totalPagesPerSide =
     Math.ceil(
@@ -2825,16 +2785,7 @@ function renderPrintSheets(){
                     &quot;div&quot;
                 );
 
-                page.className =
-                &quot;print-page &quot;
-                +
-                (
-                    currentSheetType === &quot;A1&quot;
-                    ?
-                    &quot;a1&quot;
-                    :
-                    &quot;a4&quot;
-                );
+                page.className = &quot;print-page a4&quot;;
 
                 const title =
                 document.createElement(
@@ -2875,6 +2826,20 @@ function renderPrintSheets(){
 
                     image.className =
                     &quot;sheet-badge&quot;;
+
+                    /* Recto: gauche vers droite.
+                       Verso: droite vers gauche, sans retourner
+                       le texte ni le visuel de chaque badge. */
+                    const columns = 2;
+                    const positionOnPage = i - start;
+                    const rowOnPage = Math.floor(positionOnPage / columns) + 1;
+                    const columnInRow = positionOnPage % columns;
+                    image.style.gridRow = String(rowOnPage);
+                    image.style.gridColumn = String(
+                        sheetSide.side === &quot;VERSO&quot;
+                        ? columns - columnInRow
+                        : columnInRow + 1
+                    );
 
                     image.src =
                     badge[sheetSide.key]
@@ -2970,13 +2935,13 @@ async function downloadAllPagesPNG(){
         await html2canvas(
             page,
             {
-                scale:
-                currentSheetType === &quot;A1&quot;
-                ?
-                2.5
-                :
-                4,
-
+                scale: 3,
+                onclone: function(copy){
+                    copy.querySelectorAll(&quot;#printSheetsPreview .print-page&quot;).forEach(function(el){
+                        el.style.transform=&quot;none&quot;;
+                        el.style.marginBottom=&quot;0&quot;;
+                    });
+                },
                 backgroundColor:&quot;#ffffff&quot;,
 
                 useCORS:true,
@@ -3033,128 +2998,45 @@ DOWNLOAD ALL SHEETS AS ONE PDF
 ================================================== */
 
 async function downloadSheetsPDF(){
-
-    if(
-        badgePrintQueue.length === 0
-    ){
-
-        alert(
-            &quot;There are no badges to download.&quot;
-        );
-
+    if(badgePrintQueue.length === 0){
+        alert(&quot;There are no badges to download.&quot;);
         return;
     }
-
-    renderPrintSheets();
-
-    await new Promise(
-        resolve =&gt;
-        setTimeout(
-            resolve,
-            500
-        )
-    );
-
-    const {
-        jsPDF
-    } =
-    window.jspdf;
-
-    const isA1 =
-    currentSheetType === &quot;A1&quot;;
-
-    const pageWidth =
-    isA1
-    ?
-    594
-    :
-    210;
-
-    const pageHeight =
-    isA1
-    ?
-    841
-    :
-    297;
-
-    const pdf =
-    new jsPDF({
-        orientation:&quot;portrait&quot;,
-        unit:&quot;mm&quot;,
-        format:[
-            pageWidth,
-            pageHeight
-        ],
-        compress:true
-    });
-
-    const pages =
-    document.querySelectorAll(
-        &quot;#printSheetsPreview .print-page&quot;
-    );
-
-    for(
-        let i = 0;
-        i &lt; pages.length;
-        i++
-    ){
-
-        if(i &gt; 0){
-
-            pdf.addPage(
-                [
-                    pageWidth,
-                    pageHeight
-                ],
-                &quot;portrait&quot;
-            );
-        }
-
-        const canvas =
-        await html2canvas(
-            pages[i],
-            {
-                scale:
-                isA1
-                ?
-                2.5
-                :
-                4,
-
-                backgroundColor:
-                &quot;#ffffff&quot;,
-
-                useCORS:true,
-
-                logging:false
+    const {jsPDF} = window.jspdf;
+    const pdf = new jsPDF({orientation:&quot;portrait&quot;,unit:&quot;mm&quot;,format:&quot;a4&quot;,compress:true});
+    const cardsPerPage=8;
+    const sheetCount=Math.ceil(badgePrintQueue.length/cardsPerPage);
+    const left=11, top=25.5, pitchX=98, pitchY=62;
+    const safe=3, cardW=90, cardH=60;
+    let first=true;
+    for(let pageIndex=0;pageIndex&lt;sheetCount;pageIndex++){
+        for(const side of [&quot;RECTO&quot;,&quot;VERSO&quot;]){
+            if(!first) pdf.addPage(&quot;a4&quot;,&quot;portrait&quot;);
+            first=false;
+            for(let position=0;position&lt;cardsPerPage;position++){
+                const badge=badgePrintQueue[pageIndex*cardsPerPage+position];
+                if(!badge) continue;
+                const row=Math.floor(position/2);
+                const col=position%2;
+                // Flip on LONG edge: back positions mirror left-right.
+                const printedCol=side===&quot;VERSO&quot; ? 1-col : col;
+                const x=left+printedCol*pitchX;
+                const y=top+row*pitchY;
+                // same physical crop box on both faces
+                pdf.setDrawColor(176,183,194);
+                pdf.setLineWidth(0.12);
+                pdf.setLineDashPattern([1,0.8],0);
+                pdf.rect(x,y,cardW,cardH);
+                pdf.setLineDashPattern([],0);
+                const image=side===&quot;VERSO&quot; ? (badge.backImage||badge.image) : (badge.frontImage||badge.image);
+                if(image){
+                    const fmt=image.startsWith(&quot;data:image/png&quot;) ? &quot;PNG&quot; : &quot;JPEG&quot;;
+                    pdf.addImage(image,fmt,x+safe,y+safe,cardW-2*safe,cardH-2*safe,undefined,&quot;FAST&quot;);
+                }
             }
-        );
-
-        const imageData =
-        canvas.toDataURL(
-            &quot;image/png&quot;,
-            1
-        );
-
-        pdf.addImage(
-            imageData,
-            &quot;PNG&quot;,
-            0,
-            0,
-            pageWidth,
-            pageHeight,
-            undefined,
-            &quot;FAST&quot;
-        );
+        }
     }
-
-    pdf.save(
-        &quot;PCLM_&quot;
-        +
-        currentSheetType
-        +
-        &quot;_Badges_90x60mm.pdf&quot;
-    );
+    pdf.save(&quot;PCLM_A4_Duplex_90x60mm_ActualSize.pdf&quot;);
 }
 
 
@@ -3183,7 +3065,7 @@ function clearBadgeSheets(){
     [];
 
     localStorage.removeItem(
-        &quot;pclm_badge_print_queue_86x54&quot;
+        &quot;pclm_badge_print_queue_90x60&quot;
     );
 
     renderPrintSheets();
