@@ -1034,49 +1034,13 @@ PRINT SHEETS
 /* A4 210 × 297 mm
    2 columns × 4 rows = 8 badges */
 
-.print-page.a4{
-    width:210mm;
-    height:297mm;
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(2,90mm);
-
-    grid-template-rows:
-        repeat(4,60mm);
-
-    column-gap:8mm;
-    row-gap:2mm;
-
-    justify-content:center;
-    align-content:center;
-}
-
-.sheet-badge{
-    width:90mm;
-    height:60mm;
-    object-fit:fill;
-    display:block;
-    margin:0;
-    padding:3mm; /* Safety zone: no design/text within 3mm of cutting edge */
-    border:none;
-    box-sizing:border-box;
-    background:#ffffff;
-    outline:0.12mm dashed #b0b7c2;
-    outline-offset:-0.18mm;
-}
-
-@media screen{
-
-    .print-page.a4{
-        transform:scale(.82);
-        transform-origin:top center;
-        margin-bottom:-54mm;
-    }
-
-}
-
+/* A4 portrait: 8 customizable and duplex-aligned badges */
+.print-page.a4{width:210mm;height:297mm;position:relative;display:block;overflow:hidden;background:#fff}
+.sheet-badge{position:absolute;object-fit:contain;box-sizing:border-box;background:#fff;padding:3mm;border:0;outline:.12mm dashed #89939c;outline-offset:-.15mm;touch-action:none;user-select:none;cursor:grab}
+.sheet-badge:active{cursor:grabbing}
+.sheet-badge.selected{outline:.5mm solid #1976d2;outline-offset:-.5mm}
+@media screen{.print-page.a4{transform:scale(.75);transform-origin:top center;margin-bottom:-73mm}}
+@media print{.sheet-badge{cursor:default}.sheet-badge.selected{outline:.12mm dashed #89939c;outline-offset:-.15mm}}
 @media(max-width:950px){
     .layout{
         grid-template-columns:1fr;
@@ -1306,9 +1270,9 @@ body{padding-top:0!important;}
 &lt;/div&gt;
 
 &lt;div class=&quot;help&quot;&gt;
-    &lt;strong&gt;Badge:&lt;/strong&gt; 90 × 60 mm&lt;br&gt;
-    &lt;strong&gt;PNG:&lt;/strong&gt; 1063 × 709 px&lt;br&gt;
-    &lt;strong&gt;A4:&lt;/strong&gt; 8 badges/page
+    &lt;strong&gt;Badge:&lt;/strong&gt; 103 × 62 mm&lt;br&gt;
+    &lt;strong&gt;PNG:&lt;/strong&gt; 1217 × 732 px&lt;br&gt;
+    &lt;strong&gt;A4 portrait:&lt;/strong&gt; 8 badges/page
 &lt;/div&gt;
 
 &lt;/div&gt;
@@ -1630,6 +1594,19 @@ body{padding-top:0!important;}
     No badge added yet.
 &lt;/div&gt;
 
+&lt;div class=&quot;sheet-editor&quot; id=&quot;sheetEditor&quot; style=&quot;margin:14px 0;padding:18px;border:1px solid #c5d6eb;border-radius:12px;background:#f2f7ff&quot;&gt;
+&lt;h3 style=&quot;margin:0 0 10px;color:#12345e&quot;&gt;Print Sheet Editor — A4 / 8 Badges&lt;/h3&gt;
+&lt;p style=&quot;margin-bottom:12px;font-size:13px&quot;&gt;Ovao ny habe sy ny toerana (drag) amin&#x27;ny RECTO. Manaraka ho azy ny VERSO. A4 portrait, duplex: Flip on long edge.&lt;/p&gt;
+&lt;div style=&quot;display:flex;flex-wrap:wrap;gap:12px;align-items:end&quot;&gt;
+&lt;label style=&quot;display:flex;flex-direction:column;gap:4px;font-size:13px&quot;&gt;Badge width (mm)&lt;input type=&quot;number&quot; id=&quot;sheetCardWidth&quot; min=&quot;75&quot; max=&quot;103&quot; step=&quot;0.5&quot; value=&quot;103&quot; style=&quot;width:115px&quot; oninput=&quot;changeSheetEditor()&quot;&gt;&lt;/label&gt;
+&lt;label style=&quot;display:flex;flex-direction:column;gap:4px;font-size:13px&quot;&gt;Badge height (mm)&lt;input type=&quot;number&quot; id=&quot;sheetCardHeight&quot; min=&quot;45&quot; max=&quot;68&quot; step=&quot;0.5&quot; value=&quot;62&quot; style=&quot;width:115px&quot; oninput=&quot;changeSheetEditor()&quot;&gt;&lt;/label&gt;
+&lt;label style=&quot;display:flex;flex-direction:column;gap:4px;font-size:13px&quot;&gt;Gap X (mm)&lt;input type=&quot;number&quot; id=&quot;sheetCardGapX&quot; min=&quot;0&quot; max=&quot;15&quot; step=&quot;0.5&quot; value=&quot;2&quot; style=&quot;width:105px&quot; oninput=&quot;changeSheetEditor()&quot;&gt;&lt;/label&gt;
+&lt;label style=&quot;display:flex;flex-direction:column;gap:4px;font-size:13px&quot;&gt;Gap Y (mm)&lt;input type=&quot;number&quot; id=&quot;sheetCardGapY&quot; min=&quot;0&quot; max=&quot;15&quot; step=&quot;0.5&quot; value=&quot;4&quot; style=&quot;width:105px&quot; oninput=&quot;changeSheetEditor()&quot;&gt;&lt;/label&gt;
+&lt;button type=&quot;button&quot; class=&quot;btn-dark&quot; onclick=&quot;resetSheetEditor()&quot;&gt;Reset positions&lt;/button&gt;
+&lt;/div&gt;
+&lt;div id=&quot;sheetSafetyWarning&quot; style=&quot;font-size:13px;line-height:1.5;margin-top:10px;color:#814d00&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;sheetSelectedHint&quot; style=&quot;font-size:12px;color:#31547b;margin-top:5px&quot;&gt;Drag badge amin&#x27;ny RECTO: mitovy toerana voa-mirror amin&#x27;ny VERSO.&lt;/div&gt;
+&lt;/div&gt;
 &lt;div id=&quot;printSheetsPreview&quot;&gt;&lt;/div&gt;
 
 &lt;/div&gt;
@@ -2342,10 +2319,10 @@ async function createBadgePNG(){
     );
 
     const exportWidth =
-    1063;
+    1217;
 
     const exportHeight =
-    709;
+    732;
 
     const renderedCanvas =
     await html2canvas(
@@ -2387,13 +2364,11 @@ async function createBadgePNG(){
     ctx.imageSmoothingQuality =
     &quot;high&quot;;
 
-    ctx.drawImage(
-        renderedCanvas,
-        0,
-        0,
-        exportWidth,
-        exportHeight
-    );
+    const fitW = Math.min(exportWidth, exportHeight * 856 / 540);
+    const fitH = fitW * 540 / 856;
+    ctx.fillStyle = &quot;#ffffff&quot;;
+    ctx.fillRect(0,0,exportWidth,exportHeight);
+    ctx.drawImage(renderedCanvas,(exportWidth-fitW)/2,(exportHeight-fitH)/2,fitW,fitH);
 
     return finalCanvas;
 }
@@ -2419,10 +2394,10 @@ async function createBadgeBackPNG(){
     );
 
     const exportWidth =
-    1063;
+    1217;
 
     const exportHeight =
-    709;
+    732;
 
     const renderedCanvas =
     await html2canvas(
@@ -2441,7 +2416,11 @@ async function createBadgeBackPNG(){
     finalCanvas.height = exportHeight;
 
     const ctx = finalCanvas.getContext(&quot;2d&quot;);
-    ctx.drawImage(renderedCanvas,0,0,exportWidth,exportHeight);
+    const fitW = Math.min(exportWidth, exportHeight * 856 / 540);
+    const fitH = fitW * 540 / 856;
+    ctx.fillStyle = &quot;#ffffff&quot;;
+    ctx.fillRect(0,0,exportWidth,exportHeight);
+    ctx.drawImage(renderedCanvas,(exportWidth-fitW)/2,(exportHeight-fitH)/2,fitW,fitH);
 
     return finalCanvas;
 }
@@ -2518,14 +2497,14 @@ async function downloadBadge(){
     );
 
     const rectoLink = document.createElement(&quot;a&quot;);
-    rectoLink.download = baseName + &quot;_Recto_90x60mm.png&quot;;
+    rectoLink.download = baseName + &quot;_Recto_103x62mm.png&quot;;
     rectoLink.href = frontCanvas.toDataURL(&quot;image/png&quot;,1);
     rectoLink.click();
 
     setTimeout(
         function(){
             const versoLink = document.createElement(&quot;a&quot;);
-            versoLink.download = baseName + &quot;_Verso_90x60mm.png&quot;;
+            versoLink.download = baseName + &quot;_Verso_103x62mm.png&quot;;
             versoLink.href = backCanvas.toDataURL(&quot;image/png&quot;,1);
             versoLink.click();
         },
@@ -2711,7 +2690,7 @@ function renderPrintSheets(){
     const totalBadges =
     badgePrintQueue.length;
 
-    const capacity = 8;
+    const capacity = 6;
 
     const totalPagesPerSide =
     Math.ceil(
@@ -2724,7 +2703,7 @@ function renderPrintSheets(){
     `
     &lt;strong&gt;${currentSheetType} Paper&lt;/strong&gt;&lt;br&gt;
     Badge size:
-    &lt;strong&gt;90 × 60 mm&lt;/strong&gt;&lt;br&gt;
+    &lt;strong&gt;103 × 62 mm&lt;/strong&gt;&lt;br&gt;
     Total cards:
     &lt;strong&gt;${totalBadges}&lt;/strong&gt;&lt;br&gt;
     Capacity/page:
@@ -3003,22 +2982,22 @@ async function downloadSheetsPDF(){
         return;
     }
     const {jsPDF} = window.jspdf;
-    const pdf = new jsPDF({orientation:&quot;portrait&quot;,unit:&quot;mm&quot;,format:&quot;a4&quot;,compress:true});
-    const cardsPerPage=8;
+    const pdf = new jsPDF({orientation:&quot;landscape&quot;,unit:&quot;mm&quot;,format:&quot;a4&quot;,compress:true});
+    const cardsPerPage=6;
     const sheetCount=Math.ceil(badgePrintQueue.length/cardsPerPage);
-    const left=11, top=25.5, pitchX=98, pitchY=62;
-    const safe=3, cardW=90, cardH=60;
+    const left=41.5, top=9, pitchX=111, pitchY=65;
+    const safe=3, cardW=103, cardH=62;
     let first=true;
     for(let pageIndex=0;pageIndex&lt;sheetCount;pageIndex++){
         for(const side of [&quot;RECTO&quot;,&quot;VERSO&quot;]){
-            if(!first) pdf.addPage(&quot;a4&quot;,&quot;portrait&quot;);
+            if(!first) pdf.addPage(&quot;a4&quot;,&quot;landscape&quot;);
             first=false;
             for(let position=0;position&lt;cardsPerPage;position++){
                 const badge=badgePrintQueue[pageIndex*cardsPerPage+position];
                 if(!badge) continue;
                 const row=Math.floor(position/2);
                 const col=position%2;
-                // Flip on LONG edge: back positions mirror left-right.
+                // Duplex A4 landscape: back positions mirror left-right (short-edge flipping).
                 const printedCol=side===&quot;VERSO&quot; ? 1-col : col;
                 const x=left+printedCol*pitchX;
                 const y=top+row*pitchY;
@@ -3031,12 +3010,16 @@ async function downloadSheetsPDF(){
                 const image=side===&quot;VERSO&quot; ? (badge.backImage||badge.image) : (badge.frontImage||badge.image);
                 if(image){
                     const fmt=image.startsWith(&quot;data:image/png&quot;) ? &quot;PNG&quot; : &quot;JPEG&quot;;
-                    pdf.addImage(image,fmt,x+safe,y+safe,cardW-2*safe,cardH-2*safe,undefined,&quot;FAST&quot;);
+                    // Preserve badge design aspect ratio without stretching or cutting text.
+                    const innerW=cardW-2*safe, innerH=cardH-2*safe;
+                    const ratio=856/540;
+                    const drawW=Math.min(innerW,innerH*ratio), drawH=drawW/ratio;
+                    pdf.addImage(image,fmt,x+(cardW-drawW)/2,y+(cardH-drawH)/2,drawW,drawH,undefined,&quot;FAST&quot;);
                 }
             }
         }
     }
-    pdf.save(&quot;PCLM_A4_Duplex_90x60mm_ActualSize.pdf&quot;);
+    pdf.save(&quot;PCLM_A4_Paysage_Duplex_103x62mm_ActualSize.pdf&quot;);
 }
 
 
@@ -3103,6 +3086,70 @@ renderPrintSheets();
 
 &lt;/script&gt;
 
+&lt;script&gt;(function(){
+&quot;use strict&quot;;
+const STORAGE=&#x27;pclm_sheet_editor_v2&#x27;;
+const init={w:103,h:62,gapX:2,gapY:4,offsets:{}};
+let editor;
+try{editor=Object.assign({},init,JSON.parse(localStorage.getItem(STORAGE)||&#x27;{}&#x27;));}catch(e){editor={...init};}
+if(!editor.offsets || typeof editor.offsets!==&#x27;object&#x27;) editor.offsets={};
+function num(x,d){const a=Number(x);return Number.isFinite(a)?a:d;}
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+function normalize(){editor.w=clamp(num(editor.w,103),75,103);editor.h=clamp(num(editor.h,62),45,68);editor.gapX=clamp(num(editor.gapX,2),0,15);editor.gapY=clamp(num(editor.gapY,4),0,15);
+ if(2*editor.w+editor.gapX&gt;210)editor.gapX=Math.max(0,210-2*editor.w);
+ if(4*editor.h+3*editor.gapY&gt;297)editor.gapY=Math.max(0,(297-4*editor.h)/3);
+}
+function persist(){try{localStorage.setItem(STORAGE,JSON.stringify(editor));}catch(e){}}
+function basePosition(slot){normalize();const x0=(210-2*editor.w-editor.gapX)/2;const y0=(297-4*editor.h-3*editor.gapY)/2;
+ return {x:x0+(slot%2)*(editor.w+editor.gapX),y:y0+Math.floor(slot/2)*(editor.h+editor.gapY)};}
+function spot(index,side){const base=basePosition(index%8);const extra=editor.offsets[String(index)]||{x:0,y:0};
+ const x=clamp(base.x+num(extra.x,0),0,210-editor.w);
+ const y=clamp(base.y+num(extra.y,0),0,297-editor.h);
+ return {x:side===&#x27;VERSO&#x27;?210-editor.w-x:x,y,w:editor.w,h:editor.h};}
+function controls(){const values=[[&#x27;sheetCardWidth&#x27;,&#x27;w&#x27;],[&#x27;sheetCardHeight&#x27;,&#x27;h&#x27;],[&#x27;sheetCardGapX&#x27;,&#x27;gapX&#x27;],[&#x27;sheetCardGapY&#x27;,&#x27;gapY&#x27;]];values.forEach(([id,key])=&gt;{const e=document.getElementById(id);if(e &amp;&amp; document.activeElement!==e)e.value=editor[key]});
+ const warn=document.getElementById(&#x27;sheetSafetyWarning&#x27;);if(warn){const margin=(210-2*editor.w-editor.gapX)/2;
+ warn.textContent=(margin&lt;5?&#x27;⚠ Sisiny ankavia sy ankavanana &#x27;+margin.toFixed(1)+&#x27; mm monja. Raha tsy mahavita borderless ny imprimante, ahenao ho 98–100 mm ny width. &#x27;:&#x27;&#x27;)+&#x27;Print PDF: A4 portrait, 100%/Actual size, duplex Flip on long edge. Andramo amin’ny taratasy iray aloha.&#x27;;}}
+window.changeSheetEditor=function(){const pick=(id,fallback)=&gt;num(document.getElementById(id)?.value,fallback);editor.w=pick(&#x27;sheetCardWidth&#x27;,editor.w);editor.h=pick(&#x27;sheetCardHeight&#x27;,editor.h);editor.gapX=pick(&#x27;sheetCardGapX&#x27;,editor.gapX);editor.gapY=pick(&#x27;sheetCardGapY&#x27;,editor.gapY);normalize();persist();renderPrintSheets();};
+window.resetSheetEditor=function(){editor={w:103,h:62,gapX:2,gapY:4,offsets:{}};persist();renderPrintSheets();};
+function drag(el,index){let start=null;
+ el.addEventListener(&#x27;pointerdown&#x27;,e=&gt;{if(e.button!==0)return;e.preventDefault();el.setPointerCapture(e.pointerId);const bounds=el.closest(&#x27;.print-page&#x27;).getBoundingClientRect();const base=basePosition(index%8);const position=spot(index,&#x27;RECTO&#x27;);start={sx:e.clientX,sy:e.clientY,bx:position.x,by:position.y,base,scaleX:210/bounds.width,scaleY:297/bounds.height};el.classList.add(&#x27;selected&#x27;);});
+ el.addEventListener(&#x27;pointermove&#x27;,e=&gt;{if(!start)return;const x=clamp(start.bx+(e.clientX-start.sx)*start.scaleX,0,210-editor.w);const y=clamp(start.by+(e.clientY-start.sy)*start.scaleY,0,297-editor.h);editor.offsets[String(index)]={x:x-start.base.x,y:y-start.base.y};
+ el.style.left=x+&#x27;mm&#x27;;el.style.top=y+&#x27;mm&#x27;;
+ document.querySelectorAll(&#x27;.print-page[data-side=&quot;VERSO&quot;] .sheet-badge[data-index=&quot;&#x27;+index+&#x27;&quot;]&#x27;).forEach(back=&gt;{back.style.left=(210-editor.w-x)+&#x27;mm&#x27;;back.style.top=y+&#x27;mm&#x27;;});
+ });
+ const end=()=&gt;{if(!start)return;start=null;el.classList.remove(&#x27;selected&#x27;);persist();};el.addEventListener(&#x27;pointerup&#x27;,end);el.addEventListener(&#x27;pointercancel&#x27;,end);
+}
+window.renderPrintSheets=function(){normalize();controls();const out=document.getElementById(&#x27;printSheetsPreview&#x27;),info=document.getElementById(&#x27;sheetInformation&#x27;);if(!out)return;
+ out.innerHTML=&#x27;&#x27;;const count=badgePrintQueue.length, pages=Math.ceil(count/8);
+ if(info) info.innerHTML=&#x27;&lt;strong&gt;A4 Portrait — Print Editor&lt;/strong&gt;&lt;br&gt;Cards: &lt;strong&gt;&#x27;+count+&#x27;&lt;/strong&gt; | Badges/page: &lt;strong&gt;8&lt;/strong&gt;&lt;br&gt;Badge: &lt;strong&gt;&#x27;+editor.w+&#x27; × &#x27;+editor.h+&#x27; mm&lt;/strong&gt; | Recto: &#x27;+pages+&#x27; | Verso: &#x27;+pages+&#x27;&lt;br&gt;Drag on recto: verso adjusts automatically.&#x27;;
+ if(!count){out.innerHTML=&#x27;&lt;div style=&quot;padding:30px;color:#667;text-align:center&quot;&gt;Add a badge to the print sheet.&lt;/div&gt;&#x27;;return;}
+ for(let p=0;p&lt;pages;p++){for(const side of [&#x27;RECTO&#x27;,&#x27;VERSO&#x27;]){
+  const page=document.createElement(&#x27;div&#x27;);page.className=&#x27;print-page a4&#x27;;page.dataset.side=side;
+  const title=document.createElement(&#x27;div&#x27;);title.className=&#x27;print-page-title&#x27;;title.textContent=&#x27;PCLM • A4 • &#x27;+side+&#x27; • &#x27;+(p+1);page.appendChild(title);
+  for(let slot=0;slot&lt;8;slot++){const index=p*8+slot,b=badgePrintQueue[index];if(!b)continue;
+   const img=document.createElement(&#x27;img&#x27;);img.className=&#x27;sheet-badge&#x27;;img.dataset.index=index;
+   img.src=b[side===&#x27;RECTO&#x27;?&#x27;frontImage&#x27;:&#x27;backImage&#x27;]||b.image;img.alt=(b.firstName||&#x27;&#x27;)+&#x27; &#x27;+(b.lastName||&#x27;&#x27;)+&#x27; &#x27;+side;
+   const a=spot(index,side);img.style.left=a.x+&#x27;mm&#x27;;img.style.top=a.y+&#x27;mm&#x27;;img.style.width=a.w+&#x27;mm&#x27;;img.style.height=a.h+&#x27;mm&#x27;;
+   page.appendChild(img);if(side===&#x27;RECTO&#x27;)drag(img,index);
+  }out.appendChild(page);
+ }}
+};
+window.downloadSheetsPDF=async function(){if(!badgePrintQueue.length){alert(&#x27;There are no badges to download.&#x27;);return;}
+ if(!window.jspdf){alert(&#x27;PDF library is unavailable.&#x27;);return;}
+ normalize();const {jsPDF}=window.jspdf,pdf=new jsPDF({orientation:&#x27;portrait&#x27;,unit:&#x27;mm&#x27;,format:&#x27;a4&#x27;,compress:true});let first=true;
+ for(let p=0;p&lt;Math.ceil(badgePrintQueue.length/8);p++)for(const side of [&#x27;RECTO&#x27;,&#x27;VERSO&#x27;]){
+  if(!first)pdf.addPage(&#x27;a4&#x27;,&#x27;portrait&#x27;);first=false;
+  for(let slot=0;slot&lt;8;slot++){const index=p*8+slot,b=badgePrintQueue[index];if(!b)continue;
+   const a=spot(index,side),src=b[side===&#x27;RECTO&#x27;?&#x27;frontImage&#x27;:&#x27;backImage&#x27;]||b.image;if(!src)continue;
+   const safe=3,ratio=1217/732,innerW=a.w-2*safe,innerH=a.h-2*safe;
+   const drawW=Math.min(innerW,innerH*ratio),drawH=drawW/ratio;
+   pdf.addImage(src,src.startsWith(&#x27;data:image/png&#x27;)?&#x27;PNG&#x27;:&#x27;JPEG&#x27;,a.x+(a.w-drawW)/2,a.y+(a.h-drawH)/2,drawW,drawH,undefined,&#x27;FAST&#x27;);
+   pdf.setDrawColor(180,180,180);pdf.setLineWidth(.08);pdf.rect(a.x,a.y,a.w,a.h);
+  }
+ }
+ pdf.save(&#x27;PCLM_A4_8_Badges_Recto_Verso_Alignes.pdf&#x27;);};
+normalize();persist();renderPrintSheets();
+})();&lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;" style="width:100%;min-height:1450px;border:0;display:block;background:#eef2f7;"></iframe>
   </div>
