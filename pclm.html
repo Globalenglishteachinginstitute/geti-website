@@ -915,55 +915,43 @@ Preview 856 × 540 px
 .back-qr-wrap{
     margin-top:18px;
     display:flex;
-    align-items:flex-start;
-    gap:16px;
-    padding:12px;
-    background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.14);
-    border-radius:14px;
+    align-items:center;
+    gap:14px;
 }
 
 #badgeBackQr{
-    width:138px;
-    height:138px;
-    min-width:138px;
+    width:112px;
+    height:112px;
     background:#fff;
-    border-radius:14px;
+    border-radius:10px;
     display:flex;
     align-items:center;
     justify-content:center;
     overflow:hidden;
-    padding:10px;
-    box-shadow:0 10px 22px rgba(0,0,0,.18);
+    padding:6px;
 }
 
 #badgeBackQr canvas,
 #badgeBackQr img{
-    width:118px !important;
-    height:118px !important;
+    width:96px !important;
+    height:96px !important;
     display:block;
-    image-rendering:pixelated;
-}
-
-.back-qr-note{
-    flex:1;
-    padding-top:2px;
 }
 
 .back-qr-note strong{
     display:block;
     color:#f0cf69;
-    font-size:12px;
-    margin-bottom:6px;
+    font-size:11px;
+    margin-bottom:5px;
     text-transform:uppercase;
     letter-spacing:1px;
 }
 
 .back-qr-note span{
     display:block;
-    color:#f8fafc;
+    color:#e5e7eb;
     font-size:11px;
-    line-height:1.55;
+    line-height:1.5;
 }
 
 .back-footer{
@@ -1289,35 +1277,6 @@ body{padding-top:0!important;}
 
 &lt;/div&gt;
 
-
-&lt;div id=&quot;pclmFullEditor&quot; class=&quot;panel&quot; style=&quot;margin:16px 0;padding:18px;border:2px solid #c99a23;border-radius:14px;background:#fffef8&quot;&gt;
- &lt;h2 style=&quot;margin:0 0 8px&quot;&gt;Badge Content Editor — RECTO &amp;amp; VERSO&lt;/h2&gt;
- &lt;p style=&quot;font-size:13px;line-height:1.6;margin-bottom:12px&quot;&gt;Ovay eto ny anarana sy ny mombamomba ny mpianatra. Azonao kitihina koa ny soratra ao amin&#x27;ny preview recto na verso mba hanovana azy mivantana. Voahitsy miaraka ny saha mifandray amin&#x27;ny lafiny roa.&lt;/p&gt;
- &lt;div style=&quot;display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:12px&quot;&gt;
-   &lt;label style=&quot;font-size:12px;min-width:190px;flex:2&quot;&gt;Soratra voafantina&lt;input type=&quot;text&quot; id=&quot;pclmEditableText&quot; placeholder=&quot;Click a text in badge preview&quot; oninput=&quot;pclmEditSelectedText(this.value)&quot;&gt;&lt;/label&gt;
-   &lt;label style=&quot;font-size:12px;max-width:125px&quot;&gt;Font size (px)&lt;input type=&quot;number&quot; min=&quot;7&quot; max=&quot;80&quot; id=&quot;pclmTextSize&quot; oninput=&quot;pclmEditStyle(&#x27;fontSize&#x27;,this.value+&#x27;px&#x27;)&quot;&gt;&lt;/label&gt;
-   &lt;label style=&quot;font-size:12px;max-width:110px&quot;&gt;Color&lt;input type=&quot;color&quot; id=&quot;pclmTextColor&quot; value=&quot;#ffffff&quot; oninput=&quot;pclmEditStyle(&#x27;color&#x27;,this.value)&quot;&gt;&lt;/label&gt;
-   &lt;label style=&quot;font-size:12px;max-width:140px&quot;&gt;Bold&lt;select id=&quot;pclmBold&quot; onchange=&quot;pclmEditStyle(&#x27;fontWeight&#x27;,this.value)&quot;&gt;&lt;option value=&quot;400&quot;&gt;Normal&lt;/option&gt;&lt;option value=&quot;700&quot;&gt;Bold&lt;/option&gt;&lt;option value=&quot;900&quot;&gt;Extra bold&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
- &lt;/div&gt;
- &lt;div style=&quot;display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:12px&quot;&gt;
-  &lt;label style=&quot;font-size:12px;flex:2;min-width:210px&quot;&gt;QR content (laisser vide = automatique)&lt;textarea id=&quot;pclmQrPayload&quot; rows=&quot;2&quot; placeholder=&quot;Default: student ID, name, phone and validity&quot; oninput=&quot;updateBadge()&quot; style=&quot;min-height:58px&quot;&gt;&lt;/textarea&gt;&lt;/label&gt;
-  &lt;label style=&quot;font-size:12px;flex:1;min-width:150px&quot;&gt;Change PCLM logo&lt;input type=&quot;file&quot; id=&quot;pclmLogoUpload&quot; accept=&quot;image/png,image/jpeg,image/webp&quot; onchange=&quot;pclmChangeLogo(this)&quot;&gt;&lt;/label&gt;
- &lt;/div&gt;
- &lt;div style=&quot;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px&quot;&gt;
-  &lt;button class=&quot;btn-dark&quot; type=&quot;button&quot; onclick=&quot;pclmSaveEditor()&quot;&gt;Save design&lt;/button&gt;
-  &lt;button class=&quot;btn-gray&quot; type=&quot;button&quot; onclick=&quot;pclmResetEditor()&quot;&gt;Reset edited text&lt;/button&gt;
-  &lt;button class=&quot;btn-blue&quot; type=&quot;button&quot; onclick=&quot;document.getElementById(&#x27;studentFirstName&#x27;).focus()&quot;&gt;Edit student details&lt;/button&gt;
- &lt;/div&gt;
- &lt;hr style=&quot;border:0;border-top:1px solid #e5dfca;margin:16px 0&quot;&gt;
- &lt;h3 style=&quot;font-size:16px;margin-bottom:7px&quot;&gt;Modify a badge already added to the A4 sheet&lt;/h3&gt;
- &lt;p style=&quot;font-size:12px;margin-bottom:9px&quot;&gt;Select a badge, change its name, text, photo or QR in the editor, then click Apply. Recto and verso images update together.&lt;/p&gt;
- &lt;div style=&quot;display:flex;flex-wrap:wrap;gap:10px;align-items:end&quot;&gt;
-  &lt;label style=&quot;font-size:12px;flex:2;min-width:210px&quot;&gt;Badge in print sheet&lt;select id=&quot;pclmQueuedSelection&quot; onchange=&quot;pclmLoadQueuedBadge()&quot;&gt;&lt;option value=&quot;&quot;&gt;Choose badge...&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
-  &lt;button class=&quot;btn-gold&quot; type=&quot;button&quot; onclick=&quot;pclmApplyQueuedBadge()&quot;&gt;Apply changes to selected badge&lt;/button&gt;
- &lt;/div&gt;
- &lt;div id=&quot;pclmEditorMessage&quot; role=&quot;status&quot; style=&quot;font-size:12px;margin-top:9px;color:#31547b&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-
 &lt;!-- BADGE PREVIEW --&gt;
 
 &lt;div class=&quot;panel preview-panel&quot;&gt;
@@ -1544,7 +1503,7 @@ body{padding-top:0!important;}
                 &lt;div id=&quot;badgeBackQr&quot;&gt;&lt;/div&gt;
                 &lt;div class=&quot;back-qr-note&quot;&gt;
                     &lt;strong&gt;Verification QR&lt;/strong&gt;
-                    &lt;span&gt;Use your phone camera to scan this code and verify the student card details quickly.&lt;/span&gt;
+                    &lt;span&gt;Scan to view the student identity details recorded on this badge.&lt;/span&gt;
                 &lt;/div&gt;
             &lt;/div&gt;
         &lt;/div&gt;
@@ -1815,7 +1774,7 @@ function syncBackLogo(){
     const rectoLogo = document.querySelector(&quot;.logo-holder img&quot;);
     const backLogo = document.getElementById(&quot;backLogoImg&quot;);
 
-    if(rectoLogo &amp;&amp; backLogo){
+    if(rectoLogo && backLogo){
         backLogo.src = rectoLogo.src;
         backLogo.style.display = &quot;block&quot;;
     }
@@ -1838,9 +1797,10 @@ function renderQrCode(targetId, qrText, size){
                 text: qrText,
                 width: size,
                 height: size,
+                typeNumber: 10,
                 colorDark: &quot;#000000&quot;,
                 colorLight: &quot;#ffffff&quot;,
-                correctLevel: QRCode.CorrectLevel.H
+                correctLevel: QRCode.CorrectLevel.M
             });
         }catch(error){
             qrBox.innerHTML = &quot;&quot;;
@@ -1863,9 +1823,10 @@ function renderQrCode(targetId, qrText, size){
                     text: fallbackText,
                     width: size,
                     height: size,
+                    typeNumber: 8,
                     colorDark: &quot;#000000&quot;,
                     colorLight: &quot;#ffffff&quot;,
-                    correctLevel: QRCode.CorrectLevel.H
+                    correctLevel: QRCode.CorrectLevel.L
                 });
             }catch(secondError){
                 qrBox.innerHTML = &quot;&lt;div style=\&quot;font-size:7px;text-align:center;padding:6px;line-height:1.2;color:#b42318;font-weight:700\&quot;&gt;QR error&lt;/div&gt;&quot;;
@@ -1997,16 +1958,8 @@ function updateBadge(){
         &quot;VALID:&quot; + (valid || &quot;-&quot;)
     ].join(&quot;\n&quot;);
 
-    const backQrText = [
-        &quot;PCLM&quot;,
-        &quot;ID=&quot; + (studentId || &quot;PCLM-0001&quot;),
-        &quot;NAME=&quot; + (fullName || &quot;-&quot;),
-        &quot;TEL=&quot; + (phone || &quot;-&quot;),
-        &quot;VALID=&quot; + (valid || &quot;-&quot;)
-    ].join(&quot;; &quot;);
-
     renderQrCode(&quot;badgeQr&quot;, qrText, 96);
-    renderQrCode(&quot;badgeBackQr&quot;, (document.getElementById(&quot;pclmQrPayload&quot;)?.value.trim() || backQrText), 118);
+    renderQrCode(&quot;badgeBackQr&quot;, qrText, 96);
 
     requestAnimationFrame(
         () =&gt; {
@@ -3197,90 +3150,6 @@ window.downloadSheetsPDF=async function(){if(!badgePrintQueue.length){alert(&#x2
  pdf.save(&#x27;PCLM_A4_8_Badges_Recto_Verso_Alignes.pdf&#x27;);};
 normalize();persist();renderPrintSheets();
 })();&lt;/script&gt;
-
-&lt;style&gt;
-#badge [data-pclm-edit],#badgeBack [data-pclm-edit]{cursor:text}
-#badge [data-pclm-edit]:hover,#badgeBack [data-pclm-edit]:hover{outline:1px dashed rgba(241,195,66,.7);outline-offset:2px}
-#badge [data-pclm-edit]:focus,#badgeBack [data-pclm-edit]:focus{outline:2px solid #e7b72e;outline-offset:2px}
-#pclmFullEditor input,#pclmFullEditor select,#pclmFullEditor textarea{max-width:100%;box-sizing:border-box}
-&lt;/style&gt;
-&lt;script&gt;
-(function(){
-&#x27;use strict&#x27;;
-const STORE=&#x27;pclm_badge_content_editor_v1&#x27;;
-const FIELDS=[&#x27;studentFirstName&#x27;,&#x27;studentLastName&#x27;,&#x27;studentId&#x27;,&#x27;studentCourse&#x27;,&#x27;studentPhone&#x27;,&#x27;validUntil&#x27;];
-const dynamic={badgeFirstName:&#x27;studentFirstName&#x27;,badgeLastName:&#x27;studentLastName&#x27;,badgeStudentId:&#x27;studentId&#x27;,badgeCourse:&#x27;studentCourse&#x27;,badgePhone:&#x27;studentPhone&#x27;,badgeValidity:&#x27;validUntil&#x27;,backStudentId:&#x27;studentId&#x27;,backCourse:&#x27;studentCourse&#x27;,backPhone:&#x27;studentPhone&#x27;,backValidity:&#x27;validUntil&#x27;,backFullName:&#x27;_name&#x27;,badgeFullName:&#x27;_name&#x27;};
-let active=null, textIds=[], state={texts:{},styles:{},logo:&#x27;&#x27;}, currentQueue=-1;
-try{state=Object.assign(state,JSON.parse(localStorage.getItem(STORE)||&#x27;{}&#x27;));}catch(e){}
-state.texts=state.texts||{}; state.styles=state.styles||{};
-function nodeKey(el){return el.dataset.pclmKey||&#x27;&#x27;}
-function status(msg){const e=document.getElementById(&#x27;pclmEditorMessage&#x27;);if(e)e.textContent=msg;}
-function save(){try{localStorage.setItem(STORE,JSON.stringify(state));}catch(e){status(&#x27;Browser storage is full. Export your HTML or reduce images.&#x27;);}}
-function getInput(id){return document.getElementById(id)}
-function nameParts(str){const s=String(str||&#x27;&#x27;).trim().split(/\s+/);return {first:s.shift()||&#x27;&#x27;,last:s.join(&#x27; &#x27;)};}
-function applyDynamic(key,value){if(!dynamic[key])return false;const target=dynamic[key];
- if(target===&#x27;_name&#x27;){const n=nameParts(value);getInput(&#x27;studentFirstName&#x27;).value=n.first;getInput(&#x27;studentLastName&#x27;).value=n.last;}
- else if(target===&#x27;validUntil&#x27;){
-  const clean=String(value).trim();const date= /^\d{4}-\d{2}-\d{2}$/.test(clean)?clean:&#x27;&#x27;;
-  if(!date){status(&#x27;Date format: YYYY-MM-DD&#x27;);return false;}getInput(target).value=date;
- } else getInput(target).value=value;
- updateBadge();return true;
-}
-function setActive(el){if(active)active.classList.remove(&#x27;pclm-selected&#x27;);active=el;if(!el)return;el.classList.add(&#x27;pclm-selected&#x27;);
- getInput(&#x27;pclmEditableText&#x27;).value=el.textContent.trim();const cs=getComputedStyle(el);
- getInput(&#x27;pclmTextSize&#x27;).value=Math.round(parseFloat(cs.fontSize)||12);
- let clr=cs.color.match(/\d+/g);if(clr&amp;&amp;clr.length&gt;=3)getInput(&#x27;pclmTextColor&#x27;).value=&#x27;#&#x27;+clr.slice(0,3).map(x=&gt;Math.min(255,+x).toString(16).padStart(2,&#x27;0&#x27;)).join(&#x27;&#x27;);
- getInput(&#x27;pclmBold&#x27;).value=(parseInt(cs.fontWeight,10)&gt;=800?&#x27;900&#x27;:parseInt(cs.fontWeight,10)&gt;=600?&#x27;700&#x27;:&#x27;400&#x27;);
-}
-function saveText(el){const k=nodeKey(el);if(!k)return;if(dynamic[el.id]){applyDynamic(el.id,el.textContent.trim());return;}
- state.texts[k]=el.textContent.trim();save();}
-function initEditable(){for(const side of [&#x27;badge&#x27;,&#x27;badgeBack&#x27;]){
- const root=getInput(side);if(!root)continue;
- // Text-only descendants including title, labels, captions and notice/rules. Exclude QR code, picture and decorative graphics.
- const selectors=&#x27;h1,h2,h3,h4,p,span,strong,li,.detail-label,.detail-value,.program,.photo-caption,.back-text,.back-label,.back-value,.back-chip,.back-footer-motto,.back-footer-right,.back-qr-note span,.back-qr-note strong,.badge-footer,.back-title,.brand-title&#x27;;
- const nodes=Array.from(root.querySelectorAll(selectors)).filter(el=&gt;!el.querySelector(&#x27;img,canvas,li,h1,h2,h3,h4,p,span,strong,.detail-label,.detail-value,.back-value,.back-label&#x27;) &amp;&amp; el.textContent.trim() &amp;&amp; !el.closest(&#x27;#badgeQr,#badgeBackQr&#x27;));
- nodes.forEach((el,i)=&gt;{
-  const k=side+&#x27;-&#x27;+i;el.dataset.pclmEdit=&#x27;1&#x27;;el.dataset.pclmKey=k;
-  el.setAttribute(&#x27;contenteditable&#x27;,&#x27;true&#x27;);el.setAttribute(&#x27;spellcheck&#x27;,&#x27;false&#x27;);
-  el.addEventListener(&#x27;focus&#x27;,()=&gt;setActive(el));
-  el.addEventListener(&#x27;blur&#x27;,()=&gt;saveText(el));
-  el.addEventListener(&#x27;keydown&#x27;,e=&gt;{if(e.key===&#x27;Enter&#x27;&amp;&amp;!el.matches(&#x27;.back-text,li&#x27;)){e.preventDefault();el.blur();}});
-  if(state.texts[k]!==undefined &amp;&amp; !dynamic[el.id])el.textContent=state.texts[k];
-  if(state.styles[k])Object.assign(el.style,state.styles[k]);
- });}
- if(state.logo){setLogo(state.logo);}
-}
-window.pclmEditSelectedText=function(value){if(!active){status(&#x27;Click the text in RECTO or VERSO first.&#x27;);return;}active.textContent=value;saveText(active);};
-window.pclmEditStyle=function(prop,value){if(!active){status(&#x27;Select text in the preview first.&#x27;);return;}if(prop===&#x27;fontSize&#x27;){const v=parseFloat(value);if(!Number.isFinite(v)||v&lt;7||v&gt;80)return;}
- active.style[prop]=value;const k=nodeKey(active);state.styles[k]=Object.assign({},state.styles[k]||{},{[prop]:value});save();};
-window.pclmSaveEditor=function(){document.querySelectorAll(&#x27;#badge [data-pclm-edit],#badgeBack [data-pclm-edit]&#x27;).forEach(el=&gt;{if(!dynamic[el.id])state.texts[nodeKey(el)]=el.textContent.trim();});save();status(&#x27;Design saved in this browser. Add or update the badge in Print Sheet to refresh its image.&#x27;);};
-window.pclmResetEditor=function(){if(!confirm(&#x27;Reset all custom labels and typography? Student information stays unchanged.&#x27;))return;state.texts={};state.styles={};save();status(&#x27;Custom text reset. Reload the page to restore the original labels.&#x27;);};
-function setLogo(src){const front=document.querySelector(&#x27;#badge .logo-holder img&#x27;);const back=getInput(&#x27;backLogoImg&#x27;);if(front)front.src=src;if(back)back.src=src;}
-window.pclmChangeLogo=function(input){const file=input.files?.[0];if(!file)return;if(file.size&gt;2*1024*1024){alert(&#x27;Choose a logo smaller than 2MB.&#x27;);return;}
- const reader=new FileReader();reader.onload=()=&gt;{state.logo=reader.result;setLogo(state.logo);save();};reader.readAsDataURL(file);};
-function snapshot(){const fields={};FIELDS.forEach(id=&gt;fields[id]=getInput(id)?.value||&#x27;&#x27;);return {fields,qr:getInput(&#x27;pclmQrPayload&#x27;)?.value||&#x27;&#x27;,texts:JSON.parse(JSON.stringify(state.texts)),styles:JSON.parse(JSON.stringify(state.styles)),logo:state.logo||&#x27;&#x27;};}
-function restore(data){if(!data)return;FIELDS.forEach(id=&gt;{if(getInput(id))getInput(id).value=data.fields?.[id]||&#x27;&#x27;;});getInput(&#x27;pclmQrPayload&#x27;).value=data.qr||&#x27;&#x27;;
- if(data.texts){state.texts=JSON.parse(JSON.stringify(data.texts));state.styles=JSON.parse(JSON.stringify(data.styles||{}));state.logo=data.logo||state.logo;document.querySelectorAll(&#x27;[data-pclm-edit]&#x27;).forEach(el=&gt;{const k=nodeKey(el);if(!dynamic[el.id]&amp;&amp;state.texts[k]!==undefined)el.textContent=state.texts[k];el.removeAttribute(&#x27;style&#x27;);if(state.styles[k])Object.assign(el.style,state.styles[k]);});if(state.logo)setLogo(state.logo);}
- updateBadge();save();}
-window.pclmLoadQueuedBadge=function(){const i=parseInt(getInput(&#x27;pclmQueuedSelection&#x27;).value,10);if(!Number.isInteger(i)||!badgePrintQueue[i]){currentQueue=-1;return;}
- currentQueue=i;const b=badgePrintQueue[i];if(b.editorData)restore(b.editorData);else {getInput(&#x27;studentFirstName&#x27;).value=b.firstName||&#x27;&#x27;;getInput(&#x27;studentLastName&#x27;).value=b.lastName||&#x27;&#x27;;getInput(&#x27;studentId&#x27;).value=b.studentId||&#x27;&#x27;;updateBadge();}
- status(&#x27;Editing badge #&#x27;+(i+1)+&#x27;. Click Apply changes to update its recto and verso in the print sheet.&#x27;);};
-window.pclmApplyQueuedBadge=async function(){if(currentQueue&lt;0||!badgePrintQueue[currentQueue]){alert(&#x27;Select a badge in the print sheet first.&#x27;);return;}
- const b=badgePrintQueue[currentQueue];try{pclmSaveEditor();updateBadge();const front=await createBadgePNG(),back=await createBadgeBackPNG();
- b.firstName=getInput(&#x27;studentFirstName&#x27;).value.trim();b.lastName=getInput(&#x27;studentLastName&#x27;).value.trim();b.studentId=getInput(&#x27;studentId&#x27;).value.trim();
- b.frontImage=front.toDataURL(&#x27;image/jpeg&#x27;,.94);b.backImage=back.toDataURL(&#x27;image/jpeg&#x27;,.94);b.image=b.frontImage;b.editorData=snapshot();
- saveBadgeQueue();renderPrintSheets();refreshQueuedSelector();status(&#x27;Updated badge #&#x27;+(currentQueue+1)+&#x27; on BOTH sides.&#x27;);}catch(err){console.error(err);alert(&#x27;Could not update the selected badge.&#x27;);}};
-function refreshQueuedSelector(){const select=getInput(&#x27;pclmQueuedSelection&#x27;);if(!select)return;const prev=currentQueue;select.innerHTML=&#x27;&lt;option value=&quot;&quot;&gt;Choose badge...&lt;/option&gt;&#x27;;
- badgePrintQueue.forEach((b,i)=&gt;{const o=document.createElement(&#x27;option&#x27;);o.value=String(i);o.textContent=(i+1)+&#x27;. &#x27;+(b.firstName||&#x27;&#x27;)+&#x27; &#x27;+(b.lastName||&#x27;&#x27;)+&#x27; — &#x27;+(b.studentId||&#x27;&#x27;);select.append(o);});
- if(prev&gt;=0&amp;&amp;badgePrintQueue[prev])select.value=String(prev);}
-const origAdd=window.addBadgeToSheets;
-if(typeof origAdd===&#x27;function&#x27;)window.addBadgeToSheets=async function(e){const len=badgePrintQueue.length;await origAdd(e);if(badgePrintQueue.length&gt;len){badgePrintQueue[badgePrintQueue.length-1].editorData=snapshot();saveBadgeQueue();refreshQueuedSelector();}};
-const origRender=window.renderPrintSheets;
-if(typeof origRender===&#x27;function&#x27;)window.renderPrintSheets=function(){origRender();refreshQueuedSelector();};
-initEditable();refreshQueuedSelector();
-})();
-&lt;/script&gt;
-
 &lt;/body&gt;
 &lt;/html&gt;" style="width:100%;min-height:1450px;border:0;display:block;background:#eef2f7;"></iframe>
   </div>
