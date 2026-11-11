@@ -1281,6 +1281,26 @@ body{padding-top:0!important;}
 
 &lt;div class=&quot;panel preview-panel&quot;&gt;
 
+
+&lt;div id=&quot;idDesignPanel&quot; style=&quot;margin:16px 0;padding:16px;border:1px solid #c6d8ec;border-radius:12px;background:#f3f8ff&quot;&gt;
+  &lt;h3 style=&quot;margin:0 0 8px;color:#12345e&quot;&gt;Student ID — Soratra sy elanelana&lt;/h3&gt;
+  &lt;p style=&quot;font-size:13px;margin:0 0 12px&quot;&gt;Ovao ny haben&#x27;ny soratra rehetra amin&#x27;ny RECTO/VERSO, ny elanelan&#x27;ny anarana sy information, ary ny ID. Miseho avy hatrany amin&#x27;ny preview.&lt;/p&gt;
+  &lt;div style=&quot;display:flex;gap:14px;flex-wrap:wrap;align-items:end&quot;&gt;
+    &lt;label style=&quot;font-size:13px;display:flex;flex-direction:column;gap:5px&quot;&gt;Haben&#x27;ny soratra rehetra (%)
+      &lt;input id=&quot;idTextScale&quot; type=&quot;range&quot; min=&quot;80&quot; max=&quot;160&quot; step=&quot;5&quot; value=&quot;100&quot; oninput=&quot;changeIdDesign()&quot; style=&quot;width:190px&quot;&gt;
+      &lt;output id=&quot;idTextScaleValue&quot;&gt;100%&lt;/output&gt;
+    &lt;/label&gt;
+    &lt;label style=&quot;font-size:13px;display:flex;flex-direction:column;gap:5px&quot;&gt;Elanelana information (px)
+      &lt;input id=&quot;idTextGap&quot; type=&quot;number&quot; min=&quot;2&quot; max=&quot;24&quot; step=&quot;1&quot; value=&quot;10&quot; oninput=&quot;changeIdDesign()&quot; style=&quot;width:115px&quot;&gt;
+    &lt;/label&gt;
+    &lt;label style=&quot;font-size:13px;display:flex;flex-direction:column;gap:5px&quot;&gt;Elanelana ambonin&#x27;ny Student ID (px)
+      &lt;input id=&quot;idBoxGap&quot; type=&quot;number&quot; min=&quot;0&quot; max=&quot;35&quot; step=&quot;1&quot; value=&quot;8&quot; oninput=&quot;changeIdDesign()&quot; style=&quot;width:115px&quot;&gt;
+    &lt;/label&gt;
+    &lt;button type=&quot;button&quot; class=&quot;btn-dark&quot; onclick=&quot;resetIdDesign()&quot;&gt;Reset ID&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;margin-top:8px;font-size:12px;color:#586579&quot;&gt;Ataovy azo antoka fa tsy mifampitsindry ny soratra. Rehefa ovaina ny design dia ampidiro indray ao amin&#x27;ny sheet ireo badge efa nalaina mba hanaraka ny endrika vaovao.&lt;/div&gt;
+&lt;/div&gt;
+
 &lt;h2&gt;PCLM Badge Preview&lt;/h2&gt;
 
 &lt;div class=&quot;badge-wrap&quot;&gt;
@@ -1605,7 +1625,7 @@ body{padding-top:0!important;}
 &lt;button type=&quot;button&quot; class=&quot;btn-dark&quot; onclick=&quot;resetSheetEditor()&quot;&gt;Reset positions&lt;/button&gt;
 &lt;/div&gt;
 &lt;div id=&quot;sheetSafetyWarning&quot; style=&quot;font-size:13px;line-height:1.5;margin-top:10px;color:#814d00&quot;&gt;&lt;/div&gt;
-&lt;div id=&quot;sheetSelectedHint&quot; style=&quot;font-size:12px;color:#31547b;margin-top:5px&quot;&gt;Drag badge amin&#x27;ny RECTO: mitovy toerana voa-mirror amin&#x27;ny VERSO.&lt;/div&gt;
+&lt;div id=&quot;sheetSelectedHint&quot; style=&quot;font-size:12px;color:#31547b;margin-top:5px&quot;&gt;Sintomy ny BADGE VOALOHANY: mihetsika miaraka ny badge rehetra (recto sy verso). Gap X/Y: manova ny elanelan&#x27;ny rehetra. Badge hafa azo afindra tsirairay.&lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&quot;printSheetsPreview&quot;&gt;&lt;/div&gt;
 
@@ -1774,7 +1794,7 @@ function syncBackLogo(){
     const rectoLogo = document.querySelector(&quot;.logo-holder img&quot;);
     const backLogo = document.getElementById(&quot;backLogoImg&quot;);
 
-    if(rectoLogo && backLogo){
+    if(rectoLogo &amp;&amp; backLogo){
         backLogo.src = rectoLogo.src;
         backLogo.style.display = &quot;block&quot;;
     }
@@ -3086,10 +3106,52 @@ renderPrintSheets();
 
 &lt;/script&gt;
 
+&lt;script&gt;
+(function(){
+&#x27;use strict&#x27;;
+const KEY=&#x27;pclm_id_design_v1&#x27;;
+const defaults={scale:100,gap:10,idGap:8};
+let config;
+try{config={...defaults,...JSON.parse(localStorage.getItem(KEY)||&#x27;{}&#x27;)}}catch(_){config={...defaults}}
+const leafSelector=&#x27;#badge *, #badgeBack *&#x27;;
+function apply(){
+  document.querySelectorAll(leafSelector).forEach(el=&gt;{
+    if(el.closest(&#x27;#badgeQr,#badgeBackQr&#x27;)||/^(IMG|CANVAS|SVG)$/.test(el.tagName))return;
+    const isText=Array.from(el.childNodes).some(n=&gt;n.nodeType===Node.TEXT_NODE &amp;&amp; n.textContent.trim());
+    if(!isText)return;
+    if(!el.dataset.pclmFontBase){
+      const computed=getComputedStyle(el),base=parseFloat(computed.fontSize);
+      if(Number.isFinite(base))el.dataset.pclmFontBase=String(base);
+    }
+    const base=Number(el.dataset.pclmFontBase);
+    if(Number.isFinite(base) &amp;&amp; base&gt;0)el.style.setProperty(&#x27;font-size&#x27;,(base*config.scale/100).toFixed(2)+&#x27;px&#x27;,&#x27;important&#x27;);
+  });
+  const details=document.querySelector(&#x27;#badge .detail-grid&#x27;);
+  if(details)details.style.setProperty(&#x27;row-gap&#x27;,config.gap+&#x27;px&#x27;,&#x27;important&#x27;);
+  const idBox=document.querySelector(&#x27;#badge .student-id-box&#x27;);
+  if(idBox)idBox.style.setProperty(&#x27;margin-top&#x27;,config.idGap+&#x27;px&#x27;,&#x27;important&#x27;);
+  const scaleVal=document.getElementById(&#x27;idTextScaleValue&#x27;);if(scaleVal)scaleVal.textContent=config.scale+&#x27;%&#x27;;
+}
+window.changeIdDesign=function(){
+  config.scale=Math.max(80,Math.min(160,Number(document.getElementById(&#x27;idTextScale&#x27;)?.value)||100));
+  config.gap=Math.max(2,Math.min(24,Number(document.getElementById(&#x27;idTextGap&#x27;)?.value)||2));
+  config.idGap=Math.max(0,Math.min(35,Number(document.getElementById(&#x27;idBoxGap&#x27;)?.value)||0));
+  try{localStorage.setItem(KEY,JSON.stringify(config))}catch(_){}
+  apply();
+};
+window.resetIdDesign=function(){config={...defaults};sync();apply();try{localStorage.setItem(KEY,JSON.stringify(config))}catch(_){}};
+function sync(){const a=document.getElementById(&#x27;idTextScale&#x27;),b=document.getElementById(&#x27;idTextGap&#x27;),c=document.getElementById(&#x27;idBoxGap&#x27;);if(a)a.value=config.scale;if(b)b.value=config.gap;if(c)c.value=config.idGap;}
+// Capture uses the same live text adjustments as previews.
+const oldUpdate=window.updateBadge;
+if(typeof oldUpdate===&#x27;function&#x27;)window.updateBadge=function(){const result=oldUpdate.apply(this,arguments);apply();return result;};
+// Reapply after two animation frames, including the initial preview and delayed updates.
+sync();apply();requestAnimationFrame(()=&gt;requestAnimationFrame(apply));
+})();
+&lt;/script&gt;
 &lt;script&gt;(function(){
 &quot;use strict&quot;;
-const STORAGE=&#x27;pclm_sheet_editor_v2&#x27;;
-const init={w:103,h:62,gapX:2,gapY:4,offsets:{}};
+const STORAGE=&#x27;pclm_sheet_editor_v3&#x27;;
+const init={w:103,h:62,gapX:2,gapY:4,shiftX:0,shiftY:0,offsets:{}};
 let editor;
 try{editor=Object.assign({},init,JSON.parse(localStorage.getItem(STORAGE)||&#x27;{}&#x27;));}catch(e){editor={...init};}
 if(!editor.offsets || typeof editor.offsets!==&#x27;object&#x27;) editor.offsets={};
@@ -3103,19 +3165,30 @@ function persist(){try{localStorage.setItem(STORAGE,JSON.stringify(editor));}cat
 function basePosition(slot){normalize();const x0=(210-2*editor.w-editor.gapX)/2;const y0=(297-4*editor.h-3*editor.gapY)/2;
  return {x:x0+(slot%2)*(editor.w+editor.gapX),y:y0+Math.floor(slot/2)*(editor.h+editor.gapY)};}
 function spot(index,side){const base=basePosition(index%8);const extra=editor.offsets[String(index)]||{x:0,y:0};
- const x=clamp(base.x+num(extra.x,0),0,210-editor.w);
- const y=clamp(base.y+num(extra.y,0),0,297-editor.h);
+ const x=clamp(base.x+num(editor.shiftX,0)+num(extra.x,0),0,210-editor.w);
+ const y=clamp(base.y+num(editor.shiftY,0)+num(extra.y,0),0,297-editor.h);
  return {x:side===&#x27;VERSO&#x27;?210-editor.w-x:x,y,w:editor.w,h:editor.h};}
 function controls(){const values=[[&#x27;sheetCardWidth&#x27;,&#x27;w&#x27;],[&#x27;sheetCardHeight&#x27;,&#x27;h&#x27;],[&#x27;sheetCardGapX&#x27;,&#x27;gapX&#x27;],[&#x27;sheetCardGapY&#x27;,&#x27;gapY&#x27;]];values.forEach(([id,key])=&gt;{const e=document.getElementById(id);if(e &amp;&amp; document.activeElement!==e)e.value=editor[key]});
  const warn=document.getElementById(&#x27;sheetSafetyWarning&#x27;);if(warn){const margin=(210-2*editor.w-editor.gapX)/2;
  warn.textContent=(margin&lt;5?&#x27;⚠ Sisiny ankavia sy ankavanana &#x27;+margin.toFixed(1)+&#x27; mm monja. Raha tsy mahavita borderless ny imprimante, ahenao ho 98–100 mm ny width. &#x27;:&#x27;&#x27;)+&#x27;Print PDF: A4 portrait, 100%/Actual size, duplex Flip on long edge. Andramo amin’ny taratasy iray aloha.&#x27;;}}
 window.changeSheetEditor=function(){const pick=(id,fallback)=&gt;num(document.getElementById(id)?.value,fallback);editor.w=pick(&#x27;sheetCardWidth&#x27;,editor.w);editor.h=pick(&#x27;sheetCardHeight&#x27;,editor.h);editor.gapX=pick(&#x27;sheetCardGapX&#x27;,editor.gapX);editor.gapY=pick(&#x27;sheetCardGapY&#x27;,editor.gapY);normalize();persist();renderPrintSheets();};
-window.resetSheetEditor=function(){editor={w:103,h:62,gapX:2,gapY:4,offsets:{}};persist();renderPrintSheets();};
+window.resetSheetEditor=function(){editor={w:103,h:62,gapX:2,gapY:4,shiftX:0,shiftY:0,offsets:{}};persist();renderPrintSheets();};
 function drag(el,index){let start=null;
  el.addEventListener(&#x27;pointerdown&#x27;,e=&gt;{if(e.button!==0)return;e.preventDefault();el.setPointerCapture(e.pointerId);const bounds=el.closest(&#x27;.print-page&#x27;).getBoundingClientRect();const base=basePosition(index%8);const position=spot(index,&#x27;RECTO&#x27;);start={sx:e.clientX,sy:e.clientY,bx:position.x,by:position.y,base,scaleX:210/bounds.width,scaleY:297/bounds.height};el.classList.add(&#x27;selected&#x27;);});
- el.addEventListener(&#x27;pointermove&#x27;,e=&gt;{if(!start)return;const x=clamp(start.bx+(e.clientX-start.sx)*start.scaleX,0,210-editor.w);const y=clamp(start.by+(e.clientY-start.sy)*start.scaleY,0,297-editor.h);editor.offsets[String(index)]={x:x-start.base.x,y:y-start.base.y};
- el.style.left=x+&#x27;mm&#x27;;el.style.top=y+&#x27;mm&#x27;;
- document.querySelectorAll(&#x27;.print-page[data-side=&quot;VERSO&quot;] .sheet-badge[data-index=&quot;&#x27;+index+&#x27;&quot;]&#x27;).forEach(back=&gt;{back.style.left=(210-editor.w-x)+&#x27;mm&#x27;;back.style.top=y+&#x27;mm&#x27;;});
+ el.addEventListener(&#x27;pointermove&#x27;,e=&gt;{if(!start)return;const x=clamp(start.bx+(e.clientX-start.sx)*start.scaleX,0,210-editor.w);const y=clamp(start.by+(e.clientY-start.sy)*start.scaleY,0,297-editor.h);if(index%8===0){
+  // The first card moves the whole grid on every sheet, keeping pair alignment.
+  const bx=start.base.x,by=start.base.y;
+  editor.shiftX=clamp(x-bx, -bx, 210-editor.w-(bx+editor.w+editor.gapX));
+  editor.shiftY=clamp(y-by, -by, 297-editor.h-(by+3*(editor.h+editor.gapY)));
+  document.querySelectorAll(&#x27;.print-page .sheet-badge&#x27;).forEach(card=&gt;{
+    const ci=Number(card.dataset.index),sd=card.closest(&#x27;.print-page&#x27;).dataset.side;
+    const where=spot(ci,sd);card.style.left=where.x+&#x27;mm&#x27;;card.style.top=where.y+&#x27;mm&#x27;;
+  });
+ }else{
+  editor.offsets[String(index)]={x:x-start.base.x-num(editor.shiftX,0),y:y-start.base.y-num(editor.shiftY,0)};
+  el.style.left=x+&#x27;mm&#x27;;el.style.top=y+&#x27;mm&#x27;;
+  document.querySelectorAll(&#x27;.print-page[data-side=&quot;VERSO&quot;] .sheet-badge[data-index=&quot;&#x27;+index+&#x27;&quot;]&#x27;).forEach(back=&gt;{back.style.left=(210-editor.w-x)+&#x27;mm&#x27;;back.style.top=y+&#x27;mm&#x27;;});
+ }
  });
  const end=()=&gt;{if(!start)return;start=null;el.classList.remove(&#x27;selected&#x27;);persist();};el.addEventListener(&#x27;pointerup&#x27;,end);el.addEventListener(&#x27;pointercancel&#x27;,end);
 }
