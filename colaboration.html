@@ -323,7 +323,33 @@ function getiMarkMessagesRead(){
  if(latest&&latest>(localStorage.getItem(key)||''))localStorage.setItem(key,latest);
  getiUpdateMessageBadge();
 }
-let adminLoginRequested=false;let user=null,application=null,messages=[],page='dashboard',uploading={},isRecovery=false;let tariffPrices={collaboration:8,certificate:8,bonus:2.50};let getiTariffLoadError='';let pendingCheckout=null;function getiShowTariffProblem(){
+let adminLoginRequested=false;let user=null,application=null,messages=[],page='dashboard',uploading={},isRecovery=false;
+// Expose narrowly-scoped, live payment context to the separate checkout script.
+window.getiPaymentBridge={
+  getClient:()=>supabase,
+  getAuth:async()=>{
+    // Always resolve the signed-in payer from the official GETI Supabase session.
+    // Avoid the historical `user is not defined` error inside separate payment scripts.
+    let result=await supabase.auth.getUser();
+    if(result.error && /jwt|token|expired|issued at future/i.test(result.error.message||'')){
+      const refresh=await supabase.auth.refreshSession();
+      if(refresh.error)throw new Error('GETI session expired or invalid. Sign out and sign in again.');
+      result=await supabase.auth.getUser();
+    }
+    if(result.error)throw result.error;
+    const payer=result.data?.user;
+    if(!payer?.id||!payer?.email)throw new Error('Sign in to GETI before continuing to Zopayo.');
+    let currentApplication=(application?.owner_id===payer.id)?application:null;
+    if(!currentApplication){
+      const query=await supabase.from('collaboration_applications')
+        .select('id,owner_id,full_name,registration_id,account_status')
+        .eq('owner_id',payer.id).order('created_at',{ascending:false}).limit(1).maybeSingle();
+      if(!query.error)currentApplication=query.data||null;
+    }
+    return {user:payer,application:currentApplication};
+  }
+};
+let tariffPrices={collaboration:8,certificate:8,bonus:2.50};let getiTariffLoadError='';let pendingCheckout=null;function getiShowTariffProblem(){
  // Keep backend tariff errors available to payment validation without displaying a dashboard warning.
  document.getElementById('getiTariffWarning')?.remove();
 }
@@ -548,7 +574,7 @@ function payment(){return `<h1 class="sectiontitle">Payment</h1>
 <div class="field"><label for="getiPaymentFullName">Full Name *</label><input id="getiPaymentFullName" type="text" maxlength="150" autocomplete="name" placeholder="Full name"></div>
 <div class="field"><label for="getiPaymentCentre">Name of Center *</label><input id="getiPaymentCentre" type="text" maxlength="180" placeholder="School / Center name"></div>
 <div class="field"><label for="getiPaymentDate">Date *</label><input id="getiPaymentDate" type="date"></div>
-<div class="field"><label for="getiPaymentQty">Total Certificates *</label><input id="getiPaymentQty" type="number" min="1" max="1000" step="1" inputmode="numeric" value="1"></div>
+<div class="field"><label for="getiPaymentQty">Total Certificates *</label><input id="getiPaymentQty" type="number" min="1" max="277" step="1" inputmode="numeric" value="1"></div>
 </div>
 <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:#eaf5ff;border:1px solid #b3d7fa;border-radius:14px;padding:18px;margin:16px 0"><div><div style="color:#416087;font-size:13px">Price per Certificate</div><b>$8.00 USD</b><div id="getiPaymentBreakdown" style="font-size:13px;color:#416087">1 × $8.00</div></div><div style="text-align:right"><div style="color:#416087;font-size:13px">Total to Pay</div><strong id="getiPaymentTotal" style="font-size:28px;color:#075a71">$8.00</strong></div></div>
 <button type="button" id="getiProceedCertificate" class="btn" style="width:100%;background:#087b84;color:#fff;padding:14px;border-radius:12px">Continue to Zopayo →</button>
@@ -885,7 +911,7 @@ E('mainContent').addEventListener('submit',async event=>{
 
 /* Payment Now chooser — the server's official certificate price must first be $8. */
 function getiPickerError(message){const el=E('getiPickerError');if(el){el.style.display=message?'block':'none';el.textContent=message||'';}}
-function getiPickerTotal(){const qty=Number(E('getiPaymentQty')?.value),ok=Number.isSafeInteger(qty)&&qty>=1&&qty<=1000;const total=E('getiPaymentTotal'),breakdown=E('getiPaymentBreakdown'),btn=E('getiProceedCertificate');if(total)total.textContent=ok?'$'+(qty*8).toFixed(2):'—';if(breakdown)breakdown.textContent=ok?qty+' × $8.00':'Please enter a quantity between 1 and 1000';if(btn)btn.disabled=!ok;}
+function getiPickerTotal(){const qty=Number(E('getiPaymentQty')?.value),ok=Number.isSafeInteger(qty)&&qty>=1&&qty<=277;const total=E('getiPaymentTotal'),breakdown=E('getiPaymentBreakdown'),btn=E('getiProceedCertificate');if(total)total.textContent=ok?'$'+(qty*8).toFixed(2):'—';if(breakdown)breakdown.textContent=ok?qty+' × $8.00':'Please enter a quantity between 1 and 1000';if(btn)btn.disabled=!ok;}
 E('mainContent').addEventListener('click',async ev=>{
  if(ev.target.closest('#getiOpenPaymentPicker')){const purpose=E('getiPurposeChoice');if(purpose){const opt=purpose.querySelector('option[value=collaboration]');if(opt&&getiAccountActive())opt.remove();if(getiAccountActive()&&purpose.value==='collaboration'){purpose.value='';E('getiPickerCollaboration').style.display='none';}}const picker=E('getiPaymentPicker');if(picker){picker.style.display='block';if(E('getiPaymentDate')&&!E('getiPaymentDate').value)E('getiPaymentDate').value=new Date().toLocaleDateString('en-CA');if(E('getiPaymentFullName')&&!E('getiPaymentFullName').value)E('getiPaymentFullName').value=application?.full_name||user?.user_metadata?.full_name||'';picker.scrollIntoView({behavior:'smooth',block:'start'});}return;}
  if(ev.target.closest('#getiProceedCollaboration')){getiPickerError('');if(getiAccountActive()){getiPickerError('Your account is already Active. Collaboration payment is no longer available.');return;}const btn=E('getiProceedCollaboration');btn.disabled=true;try{const {data,error}=await supabase.from('geti_collaboration_tariffs').select('price_usd').eq('key','collaboration').single();if(error)throw Error('Official collaboration tariff unavailable: '+error.message);if(Math.abs(Number(data?.price_usd)-8)>0.001)throw Error('GETI administration must set the official Collaboration Fee to $8.00 before Zopayo checkout.');if(getiAccountActive())throw Error('Account is Active. Collaboration payment is disabled.');tariffPrices.collaboration=8;E('collabGetiPayment')?.click();}catch(ex){getiPickerError(ex.message||'Unable to verify the payment.');}finally{btn.disabled=false;}return;}
@@ -1256,6 +1282,8 @@ function amountInCents(value){
  return cents;
 }
 async function serverTariff(key){
+ const supabase=window.getiPaymentBridge?.getClient?.();
+ if(!supabase)invalid('GETI payment is not ready. Reload the page.');
  const {data,error}=await supabase.from('geti_collaboration_tariffs').select('price_usd').eq('key',key).single();
  if(error||!data||!Number.isFinite(Number(data.price_usd)))invalid('Unable to confirm the official GETI tariff. '+(error?.message||''));
  const amount=Number(data.price_usd);
@@ -1263,27 +1291,32 @@ async function serverTariff(key){
  return amount;
 }
 async function secureSelection(id){
+ const bridge=window.getiPaymentBridge;
+ if(!bridge?.getAuth||!bridge?.getClient)invalid('GETI payment is not ready. Reload the page.');
+ const {user,application}=await bridge.getAuth();
+ const supabase=bridge.getClient();
  if(!user?.id||!user?.email)invalid('Sign in to your GETI account before payment.');
  const userEmail=user.email.trim().toLowerCase();
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userEmail))invalid('GETI account email is invalid.');
  let product='',usd=0,fullName=(application?.full_name||user.user_metadata?.full_name||userEmail.split('@')[0]||'').trim();
  let detail='';
  if(id==='getiProceedCertificate'){
    const name=field('getiPaymentFullName'),center=field('getiPaymentCentre'),date=field('getiPaymentDate');
    const qt=field('getiPaymentQty');
    if(!name||!center||!/^\d{4}-\d{2}-\d{2}$/.test(date)||!/^\d+$/.test(qt))invalid('Complete Full Name, Center, Date and number of certificates.');
-   const qty=Number(qt);if(!Number.isSafeInteger(qty)||qty<1||qty>1000)invalid('Number of certificates must be between 1 and 1000.');
+   const qty=Number(qt);if(!Number.isSafeInteger(qty)||qty<1||qty>277)invalid('Number of certificates must be between 1 and 277 per payment.');
    await serverTariff('certificate');
    usd=qty*8;product='GETI Student Certificates — '+qty+' certificates';fullName=name;
    detail=qty+' certificates for '+name+' / '+center+' / '+date;
  }else if(id==='getiProceedCollaboration'){
    const {data,error}=await supabase.from('collaboration_applications').select('account_status').eq('owner_id',user.id).order('created_at',{ascending:false}).limit(1).maybeSingle();
    if(error||!data)invalid('Unable to verify account status. Try signing in again.');
-   if(String(data.account_status).toLowerCase()==='active')invalid('Your account is already Active. Collaboration payment is not available.');
+   if(['active','activated'].includes(String(data.account_status).toLowerCase()))invalid('Your account is already Active. Collaboration payment is not available.');
    await serverTariff('collaboration');
    usd=8;product='GETI Collaboration Fee';detail='One-time collaboration fee';
  }else if(id==='getiReviewElse'){
    const motif=field('getiElseMotif').replace(/\s+/g,' ');
-   if(motif.length<3||motif.length>80)invalid('Motif must contain 3 to 80 characters.');
+   if(motif.length<3||motif.length>70)invalid('Motif must contain 3 to 70 characters.');
    const cents=amountInCents(field('getiElsePrice'));
    usd=cents/100;
    // 100 characters maximum enforced by GETI Zopayo service.
@@ -1293,7 +1326,7 @@ async function secureSelection(id){
  if(!fullName||fullName.length<2)invalid('Full name is required. Update your profile first.');
  const mga=Math.round(usd*4500);
  if(!Number.isSafeInteger(mga)||mga<1||mga>10000000)invalid('This amount exceeds the supported Zopayo checkout range.');
- return {product,usd,mga,fullName,detail,userEmail};
+ return {product,usd,mga,fullName,detail,userEmail,studentId:application?.registration_id||''};
 }
 async function startPayment(id,btn){
  if(busy)return;busy=true;
@@ -1308,12 +1341,13 @@ async function startPayment(id,btn){
   try{
    response=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},signal:controller.signal,
     body:JSON.stringify({action:'create',full_name:info.fullName,email:info.userEmail,
-      student_id:application?.registration_id||'',product:info.product,amount:info.mga,currency:'MGA',price_usd:info.usd})});
+      student_id:info.studentId,product:info.product,amount:info.mga,currency:'MGA',price_usd:info.usd})});
   }finally{clearTimeout(timeout);}
   const result=await response.json().catch(()=>({}));
   if(!response.ok)invalid(result.error||result.message||'Zopayo server could not create the payment.');
   const paymentUrl=result.payment_url;
-  if(typeof paymentUrl!=='string'||!/^https:\/\/request\.zopayo\.com\//i.test(paymentUrl))invalid('No verified Zopayo payment URL was returned.');
+  let verifiedZopayo=false; try { const u=new URL(paymentUrl); verifiedZopayo=u.protocol==='https:' && (u.hostname==='zopayo.com'||u.hostname.endsWith('.zopayo.com')); } catch {}
+  if(!verifiedZopayo)invalid('No verified Zopayo payment URL was returned.');
   if(result.relation_id)sessionStorage.setItem('geti_last_payment_ref',String(result.relation_id));
   display('Zopayo payment created. Redirecting now...','info');
   window.location.assign(paymentUrl);
