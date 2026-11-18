@@ -344,8 +344,28 @@ window.getiPaymentBridge={
       const query=await supabase.from('collaboration_applications')
         .select('id,owner_id,full_name,registration_id,account_status')
         .eq('owner_id',payer.id).order('created_at',{ascending:false}).limit(1).maybeSingle();
-      if(!query.error)currentApplication=query.data||null;
+      if(query.error)throw new Error('Unable to read your collaboration account: '+query.error.message);
+      currentApplication=query.data||null;
     }
+    // A newly registered user may not yet have an application record if the
+    // initial dashboard load failed. Register it using the same safe flow as load().
+    if(!currentApplication){
+      const registration='GETI-COL-'+new Date().getUTCFullYear()+'-'+crypto.randomUUID().replace(/-/g,'').slice(0,12).toUpperCase();
+      const create=await supabase.from('collaboration_applications').insert({
+        owner_id:payer.id,registration_id:registration,
+        full_name:String(payer.user_metadata?.full_name||payer.email.split('@')[0]||'GETI Collaborator').slice(0,120),
+        email:payer.email,account_status:'deactivated',application_status:'pending_review'
+      }).select('id,owner_id,full_name,registration_id,account_status').single();
+      if(create.error){
+        // Another tab may have inserted the application concurrently.
+        const retry=await supabase.from('collaboration_applications')
+          .select('id,owner_id,full_name,registration_id,account_status')
+          .eq('owner_id',payer.id).order('created_at',{ascending:false}).limit(1).maybeSingle();
+        if(retry.error||!retry.data)throw new Error('Unable to initialize your collaboration account: '+create.error.message);
+        currentApplication=retry.data;
+      }else currentApplication=create.data;
+    }
+    if(currentApplication.owner_id!==payer.id)throw new Error('Account verification failed.');
     return {user:payer,application:currentApplication};
   }
 };
@@ -1309,9 +1329,13 @@ async function secureSelection(id){
    usd=qty*8;product='GETI Student Certificates — '+qty+' certificates';fullName=name;
    detail=qty+' certificates for '+name+' / '+center+' / '+date;
  }else if(id==='getiProceedCollaboration'){
-   const {data,error}=await supabase.from('collaboration_applications').select('account_status').eq('owner_id',user.id).order('created_at',{ascending:false}).limit(1).maybeSingle();
-   if(error||!data)invalid('Unable to verify account status. Try signing in again.');
-   if(['active','activated'].includes(String(data.account_status).toLowerCase()))invalid('Your account is already Active. Collaboration payment is not available.');
+   if(!application?.id||application.owner_id!==user.id)invalid('Your collaboration account could not be loaded. Please reload the Dashboard.');
+   // Reload this exact row before checkout so a cached deactivated state cannot be used.
+   const {data,error}=await supabase.from('collaboration_applications').select('account_status,owner_id').eq('id',application.id).eq('owner_id',user.id).maybeSingle();
+   if(error)invalid('Unable to verify account status: '+error.message);
+   if(!data)invalid('Collaboration account not found. Please reload the Dashboard.');
+   if(['active','activated'].includes(String(data.account_status||'').trim().toLowerCase()))invalid('Your account is already Active. Collaboration payment is not available.');
+   if(!['deactivated','awaiting_admin','inactive','pending'].includes(String(data.account_status||'').trim().toLowerCase()))invalid('Account status is not eligible for Collaboration payment. Contact GETI Administration.');
    await serverTariff('collaboration');
    usd=8;product='GETI Collaboration Fee';detail='One-time collaboration fee';
  }else if(id==='getiReviewElse'){
