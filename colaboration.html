@@ -389,45 +389,39 @@ async function getiQueryWithJwtRecovery(queryFactory){
  return {...result,error:getiReadableAuthError(result?.error)};
 }
 // Expose narrowly-scoped, live payment context to the separate checkout script.
+// Verified payment-account lookup. Identity is checked by Supabase Auth on GETI's server;
+// the browser cannot choose its own account or activation status.
+const GETI_PAYMENT_ACCOUNT_ENDPOINT='https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-collaboration-account-payment';
+async function getiVerifiedPaymentAccount(){
+ const sessionResult=await supabase.auth.getSession();
+ if(sessionResult.error)throw new Error('Please sign in to GETI again: '+sessionResult.error.message);
+ let token=sessionResult.data?.session?.access_token;
+ if(!token)throw new Error('Sign in to GETI before proceeding to payment.');
+ const accountRequest=async accessToken=>{
+  const response=await fetch(GETI_PAYMENT_ACCOUNT_ENDPOINT,{
+    method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+accessToken},
+    body:JSON.stringify({action:'account'}),cache:'no-store'
+  });
+  const payload=await response.json().catch(()=>({}));
+  if(!response.ok)throw Object.assign(new Error(payload.error||'Unable to verify account status.'),{status:response.status});
+  if(!payload.user?.id||!payload.user?.email||!payload.application?.id||payload.application.owner_id!==payload.user.id)
+    throw new Error('GETI account verification returned incomplete information.');
+  return payload;
+ };
+ try{return await accountRequest(token);}
+ catch(err){
+  if(err.status!==401)throw err;
+  // One refresh is appropriate for an invalid session; never repeatedly rotate JWTs.
+  const renewed=await supabase.auth.refreshSession();
+  if(renewed.error||!renewed.data?.session?.access_token)
+   throw new Error('GETI login session has expired. Please sign out and sign in again.');
+  return await accountRequest(renewed.data.session.access_token);
+ }
+}
 window.getiPaymentBridge={
-  getClient:()=>supabase,
-  queryWithRecovery:getiQueryWithJwtRecovery,
-  getAuth:async()=>{
-    // Always resolve the signed-in payer from the official GETI Supabase session.
-    // Avoid the historical `user is not defined` error inside separate payment scripts.
-    const result=await getiQueryWithJwtRecovery(()=>supabase.auth.getUser());
-    if(result.error)throw getiReadableAuthError(result.error);
-    const payer=result.data?.user;
-    if(!payer?.id||!payer?.email)throw new Error('Sign in to GETI before continuing to Zopayo.');
-    let currentApplication=(application?.owner_id===payer.id)?application:null;
-    if(!currentApplication){
-      const query=await getiQueryWithJwtRecovery(()=>supabase.from('collaboration_applications')
-        .select('id,owner_id,full_name,registration_id,account_status')
-        .eq('owner_id',payer.id).order('created_at',{ascending:false}).limit(1).maybeSingle());
-      if(query.error)throw new Error('Unable to read your collaboration account: '+getiReadableAuthError(query.error).message);
-      currentApplication=query.data||null;
-    }
-    // A newly registered user may not yet have an application record if the
-    // initial dashboard load failed. Register it using the same safe flow as load().
-    if(!currentApplication){
-      const registration='GETI-COL-'+new Date().getUTCFullYear()+'-'+crypto.randomUUID().replace(/-/g,'').slice(0,12).toUpperCase();
-      const create=await getiQueryWithJwtRecovery(()=>supabase.from('collaboration_applications').insert({
-        owner_id:payer.id,registration_id:registration,
-        full_name:String(payer.user_metadata?.full_name||payer.email.split('@')[0]||'GETI Collaborator').slice(0,120),
-        email:payer.email,account_status:'deactivated',application_status:'pending_review'
-      }).select('id,owner_id,full_name,registration_id,account_status').single());
-      if(create.error){
-        // Another tab may have inserted the application concurrently.
-        const retry=await supabase.from('collaboration_applications')
-          .select('id,owner_id,full_name,registration_id,account_status')
-          .eq('owner_id',payer.id).order('created_at',{ascending:false}).limit(1).maybeSingle();
-        if(retry.error||!retry.data)throw new Error('Unable to initialize your collaboration account: '+create.error.message);
-        currentApplication=retry.data;
-      }else currentApplication=create.data;
-    }
-    if(currentApplication.owner_id!==payer.id)throw new Error('Account verification failed.');
-    return {user:payer,application:currentApplication};
-  }
+ getClient:()=>supabase,
+ queryWithRecovery:getiQueryWithJwtRecovery,
+ getAuth:getiVerifiedPaymentAccount
 };
 let tariffPrices={collaboration:8,certificate:8,bonus:2.50};let getiTariffLoadError='';let pendingCheckout=null;function getiShowTariffProblem(){
  // Keep backend tariff errors available to payment validation without displaying a dashboard warning.
@@ -1353,7 +1347,7 @@ async function chooseMethodLikeGETIPay(info){
   const shade=document.createElement('div');shade.className='geti-method-backdrop';shade.setAttribute('role','presentation');
   const dialog=document.createElement('section');dialog.className='geti-method-dialog';dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-labelledby','getiMethodTitle');
   const header=document.createElement('div');header.className='geti-method-header';
-  const head=document.createElement('div');head.innerHTML='<h2 id="getiMethodTitle">GETI — Choose Payment Method</h2><p>Choose your preferred method before opening the secure Zopayo checkout.</p>';
+  const head=document.createElement('div');head.innerHTML='<h2 id="getiMethodTitle">GETI — Payment Area | Choose Payment Method</h2><p>Choose your preferred method before opening the secure Zopayo checkout.</p>';
   const close=document.createElement('button');close.type='button';close.className='geti-method-close';close.textContent='Close';header.append(head,close);
   const step=document.createElement('div');step.className='geti-method-steps';step.innerHTML='<span>1. Choose Method</span><span>2. Payment Details</span><span>3. Confirmation</span><span>4. Payment Status</span>';
   const grid=document.createElement('div');grid.className='geti-method-grid';
@@ -1367,7 +1361,7 @@ async function chooseMethodLikeGETIPay(info){
   };
   const update=()=>{
    grid.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.method===chosen)));
-   explanation.replaceChildren();const b=document.createElement('b');b.textContent=chosen;const p=document.createElement('p');p.textContent=descriptions[chosen];const note=document.createElement('p');note.textContent='This is a preferred method, not a guaranteed or preselected Zopayo option. Choose the available method again on Zopayo.';explanation.append(b,p,note);
+   explanation.replaceChildren();const b=document.createElement('b');b.textContent=chosen;const p=document.createElement('p');p.textContent=descriptions[chosen];const note=document.createElement('p');note.textContent='Choose the final payment method on the secure Zopayo page. GETI does not collect mobile-money PINs or card details.';explanation.append(b,p,note);
   };
   for(const method of methods){
    const b=document.createElement('button');b.type='button';b.className='geti-method-choice';b.dataset.method=method.label;
@@ -1411,19 +1405,26 @@ function amountInCents(value){
  return cents;
 }
 async function serverTariff(key){
- const supabase=window.getiPaymentBridge?.getClient?.();
- if(!supabase)invalid('GETI payment is not ready. Reload the page.');
- const {data,error}=await supabase.from('geti_collaboration_tariffs').select('price_usd').eq('key',key).single();
- if(error||!data||!Number.isFinite(Number(data.price_usd)))invalid('Unable to confirm the official GETI tariff. '+(error?.message||''));
- const amount=Number(data.price_usd);
- if(Math.abs(amount-8)>0.001)invalid('The official GETI '+key+' tariff must be $8.00 before payment.');
- return amount;
+ // Pricing is displayed locally; the existing GETI Zopayo Edge Function
+ // independently validates certificate and collaboration rates against its DB.
+ if(key!=='certificate' && key!=='collaboration')invalid('Unknown GETI payment tariff.');
+ return 8;
 }
 async function secureSelection(id){
  const bridge=window.getiPaymentBridge;
  if(!bridge?.getAuth||!bridge?.getClient)invalid('GETI payment is not ready. Reload the page.');
- const {user,application}=await bridge.getAuth();
  const supabase=bridge.getClient();
+ let user=null,application=null;
+ if(id==='getiProceedCollaboration'){
+   // Only the Collaboration Fee requires server-verified collaboration status.
+   const verified=await bridge.getAuth();
+   user=verified.user;application=verified.application;
+ }else{
+   // Certificates and Other payments must not depend on a collaboration dossier.
+   const result=await supabase.auth.getUser();
+   if(result.error)invalid('GETI sign in failed: '+result.error.message);
+   user=result.data?.user;
+ }
  if(!user?.id||!user?.email)invalid('Sign in to your GETI account before payment.');
  const userEmail=user.email.trim().toLowerCase();
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userEmail))invalid('GETI account email is invalid.');
@@ -1439,12 +1440,11 @@ async function secureSelection(id){
    detail=qty+' certificates for '+name+' / '+center+' / '+date;
  }else if(id==='getiProceedCollaboration'){
    if(!application?.id||application.owner_id!==user.id)invalid('Your collaboration account could not be loaded. Please reload the Dashboard.');
-   // Reload this exact row before checkout so a cached deactivated state cannot be used.
-   const {data,error}=await bridge.queryWithRecovery(()=>supabase.from('collaboration_applications').select('account_status,owner_id').eq('id',application.id).eq('owner_id',user.id).maybeSingle());
-   if(error)invalid('Unable to verify account status: '+error.message);
-   if(!data)invalid('Collaboration account not found. Please reload the Dashboard.');
-   if(['active','activated'].includes(String(data.account_status||'').trim().toLowerCase()))invalid('Your account is already Active. Collaboration payment is not available.');
-   if(!['deactivated','awaiting_admin','inactive','pending'].includes(String(data.account_status||'').trim().toLowerCase()))invalid('Account status is not eligible for Collaboration payment. Contact GETI Administration.');
+   // The GETI server has just verified this account through Supabase Auth and
+   // loaded the CURRENT status through an admin-scoped database query.
+   const status=String(application.account_status||'').trim().toLowerCase();
+   if(['active','activated'].includes(status))invalid('Your account is already Active. Collaboration payment is not available.');
+   if(!['deactivated','awaiting_admin','inactive','pending'].includes(status))invalid('Account status is not eligible for Collaboration payment. Contact GETI Administration.');
    await serverTariff('collaboration');
    usd=8;product='GETI Collaboration Fee';detail='One-time collaboration fee';
  }else if(id==='getiReviewElse'){
