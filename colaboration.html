@@ -1012,15 +1012,19 @@ function getiMembersPage(){
  <div class="geti-messenger" id="getiMessengerShell">
  <aside class="geti-member-pane">
  <div class="geti-msg-header"><h2>Chats</h2><button type="button" id="getiChatRefresh" title="Refresh chats" aria-label="Refresh chats">↻</button></div>
- <div class="geti-msg-search-wrap"><span aria-hidden="true">⌕</span><input class="geti-member-search" type="search" id="getiMemberSearch" maxlength="100" placeholder="Search people..." aria-label="Search chats"></div>
- <div class="geti-msg-row-head">People on GETI <span id="getiMemberTotal"></span></div>
+ <div class="geti-msg-search-wrap"><span aria-hidden="true">⌕</span><input class="geti-member-search" type="search" id="getiMemberSearch" maxlength="100" placeholder="Search all GETI accounts..." aria-label="Search chats"></div>
+ <div class="geti-msg-row-head">All GETI accounts <span id="getiMemberTotal"></span></div>
  <div class="geti-member-list" id="getiMemberList"><div class="geti-chat-placeholder">Loading conversations...</div></div>
  </aside>
  <section class="geti-chat-pane" id="getiChatPane"><div class="geti-msg-empty"><div class="geti-msg-empty-icon">✉</div><strong>Your conversations</strong><p>Choose a GETI member to open your private chat.</p></div></section>
  </div></section>`;
 }
 
-async function getiSocialPulse(){if(!user)return;const {error}=await getiQueryWithJwtRecovery(()=>supabase.from('geti_member_presence').upsert({user_id:user.id,last_seen:new Date().toISOString()},{onConflict:'user_id'}));if(error)console.debug('GETI presence unavailable:',error.message)}
+async function getiSocialPulse(){
+ if(!user)return;
+ try{await getiSocialApi('presence');}
+ catch(error){console.debug('GETI presence update unavailable:',error?.message||String(error));}
+}
 setInterval(()=>{if(user&&!document.hidden)void getiSocialPulse()},30000);document.addEventListener('visibilitychange',()=>{if(user&&!document.hidden)void getiSocialPulse()});
 function getiMemberOnline(m){return !!m.last_seen && Date.now()-new Date(m.last_seen).getTime()<90000}
 function getiChatAvatar(m){
@@ -1045,7 +1049,7 @@ function getiDisplayMembers(){
  const q=(E('getiMemberSearch')?.value||'').trim().toLocaleLowerCase();
  const filtered=getiMemberDirectory.filter(m=>(m.full_name+' '+(m.organization||'')).toLocaleLowerCase().includes(q));
  const count=E('getiMemberTotal');if(count)count.textContent=String(getiMemberDirectory.length);
- el.innerHTML=filtered.length?filtered.map(getiMemberRow).join(''):'<div class="geti-chat-placeholder">No matching members found.</div>';
+ el.innerHTML=filtered.length?filtered.map(getiMemberRow).join(''):'<div class="geti-chat-placeholder">No matching GETI accounts found.</div>';
 }
 async function getiLoadMembers(){
  if(!user||page!=='members')return;
@@ -1079,7 +1083,7 @@ function getiCloseChat(){
 }
 function getiOpenMember(id){
  const m=getiMemberDirectory.find(x=>x.user_id===id);if(!m)return;
- getiChosenMember=m;getiDisplayMembers();
+ getiChosenMember=m;getiChatLastSignature='';getiDisplayMembers();
  const el=E('getiChatPane');if(!el)return;
  el.innerHTML=`<div class="geti-chat-head">
    <button class="geti-msg-back" type="button" id="getiChatGoBack" aria-label="Back to chats">‹</button>
@@ -1094,22 +1098,41 @@ function getiOpenMember(id){
  E('getiChatGoBack').onclick=getiCloseChat;
  E('getiViewMember').onclick=()=>E('getiSelectedProfile').classList.toggle('hide');
  E('getiSendDirect').onsubmit=getiSendPrivateMessage;
+ E('getiChatText').addEventListener('keydown',event=>{
+  if(event.key==='Enter'&&!event.shiftKey&&!event.isComposing){
+   event.preventDefault();
+   E('getiSendDirect')?.requestSubmit();
+  }
+ });
  void getiFetchConversation();
 }
+let getiChatLastSignature='',getiChatFetching=false;
 async function getiFetchConversation(){
- if(!user||page!=='members'||!getiChosenMember||getiSocialBusy)return;
+ if(!user||page!=='members'||!getiChosenMember||getiChatFetching)return;
  const peer=getiChosenMember.user_id;
+ getiChatFetching=true;
  let data=[],error=null;
  try{data=(await getiSocialApi('conversation',{peer_id:peer})).messages||[];}
  catch(e){error=e;}
- if(getiChosenMember?.user_id!==peer)return;
+ finally{getiChatFetching=false;}
+ if(getiChosenMember?.user_id!==peer||page!=='members')return;
  const box=E('getiChatHistory');if(!box)return;
- if(error){box.innerHTML='<div class="geti-social-notice">'+esc('Chat unavailable: '+(error.message||'Try again.'))+'</div>';return;}
- const atBottom=box.scrollHeight-box.scrollTop-box.clientHeight<100;
+ const notice=E('getiChatError');
+ if(error){
+  if(notice)notice.textContent='Conversation not available: '+(error.message||'Please retry.');
+  if(!box.dataset.loaded)box.innerHTML='<div class="geti-social-notice">Unable to load messages.</div>';
+  return;
+ }
+ if(notice&&notice.textContent.startsWith('Conversation not available:'))notice.textContent='';
+ const signature=JSON.stringify(data.map(x=>[x.id,x.created_at,x.body,x.sender_id]));
+ if(signature===getiChatLastSignature&&box.dataset.loaded)return;
+ const atBottom=box.scrollHeight-box.scrollTop-box.clientHeight<120;
+ getiChatLastSignature=signature;
  box.innerHTML=data.length?data.map(m=>`<div class="geti-bubble ${m.sender_id===user.id?'mine':''}">${esc(m.body)}<time>${esc(getiSocialSafeTime(m.created_at))}</time></div>`).join(''):'<div class="geti-chat-placeholder">No messages yet. Say hello!</div>';
  if(atBottom||!box.dataset.loaded)box.scrollTop=box.scrollHeight;
  box.dataset.loaded='1';
 }
+
 async function getiSendPrivateMessage(e){
  e.preventDefault();
  if(getiSocialBusy||!user||!getiChosenMember)return;
@@ -1117,24 +1140,52 @@ async function getiSendPrivateMessage(e){
  if(!body||body.length>3000)return;
  getiSocialBusy=true;
  const button=E('getiSendDirect')?.querySelector('button');
+ const notice=E('getiChatError');
  if(button)button.disabled=true;
+ if(notice)notice.textContent='Sending...';
  const peer=getiChosenMember.user_id;
  try{
-  await getiSocialApi('send_private',{peer_id:peer,body});
-  if(ta)ta.value='';
-  const msg=E('getiChatError');if(msg)msg.textContent='';
+  const response=await getiSocialApi('send_private',{peer_id:peer,body});
+  if(!response?.sent)throw new Error('The server did not confirm your message.');
+  if(ta&&getiChosenMember?.user_id===peer)ta.value='';
+  if(notice)notice.textContent='Message sent';
  }catch(err){
-  const msg=E('getiChatError');if(msg)msg.textContent='Could not send: '+(err?.message||String(err));
+  if(notice)notice.textContent='Message not sent: '+(err?.message||String(err));
   return;
  }finally{
   getiSocialBusy=false;
   if(button)button.disabled=false;
  }
  await getiFetchConversation();
- await getiLoadMembers();
+ void getiLoadMembers();
 }
-function getiStopSocialPoll(){if(getiSocialPoll){clearInterval(getiSocialPoll);getiSocialPoll=null;}getiChosenMember=null;getiMemberDirectory=[];}
-function getiStartSocial(){getiStopSocialPoll();if(!user||page!=='members')return;void getiSocialPulse();void getiLoadMembers();getiSocialPoll=setInterval(async()=>{if(document.hidden||page!=='members'||!user)return;await getiSocialPulse();await getiLoadMembers();if(getiChosenMember)await getiFetchConversation();},12000);const input=E('getiMemberSearch');if(input)input.oninput=getiDisplayMembers;const list=E('getiMemberList');if(list)list.onclick=e=>{const b=e.target.closest('[data-member-id]');if(b)getiOpenMember(b.dataset.memberId)};const refresh=E('getiChatRefresh');if(refresh)refresh.onclick=()=>{void getiLoadMembers();if(getiChosenMember)void getiFetchConversation();};}
+
+let getiChatMessagePoll=null;
+function getiStopSocialPoll(){
+ if(getiSocialPoll){clearInterval(getiSocialPoll);getiSocialPoll=null;}
+ if(getiChatMessagePoll){clearInterval(getiChatMessagePoll);getiChatMessagePoll=null;}
+ getiChosenMember=null;getiMemberDirectory=[];getiChatLastSignature='';
+}
+function getiStartSocial(){
+ getiStopSocialPoll();
+ if(!user||page!=='members')return;
+ void getiSocialPulse();void getiLoadMembers();
+ getiSocialPoll=setInterval(()=>{
+  if(document.hidden||page!=='members'||!user)return;
+  void getiSocialPulse();void getiLoadMembers();
+ },12000);
+ getiChatMessagePoll=setInterval(()=>{
+  if(document.hidden||page!=='members'||!user||!getiChosenMember)return;
+  void getiFetchConversation();
+ },3500);
+ const input=E('getiMemberSearch');
+ if(input)input.oninput=getiDisplayMembers;
+ const list=E('getiMemberList');
+ if(list)list.onclick=e=>{const b=e.target.closest('[data-member-id]');if(b)getiOpenMember(b.dataset.memberId)};
+ const refresh=E('getiChatRefresh');
+ if(refresh)refresh.onclick=()=>{void getiLoadMembers();if(getiChosenMember)void getiFetchConversation();};
+}
+
 
 const GETI_BACK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
 function getiBackButton(label,id,extra=''){return `<button type="button" class="geti-back-btn ${extra}" id="${id}">${GETI_BACK_SVG}<span>${label}</span></button>`;}
