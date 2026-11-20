@@ -1629,9 +1629,31 @@ async function api(path,options={},retry=true){
  if(!r.ok)throw Error((out&&typeof out==='object'&&(out.message||out.error_description||out.error||out.msg))||String(out||'HTTP '+r.status));
  return out;
 }
+// JWT clock-skew fallback: the GETI Edge Function verifies the bearer with Supabase Auth.
+// Never trust browser-supplied admin flags, IDs or unverified JWT claims.
+function collabJwtClockSkew(error){return /JWT issued at future/i.test(errorText(error))}
+async function collabSecureAccounts(action='admin_list',payload={}){
+ if(!session?.access_token)throw Error('A valid GETI administrator login is required.');
+ const response=await fetch(root+'/functions/v1/geti-collaboration-account-payment',{
+  method:'POST',headers:{apikey:key,Authorization:'Bearer '+session.access_token,'Content-Type':'application/json'},
+  body:JSON.stringify({action,...payload}),cache:'no-store'
+ });
+ const value=await response.json().catch(()=>({}));
+ if(!response.ok)throw Error(value.error||'GETI secure account verification failed (HTTP '+response.status+').');
+ return value;
+}
+async function collabReadAccountList(){
+ try{return await api('/rest/v1/collaboration_applications?select=*&order=created_at.desc&limit=500');}
+ catch(error){
+  if(!collabJwtClockSkew(error))throw error;
+  const answer=await collabSecureAccounts('admin_list');
+  if(!Array.isArray(answer.accounts))throw Error('GETI server returned an invalid account list.');
+  return answer.accounts;
+ }
+}
 async function authCheck(){
  if(!session)return false;
- try{authorized=(await api('/rest/v1/rpc/geti_collaboration_admin',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}))===true;}catch(e){authorized=false;throw e}
+ try{authorized=(await api('/rest/v1/rpc/geti_collaboration_admin',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}))===true;}catch(e){if(!collabJwtClockSkew(e)){authorized=false;throw e;}try{const verified=await collabSecureAccounts('admin_list');authorized=Array.isArray(verified.accounts);}catch(inner){authorized=false;throw inner;}}
  return authorized;
 }
 async function collabLogin(){
@@ -1648,7 +1670,7 @@ async function collabLoad(force=false){
  if(!authorized){authPage();return false;}if(loaded&&!force)return true;
  content(hdr('GETI Collaboration','Loading secure Supabase administration...'));
  const requests=await Promise.allSettled([
- api('/rest/v1/collaboration_applications?select=*&order=created_at.desc&limit=500'),
+ collabReadAccountList(),
  api('/rest/v1/collaboration_messages?select=*&order=created_at.desc&limit=500'),
  api('/rest/v1/geti_collaboration_tariffs?select=*&order=key.asc'),
  api('/rest/v1/rpc/geti_collaboration_admin_payments',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})
@@ -1682,10 +1704,18 @@ function collabFilterApps(){let q=(document.getElementById('collabSearch')?.valu
 function collabDetail(id){const a=entries.find(x=>x.id===id);if(!a)return;selectedId=id;let fields=[['Full name',a.full_name],['Registration ID',a.registration_id],['Email',a.email],['Phone',a.phone],['Centre',a.organization],['Account',a.account_status],['Application review',a.application_status],['Created',dat(a.created_at)],['PDF',a.dossier_pdf||'Not submitted']];let extras=Object.entries(a.application_data||{}).filter(([k,v])=>!String(v).startsWith('data:')).slice(0,30).map(([k,v])=>[k,typeof v==='object'?JSON.stringify(v).slice(0,180):String(v).slice(0,260)]);content(hdr('Collaboration Application File',a.registration_id||a.full_name)+'<div class="collab-panel"><h3>Applicant Information</h3><div class="collab-detail">'+[...fields,...extras].map(([k,v])=>'<div><b>'+E(k)+'</b>'+E(v||'—')+'</div>').join('')+'</div><div class="collab-inline" style="margin-top:14px">'+btn('collabSignedDossier('+jsArg(id)+')','OPEN SIGNED PDF')+btn('collabToggle('+jsArg(id)+')',a.account_status==='active'?'DEACTIVATE':'ACTIVATE',a.account_status==='active'?'danger':'success')+btn("openPage('collabreview')",'APPLICATION REVIEW')+'</div><div id="collabFeedback"></div></div>')}
 async function collabUpdate(id,values){
  if(!authorized)throw Error('Verified Supabase administrator session required.');
- const updated=await api('/rest/v1/collaboration_applications?id=eq.'+encodeURIComponent(id),{
-  method:'PATCH',headers:{'Content-Type':'application/json','Prefer':'return=representation'},
-  body:JSON.stringify(values)
- });
+ let updated;
+ try{
+  updated=await api('/rest/v1/collaboration_applications?id=eq.'+encodeURIComponent(id),{
+   method:'PATCH',headers:{'Content-Type':'application/json','Prefer':'return=representation'},
+   body:JSON.stringify(values)
+  });
+ }catch(error){
+  if(!collabJwtClockSkew(error) || Object.keys(values).length!==1 || !Object.prototype.hasOwnProperty.call(values,'account_status'))throw error;
+  const secure=await collabSecureAccounts('admin_set_status',{id,status:values.account_status});
+  if(!secure.account || secure.account.id!==id)throw Error('GETI server did not verify this account change.');
+  updated=[secure.account];
+ }
  if(!Array.isArray(updated)||updated.length!==1)throw Error('No account was updated. Verify GETI admin authorization and record access.');
  // The PATCH response is authoritative; a separate module's loading failure cannot roll back it.
  const index=entries.findIndex(x=>x.id===id);
@@ -1734,7 +1764,7 @@ async function collabToggle(id){
 setInterval(async()=>{
  if(!authorized||document.hidden||!document.getElementById('collabAccountLiveTable'))return;
  try{
-  const fresh=await api('/rest/v1/collaboration_applications?select=*&order=created_at.desc&limit=500');
+  const fresh=await collabReadAccountList();
   if(!Array.isArray(fresh)||!document.getElementById('collabAccountLiveTable'))return;
   const before=JSON.stringify(entries.map(x=>[x.id,x.account_status,x.application_status]));
   entries=fresh;
@@ -1751,7 +1781,7 @@ async function collabAccountsRefresh(silent=false){
  if(b){b.disabled=true;b.textContent='Refreshing...';}
  try{
   // Read live applications independently of Messages, Payments, and Tariffs.
-  const fresh=await api('/rest/v1/collaboration_applications?select=*&order=created_at.desc&limit=500');
+  const fresh=await collabReadAccountList();
   if(!Array.isArray(fresh))throw Error('Invalid applications response from Supabase.');
   entries=fresh;loaded=true;
   const list=document.getElementById('collabAccountLiveTable');
