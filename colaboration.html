@@ -1268,7 +1268,7 @@ function getiFreePracticeReply(m,body,history){
 function getiDemoRenderMessages(id){
  const box=E('getiDemoHistory');if(!box)return;
  const messages=getiReadDemoMessages(id);
- box.innerHTML=messages.length?messages.map(x=>`<div class="geti-bubble ${x.from==='me'?'mine':''}">${esc(x.body)}<time>${x.from==='demo'?(x.replyMode==='FREE PRACTICE'?'Free Practice':'AI tutor'):'You'}</time></div>`).join(''):
+ box.innerHTML=messages.length?messages.map(x=>`<div class="geti-bubble ${x.from==='me'?'mine':''}">${esc(x.body)}<time>${x.from==='demo'?(x.replyMode==='FREE PRACTICE'?'Older scripted practice':'Gemini AI'):'You'}</time></div>`).join(''):
  `<div class="geti-chat-placeholder">Start your English practice by saying hello or asking a question about ${esc(getiInternationalDemoProfiles.find(m=>m.id===id)?.topic||'English')}.</div>`;
  box.scrollTop=box.scrollHeight;
 }
@@ -1284,7 +1284,7 @@ function getiOpenDemoProfile(id){
    <div><strong>${esc(m.name)}</strong><small>English practice · AI coach</small></div>
   </div>
  </div>
- <div class="geti-demo-education-banner"><strong>English practice tutor</strong> · Free Practice works without an API key. Genuine AI answers require a Gemini key. These are virtual tutors, not real people. Chat history stays on this device.</div>
+ <div class="geti-demo-education-banner"><strong>English practice AI tutor</strong> · Answers come from the Gemini AI server. If the model or free-tier quota is unavailable, the error is displayed clearly instead of a scripted reply. These are virtual tutors, not real people. Chat history stays on this device.</div>
  <div class="geti-chat-history" id="getiDemoHistory" role="log" aria-live="polite"></div>
  <form class="geti-chat-compose" id="getiDemoChatForm"><textarea id="getiDemoChatInput" maxlength="1800" rows="1" required placeholder="Ask your AI English tutor..." aria-label="English practice message"></textarea><button class="btn" type="submit" aria-label="Send practice message">➤</button></form>
  <div class="hint" id="getiDemoStatus" role="status" style="padding:4px 12px 10px"></div>`;
@@ -1305,7 +1305,7 @@ async function getiAskAiCoach(id,text,history){
  if(error)throw error;
  const accessToken=data?.session?.access_token;
  if(!accessToken)throw Error('Sign in to GETI to use AI practice.');
- const context=history.slice(-16).filter(x=>x&&['me','demo'].includes(x.from)&&typeof x.body==='string')
+ const context=history.slice(-16).filter(x=>x&&['me','demo'].includes(x.from)&&typeof x.body==='string'&&(x.from!=='demo'||x.replyMode==='AI'))
   .map(x=>({role:x.from==='me'?'user':'assistant',content:x.body.slice(0,1800)}));
  const response=await fetch(GETI_AI_CHAT_ENDPOINT,{
   method:'POST',cache:'no-store',
@@ -1330,29 +1330,23 @@ async function getiSendDemoMessage(id){
  const button=E('getiDemoChatForm')?.querySelector('button');
  if(button)button.disabled=true;
  const status=E('getiDemoStatus');
- if(status)status.textContent=`${m.name} · AI is thinking...`;
+ if(status)status.textContent=`${m.name} · Gemini AI is responding...`;
  try{
-  let answer,replyMode='AI';
-  try{
-   answer=await getiAskAiCoach(id,text,history.slice(0,-1));
-  }catch(aiError){
-   // No-key/no-quota fallback is immediately usable for English practice;
-   // clearly label it, never pretend these are generated AI answers.
-   replyMode='FREE PRACTICE';
-   answer=getiFreePracticeReply(m,text,history);
-   console.debug('GETI free practice fallback:',aiError?.message||String(aiError));
-  }
+  // Real AI is never silently substituted with generic scripted answers.
+  const answer=await getiAskAiCoach(id,text,history.slice(0,-1));
   const existing=getiReadDemoMessages(id);
-  existing.push({from:'demo',body:answer,replyMode});
+  existing.push({from:'demo',body:answer,replyMode:'AI'});
   getiStoreDemoMessages(id,existing);
   if(getiActiveDemoId===id&&page==='members'){
-   const note=E('getiDemoStatus');if(note)note.textContent=replyMode==='AI'?'AI response received':'Free Practice reply (not generative AI). For true AI, configure a Gemini API key.';
+   const note=E('getiDemoStatus');if(note)note.textContent='✓ Answer from Gemini AI';
    getiDemoRenderMessages(id);
   }
  }catch(error){
+  const explanation=error?.message||String(error);
+  console.warn('GETI Gemini AI request failed:',explanation);
   if(getiActiveDemoId===id&&page==='members'){
    const note=E('getiDemoStatus');
-   if(note)note.textContent='AI could not reply: '+(error?.message||String(error));
+   if(note)note.textContent='Gemini AI error: '+explanation+' — Check the GETI Gemini model / free-tier quota and try again.';
   }
  }finally{
   getiDemoPendingById.delete(id);getiDemoReplyPending=false;
