@@ -630,8 +630,12 @@ async function call(url,body,withToken=true){
     if(withToken&&token)headers["x-admin-token"]=token;
     const r=await fetch(url,{method:"POST",headers,body:JSON.stringify(body),signal:controller.signal});
     let data={};try{data=await r.json()}catch{}
-    if(r.status===401&&withToken){logout();throw new Error("Administrator session expired.")}
-    if(!r.ok)throw new Error(data.error||("Request failed: "+r.status));
+    // Only the GETI Admin endpoint's explicit invalid-admin-token response may clear the admin session.
+    // An upstream JWT/database error is not proof that this admin session expired.
+    if(r.status===401&&withToken&&url===ADMIN_FN&&data.error==="Unauthorized"){
+      logout();throw new Error("Administrator session expired.");
+    }
+    if(!r.ok)throw new Error(data.error||data.message||("Request failed: "+r.status));
     return data;
   }finally{clearTimeout(timer)}
 }
@@ -696,24 +700,33 @@ async function getBlocks(force=false){
 async function overview(){
   content(notice("Loading overview..."));
   try{
-    /* Sequential requests intentionally reduce simultaneous backend connections. */
-    const users=await getUsers(true);
-    const res=await getResults(true);
-    const regs=await getRegs(true);
-    const bl=await getBlocks(true);
-    const pass=res.filter(x=>String(x.status).toUpperCase()==="PASSED");
-    const fail=res.filter(x=>String(x.status).toUpperCase()==="FAILED");
+    /* Load each independent dashboard section; one failed API must not blank out the whole workspace. */
+    const overviewRequests=[
+      ['Students',()=>getUsers(true)],
+      ['Exam results',()=>getResults(true)],
+      ['Registrations',()=>getRegs(true)],
+      ['Blocked emails',()=>getBlocks(true)]
+    ];
+    const overviewData=[];
+    for(const [,fn] of overviewRequests){try{overviewData.push({status:'fulfilled',value:await fn()})}catch(reason){overviewData.push({status:'rejected',reason})}}
+    const readResult=i=>overviewData[i].status==='fulfilled'&&Array.isArray(overviewData[i].value)?overviewData[i].value:null;
+    const users=readResult(0),res=readResult(1),regs=readResult(2),bl=readResult(3);
+    const failures=overviewData.flatMap((r,i)=>r.status==='rejected'?[overviewRequests[i][0]+': '+String(r.reason?.message||r.reason)]:[]);
+    const safeRes=res||[];
+    const pass=safeRes.filter(x=>String(x.status).toUpperCase()==="PASSED");
+    const fail=safeRes.filter(x=>String(x.status).toUpperCase()==="FAILED");
     const issued=pass.filter(x=>String(x.certificate_id||"").trim());
     const queue=pass.filter(x=>!String(x.certificate_id||"").trim());
-    const recent=[...res].sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0)).slice(0,7);
-    const k=(l,v,s)=>'<div class="card kpi"><span class="kpi-label">'+esc(l)+'</span><span class="kpi-value">'+n(v)+'</span><small>'+esc(s)+'</small></div>';
+    const recent=[...safeRes].sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0)).slice(0,7);
+    const k=(l,v,s)=>'<div class="card kpi"><span class="kpi-label">'+esc(l)+'</span><span class="kpi-value">'+(v==null?"—":n(v))+'</span><small>'+esc(s)+'</small></div>';
     content(
       pageHead("Overview","Live GETI operational summary.",'<button class="btn" onclick="overview()">REFRESH</button>')+
+      (failures.length?notice("Some GETI services are unavailable: "+failures.join(" | "),"error"):"")+
       '<div class="grid4">'+
-        k("Students",users.length,"Registered accounts")+k("Registrations",regs.length,"Active exam registrations")+
-        k("Passed",pass.length,"Successful exams")+k("Failed",fail.length,"Failed exams")+
-        k("Certificates issued",issued.length,"With Certificate ID")+k("Certificate queue",queue.length,"Passed, no Certificate ID")+
-        k("Blocked emails",bl.length,"Exam access blocked")+k("Total results",res.length,"All saved results")+
+        k("Students",users?.length,"Registered accounts")+k("Registrations",regs?.length,"Active exam registrations")+
+        k("Passed",res?pass.length:null,"Successful exams")+k("Failed",res?fail.length:null,"Failed exams")+
+        k("Certificates issued",res?issued.length:null,"With Certificate ID")+k("Certificate queue",res?queue.length:null,"Passed, no Certificate ID")+
+        k("Blocked emails",bl?.length,"Exam access blocked")+k("Total results",res?res.length:null,"All saved results")+
       '</div>'+
       '<div class="two-col">'+
         '<div class="card"><div class="panel-head"><strong>RECENT EXAM RESULTS</strong><button class="btn" onclick="openPage(\'results\')">VIEW ALL</button></div><div class="table-wrap" style="border:0;border-radius:0"><table><thead><tr><th>Student</th><th>Exam</th><th>Score</th><th>Status</th><th>Date</th></tr></thead><tbody>'+
@@ -1625,35 +1638,20 @@ async function api(path,options={},retry=true){
  const r=await fetch(root+path,{...options,headers});
  let out;const raw=await r.text();
  try{out=raw?JSON.parse(raw):null}catch{out=raw}
- if(r.status===401&&session&&retry){await collabRefreshToken();return api(path,options,false)}
- if(!r.ok)throw Error((out&&typeof out==='object'&&(out.message||out.error_description||out.error||out.msg))||String(out||'HTTP '+r.status));
- return out;
-}
-// JWT clock-skew fallback: the GETI Edge Function verifies the bearer with Supabase Auth.
-// Never trust browser-supplied admin flags, IDs or unverified JWT claims.
-function collabJwtClockSkew(error){return /JWT issued at future/i.test(errorText(error))}
-async function collabSecureAccounts(action='admin_list',payload={}){
- if(!session?.access_token)throw Error('A valid GETI administrator login is required.');
- const response=await fetch(root+'/functions/v1/geti-collaboration-account-payment',{
-  method:'POST',headers:{apikey:key,Authorization:'Bearer '+session.access_token,'Content-Type':'application/json'},
-  body:JSON.stringify({action,...payload}),cache:'no-store'
- });
- const value=await response.json().catch(()=>({}));
- if(!response.ok)throw Error(value.error||'GETI secure account verification failed (HTTP '+response.status+').');
- return value;
-}
-async function collabReadAccountList(){
- try{return await api('/rest/v1/collaboration_applications?select=*&order=created_at.desc&limit=500');}
- catch(error){
-  if(!collabJwtClockSkew(error))throw error;
-  const answer=await collabSecureAccounts('admin_list');
-  if(!Array.isArray(answer.accounts))throw Error('GETI server returned an invalid account list.');
-  return answer.accounts;
+ const apiError=(out&&typeof out==='object'&&(out.message||out.error_description||out.error||out.msg))||String(out||'HTTP '+r.status);
+ if(!r.ok&&session&&retry&&(r.status===401||/JWT issued at future/i.test(String(apiError)))){
+   // The only automatic recovery is a genuine new Supabase Auth token.
+   // No JWT validation or administrator access checks are bypassed.
+   await collabRefreshToken();return api(path,options,false);
  }
+ if(!r.ok)throw Error(/JWT issued at future/i.test(String(apiError))
+   ? 'Supabase JWT issued at future (PGRST303): server token clock mismatch. Authentication is still enforced; contact Supabase project administrator.'
+   : apiError);
+ return out;
 }
 async function authCheck(){
  if(!session)return false;
- try{authorized=(await api('/rest/v1/rpc/geti_collaboration_admin',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}))===true;}catch(e){if(!collabJwtClockSkew(e)){authorized=false;throw e;}try{const verified=await collabSecureAccounts('admin_list');authorized=Array.isArray(verified.accounts);}catch(inner){authorized=false;throw inner;}}
+ try{authorized=(await api('/rest/v1/rpc/geti_collaboration_admin',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}))===true;}catch(e){authorized=false;throw e}
  return authorized;
 }
 async function collabLogin(){
@@ -1670,7 +1668,7 @@ async function collabLoad(force=false){
  if(!authorized){authPage();return false;}if(loaded&&!force)return true;
  content(hdr('GETI Collaboration','Loading secure Supabase administration...'));
  const requests=await Promise.allSettled([
- collabReadAccountList(),
+ api('/rest/v1/collaboration_applications?select=*&order=created_at.desc&limit=500'),
  api('/rest/v1/collaboration_messages?select=*&order=created_at.desc&limit=500'),
  api('/rest/v1/geti_collaboration_tariffs?select=*&order=key.asc'),
  api('/rest/v1/rpc/geti_collaboration_admin_payments',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})
@@ -1704,18 +1702,10 @@ function collabFilterApps(){let q=(document.getElementById('collabSearch')?.valu
 function collabDetail(id){const a=entries.find(x=>x.id===id);if(!a)return;selectedId=id;let fields=[['Full name',a.full_name],['Registration ID',a.registration_id],['Email',a.email],['Phone',a.phone],['Centre',a.organization],['Account',a.account_status],['Application review',a.application_status],['Created',dat(a.created_at)],['PDF',a.dossier_pdf||'Not submitted']];let extras=Object.entries(a.application_data||{}).filter(([k,v])=>!String(v).startsWith('data:')).slice(0,30).map(([k,v])=>[k,typeof v==='object'?JSON.stringify(v).slice(0,180):String(v).slice(0,260)]);content(hdr('Collaboration Application File',a.registration_id||a.full_name)+'<div class="collab-panel"><h3>Applicant Information</h3><div class="collab-detail">'+[...fields,...extras].map(([k,v])=>'<div><b>'+E(k)+'</b>'+E(v||'—')+'</div>').join('')+'</div><div class="collab-inline" style="margin-top:14px">'+btn('collabSignedDossier('+jsArg(id)+')','OPEN SIGNED PDF')+btn('collabToggle('+jsArg(id)+')',a.account_status==='active'?'DEACTIVATE':'ACTIVATE',a.account_status==='active'?'danger':'success')+btn("openPage('collabreview')",'APPLICATION REVIEW')+'</div><div id="collabFeedback"></div></div>')}
 async function collabUpdate(id,values){
  if(!authorized)throw Error('Verified Supabase administrator session required.');
- let updated;
- try{
-  updated=await api('/rest/v1/collaboration_applications?id=eq.'+encodeURIComponent(id),{
-   method:'PATCH',headers:{'Content-Type':'application/json','Prefer':'return=representation'},
-   body:JSON.stringify(values)
-  });
- }catch(error){
-  if(!collabJwtClockSkew(error) || Object.keys(values).length!==1 || !Object.prototype.hasOwnProperty.call(values,'account_status'))throw error;
-  const secure=await collabSecureAccounts('admin_set_status',{id,status:values.account_status});
-  if(!secure.account || secure.account.id!==id)throw Error('GETI server did not verify this account change.');
-  updated=[secure.account];
- }
+ const updated=await api('/rest/v1/collaboration_applications?id=eq.'+encodeURIComponent(id),{
+  method:'PATCH',headers:{'Content-Type':'application/json','Prefer':'return=representation'},
+  body:JSON.stringify(values)
+ });
  if(!Array.isArray(updated)||updated.length!==1)throw Error('No account was updated. Verify GETI admin authorization and record access.');
  // The PATCH response is authoritative; a separate module's loading failure cannot roll back it.
  const index=entries.findIndex(x=>x.id===id);
@@ -1764,7 +1754,7 @@ async function collabToggle(id){
 setInterval(async()=>{
  if(!authorized||document.hidden||!document.getElementById('collabAccountLiveTable'))return;
  try{
-  const fresh=await collabReadAccountList();
+  const fresh=await api('/rest/v1/collaboration_applications?select=*&order=created_at.desc&limit=500');
   if(!Array.isArray(fresh)||!document.getElementById('collabAccountLiveTable'))return;
   const before=JSON.stringify(entries.map(x=>[x.id,x.account_status,x.application_status]));
   entries=fresh;
@@ -1781,7 +1771,7 @@ async function collabAccountsRefresh(silent=false){
  if(b){b.disabled=true;b.textContent='Refreshing...';}
  try{
   // Read live applications independently of Messages, Payments, and Tariffs.
-  const fresh=await collabReadAccountList();
+  const fresh=await api('/rest/v1/collaboration_applications?select=*&order=created_at.desc&limit=500');
   if(!Array.isArray(fresh))throw Error('Invalid applications response from Supabase.');
   entries=fresh;loaded=true;
   const list=document.getElementById('collabAccountLiveTable');
@@ -1814,6 +1804,7 @@ async function collabMessageAttachment(id){try{let m=messagesData.find(x=>x.id==
 async function collabSendMessage(){const id=selectedId,body=document.getElementById('collabMessageBody')?.value.trim();const file=document.getElementById('collabMessageAttachment')?.files?.[0];if(!id||(!body&&!file)){status('Choose a collaborator and enter a message or attach a file.','bad');return}try{let attachment={};if(file){if(file.size>20*1024*1024)throw Error('Attachment exceeds 20 MB');let ext=file.name.split('.').pop().toLowerCase();if(!['png','jpg','jpeg','pdf'].includes(ext))throw Error('Unsupported attachment type.');let path=id+'/'+session.user.id+'/'+Date.now()+'-'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');await api('/storage/v1/object/collaboration-chat/'+path.split('/').map(encodeURIComponent).join('/'),{method:'POST',headers:{'Content-Type':file.type||'application/octet-stream','x-upsert':'false'},body:file});attachment={attachment_path:path,attachment_name:file.name,attachment_type:file.type}}
  await api('/rest/v1/collaboration_messages',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({application_id:id,sender_id:session.user.id,sender_role:'admin',body:body||'',...attachment})});loaded=false;await collabLoad(true);collabMessages();status('Message sent.');}catch(e){status(errorText(e),'bad')}}
 let collabShowArchivedPayments=false;
+function collabSetPaymentList(archived){collabShowArchivedPayments=!!archived;collabPayments()}
 async function collabArchivePayment(id,archived){
  if(!authorized){status('Sign in as authorized GETI administrator.','bad');return}
  const rec=paymentsData.find(p=>p.id===id);
@@ -1834,7 +1825,7 @@ function collabPayments(){return page('Payments',()=>{
  const sum=paid.reduce((a,p)=>a+Number(p.amount||0),0);
  content(hdr('Collaboration Payment Records','Admin can Delete (archive) or Restore collaboration payment entries. Original transaction and payment audit history are preserved.')+
  '<div class="collab-grid">'+k('Active orders',active.length)+k('Confirmed paid',paid.length)+k('Archived',all.length-active.length)+k('Paid amount (mixed currency)',sum.toLocaleString())+'</div>'+
- '<div class="collab-panel"><div class="collab-inline"><button class="btn" onclick="collabShowArchivedPayments=false;collabPayments()">Active Payments</button><button class="btn" onclick="collabShowArchivedPayments=true;collabPayments()">Archived Payments / Restore</button></div><div class="collab-tbl"><table><thead><tr><th>Reference</th><th>Payer</th><th>Service</th><th>Amount</th><th>Status</th><th>Created</th><th>Action</th></tr></thead><tbody>'+
+ '<div class="collab-panel"><div class="collab-inline"><button class="btn" onclick="collabSetPaymentList(false)">Active Payments</button><button class="btn" onclick="collabSetPaymentList(true)">Archived Payments / Restore</button></div><div class="collab-tbl"><table><thead><tr><th>Reference</th><th>Payer</th><th>Service</th><th>Amount</th><th>Status</th><th>Created</th><th>Action</th></tr></thead><tbody>'+
  (visible.length?visible.map(p=>'<tr><td>'+E(p.relation_id)+'</td><td>'+E(p.full_name)+'<br>'+E(p.email)+'</td><td>'+E(p.product)+'</td><td>'+E(p.amount)+' '+E(p.currency)+'</td><td>'+pill(p.status)+'</td><td>'+E(dat(p.created_at))+'</td><td>'+btn('collabArchivePayment('+jsArg(p.id)+','+(!p.archived)+')',p.archived?'RESTORE':'DELETE',p.archived?'':'danger')+'</td></tr>').join(''):'<tr><td colspan="7" class="empty">No '+(collabShowArchivedPayments?'archived':'active')+' Collaboration payments found.</td></tr>')+'</tbody></table></div></div>')})}
 
 function collabPrices(){return page('Prices',()=>{
@@ -1947,7 +1938,7 @@ async function collabDeleteDossier(id){
  }catch(e){collabDocuments();setTimeout(()=>status('Could not remove application PDF: '+errorText(e),'bad'),0)}
 }
 async function collabReload(){if(!authorized){authPage();return}try{await collabLoad(true);collabOverview()}catch(e){status(errorText(e),'bad')}}
-Object.assign(window,{collabLogin,collabLogout,collabReload,collabOverview,collabApplications,collabAccounts,collabDocuments,collabReview,collabMessages,collabPayments,collabPrices,collabStatistics,collabSettings,collabFilterApps,collabDetail,collabToggle,collabSignedDossier,collabReviewSave,collabThread,collabSendMessage,collabMessageAttachment,collabSavePrices,collabDeleteApplication,collabDeleteMessage,collabDeleteDossier});
+Object.assign(window,{collabLogin,collabLogout,collabReload,collabOverview,collabApplications,collabAccounts,collabSetAccountStatus,collabAccountsRefresh,collabDocuments,collabReview,collabMessages,collabPayments,collabPrices,collabStatistics,collabSettings,collabFilterApps,collabDetail,collabToggle,collabSignedDossier,collabReviewSave,collabThread,collabSendMessage,collabMessageAttachment,collabSavePrices,collabReloadPrices,collabArchivePayment,collabSetPaymentList,collabDeleteApplication,collabDeleteMessage,collabDeleteDossier});
 })();
 </script>
 
