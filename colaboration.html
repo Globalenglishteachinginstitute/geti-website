@@ -1066,7 +1066,7 @@ function getiMembersPage(){
  <aside class="geti-member-pane">
  <div class="geti-msg-header"><h2>Chats</h2><button type="button" id="getiChatRefresh" title="Refresh chats" aria-label="Refresh chats">↻</button></div>
  <div class="geti-msg-search-wrap"><span aria-hidden="true">⌕</span><input class="geti-member-search" type="search" id="getiMemberSearch" maxlength="100" placeholder="Search Collaboration members..." aria-label="Search chats"></div>
- <div class="geti-msg-row-head">Collaboration accounts <span id="getiMemberTotal"></span></div>
+ <div class="geti-msg-row-head">Contacts <span id="getiMemberTotal"></span></div>
  <div class="geti-member-list" id="getiMemberList"><div class="geti-chat-placeholder">Loading conversations...</div></div>
  </aside>
  <section class="geti-chat-pane" id="getiChatPane"><div class="geti-msg-empty"><div class="geti-msg-empty-icon">✉</div><strong>Your conversations</strong><p>Choose a GETI member to open your private chat.</p></div></section>
@@ -1124,10 +1124,10 @@ const getiInternationalDemoProfiles=[
 function getiDemoMemberRow(m){
  const previous=getiReadDemoMessages(m.id);
  const last=previous.length?previous[previous.length-1]?.body:m.topic;
- return `<button type="button" class="geti-member-row geti-demo-chat-row" data-demo-profile="${esc(m.id)}" aria-label="Open automated English practice with ${esc(m.name)}">
+ return `<button type="button" class="geti-member-row geti-demo-chat-row" data-demo-profile="${esc(m.id)}" aria-label="Open practice chat with ${esc(m.name)}">
  <span class="geti-member-avatar"><img src="${esc(m.photo)}" alt="Practice coach portrait" loading="lazy" decoding="async" onerror="this.remove()"></span>
  <span class="geti-member-meta"><strong>${esc(m.name)}</strong><small>${esc(last||m.topic)}</small></span>
- <span class="geti-demo-tag">AI</span>
+ 
  </button>`;
 }
 function getiDisplayMembers(){
@@ -1135,12 +1135,8 @@ function getiDisplayMembers(){
  const q=(E('getiMemberSearch')?.value||'').trim().toLocaleLowerCase();
  const actual=getiMemberDirectory.filter(m=>(m.full_name+' '+(m.organization||'')).toLocaleLowerCase().includes(q));
  const demo=getiInternationalDemoProfiles.filter(m=>(m.name+' '+m.topic).toLocaleLowerCase().includes(q));
- const count=E('getiMemberTotal');if(count)count.textContent=String(getiMemberDirectory.length);
- el.innerHTML=`<div class="geti-chat-group-head">REAL COLLABORATION MEMBERS (${actual.length})</div>
- ${actual.length?actual.map(getiMemberRow).join(''):'<div class="geti-chat-placeholder">No matching real Collaboration accounts.</div>'}
- <div class="geti-chat-group-head">ENGLISH PRACTICE CHATS (${demo.length})</div>
- <p class="geti-demo-explain">18 virtual English practice coaches. Free Practice is included; Gemini AI is available when connected.</p>
- ${demo.map(getiDemoMemberRow).join('')}`;
+ const count=E('getiMemberTotal');if(count)count.textContent=String(actual.length+demo.length);
+ el.innerHTML=(actual.map(getiMemberRow).join('')+demo.map(getiDemoMemberRow).join(''))||'<div class="geti-chat-placeholder">No matching contacts.</div>';
 }
 let getiActiveDemoId=null;
 let getiDemoReplyPending=false;
@@ -1268,7 +1264,7 @@ function getiFreePracticeReply(m,body,history){
 function getiDemoRenderMessages(id){
  const box=E('getiDemoHistory');if(!box)return;
  const messages=getiReadDemoMessages(id);
- box.innerHTML=messages.length?messages.map(x=>`<div class="geti-bubble ${x.from==='me'?'mine':''}">${esc(x.body)}<time>${x.from==='demo'?(x.replyMode==='FREE PRACTICE'?'Older scripted practice':'Gemini AI'):'You'}</time></div>`).join(''):
+ box.innerHTML=messages.length?messages.map(x=>`<div class="geti-bubble ${x.from==='me'?'mine':''}">${esc(x.body)}</div>`).join(''):
  `<div class="geti-chat-placeholder">Start your English practice by saying hello or asking a question about ${esc(getiInternationalDemoProfiles.find(m=>m.id===id)?.topic||'English')}.</div>`;
  box.scrollTop=box.scrollHeight;
 }
@@ -1281,12 +1277,12 @@ function getiOpenDemoProfile(id){
  pane.innerHTML=`<div class="geti-chat-head">
   <button type="button" class="geti-msg-back" id="getiDemoChatBack" aria-label="Back to chats">‹</button>
   <div class="geti-chat-identity"><span class="geti-member-avatar"><img src="${esc(m.photo)}" alt="Practice coach portrait" loading="lazy" onerror="this.remove()"></span>
-   <div><strong>${esc(m.name)}</strong><small>English practice · AI coach</small></div>
+   <div><strong>${esc(m.name)}</strong><small>Automated practice</small></div>
   </div>
  </div>
- <div class="geti-demo-education-banner"><strong>English practice AI tutor</strong> · Answers come from the Gemini AI server. If the model or free-tier quota is unavailable, the error is displayed clearly instead of a scripted reply. These are virtual tutors, not real people. Chat history stays on this device.</div>
+ 
  <div class="geti-chat-history" id="getiDemoHistory" role="log" aria-live="polite"></div>
- <form class="geti-chat-compose" id="getiDemoChatForm"><textarea id="getiDemoChatInput" maxlength="1800" rows="1" required placeholder="Ask your AI English tutor..." aria-label="English practice message"></textarea><button class="btn" type="submit" aria-label="Send practice message">➤</button></form>
+ <form class="geti-chat-compose" id="getiDemoChatForm"><textarea id="getiDemoChatInput" maxlength="1800" rows="1" required placeholder="Write a message..." aria-label="English practice message"></textarea><button class="btn" type="submit" aria-label="Send practice message">➤</button></form>
  <div class="hint" id="getiDemoStatus" role="status" style="padding:4px 12px 10px"></div>`;
  E('getiMessengerShell')?.classList.add('geti-msg-open');
  E('getiDemoChatBack').onclick=()=>{getiActiveDemoId=null;getiCloseChat();};
@@ -1330,7 +1326,7 @@ async function getiSendDemoMessage(id){
  const button=E('getiDemoChatForm')?.querySelector('button');
  if(button)button.disabled=true;
  const status=E('getiDemoStatus');
- if(status)status.textContent=`${m.name} · Gemini AI is responding...`;
+ if(status)status.textContent=`${m.name} is typing...`;
  try{
   // Real AI is never silently substituted with generic scripted answers.
   const answer=await getiAskAiCoach(id,text,history.slice(0,-1));
@@ -1338,7 +1334,7 @@ async function getiSendDemoMessage(id){
   existing.push({from:'demo',body:answer,replyMode:'AI'});
   getiStoreDemoMessages(id,existing);
   if(getiActiveDemoId===id&&page==='members'){
-   const note=E('getiDemoStatus');if(note)note.textContent='✓ Answer from Gemini AI';
+   const note=E('getiDemoStatus');if(note)note.textContent='';
    getiDemoRenderMessages(id);
   }
  }catch(error){
@@ -1346,7 +1342,7 @@ async function getiSendDemoMessage(id){
   console.warn('GETI Gemini AI request failed:',explanation);
   if(getiActiveDemoId===id&&page==='members'){
    const note=E('getiDemoStatus');
-   if(note)note.textContent='Gemini AI error: '+explanation+' — Check the GETI Gemini model / free-tier quota and try again.';
+   if(note)note.textContent='Message could not be answered: '+explanation;
   }
  }finally{
   getiDemoPendingById.delete(id);getiDemoReplyPending=false;
