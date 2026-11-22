@@ -3031,7 +3031,27 @@ async function getiRefreshAccountStatus(){
 setInterval(()=>{if(user&&application&&!document.hidden)void getiRefreshAccountStatus()},15000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)void getiRefreshAccountStatus()});
 window.addEventListener('focus',()=>{void getiRefreshAccountStatus()});
-async function enter(){if(!user)return;void getiSocialPulse();E('auth').classList.add('hide');E('portal').classList.remove('hide');page='dashboard';route('dashboard');try{await load();route('dashboard')}catch(e){console.error('Collaboration database access:',e)}}
+function getiLoginBanner(message,isProblem=false){
+ let node=document.getElementById('getiLoginAccountBanner');
+ if(!node){node=document.createElement('div');node.id='getiLoginAccountBanner';node.setAttribute('role','status');node.style.cssText='margin:14px auto;padding:14px 18px;border:1px solid #b9d7ee;border-radius:12px;background:#f1f8ff;color:#133960;font-size:14px;line-height:1.55;max-width:1000px;white-space:pre-wrap';const main=E('portal');if(main)main.insertBefore(node,main.firstChild);}
+ node.style.borderColor=isProblem?'#e9c290':'#b9d7ee';node.style.background=isProblem?'#fff9e8':'#f1f8ff';node.textContent=message;node.hidden=!message;
+}
+async function enter(){
+ if(!user)return;
+ E('auth').classList.add('hide');E('portal').classList.remove('hide');
+ page='dashboard';getiLoginBanner('GETI: Checking your collaboration account...');
+ try{
+  await load();
+  route('dashboard');void getiSocialPulse();
+  if(!getiAccountActive())getiLoginBanner('✓ Login successful. Your collaboration account is currently '+String(application?.account_status||'awaiting activation')+'. GETI Administration must activate it before you can save or submit the application dossier.',true);
+  else getiLoginBanner('');
+ }catch(e){
+  console.error('Collaboration database access:',e);
+  const message=err(e);
+  getiLoginBanner('✓ Your GETI login was successful, but the collaboration account could not be loaded. '+message+'\nReload the page or sign out and in again. If the error mentions JWT issued at future, enable automatic device date/time.',true);
+  route('dashboard');
+ }
+}
 async function getiSafeDossierUpload(path,blob,contentType){
  // Storage uploads can also be rejected while a freshly issued JWT is ahead of the verifier clock.
  const run=()=>supabase.storage.from('collaboration-dossiers').upload(path,blob,{contentType,upsert:false});
@@ -3162,7 +3182,7 @@ E('mainContent').addEventListener('submit',async e=>{e.preventDefault();const f=
  }
 if(!file)throw Error('Choose a JPG, JPEG or PNG image before clicking Upload.');if(file.size===0)throw Error('The selected file is empty. Choose another image.');if(file.size>20*1024*1024)throw Error('Maximum file size is 20 MB. Compress the image and retry.');const allowed=['image/jpeg','image/png','application/pdf'];if(!allowed.includes(file.type))throw Error('Upload JPG, PNG or PDF only.');if(['identity_photo','id_recto','id_verso'].includes(key)&&file.type==='application/pdf')throw Error('Identity documents require JPG, JPEG or PNG.');if(key==='collaboration_form'&&file.type!=='application/pdf')throw Error('Signed form must be PDF.');const ext=file.type==='image/jpeg'?'jpg':file.type==='image/png'?'png':'pdf';const path=`${application.id}/${user.id}/${key}-${Date.now()}.${ext}`;const up=await getiSafeDossierUpload(path,file,file.type);if(up.error)throw getiReadableAuthError(up.error);await patchData({docs:{...(fieldData().docs||{}),[key]:{path,name:file.name,uploaded_at:new Date().toISOString()}}});render();info('uploadNotice','✓ '+({identity_photo:'Identity photo',id_recto:'ID card front',id_verso:'ID card back'}[key]||'Document')+' uploaded and securely saved.');if(key==='identity_photo'){const photoNotice=E('identityPhotoUploadNotice');if(photoNotice){photoNotice.textContent='✓ Identity photo uploaded successfully.';photoNotice.classList.remove('hide');}}}catch(ex){const id=f.id==='dossierForm'?'dossierNotice':f.id==='signatureForm'?'signatureNotice':'uploadNotice';info(id,err(ex),true);if(f.classList.contains('uploadForm')&&f.dataset.key==='identity_photo')info('identityPhotoUploadNotice',err(ex),true)}finally{if(btn&&btn.isConnected)btn.disabled=false}});
 E('mainContent').addEventListener('click',async e=>{let t=e.target.closest('#reloadData,#sendPasswordReset,[data-viewdoc]');if(!t)return;try{if(t.id==='reloadData'){await load();render()}else if(t.id==='sendPasswordReset'){const r=await supabase.auth.resetPasswordForEmail(user.email,{redirectTo:location.origin+location.pathname});if(r.error)throw r.error;info('profileNotice','Password reset email requested.')}else if(t.dataset.viewdoc){const path=fieldData().docs?.[t.dataset.viewdoc]?.path;if(!path)throw Error('No uploaded file found.');const r=await supabase.storage.from('collaboration-dossiers').createSignedUrl(path,60);if(r.error)throw r.error;window.open(r.data.signedUrl,'_blank','noopener')}}catch(ex){alert(err(ex))}});
-E('loginForm').onsubmit=async e=>{e.preventDefault();const f=e.target;busy(f,true);try{const r=await supabase.auth.signInWithPassword({email:E('email').value.trim(),password:E('password').value});if(r.error){if(/invalid login credentials|email not confirmed/i.test(String(r.error.message||'')))throw Error('Unable to sign in with these credentials. Use your existing GETI Supabase account details, or reset your password. If your GETI student account belongs to a different login system, contact GETI support to link it.');throw r.error;}if(!r.data.user||!r.data.session)throw Error('GETI sign-in could not be confirmed.');user=r.data.user;page='dashboard';await enter();if(adminLoginRequested){adminLoginRequested=false;adminOverlay.classList.remove('hide');adminInput.focus();}}catch(ex){status(err(ex))}finally{busy(f,false)}};
+E('loginForm').onsubmit=async e=>{e.preventDefault();const f=e.target;busy(f,true);try{const r=await supabase.auth.signInWithPassword({email:E('email').value.trim(),password:E('password').value});if(r.error){if(/invalid login credentials/i.test(String(r.error.message||'')))throw Error('Email na mot de passe tsy mety. Jereo ny email ampiasaina, na tsindrio Forgot Password.');if(/email not confirmed/i.test(String(r.error.message||'')))throw Error('Tsy mbola voamarina ny email amin’ny Supabase. Jereo ny inbox sy spam, na mifandraisa amin’ny administrateur GETI.');if(/issued at future|not yet valid/i.test(String(r.error.message||'')))throw Error('Session JWT issued at future: amboary automatique ny Date, Time ary Time Zone amin’ny fitaovanao, dia andramo indray.');throw r.error;}if(!r.data.user||!r.data.session)throw Error('GETI sign-in could not be confirmed.');user=r.data.user;page='dashboard';await enter();if(adminLoginRequested){adminLoginRequested=false;adminOverlay.classList.remove('hide');adminInput.focus();}}catch(ex){status(err(ex))}finally{busy(f,false)}};
 E('signupForm').onsubmit=async e=>{
  e.preventDefault();const f=e.target;busy(f,true);
  try{
