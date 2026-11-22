@@ -2754,7 +2754,7 @@ function getiSupportAccountsPaint(){
       <button type="button" class="geti-review-btn" data-geti-view-dossier="${esc(row.id)}">View PDF</button>
       <button type="button" class="geti-review-btn geti-review-download" data-geti-download-dossier="${esc(row.id)}">↓ Download PDF</button>
       ${approved?'':`<button type="button" class="geti-review-btn approve" data-geti-review="approve" data-geti-review-id="${esc(row.id)}">✓ Approve</button>`}
-      <button type="button" class="geti-review-btn reject" data-geti-review="reset" data-geti-review-id="${esc(row.id)}">Reset Dossier</button>
+      <button type="button" class="geti-review-btn reject" data-geti-review="reject_reset" data-geti-review-id="${esc(row.id)}">Reject & Reset</button>
      </div>`:''}
      ${row.review_note?`<p class="geti-admin-review-note"><strong>Admin note:</strong> ${esc(row.review_note)}</p>`:''}
     </section>
@@ -2834,7 +2834,7 @@ async function getiSupportReviewDossier(id,decision,button){
  if(decision==='approve'){
    if(!confirm(`Approve the A4 dossier of ${name}?`))return;
  }else{
-   const response=prompt(`Reset the dossier of ${name} and allow a NEW submission?\n\nWrite the reason / corrections required (minimum 5 characters):`);
+   const response=prompt(`Reject the dossier of ${name} and allow a NEW submission?\n\nWrite the reason / corrections required (minimum 5 characters):`);
    if(response===null)return;
    note=response.trim();
    if(note.length<5)return alert('Please write a reason of at least 5 characters.');
@@ -2844,15 +2844,15 @@ async function getiSupportReviewDossier(id,decision,button){
  const notice=E('getiSupportAdminNotice');
  if(notice)notice.textContent='Saving official dossier decision...';
  try{
-   const response=await getiSocialApi('admin_review_dossier',{application_id:id,decision:decision==='approve'?'verify':'reset',note,...(decision==='reset'?{confirmation:'RESET'}:{})});
+   const response=await getiSocialApi('admin_review_dossier',{application_id:id,decision,note});
    if(!response.updated)throw Error('The server did not confirm the decision.');
    if(decision==='approve'){
      row.application_status='approved';row.document_status='received';row.review_note=note||null;
    }else{
      row.application_status='pending_review';row.document_status='not_received';row.dossier_pdf=null;row.review_note=note;
    }
-   if(application?.id===id){Object.assign(application,row);if(decision==='reset'){application.application_data={};application.identity_photo=null;}}
-   if(notice)notice.textContent=decision==='approve'?`✓ Dossier verified for ${name}.`:`✓ Dossier of ${name} reset by GETI admin. Member may complete and submit again.`;
+   if(application?.id===id){Object.assign(application,row);if(decision==='reject_reset')application.application_data={};}
+   if(notice)notice.textContent=decision==='approve'?`✓ Dossier verified for ${name}.`:`✓ Dossier of ${name} reset. Member may complete and submit again.`;
    getiSupportAccountsPaint();
  }catch(e){if(notice)notice.textContent='Verification failed: '+(e?.message||String(e));button.disabled=false;}
 }
