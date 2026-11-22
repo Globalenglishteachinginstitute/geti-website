@@ -22772,14 +22772,7 @@ a[href],
 <script id="geti-collaboration-access">
 (function(){
   window.getiOpenCollaboration = async function(){
-    /* Require the collaboration access password before checking the student session. */
-    var enteredPassword = window.prompt('Enter the Collaboration access password:');
-    if(enteredPassword === null) return;
-    if(enteredPassword !== 'certificate'){
-      window.alert('Incorrect password. Access to Collaboration is denied.');
-      return;
-    }
-
+    /* Open collaboration after verifying the existing GETI student session. */
     var btn = document.getElementById('getiCollaborationBtn');
     var oldText = btn ? btn.innerHTML : 'COLLABORATION WITH GETI';
     if(btn){btn.disabled=true;btn.textContent='OPENING...';}
@@ -25150,9 +25143,9 @@ body.geti-checkout-active{overflow:hidden!important}
 </style>
 <button id="getiRobotLaunch" type="button" aria-label="Open GETI Robot Chat" aria-controls="getiRobotPanel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="6" width="18" height="15" rx="4"/><path d="M12 3v3M9 3h6M8 13h.01M16 13h.01M8 17c2.5 2 5.5 2 8 0"/></svg> GETI Robot Chat</button>
 <section id="getiRobotPanel" hidden role="dialog" aria-modal="false" aria-label="GETI Robot Chat">
-<div class="geti-robot-head"><span aria-hidden="true" style="font-size:27px">🤖</span><div><strong>GETI Assistant</strong><small>GETI knowledge assistant • Programs & student help</small></div><button id="getiRobotClose" type="button" aria-label="Close chat">×</button></div>
+<div class="geti-robot-head"><span aria-hidden="true" style="font-size:27px">🤖</span><div><strong>GETI Assistant</strong><small>Gemini AI • Programs & student help</small></div><button id="getiRobotClose" type="button" aria-label="Close chat">×</button></div>
 <div id="getiRobotMessages" role="log" aria-live="polite" aria-relevant="additions"></div>
-<div class="geti-robot-quick" aria-label="Suggested questions"><button type="button" data-geti-question="What is GETI?">About GETI</button><button type="button" data-geti-question="What courses and exams are available?">Programs</button><button type="button" data-geti-question="How do I verify a certificate?">Certificates</button><button type="button" data-geti-question="How can I pay?">Payment</button></div>
+<div class="geti-robot-quick" aria-label="Suggested questions"><button type="button" data-geti-question="What is GETI?">About GETI</button><button type="button" data-geti-question="What courses and exams are available?">Programs</button><button type="button" data-geti-question="How do I verify a certificate?">Certificates</button><button type="button" data-geti-question="How can I pay?">Payment</button><button type="button" data-geti-question="How do I apply for collaboration with GETI?">Collaboration</button></div>
 <form id="getiRobotForm"><input id="getiRobotInput" type="text" maxlength="1500" placeholder="Ask about GETI, TEFL, TESOL..." aria-label="Your question" required autocomplete="off"><button type="submit">Send</button></form>
 <div class="geti-robot-disclaimer">GETI guidance only. This assistant cannot access your account or verify private records. Never share passwords or security codes.</div>
 </section>
@@ -25166,7 +25159,7 @@ const publicKey='sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8';
 const history=[];
 let sending=false;
 function bubble(message,who){const el=document.createElement('div');el.className='geti-robot-bubble '+who;el.textContent=message;log.appendChild(el);log.scrollTop=log.scrollHeight;return el;}
-function openChat(){panel.hidden=false;trigger.setAttribute('aria-expanded','true');if(!log.children.length)bubble('Hello! 👋 I am your GETI Assistant. Ask about TEFL, TESOL, GETI English programs, exams, accounts, payments or certificate verification.','bot');input.focus();}
+function openChat(){panel.hidden=false;trigger.setAttribute('aria-expanded','true');if(!log.children.length)bubble('Hello! 👋 I am your GETI AI Assistant. Ask me anything about English learning, TEFL, TESOL, exams, certificates, accounts, payments or collaborations. You can speak English, Français, Malagasy or Deutsch.','bot');input.focus();}
 function hideChat(){panel.hidden=true;trigger.setAttribute('aria-expanded','false');trigger.focus();}
 trigger.addEventListener('click',()=>panel.hidden?openChat():hideChat());close.addEventListener('click',hideChat);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)hideChat();});
