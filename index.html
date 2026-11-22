@@ -9286,11 +9286,6 @@ TEFL, TESOL and assessment.
 <div class="container">
 
 
-<div class="geti-lesson-browser" id="getiLessonBrowser">
-  <div class="geti-lesson-browser-heading"><span>GETI AI LEARNING LIBRARY</span><h2>Professional Lessons for Every Programme</h2><p>Choose your programme and subject. Gemini AI prepares a detailed guided lesson, practical activities, review questions and multilingual explanations.</p></div>
-  <label for="getiLessonSearch">Search programmes and subjects</label>
-  <div class="geti-lesson-search-row"><input type="search" id="getiLessonSearch" autocomplete="off" placeholder="Search: Business English, Tourism, Leadership, Grammar…" aria-controls="lessonExamList"><span id="getiLessonCount" role="status"></span></div>
-</div>
 <div id="lessonExamList" class="lesson-exam-list"></div>
 
 <div id="lessonSubjectArea"></div>
@@ -10137,24 +10132,7 @@ var clone=cert.cloneNode(true);
 var images=cert.querySelectorAll("img"),clones=clone.querySelectorAll("img");
 for(var i=0;i<images.length;i++)clones[i].src=images[i].src;
 win.document.open();
-win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'
-<style id="geti-ai-all-lessons-polish">
-.geti-lesson-browser{padding:22px 24px;margin:16px 0 20px;border:1px solid #d5e2f5;border-radius:18px;background:linear-gradient(135deg,#f6f9ff,#ecf4ff);color:#0e315a;box-shadow:0 10px 26px rgba(16,55,116,.07)}
-.geti-lesson-browser-heading span{font-size:11px;font-weight:900;letter-spacing:1.4px;color:#2868bb}
-.geti-lesson-browser h2{font-size:clamp(21px,3vw,30px);margin:8px 0 10px;color:#0a356a}
-.geti-lesson-browser p{max-width:740px;line-height:1.65;color:#4e6280;margin:0 0 18px}
-.geti-lesson-browser label{display:block;font-size:13px;font-weight:800;margin-bottom:8px}
-.geti-lesson-search-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-#getiLessonSearch{font:inherit;flex:1 1 300px;border:1px solid #bfcfe5;border-radius:12px;padding:14px 15px;min-width:0;background:white;color:#0d315b;outline-offset:3px}
-#getiLessonCount{color:#527299;font-size:13px;font-weight:700}
-#geti-lessons .lesson-exam-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px;align-items:stretch}
-#geti-lessons .lesson-exam-btn{width:100%;min-height:58px;line-height:1.45;white-space:normal;text-align:left}
-.geti-lesson-empty{padding:16px;color:#56708f}
-#geti-ai-lesson-ui .lai-top{box-shadow:0 12px 30px rgba(2,31,90,.17)}
-#geti-ai-lesson-ui button:focus-visible{outline:3px solid #ffca62;outline-offset:3px}
-@media(max-width:600px){.geti-lesson-browser{padding:18px 15px}}
-</style>
-</body></html>');
+win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'</body></html>');
 win.document.close();
 win.onload=function(){setTimeout(function(){win.print();},400);};
 }
@@ -11194,7 +11172,7 @@ function openExamRegistration(program){
     ' EXAM</h2>'+
 
     '<p class="exam-subtitle">'+
-    'Registration before starting the examination. Exam duration: 45 minutes. You can take the exam without paying; certificate payment is separate.'+
+    'Registration before starting the examination. Exam duration: 45 minutes.'+
     '</p>'+
 
     '<div class="registration-form geti-exam-registration">'+
@@ -12876,7 +12854,7 @@ function openGeneralExamHourSelector(examName){
     const cards=GETI_GENERAL_EXAM_HOURS.map(function(option,index){
         return '<button class="tefl-course-card" onclick="selectGeneralExamHour('+index+')">'+
             '<strong>'+option.hours+'-Hour '+escapeHTML(displayName)+'</strong>'+
-            '<span>Certificate examination program</span>'+
+            '<span>Certificate examination program · Level C2</span>'+
             '</button>';
     }).join("");
 
@@ -12907,7 +12885,7 @@ function openLanguageCourseSelector(program,courses){
     const cards=courses.map(function(course,index){
         return '<button class="tefl-course-card '+(course.recommended?'tefl-recommended':'')+'" onclick="selectGetiLanguageCourse(\''+program+'\','+index+')">'+
             '<strong>'+escapeHTML(course.title)+(course.recommended?' ★':'')+'</strong>'+
-            '<span>'+escapeHTML(course.description)+'</span>'+
+            '<span>'+escapeHTML(course.description)+(program==="English Proficiency"?' · Level '+escapeHTML(getGetiExamPolicy(course.hours).level):' · Exam Level C2')+'</span>'+
             '</button>';
     }).join("");
 
@@ -14272,7 +14250,7 @@ function openLessonSubjects(examName){
     panel.innerHTML="";
 
     let html='<div style="margin-top:30px;">'+
-        '<div class="lesson-book-cover"><span class="lesson-book-kicker">GETI PROFESSIONAL LEARNING SERIES</span><h3>'+escapeHTML(examName.replace(/ Exam$/,""))+'</h3><p>Choose one subject. Select a subject to generate a structured AI-guided course. Listen to explanations, practise with exercises, and ask the teacher about anything unclear.</p><div class="lesson-book-meta"><span>SUBJECT-BASED LESSONS</span><span>AI EXPLANATIONS</span><span>AUDIO &amp; PRACTICE</span></div></div>'+
+        '<div class="lesson-book-cover"><span class="lesson-book-kicker">GETI PROFESSIONAL LEARNING SERIES</span><h3>'+escapeHTML(examName.replace(/ Exam$/,""))+'</h3><p>Choose one subject. Every subject opens as a structured high-school-style textbook course, but the academic level, methods, examples and professional applications change according to the subject.</p><div class="lesson-book-meta"><span>10 SUBJECTS</span><span>200 PAGES PER SUBJECT</span><span>PROGRESSIVE DIFFICULTY</span></div></div>'+
         '<div class="lesson-subject-list geti-200-subject-list">';
 
     subjects.forEach(function(subject,index){
@@ -18887,30 +18865,35 @@ if(document.readyState!=="loading"){try{window.renderGetiExamButtons();}catch(e)
         });
     };
 
-    /* GETI LESSON LIBRARY: all published/non-medical learning programmes. */
+    /* PROFESSIONAL LESSONS: only TEFL, TESOL and TEYL retain lessons.
+       The other public examinations remain available in TAKE AN EXAM,
+       with their subject/question data untouched. */
+    const GETI_LESSON_ENABLED_EXAMS = new Set(["TEFL Exam", "TESOL Exam", "TEYL Exam"]);
     window.initGetiLessons = function(){
-        const list=document.getElementById('lessonExamList');
-        if(!list || typeof GETI_30_EXAM_SUBJECTS==='undefined')return;
-        const available=Object.keys(GETI_30_EXAM_SUBJECTS)
-          .filter(exam=>exam!=='A2 Exam' && !/medical|treatment/i.test(exam))
-          .sort((a,b)=>a.localeCompare(b,'en',{sensitivity:'base'}));
-        const field=document.getElementById('getiLessonSearch');
-        const query=(field?.value||'').trim().toLowerCase();
-        list.innerHTML='';
-        let shown=0;
-        available.forEach(exam=>{
-          const subjectNames=GETI_30_EXAM_SUBJECTS[exam]||[];
-          const display=displayExamName(exam);
-          if(query && !(display.toLowerCase().includes(query)||exam.toLowerCase().includes(query)||subjectNames.some(x=>String(x).toLowerCase().includes(query))))return;
-          const btn=document.createElement('button');btn.type='button';btn.className='lesson-exam-btn';
-          btn.textContent=display;
-          btn.onclick=function(){if(typeof openLessonSubjects==='function')openLessonSubjects(exam)};
-          list.appendChild(btn);shown++;
-        });
-        const count=document.getElementById('getiLessonCount');
-        if(count)count.textContent=shown+' programme(s) · '+available.length+' available';
-        if(!shown){const p=document.createElement('p');p.className='geti-lesson-empty';p.textContent='No matching programme. Try another subject or course name.';list.appendChild(p)}
+        const list = document.getElementById("lessonExamList");
+        if (!list || typeof GETI_30_EXAM_SUBJECTS === "undefined") return;
+        list.innerHTML = "";
+        GETI_PUBLIC_ENGLISH_EXAMS
+            .filter(examName => GETI_LESSON_ENABLED_EXAMS.has(examName) && !!GETI_30_EXAM_SUBJECTS[examName])
+            .forEach(function(examName){
+                const b = document.createElement("button");
+                b.className = "lesson-exam-btn";
+                b.textContent = " " + displayExamName(examName);
+                b.onclick = function(){
+                    if (typeof openLessonSubjects === "function") openLessonSubjects(examName);
+                };
+                list.appendChild(b);
+            });
     };
+
+    /* Block older lesson links to the removed programmes, without affecting examinations. */
+    const oldOpenLessonSubjects = window.openLessonSubjects;
+    if (typeof oldOpenLessonSubjects === "function") {
+        window.openLessonSubjects = function(examName){
+            if (!GETI_LESSON_ENABLED_EXAMS.has(examName)) return;
+            return oldOpenLessonSubjects.apply(this, arguments);
+        };
+    }
 
     /* Keep the existing plan; only make the selected portal the visible inside page. */
     const oldEnter=window.enterGetiPortal;
@@ -18921,8 +18904,6 @@ if(document.readyState!=="loading"){try{window.renderGetiExamButtons();}catch(e)
     };
 
     function boot(){
-        const lessonSearch=document.getElementById('getiLessonSearch');
-        if(lessonSearch && !lessonSearch.dataset.bound){lessonSearch.dataset.bound='1';lessonSearch.addEventListener('input',window.initGetiLessons);}
         try{window.renderGetiExamButtons();}catch(e){}
         try{window.initGetiLessons();}catch(e){}
     }
@@ -24344,7 +24325,7 @@ document.addEventListener(&quot;DOMContentLoaded&quot;,()=&gt;{refreshPaymentNot
      return null;
    }catch{return null;}
  }
- function presentPassedResult(exam,hours,paid,paymentUnavailable=false){
+ function presentPassedResult(exam,hours,paid){
    // Only the result UI is rebuilt; certificate / QR verification is untouched.
    const record=findStoredPassed(exam,hours);
    const fee=/(?:^|[^a-z0-9])A2(?:$|[^a-z0-9])/i.test(String(exam))?1.5:
@@ -24383,7 +24364,6 @@ document.addEventListener(&quot;DOMContentLoaded&quot;,()=&gt;{refreshPaymentNot
    const price=document.createElement('p');price.textContent=fee==null?'Certificate price unavailable.':
      'Official certificate price: $'+fee+' USD'+(hours?' ('+hours+' Hours)':'');footer.appendChild(price);
    if(paid){const confirmed=document.createElement('p');confirmed.textContent='Payment confirmed.';footer.appendChild(confirmed);}
-   else if(paymentUnavailable){const note=document.createElement('p');note.setAttribute('role','alert');note.textContent='Payment verification is temporarily unavailable. Do not pay again until your previous payment is confirmed by GETI Support.';footer.appendChild(note);}
    else if(fee!=null){
      const pay=document.createElement('button');pay.type='button';pay.textContent='Get Certificate — $'+fee+' USD';
      pay.addEventListener('click',()=>{
@@ -24406,23 +24386,19 @@ document.addEventListener(&quot;DOMContentLoaded&quot;,()=&gt;{refreshPaymentNot
      const result=await verify(exam,hours);
      if(result.unavailable || result.notLogged){
        if(hasLocalPassedResult(exam,hours)){presentPassedResult(exam,hours,false);return;}
-       // Checking the previous result must never be a payment prerequisite
-       // for starting an examination. Registration keeps its own validations.
-       return original.apply(self,args);
+       toast('Please sign in to your GETI account to check your previous exam results.');
+       return;
      }
      if(result.passed===true || hasLocalPassedResult(exam,hours)){
        // A PASSED exam is final: payment never unlocks another attempt.
        // Reopening the exam displays the saved final result and certificate payment.
-       presentPassedResult(exam,hours,result.paid===true,result.payment_check_unavailable===true);
+       presentPassedResult(exam,hours,result.paid===true);
        return;
      }
      return original.apply(self,args);
    }catch(error){
      if(hasLocalPassedResult(exam,hours)){presentPassedResult(exam,hours,false);return;}
-     // Network/payment verification problems do not stop a new examination.
-     // No payment is inferred or marked PAID by this fallback.
-     console.warn('GETI previous-result check unavailable; opening exam registration.', error);
-     return original.apply(self,args);
+     toast('Unable to verify your previous results. Please try again. '+(error?.message||''));
    }finally{checking=false;}
  }
  const original30=window.openGeti30Registration;
@@ -26356,7 +26332,7 @@ body.geti-pub-body-open{overflow:hidden!important}
 (function(){
  'use strict';
  const endpoint='https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-ai-lesson';
- const isSupportedExam=exam=>typeof GETI_30_EXAM_SUBJECTS!=='undefined' && Object.prototype.hasOwnProperty.call(GETI_30_EXAM_SUBJECTS,exam);
+ const enabled=new Set(['TEFL Exam','TESOL Exam','TEYL Exam']);
  const locale={"af":"af-ZA","sq":"sq-AL","am":"am-ET","ar":"ar-SA","hy":"hy-AM","az":"az-AZ","eu":"eu-ES","bn":"bn-BD","bs":"bs-BA","bg":"bg-BG","my":"my-MM","ca":"ca-ES","zh":"zh-CN","hr":"hr-HR","cs":"cs-CZ","da":"da-DK","nl":"nl-NL","en":"en-US","et":"et-EE","fi":"fi-FI","fr":"fr-FR","ka":"ka-GE","de":"de-DE","el":"el-GR","gu":"gu-IN","ht":"ht-HT","ha":"ha-NG","he":"he-IL","hi":"hi-IN","hu":"hu-HU","is":"is-IS","ig":"ig-NG","id":"id-ID","ga":"ga-IE","it":"it-IT","ja":"ja-JP","jv":"jv-ID","kn":"kn-IN","kk":"kk-KZ","km":"km-KH","ko":"ko-KR","ku":"ku-TR","lo":"lo-LA","la":"la","lv":"lv-LV","lt":"lt-LT","mk":"mk-MK","mg":"mg-MG","ms":"ms-MY","ml":"ml-IN","mt":"mt-MT","mi":"mi-NZ","mr":"mr-IN","mn":"mn-MN","ne":"ne-NP","no":"nb-NO","fa":"fa-IR","pl":"pl-PL","pt":"pt-BR","pa":"pa-IN","ro":"ro-RO","ru":"ru-RU","sr":"sr-RS","si":"si-LK","sk":"sk-SK","sl":"sl-SI","so":"so-SO","es":"es-ES","sw":"sw-KE","sv":"sv-SE","tl":"fil-PH","ta":"ta-IN","te":"te-IN","th":"th-TH","tr":"tr-TR","uk":"uk-UA","ur":"ur-PK","uz":"uz-UZ","vi":"vi-VN","cy":"cy-GB","yo":"yo-NG","zu":"zu-ZA"};
  const langs={"af":"Afrikaans","sq":"Albanian","am":"Amharic","ar":"Arabic","hy":"Armenian","az":"Azerbaijani","eu":"Basque","bn":"Bengali","bs":"Bosnian","bg":"Bulgarian","my":"Burmese","ca":"Catalan","zh":"Chinese (Mandarin)","hr":"Croatian","cs":"Czech","da":"Danish","nl":"Dutch","en":"English","et":"Estonian","fi":"Finnish","fr":"French","ka":"Georgian","de":"German","el":"Greek","gu":"Gujarati","ht":"Haitian Creole","ha":"Hausa","he":"Hebrew","hi":"Hindi","hu":"Hungarian","is":"Icelandic","ig":"Igbo","id":"Indonesian","ga":"Irish","it":"Italian","ja":"Japanese","jv":"Javanese","kn":"Kannada","kk":"Kazakh","km":"Khmer","ko":"Korean","ku":"Kurdish","lo":"Lao","la":"Latin","lv":"Latvian","lt":"Lithuanian","mk":"Macedonian","mg":"Malagasy","ms":"Malay","ml":"Malayalam","mt":"Maltese","mi":"Maori","mr":"Marathi","mn":"Mongolian","ne":"Nepali","no":"Norwegian","fa":"Persian (Farsi)","pl":"Polish","pt":"Portuguese","pa":"Punjabi","ro":"Romanian","ru":"Russian","sr":"Serbian","si":"Sinhala","sk":"Slovak","sl":"Slovenian","so":"Somali","es":"Spanish","sw":"Swahili","sv":"Swedish","tl":"Tagalog (Filipino)","ta":"Tamil","te":"Telugu","th":"Thai","tr":"Turkish","uk":"Ukrainian","ur":"Urdu","uz":"Uzbek","vi":"Vietnamese","cy":"Welsh","yo":"Yoruba","zu":"Zulu"};
  const state={exam:'',subject:'',language:'en',lesson:null,abort:null,activeId:0};
@@ -26462,7 +26438,7 @@ body.geti-pub-body-open{overflow:hidden!important}
  }
  const prior=window.openGetiLesson;
  window.openGetiLesson=function(exam,subject){
-  if(!isSupportedExam(exam))return typeof prior==='function'?prior.apply(this,arguments):undefined;
+  if(!enabled.has(exam))return typeof prior==='function'?prior.apply(this,arguments):undefined;
   if(state.abort)state.abort.abort();stopAudio();state.activeId++;
   state.exam=exam;state.subject=subject;state.lesson=null;createShell(exam,subject);
  };
@@ -26536,7 +26512,6 @@ body.geti-pub-body-open{overflow:hidden!important}
    var input=byId('verifyInput');if(!input)return;
    input.value=id;
    try{if(typeof window.setVerifyType==='function')window.setVerifyType('id')}catch(e){}
-   input.dispatchEvent(new Event('input',{bubbles:false}));
    if(typeof window.verifyCertificate==='function')window.verifyCertificate('id');
    input.focus();
  }
