@@ -1021,7 +1021,7 @@ function getiIsJwtTimeError(error){
  return /jwt issued at future|issued in the future|jwt.*future|not yet valid/i.test(String(error?.message||error||''));
 }
 function getiReadableAuthError(error){
- if(getiIsJwtTimeError(error))return new Error('Supabase has not accepted the session token yet (JWT issued at future). Enable automatic date and time on your device, reload the page, then sign out and sign in again. If the error persists, contact GETI administration to check the server clock: this cannot be bypassed safely in the browser.');
+ if(getiIsJwtTimeError(error))return new Error('GETI authentication server and database are not synchronized (JWT issued at future). Saving application details now uses a secure GETI server fallback. For photo, signature or PDF uploads, please try sign out / sign in once; if this message persists, GETI administration must resolve Supabase clock synchronization.');
  return error;
 }
 const getiSleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -3078,14 +3078,34 @@ async function getiSafeDossierUpload(path,blob,contentType){
  const run=()=>supabase.storage.from('collaboration-dossiers').upload(path,blob,{contentType,upsert:false});
  return await getiQueryWithJwtRecovery(run);
 }
-async function saveDossier(form){if(!getiAccountActive())throw Error('Admin activation is required before filling your application file.');const data=Object.fromEntries(new FormData(form).entries()),{full_name,phone,organization,...rest}=data,old=fieldData();const payload={owner_id:user.id,full_name:full_name.trim(),email:user.email,phone:phone.trim(),organization:organization.trim(),application_data:{...old,...rest}};let r;if(application)r=await getiQueryWithJwtRecovery(()=>supabase.from('collaboration_applications').update(payload).eq('id',application.id).eq('owner_id',user.id).select('*').single());else r=await getiQueryWithJwtRecovery(()=>supabase.from('collaboration_applications').insert(payload).select('*').single());if(r.error)throw r.error;
+// Verified Auth backend fallback for PostgREST PGRST303 clock-skew errors.
+// The endpoint calls Supabase Auth on every request and writes only the caller's dossier.
+async function getiApplicationBackendSave(patch){
+ const sess=await supabase.auth.getSession();
+ if(sess.error||!sess.data?.session?.access_token)throw Error('Please sign in again to save your application.');
+ const send=async token=>{
+  const res=await fetch(GETI_PAYMENT_ACCOUNT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({action:'save_application',patch}),cache:'no-store'});
+  const json=await res.json().catch(()=>({}));
+  if(!res.ok)throw Object.assign(Error(json.error||'Unable to save application on GETI server.'),{status:res.status});
+  if(json?.application?.owner_id!==user?.id||!json?.saved)throw Error('GETI could not verify application ownership.');
+  return {data:json.application,error:null};
+ };
+ try{return await send(sess.data.session.access_token)}
+ catch(err){
+  if(err.status!==401)throw err;
+  const refreshed=await supabase.auth.refreshSession();
+  if(refreshed.error||!refreshed.data?.session?.access_token)throw Error('GETI session expired. Please sign out and sign in again.');
+  return await send(refreshed.data.session.access_token);
+ }
+}
+async function saveDossier(form){if(!getiAccountActive())throw Error('Admin activation is required before filling your application file.');const data=Object.fromEntries(new FormData(form).entries()),{full_name,phone,organization,...rest}=data,old=fieldData();const payload={owner_id:user.id,full_name:full_name.trim(),email:user.email,phone:phone.trim(),organization:organization.trim(),application_data:{...old,...rest}};let r;if(application)r=await getiQueryWithJwtRecovery(()=>supabase.from('collaboration_applications').update(payload).eq('id',application.id).eq('owner_id',user.id).select('*').single());else r=await getiQueryWithJwtRecovery(()=>supabase.from('collaboration_applications').insert(payload).select('*').single());if(getiIsJwtTimeError(r.error))r=await getiApplicationBackendSave({full_name:payload.full_name,phone:payload.phone,organization:payload.organization,application_data:payload.application_data});if(r.error)throw getiReadableAuthError(r.error);
  if(!r.data?.id||r.data.owner_id!==user.id)throw Error('The server could not confirm your saved dossier.');
  const actual=r.data.application_data||{};
  for(const [key,value] of Object.entries(rest)){
    if(String(actual[key]??'')!==String(value??''))throw Error('The saved dossier differs from the form at: '+key+'. Please reload and try again.');
  }
  application=r.data;return r.data}
-async function patchData(extra){if(!getiAccountActive())throw Error('Admin activation is required before changing your application file.');const updated={...fieldData(),...extra};if(!application)throw Error('Save the collaboration dossier first.');const r=await getiQueryWithJwtRecovery(()=>supabase.from('collaboration_applications').update({application_data:updated}).eq('id',application.id).eq('owner_id',user.id).select('*').single());if(r.error)throw r.error;application=r.data}
+async function patchData(extra){if(!getiAccountActive())throw Error('Admin activation is required before changing your application file.');const updated={...fieldData(),...extra};if(!application)throw Error('Save the collaboration dossier first.');const r=await getiQueryWithJwtRecovery(()=>supabase.from('collaboration_applications').update({application_data:updated}).eq('id',application.id).eq('owner_id',user.id).select('*').single());if(getiIsJwtTimeError(r.error))r=await getiApplicationBackendSave({application_data:updated});if(r.error)throw getiReadableAuthError(r.error);application=r.data}
 function info(id,msg,isBad=false){const n=E(id);if(n){n.className='notice'+(isBad?' alert bad':'');n.textContent=msg;n.classList.remove('hide')}}
 let signatureDrawn=false;let signatureActive=false;let lastPoint=null;
 function sigPoint(e,canvas){const box=canvas.getBoundingClientRect();return {x:(e.clientX-box.left)*canvas.width/box.width,y:(e.clientY-box.top)*canvas.height/box.height}}
