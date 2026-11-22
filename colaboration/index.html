@@ -1443,23 +1443,21 @@ async function getiLoadDashboardPhoto(){
  }catch(e){console.warn('Profile photos:',e);}
 }
 function getiDossierLock(){
- const stamp=application?.application_data?.pdf_submitted_at;
- if(!stamp)return {locked:false};
- const date=new Date(stamp);
- if(Number.isNaN(date.getTime()))return {locked:false};
- const unlock=new Date(date.getTime());unlock.setUTCMonth(unlock.getUTCMonth()+3);
- return {locked:Date.now()<unlock.getTime(),unlock,submitted:date};
+ const submitted=application?.application_data?.pdf_submitted_at||null;
+ // Confirmation remains final until GETI Administration resets/deletes the dossier.
+ // The server-side lock uses the same presence check, not a fixed expiry date.
+ return {locked:Boolean(application?.dossier_pdf||submitted),submitted:submitted?new Date(submitted):null};
 }
-function getiDossierLockMessage(){if(!getiAccountActive())return `<div class="notice geti-activation-guide" role="status"><h3><svg class="geti-ui-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="12" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3"/></svg> This section is locked — Admin activation required</h3><p>To complete your GETI collaboration application, follow these steps:</p><ol><li><b>Pay the Collaboration Fee (${money(tariffPrices.collaboration)}).</b> Select Collaboration Fee in the GETI Payment Area.</li><li><b>Wait for payment confirmation.</b> GETI must verify the payment status as PAID.</li><li><b>Wait for GETI Admin to activate your account.</b> Your status will change from Deactivated to Active.</li><li><b>Complete your application file.</b> You can then add your identity photo and electronic signature, then confirm your A4 PDF.</li></ol><p><b>Current status: Deactivated.</b> Making a payment does not activate the account automatically.</p><button type="button" class="btn" data-page="payment" data-collab-pay="1"><svg class="geti-ui-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg> Pay Collaboration Fee — ${money(tariffPrices.collaboration)} →</button></div>`;const l=getiDossierLock();return l.locked?`<div class="notice" style="border-left:5px solid #c88719;background:#fff8e8"><b><svg class="geti-ui-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="12" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3"/></svg> Application Submitted — Editing Locked</b><p>Your application file has been submitted. You may complete or change your information again on <b>${esc(l.unlock.toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'numeric'}))}</b> (3 months after submission).</p><p>You can still download the submitted A4 PDF and read your messages.</p></div>`:''}
+function getiDossierLockMessage(){if(!getiAccountActive())return `<div class="notice geti-activation-guide" role="status"><h3><svg class="geti-ui-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="12" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3"/></svg> This section is locked — Admin activation required</h3><p>To complete your GETI collaboration application, follow these steps:</p><ol><li><b>Pay the Collaboration Fee (${money(tariffPrices.collaboration)}).</b> Select Collaboration Fee in the GETI Payment Area.</li><li><b>Wait for payment confirmation.</b> GETI must verify the payment status as PAID.</li><li><b>Wait for GETI Admin to activate your account.</b> Your status will change from Deactivated to Active.</li><li><b>Complete your application file.</b> You can then add your identity photo and electronic signature, then confirm your A4 PDF.</li></ol><p><b>Current status: Deactivated.</b> Making a payment does not activate the account automatically.</p><button type="button" class="btn" data-page="payment" data-collab-pay="1"><svg class="geti-ui-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg> Pay Collaboration Fee — ${money(tariffPrices.collaboration)} →</button></div>`;const l=getiDossierLock();return l.locked?`<div class="notice" style="border-left:5px solid #c88719;background:#fff8e8"><b><svg class="geti-ui-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="12" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3"/></svg> Application Submitted — Editing Locked</b><p>Your application file has been confirmed and sent to GETI Administration. <b>No editing or resubmission is permitted</b> until the administrator deletes or resets this dossier.</p><p>You can still download the submitted A4 PDF and read your messages.</p></div>`:''}
 function getiAccountActive(){return ['active','activated'].includes(String(application?.account_status||'deactivated').toLowerCase());}
 function getiApplyDossierLockUI(){if(!['dossier','documents'].includes(page)|| (getiAccountActive()&&!getiDossierLock().locked))return;
  const root=E('mainContent');if(!root)return;
  for(const id of ['dossierForm','signatureForm']){const form=root.querySelector('#'+id);if(form){for(const el of form.querySelectorAll('input,select,textarea,button'))el.disabled=true;}}
  for(const form of root.querySelectorAll('form.uploadForm')){for(const el of form.querySelectorAll('input[type=file],button[type=submit]'))el.disabled=true;}
- const submit=root.querySelector('#getiSubmitPdf');if(submit)submit.disabled=true;
+ const submit=root.querySelector('#getiSubmitPdf');if(submit)submit.disabled=true;const canvas=root.querySelector('#signatureCanvas');if(canvas)canvas.style.pointerEvents='none';
 }
 function dossier(){const d=fieldData();return `<h1 class="sectiontitle">My Collaboration Application File</h1><p class="sectionintro">Official collaboration application and identification.</p>${getiDossierLockMessage()}${application?.review_note&&!application?.dossier_pdf?`<div class="notice" style="border-left:5px solid #d68b26;background:#fff9e9"><b>Revision requested by GETI administration</b><p>${esc(application.review_note)}</p><p>Please complete your dossier again and submit a new A4 PDF.</p></div>`:application?.dossier_pdf?`<div class="notice" style="border-left:5px solid #1b74d1;background:#eef6ff"><b>${application.application_status==='approved'?'Dossier verified and approved':'Dossier received — Pending Verification'}</b><p>Your application has been sent to Support → ACTIVE for administrator review.</p></div>`:''}<div class="panel geti-simple-app-panel"><div class="panelhead"><h2>Collaboration Application Form</h2>${pill(appStatus().replaceAll('_',' '))}</div>
-  <p class="hint">Complete your application, add your identity photo and sign on screen. Then confirm to generate your A4 application document.</p>
+  ${getiDossierLock().locked?'<p class="hint"><strong>Confirmed dossier — read-only.</strong> GETI Administration must reset or delete the submitted document before you can confirm a new one.</p>':'<p class="hint">Complete your application, add your identity photo and sign on screen. Then confirm to generate your A4 application document.</p>'}
   <div class="geti-identity-first"><div class="geti-identity-badge"><strong>📷 Add Identity Photo *</strong><span>JPG / JPEG / PNG · Maximum 20 MB</span></div>
     <div class="geti-identity-photo-row"><div class="geti-identity-photo-preview" id="identityPhotoPreview">${d.docs?.identity_photo?.path?'✓ Photo saved':'No photo yet'}</div>
       <form class="uploadForm geti-photo-upload" data-key="identity_photo"><input type="file" name="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" aria-label="Add Identity Photo" required><div class="actions"><button class="btn" type="submit">Add Identity Photo</button>${d.docs?.identity_photo?.path?`<button type="button" class="btn alt" data-viewdoc="identity_photo">View Photo</button>`:''}</div></form>
@@ -2756,7 +2754,7 @@ function getiSupportAccountsPaint(){
       <button type="button" class="geti-review-btn" data-geti-view-dossier="${esc(row.id)}">View PDF</button>
       <button type="button" class="geti-review-btn geti-review-download" data-geti-download-dossier="${esc(row.id)}">↓ Download PDF</button>
       ${approved?'':`<button type="button" class="geti-review-btn approve" data-geti-review="approve" data-geti-review-id="${esc(row.id)}">✓ Approve</button>`}
-      <button type="button" class="geti-review-btn reject" data-geti-review="reject_reset" data-geti-review-id="${esc(row.id)}">Reject & Reset</button>
+      <button type="button" class="geti-review-btn reject" data-geti-review="reset" data-geti-review-id="${esc(row.id)}">Reset Dossier</button>
      </div>`:''}
      ${row.review_note?`<p class="geti-admin-review-note"><strong>Admin note:</strong> ${esc(row.review_note)}</p>`:''}
     </section>
@@ -2836,7 +2834,7 @@ async function getiSupportReviewDossier(id,decision,button){
  if(decision==='approve'){
    if(!confirm(`Approve the A4 dossier of ${name}?`))return;
  }else{
-   const response=prompt(`Reject the dossier of ${name} and allow a NEW submission?\n\nWrite the reason / corrections required (minimum 5 characters):`);
+   const response=prompt(`Reset the dossier of ${name} and allow a NEW submission?\n\nWrite the reason / corrections required (minimum 5 characters):`);
    if(response===null)return;
    note=response.trim();
    if(note.length<5)return alert('Please write a reason of at least 5 characters.');
@@ -2846,15 +2844,15 @@ async function getiSupportReviewDossier(id,decision,button){
  const notice=E('getiSupportAdminNotice');
  if(notice)notice.textContent='Saving official dossier decision...';
  try{
-   const response=await getiSocialApi('admin_review_dossier',{application_id:id,decision,note});
+   const response=await getiSocialApi('admin_review_dossier',{application_id:id,decision:decision==='approve'?'verify':'reset',note,...(decision==='reset'?{confirmation:'RESET'}:{})});
    if(!response.updated)throw Error('The server did not confirm the decision.');
    if(decision==='approve'){
      row.application_status='approved';row.document_status='received';row.review_note=note||null;
    }else{
      row.application_status='pending_review';row.document_status='not_received';row.dossier_pdf=null;row.review_note=note;
    }
-   if(application?.id===id){Object.assign(application,row);if(decision==='reject_reset')application.application_data={};}
-   if(notice)notice.textContent=decision==='approve'?`✓ Dossier verified for ${name}.`:`✓ Dossier of ${name} reset. Member may complete and submit again.`;
+   if(application?.id===id){Object.assign(application,row);if(decision==='reset'){application.application_data={};application.identity_photo=null;}}
+   if(notice)notice.textContent=decision==='approve'?`✓ Dossier verified for ${name}.`:`✓ Dossier of ${name} reset by GETI admin. Member may complete and submit again.`;
    getiSupportAccountsPaint();
  }catch(e){if(notice)notice.textContent='Verification failed: '+(e?.message||String(e));button.disabled=false;}
 }
@@ -3573,7 +3571,7 @@ async function getiConfirmSimpleApplication(){
  const btn=E('getiConfirmApplication');if(btn)btn.disabled=true;
  try{
   if(!getiAccountActive())throw Error('Admin activation is required before confirming your application.');
-  if(getiDossierLock().locked)throw Error('Your application is locked after submission.');
+  if(getiDossierLock().locked)throw Error('This dossier was already confirmed. Only GETI Administration can reset it before another submission.');
   const form=E('dossierForm'),sign=E('signatureForm');
   if(!form?.reportValidity()||!sign?.reportValidity())throw Error('Please complete all required fields and accept the declaration.');
   const typed=String(sign.elements.signature?.value||'').trim();
@@ -3605,7 +3603,7 @@ async function getiConfirmSimpleApplication(){
  }catch(error){info('signatureNotice','Confirmation failed: '+err(error),true)}finally{if(btn?.isConnected)btn.disabled=false}
 }
 async function getiSubmitCompleteDossier(){
- if(getiDossierLock().locked){info('getiPdfNotice','Your application file is locked for 3 months after submission.',true);return;}
+ if(getiDossierLock().locked){info('getiPdfNotice','Your application has already been confirmed. Only GETI Administration can reset the dossier.',true);return;}
  const button=E('getiSubmitPdf');if(button)button.disabled=true;
  try{
   await getiRefreshAccountStatus();
