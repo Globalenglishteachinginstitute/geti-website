@@ -1021,7 +1021,7 @@ function getiIsJwtTimeError(error){
  return /jwt issued at future|issued in the future|jwt.*future|not yet valid/i.test(String(error?.message||error||''));
 }
 function getiReadableAuthError(error){
- if(getiIsJwtTimeError(error))return new Error('GETI authentication server and database are not synchronized (JWT issued at future). Saving application details now uses a secure GETI server fallback. For photo, signature or PDF uploads, please try sign out / sign in once; if this message persists, GETI administration must resolve Supabase clock synchronization.');
+ if(getiIsJwtTimeError(error))return new Error('GETI Storage rejects the JWT because server clocks disagree. Secure upload fallback was attempted; ask GETI administration to resolve the Supabase JWT clock issue if it persists.');
  return error;
 }
 const getiSleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -3073,10 +3073,42 @@ setInterval(()=>{if(user&&application&&!document.hidden)void getiRefreshAccountS
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)void getiRefreshAccountStatus()});
 window.addEventListener('focus',()=>{void getiRefreshAccountStatus()});
 async function enter(){if(!user)return;void getiSocialPulse();E('auth').classList.add('hide');E('portal').classList.remove('hide');page='dashboard';route('dashboard');try{await load();route('dashboard')}catch(e){console.error('Collaboration database access:',e)}}
+async function getiProtectedDossierAction(action,payload){
+ const session=await supabase.auth.getSession();
+ if(session.error||!session.data?.session?.access_token)throw Error('Sign in again to use secure GETI storage.');
+ const send=async token=>{
+  const response=await fetch(GETI_PAYMENT_ACCOUNT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({action,...payload}),cache:'no-store'});
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok)throw Object.assign(Error(result.error||'GETI secure document server unavailable.'),{status:response.status});
+  return result;
+ };
+ try{return await send(session.data.session.access_token)}catch(error){
+  if(error.status!==401)throw error;
+  const renewed=await supabase.auth.refreshSession();
+  if(renewed.error||!renewed.data?.session?.access_token)throw Error('Your GETI session expired. Sign in again.');
+  return await send(renewed.data.session.access_token);
+ }
+}
+async function getiBlobBase64(blob){
+ const buffer=await blob.arrayBuffer();
+ const bytes=new Uint8Array(buffer);let text='';
+ // Chunk conversion prevents large argument-list or stack overflows.
+ for(let i=0;i<bytes.length;i+=16384)text+=String.fromCharCode(...bytes.subarray(i,i+16384));
+ return btoa(text);
+}
 async function getiSafeDossierUpload(path,blob,contentType){
- // Storage uploads can also be rejected while a freshly issued JWT is ahead of the verifier clock.
- const run=()=>supabase.storage.from('collaboration-dossiers').upload(path,blob,{contentType,upsert:false});
- return await getiQueryWithJwtRecovery(run);
+ // First use the normal private Storage RLS path. If JWT clock skew blocks it,
+ // ask a GETI server that independently verifies the logged-in user.
+ const normal=await supabase.storage.from('collaboration-dossiers').upload(path,blob,{contentType,upsert:false});
+ if(!getiIsJwtTimeError(normal.error))return normal;
+ if(blob.size>8*1024*1024)return {data:null,error:Error('GETI Storage JWT clock error. The secure server fallback accepts files up to 8 MB; compress this file or ask GETI administration to repair Storage clock synchronization.')};
+ const isPdf=contentType==='application/pdf';
+ const kind=isPdf?'pdf':contentType==='image/png'?(path.includes('signature-')?'signature':'identity_png'):'identity_photo';
+ try{
+  const result=await getiProtectedDossierAction('upload_dossier',{kind,base64:await getiBlobBase64(blob)});
+  if(!result.ok||!result.path)throw Error('GETI upload was not verified.');
+  return {data:{path:result.path},error:null};
+ }catch(error){return {data:null,error};}
 }
 // Verified Auth backend fallback for PostgREST PGRST303 clock-skew errors.
 // The endpoint calls Supabase Auth on every request and writes only the caller's dossier.
@@ -3556,14 +3588,14 @@ async function getiConfirmSimpleApplication(){
    const ext=photo.type==='image/png'?'png':'jpg',path=`${application.id}/${user.id}/identity_photo-${Date.now()}.${ext}`;
    const uploaded=await getiSafeDossierUpload(path,photo,photo.type);
    if(uploaded.error)throw getiReadableAuthError(uploaded.error);
-   await patchData({docs:{...(fieldData().docs||{}),identity_photo:{path,name:photo.name,uploaded_at:new Date().toISOString()}}});
+   await patchData({docs:{...(fieldData().docs||{}),identity_photo:{path:uploaded.data?.path||path,name:photo.name,uploaded_at:new Date().toISOString()}}});
   }
   if(signatureDrawn){
    const canvas=E('signatureCanvas');const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
    if(!blob)throw Error('Unable to save the handwritten signature.');
    const path=`${application.id}/${user.id}/signature-${Date.now()}.png`;
    const up=await getiSafeDossierUpload(path,blob,'image/png');if(up.error)throw getiReadableAuthError(up.error);
-   await patchData({signature:typed,accepted:true,signed_at:new Date().toISOString(),signature_image:{path,uploaded_at:new Date().toISOString()}});
+   await patchData({signature:typed,accepted:true,signed_at:new Date().toISOString(),signature_image:{path:up.data?.path||path,uploaded_at:new Date().toISOString()}});
    signatureDrawn=false;
   }else{
    await patchData({signature:typed,accepted:true,signed_at:fieldData().signed_at||new Date().toISOString()});
@@ -3591,9 +3623,15 @@ async function getiSubmitCompleteDossier(){
   if(blob.size>18*1024*1024)throw Error('Generated PDF too large. Please use smaller identity photos.');
   const path=`${application.id}/${user.id}/geti-collaboration-dossier-${Date.now()}.pdf`;
   const uploaded=await getiSafeDossierUpload(path,blob,'application/pdf');if(uploaded.error)throw getiReadableAuthError(uploaded.error);
-  const result=await getiQueryWithJwtRecovery(()=>supabase.from('collaboration_applications').update({dossier_pdf:path,application_data:{...fieldData(),pdf_submitted_at:new Date().toISOString()}}).eq('id',application.id).eq('owner_id',user.id).select('*').single());
+  const savedPath=uploaded.data?.path||path;
+  let result=await supabase.from('collaboration_applications').update({dossier_pdf:savedPath,application_data:{...fieldData(),pdf_submitted_at:new Date().toISOString()}}).eq('id',application.id).eq('owner_id',user.id).select('*').single();
+  if(getiIsJwtTimeError(result.error)){
+    try{const verified=await getiProtectedDossierAction('finalize_dossier',{path:savedPath});
+      result={data:verified.application,error:null};
+    }catch(error){result={data:null,error};}
+  }
   if(result.error)throw getiReadableAuthError(result.error);
-  if(!result.data||result.data.dossier_pdf!==path||!result.data.application_data?.pdf_submitted_at){
+  if(!result.data||result.data.dossier_pdf!==savedPath||!result.data.application_data?.pdf_submitted_at){
    throw Error('Supabase did not confirm the complete PDF submission. Please refresh before retrying.');
   }
   application=result.data;
