@@ -1051,7 +1051,7 @@ function getiIsJwtTimeError(error){
  return /jwt issued at future|issued in the future|jwt.*future|not yet valid/i.test(String(error?.message||error||''));
 }
 function getiReadableAuthError(error){
- if(getiIsJwtTimeError(error))return new Error('Supabase has not accepted the session token yet (JWT issued at future). Enable automatic date and time on your device, reload the page, then sign out and sign in again. If the error persists, contact GETI administration to check the server clock: this cannot be bypassed safely in the browser.');
+ if(getiIsJwtTimeError(error))return new Error('GETI server has temporarily rejected this newly issued session token (JWT issued at future). The app has retried safely. Please try again in a moment. If it continues, GETI administration must check Supabase Auth / PostgREST / Storage server clock synchronization and JWT validation logs; changing your device time alone might not resolve it.');
  return error;
 }
 const getiSleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -1064,40 +1064,37 @@ function getiJwtIssuedAt(token){
    return Number.isFinite(payload.iat)?payload.iat:null;
  }catch{return null;}
 }
-async function getiRefreshForJwt(){
- // Refresh ONCE at most, then allow for a small server clock skew before retrying.
- const refreshed=await supabase.auth.refreshSession();
- if(refreshed.error)throw getiReadableAuthError(refreshed.error);
- return refreshed.data?.session||null;
-}
-async function getiJwtDelayForSession(){
- const {data}=await supabase.auth.getSession();
- const iat=getiJwtIssuedAt(data?.session?.access_token);
- // The local clock may be wrong; do not wait indefinitely or trust local time for authorization.
- if(iat!==null){
-   const ahead=Math.round(iat*1000-Date.now());
-   if(ahead>0 && ahead<16000)await getiSleep(Math.min(16000,ahead+2000));
- }
+// The device clock is not the authority for token validity. Consult the service
+// Date response to diagnose skew; only Supabase can validate a Supabase JWT.
+async function getiGetServerTimestamp(){
+ try{
+   const r=await fetch('https://syawyulrelrhjprnxdyn.supabase.co/auth/v1/health',{
+      method:'GET',cache:'no-store'
+   });
+   const date=r.headers.get('date');
+   const time=date?Date.parse(date):NaN;
+   return Number.isFinite(time)?time:null;
+ }catch{return null;}
 }
 async function getiQueryWithJwtRecovery(queryFactory){
  let result=await queryFactory();
  if(!getiIsJwtTimeError(result?.error))return result;
- try{await getiJwtDelayForSession();}catch{}
- // Retrying first preserves the existing valid session and avoids rotating tokens repeatedly.
- for(let attempt=0;attempt<4;attempt++){
-   await getiSleep(attempt===0?1500:3500);
+ const session=await supabase.auth.getSession();
+ const token=session.data?.session?.access_token;
+ const issued=getiJwtIssuedAt(token);
+ const serverNow=await getiGetServerTimestamp();
+ // Do not rotate a JWT that is already too new: refresh would produce an even newer iat.
+ // Wait for a short, bounded grace period, then let the backend validate the *same* JWT.
+ const serverAhead=issued!==null&&serverNow!==null?Math.max(0,issued*1000-serverNow):null;
+ const waits=serverAhead!==null&&serverAhead<20000
+   ?[Math.max(2500,Math.min(12000,serverAhead+2500)),4000,5000]
+   :[3000,5000,7000];
+ for(const ms of waits){
+   await getiSleep(ms);
    result=await queryFactory();
    if(!getiIsJwtTimeError(result?.error))return result;
  }
- try{
-   await getiRefreshForJwt();
-   await getiJwtDelayForSession();
- }catch(error){return {...result,error:getiReadableAuthError(error)};}
- for(let attempt=0;attempt<5;attempt++){
-   await getiSleep(attempt===0?2000:4000);
-   result=await queryFactory();
-   if(!getiIsJwtTimeError(result?.error))return result;
- }
+ // Only the server can resolve persistent token-issuer/verifier skew.
  return {...result,error:getiReadableAuthError(result?.error)};
 }
 // Expose narrowly-scoped, live payment context to the separate checkout script.
@@ -1488,7 +1485,7 @@ function getiApplyDossierLockUI(){if(!['dossier','documents'].includes(page)|| (
  for(const form of root.querySelectorAll('form.uploadForm')){for(const el of form.querySelectorAll('input[type=file],button[type=submit]'))el.disabled=true;}
  const submit=root.querySelector('#getiSubmitPdf');if(submit)submit.disabled=true;
 }
-function dossier(){const d=fieldData();const requiredUploads=[['id_recto','ID Card Front (JPG, JPEG, PNG)'],['id_verso','ID Card Back (JPG, JPEG, PNG)']];return `<h1 class="sectiontitle">My Collaboration Application File</h1><p class="sectionintro">Official collaboration application and identification. When you save the filled form, an A4 PDF copy is generated automatically, even before uploading supporting documents.</p>${getiDossierLockMessage()}${application?.review_note&&!application?.dossier_pdf?`<div class="notice" style="border-left:5px solid #d68b26;background:#fff9e9"><b>Revision requested by GETI administration</b><p>${esc(application.review_note)}</p><p>Please complete your dossier again and submit a new A4 PDF.</p></div>`:application?.dossier_pdf?`<div class="notice" style="border-left:5px solid #1b74d1;background:#eef6ff"><b>${application.application_status==='approved'?'Dossier verified and approved':'Dossier received — Pending Verification'}</b><p>Your application has been sent to Support → ACTIVE for administrator review.</p></div>`:''}<section class="welcomeGETI"><div class="welcomeeyebrow">GLOBAL ENGLISH TEACHING INSTITUTE · OFFICIAL COLLABORATION</div><h2>Welcome to GETI – Global English Teaching Institute</h2><p class="welcomeTag">Keep Learning. Keep Growing. English Opens Opportunities.</p><p>Welcome to the <b>Global English Teaching Institute (GETI)</b>! If you are looking to earn a GETI certificate, we are ready to support you throughout your learning and certification journey.</p><p>GETI is an innovative online platform designed to provide English language assessments, professional knowledge tests, skills evaluations, and various certification opportunities. Our mission is to make education and certification more accessible, convenient, and professional for learners around the world.</p><p>At GETI, students can demonstrate their knowledge, evaluate their abilities, and obtain different types of certificates according to their qualifications and achievements.</p><h3>What makes GETI different?</h3><p>GETI has its own independent certification system and a unique institutional identity. Unlike many other online certification platforms, GETI provides certificates featuring <b>individual identification codes and QR code verification</b>, allowing certificate information to be checked through its online verification system.</p><p>Every GETI certificate is designed to reflect our institution's identity, commitment to quality, and dedication to professional development.</p><p>GETI is more than just a certification platform. It is a growing educational community committed to helping learners develop their skills, recognize their achievements, and explore new opportunities.</p><p class="welcomeEnd">Join GETI today and take the next step toward your future success!</p></section><div class="panel"><div class="panelhead"><h2>Collaboration Application Form</h2>${pill(appStatus().replaceAll('_',' '))}</div><div class="geti-identity-first"><div class="geti-identity-badge"><svg class="geti-ui-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h4l2-3h6l2 3h4v13H3Z"/><circle cx="12" cy="13" r="4"/></svg> <strong>Identity Photo *</strong><span>JPG / JPEG / PNG · Maximum 20 MB</span></div><p class="hint">This photo will appear in your collaboration profile and the A4 application PDF. Choose any JPG/JPEG/PNG photo. When you upload, GETI will automatically save your completed application form first if needed.</p><div class="geti-identity-photo-row"><div class="geti-identity-photo-preview" id="identityPhotoPreview">${d.docs?.identity_photo?.path?'✓ Photo uploaded':'No photo yet'}</div><form class="uploadForm geti-photo-upload" data-key="identity_photo"><input type="file" name="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" aria-label="Upload Identity Photo" required><div class="actions"><button class="btn" type="submit">Upload Identity Photo</button>${d.docs?.identity_photo?.path?`<button type="button" class="btn alt" data-viewdoc="identity_photo">View Saved Photo</button>`:''}</div></form></div><div class="notice" style="font-size:12px">${d.docs?.identity_photo?.path?'✓ Identity photo saved.':'Your identity photo is required. Upload it now; if needed, GETI will save the completed form first.'}</div><div id="identityPhotoUploadNotice" class="notice hide" role="status"></div></div><form id="dossierForm"><div class="formgrid"><div class="field"><label>Full Name *</label><input name="full_name" value="${esc(application?.full_name)}" required maxlength="150"></div><div class="field"><label>Email Address</label><input value="${esc(user.email)}" disabled></div><div class="field"><label>Phone Number *</label><input name="phone" value="${esc(application?.phone)}" required></div><div class="field"><label>Organization / Institution *</label><input name="organization" value="${esc(application?.organization)}" required></div><div class="field"><label>Country</label><input name="country" value="${esc(d.country)}"></div><div class="field"><label>City / Location</label><input name="city" value="${esc(d.city)}"></div><div class="field"><label>Collaboration Type</label><select name="collaboration_type"><option value="">Select collaboration type</option>${['Educational Partner','Training Center','Teacher / Instructor','Institution','Business Partner','Other'].map(v=>`<option ${d.collaboration_type===v?'selected':''}>${v}</option>`).join('')}</select></div><div class="field"><label>Area of Interest</label><select name="interest"><option value="">Select interest</option>${['English Language Programs','TESOL / TEFL / TEYL','Examinations & Certificates','Digital Learning','Other'].map(v=>`<option ${d.interest===v?'selected':''}>${v}</option>`).join('')}</select></div><div class="field wide"><label>Address</label><input name="address" value="${esc(d.address)}"></div><div class="field wide"><label>Motivation / Purpose of Collaboration *</label><textarea name="motivation" required>${esc(d.motivation)}</textarea></div><div class="field wide"><label>Additional Information</label><textarea name="additional">${esc(d.additional)}</textarea></div></div><div class="actions"><button class="btn" type="submit">Save My Application File + A4 PDF</button>${application?.id?`<button class="btn alt" type="button" id="getiDownloadSavedA4">Download Saved A4</button>`:''}<button class="btn alt" type="button" data-page="documents">Next: Documents →</button></div><div id="dossierNotice" class="notice hide"></div></form></div><div class="panel"><h2>Identity Verification Documents</h2><p class="hint">Choose both sides of your identification card (JPG, JPEG or PNG; maximum 20 MB each). The application form is saved automatically before the first upload if necessary. Your Identity Photo upload is located directly under the Collaboration Application Form heading.</p><div class="docgrid">${requiredUploads.map(([key,name])=>`<div class="uploadbox"><h3>${esc(name)}</h3><div class="status">${pill(d.docs?.[key]?.path?'Uploaded':'Missing')}</div><form class="uploadForm" data-key="${key}"><input type="file" name="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" aria-label="${esc(name)}" required><div class="actions"><button class="btn" type="submit">Upload</button>${d.docs?.[key]?.path?`<button type="button" class="btn alt" data-viewdoc="${key}">View</button>`:''}</div></form></div>`).join('')}</div><div id="uploadNotice" class="notice hide"></div></div><div class="panel"><h2>Collaboration Declaration & Signature</h2><p class="hint">I confirm that the information submitted is accurate. I agree that GETI may review my collaboration request. Signing does not constitute approval by GETI.</p><form id="signatureForm"><div class="field"><label>Typed Full Name / Signature *</label><input name="signature" required value="${esc(d.signature)}" placeholder="Type your full legal name"></div><div class="field"><label>Draw Your Signature on Screen *</label><div class="signaturePad"><canvas id="signatureCanvas" width="900" height="240" aria-label="Draw your signature here with mouse or finger"></canvas></div><div class="actions"><button type="button" class="btn alt" id="clearSignature">Clear Signature</button>${d.signature_image?.path?`<button type="button" class="btn alt" data-viewsignature="true">View Saved Signature</button>`:''}</div><p class="hint">Use your mouse, pen or finger to sign inside the white box. Your signature image is stored privately with your collaboration dossier. After you save your signature, GETI sends a confirmation email to your registered address and informs the administration.</p></div><label style="display:flex;gap:9px;align-items:center"><input style="width:auto" type="checkbox" name="accepted" ${d.accepted?'checked':''} required> I confirm this electronic declaration.</label><div class="actions"><button class="btn" type="submit">Save and Submit Signature</button></div><div id="signatureNotice" class="notice hide"></div></form></div><div class="panel geti-pdf-submit"><h2>Submit Complete Collaboration Application File</h2><p class="hint">Complete the application form, upload Identity Photo and both sides of your ID card, and save your handwritten signature before submitting. GETI will generate an A4 application PDF and make it available privately to you and GETI administration.</p><div class="actions"><button class="btn" id="getiSubmitPdf" type="button"><svg class="geti-ui-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h8l5 5v15H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M14 2v6h5M8 13h8m-8 4h8"/></svg> Submit Application File &amp; Generate A4 PDF</button>${application?.dossier_pdf?`<button class="btn alt" type="button" data-geti-download-pdf="1"><svg class="geti-ui-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4"/></svg> Download Submitted A4 PDF</button>`:''}</div><div id="getiPdfNotice" class="notice hide" role="status"></div></div>`}
+function dossier(){const d=fieldData();const requiredUploads=[['id_recto','ID Card Front (JPG, JPEG, PNG)'],['id_verso','ID Card Back (JPG, JPEG, PNG)']];return `<h1 class="sectiontitle">My Collaboration Application File</h1><p class="sectionintro">Official collaboration application and identification. When you save the filled form, an A4 PDF copy is generated automatically, even before uploading supporting documents.</p>${getiDossierLockMessage()}${application?.review_note&&!application?.dossier_pdf?`<div class="notice" style="border-left:5px solid #d68b26;background:#fff9e9"><b>Revision requested by GETI administration</b><p>${esc(application.review_note)}</p><p>Please complete your dossier again and submit a new A4 PDF.</p></div>`:application?.dossier_pdf?`<div class="notice" style="border-left:5px solid #1b74d1;background:#eef6ff"><b>${application.application_status==='approved'?'Dossier verified and approved':'Dossier received — Pending Verification'}</b><p>Your application has been sent to Support → ACTIVE for administrator review.</p></div>`:''}<section class="welcomeGETI"><div class="welcomeeyebrow">GLOBAL ENGLISH TEACHING INSTITUTE · OFFICIAL COLLABORATION</div><h2>Welcome to GETI – Global English Teaching Institute</h2><p class="welcomeTag">Keep Learning. Keep Growing. English Opens Opportunities.</p><p>Welcome to the <b>Global English Teaching Institute (GETI)</b>! If you are looking to earn a GETI certificate, we are ready to support you throughout your learning and certification journey.</p><p>GETI is an innovative online platform designed to provide English language assessments, professional knowledge tests, skills evaluations, and various certification opportunities. Our mission is to make education and certification more accessible, convenient, and professional for learners around the world.</p><p>At GETI, students can demonstrate their knowledge, evaluate their abilities, and obtain different types of certificates according to their qualifications and achievements.</p><h3>What makes GETI different?</h3><p>GETI has its own independent certification system and a unique institutional identity. Unlike many other online certification platforms, GETI provides certificates featuring <b>individual identification codes and QR code verification</b>, allowing certificate information to be checked through its online verification system.</p><p>Every GETI certificate is designed to reflect our institution's identity, commitment to quality, and dedication to professional development.</p><p>GETI is more than just a certification platform. It is a growing educational community committed to helping learners develop their skills, recognize their achievements, and explore new opportunities.</p><p class="welcomeEnd">Join GETI today and take the next step toward your future success!</p></section><div class="panel"><div class="panelhead"><h2>Collaboration Application Form</h2>${pill(appStatus().replaceAll('_',' '))}</div><div class="geti-identity-first"><div class="geti-identity-badge"><svg class="geti-ui-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h4l2-3h6l2 3h4v13H3Z"/><circle cx="12" cy="13" r="4"/></svg> <strong>Identity Photo *</strong><span>JPG / JPEG / PNG · Maximum 20 MB</span></div><p class="hint">This photo will appear in your collaboration profile and the A4 application PDF. Choose any JPG/JPEG/PNG photo. When you upload, GETI will automatically save your completed application form first if needed.</p><div class="geti-identity-photo-row"><div class="geti-identity-photo-preview" id="identityPhotoPreview">${d.docs?.identity_photo?.path?'✓ Photo uploaded':'No photo yet'}</div><form class="uploadForm geti-photo-upload" data-key="identity_photo"><input type="file" name="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" aria-label="Upload Identity Photo" required><div class="actions"><button class="btn" type="submit">Upload Identity Photo</button>${d.docs?.identity_photo?.path?`<button type="button" class="btn alt" data-viewdoc="identity_photo">View Saved Photo</button>`:''}</div></form></div><div class="notice" style="font-size:12px">${d.docs?.identity_photo?.path?'✓ Identity photo saved.':'Your identity photo is required. Upload it now; if needed, GETI will save the completed form first.'}</div><div id="identityPhotoUploadNotice" class="notice hide" role="status"></div></div><form id="dossierForm"><div class="formgrid"><div class="field"><label>Full Name *</label><input name="full_name" value="${esc(application?.full_name)}" required maxlength="150"></div><div class="field"><label>Email Address</label><input value="${esc(user.email)}" disabled></div><div class="field"><label>Phone Number *</label><input name="phone" value="${esc(application?.phone)}" required></div><div class="field"><label>Organization / Institution *</label><input name="organization" value="${esc(application?.organization)}" required></div><div class="field"><label>Country</label><input name="country" value="${esc(d.country)}"></div><div class="field"><label>City / Location</label><input name="city" value="${esc(d.city)}"></div><div class="field"><label>Collaboration Type</label><select name="collaboration_type"><option value="">Select collaboration type</option>${['Educational Partner','Training Center','Teacher / Instructor','Institution','Business Partner','Other'].map(v=>`<option ${d.collaboration_type===v?'selected':''}>${v}</option>`).join('')}</select></div><div class="field"><label>Area of Interest</label><select name="interest"><option value="">Select interest</option>${['English Language Programs','TESOL / TEFL / TEYL','Examinations & Certificates','Digital Learning','Other'].map(v=>`<option ${d.interest===v?'selected':''}>${v}</option>`).join('')}</select></div><div class="field wide"><label>Address</label><input name="address" value="${esc(d.address)}"></div><div class="field wide"><label>Motivation / Purpose of Collaboration *</label><textarea name="motivation" required>${esc(d.motivation)}</textarea></div><div class="field wide"><label>Additional Information</label><textarea name="additional">${esc(d.additional)}</textarea></div></div><div class="actions"><button class="btn" type="submit">Save My Application File + A4 PDF</button>${application?.id?`<button class="btn alt" type="button" id="getiDownloadSavedA4">Download Saved A4</button>`:''}<button class="btn alt" type="button" data-page="documents">Next: Documents →</button></div><div id="dossierNotice" class="notice hide"></div></form></div><div class="panel"><h2>Identity Verification Documents</h2><p class="hint">Choose both sides of your identification card (JPG, JPEG or PNG; maximum 20 MB each). The application form is saved automatically before the first upload if necessary. Your Identity Photo upload is located directly under the Collaboration Application Form heading.</p><div class="docgrid">${requiredUploads.map(([key,name])=>`<div class="uploadbox"><h3>${esc(name)}</h3><div class="status">${pill(d.docs?.[key]?.path?'Uploaded':'Missing')}</div><form class="uploadForm" data-key="${key}"><input type="file" name="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" aria-label="${esc(name)}" required><div class="actions"><button class="btn" type="submit">Upload</button>${d.docs?.[key]?.path?`<button type="button" class="btn alt" data-viewdoc="${key}">View</button>`:''}</div></form></div>`).join('')}</div><div id="uploadNotice" class="notice hide"></div></div><div class="panel"><h2>Collaboration Declaration & Signature</h2><p class="hint">I confirm that the information submitted is accurate. I agree that GETI may review my collaboration request. Signing does not constitute approval by GETI.</p><form id="signatureForm"><div class="field"><label>Typed Full Name / Signature *</label><input name="signature" required value="${esc(d.signature)}" placeholder="Type your full legal name"></div><div class="field"><label>Draw Your Signature on Screen *</label><div class="signaturePad"><canvas id="signatureCanvas" width="900" height="240" aria-label="Draw your signature here with mouse or finger"></canvas></div><div class="actions"><button type="button" class="btn alt" id="clearSignature">Clear Signature</button>${d.signature_image?.path?`<button type="button" class="btn alt" data-viewsignature="true">View Saved Signature</button>`:''}</div><p class="hint">Use your mouse, pen or finger to sign inside the white box. Your signature image is stored privately with your collaboration dossier. After you save your signature, GETI sends a confirmation email to your registered address and informs the administration.</p></div><label style="display:flex;gap:9px;align-items:center"><input style="width:auto" type="checkbox" name="accepted" ${d.accepted?'checked':''} required> I confirm this electronic declaration.</label><div class="actions"><button class="btn" type="submit">Save and Submit Signature + A4 PDF</button>${d.signature_image?.path?`<button type="button" class="btn alt" id="getiDownloadSignedA4">Download Signed A4</button>`:''}</div><div id="signatureNotice" class="notice hide"></div></form></div><div class="panel geti-pdf-submit"><h2>Submit Complete Collaboration Application File</h2><p class="hint">Complete the application form, upload Identity Photo and both sides of your ID card, and save your handwritten signature before submitting. GETI will generate an A4 application PDF and make it available privately to you and GETI administration.</p><div class="actions"><button class="btn" id="getiSubmitPdf" type="button"><svg class="geti-ui-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h8l5 5v15H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M14 2v6h5M8 13h8m-8 4h8"/></svg> Submit Application File &amp; Generate A4 PDF</button>${application?.dossier_pdf?`<button class="btn alt" type="button" data-geti-download-pdf="1"><svg class="geti-ui-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4"/></svg> Download Submitted A4 PDF</button>`:''}</div><div id="getiPdfNotice" class="notice hide" role="status"></div></div>`}
 function applicationStatus(){return `<h1 class="sectiontitle">Application Status</h1><p class="sectionintro">Follow the status recorded for your GETI collaboration application.</p><div class="panel"><h2>Application Details</h2>${[['Registration ID',regId()],['Applicant',application?.full_name||'Not provided'],['Account Status',isAccessActive()?'Active':'Deactivated'],['Application Status',appStatus()],['Created',application?.created_at?new Date(application.created_at).toLocaleString():'Not submitted'],['Last Updated',application?.updated_at?new Date(application.updated_at).toLocaleString():'—']].map(([a,b])=>`<div class="record recordrow"><span>${a}</span><b>${esc(b)}</b></div>`).join('')}<div class="actions"><button class="btn" data-page="dossier">Edit Application File</button><button class="btn alt" id="reloadData">Refresh Status</button></div></div><div class="notice">GETI administration determines approval. Completing the form does not automatically grant approved status.</div>`}
 function documents(){
  const hasPdf=Boolean(application?.dossier_pdf);
@@ -3090,7 +3087,7 @@ async function enter(){
  }catch(e){
   console.error('Collaboration database access:',e);
   const message=err(e);
-  getiLoginBanner('✓ Your GETI login was successful, but the collaboration account could not be loaded. '+message+'\nReload the page or sign out and in again. If the error mentions JWT issued at future, enable automatic device date/time.',true);
+  getiLoginBanner('✓ Your GETI login was successful, but the collaboration account could not be loaded. '+message+'\nReload the page or sign out and in again. If the error mentions JWT issued at future, the Supabase token issuer and verifier clocks must be checked.',true);
   route('dashboard');
  }
 }
@@ -3111,58 +3108,59 @@ async function getiSavedApplicationA4(){
  if(!application?.id)throw Error('Save your application file first.');
  const JsPDF=await getiPdfLibrary();
  const pdf=new JsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
- const x=20, right=190, width=170, bottom=272;
- const raw=application.application_data||{};
- const clean=v=>String(v==null?'':v).replace(/[\u2018\u2019]/g,"'").replace(/[\u2013\u2014]/g,'-').trim();
- const val=v=>clean(v)||'Not provided';
- let y=0,page=1;
- function type(size=10,bold=false){pdf.setFont('helvetica',bold?'bold':'normal');pdf.setFontSize(size);pdf.setTextColor(29,45,65)}
- function head(){
-   pdf.setFillColor(12,55,109);pdf.rect(0,0,210,32,'F');pdf.setTextColor(255,255,255);
-   pdf.setFont('helvetica','bold');pdf.setFontSize(20);pdf.text('GETI',x,17);
-   pdf.setFontSize(10);pdf.text('GLOBAL ENGLISH TEACHING INSTITUTE',x+35,16);
-   pdf.setFontSize(8);pdf.text('COLLABORATION APPLICATION  |  A4 SAVED COPY',x+35,22);
-   type(9,true);y=44;
+ const d=application.application_data||{};
+ const safe=v=>String(v==null?'':v).replace(/[\u2018\u2019]/g,"'").replace(/[\u2013\u2014]/g,'-').replace(/\s+/g,' ').trim();
+ const present=v=>safe(v)||'Not provided';
+ const name=present(application.full_name),ref=present(application.registration_id||application.id);
+ const date=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'Indian/Antananarivo'});
+ const left=24,right=186,contentWidth=162,bottom=268;
+ let y=0;
+ function font(size=10,bold=false,italic=false){pdf.setFont('times',bold?'bold':italic?'italic':'normal');pdf.setFontSize(size);pdf.setTextColor(29,31,38)}
+ function header(){
+  font(17,true);pdf.text('GETI',105,15,{align:'center'});
+  font(9,true);pdf.text('GLOBAL ENGLISH TEACHING INSTITUTE',105,21,{align:'center'});
+  font(7);pdf.text('OFFICIAL COLLABORATION APPLICATION',105,26,{align:'center'});
+  pdf.setDrawColor(100,112,128);pdf.setLineWidth(.28);pdf.line(53,30,157,30);
+  font(8);pdf.text('GETI Collaboration  |  https://getienglish.com',105,35,{align:'center'});
  }
- function newPage(){pdf.addPage();page++;head()}
- function ensure(height){if(y+height>bottom)newPage()}
- function title(text){ensure(17);type(12,true);pdf.text(text,x,y);y+=3;pdf.setDrawColor(180,200,221);pdf.line(x,y,right,y);y+=9}
- function field(label,value){
-   const text=val(value);
-   type(10);const lines=pdf.splitTextToSize(text,width);
-   const h=9+lines.length*5.2+4;ensure(h);
-   type(9,true);pdf.text(label,x,y);y+=6;type(10);
-   for(const line of lines){ensure(7);pdf.text(line,x+3,y);y+=5.2}
-   y+=7;
+ function footer(){
+  const pageNo=pdf.getCurrentPageInfo().pageNumber;
+  pdf.setDrawColor(190,194,202);pdf.setLineWidth(.2);pdf.line(left,278,right,278);
+  font(7);pdf.text('Global English Teaching Institute  |  Saved application, not approval',left,283);
+  pdf.text(String(pageNo),right,283,{align:'right'});
  }
- head();
- type(14,true);pdf.text('SAVED COLLABORATION APPLICATION',x,y);y+=10;
- type(9);pdf.text('Reference: '+val(application.registration_id||application.id),x,y);y+=6;
- pdf.text('Saved copy generated: '+new Date().toLocaleString('en-GB'),x,y);y+=6;
- pdf.setTextColor(127,86,26);pdf.setFontSize(8);
- pdf.text('DRAFT / SAVED COPY - This document is not GETI approval or a submitted complete dossier.',x,y);y+=14;
- title('Applicant information');
- field('Full Name',application.full_name);
- field('Email Address',application.email||user?.email);
- field('Phone Number',application.phone);
- field('Organization / Institution',application.organization);
- title('Collaboration information');
- field('Country',raw.country);
- field('City / Location',raw.city);
- field('Collaboration Type',raw.collaboration_type);
- field('Area of Interest',raw.interest);
- field('Address',raw.address);
- title('Statement of purpose');
- field('Motivation / Purpose of Collaboration',raw.motivation);
- field('Additional Information',raw.additional);
- type(9);ensure(24);pdf.text('Applicant: '+val(application.full_name),x,y);y+=8;
- pdf.text('Application status: '+val(application.application_status||'pending_review'),x,y);
- const total=pdf.getNumberOfPages();
- for(let n=1;n<=total;n++){
-  pdf.setPage(n);pdf.setDrawColor(198,210,224);pdf.line(x,283,right,283);
-  type(8);pdf.text('GETI Collaboration - Saved application copy',x,289);
-  pdf.text('Page '+n+' / '+total,right,289,{align:'right'});
+ function nextPage(){pdf.addPage();header();y=48}
+ function ensure(h){if(y+h>bottom)nextPage()}
+ function line(text,indent=0,spacing=5.4){
+  font(10);const parts=pdf.splitTextToSize(safe(text),contentWidth-indent);
+  for(const part of parts){ensure(spacing);pdf.text(part,left+indent,y);y+=spacing}
  }
+ function para(text){ensure(9);line(text,11,5.45);y+=4}
+ header();y=48;
+ font(9);pdf.text('Ref. No. '+ref,left,y);y+=9;
+ font(9);pdf.text(date,right,y,{align:'right'});y+=10;
+ font(10);pdf.text('To:',right,y,{align:'right'});y+=6;
+ pdf.text('GETI Collaboration Administration',right,y,{align:'right'});y+=8;
+ font(9,false,true);pdf.text('For official review and registration',right,y,{align:'right'});y+=15;
+ font(10);pdf.text('Subject: Application for GETI Collaboration',left,y);y+=11;
+ line('Dear GETI Administration,');y+=7;
+ para('I, '+name+', hereby submit my application to collaborate with the Global English Teaching Institute (GETI). I respectfully request the administration to review my details and consider this collaboration proposal.');
+ para('I am associated with '+present(application.organization)+'. My contact telephone number is '+present(application.phone)+' and my registered email address is '+present(application.email||user?.email)+'.'+(d.city||d.country?' My location is '+[d.city,d.country].filter(Boolean).map(safe).join(', ')+'.':''));
+ if(d.collaboration_type||d.interest){para('The proposed collaboration type is '+present(d.collaboration_type)+', with an area of interest in '+present(d.interest)+'.')}
+ if(d.address){para('Correspondence address: '+safe(d.address)+'.')}
+ para('Purpose of collaboration: '+present(d.motivation));
+ if(d.additional){para('Additional information: '+safe(d.additional))}
+ para('I confirm that the information provided in my application is accurate to the best of my knowledge. I understand that submitting this application does not constitute acceptance, approval, or an official partnership until GETI completes its review.');
+ ensure(34);y+=3;line('Yours sincerely,');y+=6;
+ if(d.signature_image?.path){
+   try{const image=await getiPdfImage(d.signature_image.path);
+    if(image){ensure(21);pdf.addImage(image,'PNG',left,y-2,47,15,undefined,'FAST');y+=17}
+   }catch(_){/* Keep the printed signature line if saved image is unavailable. */}
+ }
+ font(10,true);pdf.text(name,left,y);y+=6;
+ font(9);pdf.text('Applicant',left,y);y+=7;
+ if(!d.signature_image?.path){pdf.setDrawColor(135,141,152);pdf.line(left,y,left+54,y);y+=5;font(8);pdf.text('Signature',left,y)}
+ const count=pdf.getNumberOfPages();for(let i=1;i<=count;i++){pdf.setPage(i);footer()}
  return pdf.output('blob');
 }
 async function getiDownloadSavedApplicationA4(){
@@ -3172,6 +3170,51 @@ async function getiDownloadSavedApplicationA4(){
  a.download='GETI-Application-Saved-'+String(application?.registration_id||'Copy').replace(/[^a-zA-Z0-9_-]/g,'_')+'.pdf';
  document.body.appendChild(a);a.click();
  setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},10000);
+}
+// A4 declaration with real saved handwritten signature, independent of full dossier submission.
+async function getiSignedDeclarationA4(){
+ if(!application?.id)throw Error('Save your application file first.');
+ const d=fieldData();
+ if(!d.signature_image?.path||!d.signature||!d.accepted||!d.signed_at)throw Error('Save your handwritten signature and declaration before downloading the signed A4.');
+ const JsPDF=await getiPdfLibrary();
+ const pdf=new JsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
+ const safe=v=>String(v==null?'':v).replace(/[\u2018\u2019]/g,"'").replace(/[\u2013\u2014]/g,'-').trim();
+ const wrap=(str,max=166)=>pdf.splitTextToSize(safe(str)||'Not provided',max);
+ let y=44;
+ pdf.setFillColor(12,55,109);pdf.rect(0,0,210,33,'F');
+ pdf.setTextColor(255,255,255);pdf.setFont('helvetica','bold');pdf.setFontSize(20);pdf.text('GETI',20,16);
+ pdf.setFontSize(10);pdf.text('GLOBAL ENGLISH TEACHING INSTITUTE',55,15);
+ pdf.setFontSize(8);pdf.text('COLLABORATION · ELECTRONIC DECLARATION',55,22);
+ pdf.setTextColor(23,48,76);pdf.setFont('helvetica','bold');pdf.setFontSize(15);pdf.text('SIGNED COLLABORATION DECLARATION',20,y);y+=12;
+ pdf.setFontSize(9);pdf.setFont('helvetica','normal');
+ const add=(label,value)=>{pdf.setFont('helvetica','bold');pdf.text(label,20,y);pdf.setFont('helvetica','normal');const lines=wrap(value,107);pdf.text(lines,80,y);y+=Math.max(9,lines.length*5+4);};
+ add('Full Name',application.full_name);
+ add('Email Address',application.email||user?.email);
+ add('Phone Number',application.phone);
+ add('Organization',application.organization);
+ add('GETI Reference',application.registration_id||application.id);
+ add('Signed At',new Date(d.signed_at).toLocaleString('en-GB'));
+ pdf.setDrawColor(203,215,231);pdf.line(20,y+2,190,y+2);y+=13;
+ pdf.setFont('helvetica','bold');pdf.setFontSize(11);pdf.text('Applicant Declaration',20,y);y+=9;
+ pdf.setFont('helvetica','normal');pdf.setFontSize(10);
+ const statement='I confirm that the information submitted in this collaboration application is accurate. I agree that GETI may review my collaboration request. Signing does not constitute approval by GETI.';
+ const lines=wrap(statement);pdf.text(lines,20,y);y+=lines.length*5.3+12;
+ pdf.setFont('helvetica','bold');pdf.text('Handwritten Signature',20,y);y+=7;
+ const signedImage=await getiPdfImage(d.signature_image.path);
+ if(!signedImage)throw Error('Saved signature image not available.');
+ pdf.setDrawColor(197,212,228);pdf.roundedRect(20,y,170,47,3,3,'S');
+ pdf.addImage(signedImage,'PNG',24,y+4,162,39,undefined,'FAST');y+=57;
+ pdf.setFont('helvetica','normal');pdf.setFontSize(9);pdf.text('Typed signature: '+safe(d.signature).slice(0,100),20,y);y+=9;
+ pdf.setTextColor(143,85,30);pdf.setFontSize(8);
+ pdf.text(wrap('DOCUMENT STATUS: Signature saved. This declaration is not GETI approval and is not a complete submitted application dossier.'),20,y); 
+ pdf.setDrawColor(198,210,224);pdf.line(20,283,190,283);pdf.setTextColor(67,86,108);pdf.setFontSize(8);pdf.text('GETI Collaboration · Secure saved electronic declaration',20,289);
+ return pdf.output('blob');
+}
+async function getiDownloadSignedDeclarationA4(){
+ const blob=await getiSignedDeclarationA4();
+ const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;
+ a.download='GETI-Signed-Declaration-'+String(application?.registration_id||'Application').replace(/[^a-zA-Z0-9_-]/g,'_')+'.pdf';
+ document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},30000);
 }
 async function getiNotifySignatureSaved(applicationId){
   const sessionResult=await supabase.auth.getSession();
@@ -3199,15 +3242,22 @@ E('mainContent').addEventListener('submit',async e=>{e.preventDefault();const f=
  try{await getiDownloadSavedApplicationA4();info('dossierNotice','✓ Application saved. Your filled A4 PDF copy has been downloaded. You can also use Download Saved A4 to get another copy.');}
  catch(pdfError){info('dossierNotice','✓ Application saved in GETI. A4 PDF download was not available: '+err(pdfError)+' Use Download Saved A4 to retry.',true);}
 }else if(f.id==='signatureForm'){if(!application)throw Error('Please save your application file before signing.');const d=Object.fromEntries(new FormData(f).entries());if(!signatureDrawn)throw Error('Draw your signature in the box before submitting.');const canvas=E('signatureCanvas');const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('Unable to save signature image.');const path=`${application.id}/${user.id}/signature-${Date.now()}.png`;const up=await getiSafeDossierUpload(path,blob,'image/png');if(up.error)throw getiReadableAuthError(up.error);await patchData({signature:d.signature.trim(),accepted:true,signed_at:new Date().toISOString(),signature_image:{path,uploaded_at:new Date().toISOString()}});signatureDrawn=false;
- info('signatureNotice','✓ Signature saved securely. Sending email confirmation...');
+ info('signatureNotice','✓ Signature saved securely. Preparing your signed A4 document...');
+ let signedPdfMessage='';
+ try{await getiDownloadSignedDeclarationA4();signedPdfMessage=' Your signed A4 PDF has been downloaded.';}
+ catch(pdfError){signedPdfMessage=' The signed A4 PDF could not be downloaded: '+err(pdfError)+'. Use Download Signed A4 to retry.';}
+ // Make the permanent download button available without losing the current notice.
+ const actions=f.querySelector('.actions:last-of-type');
+ if(actions&&!f.querySelector('#getiDownloadSignedA4')){const download=document.createElement('button');download.type='button';download.id='getiDownloadSignedA4';download.className='btn alt';download.textContent='Download Signed A4';actions.appendChild(download);}
+ info('signatureNotice','✓ Signature saved.'+signedPdfMessage+' Sending email confirmation...');
  try{
    const notice=await getiNotifySignatureSaved(application.id);
    const details=notice.member_email_sent
      ?'✓ Signature saved. A confirmation email was sent to '+(user.email||'your GETI email')+'.'
      :'✓ Signature saved securely. The confirmation email could not be delivered yet.';
-   info('signatureNotice',details+(notice.admin_email_sent?' GETI Administration has been notified.':' GETI Administration email is pending.'));
+   info('signatureNotice',details+signedPdfMessage+(notice.admin_email_sent?' GETI Administration has been notified.':' GETI Administration email is pending.'));
  }catch(mailError){
-   info('signatureNotice','✓ Signature saved successfully. Email notification could not be sent: '+err(mailError)+' Your signature is still saved.',true);
+   info('signatureNotice','✓ Signature saved successfully.'+signedPdfMessage+' Email notification could not be sent: '+err(mailError)+' Your signature is still saved.',true);
  }}else if(f.classList.contains('uploadForm')){const file=f.querySelector('input[type="file"]')?.files?.[0],key=f.dataset.key;
  if(!application){
    const dossierForm=E('dossierForm');
@@ -3680,6 +3730,11 @@ async function getiSubmitCompleteDossier(){
  }catch(e){info('getiPdfNotice','Submission failed: '+err(e),true)}finally{if(E('getiSubmitPdf'))E('getiSubmitPdf').disabled=false}
 }
 document.addEventListener('click',async event=>{
+ if(event.target.closest('#getiDownloadSignedA4')){
+  try{await getiDownloadSignedDeclarationA4();info('signatureNotice','✓ Your saved signed A4 declaration has been downloaded.');}
+  catch(e){info('signatureNotice','Unable to download signed A4: '+err(e),true);}
+  return;
+ }
  if(event.target.closest('#getiDownloadSavedA4')){
   try{await getiDownloadSavedApplicationA4();info('dossierNotice','✓ Your saved A4 application PDF has been downloaded.');}
   catch(e){info('dossierNotice','Unable to download A4: '+err(e),true);}
