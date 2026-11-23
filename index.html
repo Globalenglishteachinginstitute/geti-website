@@ -7763,6 +7763,9 @@ h1, h2, h3, h4, h5, h6,
 html:not([data-geti-accreditation="visible"]) .geti-cpd-panel,
 html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {display:none!important}
 </style>
+<style id="geti-certificate-qr-scanner-style">
+.geti-qr-scan-actions{display:flex;flex-direction:column;align-items:center;gap:7px;margin:0 0 20px}.geti-qr-scan-actions button{width:min(420px,100%);padding:16px 20px;border:2px solid #f8d87e;border-radius:13px;color:#fff;background:linear-gradient(105deg,#0957a7,#693cc4,#d34e81);font-weight:900;font-size:15px;letter-spacing:.05em;cursor:pointer;box-shadow:0 10px 24px rgba(29,57,120,.23)}.geti-qr-scan-actions button:hover{filter:brightness(1.08)}.geti-qr-scan-actions span{font-size:12px;color:#536987;text-align:center}.geti-qr-scanner-box{width:min(520px,100%);margin:8px auto 20px;padding:16px;border-radius:17px;border:1px solid #d4e1ef;background:#fff;box-shadow:0 10px 28px rgba(5,34,75,.12)}.geti-qr-scanner-box[hidden]{display:none!important}.geti-qr-scanner-header{display:flex;justify-content:space-between;align-items:center;color:#113b71;margin-bottom:12px}.geti-qr-scanner-header button{border:0;background:#edf3fa;color:#153b6e;border-radius:50%;width:35px;height:35px;cursor:pointer;font-size:17px}#getiQrReader{max-width:100%;overflow:hidden;border-radius:12px}#getiQrReader video{max-width:100%;border-radius:12px}.geti-qr-image-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px}.geti-qr-image-row label{background:#e9f2fb;border-radius:8px;padding:10px 13px;color:#104d8e;font-size:13px;font-weight:800;cursor:pointer}.geti-qr-image-row input{max-width:100%;font-size:12px}#getiQrScanStatus{font-size:13px;color:#52667c;padding:9px 0 0;line-height:1.5}
+</style>
 </head>
 
 <body translate="no" class="notranslate">
@@ -7826,21 +7829,12 @@ html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {disp
         <div class="geti-auto-verify-intro">Search with a Certificate ID or certificate holder name in the same box.</div>
         <div class="geti-verify-universal-card">
           <label class="geti-verify-search-label" for="verifyInput">Certificate ID · Name</label>
-          <div class="geti-qr-verify-top">
-            <button type="button" id="getiQrStartBtn" class="geti-qr-action" onclick="getiOpenCertificateQrScanner()" aria-expanded="false" aria-controls="getiQrScannerPanel">
-              <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM21 14v3M17 21h4M14 21v-2"/></svg>
-              SCAN QR CODE TO VERIFY CERTIFICATE
-            </button>
-            <div id="getiQrScannerPanel" class="geti-qr-scanner-panel" hidden>
-              <p class="geti-qr-scanner-hint">Point your camera at a GETI certificate QR code, or upload a picture of the QR code.</p>
-              <div id="getiQrCamera" class="geti-qr-camera"></div>
-              <div class="geti-qr-scan-controls">
-                <label for="getiQrImageFile" class="geti-qr-file-label">UPLOAD QR IMAGE</label>
-                <input id="getiQrImageFile" type="file" accept="image/*" aria-label="Upload certificate QR code image" onchange="getiVerifyQrImageFile(this)" />
-                <button type="button" class="geti-qr-stop" onclick="getiCloseCertificateQrScanner()">CLOSE SCANNER</button>
-              </div>
-              <div id="getiQrScanStatus" role="status" aria-live="polite"></div>
-            </div>
+          <div class="geti-qr-scan-actions"><button type="button" id="getiQrScanButton" onclick="getiOpenQrScanner()">▣ &nbsp; SCAN QR CODE</button><span>Scan your certificate QR code for official verification</span></div>
+          <div id="getiQrScannerBox" class="geti-qr-scanner-box" hidden>
+            <div class="geti-qr-scanner-header"><strong>📷 Scan GETI Certificate</strong><button type="button" onclick="getiCloseQrScanner()" aria-label="Close QR scanner">✕</button></div>
+            <div id="getiQrReader"></div>
+            <div class="geti-qr-image-row"><label for="getiQrFile">🖼️ Scan a QR image</label><input id="getiQrFile" type="file" accept="image/*" onchange="getiScanQrImage(this)"></div>
+            <p id="getiQrScanStatus" role="status" aria-live="polite">Allow camera access, or choose a QR image.</p>
           </div>
           <div class="geti-verify-search-row geti-verify-universal-row">
             <input id="verifyInput" type="text" autocomplete="off" placeholder="Enter Certificate ID or Name" aria-label="Search GETI certificate by certificate ID or holder name" oninput="getiLiveCertificateSearch(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();verifyCertificate();}">
@@ -10132,7 +10126,68 @@ var clone=cert.cloneNode(true);
 var images=cert.querySelectorAll("img"),clones=clone.querySelectorAll("img");
 for(var i=0;i<images.length;i++)clones[i].src=images[i].src;
 win.document.open();
-win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'</body></html>');
+win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script id="geti-certificate-qr-scanner-script">
+(function(){
+let scanner=null,opening=false,ready=null;
+const $=id=>document.getElementById(id);
+function status(text){const el=$('getiQrScanStatus');if(el)el.textContent=text;}
+function loadScanner(){
+ if(window.Html5Qrcode)return Promise.resolve();
+ if(ready)return ready;
+ ready=new Promise((resolve,reject)=>{
+  const script=document.createElement('script');
+  script.src='https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js';
+  script.onload=()=>window.Html5Qrcode?resolve():reject(new Error('QR scanner could not load'));
+  script.onerror=()=>reject(new Error('Internet connection required to load QR scanner'));
+  document.head.appendChild(script);
+ }).catch(error=>{ready=null;throw error});return ready;
+}
+function extractCertificateId(raw){
+ const data=String(raw||'').trim();if(!data||data.length>2048)return '';
+ try{
+  const url=new URL(data);
+  if(url.protocol!=='https:'||!['getienglish.com','www.getienglish.com'].includes(url.hostname.toLowerCase()))return '';
+  const v=url.searchParams.get('verify')||url.searchParams.get('certificate_id')||url.searchParams.get('id')||'';
+  return v.trim().slice(0,120);
+ }catch{return /^[A-Za-z0-9][A-Za-z0-9._/-]{2,119}$/.test(data)?data:'';}
+}
+async function stop(){const previous=scanner;scanner=null;if(previous){try{if(previous.isScanning)await previous.stop();}catch(e){}try{await previous.clear();}catch(e){}}}
+window.getiCloseQrScanner=async function(){const box=$('getiQrScannerBox');if(box)box.hidden=true;await stop();};
+async function onDecoded(decoded){
+ const id=extractCertificateId(decoded);
+ if(!id){status('This QR code is not a supported GETI certificate verification QR code.');return;}
+ await window.getiCloseQrScanner();
+ const input=$('verifyInput');if(!input){status('Certificate search box not found.');return;}
+ input.value=id;input.dispatchEvent(new Event('input',{bubbles:true}));
+ if(typeof window.setVerifyType==='function')window.setVerifyType('id');
+ if(typeof window.verifyCertificate==='function')window.verifyCertificate('id');
+ $('verifyResult')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+window.getiOpenQrScanner=async function(){
+ const box=$('getiQrScannerBox');if(!box)return;
+ if(!box.hidden){await window.getiCloseQrScanner();return;}
+ box.hidden=false;status('Loading QR scanner…');
+ if(opening)return;opening=true;
+ try{
+  await loadScanner();
+  if(box.hidden)return;
+  if(!window.isSecureContext){status('Camera access requires HTTPS. You can scan a saved QR image below.');return;}
+  await stop();scanner=new window.Html5Qrcode('getiQrReader');
+  await scanner.start({facingMode:'environment'},{fps:10,qrbox:(w,h)=>{const edge=Math.min(245,Math.floor(Math.min(w,h)*0.8));return {width:edge,height:edge}}},onDecoded,()=>{});
+  status('Point the camera at the GETI certificate QR code.');
+ }catch(error){status('Camera unavailable or access denied. You can upload a QR image below.');await stop();}
+ finally{opening=false;}
+};
+window.getiScanQrImage=async function(input){
+ const file=input?.files?.[0];if(!file)return;
+ if(!file.type.startsWith('image/')||file.size>10*1024*1024){status('Choose an image up to 10 MB.');input.value='';return;}
+ try{status('Reading QR image…');await loadScanner();await stop();scanner=new window.Html5Qrcode('getiQrReader');const result=await scanner.scanFile(file,true);await onDecoded(result);}
+ catch(error){status('Could not read a QR code from this image. Try a clearer picture.');}
+ finally{input.value='';await stop();}
+};
+})();
+</script>
+</body></html>');
 win.document.close();
 win.onload=function(){setTimeout(function(){win.print();},400);};
 }
@@ -12143,9 +12198,6 @@ function showFinalResult(timeExpired){
 
     }
 
-    if(typeof getiDisplayAndSendTranscript==='function'){
-        getiDisplayAndSendTranscript({...record,exam:record.program,hours:oldExamHours,source:'GETI'},'examPanel');
-    }
     panel.scrollIntoView({
         behavior:"smooth"
     });
@@ -12689,7 +12741,7 @@ function saveGeti30Session(phase){
         version:2,phase:geti30State.sessionPhase,exam:geti30State.exam,examTitle:geti30State.examTitle,
         examLevel:geti30State.examLevel,passMark:geti30State.passMark,teflHours:geti30State.teflHours,
         student:geti30State.student,subjectIndex:geti30State.subjectIndex,questionIndex:geti30State.questionIndex,
-        answers:geti30State.answers,subjectScores:geti30State.subjectScores,questionSets:geti30State.questionSets,aiGeneratedSubjects:geti30State.aiGeneratedSubjects||{},
+        answers:geti30State.answers,subjectScores:geti30State.subjectScores,questionSets:geti30State.questionSets,
         failureCount:Number(geti30State.failureCount||0),retryMode:!!geti30State.retryMode,
         retryQuestionIndexes:geti30State.retryQuestionIndexes,timeRemaining:geti30State.timeRemaining,
         speakingResult:geti30State.speakingResult||null,savedAt:new Date().toISOString()
@@ -12708,7 +12760,6 @@ function clearGeti30Session(examName,examTitle){
 }
 function resumeGeti30Session(data){
     geti30State=Object.assign({},geti30State,data,{started:true,timerInterval:null});
-    geti30State.examLevel=getGetiLevelForExam(geti30State.exam,geti30State.teflHours);
     geti30State.timeRemaining=Math.max(1,Number(data.timeRemaining)||getCurrentGetiExamPolicy().durationMinutes*60);
     getiEnableExamLock();
     startGeti30Timer();
@@ -12748,18 +12799,8 @@ function getGetiExamPolicy(hours){
     return {level:"A2",passMark:100,durationMinutes:45};
 }
 
-/* All professional GETI examinations use the advanced C2 question level.
-   English Proficiency keeps the original A2/B1/B2/C1/C2 hours-based scale.
-   The standalone A2 examination also remains A2 by its explicit name. */
-function getGetiLevelForExam(examName,hours){
-    const name=String(examName||"").trim();
-    if(/English Proficiency/i.test(name))return getGetiExamPolicy(hours).level;
-    if(/^A2 Exam$/i.test(name))return "A2";
-    return "C2";
-}
 function getCurrentGetiExamPolicy(){
-    const policy=getGetiExamPolicy(geti30State.teflHours);
-    return {...policy,level:getGetiLevelForExam(geti30State.exam,geti30State.teflHours)};
+    return getGetiExamPolicy(geti30State.teflHours);
 }
 
 function getGetiExamHoursFromTitle(value){
@@ -12854,7 +12895,7 @@ function openGeneralExamHourSelector(examName){
     const cards=GETI_GENERAL_EXAM_HOURS.map(function(option,index){
         return '<button class="tefl-course-card" onclick="selectGeneralExamHour('+index+')">'+
             '<strong>'+option.hours+'-Hour '+escapeHTML(displayName)+'</strong>'+
-            '<span>Certificate examination program · Level C2</span>'+
+            '<span>Certificate examination program</span>'+
             '</button>';
     }).join("");
 
@@ -12885,7 +12926,7 @@ function openLanguageCourseSelector(program,courses){
     const cards=courses.map(function(course,index){
         return '<button class="tefl-course-card '+(course.recommended?'tefl-recommended':'')+'" onclick="selectGetiLanguageCourse(\''+program+'\','+index+')">'+
             '<strong>'+escapeHTML(course.title)+(course.recommended?' ★':'')+'</strong>'+
-            '<span>'+escapeHTML(course.description)+(program==="English Proficiency"?' · Level '+escapeHTML(getGetiExamPolicy(course.hours).level):' · Exam Level C2')+'</span>'+
+            '<span>'+escapeHTML(course.description)+'</span>'+
             '</button>';
     }).join("");
 
@@ -12992,7 +13033,7 @@ function openGeti30Registration(examName,course){
     geti30State={
         exam:examName,
         examTitle:selectedTitle,
-        examLevel:getGetiLevelForExam(examName,course ? course.hours : 0),
+        examLevel:course ? selectedPolicy.level : "A2",
         passMark:100,
         teflHours:course ? course.hours : null,
         student:null,
@@ -13528,7 +13569,7 @@ function geti30MakeQuestion(subject,templateIndex,rnd){
         ]
     ];
 
-    const currentLevel=getGetiLevelForExam(geti30State.exam,geti30State.teflHours);
+    const currentLevel=String(geti30State.examLevel||"B2").replace("+","");
     let base;
     if(currentLevel==="A2" || currentLevel==="B1"){
         const b1Item=GETI_B1_QUESTION_POOL[templateIndex % GETI_B1_QUESTION_POOL.length];
@@ -13616,48 +13657,6 @@ function buildGeti30QuestionSets(){
             return geti30MakeQuestion(subject,templateIndex,rnd);
         });
     });
-}
-
-/* GETI Gemini: generate one subject at a time, keeping exam HTML/timer/scoring UI unchanged. */
-const GETI_AI_EXAM_ENDPOINT="https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-ai-exam-subject";
-const GETI_AI_EXAM_PUBLISHABLE_KEY="sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8";
-async function geti30LoadAiSubject(subjectIndex,forceNew){
-    const exam=geti30State.exam;
-    if(typeof GETI_PUBLIC_ENGLISH_EXAMS==="undefined" || GETI_PUBLIC_ENGLISH_EXAMS.indexOf(exam)===-1) return;
-    const subjects=GETI_30_EXAM_SUBJECTS[exam]||[];
-    const subject=subjects[subjectIndex];
-    if(!subject) return;
-    if(!geti30State.aiGeneratedSubjects) geti30State.aiGeneratedSubjects={};
-    if(!forceNew && geti30State.aiGeneratedSubjects[subjectIndex] && geti30State.questionSets[subjectIndex])return;
-    const panel=document.getElementById("geti30ExamPanel");
-    const previous=panel?panel.innerHTML:"";
-    if(panel){panel.innerHTML='<div class="result-box" role="status" aria-live="polite"><h2>PREPARING EXAM SUBJECT</h2><p>Gemini AI is preparing new questions for <strong>'+escapeHTML(subject)+'</strong>.</p><p>Please keep this page open.</p></div>';}
-    try{
-        const resp=await fetch(GETI_AI_EXAM_ENDPOINT,{
-            method:"POST",headers:{"Content-Type":"application/json","apikey":GETI_AI_EXAM_PUBLISHABLE_KEY},
-            body:JSON.stringify({exam,subject,level:getGetiLevelForExam(exam,geti30State.teflHours),count:getGeti30QuestionCount(exam)})
-        });
-        const data=await resp.json();
-        if(!resp.ok)throw new Error(data.error||"AI generation unavailable");
-        const count=getGeti30QuestionCount(exam);
-        if(!Array.isArray(data.questions)||data.questions.length!==count)throw new Error("Incorrect AI question count");
-        const rows=data.questions.map(function(q){
-            if(!q || typeof q.question!=="string" || !Array.isArray(q.options)||q.options.length!==4 || !Number.isInteger(q.correctIndex)||q.correctIndex<0||q.correctIndex>3)throw new Error("Incorrect AI question format");
-            return [q.question,q.options[0],q.options[1],q.options[2],q.options[3],q.correctIndex];
-        });
-        if(!Array.isArray(geti30State.questionSets))geti30State.questionSets=[];
-        geti30State.questionSets[subjectIndex]=rows;
-        geti30State.aiGeneratedSubjects[subjectIndex]=true;
-        saveGeti30Session("question");
-    }catch(error){
-        console.warn("GETI Gemini exam fallback:",error);
-        if(!geti30State.aiFailureWarned){
-            geti30State.aiFailureWarned=true;
-            alert("Gemini AI could not prepare the exam questions ("+(error&&error.message||"service unavailable")+"). The existing GETI question bank will be used for this session. Please notify the GETI administrator if AI questions are required.");
-        }
-    }finally{
-        if(panel)panel.innerHTML=previous;
-    }
 }
 
 function getGeti30Question(examName,subject,qIndex){
@@ -14045,13 +14044,12 @@ function calculateGeti30OverallPercentage(){
     return academicPercentage;
 }
 
-async function continueGeti30Exam(){
+function continueGeti30Exam(){
     const nextSubject=getGetiNextRetrySubject(geti30State.subjectIndex+1);
     if(nextSubject!==-1){
         geti30State.subjectIndex=nextSubject;
         const indexes=getGetiActiveQuestionIndexes(nextSubject);
         geti30State.questionIndex=indexes[0];
-        await geti30LoadAiSubject(nextSubject,false);
         saveGeti30Session("question");
         if(!geti30State.timerInterval)startGeti30Timer();
         showGeti30Question();
@@ -14131,10 +14129,6 @@ function showGeti30FinalResult(){
         (status==="PASSED" ? buildGetiCertificateFeeNotice(geti30State.teflHours||getGetiExamHoursFromTitle(geti30State.examTitle||"")) : "")+
         '<h3>Subject Results</h3>'+rows+
         '</div>';
-    if(typeof getiDisplayAndSendTranscript==='function'){
-        const aiUsed=!!(geti30State.aiGeneratedSubjects && Object.keys(geti30State.aiGeneratedSubjects).length);
-        getiDisplayAndSendTranscript({...record,source:aiUsed?'gemini':'GETI'},'geti30ExamPanel');
-    }
 }
 
 function startGeti30Timer(){
@@ -17202,7 +17196,7 @@ async function submitGeti30Registration(){
 
     const selectedPolicy=getGetiExamPolicy(examHours);
     geti30State.teflHours=examHours;
-    geti30State.examLevel=getGetiLevelForExam(geti30State.exam,examHours);
+    geti30State.examLevel=selectedPolicy.level;
     geti30State.passMark=selectedPolicy.passMark;
     geti30State.timeRemaining=selectedPolicy.durationMinutes*60;
 
@@ -17318,8 +17312,6 @@ async function submitGeti30Registration(){
 
         getiEnableExamLock();
         buildGeti30QuestionSets();
-        geti30State.aiGeneratedSubjects={};
-        await geti30LoadAiSubject(0,false);
         saveGeti30Session("question");
 
         startGeti30Timer();
@@ -17581,11 +17573,10 @@ function restartGetiExamRegistration(){
     openGeti30Registration(exam,course);
 }
 
-async function startGetiFailedQuestionRetry(restartAll){
+function startGetiFailedQuestionRetry(restartAll){
     const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam]||[];
     restartAll=true;
     buildGeti30QuestionSets();
-    geti30State.aiGeneratedSubjects={};
     geti30State.timeoutSubmitting=false;
     geti30State.timedOut=false;
     if(restartAll){
@@ -17626,7 +17617,6 @@ async function startGetiFailedQuestionRetry(restartAll){
     geti30State.subjectIndex=firstSubject===-1?0:firstSubject;
     const indexes=getGetiActiveQuestionIndexes(geti30State.subjectIndex);
     geti30State.questionIndex=indexes.length?indexes[0]:0;
-    await geti30LoadAiSubject(geti30State.subjectIndex,true);
     saveGeti30Session("question");
     startGeti30Timer();
     showGeti30Question();
@@ -18865,35 +18855,23 @@ if(document.readyState!=="loading"){try{window.renderGetiExamButtons();}catch(e)
         });
     };
 
-    /* PROFESSIONAL LESSONS: only TEFL, TESOL and TEYL retain lessons.
-       The other public examinations remain available in TAKE AN EXAM,
-       with their subject/question data untouched. */
-    const GETI_LESSON_ENABLED_EXAMS = new Set(["TEFL Exam", "TESOL Exam", "TEYL Exam"]);
-    window.initGetiLessons = function(){
-        const list = document.getElementById("lessonExamList");
-        if (!list || typeof GETI_30_EXAM_SUBJECTS === "undefined") return;
-        list.innerHTML = "";
+    /* PROFESSIONAL LESSONS: show exactly the same programmes as TAKE AN EXAM. */
+    window.initGetiLessons=function(){
+        const list=document.getElementById("lessonExamList");
+        if(!list || typeof GETI_30_EXAM_SUBJECTS==="undefined") return;
+        list.innerHTML="";
         GETI_PUBLIC_ENGLISH_EXAMS
-            .filter(examName => GETI_LESSON_ENABLED_EXAMS.has(examName) && !!GETI_30_EXAM_SUBJECTS[examName])
+            .filter(function(examName){return !!GETI_30_EXAM_SUBJECTS[examName];})
             .forEach(function(examName){
-                const b = document.createElement("button");
-                b.className = "lesson-exam-btn";
-                b.textContent = " " + displayExamName(examName);
-                b.onclick = function(){
-                    if (typeof openLessonSubjects === "function") openLessonSubjects(examName);
+                const b=document.createElement("button");
+                b.className="lesson-exam-btn";
+                b.textContent=" "+displayExamName(examName);
+                b.onclick=function(){
+                    if(typeof openLessonSubjects==="function") openLessonSubjects(examName);
                 };
                 list.appendChild(b);
             });
     };
-
-    /* Block older lesson links to the removed programmes, without affecting examinations. */
-    const oldOpenLessonSubjects = window.openLessonSubjects;
-    if (typeof oldOpenLessonSubjects === "function") {
-        window.openLessonSubjects = function(examName){
-            if (!GETI_LESSON_ENABLED_EXAMS.has(examName)) return;
-            return oldOpenLessonSubjects.apply(this, arguments);
-        };
-    }
 
     /* Keep the existing plan; only make the selected portal the visible inside page. */
     const oldEnter=window.enterGetiPortal;
@@ -22865,7 +22843,8 @@ a[href],
 <script id="geti-collaboration-access">
 (function(){
   window.getiOpenCollaboration = async function(){
-    /* Open collaboration after verifying the existing GETI student session. */
+    /* No separate Collaboration password: GETI student authentication is still required. */
+
     var btn = document.getElementById('getiCollaborationBtn');
     var oldText = btn ? btn.innerHTML : 'COLLABORATION WITH GETI';
     if(btn){btn.disabled=true;btn.textContent='OPENING...';}
@@ -25231,31 +25210,50 @@ body.geti-checkout-active{overflow:hidden!important}
 #getiRobotForm{display:flex;gap:7px;padding:10px;border-top:1px solid #e2eaf5}
 #getiRobotInput{flex:1;min-width:0;border:1px solid #a6bad6;border-radius:10px;padding:11px;font:14px Arial,sans-serif}
 #getiRobotForm button{border:0;border-radius:9px;background:#073d83;color:#fff;padding:0 14px;font-weight:bold;cursor:pointer}
-.geti-robot-disclaimer{font-size:10px;padding:0 12px 8px;color:#58677c}
+.geti-robot-toolbar{display:flex;align-items:center;gap:8px;padding:8px 11px;border-top:1px solid #e2eaf5;background:#f7faff}.geti-robot-toolbar select{flex:1;min-width:0;border:1px solid #c9d8eb;border-radius:8px;padding:8px;background:white;color:#073d83}.geti-robot-toolbar button{border:1px solid #c9d8eb;border-radius:8px;padding:8px 10px;background:white;color:#073d83;cursor:pointer}.geti-robot-disclaimer{font-size:10px;padding:0 12px 8px;color:#58677c}
 @media(max-width:520px){#getiRobotLaunch{left:12px;bottom:12px;padding:11px 13px}#getiRobotPanel{left:12px;bottom:72px;height:min(520px,calc(100dvh - 88px))}}
-
-/* GETI AI rich conversation layout */
-.geti-robot-bubble.bot{background:#fff;border:1px solid #dae5f4;box-shadow:0 3px 12px rgba(10,50,100,.07);white-space:normal;padding:13px 14px;max-width:96%;line-height:1.6}
-.geti-robot-bubble.bot p{margin:0 0 10px}.geti-robot-bubble.bot p:last-child{margin-bottom:0}
-.geti-robot-bubble.bot strong{font-weight:800;color:#063c83}
-.geti-robot-bubble.bot h3{font-size:15px;line-height:1.4;color:#073d83;margin:0 0 10px}
-.geti-robot-bubble.bot ul{padding-left:17px;margin:8px 0}.geti-robot-bubble.bot li{margin:6px 0}
-.geti-robot-bubble.bot a{color:#0866bb;font-weight:700;text-decoration:underline;overflow-wrap:anywhere}
-.geti-robot-choice-list{display:grid;grid-template-columns:1fr;gap:7px;margin:10px 0 12px!important;padding:0!important;list-style:none}
-.geti-robot-choice-list li{margin:0!important}
-.geti-robot-choice{display:flex;gap:9px;align-items:center;width:100%;padding:10px 11px;text-align:left;background:#f5f9ff;border:1px solid #d4e4f9;border-radius:11px;color:#123b70;font:700 12px/1.45 Arial,sans-serif;cursor:pointer;transition:background .15s,border-color .15s}
-.geti-robot-choice:hover,.geti-robot-choice:focus-visible{background:#e8f3ff;border-color:#72a5e3;outline-offset:2px}
-.geti-robot-choice .choice-icon{font-size:19px;line-height:1}
-.geti-robot-choice .choice-arrow{margin-left:auto;color:#2774bc;font-size:16px}
-.geti-robot-bubble.bot .geti-robot-welcome{display:flex;align-items:center;gap:9px;margin:0 0 9px}
-.geti-robot-bubble.bot .geti-robot-welcome-icon{width:36px;height:36px;border-radius:12px;background:#e8f2ff;display:grid;place-items:center;font-size:20px}
-@media (max-width:520px){.geti-robot-bubble.bot{max-width:100%;padding:11px}.geti-robot-choice{padding:10px}}
 </style>
+
+<style id="getiRobotPremiumAnswers">
+#getiRobotPanel{width:min(445px,calc(100vw - 24px));height:min(650px,calc(100dvh - 105px));border-radius:22px}
+.geti-robot-bubble.bot.geti-robot-rich{max-width:100%;width:100%;background:#fff;padding:15px;border:1px solid #d9e5f3;box-shadow:0 8px 22px rgba(8,46,93,.09);white-space:normal;line-height:1.65}
+.geti-robot-rich h3{margin:0 0 10px;font-size:18px;color:#082e5d;line-height:1.35}
+.geti-robot-rich p{margin:0 0 11px;color:#35465b}
+.geti-robot-rich p:last-child{margin-bottom:0}
+.geti-robot-rich strong{color:#092f62}
+.geti-robot-rich a{color:#085ca8;text-decoration:underline;text-underline-offset:2px;font-weight:750;overflow-wrap:anywhere}
+.geti-robot-rich ul,.geti-robot-rich ol{padding-left:18px;margin:8px 0}
+.geti-robot-rich li{margin:6px 0}
+.geti-robot-welcome-top{padding:16px;border-radius:15px;background:linear-gradient(125deg,#052c5a,#155aa4 62%,#6434a5);color:#fff;margin-bottom:13px}
+.geti-robot-welcome-top .geti-robot-kicker{display:block;color:#ffe39a;font-size:10px;letter-spacing:.13em;font-weight:900;margin-bottom:7px}
+.geti-robot-welcome-top h3{color:#fff;font-size:20px;margin-bottom:6px}
+.geti-robot-welcome-top p{color:#edf4ff;font-size:12.5px;margin:0}
+.geti-robot-welcome-label{font-size:12px;font-weight:850;color:#213c61;margin:13px 1px 10px}
+.geti-robot-topic-grid{display:grid;gap:8px}
+.geti-robot-topic{width:100%;display:flex;align-items:center;gap:11px;text-align:left;padding:12px;border-radius:12px;cursor:pointer;border:1px solid var(--topic-line);background:var(--topic-bg);transition:transform .15s ease,box-shadow .15s ease}
+.geti-robot-topic:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(10,40,85,.11)}
+.geti-robot-topic:focus-visible{outline:3px solid #174f9b;outline-offset:2px}
+.geti-robot-topic-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:11px;background:var(--topic-color);color:white;font-size:19px}
+.geti-robot-topic-copy{flex:1;min-width:0}
+.geti-robot-topic-copy strong{display:block;font-size:12.5px;color:var(--topic-text);line-height:1.35}
+.geti-robot-topic-copy small{display:block;font-size:11px;color:#53627a;line-height:1.35;margin-top:3px}
+.geti-robot-topic-arrow{font-size:18px;font-weight:bold;color:var(--topic-color)}
+.geti-robot-topic:nth-child(1){--topic-bg:#ecf4ff;--topic-line:#c9dffc;--topic-color:#1666c3;--topic-text:#0a4289}
+.geti-robot-topic:nth-child(2){--topic-bg:#ecfbf5;--topic-line:#b9e9d2;--topic-color:#16855c;--topic-text:#116544}
+.geti-robot-topic:nth-child(3){--topic-bg:#fff5e9;--topic-line:#f5d8ae;--topic-color:#da8320;--topic-text:#8a4c08}
+.geti-robot-topic:nth-child(4){--topic-bg:#f3edff;--topic-line:#d9c8fc;--topic-color:#8053ce;--topic-text:#5c359f}
+.geti-robot-topic:nth-child(5){--topic-bg:#fff0f4;--topic-line:#f2c4d3;--topic-color:#cb5075;--topic-text:#953356}
+.geti-robot-official{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:13px;border-radius:11px;padding:11px 12px;background:#eef3fa;color:#40566f;font-size:11px}
+.geti-robot-official a{font-weight:900;text-decoration:none;color:#0757a4}
+@media(max-width:520px){#getiRobotPanel{height:min(650px,calc(100dvh - 88px))}.geti-robot-bubble.bot.geti-robot-rich{padding:11px}.geti-robot-welcome-top{padding:13px}}
+</style>
+
 <button id="getiRobotLaunch" type="button" aria-label="Open GETI Robot Chat" aria-controls="getiRobotPanel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="6" width="18" height="15" rx="4"/><path d="M12 3v3M9 3h6M8 13h.01M16 13h.01M8 17c2.5 2 5.5 2 8 0"/></svg> GETI Robot Chat</button>
 <section id="getiRobotPanel" hidden role="dialog" aria-modal="false" aria-label="GETI Robot Chat">
-<div class="geti-robot-head"><span aria-hidden="true" style="font-size:27px">🤖</span><div><strong>GETI Assistant</strong><small>Gemini AI • Programs & student help</small></div><button id="getiRobotClose" type="button" aria-label="Close chat">×</button></div>
+<div class="geti-robot-head"><span aria-hidden="true" style="font-size:27px">🤖</span><div><strong>GETI Assistant</strong><small>GETI knowledge assistant • Programs & student help</small></div><button id="getiRobotClose" type="button" aria-label="Close chat">×</button></div>
 <div id="getiRobotMessages" role="log" aria-live="polite" aria-relevant="additions"></div>
-<div class="geti-robot-quick" aria-label="Suggested questions"><button type="button" data-geti-question="What is GETI?">About GETI</button><button type="button" data-geti-question="What courses and exams are available?">Programs</button><button type="button" data-geti-question="How do I verify a certificate?">Certificates</button><button type="button" data-geti-question="How can I pay?">Payment</button><button type="button" data-geti-question="How do I apply for collaboration with GETI?">Collaboration</button></div>
+<div class="geti-robot-quick" aria-label="Suggested questions"><button type="button" data-geti-question="What is GETI?">About GETI</button><button type="button" data-geti-question="What courses and exams are available?">Programs</button><button type="button" data-geti-question="How do I verify a certificate?">Certificates</button><button type="button" data-geti-question="How can I pay?">Payment</button></div>
+<div class="geti-robot-toolbar"><label for="getiRobotLanguage">Language</label><select id="getiRobotLanguage" aria-label="Response language"><option value="auto">Auto detect</option><option value="en">English</option><option value="mg">Malagasy</option><option value="fr">Français</option><option value="de">Deutsch</option></select><button id="getiRobotClear" type="button">Clear</button></div>
 <form id="getiRobotForm"><input id="getiRobotInput" type="text" maxlength="1500" placeholder="Ask about GETI, TEFL, TESOL..." aria-label="Your question" required autocomplete="off"><button type="submit">Send</button></form>
 <div class="geti-robot-disclaimer">GETI guidance only. This assistant cannot access your account or verify private records. Never share passwords or security codes.</div>
 </section>
@@ -25267,54 +25265,79 @@ if(!trigger||!panel||!close||!log||!form||!input)return;
 const endpoint='https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-ai-chat';
 const publicKey='sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8';
 const history=[];
+const language=document.getElementById('getiRobotLanguage');
+const clear=document.getElementById('getiRobotClear');
 let sending=false;
-const choices=[
- {re:/\b(tefl|tesol)\b/i,icon:'🎓',question:'Tell me about GETI TEFL and TESOL teacher training courses.'},
- {re:/\b(english learning|speaking practice|anglais|english course)\b/i,icon:'📚',question:'How can I learn English and practice speaking with GETI?'},
- {re:/\b(student registration|online exam|registration|examination)\b/i,icon:'📝',question:'How do I register as a GETI student and take online exams?'},
- {re:/\b(certificate verification|verify certificate)\b/i,icon:'🏅',question:'How can I verify my GETI certificate?'},
- {re:/\b(collaboration|partnership)\b/i,icon:'🤝',question:'How do I apply for collaboration or partnership with GETI?'}
-];
-function addInline(parent,text){
- const pattern=/(\*\*([^*]+)\*\*)|(\[([^\]]{1,180})\]\((https:\/\/[^\s)]+)\))|(https:\/\/[^\s<>]+)/g;
- let m,last=0;while((m=pattern.exec(text))!==null){
-  if(m.index>last)parent.appendChild(document.createTextNode(text.slice(last,m.index)));
-  if(m[2]){const strong=document.createElement('strong');strong.textContent=m[2];parent.appendChild(strong);}
-  else {const href=m[5]||m[6];try{const url=new URL(href);if(url.protocol!=='https:')throw Error();const link=document.createElement('a');link.href=url.href;link.target='_blank';link.rel='noopener noreferrer';link.textContent=m[4]||href;parent.appendChild(link);}catch{parent.appendChild(document.createTextNode(m[0]));}}
-  last=pattern.lastIndex;
+const languageNames={en:'English',mg:'Malagasy',fr:'French',de:'German'};
+clear.addEventListener('click',()=>{if(sending)return;history.length=0;log.replaceChildren();bubble('The Global English Teaching Institute (GETI) offers English learning, teacher training, online exams and certificate services.\\n\\nWhat specifically would you like to know about?\\n\\n- **TEFL / TESOL Courses**\\n- **English Learning & Speaking Practice**\\n- **Student Registration & Online Exams**\\n- **Certificate Verification**\\n- **Collaboration & Partnership Opportunities**\\n\\nVisit https://getienglish.com/ for official information.','bot');input.focus();});
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function safeInline(s){
+ let v=escapeHTML(s);
+ v=v.replace(/\[([^\]]{1,120})\]\(\[?(https?:\/\/[^\s)]+)\]?\)/g,(all,label,url)=>'<a href="'+url.replace(/&amp;/g,'&amp;')+'" target="_blank" rel="noopener noreferrer">'+label+'</a>');
+ v=v.replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>');
+ v=v.replace(/(^|[\s(])\*([^*\n]+)\*/g,'$1<em>$2</em>');
+ return v;
+}
+function formatResponse(message){
+ const lines=String(message).replace(/\r/g,'').split('\n'),parts=[];let list=[],type='';
+ function flush(){if(list.length){parts.push('<'+type+'>'+list.map(x=>'<li>'+safeInline(x)+'</li>').join('')+'</'+type+'>');list=[];type='';}}
+ for(const line of lines){
+  const t=line.trim();
+  if(!t){flush();continue;}
+  const m=t.match(/^([-*•]|\d+\.)\s+(.+)$/);
+  if(m){const kind=/^\d/.test(m[1])?'ol':'ul';if(type&&kind!==type)flush();type=kind;list.push(m[2]);continue;}
+  flush();
+  if(/^#{1,3}\s+/.test(t))parts.push('<h3>'+safeInline(t.replace(/^#{1,3}\s+/,''))+'</h3>');
+  else parts.push('<p>'+safeInline(t)+'</p>');
  }
- if(last<text.length)parent.appendChild(document.createTextNode(text.slice(last)));
+ flush();return parts.join('');
 }
-function richMessage(el,message){
- el.replaceChildren();const lines=String(message).replace(/\r/g,'').split('\n');let paragraph=[],list=null;
- function flush(){if(paragraph.length){const p=document.createElement('p');addInline(p,paragraph.join(' '));el.appendChild(p);paragraph=[];}list=null;}
- for(const raw of lines){const line=raw.trim();if(!line){flush();continue;}
-  const bullet=line.match(/^[-*•]\s+(.+)$/);if(bullet){if(paragraph.length)flush();if(!list){list=document.createElement('ul');el.appendChild(list);}const value=bullet[1].trim();const item=document.createElement('li');const choice=choices.find(c=>c.re.test(value));if(choice){
-    list.classList.add('geti-robot-choice-list');const btn=document.createElement('button');btn.type='button';btn.className='geti-robot-choice';const icon=document.createElement('span');icon.className='choice-icon';icon.textContent=choice.icon;btn.appendChild(icon);const label=document.createElement('span');addInline(label,value);btn.appendChild(label);const arrow=document.createElement('span');arrow.className='choice-arrow';arrow.textContent='›';btn.appendChild(arrow);btn.addEventListener('click',()=>ask(choice.question));item.appendChild(btn);
-   }else addInline(item,value);list.appendChild(item);continue;}
-  if(list)list=null;const heading=line.match(/^#{1,4}\s+(.+)$/);if(heading){flush();const h=document.createElement('h3');addInline(h,heading[1]);el.appendChild(h);continue;}
-  paragraph.push(line);
- }flush();
+const topicData=[
+ ['📘','TEFL / TESOL Courses','Teacher training and qualifications','Tell me about GETI TEFL and TESOL teacher training courses.'],
+ ['🗣️','English Learning & Speaking','Practice conversation and improve fluency','How can I learn and practice spoken English with GETI?'],
+ ['📝','Registration & Online Exams','Enrollment and examination guidance','How do I register as a student and take an online exam at GETI?'],
+ ['🏅','Certificate Verification','Verify a certificate through GETI','How do I verify a GETI certificate?'],
+ ['🤝','Collaboration & Partnerships','Work with GETI as a partner','How can I apply for collaboration or partnership with GETI?']
+];
+function isOverview(s){return /Global English Teaching Institute \(GETI\)/i.test(s)&&/TEFL\s*\/\s*TESOL Courses|TEFL\s*\/\s*TESOL/i.test(s)&&/Certificate Verification/i.test(s)&&/Collaboration/i.test(s);}
+function renderRich(el,message){
+ el.classList.add('geti-robot-rich');
+ if(isOverview(message)){
+   el.innerHTML='<div class="geti-robot-welcome-top"><span class="geti-robot-kicker">GLOBAL ENGLISH TEACHING INSTITUTE</span><h3>🌍 Welcome to GETI!</h3><p>Explore English learning, teacher training, online examinations and certificate services.</p></div><div class="geti-robot-welcome-label">✨ What would you like to explore?</div><div class="geti-robot-topic-grid"></div><div class="geti-robot-official"><span>🌐 Official GETI Website</span><a href="https://getienglish.com/" target="_blank" rel="noopener noreferrer">getienglish.com ↗</a></div>';
+   const grid=el.querySelector('.geti-robot-topic-grid');
+   topicData.forEach(([emoji,title,detail,question])=>{
+      const btn=document.createElement('button');btn.type='button';btn.className='geti-robot-topic';
+      btn.innerHTML='<span class="geti-robot-topic-icon">'+emoji+'</span><span class="geti-robot-topic-copy"><strong>'+escapeHTML(title)+'</strong><small>'+escapeHTML(detail)+'</small></span><span class="geti-robot-topic-arrow" aria-hidden="true">›</span>';
+      btn.addEventListener('click',()=>ask(question));grid.appendChild(btn);
+   });
+ }else{el.innerHTML=formatResponse(message);}
 }
-function bubble(message,who){const el=document.createElement('div');el.className='geti-robot-bubble '+who;if(who==='bot')richMessage(el,message);else el.textContent=message;log.appendChild(el);log.scrollTop=log.scrollHeight;return el;}
-function openChat(){panel.hidden=false;trigger.setAttribute('aria-expanded','true');if(!log.children.length)bubble("Welcome to **GETI AI Assistant**! 👋\n\nHow can I help you today? Choose a topic below or write your own question.\n\n- **TEFL / TESOL Courses**\n- **English Learning & Speaking Practice**\n- **Student Registration & Online Exams**\n- **Certificate Verification**\n- **Collaboration & Partnership Opportunities**\n\nYou can chat in English, Français, Malagasy or Deutsch.",'bot');input.focus();}
+function bubble(message,who){
+ const el=document.createElement('div');el.className='geti-robot-bubble '+who;
+ if(who==='bot'&&message!=='Thinking…')renderRich(el,message);
+ else el.textContent=message;
+ log.appendChild(el);log.scrollTop=log.scrollHeight;return el;
+}
+function openChat(){panel.hidden=false;trigger.setAttribute('aria-expanded','true');if(!log.children.length)bubble('The Global English Teaching Institute (GETI) offers English learning, teacher training, online exams and certificate services.\\n\\nWhat specifically would you like to know about?\\n\\n- **TEFL / TESOL Courses**\\n- **English Learning & Speaking Practice**\\n- **Student Registration & Online Exams**\\n- **Certificate Verification**\\n- **Collaboration & Partnership Opportunities**\\n\\nVisit https://getienglish.com/ for official information.','bot');input.focus();}
 function hideChat(){panel.hidden=true;trigger.setAttribute('aria-expanded','false');trigger.focus();}
 trigger.addEventListener('click',()=>panel.hidden?openChat():hideChat());close.addEventListener('click',hideChat);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)hideChat();});
 async function ask(message){
  const value=String(message||'').trim();if(!value||sending)return;
+ const lang=language.value;const prompt=lang==='auto'?value:('[Answer in '+languageNames[lang]+'.] '+value);
  sending=true;const sendBtn=form.querySelector('button[type="submit"]');if(sendBtn)sendBtn.disabled=true;
  bubble(value,'user');const placeholder=bubble('Thinking…','bot');
  try{
   const control=new AbortController();const timer=setTimeout(()=>control.abort(),25000);
   let response;
-  try{response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','apikey':publicKey},body:JSON.stringify({message:value,history:history.slice(-8)}),signal:control.signal});}
+  try{response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','apikey':publicKey},body:JSON.stringify({message:prompt,history:history.slice(-8)}),signal:control.signal});}
   finally{clearTimeout(timer);}
-  const data=await response.json();
+  let data;try{data=await response.json()}catch{throw new Error('Invalid server response. Please try again.');}
   if(!response.ok)throw new Error(data.error||'Unable to answer right now.');
+  if(data.mode==='setup-required')throw new Error('Gemini API key is not configured on the GETI server yet.');
   const answer=String(data.answer||'').trim();if(!answer)throw new Error('GETI Assistant did not return a reply.');
-  richMessage(placeholder,answer);
-  history.push({role:'user',content:value},{role:'assistant',content:answer});if(history.length>16)history.splice(0,history.length-16);
+  renderRich(placeholder,answer);
+  history.push({role:'user',content:prompt},{role:'assistant',content:answer});if(history.length>16)history.splice(0,history.length-16);
  }catch(error){placeholder.textContent=error.name==='AbortError'?'GETI Assistant timed out. Please try again.':(error.message||'Unable to connect to GETI Assistant right now.');}
  finally{sending=false;if(sendBtn)sendBtn.disabled=false;log.scrollTop=log.scrollHeight;input.focus();}
 }
@@ -26229,331 +26252,6 @@ body.geti-pub-body-open{overflow:hidden!important}
 })();
 </script>
 
-
-
-<style id="geti-transcript-auto-style">
-.geti-transcript-card{background:#f6f9ff;border:1px solid #afc7e9;border-radius:16px;padding:19px;margin:19px 0;color:#102d57;box-shadow:0 8px 22px rgba(4,34,80,.08);text-align:left}
-.geti-transcript-header{background:linear-gradient(120deg,#0a316d,#1763aa);color:white;padding:14px;border-radius:12px;margin-bottom:13px}
-.geti-transcript-header h3{color:white;margin:0 0 4px;font-size:19px}
-.geti-transcript-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.geti-transcript-cell{background:white;border:1px solid #dbe5f2;border-radius:9px;padding:10px;overflow-wrap:anywhere}
-.geti-transcript-cell span{display:block;font-size:10px;color:#527195;letter-spacing:.05em;font-weight:800;margin-bottom:5px}
-.geti-transcript-cell strong{font-size:15px;color:#092b60}
-.geti-transcript-status{font-size:12px;margin:12px 0 0;color:#355578;line-height:1.5}
-@media(max-width:520px){.geti-transcript-grid{grid-template-columns:1fr}}
-
-.geti-transcript-subjects{margin-top:15px;overflow-x:auto}
-.geti-transcript-subjects h4{margin:0 0 9px;color:#092b60;font-size:14px}
-.geti-transcript-subjects table{width:100%;border-collapse:collapse;background:#fff;font-size:13px;min-width:390px}
-.geti-transcript-subjects th{background:#dceafd;color:#0a346c;text-align:left;padding:10px 8px}
-.geti-transcript-subjects td{border-bottom:1px solid #dbe5f2;padding:10px 8px}
-</style>
-<script id="geti-transcript-auto-mail">
-/* Candidate-submitted informational transcript. Official results require server verification. */
-(function(){
- function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]});}
- function gradeOf(n){return n>=90?'A':n>=85?'B+':n>=80?'B':n>=75?'C+':n>=70?'C':n>=60?'D':'F';}
- function pointsOf(n){return n>=90?4:n>=85?3.3:n>=80?3:n>=75?2.3:n>=70?2:n>=60?1:0;}
- function appreciation(n){return n>=90?'EXCELLENCE':n>=80?'VERY GOOD':n>=70?'GOOD':n>=60?'PASSABLE':'NEEDS IMPROVEMENT';}
- function subjectRows(items){return items.map(function(item){var n=Number(item&&item.percentage);if(!Number.isFinite(n))n=0;n=Math.max(0,Math.min(100,n));return '<tr><td>'+esc(item.subject||'Subject')+'</td><td>'+n.toFixed(1)+'%</td><td>'+gradeOf(n)+'</td><td>'+pointsOf(n).toFixed(1)+'</td></tr>';}).join('');}
- function makeCell(k,v){return '<div class="geti-transcript-cell"><span>'+esc(k)+'</span><strong>'+esc(v)+'</strong></div>';}
- window.getiDisplayAndSendTranscript=async function(record,panelId){
-   if(!record||!record.id||!record.email)return;
-   var panel=document.getElementById(panelId);
-   if(!panel)return;
-   var pct=Math.min(100,Math.max(0,Number(record.percentage)||0));
-   var hours=Number(record.hours)||0;
-   if(!hours && typeof getGetiExamHoursFromTitle==='function')hours=getGetiExamHoursFromTitle(record.exam||record.program);
-   var exam=String(record.exam||record.program||'GETI Examination');
-   var subjects=(Array.isArray(record.subjects)?record.subjects:[]).filter(function(x){return x&&x.subject&&Number.isFinite(Number(x.percentage));});
-   var gpa=subjects.length?subjects.reduce(function(total,x){return total+pointsOf(Number(x.percentage));},0)/subjects.length:pointsOf(pct);
-   var transcriptSubjects='<div class="geti-transcript-subjects"><h4>SUBJECT GRADES</h4><table><thead><tr><th>SUBJECT</th><th>%</th><th>GRADE</th><th>POINT / 4.0</th></tr></thead><tbody>'+subjectRows(subjects)+'</tbody></table></div>';
-   var domId='geti-transcript-'+panelId;
-   var existing=document.getElementById(domId);
-   if(existing)existing.remove();
-   var wrapper=document.createElement('section');wrapper.id=domId;wrapper.className='geti-transcript-card';
-   wrapper.innerHTML='<div class="geti-transcript-header"><h3>GETI EXAMINATION TRANSCRIPT</h3><small>Global English Teaching Institute · Automatic summary</small></div>'+
-    '<div class="geti-transcript-grid">'+makeCell('NAME',record.name)+makeCell('CANDIDATE ID',record.id)+makeCell('EXAM',exam)+makeCell('HOURS',hours?hours+' HOURS':'Not specified')+
-    makeCell('GRADE',gradeOf(pct))+makeCell('PERCENTAGE',pct+'%')+makeCell('APPRECIATION',appreciation(pct))+makeCell('GPA (4.0 SCALE)',gpa.toFixed(2)+' / 4.00')+makeCell('RESULT',record.status)+'</div>'+transcriptSubjects+
-    '<p class="geti-transcript-status">This automatically generated score summary is not an official certificate. Email delivery requires a verified GETI account with the same email address as the exam registration.</p>'+
-    '<p class="geti-transcript-status" data-geti-mail-status>Checking transcript email delivery…</p>';
-   panel.appendChild(wrapper);
-   var indicator=wrapper.querySelector('[data-geti-mail-status]');
-   try{
-    if(typeof GETI_SB==='undefined'||!GETI_SB.auth)throw new Error('Please sign in to your GETI account to receive the email.');
-    var sessionResponse=await GETI_SB.auth.getSession();
-    var token=sessionResponse&&sessionResponse.data&&sessionResponse.data.session&&sessionResponse.data.session.access_token;
-    if(!token)throw new Error('Please sign in to your GETI account to receive the email.');
-    var response=await fetch('https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-exam-transcript-mail',{
-      method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+token,'apikey':'sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8'},
-      body:JSON.stringify({id:record.id,name:record.name,email:record.email,exam:exam,hours:hours,percentage:pct,status:record.status,subjects:subjects})
-    });
-    var data=await response.json().catch(function(){return {}});
-    if(!response.ok)throw new Error(data.error||'Transcript email was not sent.');
-    indicator.textContent=data.sent?'Transcript email sent to '+record.email+'.':data.message||'Transcript email request already recorded.';
-   }catch(error){indicator.textContent='Email not sent: '+(error.message||'Please contact GETI support.');}
- };
-})();
-</script>
-
-<style id="geti-ai-lesson-ui-v1">
-#geti-ai-lesson-ui{--lai:#0b3975;--lb:#e7efff;font-family:inherit;color:#122743;margin-top:24px}
-#geti-ai-lesson-ui *{box-sizing:border-box}
-#geti-ai-lesson-ui .lai-card{background:#fff;border:1px solid #d7e2f3;border-radius:17px;padding:23px;margin:16px 0;box-shadow:0 8px 24px rgba(9,49,98,.055)}
-#geti-ai-lesson-ui .lai-top{background:linear-gradient(120deg,#072a60,#175bc5);border-radius:18px;padding:25px;color:#fff;margin-bottom:15px}
-#geti-ai-lesson-ui .lai-top h2{color:#fff;margin:4px 0 10px;font-size:clamp(22px,3vw,31px)}
-#geti-ai-lesson-ui .lai-eyebrow{text-transform:uppercase;letter-spacing:1.4px;font-size:11px;font-weight:800;opacity:.83}
-#geti-ai-lesson-ui .lai-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}
-#geti-ai-lesson-ui label{font-weight:700;font-size:13px}
-#geti-ai-lesson-ui select,#geti-ai-lesson-ui textarea{font:inherit;border:1px solid #c2d1e4;border-radius:10px;padding:11px;background:#fff;color:#122743;max-width:100%}
-#geti-ai-lesson-ui select{min-width:180px}
-#geti-ai-lesson-ui textarea{width:100%;min-height:90px;resize:vertical}
-#geti-ai-lesson-ui button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:10px 14px;font-weight:750;background:#0d4b9a;color:#fff;transition:filter .2s}
-#geti-ai-lesson-ui button:hover{filter:brightness(1.1)}
-#geti-ai-lesson-ui button:disabled{opacity:.5;cursor:not-allowed}
-#geti-ai-lesson-ui .lai-outline{background:#eaf1fc;color:#103f80;border:1px solid #c8d8ed}
-#geti-ai-lesson-ui .lai-quiet{font-size:13px;color:#61728b}
-#geti-ai-lesson-ui .lai-section{border-left:4px solid #3979c8;padding-left:16px;margin:22px 0}
-#geti-ai-lesson-ui .lai-section h3,#geti-ai-lesson-ui .lai-card h3{font-size:19px;color:#103e7d;margin:0 0 12px}
-#geti-ai-lesson-ui p,#geti-ai-lesson-ui li{line-height:1.7}
-#geti-ai-lesson-ui .lai-note{background:#f1f6ff;border-radius:10px;padding:12px;margin:12px 0}
-#geti-ai-lesson-ui .lai-vocab{width:100%;border-collapse:collapse}
-#geti-ai-lesson-ui .lai-vocab td,#geti-ai-lesson-ui .lai-vocab th{border-bottom:1px solid #e0e8f3;text-align:left;padding:10px;vertical-align:top}
-#geti-ai-lesson-ui .lai-answer{display:grid;gap:9px;margin:12px 0}
-#geti-ai-lesson-ui .lai-answer label{display:flex;align-items:flex-start;gap:10px;background:#f7faff;border:1px solid #e0e8f3;padding:12px;border-radius:9px;font-weight:500}
-#geti-ai-lesson-ui .lai-answer input{margin-top:4px}
-#geti-ai-lesson-ui .lai-status{padding:13px;border-radius:10px;background:#eef5ff;color:#0a3c80;margin-top:10px;white-space:pre-wrap}
-#geti-ai-lesson-ui .lai-quiz-item{padding:18px 0;border-bottom:1px solid #e4eaf4}
-#geti-ai-lesson-ui .lai-quiz-item:last-child{border-bottom:0}
-#geti-ai-lesson-ui .lai-help{margin-top:12px;padding:12px;background:#f4f8fe;border:1px solid #dce7f7;border-radius:10px;white-space:pre-wrap;line-height:1.65}
-@media(max-width:640px){#geti-ai-lesson-ui .lai-card{padding:16px}#geti-ai-lesson-ui .lai-toolbar{align-items:stretch;flex-direction:column}#geti-ai-lesson-ui .lai-toolbar>*{width:100%}#geti-ai-lesson-ui .lai-top{padding:19px}}
-</style>
-<script id="geti-ai-lesson-script-v1">
-(function(){
- 'use strict';
- const endpoint='https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-ai-lesson';
- const enabled=new Set(['TEFL Exam','TESOL Exam','TEYL Exam']);
- const locale={"af":"af-ZA","sq":"sq-AL","am":"am-ET","ar":"ar-SA","hy":"hy-AM","az":"az-AZ","eu":"eu-ES","bn":"bn-BD","bs":"bs-BA","bg":"bg-BG","my":"my-MM","ca":"ca-ES","zh":"zh-CN","hr":"hr-HR","cs":"cs-CZ","da":"da-DK","nl":"nl-NL","en":"en-US","et":"et-EE","fi":"fi-FI","fr":"fr-FR","ka":"ka-GE","de":"de-DE","el":"el-GR","gu":"gu-IN","ht":"ht-HT","ha":"ha-NG","he":"he-IL","hi":"hi-IN","hu":"hu-HU","is":"is-IS","ig":"ig-NG","id":"id-ID","ga":"ga-IE","it":"it-IT","ja":"ja-JP","jv":"jv-ID","kn":"kn-IN","kk":"kk-KZ","km":"km-KH","ko":"ko-KR","ku":"ku-TR","lo":"lo-LA","la":"la","lv":"lv-LV","lt":"lt-LT","mk":"mk-MK","mg":"mg-MG","ms":"ms-MY","ml":"ml-IN","mt":"mt-MT","mi":"mi-NZ","mr":"mr-IN","mn":"mn-MN","ne":"ne-NP","no":"nb-NO","fa":"fa-IR","pl":"pl-PL","pt":"pt-BR","pa":"pa-IN","ro":"ro-RO","ru":"ru-RU","sr":"sr-RS","si":"si-LK","sk":"sk-SK","sl":"sl-SI","so":"so-SO","es":"es-ES","sw":"sw-KE","sv":"sv-SE","tl":"fil-PH","ta":"ta-IN","te":"te-IN","th":"th-TH","tr":"tr-TR","uk":"uk-UA","ur":"ur-PK","uz":"uz-UZ","vi":"vi-VN","cy":"cy-GB","yo":"yo-NG","zu":"zu-ZA"};
- const langs={"af":"Afrikaans","sq":"Albanian","am":"Amharic","ar":"Arabic","hy":"Armenian","az":"Azerbaijani","eu":"Basque","bn":"Bengali","bs":"Bosnian","bg":"Bulgarian","my":"Burmese","ca":"Catalan","zh":"Chinese (Mandarin)","hr":"Croatian","cs":"Czech","da":"Danish","nl":"Dutch","en":"English","et":"Estonian","fi":"Finnish","fr":"French","ka":"Georgian","de":"German","el":"Greek","gu":"Gujarati","ht":"Haitian Creole","ha":"Hausa","he":"Hebrew","hi":"Hindi","hu":"Hungarian","is":"Icelandic","ig":"Igbo","id":"Indonesian","ga":"Irish","it":"Italian","ja":"Japanese","jv":"Javanese","kn":"Kannada","kk":"Kazakh","km":"Khmer","ko":"Korean","ku":"Kurdish","lo":"Lao","la":"Latin","lv":"Latvian","lt":"Lithuanian","mk":"Macedonian","mg":"Malagasy","ms":"Malay","ml":"Malayalam","mt":"Maltese","mi":"Maori","mr":"Marathi","mn":"Mongolian","ne":"Nepali","no":"Norwegian","fa":"Persian (Farsi)","pl":"Polish","pt":"Portuguese","pa":"Punjabi","ro":"Romanian","ru":"Russian","sr":"Serbian","si":"Sinhala","sk":"Slovak","sl":"Slovenian","so":"Somali","es":"Spanish","sw":"Swahili","sv":"Swedish","tl":"Tagalog (Filipino)","ta":"Tamil","te":"Telugu","th":"Thai","tr":"Turkish","uk":"Ukrainian","ur":"Urdu","uz":"Uzbek","vi":"Vietnamese","cy":"Welsh","yo":"Yoruba","zu":"Zulu"};
- const state={exam:'',subject:'',language:'en',lesson:null,abort:null,activeId:0};
- const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const get=id=>document.getElementById(id);
- const row=(text)=>'<p>'+esc(text)+'</p>';
- const items=(list,ordered=false)=>'<'+(ordered?'ol':'ul')+'>'+list.map(x=>'<li>'+esc(x)+'</li>').join('')+'</'+(ordered?'ol':'ul')+'>';
- function announce(text){let el=get('lai-progress');if(el)el.textContent=text;}
- function stopAudio(){if('speechSynthesis' in window)try{window.speechSynthesis.cancel()}catch(e){}}
- window.getiStopAiLessonAudio=stopAudio;
- function speak(text){
-  if(!('speechSynthesis' in window)){announce('Audio unavailable in this browser.');return;}
-  stopAudio();const msg=new SpeechSynthesisUtterance(String(text).slice(0,12000));msg.lang=locale[state.language]||'en-US';msg.rate=.88;
-  const voices=window.speechSynthesis.getVoices();const found=voices.find(v=>v.lang.toLowerCase()===msg.lang.toLowerCase())||voices.find(v=>v.lang.toLowerCase().startsWith(state.language==='mg'?'mg':state.language));
-  if(found)msg.voice=found;
-  if(!found&&state.language==='mg')announce('Malagasy speech voice may not be installed on this device.');
-  window.speechSynthesis.speak(msg);
- }
- function createShell(exam,subject){
-  const panel=get('lessonPanel');if(!panel)return;
-  panel.classList.add('active');
-  panel.innerHTML='<div id="geti-ai-lesson-ui"><div class="lai-top"><div class="lai-eyebrow">GETI • Gemini AI Teacher</div><h2>'+esc(subject)+'</h2><div>'+esc(exam)+' · Interactive learning</div><div class="lai-toolbar"><label for="lai-language" style="color:white">Explanation language</label><select id="lai-language" aria-label="Explanation language">'+Object.keys(langs).map(k=>'<option value="'+k+'"'+(state.language===k?' selected':'')+'>'+langs[k]+'</option>').join('')+'</select><button id="lai-generate">Generate AI lesson</button><button type="button" id="lai-stop-audio" class="lai-outline">■ Stop audio</button></div></div><div id="lai-progress" class="lai-status" role="status">Select a language and generate your complete lesson.</div><div class="lai-card" id="lai-anything-card"><h3>💬 Ask Anything — Manontania izay tianao ho fantatra</h3><p>Ask about any topic, not only this lesson. Gemini will answer in the explanation language you select above.</p><label for="lai-anything-question">Your question / Fanontanianao</label><textarea id="lai-anything-question" maxlength="1000" placeholder="Example: Explain the difference between fluency and accuracy..."></textarea><div class="lai-toolbar"><button type="button" id="lai-anything-send">Ask Gemini AI</button><button type="button" class="lai-outline" id="lai-anything-clear">Clear</button></div><div id="lai-anything-result" class="lai-help" aria-live="polite" hidden></div></div><div id="lai-results"></div></div>';
-  get('lai-language').addEventListener('change',function(){state.language=this.value;stopAudio();state.lesson=null;get('lai-results').innerHTML='';announce('Language selected: '+langs[state.language]+'. Click Generate AI lesson.');});
-  get('lai-generate').addEventListener('click',generate);
-  get('lai-stop-audio').addEventListener('click',stopAudio);
-  get('lai-anything-send').addEventListener('click',askAnything);
-  get('lai-anything-clear').addEventListener('click',function(){get('lai-anything-question').value='';const el=get('lai-anything-result');el.textContent='';el.hidden=true;});
-  get('lai-anything-question').addEventListener('keydown',function(e){if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();askAnything();}});
-
-  panel.scrollIntoView({behavior:'smooth',block:'start'});
- }
- async function request(payload){
-  const c=new AbortController();state.abort=c;
-  const t=setTimeout(()=>c.abort(),55000);
-  try{
-   const res=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:c.signal});
-   let data={};try{data=await res.json()}catch(e){}
-   if(!res.ok)throw Error(data.error||'AI teacher unavailable.');
-   return data;
-  }finally{clearTimeout(t);if(state.abort===c)state.abort=null}
- }
- async function askAnything(){
-  const q=get('lai-anything-question').value.trim(),box=get('lai-anything-result'),button=get('lai-anything-send');
-  box.hidden=false;
-  if(!q){box.textContent='Please write a question first.';return;}
-  button.disabled=true;box.textContent='Gemini AI is preparing your answer…';
-  try{
-   const data=await request({mode:'anything',language:state.language,question:q.slice(0,1000)});
-   box.innerHTML='<div style="white-space:pre-wrap">'+esc(data.answer||'No answer received.')+'</div><button type="button" id="lai-anything-audio" class="lai-outline" style="margin-top:12px">🔊 Listen to answer</button>';
-   get('lai-anything-audio').addEventListener('click',function(){speak(data.answer||'');});
-  }catch(e){box.textContent=e.message||'Could not answer your question.';}
-  finally{button.disabled=false;}
- }
- async function generate(){
-  const id=++state.activeId;
-  if(state.abort)state.abort.abort();stopAudio();state.lesson=null;
-  get('lai-generate').disabled=true;get('lai-results').innerHTML='';announce('Generating full lesson with Gemini AI…');
-  try{
-   const data=await request({mode:'lesson',exam:state.exam,subject:state.subject,language:state.language});
-   if(id!==state.activeId)return;
-   if(!data.lesson||!Array.isArray(data.lesson.sections))throw Error('Incomplete lesson. Retry.');
-   state.lesson=data.lesson;render(data.lesson);announce('Your AI lesson is ready. Read, listen, practise and ask questions.');
-  }catch(e){if(id===state.activeId)announce((e.name==='AbortError'?'Request cancelled.':e.message||'Failed to generate lesson.')+' Please try again.');}
-  finally{if(id===state.activeId){const b=get('lai-generate');if(b)b.disabled=false;}}
- }
- function render(l){
-  const v=Array.isArray(l.vocabulary)?l.vocabulary:[],sections=Array.isArray(l.sections)?l.sections:[],scenarios=Array.isArray(l.scenarios)?l.scenarios:[],task=Array.isArray(l.practicalTask)?l.practicalTask:[],quiz=Array.isArray(l.quiz)?l.quiz:[];
-  let out='<div class="lai-card"><div class="lai-eyebrow" style="color:#2860a4">Complete guided course</div><h3>'+esc(l.title)+'</h3>'+row(l.introduction)+'<div class="lai-toolbar"><button type="button" id="lai-play-all">▶ Listen to lesson</button><button type="button" id="lai-pause" class="lai-outline">Ⅱ Pause / Resume</button></div><h3 style="margin-top:22px">Learning objectives</h3>'+items(l.objectives||[])+'</div>';
-  if(v.length){out+='<div class="lai-card"><h3>Key vocabulary</h3><table class="lai-vocab"><thead><tr><th>Term</th><th>Explanation</th></tr></thead><tbody>'+v.map(x=>'<tr><td><strong>'+esc(x.term)+'</strong></td><td>'+esc(x.meaning)+'</td></tr>').join('')+'</tbody></table></div>';}
-  out+='<div class="lai-card"><h3>Detailed lesson and examples</h3>'+sections.map((s,i)=>'<section class="lai-section"><h3>'+(i+1)+'. '+esc(s.heading)+'</h3>'+row(s.explanation)+'<div class="lai-note"><strong>Example</strong>'+row(s.example)+'</div><div class="lai-note"><strong>How to practise</strong>'+row(s.action)+'</div><button type="button" class="lai-read-section lai-outline" data-index="'+i+'">🔊 Listen to this section</button></section>').join('')+'</div>';
-  if(scenarios.length)out+='<div class="lai-card"><h3>Real-world teaching scenarios</h3>'+scenarios.map((s,i)=>'<div class="lai-section"><h3>Scenario '+(i+1)+': '+esc(s.title)+'</h3>'+row(s.situation)+'<div class="lai-note"><strong>Suggested solution</strong>'+row(s.solution)+'</div></div>').join('')+'</div>';
-  out+='<div class="lai-card"><h3>Practical assignment</h3><p>Follow these instructions, then write your response. You can ask the AI teacher for feedback.</p>'+items(task,true)+'<label for="lai-practical">Your practice answer</label><textarea id="lai-practical" placeholder="Write your response, lesson plan or classroom activity..."></textarea><div class="lai-toolbar"><button id="lai-feedback">Get feedback from AI Teacher</button></div><div id="lai-practical-feedback" aria-live="polite"></div></div>';
-  if(quiz.length)out+='<div class="lai-card"><h3>Knowledge check — practice quiz</h3><p class="lai-quiet">This is a learning exercise, not an official GETI examination.</p>'+quiz.map((q,i)=>'<div class="lai-quiz-item"><strong>'+(i+1)+'. '+esc(q.question)+'</strong><div class="lai-answer">'+q.options.map((o,j)=>'<label><input type="radio" name="lai-q-'+i+'" value="'+j+'"><span>'+String.fromCharCode(65+j)+'. '+esc(o)+'</span></label>').join('')+'</div><div id="lai-q-result-'+i+'"></div></div>').join('')+'<button type="button" id="lai-check-quiz">Check my answers</button><div id="lai-quiz-score" aria-live="polite"></div></div>';
-  out+='<div class="lai-card"><h3>Ask your AI Teacher</h3><p>What is still unclear? Ask for a simpler explanation, another example or an additional exercise in your selected language.</p><label for="lai-ask-input">Your question</label><textarea id="lai-ask-input" placeholder="Example: Could you explain this with another classroom example?"></textarea><div class="lai-toolbar"><button type="button" id="lai-ask">Ask AI</button><button type="button" id="lai-new" class="lai-outline">Generate another lesson</button></div><div id="lai-ask-result" aria-live="polite"></div></div>';
-  out+='<div class="lai-card"><h3>Summary</h3>'+row(l.conclusion)+'</div>';
-  get('lai-results').innerHTML=out;
-  get('lai-play-all').addEventListener('click',()=>speak([l.title,l.introduction,...sections.map(x=>x.heading+'. '+x.explanation+'. Example: '+x.example+'. Practise: '+x.action),l.conclusion].join('. ')));
-  get('lai-pause').addEventListener('click',()=>{if(!('speechSynthesis' in window))return;if(speechSynthesis.paused)speechSynthesis.resume();else speechSynthesis.pause();});
-  get('lai-results').querySelectorAll('.lai-read-section').forEach(btn=>btn.addEventListener('click',()=>{const section=sections[Number(btn.dataset.index)];speak(section.heading+'. '+section.explanation+'. Example: '+section.example+'. '+section.action);}));
-  get('lai-feedback').addEventListener('click',()=>feedback(task));
-  if(get('lai-check-quiz'))get('lai-check-quiz').addEventListener('click',()=>checkQuiz(quiz));
-  get('lai-ask').addEventListener('click',ask);
-  get('lai-new').addEventListener('click',generate);
- }
- function checkQuiz(quiz){
-  let good=0;
-  quiz.forEach((q,i)=>{const checked=document.querySelector('input[name="lai-q-'+i+'"]:checked');const val=checked?Number(checked.value):-1,passed=val===Number(q.correctIndex);if(passed)good++;get('lai-q-result-'+i).innerHTML='<div class="lai-help"><strong>'+(passed?'✓ Correct':'✗ Review this question')+'</strong>. Answer: '+esc(q.options[q.correctIndex])+'. '+esc(q.explanation)+'</div>';});
-  get('lai-quiz-score').innerHTML='<div class="lai-status">Practice score: '+good+' / '+quiz.length+'. Review each explanation above.</div>';
- }
- async function feedback(task){
-  const answer=(get('lai-practical')?.value||'').trim(),area=get('lai-practical-feedback');
-  if(answer.length<10){area.textContent='Please write a practice answer first.';return;}
-  const btn=get('lai-feedback');btn.disabled=true;area.textContent='AI teacher is reviewing your practice…';
-  try{const data=await request({mode:'ask',exam:state.exam,subject:state.subject,language:state.language,lessonContext:(task||[]).join(' | ').slice(0,4500),question:'Give constructive, specific feedback on my practical response. Identify strengths, needed improvements and provide a corrected example. My response: '+answer.slice(0,800)});area.innerHTML='<div class="lai-help">'+esc(data.answer)+'</div>';}
-  catch(e){area.textContent=e.message||'Could not get feedback.';}finally{btn.disabled=false;}
- }
- async function ask(){
-  const q=(get('lai-ask-input')?.value||'').trim(),area=get('lai-ask-result');if(!q){area.textContent='Please type a question.';return;}
-  const btn=get('lai-ask');btn.disabled=true;area.textContent='Your AI Teacher is preparing an explanation…';
-  const l=state.lesson||{},context=[l.introduction,...(l.sections||[]).map(x=>x.heading+': '+x.explanation)].join('\n').slice(0,8500);
-  try{const data=await request({mode:'ask',exam:state.exam,subject:state.subject,language:state.language,lessonContext:context,question:q.slice(0,900)});area.innerHTML='<div class="lai-help">'+esc(data.answer)+'</div><button type="button" id="lai-speak-answer" class="lai-outline" style="margin-top:10px">🔊 Listen to explanation</button>';get('lai-speak-answer').addEventListener('click',()=>speak(data.answer));}
-  catch(e){area.textContent=e.message||'Could not answer your question.';}finally{btn.disabled=false;}
- }
- const prior=window.openGetiLesson;
- window.openGetiLesson=function(exam,subject){
-  if(!enabled.has(exam))return typeof prior==='function'?prior.apply(this,arguments):undefined;
-  if(state.abort)state.abort.abort();stopAudio();state.activeId++;
-  state.exam=exam;state.subject=subject;state.lesson=null;createShell(exam,subject);
- };
- window.addEventListener('pagehide',stopAudio);
-})();
-</script>
-
-
-<style id="geti-certificate-qr-scan-style">
-.geti-qr-verify-top{margin-bottom:14px}
-.geti-qr-action{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:54px;padding:12px 16px;background:linear-gradient(110deg,#f5cf75,#efad31);border:1px solid #f9dd99;border-radius:12px;color:#13284a;font-weight:900;font-size:14px;letter-spacing:.04em;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.15)}
-.geti-qr-action:hover,.geti-qr-action:focus-visible{background:#ffe29b;outline:3px solid rgba(255,255,255,.5);outline-offset:2px}
-.geti-qr-scanner-panel{margin-top:12px;background:#fff;color:#182f4f;border-radius:14px;padding:15px;box-shadow:0 9px 25px rgba(0,0,0,.15)}
-.geti-qr-scanner-panel[hidden]{display:none!important}
-.geti-qr-scanner-hint{margin:0 0 12px;color:#233b5e;font-size:14px;line-height:1.5}
-.geti-qr-camera{max-width:440px;margin:0 auto;border-radius:12px;overflow:hidden;background:#e9eff7;min-height:20px}
-.geti-qr-camera video{max-width:100%;border-radius:10px}
-.geti-qr-scan-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px}
-.geti-qr-file-label,.geti-qr-stop{padding:11px 14px;min-height:43px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;text-align:center}
-.geti-qr-file-label{background:#0c4588;color:#fff}
-.geti-qr-stop{background:#f0f3f7;color:#17365d;border:1px solid #c8d4e4}
-#getiQrImageFile{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
-#getiQrScanStatus{font-size:13px;margin-top:10px;color:#25456c;line-height:1.5}
-@media(max-width:520px){.geti-qr-action{font-size:12px;letter-spacing:0}.geti-qr-scan-controls{flex-direction:column;align-items:stretch}}
-</style>
-<script id="geti-certificate-qr-scan-script">
-(function(){
- 'use strict';
- var scanner=null,session=0,loading=null,closing=false;
- var libraryURL='https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js';
- function byId(id){return document.getElementById(id)}
- function status(message,isError){var el=byId('getiQrScanStatus');if(el){el.textContent=message;el.style.color=isError?'#9a2430':'#25456c'}}
- function loadLibrary(){
-   if(window.Html5Qrcode)return Promise.resolve();
-   if(loading)return loading;
-   loading=new Promise(function(resolve,reject){
-     var script=document.createElement('script');script.src=libraryURL;script.async=true;
-     script.onload=function(){window.Html5Qrcode?resolve():reject(new Error('QR scanner failed to initialize'))};
-     script.onerror=function(){reject(new Error('Unable to load QR scanner library. Please check your internet connection.'))};
-     document.head.appendChild(script);
-   }).catch(function(error){loading=null;throw error});
-   return loading;
- }
- function readCertificateId(decoded){
-   var raw=String(decoded||'').trim();if(!raw||raw.length>2000)return null;
-   var id=raw;
-   if(/^https?:\/\//i.test(raw)){
-     try{
-       var url=new URL(raw);
-       if(!['getienglish.com','www.getienglish.com'].includes(url.hostname.toLowerCase())||!['https:','http:'].includes(url.protocol))return null;
-       id=url.searchParams.get('verify')||url.searchParams.get('certificate_id')||url.searchParams.get('certificateId')||url.searchParams.get('id')||'';
-     }catch(e){return null}
-   }else if(/(?:^|[?&])verify=/i.test(raw)){
-     try{id=new URLSearchParams(raw.replace(/^.*?\?/, '?').replace(/^\?/, '')).get('verify')||''}catch(e){return null}
-   }
-   id=String(id||'').trim();
-   // A QR is an untrusted input; allow only certificate identifiers.
-   return /^[a-zA-Z0-9][a-zA-Z0-9._\/-]{2,119}$/.test(id)?id:null;
- }
- async function closeScanner(){
-   session++;
-   var inst=scanner;scanner=null;
-   if(inst){try{if(inst.isScanning)await inst.stop()}catch(e){}try{inst.clear()}catch(e){}}
-   var preview=byId('getiQrCamera');if(preview)preview.innerHTML='';
- }
- async function onScan(value){
-   var id=readCertificateId(value);
-   if(!id){status('This QR code is not a supported GETI certificate ID or verification link.',true);return}
-   status('QR code read. Checking the official GETI certificate register…');
-   await window.getiCloseCertificateQrScanner();
-   var input=byId('verifyInput');if(!input)return;
-   input.value=id;
-   try{if(typeof window.setVerifyType==='function')window.setVerifyType('id')}catch(e){}
-   if(typeof window.verifyCertificate==='function')window.verifyCertificate('id');
-   input.focus();
- }
- window.getiCloseCertificateQrScanner=async function(){
-   var panel=byId('getiQrScannerPanel'),btn=byId('getiQrStartBtn');
-   if(panel)panel.hidden=true;
-   if(btn)btn.setAttribute('aria-expanded','false');
-   await closeScanner();
- };
- window.getiOpenCertificateQrScanner=async function(){
-   var panel=byId('getiQrScannerPanel'),btn=byId('getiQrStartBtn');if(!panel)return;
-   if(!panel.hidden){await window.getiCloseCertificateQrScanner();return}
-   panel.hidden=false;if(btn)btn.setAttribute('aria-expanded','true');
-   status('Loading QR reader…');var token=++session;
-   try{
-     await loadLibrary();if(token!==session||panel.hidden)return;
-     scanner=new window.Html5Qrcode('getiQrCamera',{verbose:false});
-     await scanner.start({facingMode:'environment'},{fps:8,qrbox:function(w,h){var size=Math.min(260,w-30,h-30);return {width:size,height:size}}},function(value){if(token===session)onScan(value)},function(){});
-     if(token!==session||panel.hidden){await closeScanner();return}
-     status('Camera active — align the certificate QR code inside the frame.');
-   }catch(err){
-     status('Camera unavailable or permission denied. You can still upload a QR image. Camera scanning requires HTTPS and permission.',true);
-   }
- };
- window.getiVerifyQrImageFile=async function(input){
-   var file=input&&input.files&&input.files[0];if(!file)return;
-   if(file.size>8*1024*1024){status('Image must be smaller than 8 MB.',true);input.value='';return}
-   status('Reading QR image…');
-   try{
-     await loadLibrary();
-     var panel=byId('getiQrScannerPanel');if(!panel||panel.hidden)return;
-     // html5-qrcode cannot scan an image while camera is active on the same instance.
-     await closeScanner();
-     scanner=new window.Html5Qrcode('getiQrCamera',{verbose:false});
-     var result=await scanner.scanFile(file,true);
-     await onScan(result);
-   }catch(err){status('No readable QR code found in this image. Try a clearer image.',true)}
-   finally{if(input)input.value=''}
- };
- window.addEventListener('pagehide',function(){closeScanner()});
-})();
-</script>
 
 </body>
 </html>
