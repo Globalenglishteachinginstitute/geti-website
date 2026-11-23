@@ -7763,9 +7763,6 @@ h1, h2, h3, h4, h5, h6,
 html:not([data-geti-accreditation="visible"]) .geti-cpd-panel,
 html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {display:none!important}
 </style>
-<style id="geti-certificate-qr-scanner-style">
-.geti-qr-scan-actions{display:flex;flex-direction:column;align-items:center;gap:7px;margin:0 0 20px}.geti-qr-scan-actions button{width:min(420px,100%);padding:16px 20px;border:2px solid #f8d87e;border-radius:13px;color:#fff;background:linear-gradient(105deg,#0957a7,#693cc4,#d34e81);font-weight:900;font-size:15px;letter-spacing:.05em;cursor:pointer;box-shadow:0 10px 24px rgba(29,57,120,.23)}.geti-qr-scan-actions button:hover{filter:brightness(1.08)}.geti-qr-scan-actions span{font-size:12px;color:#536987;text-align:center}.geti-qr-scanner-box{width:min(520px,100%);margin:8px auto 20px;padding:16px;border-radius:17px;border:1px solid #d4e1ef;background:#fff;box-shadow:0 10px 28px rgba(5,34,75,.12)}.geti-qr-scanner-box[hidden]{display:none!important}.geti-qr-scanner-header{display:flex;justify-content:space-between;align-items:center;color:#113b71;margin-bottom:12px}.geti-qr-scanner-header button{border:0;background:#edf3fa;color:#153b6e;border-radius:50%;width:35px;height:35px;cursor:pointer;font-size:17px}#getiQrReader{max-width:100%;overflow:hidden;border-radius:12px}#getiQrReader video{max-width:100%;border-radius:12px}.geti-qr-image-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px}.geti-qr-image-row label{background:#e9f2fb;border-radius:8px;padding:10px 13px;color:#104d8e;font-size:13px;font-weight:800;cursor:pointer}.geti-qr-image-row input{max-width:100%;font-size:12px}#getiQrScanStatus{font-size:13px;color:#52667c;padding:9px 0 0;line-height:1.5}
-</style>
 </head>
 
 <body translate="no" class="notranslate">
@@ -7829,13 +7826,6 @@ html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {disp
         <div class="geti-auto-verify-intro">Search with a Certificate ID or certificate holder name in the same box.</div>
         <div class="geti-verify-universal-card">
           <label class="geti-verify-search-label" for="verifyInput">Certificate ID · Name</label>
-          <div class="geti-qr-scan-actions"><button type="button" id="getiQrScanButton" onclick="getiOpenQrScanner()">▣ &nbsp; SCAN QR CODE</button><span>Scan your certificate QR code for official verification</span></div>
-          <div id="getiQrScannerBox" class="geti-qr-scanner-box" hidden>
-            <div class="geti-qr-scanner-header"><strong>📷 Scan GETI Certificate</strong><button type="button" onclick="getiCloseQrScanner()" aria-label="Close QR scanner">✕</button></div>
-            <div id="getiQrReader"></div>
-            <div class="geti-qr-image-row"><label for="getiQrFile">🖼️ Scan a QR image</label><input id="getiQrFile" type="file" accept="image/*" onchange="getiScanQrImage(this)"></div>
-            <p id="getiQrScanStatus" role="status" aria-live="polite">Allow camera access, or choose a QR image.</p>
-          </div>
           <div class="geti-verify-search-row geti-verify-universal-row">
             <input id="verifyInput" type="text" autocomplete="off" placeholder="Enter Certificate ID or Name" aria-label="Search GETI certificate by certificate ID or holder name" oninput="getiLiveCertificateSearch(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();verifyCertificate();}">
             <button type="button" class="geti-home-v2-verify-btn" onclick="verifyCertificate()">VERIFY CERTIFICATE</button>
@@ -10126,68 +10116,7 @@ var clone=cert.cloneNode(true);
 var images=cert.querySelectorAll("img"),clones=clone.querySelectorAll("img");
 for(var i=0;i<images.length;i++)clones[i].src=images[i].src;
 win.document.open();
-win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script id="geti-certificate-qr-scanner-script">
-(function(){
-let scanner=null,opening=false,ready=null;
-const $=id=>document.getElementById(id);
-function status(text){const el=$('getiQrScanStatus');if(el)el.textContent=text;}
-function loadScanner(){
- if(window.Html5Qrcode)return Promise.resolve();
- if(ready)return ready;
- ready=new Promise((resolve,reject)=>{
-  const script=document.createElement('script');
-  script.src='https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js';
-  script.onload=()=>window.Html5Qrcode?resolve():reject(new Error('QR scanner could not load'));
-  script.onerror=()=>reject(new Error('Internet connection required to load QR scanner'));
-  document.head.appendChild(script);
- }).catch(error=>{ready=null;throw error});return ready;
-}
-function extractCertificateId(raw){
- const data=String(raw||'').trim();if(!data||data.length>2048)return '';
- try{
-  const url=new URL(data);
-  if(url.protocol!=='https:'||!['getienglish.com','www.getienglish.com'].includes(url.hostname.toLowerCase()))return '';
-  const v=url.searchParams.get('verify')||url.searchParams.get('certificate_id')||url.searchParams.get('id')||'';
-  return v.trim().slice(0,120);
- }catch{return /^[A-Za-z0-9][A-Za-z0-9._/-]{2,119}$/.test(data)?data:'';}
-}
-async function stop(){const previous=scanner;scanner=null;if(previous){try{if(previous.isScanning)await previous.stop();}catch(e){}try{await previous.clear();}catch(e){}}}
-window.getiCloseQrScanner=async function(){const box=$('getiQrScannerBox');if(box)box.hidden=true;await stop();};
-async function onDecoded(decoded){
- const id=extractCertificateId(decoded);
- if(!id){status('This QR code is not a supported GETI certificate verification QR code.');return;}
- await window.getiCloseQrScanner();
- const input=$('verifyInput');if(!input){status('Certificate search box not found.');return;}
- input.value=id;input.dispatchEvent(new Event('input',{bubbles:true}));
- if(typeof window.setVerifyType==='function')window.setVerifyType('id');
- if(typeof window.verifyCertificate==='function')window.verifyCertificate('id');
- $('verifyResult')?.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-window.getiOpenQrScanner=async function(){
- const box=$('getiQrScannerBox');if(!box)return;
- if(!box.hidden){await window.getiCloseQrScanner();return;}
- box.hidden=false;status('Loading QR scanner…');
- if(opening)return;opening=true;
- try{
-  await loadScanner();
-  if(box.hidden)return;
-  if(!window.isSecureContext){status('Camera access requires HTTPS. You can scan a saved QR image below.');return;}
-  await stop();scanner=new window.Html5Qrcode('getiQrReader');
-  await scanner.start({facingMode:'environment'},{fps:10,qrbox:(w,h)=>{const edge=Math.min(245,Math.floor(Math.min(w,h)*0.8));return {width:edge,height:edge}}},onDecoded,()=>{});
-  status('Point the camera at the GETI certificate QR code.');
- }catch(error){status('Camera unavailable or access denied. You can upload a QR image below.');await stop();}
- finally{opening=false;}
-};
-window.getiScanQrImage=async function(input){
- const file=input?.files?.[0];if(!file)return;
- if(!file.type.startsWith('image/')||file.size>10*1024*1024){status('Choose an image up to 10 MB.');input.value='';return;}
- try{status('Reading QR image…');await loadScanner();await stop();scanner=new window.Html5Qrcode('getiQrReader');const result=await scanner.scanFile(file,true);await onDecoded(result);}
- catch(error){status('Could not read a QR code from this image. Try a clearer picture.');}
- finally{input.value='';await stop();}
-};
-})();
-</script>
-</body></html>');
+win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'</body></html>');
 win.document.close();
 win.onload=function(){setTimeout(function(){win.print();},400);};
 }
@@ -22843,7 +22772,13 @@ a[href],
 <script id="geti-collaboration-access">
 (function(){
   window.getiOpenCollaboration = async function(){
-    /* No separate Collaboration password: GETI student authentication is still required. */
+    /* Require the collaboration access password before checking the student session. */
+    var enteredPassword = window.prompt('Enter the Collaboration access password:');
+    if(enteredPassword === null) return;
+    if(enteredPassword !== 'certificate'){
+      window.alert('Incorrect password. Access to Collaboration is denied.');
+      return;
+    }
 
     var btn = document.getElementById('getiCollaborationBtn');
     var oldText = btn ? btn.innerHTML : 'COLLABORATION WITH GETI';
@@ -25210,50 +25145,14 @@ body.geti-checkout-active{overflow:hidden!important}
 #getiRobotForm{display:flex;gap:7px;padding:10px;border-top:1px solid #e2eaf5}
 #getiRobotInput{flex:1;min-width:0;border:1px solid #a6bad6;border-radius:10px;padding:11px;font:14px Arial,sans-serif}
 #getiRobotForm button{border:0;border-radius:9px;background:#073d83;color:#fff;padding:0 14px;font-weight:bold;cursor:pointer}
-.geti-robot-toolbar{display:flex;align-items:center;gap:8px;padding:8px 11px;border-top:1px solid #e2eaf5;background:#f7faff}.geti-robot-toolbar select{flex:1;min-width:0;border:1px solid #c9d8eb;border-radius:8px;padding:8px;background:white;color:#073d83}.geti-robot-toolbar button{border:1px solid #c9d8eb;border-radius:8px;padding:8px 10px;background:white;color:#073d83;cursor:pointer}.geti-robot-disclaimer{font-size:10px;padding:0 12px 8px;color:#58677c}
+.geti-robot-disclaimer{font-size:10px;padding:0 12px 8px;color:#58677c}
 @media(max-width:520px){#getiRobotLaunch{left:12px;bottom:12px;padding:11px 13px}#getiRobotPanel{left:12px;bottom:72px;height:min(520px,calc(100dvh - 88px))}}
 </style>
-
-<style id="getiRobotPremiumAnswers">
-#getiRobotPanel{width:min(445px,calc(100vw - 24px));height:min(650px,calc(100dvh - 105px));border-radius:22px}
-.geti-robot-bubble.bot.geti-robot-rich{max-width:100%;width:100%;background:#fff;padding:15px;border:1px solid #d9e5f3;box-shadow:0 8px 22px rgba(8,46,93,.09);white-space:normal;line-height:1.65}
-.geti-robot-rich h3{margin:0 0 10px;font-size:18px;color:#082e5d;line-height:1.35}
-.geti-robot-rich p{margin:0 0 11px;color:#35465b}
-.geti-robot-rich p:last-child{margin-bottom:0}
-.geti-robot-rich strong{color:#092f62}
-.geti-robot-rich a{color:#085ca8;text-decoration:underline;text-underline-offset:2px;font-weight:750;overflow-wrap:anywhere}
-.geti-robot-rich ul,.geti-robot-rich ol{padding-left:18px;margin:8px 0}
-.geti-robot-rich li{margin:6px 0}
-.geti-robot-welcome-top{padding:16px;border-radius:15px;background:linear-gradient(125deg,#052c5a,#155aa4 62%,#6434a5);color:#fff;margin-bottom:13px}
-.geti-robot-welcome-top .geti-robot-kicker{display:block;color:#ffe39a;font-size:10px;letter-spacing:.13em;font-weight:900;margin-bottom:7px}
-.geti-robot-welcome-top h3{color:#fff;font-size:20px;margin-bottom:6px}
-.geti-robot-welcome-top p{color:#edf4ff;font-size:12.5px;margin:0}
-.geti-robot-welcome-label{font-size:12px;font-weight:850;color:#213c61;margin:13px 1px 10px}
-.geti-robot-topic-grid{display:grid;gap:8px}
-.geti-robot-topic{width:100%;display:flex;align-items:center;gap:11px;text-align:left;padding:12px;border-radius:12px;cursor:pointer;border:1px solid var(--topic-line);background:var(--topic-bg);transition:transform .15s ease,box-shadow .15s ease}
-.geti-robot-topic:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(10,40,85,.11)}
-.geti-robot-topic:focus-visible{outline:3px solid #174f9b;outline-offset:2px}
-.geti-robot-topic-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:11px;background:var(--topic-color);color:white;font-size:19px}
-.geti-robot-topic-copy{flex:1;min-width:0}
-.geti-robot-topic-copy strong{display:block;font-size:12.5px;color:var(--topic-text);line-height:1.35}
-.geti-robot-topic-copy small{display:block;font-size:11px;color:#53627a;line-height:1.35;margin-top:3px}
-.geti-robot-topic-arrow{font-size:18px;font-weight:bold;color:var(--topic-color)}
-.geti-robot-topic:nth-child(1){--topic-bg:#ecf4ff;--topic-line:#c9dffc;--topic-color:#1666c3;--topic-text:#0a4289}
-.geti-robot-topic:nth-child(2){--topic-bg:#ecfbf5;--topic-line:#b9e9d2;--topic-color:#16855c;--topic-text:#116544}
-.geti-robot-topic:nth-child(3){--topic-bg:#fff5e9;--topic-line:#f5d8ae;--topic-color:#da8320;--topic-text:#8a4c08}
-.geti-robot-topic:nth-child(4){--topic-bg:#f3edff;--topic-line:#d9c8fc;--topic-color:#8053ce;--topic-text:#5c359f}
-.geti-robot-topic:nth-child(5){--topic-bg:#fff0f4;--topic-line:#f2c4d3;--topic-color:#cb5075;--topic-text:#953356}
-.geti-robot-official{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:13px;border-radius:11px;padding:11px 12px;background:#eef3fa;color:#40566f;font-size:11px}
-.geti-robot-official a{font-weight:900;text-decoration:none;color:#0757a4}
-@media(max-width:520px){#getiRobotPanel{height:min(650px,calc(100dvh - 88px))}.geti-robot-bubble.bot.geti-robot-rich{padding:11px}.geti-robot-welcome-top{padding:13px}}
-</style>
-
 <button id="getiRobotLaunch" type="button" aria-label="Open GETI Robot Chat" aria-controls="getiRobotPanel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="6" width="18" height="15" rx="4"/><path d="M12 3v3M9 3h6M8 13h.01M16 13h.01M8 17c2.5 2 5.5 2 8 0"/></svg> GETI Robot Chat</button>
 <section id="getiRobotPanel" hidden role="dialog" aria-modal="false" aria-label="GETI Robot Chat">
 <div class="geti-robot-head"><span aria-hidden="true" style="font-size:27px">🤖</span><div><strong>GETI Assistant</strong><small>GETI knowledge assistant • Programs & student help</small></div><button id="getiRobotClose" type="button" aria-label="Close chat">×</button></div>
 <div id="getiRobotMessages" role="log" aria-live="polite" aria-relevant="additions"></div>
 <div class="geti-robot-quick" aria-label="Suggested questions"><button type="button" data-geti-question="What is GETI?">About GETI</button><button type="button" data-geti-question="What courses and exams are available?">Programs</button><button type="button" data-geti-question="How do I verify a certificate?">Certificates</button><button type="button" data-geti-question="How can I pay?">Payment</button></div>
-<div class="geti-robot-toolbar"><label for="getiRobotLanguage">Language</label><select id="getiRobotLanguage" aria-label="Response language"><option value="auto">Auto detect</option><option value="en">English</option><option value="mg">Malagasy</option><option value="fr">Français</option><option value="de">Deutsch</option></select><button id="getiRobotClear" type="button">Clear</button></div>
 <form id="getiRobotForm"><input id="getiRobotInput" type="text" maxlength="1500" placeholder="Ask about GETI, TEFL, TESOL..." aria-label="Your question" required autocomplete="off"><button type="submit">Send</button></form>
 <div class="geti-robot-disclaimer">GETI guidance only. This assistant cannot access your account or verify private records. Never share passwords or security codes.</div>
 </section>
@@ -25265,79 +25164,26 @@ if(!trigger||!panel||!close||!log||!form||!input)return;
 const endpoint='https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-ai-chat';
 const publicKey='sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8';
 const history=[];
-const language=document.getElementById('getiRobotLanguage');
-const clear=document.getElementById('getiRobotClear');
 let sending=false;
-const languageNames={en:'English',mg:'Malagasy',fr:'French',de:'German'};
-clear.addEventListener('click',()=>{if(sending)return;history.length=0;log.replaceChildren();bubble('The Global English Teaching Institute (GETI) offers English learning, teacher training, online exams and certificate services.\\n\\nWhat specifically would you like to know about?\\n\\n- **TEFL / TESOL Courses**\\n- **English Learning & Speaking Practice**\\n- **Student Registration & Online Exams**\\n- **Certificate Verification**\\n- **Collaboration & Partnership Opportunities**\\n\\nVisit https://getienglish.com/ for official information.','bot');input.focus();});
-function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function safeInline(s){
- let v=escapeHTML(s);
- v=v.replace(/\[([^\]]{1,120})\]\(\[?(https?:\/\/[^\s)]+)\]?\)/g,(all,label,url)=>'<a href="'+url.replace(/&amp;/g,'&amp;')+'" target="_blank" rel="noopener noreferrer">'+label+'</a>');
- v=v.replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>');
- v=v.replace(/(^|[\s(])\*([^*\n]+)\*/g,'$1<em>$2</em>');
- return v;
-}
-function formatResponse(message){
- const lines=String(message).replace(/\r/g,'').split('\n'),parts=[];let list=[],type='';
- function flush(){if(list.length){parts.push('<'+type+'>'+list.map(x=>'<li>'+safeInline(x)+'</li>').join('')+'</'+type+'>');list=[];type='';}}
- for(const line of lines){
-  const t=line.trim();
-  if(!t){flush();continue;}
-  const m=t.match(/^([-*•]|\d+\.)\s+(.+)$/);
-  if(m){const kind=/^\d/.test(m[1])?'ol':'ul';if(type&&kind!==type)flush();type=kind;list.push(m[2]);continue;}
-  flush();
-  if(/^#{1,3}\s+/.test(t))parts.push('<h3>'+safeInline(t.replace(/^#{1,3}\s+/,''))+'</h3>');
-  else parts.push('<p>'+safeInline(t)+'</p>');
- }
- flush();return parts.join('');
-}
-const topicData=[
- ['📘','TEFL / TESOL Courses','Teacher training and qualifications','Tell me about GETI TEFL and TESOL teacher training courses.'],
- ['🗣️','English Learning & Speaking','Practice conversation and improve fluency','How can I learn and practice spoken English with GETI?'],
- ['📝','Registration & Online Exams','Enrollment and examination guidance','How do I register as a student and take an online exam at GETI?'],
- ['🏅','Certificate Verification','Verify a certificate through GETI','How do I verify a GETI certificate?'],
- ['🤝','Collaboration & Partnerships','Work with GETI as a partner','How can I apply for collaboration or partnership with GETI?']
-];
-function isOverview(s){return /Global English Teaching Institute \(GETI\)/i.test(s)&&/TEFL\s*\/\s*TESOL Courses|TEFL\s*\/\s*TESOL/i.test(s)&&/Certificate Verification/i.test(s)&&/Collaboration/i.test(s);}
-function renderRich(el,message){
- el.classList.add('geti-robot-rich');
- if(isOverview(message)){
-   el.innerHTML='<div class="geti-robot-welcome-top"><span class="geti-robot-kicker">GLOBAL ENGLISH TEACHING INSTITUTE</span><h3>🌍 Welcome to GETI!</h3><p>Explore English learning, teacher training, online examinations and certificate services.</p></div><div class="geti-robot-welcome-label">✨ What would you like to explore?</div><div class="geti-robot-topic-grid"></div><div class="geti-robot-official"><span>🌐 Official GETI Website</span><a href="https://getienglish.com/" target="_blank" rel="noopener noreferrer">getienglish.com ↗</a></div>';
-   const grid=el.querySelector('.geti-robot-topic-grid');
-   topicData.forEach(([emoji,title,detail,question])=>{
-      const btn=document.createElement('button');btn.type='button';btn.className='geti-robot-topic';
-      btn.innerHTML='<span class="geti-robot-topic-icon">'+emoji+'</span><span class="geti-robot-topic-copy"><strong>'+escapeHTML(title)+'</strong><small>'+escapeHTML(detail)+'</small></span><span class="geti-robot-topic-arrow" aria-hidden="true">›</span>';
-      btn.addEventListener('click',()=>ask(question));grid.appendChild(btn);
-   });
- }else{el.innerHTML=formatResponse(message);}
-}
-function bubble(message,who){
- const el=document.createElement('div');el.className='geti-robot-bubble '+who;
- if(who==='bot'&&message!=='Thinking…')renderRich(el,message);
- else el.textContent=message;
- log.appendChild(el);log.scrollTop=log.scrollHeight;return el;
-}
-function openChat(){panel.hidden=false;trigger.setAttribute('aria-expanded','true');if(!log.children.length)bubble('The Global English Teaching Institute (GETI) offers English learning, teacher training, online exams and certificate services.\\n\\nWhat specifically would you like to know about?\\n\\n- **TEFL / TESOL Courses**\\n- **English Learning & Speaking Practice**\\n- **Student Registration & Online Exams**\\n- **Certificate Verification**\\n- **Collaboration & Partnership Opportunities**\\n\\nVisit https://getienglish.com/ for official information.','bot');input.focus();}
+function bubble(message,who){const el=document.createElement('div');el.className='geti-robot-bubble '+who;el.textContent=message;log.appendChild(el);log.scrollTop=log.scrollHeight;return el;}
+function openChat(){panel.hidden=false;trigger.setAttribute('aria-expanded','true');if(!log.children.length)bubble('Hello! 👋 I am your GETI Assistant. Ask about TEFL, TESOL, GETI English programs, exams, accounts, payments or certificate verification.','bot');input.focus();}
 function hideChat(){panel.hidden=true;trigger.setAttribute('aria-expanded','false');trigger.focus();}
 trigger.addEventListener('click',()=>panel.hidden?openChat():hideChat());close.addEventListener('click',hideChat);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)hideChat();});
 async function ask(message){
  const value=String(message||'').trim();if(!value||sending)return;
- const lang=language.value;const prompt=lang==='auto'?value:('[Answer in '+languageNames[lang]+'.] '+value);
  sending=true;const sendBtn=form.querySelector('button[type="submit"]');if(sendBtn)sendBtn.disabled=true;
  bubble(value,'user');const placeholder=bubble('Thinking…','bot');
  try{
   const control=new AbortController();const timer=setTimeout(()=>control.abort(),25000);
   let response;
-  try{response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','apikey':publicKey},body:JSON.stringify({message:prompt,history:history.slice(-8)}),signal:control.signal});}
+  try{response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','apikey':publicKey},body:JSON.stringify({message:value,history:history.slice(-8)}),signal:control.signal});}
   finally{clearTimeout(timer);}
-  let data;try{data=await response.json()}catch{throw new Error('Invalid server response. Please try again.');}
+  const data=await response.json();
   if(!response.ok)throw new Error(data.error||'Unable to answer right now.');
-  if(data.mode==='setup-required')throw new Error('Gemini API key is not configured on the GETI server yet.');
   const answer=String(data.answer||'').trim();if(!answer)throw new Error('GETI Assistant did not return a reply.');
-  renderRich(placeholder,answer);
-  history.push({role:'user',content:prompt},{role:'assistant',content:answer});if(history.length>16)history.splice(0,history.length-16);
+  placeholder.textContent=answer;
+  history.push({role:'user',content:value},{role:'assistant',content:answer});if(history.length>16)history.splice(0,history.length-16);
  }catch(error){placeholder.textContent=error.name==='AbortError'?'GETI Assistant timed out. Please try again.':(error.message||'Unable to connect to GETI Assistant right now.');}
  finally{sending=false;if(sendBtn)sendBtn.disabled=false;log.scrollTop=log.scrollHeight;input.focus();}
 }
