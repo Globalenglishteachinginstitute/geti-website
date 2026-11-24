@@ -7799,6 +7799,13 @@ html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {disp
 @media(max-width:620px){.geti-qr-card{padding:15px}.geti-qr-actions{flex-direction:column}.geti-qr-btn{width:100%}.geti-qr-top{align-items:flex-start}}
 </style>
 
+
+<style id="geti-passed-mail-retry-style">
+.myresult-card .geti-passed-mail-action{margin:15px 0 0;padding:13px;border:1px solid #cbdff4;border-radius:12px;background:#f4f9ff}
+.myresult-card .geti-passed-email-retry{border:0;border-radius:9px;background:#0b4d90;color:#fff;font-weight:800;font-size:12px;padding:12px 16px;cursor:pointer}
+.myresult-card .geti-passed-email-retry:disabled{opacity:.62;cursor:wait}
+.myresult-card .geti-passed-mail-note{margin:10px 0 0;font-size:12px;line-height:1.5;color:#3a5877}
+</style>
 </head>
 
 <body translate="no" class="notranslate">
@@ -10928,7 +10935,8 @@ let examState={
     started:false,
     timeRemaining:2700,
     timerInterval:null,
-    timeExpired:false
+    timeExpired:false,
+    subjectOrder:[]
 };
 
 /* =========================================================
@@ -11299,7 +11307,8 @@ function openExamRegistration(program){
         questionIndex:0,
         answers:[],
         subjectScores:[],
-        started:false
+        started:false,
+        subjectOrder:[]
     };
 
     disableExamProtection();
@@ -11508,6 +11517,15 @@ async function submitRegistration(){
     });
 
     examState.subjectScores=[];
+    examState.subjectOrder=Array.from({length:10},function(_,i){return i;});
+    for(let i=examState.subjectOrder.length-1;i>0;i--){
+        const r=new Uint32Array(1);
+        if(window.crypto&&window.crypto.getRandomValues)window.crypto.getRandomValues(r);
+        else r[0]=Math.floor(Math.random()*4294967296);
+        const j=r[0]%(i+1),tmp=examState.subjectOrder[i];
+        examState.subjectOrder[i]=examState.subjectOrder[j];examState.subjectOrder[j]=tmp;
+    }
+    examState.subjectIndex=examState.subjectOrder[0];
 
     /* ENABLE COPY PROTECTION */
     enableExamProtection();
@@ -11683,7 +11701,7 @@ function showQuestion(){
 
     '<span>'+
     'Subject '+
-    (examState.subjectIndex+1)+
+    (Math.max(0,(examState.subjectOrder||[]).indexOf(examState.subjectIndex))+1)+
     '/10'+
     '</span>'+
 
@@ -11983,9 +12001,11 @@ function showSubjectResult(
 
 function continueExam(){
 
-    if(examState.subjectIndex<9){
+    const order=examState.subjectOrder&&examState.subjectOrder.length===10?examState.subjectOrder:[0,1,2,3,4,5,6,7,8,9];
+    const position=order.indexOf(examState.subjectIndex);
+    if(position>=0&&position<order.length-1){
 
-        examState.subjectIndex++;
+        examState.subjectIndex=order[position+1];
 
         examState.questionIndex=0;
 
@@ -12815,7 +12835,8 @@ let geti30State = {
     started:false,
     timeRemaining:2700,
     timerInterval:null,
-    questionSets:[]
+    questionSets:[],
+    subjectOrder:[]
 };
 
 const GETI_EXAM_SESSION_PREFIX="GETI_ACTIVE_EXAM_SESSION_V2_";
@@ -12828,8 +12849,8 @@ function saveGeti30Session(phase){
     const data={
         version:2,phase:geti30State.sessionPhase,exam:geti30State.exam,examTitle:geti30State.examTitle,
         examLevel:geti30State.examLevel,passMark:geti30State.passMark,teflHours:geti30State.teflHours,
-        student:geti30State.student,subjectIndex:geti30State.subjectIndex,questionIndex:geti30State.questionIndex,
-        answers:geti30State.answers,subjectScores:geti30State.subjectScores,questionSets:geti30State.questionSets,liveSubjectIndexes:geti30State.liveSubjectIndexes||[],liveAttemptKey:geti30State.liveAttemptKey||"",
+        student:geti30State.student,subjectIndex:geti30State.subjectIndex,subjectOrder:geti30State.subjectOrder,questionIndex:geti30State.questionIndex,
+        answers:geti30State.answers,subjectScores:geti30State.subjectScores,questionSets:geti30State.questionSets,
         failureCount:Number(geti30State.failureCount||0),retryMode:!!geti30State.retryMode,
         retryQuestionIndexes:geti30State.retryQuestionIndexes,timeRemaining:geti30State.timeRemaining,
         speakingResult:geti30State.speakingResult||null,savedAt:new Date().toISOString()
@@ -13886,110 +13907,59 @@ function getiHourCombine(coreItems,subject,rnd,seenQuestions){
  selected.forEach(function(q){seen.add(getiUniqueQuestionKey(q));});
  return geti30Shuffle(selected,rnd);
 }
-/* GETI LIVE EXAM SUBJECT ENGINE
-   Student-facing labels remain GETI Exam; generation provider stays server-side.
-   Questions are generated once per subject and held for the active session.
-   A generated batch is never silently replaced by legacy/static content. */
-const GETI_LIVE_EXAM_SUBJECT_FUNCTION = "https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-live-exam-subject";
-let getiLiveSubjectBusy=false;
-function getiLiveLevel(hours){
-    const h=Number(hours)||20;
-    return h>=200?"C2":h>=100?"C1":h>=80?"B2":h>=40?"B1":"A2";
+/* GETI STATIC QUESTION BANK MODE (no Gemini question generation).
+   Repetition between separate examination sessions is allowed.
+   Every new exam attempt draws a fresh random mix *from its selected hours tier*.
+   Inside one attempt the same question statement is never reused.
+   Stored questionSets preserve choices and correct indices while the exam is active. */
+function getiExamActiveHours(){
+ const selected=Number(geti30State.teflHours)||getGetiExamHoursFromTitle(geti30State.examTitle);
+ return Number.isFinite(selected)&&selected>=20?selected:20;
 }
-async function getiLoadLiveExamSubject(subjectIndex, forceNew){
-    const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam]||[];
-    if(!subjects[subjectIndex])throw new Error("Exam subject is missing.");
-    if(!forceNew && Array.isArray(geti30State.questionSets)&&Array.isArray(geti30State.questionSets[subjectIndex])&&Array.isArray(geti30State.liveSubjectIndexes)&&geti30State.liveSubjectIndexes.includes(subjectIndex))return;
-    if(getiLiveSubjectBusy)throw new Error("Another subject is being prepared. Please try again.");
-    const count=getGeti30QuestionCount(geti30State.exam);
-    getiLiveSubjectBusy=true;
-    try{
-        const used=new Set();
-        (geti30State.questionSets||[]).forEach(function(set,i){
-            if(i!==subjectIndex && set && Array.isArray(geti30State.liveSubjectIndexes)&&geti30State.liveSubjectIndexes.includes(i))set.forEach(function(q){used.add(String(q[0]).toLowerCase().replace(/\s+/g," ").trim());});
-        });
-        for(let attempt=0;attempt<3;attempt++){
-            const response=await fetch(GETI_LIVE_EXAM_SUBJECT_FUNCTION,{
-                method:"POST",cache:"no-store",
-                headers:{"Content-Type":"application/json","apikey":GETI_SUPABASE_KEY},
-                body:JSON.stringify({
-                    candidate_id:geti30State.student.id,
-                    attempt_key:geti30State.liveAttemptKey,
-                    email:geti30State.student.email,
-                    program:geti30State.examTitle,
-                    exam:geti30State.exam,
-                    subject:subjects[subjectIndex],
-                    subject_index:subjectIndex,
-                    hours:Number(geti30State.teflHours)||20,
-                    count:count
-                })
-            });
-            let payload={};try{payload=await response.json();}catch(e){}
-            if(!response.ok)throw new Error(payload.error||"GETI question service is temporarily unavailable. Please retry.");
-            if(!Array.isArray(payload.questions)||payload.questions.length!==count)continue;
-            const seen=new Set(used),rows=[];
-            let valid=true;
-            for(const q of payload.questions){
-                const prompt=String(q.question||"").trim(),opts=q.options,correct=Number(q.correctIndex);
-                const key=prompt.toLowerCase().replace(/\s+/g," ").trim();
-                if(prompt.length<12||!Array.isArray(opts)||opts.length!==4||!Number.isInteger(correct)||correct<0||correct>3||seen.has(key)){
-                    valid=false;break;
-                }
-                seen.add(key);
-                const row=[prompt,...opts.map(String),correct];
-                rows.push(geti30RandomizedChoices(row,Math.random));
-            }
-            if(!valid)continue;
-            if(!Array.isArray(geti30State.questionSets))geti30State.questionSets=[];
-            const shuffled=geti30Shuffle(rows,Math.random);
-            Object.defineProperty(shuffled,"_getiLive",{value:true,enumerable:false,configurable:true});
-            geti30State.questionSets[subjectIndex]=shuffled;
-            // Persist a separately serializable marker, since custom array properties are lost in JSON.
-            if(!Array.isArray(geti30State.liveSubjectIndexes))geti30State.liveSubjectIndexes=[];
-            if(!geti30State.liveSubjectIndexes.includes(subjectIndex))geti30State.liveSubjectIndexes.push(subjectIndex);
-            saveGeti30Session("question");
-            return;
-        }
-        throw new Error("A unique, complete subject could not be prepared. Please retry.");
-    }finally{getiLiveSubjectBusy=false;}
+function getiExamFreshSeed(){
+ try{const bytes=new Uint32Array(2);crypto.getRandomValues(bytes);return (bytes[0]^Math.imul(bytes[1],0x9E3779B1))>>>0;}
+ catch(e){return (Date.now()^Math.floor(Math.random()*0xFFFFFFFF))>>>0;}
 }
 function buildGeti30QuestionSets(){
  const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam]||[];
- const registrationKey=[geti30State.examTitle||geti30State.exam,geti30State.examLevel||"B2",geti30State.student?geti30State.student.id:"",Date.now(),Math.random()].join("|");
- const masterSeed=geti30HashString(registrationKey);
+ const hours=getiExamActiveHours();
+ const registrationKey=[geti30State.examTitle||geti30State.exam,hours,geti30State.examLevel||"B2",geti30State.student?geti30State.student.id:"",Date.now(),getiExamFreshSeed()].join("|");
+ const masterSeed=geti30HashString(registrationKey)^getiExamFreshSeed();
+ // This set is intentionally local to the CURRENT attempt, not shared between students.
  const usedQuestions=new Set();
  geti30State.questionSets=subjects.map(function(subject,subjectIndex){
   const rnd=geti30SeededRandom(masterSeed^geti30HashString(subject)^((subjectIndex+1)*2654435761));
-  // Preserve the A2 bank, but never return the same question twice in a sitting.
   if(geti30State.exam==="A2 Exam"){
-   const pool=GETI_A2_EXAM_BANK.filter(function(item){const key=getiUniqueQuestionKey(item);if(usedQuestions.has(key))return false;usedQuestions.add(key);return true;});
-   return geti30Shuffle(pool,rnd).slice(0,15).map(function(item){return geti30RandomizedChoices(item,rnd);});
+   const pool=geti30Shuffle(GETI_A2_EXAM_BANK.filter(function(item){
+    return !usedQuestions.has(getiUniqueQuestionKey(item));
+   }),rnd);
+   const selected=pool.slice(0,getGeti30QuestionCount(geti30State.exam)).map(function(item){
+    usedQuestions.add(getiUniqueQuestionKey(item));return geti30RandomizedChoices(item,rnd);
+   });
+   return geti30Shuffle(selected,rnd);
   }
+  // Separate curated domain bank for each exam; difficulty mix depends on active course hours.
   const professional=geti30ProfessionalQuestions(geti30State.exam,subjectIndex,rnd);
   const teyl=professional?null:getiBuildTEYLItems(geti30State.exam,subjectIndex,rnd);
   const teacher=professional||teyl?null:geti30BuildTeacherEducationItems(geti30State.exam,subjectIndex,rnd);
   const core=professional||teyl||teacher;
-  if(core)return getiHourCombine(core,subject,rnd,usedQuestions);
-  const basicOriginal=geti30Shuffle(Array.from({length:30},function(_,i){return i;}),rnd).map(function(i){return geti30MakeQuestion(subject,i,rnd);});
-  return getiHourCombine(basicOriginal,subject,rnd,usedQuestions);
+  const domainBank=core||geti30Shuffle(Array.from({length:40},function(_,i){return i;}),rnd)
+   .map(function(i){return geti30MakeQuestion(subject,i,rnd);});
+  // getiHourCombine selects only the number of foundational/core/advanced/expert
+  // questions allocated to THIS hours level, then shuffles all selected items.
+  const selected=getiHourCombine(domainBank,subject,rnd,usedQuestions);
+  return selected.map(function(q){return geti30RandomizedChoices(q,rnd);});
  });
+ geti30State.selectedQuestionHours=hours;
 }
 
 function getGeti30Question(examName,subject,qIndex){
-    const liveSubjects=GETI_30_EXAM_SUBJECTS[examName]||[];
-    const liveIndex=liveSubjects.indexOf(subject);
-    if(liveIndex>=0 && Array.isArray(geti30State.liveSubjectIndexes) && geti30State.liveSubjectIndexes.includes(liveIndex)){
-        const liveQuestion=geti30State.questionSets&&geti30State.questionSets[liveIndex]&&geti30State.questionSets[liveIndex][qIndex];
-        if(liveQuestion)return liveQuestion;
-    }
     if(examName==="A2 Exam"){
         const saved=geti30State.questionSets&&geti30State.questionSets[0];
         if(saved&&saved[qIndex])return saved[qIndex];
         const item=GETI_A2_EXAM_BANK[qIndex % GETI_A2_EXAM_BANK.length];
         return geti30RandomizedChoices(item,geti30SeededRandom(GETI_EXAM_RANDOM_SESSION_SEED^geti30HashString("A2|"+qIndex)));
     }
-    if(examName==="Chinese Language Exam") return getLocalizedLanguageExamQuestion("zh",subject,qIndex);
-    if(examName==="Korean Language Exam") return getLocalizedLanguageExamQuestion("ko",subject,qIndex);
     const subjects=GETI_30_EXAM_SUBJECTS[examName] || [];
     const subjectIndex=subjects.indexOf(subject);
 
@@ -14004,7 +13974,9 @@ function getGeti30Question(examName,subject,qIndex){
     const rnd=geti30SeededRandom(
         (GETI_EXAM_RANDOM_SESSION_SEED^geti30HashString(examName+"|"+subject+"|"+qIndex))
     );
-    return geti30MakeQuestion(subject,qIndex,rnd);
+    if(examName==="Chinese Language Exam")return getLocalizedLanguageExamQuestion("zh",subject,qIndex);
+    if(examName==="Korean Language Exam")return getLocalizedLanguageExamQuestion("ko",subject,qIndex);
+    return geti30RandomizedChoices(geti30MakeQuestion(subject,qIndex,rnd),rnd);
 }
 
 const GETI_CHINESE_EXAM_BANK=[
@@ -14067,10 +14039,34 @@ function getGetiActiveQuestionIndexes(subjectIndex){
     return Array.from({length:getGeti30QuestionCount(geti30State.exam)},function(_,i){return i;});
 }
 
+function geti30CreateSubjectOrder(){
+    const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam]||[];
+    const indexes=subjects.map(function(_,i){return i;});
+    // New shuffled order for every fresh attempt; answer arrays stay keyed to original subjects.
+    for(let i=indexes.length-1;i>0;i--){
+        const r=new Uint32Array(1);
+        if(window.crypto&&window.crypto.getRandomValues)window.crypto.getRandomValues(r);
+        else r[0]=Math.floor(Math.random()*4294967296);
+        const j=r[0]%(i+1),tmp=indexes[i];indexes[i]=indexes[j];indexes[j]=tmp;
+    }
+    geti30State.subjectOrder=indexes;
+    return indexes;
+}
+function geti30CurrentSubjectPosition(){
+    const order=geti30State.subjectOrder||[];
+    const pos=order.indexOf(geti30State.subjectIndex);
+    return pos<0?geti30State.subjectIndex:pos;
+}
 function getGetiNextRetrySubject(fromIndex){
-    const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam] || [];
-    for(let i=fromIndex;i<subjects.length;i++){
-        if(getGetiActiveQuestionIndexes(i).length)return i;
+    const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam]||[];
+    const order=Array.isArray(geti30State.subjectOrder)&&geti30State.subjectOrder.length===subjects.length
+      ?geti30State.subjectOrder:subjects.map(function(_,i){return i;});
+    // fromIndex refers to the canonical subject following the one just completed.
+    const previous=fromIndex<0?-1:order.indexOf(fromIndex-1);
+    const start=previous>=0?previous+1:(fromIndex<=0?0:order.length);
+    for(let position=start;position<order.length;position++){
+        const originalIndex=order[position];
+        if(getGetiActiveQuestionIndexes(originalIndex).length)return originalIndex;
     }
     return -1;
 }
@@ -14090,7 +14086,7 @@ function showGeti30Question(){
         '<div id="geti30Timer" class="exam-timer"></div>'+
         '<div class="exam-progress">'+
         '<span>'+escapeHTML(geti30State.examTitle||geti30State.exam)+'</span>'+
-        '<span>'+ui.subject+' '+(geti30State.subjectIndex+1)+'/'+subjects.length+'</span>'+
+        '<span>'+ui.subject+' '+(geti30CurrentSubjectPosition()+1)+'/'+subjects.length+'</span>'+
         '<span>'+(geti30State.retryMode?ui.correction:ui.question)+(activePosition+1)+'/'+activeIndexes.length+'</span>'+
         '</div>'+
         '<h2 class="exam-title">'+escapeHTML(getLocalizedCourseSubject(geti30State.exam,subject))+'</h2>'+
@@ -14370,17 +14366,9 @@ function calculateGeti30OverallPercentage(){
     return academicPercentage;
 }
 
-async function continueGeti30Exam(){
-    if(getiLiveSubjectBusy)return;
+function continueGeti30Exam(){
     const nextSubject=getGetiNextRetrySubject(geti30State.subjectIndex+1);
     if(nextSubject!==-1){
-        const button=document.querySelector("#geti30ExamPanel button");
-        if(button){button.disabled=true;button.textContent="PREPARING NEXT SUBJECT...";}
-        try{await getiLoadLiveExamSubject(nextSubject,false);}catch(err){
-            if(button){button.disabled=false;button.textContent="RETRY NEXT SUBJECT";}
-            alert(err.message||"Could not prepare the next subject. Please retry.");
-            return;
-        }
         geti30State.subjectIndex=nextSubject;
         const indexes=getGetiActiveQuestionIndexes(nextSubject);
         geti30State.questionIndex=indexes[0];
@@ -16525,9 +16513,39 @@ function renderMyResults(results,user){
         const passed=String(result.status||"").toUpperCase()==="PASSED";
         const date=result.created_at?new Date(result.created_at).toLocaleDateString("en-GB",{year:"numeric",month:"long",day:"2-digit"}):"Not available";
         html+='<article class="myresult-card '+(passed?'passed':'failed')+'"><div class="myresult-card-head"><h3>'+escapeHTML(result.program||"GETI Examination")+'</h3><span class="myresult-status '+(passed?'passed':'failed')+'">'+(passed?'PASSED':'NOT PASSED')+'</span></div>'+
-            '<div class="myresult-meta"><span>Final Score<strong>'+escapeHTML(String(result.percentage??0))+'%</strong></span><span>Candidate ID<strong>'+escapeHTML(result.candidate_id||"")+'</strong></span>'+(result.certificate_id?'<span>Certificate ID<strong>'+escapeHTML(result.certificate_id)+'</strong></span>':'')+'<span>Completion Date<strong>'+escapeHTML(date)+'</strong></span></div></article>';
+            '<div class="myresult-meta"><span>Final Score<strong>'+escapeHTML(String(result.percentage??0))+'%</strong></span><span>Candidate ID<strong>'+escapeHTML(result.candidate_id||"")+'</strong></span>'+(result.certificate_id?'<span>Certificate ID<strong>'+escapeHTML(result.certificate_id)+'</strong></span>':'')+'<span>Completion Date<strong>'+escapeHTML(date)+'</strong></span></div>'+(passed?'<div class="geti-passed-mail-action"><button type="button" class="geti-passed-email-retry" data-geti-candidate="'+escapeHTML(result.candidate_id||'')+'" onclick="getiRetryPassedEmail(this)">RESEND PASSED EMAIL</button><p class="geti-passed-mail-note" aria-live="polite">Email is sent from certificate@getienglish.com after a verified PASSED result. Use resend if you did not receive it. Check spam first.</p></div>':'')+'</article>';
     });
     body.innerHTML=html+'</div>';
+}
+
+/* GETI PASSED EMAIL RETRY — authenticated student only; server checks ownership. */
+async function getiRetryPassedEmail(button){
+    if(!button || button.disabled)return;
+    const candidateId=button.getAttribute('data-geti-candidate')||'';
+    const note=button.parentElement&&button.parentElement.querySelector('.geti-passed-mail-note');
+    const original=button.textContent;
+    button.disabled=true;button.textContent='SENDING...';
+    if(note)note.textContent='Checking your GETI account and email delivery...';
+    try{
+        const auth=await GETI_SB.auth.getSession();
+        const session=auth&&auth.data&&auth.data.session;
+        if(!session||!session.access_token)throw new Error('Please sign in to your GETI account first.');
+        const data=await getiFetchJson(GETI_EXAM_FUNCTION,{
+            method:'POST',
+            headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY,'Authorization':'Bearer '+session.access_token},
+            body:JSON.stringify({action:'retry_my_pass_email',candidate_id:candidateId})
+        });
+        const info=data&&data.email_notification||{};
+        if(data.success&&info.sent){
+            if(note)note.textContent=info.already_sent?'This PASSED notification was already recorded as sent. Please check your Inbox or Spam folder.':'Email accepted by the provider. Please check your Inbox or Spam folder.';
+            button.textContent='EMAIL REQUEST COMPLETE';
+            return;
+        }
+        throw new Error((info&&info.error)||data.error||'Email not delivered. Please contact GETI Administration.');
+    }catch(error){
+        if(note)note.textContent='Email not sent: '+String(error&&error.message||error).slice(0,250);
+        button.disabled=false;button.textContent=original;
+    }
 }
 
 /* =========================================================
@@ -17639,25 +17657,22 @@ async function submitGeti30Registration(){
         );
 
         geti30State.subjectScores=[];
-        geti30State.subjectIndex=0;
+        geti30CreateSubjectOrder();
+        geti30State.subjectIndex=geti30State.subjectOrder[0]||0;
         geti30State.questionIndex=0;
         geti30State.started=true;
         geti30State.timeRemaining=getCurrentGetiExamPolicy().durationMinutes*60;
 
-        buildGeti30QuestionSets();
-        geti30State.liveSubjectIndexes=[];
-        geti30State.liveAttemptKey=crypto.randomUUID();
-        if(button)button.textContent="PREPARING YOUR EXAM...";
-        await getiLoadLiveExamSubject(0,false);
         getiEnableExamLock();
+        geti30CreateSubjectOrder();
+        geti30State.subjectIndex=geti30State.subjectOrder[0]||0;
+        buildGeti30QuestionSets();
         saveGeti30Session("question");
 
         startGeti30Timer();
         showGeti30Question();
 
     }catch(err){
-        geti30State.started=false;
-        getiDisableExamLock();
         console.error("GETI registration error:",err);
         alert(err && err.message ? err.message : "Registration could not be completed. Please check your internet connection and try again.");
     }finally{
@@ -17916,14 +17931,11 @@ function restartGetiExamRegistration(){
     openGeti30Registration(exam,course);
 }
 
-async function startGetiFailedQuestionRetry(restartAll){
-    if(getiLiveSubjectBusy)return;
+function startGetiFailedQuestionRetry(restartAll){
     const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam]||[];
     restartAll=true;
+    geti30CreateSubjectOrder();
     buildGeti30QuestionSets();
-    geti30State.liveSubjectIndexes=[];
-    geti30State.liveAttemptKey=crypto.randomUUID();
-    try{await getiLoadLiveExamSubject(0,true);}catch(err){alert(err.message||"Exam questions could not be prepared. Please retry.");return;}
     geti30State.timeoutSubmitting=false;
     geti30State.timedOut=false;
     if(restartAll){
@@ -17953,7 +17965,7 @@ async function startGetiFailedQuestionRetry(restartAll){
     geti30State.timeRemaining=getCurrentGetiExamPolicy().durationMinutes*60;
     geti30State.started=true;
     getiEnableExamLock();
-    const firstSubject=getGetiNextRetrySubject(0);
+    const firstSubject=getGetiNextRetrySubject(-1);
     if(firstSubject===-1 && isGetiProficiencyExam()){
         geti30State.speakingResult=null;
         geti30State.subjectScores=geti30State.subjectScores.filter(function(s){return s.subject!=="English Speaking";});
@@ -19090,7 +19102,7 @@ window.getGeti200OutlineHTML=function(exam,subject){const c=cfg(exam);if(!c)retu
 
 // Native exam questions for all six dedicated language examinations.
 const originalGetQ=window.getGeti30Question;
-window.getGeti30Question=function(exam,subject,qIndex){const subjects=GETI_30_EXAM_SUBJECTS[exam]||[];const idx=subjects.indexOf(subject);if(idx>=0&&Array.isArray(geti30State.liveSubjectIndexes)&&geti30State.liveSubjectIndexes.includes(idx)){const q=geti30State.questionSets?.[idx]?.[qIndex];if(q)return q;}const c=cfg(exam);if(!c)return originalGetQ(exam,subject,qIndex);const bank=c.bank||[];if(!bank.length)return originalGetQ(exam,subject,qIndex);const orderRnd=geti30SeededRandom(GETI_EXAM_RANDOM_SESSION_SEED^geti30HashString(exam+"|"+subject+"|native-order"));const order=geti30Shuffle(bank.map(function(_,i){return i;}),orderRnd);const item=bank[order[qIndex%order.length]];const rnd=geti30SeededRandom(GETI_EXAM_RANDOM_SESSION_SEED^geti30HashString(exam+"|"+subject+"|native|"+qIndex));return geti30RandomizedChoices(item,rnd);};
+window.getGeti30Question=function(exam,subject,qIndex){const c=cfg(exam);if(!c)return originalGetQ(exam,subject,qIndex);const bank=c.bank||[];if(!bank.length)return originalGetQ(exam,subject,qIndex);const orderRnd=geti30SeededRandom(GETI_EXAM_RANDOM_SESSION_SEED^geti30HashString(exam+"|"+subject+"|native-order"));const order=geti30Shuffle(bank.map(function(_,i){return i;}),orderRnd);const item=bank[order[qIndex%order.length]];const rnd=geti30SeededRandom(GETI_EXAM_RANDOM_SESSION_SEED^geti30HashString(exam+"|"+subject+"|native|"+qIndex));return geti30RandomizedChoices(item,rnd);};
 
 // Show native names in both the exam list and lesson list.
 const originalRenderExamButtons=window.renderGetiExamButtons;
@@ -19111,7 +19123,7 @@ window.submitGeti30Registration=function(){return withNativeAlert(geti30State.ex
 const originalNextQ=window.nextGeti30Question;
 window.nextGeti30Question=function(){return withNativeAlert(geti30State.exam,function(){return originalNextQ();});};
 
-function translateQuestion(){const c=cfg(geti30State.exam);if(!c)return;const p=document.getElementById("geti30ExamPanel");if(!p)return;const spans=p.querySelectorAll(".exam-progress span");if(spans[0])spans[0].textContent=nativeDisplayTitle(geti30State.exam,geti30State.examTitle);if(spans[1])spans[1].textContent=c.ui.subject+" "+(geti30State.subjectIndex+1)+"/10";if(spans[2]){const active=getGetiActiveQuestionIndexes(geti30State.subjectIndex),pos=Math.max(0,active.indexOf(geti30State.questionIndex));spans[2].textContent=(geti30State.retryMode?c.ui.correction:c.ui.question)+(pos+1)+"/"+active.length;}const active=getGetiActiveQuestionIndexes(geti30State.subjectIndex),pos=Math.max(0,active.indexOf(geti30State.questionIndex));const btn=p.querySelector(".next-btn");if(btn)btn.textContent=pos===active.length-1?c.ui.submit:c.ui.next;}
+function translateQuestion(){const c=cfg(geti30State.exam);if(!c)return;const p=document.getElementById("geti30ExamPanel");if(!p)return;const spans=p.querySelectorAll(".exam-progress span");if(spans[0])spans[0].textContent=nativeDisplayTitle(geti30State.exam,geti30State.examTitle);if(spans[1])spans[1].textContent=c.ui.subject+" "+(geti30CurrentSubjectPosition()+1)+"/10";if(spans[2]){const active=getGetiActiveQuestionIndexes(geti30State.subjectIndex),pos=Math.max(0,active.indexOf(geti30State.questionIndex));spans[2].textContent=(geti30State.retryMode?c.ui.correction:c.ui.question)+(pos+1)+"/"+active.length;}const active=getGetiActiveQuestionIndexes(geti30State.subjectIndex),pos=Math.max(0,active.indexOf(geti30State.questionIndex));const btn=p.querySelector(".next-btn");if(btn)btn.textContent=pos===active.length-1?c.ui.submit:c.ui.next;}
 const originalShowQ=window.showGeti30Question;
 window.showGeti30Question=function(){const r=originalShowQ();translateQuestion();return r;};
 
@@ -23190,14 +23202,7 @@ a[href],
 <script id="geti-collaboration-access">
 (function(){
   window.getiOpenCollaboration = async function(){
-    /* Require the collaboration access password before checking the student session. */
-    var enteredPassword = window.prompt('Enter the Collaboration access password:');
-    if(enteredPassword === null) return;
-    if(enteredPassword !== 'certificate'){
-      window.alert('Incorrect password. Access to Collaboration is denied.');
-      return;
-    }
-
+    /* Collaboration opens without an additional access password. GETI login still required. */
     var btn = document.getElementById('getiCollaborationBtn');
     var oldText = btn ? btn.innerHTML : 'COLLABORATION WITH GETI';
     if(btn){btn.disabled=true;btn.textContent='OPENING...';}
@@ -26507,74 +26512,5 @@ function getiQrToggleOptions(){
   if(!opening && typeof getiQrCloseCamera==='function')getiQrCloseCamera();
 }
 </script>
-
-<style id="geti-question-bank-editor-style">
-#getiQbeOpen{position:fixed;bottom:85px;left:18px;z-index:20015;background:#152d63;color:white;border:1px solid #7a97d1;border-radius:13px;padding:12px 17px;box-shadow:0 12px 30px #0003;cursor:pointer;font-weight:700}
-#getiQbeBackdrop{position:fixed;inset:0;background:#071527b8;z-index:20100;display:flex;align-items:center;justify-content:center;padding:18px}
-#getiQbeBackdrop[hidden],#getiQbeOpen[hidden]{display:none!important}
-#getiQbePanel{box-sizing:border-box;background:#f7f9ff;color:#14213e;width:min(100%,1040px);max-height:92vh;overflow:auto;padding:27px;border-radius:20px;box-shadow:0 18px 65px #0008;font-family:Arial,sans-serif}
-#getiQbePanel *{box-sizing:border-box}
-#getiQbePanel h2{font-size:23px;margin:0 0 9px;color:#152d63}
-#getiQbePanel p{font-size:14px;color:#50627b;margin:0 0 16px;line-height:1.5}
-.getiQbeGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-#getiQbePanel label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#243956;margin-bottom:12px}
-#getiQbePanel input,#getiQbePanel select,#getiQbePanel textarea{border:1px solid #c6d0e1;border-radius:9px;background:white;padding:10px;font:inherit;color:#10243e;width:100%;font-weight:400}
-#getiQbePanel textarea{min-height:70px;resize:vertical}
-.getiQbeActions{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:5px 0 14px}
-.getiQbeActions button,#getiQbeClose{background:#143977;color:#fff;border:none;border-radius:9px;padding:11px 16px;cursor:pointer;font-weight:700}
-#getiQbeClose{background:#e7edf7;color:#243956;float:right}
-#getiQbePublish{background:#13774d}
-#getiQbeCards{display:grid;gap:12px}
-.getiQbeCard{background:white;border:1px solid #d1dbeb;padding:14px;border-radius:13px}
-.getiQbeCard strong{display:block;margin:0 0 10px;font-size:13px}
-.getiQbeOptions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-#getiQbeNotice{padding:10px;background:#eaf0f9;border-radius:9px;margin-top:8px;white-space:pre-wrap;font-size:13px}
-@media(max-width:700px){.getiQbeGrid,.getiQbeOptions{grid-template-columns:1fr}#getiQbePanel{padding:17px}}
-</style>
-<button type="button" id="getiQbeOpen" hidden>QUESTION BANK EDITOR</button>
-<div id="getiQbeBackdrop" hidden role="dialog" aria-modal="true" aria-labelledby="getiQbeTitle">
- <section id="getiQbePanel">
-  <button type="button" id="getiQbeClose" aria-label="Close editor">CLOSE ✕</button>
-  <h2 id="getiQbeTitle">GETI Question Bank Editor</h2>
-  <p>Administration only. Generate draft subjects, review every answer, then publish to the secure examination question bank. Nothing is published automatically.</p>
-  <div class="getiQbeGrid">
-   <label>Examination / Programme<input id="getiQbeProgram" value="TEFL Exam" maxlength="120"></label>
-   <label>Exam Hours<select id="getiQbeHours"><option>20</option><option>40</option><option>60</option><option>80</option><option selected>100</option><option>120</option><option>180</option><option>200</option><option>250</option><option>300</option><option>420</option></select></label>
-   <label>Subject Number (1–10)<select id="getiQbeSubjectNo"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></label>
-   <label>Subject Name<input id="getiQbeSubjectName" value="Teaching Methodology" maxlength="120"></label>
-   <label>Number of questions<select id="getiQbeCount"><option>3</option><option>5</option><option selected>10</option><option>12</option></select></label>
-   <label>Optional focus<input id="getiQbeTopic" placeholder="Classroom assessment, lesson planning..."></label>
-  </div>
-  <div class="getiQbeActions">
-   <button id="getiQbeGenerate" type="button">GENERATE DRAFT QUESTIONS</button>
-   <button id="getiQbePublish" type="button" disabled>PUBLISH REVIEWED QUESTIONS</button>
-   <button id="getiQbeStats" type="button">CHECK QUESTION COUNT</button>
-  </div>
-  <div id="getiQbeCards" aria-live="polite"></div>
-  <div id="getiQbeNotice" role="status">Sign in with an authorized exam-editor account to use this tool.</div>
- </section>
-</div>
-<script id="geti-question-bank-editor-script">
-(function(){'use strict';
-const host='https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-question-bank-editor';
-const $=id=>document.getElementById(id);
-const open=$('getiQbeOpen'),dialog=$('getiQbeBackdrop'),cards=$('getiQbeCards'),notice=$('getiQbeNotice');
-let drafts=[],busy=false;
-const say=t=>{notice.textContent=t;};
-const clean=x=>String(x||'').trim();
-function ctx(){return {program:clean($('getiQbeProgram').value),exam_hours:Number($('getiQbeHours').value),subject_index:Number($('getiQbeSubjectNo').value)-1,subject_name:clean($('getiQbeSubjectName').value),topic:clean($('getiQbeTopic').value),count:Number($('getiQbeCount').value)}}
-async function client(){if(typeof GETI_SB==='undefined'||!GETI_SB||!GETI_SB.auth)throw Error('GETI account connection unavailable');let {data,error}=await GETI_SB.auth.getSession();if(error||!data?.session?.access_token)throw Error('Please sign in to GETI with your exam editor account.');return data.session.access_token}
-async function send(body){const token=await client();const res=await fetch(host,{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+token,'apikey':GETI_SUPABASE_KEY},body:JSON.stringify(body)});const data=await res.json();if(!res.ok)throw Error(data.error||'Request failed');return data}
-function field(label,value,change,kind='input'){const el=document.createElement('label');el.textContent=label;const c=document.createElement(kind);c.value=value;c.addEventListener('input',()=>change(c.value));el.appendChild(c);return el}
-function render(){cards.replaceChildren();drafts.forEach((q,i)=>{const c=document.createElement('div');c.className='getiQbeCard';const h=document.createElement('strong');h.textContent='Draft question '+(i+1);c.appendChild(h);c.appendChild(field('Question',q.question,v=>q.question=v,'textarea'));const options=document.createElement('div');options.className='getiQbeOptions';q.options.forEach((v,j)=>options.appendChild(field('Option '+('ABCD'[j]),v,x=>q.options[j]=x)));c.appendChild(options);const correct=document.createElement('label');correct.textContent='Correct answer (verify carefully)';const select=document.createElement('select');q.options.forEach((v,j)=>{const o=document.createElement('option');o.value=j;o.textContent='Option '+('ABCD'[j]);select.appendChild(o)});select.value=q.correctIndex;select.addEventListener('change',()=>q.correctIndex=Number(select.value));correct.appendChild(select);c.appendChild(correct);const pick=document.createElement('label');const check=document.createElement('input');check.type='checkbox';check.checked=true;check.style.width='auto';check.addEventListener('change',()=>q.include=check.checked);pick.style.display='block';pick.append('Approved for publishing ');pick.appendChild(check);c.appendChild(pick);cards.appendChild(c)});$('getiQbePublish').disabled=!drafts.length}
-async function perform(action){if(busy)return;busy=true;try{say(action==='generate'?'Creating original questions for review…':'Working…');const payload=ctx();if(action==='generate')drafts=[];if(action==='publish'){payload.questions=drafts.filter(q=>q.include!==false).map(({question,options,correctIndex})=>({question,options,correctIndex}));if(!payload.questions.length)throw Error('Approve at least one question.');if(!confirm('Publish '+payload.questions.length+' reviewed questions to the GETI bank?')){say('Publication cancelled.');return}}
- const data=await send({action,...payload});if(action==='generate'){drafts=data.questions;render();say('Draft created. Check the accuracy and correct option of every question before publishing.')}else if(action==='publish'){drafts=[];render();say('Published '+data.accepted+' questions. Duplicates skipped: '+data.duplicates_skipped+'.')}else say('Question bank contains '+data.count+' questions for this subject and level.');
-}catch(e){say('Error: '+(e?.message||e))}finally{busy=false}}
-$('getiQbeGenerate').onclick=()=>perform('generate');$('getiQbePublish').onclick=()=>perform('publish');$('getiQbeStats').onclick=()=>perform('stats');open.onclick=()=>{dialog.hidden=false};$('getiQbeClose').onclick=()=>{dialog.hidden=true};dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.hidden=true});
-async function authorize(){try{if(typeof GETI_SB==='undefined')return;const {data}=await GETI_SB.auth.getUser();open.hidden=data?.user?.app_metadata?.geti_exam_editor!==true;if(!open.hidden)say('Exam editor authorized. Choose the programme and subject to generate a draft.')}catch(e){open.hidden=true}}
-window.addEventListener('load',authorize);if(typeof GETI_SB!=='undefined'&&GETI_SB.auth)GETI_SB.auth.onAuthStateChange(()=>{setTimeout(authorize,0)});
-})();
-</script>
-
 </body>
 </html>
