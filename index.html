@@ -11659,6 +11659,44 @@ function calculateAllSubjectScores(){
    SHOW QUESTION
 ========================================================= */
 
+
+/* GETI 2026: choice-length fairness for scenario-based examination items.
+   Original option text and correct indices in the question bank are unchanged.
+   Added context is answer-neutral, deterministic, and only used for pedagogical
+   scenario / professional judgement questions; grammar/lexical test sentences
+   are never changed. */
+function getiBalancedChoiceTexts(question, originalOptions){
+  const raw=(originalOptions||[]).map(function(x){return String(x??"");});
+  if(raw.length!==4)return raw;
+  const questionText=String(question||"");
+  const isScenario=/(?:teacher|learner|student|lesson|classroom|course|teaching|training|feedback|assessment|policy|intervention|professional|planning|evaluate|evaluation|practice|research|curriculum|instruction|learning|management|project|decision|evidence|approach|situation|scenario|methodology|development|task)/i.test(questionText);
+  const isLiteral=/(?:which sentence|choose the correct sentence|correct spelling|which word|what does ["'“]|meaning of ["'“]|relative clause|grammar form|which tense|punctuation|which letter|translation|which expression means|fill in the blank|pronounced|pronunciation of)/i.test(questionText);
+  if(!isScenario||isLiteral)return raw;
+  const longest=Math.max(...raw.map(function(x){return x.length;}));
+  if(longest<42)return raw;
+  const minimum=Math.min(96,Math.round(longest*0.76));
+  const endings=[
+    " as the main option for this situation",
+    " as the proposed action in this case",
+    " as the preferred response to the task",
+    " as the selected approach for this case"
+  ];
+  return raw.map(function(value){
+    // Leave meaningful longer answers intact. Avoid arbitrary truncation,
+    // changing quotations, or changing the underlying scoring key.
+    if(value.length>=minimum)return value;
+    const normalized=value.replace(/[.?!]+$/g,"");
+    let best="";
+    let nearest=Infinity;
+    for(const phrase of endings){
+      const candidate=normalized+phrase;
+      const error=Math.abs(candidate.length-Math.max(minimum,longest));
+      if(error<nearest){nearest=error;best=candidate;}
+    }
+    return best||value;
+  });
+}
+
 function showQuestion(){
     window.getiClassicAutoAdvanceLocked=false;
 
@@ -11739,6 +11777,8 @@ function showQuestion(){
     let container=
         document.getElementById("optionsContainer");
 
+    const getiDisplayChoices=getiBalancedChoiceTexts(q[0],q.slice(1,5));
+
     for(let i=1;i<=4;i++){
 
         let button=
@@ -11756,7 +11796,7 @@ function showQuestion(){
             "<strong>"+
             String.fromCharCode(64+i)+
             ".</strong> "+
-            escapeHTML(q[i]);
+            escapeHTML(getiDisplayChoices[i-1]);
 
         button.onclick=function(){
 
@@ -14102,10 +14142,11 @@ function showGeti30Question(){
         '<button type="button" class="geti-restart-exam-btn" onclick="getiRestartActiveExam(\'geti30\')">↻ RESTART EXAM</button></div></div>';
 
     const c=document.getElementById("geti30Options");
+    const getiDisplayChoices=getiBalancedChoiceTexts(q[0],q.slice(1,5));
     for(let i=1;i<=4;i++){
         const b=document.createElement("button");
         b.className="option"+(selected===i-1?" selected":"");
-        b.innerHTML="<strong>"+String.fromCharCode(64+i)+".</strong> "+escapeHTML(q[i]);
+        b.innerHTML="<strong>"+String.fromCharCode(64+i)+".</strong> "+escapeHTML(getiDisplayChoices[i-1]);
         b.onclick=function(){selectGeti30Answer(i-1);};
         c.appendChild(b);
     }
@@ -26708,51 +26749,149 @@ window.getiRestartActiveExam=function(which){
 </script>
 
 <style id="geti-short-answer-indicator-style">
-#getiSelectedAnswerIndicator {
- display:none;vertical-align:middle;margin-right:10px;padding:4px 11px;
- border-radius:999px;background:#1b8c56;color:#fff;font-weight:900;
- font-size:15px;line-height:1.5;letter-spacing:.4px;
+.getiSelectedAnswerIndicator{
+  display:none!important;vertical-align:middle;margin-right:7px;
+  padding:3px 9px;border-radius:7px;background:#1b8c56!important;color:white!important;
+  font-weight:900!important;font-size:15px!important;line-height:1.5;
 }
-#getiSelectedAnswerIndicator.geti-show {display:inline-block;}
+.getiSelectedAnswerIndicator.geti-show{display:inline-flex!important;align-items:center;justify-content:center;}
+#getiAnswerVisibleFallback{display:none;position:fixed;top:10px;left:10px;z-index:2147483646;
+ background:#082e5d;color:#fff;box-shadow:0 5px 18px #0005;border:2px solid #fff;
+ border-radius:10px;padding:11px 14px;align-items:center;gap:8px;font-size:13px;font-weight:900;}
+#getiAnswerVisibleFallback.geti-show{display:flex!important;}
+#getiAnswerVisibleFallback .geti-answer-leading{background:#168b55;color:white;padding:4px 8px;border-radius:6px;}
 </style>
 <script id="geti-short-answer-indicator-script">
 (function(){
-  let clearIndicatorTimer=0;
-  function getIndicator(){
-    const heading=document.querySelector(".geti-second-area-entrybar-inner > strong");
-    if(!heading)return null;
-    let indicator=document.getElementById("getiSelectedAnswerIndicator");
-    if(!indicator){
-      indicator=document.createElement("span");
-      indicator.id="getiSelectedAnswerIndicator";
-      indicator.setAttribute("aria-live","polite");
-      heading.insertAdjacentElement("beforebegin",indicator);
+ let timer=0;
+ function getLabels(){
+   return Array.from(document.querySelectorAll(
+     '.geti-second-area-entrybar-inner > strong, .geti-inside-portal-badge'
+   )).filter(function(el){return el.textContent.trim().includes('GETI STUDENT AREA');});
+ }
+ function getMarkers(){
+   const markers=[];
+   getLabels().forEach(function(label){
+      let indicator=label.previousElementSibling;
+      if(!indicator||!indicator.classList.contains('getiSelectedAnswerIndicator')){
+         indicator=document.createElement('span');
+         indicator.className='getiSelectedAnswerIndicator';
+         indicator.setAttribute('aria-live','polite');
+         label.parentNode.insertBefore(indicator,label);
+      }
+      markers.push(indicator);
+   });
+   return markers;
+ }
+ function visible(el){if(!el)return false;const r=el.getBoundingClientRect();const cs=getComputedStyle(el);
+   return cs.display!=='none'&&cs.visibility!=='hidden'&&r.width>0&&r.height>0;
+ }
+ function fallback(){
+   let el=document.getElementById('getiAnswerVisibleFallback');
+   if(!el){el=document.createElement('div');el.id='getiAnswerVisibleFallback';el.innerHTML='<span class="geti-answer-leading"></span><span>GETI STUDENT AREA</span>';document.body.appendChild(el);}
+   return el;
+ }
+ window.getiShowSelectedAnswerLetter=function(answer){
+   const letter=['A','B','C','D'][Number(answer)];
+   if(!letter)return;
+   clearTimeout(timer);
+   const markers=getMarkers();
+   markers.forEach(function(el){el.textContent=letter;el.classList.add('geti-show');});
+   const visibleMarker=markers.some(visible);
+   const floating=fallback();
+   floating.querySelector('.geti-answer-leading').textContent=letter;
+   floating.classList.toggle('geti-show',!visibleMarker);
+   timer=setTimeout(window.getiClearSelectedAnswerLetter,2000);
+ };
+ window.getiClearSelectedAnswerLetter=function(){
+   clearTimeout(timer);timer=0;
+   document.querySelectorAll('.getiSelectedAnswerIndicator').forEach(function(el){el.textContent='';el.classList.remove('geti-show');});
+   const floating=document.getElementById('getiAnswerVisibleFallback');
+   if(floating)floating.classList.remove('geti-show');
+ };
+})();
+</script>
+<style id="geti-answer-length-fairness">
+#optionsContainer, #geti30Options { display:grid;grid-template-columns:minmax(0,1fr);gap:10px; }
+#optionsContainer .option, #geti30Options .option {
+  display:flex;align-items:center;min-height:76px;box-sizing:border-box;
+  width:100%;padding:15px 18px;line-height:1.6;text-align:left;
+  overflow-wrap:anywhere;word-break:normal;white-space:normal;
+}
+#optionsContainer .option strong, #geti30Options .option strong {
+  display:inline-block;min-width:24px;margin-right:9px;flex-shrink:0;
+}
+@media(max-width:600px){
+ #optionsContainer .option, #geti30Options .option {min-height:88px;padding:13px 14px;}
+}
+</style>
+
+<style id="geti-leave-exam-style">
+.geti-leave-exam-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;margin:13px 0 8px;padding:11px 21px;background:#fff;color:#274c7d;border:2px solid #718dac;border-radius:10px;font-size:13px;font-weight:800;letter-spacing:.3px;cursor:pointer;max-width:100%;}
+.geti-leave-exam-btn:hover,.geti-leave-exam-btn:focus-visible{background:#edf4fc;border-color:#285b90;}
+.geti-leave-exam-note{font-size:12px;color:#68778b;margin:6px 0 10px;line-height:1.6;}
+@media(max-width:600px){.geti-leave-exam-btn{width:100%;}}
+</style>
+<script id="geti-leave-exam-2026">
+/* LEAVE does not finish, grade or submit an examination. */
+(function(){
+  function panelFor(which){return document.getElementById(which==='classic'?'examPanel':'geti30ExamPanel');}
+  function modernSession(){try{return typeof geti30State!=='undefined'?geti30State:null;}catch(e){return null;}}
+  function classicSession(){try{return typeof examState!=='undefined'?examState:null;}catch(e){return null;}}
+  window.getiLeaveExam2026=function(which){
+    var modern=which==='modern', state=modern?modernSession():classicSession();
+    var started=!!(state&&state.started);
+    var text=started?
+      (modern?'LEAVE EXAM?\n\nYour answers and exam progress will be saved. Choose the same examination again to resume. No exam result will be submitted.':
+        'LEAVE EXAM?\n\nThis examination does not support saving an unfinished attempt. Your current answers will be lost. No result will be submitted.'):
+      'LEAVE REGISTRATION?\n\nYou can choose another examination or come back when you are ready.';
+    if(!window.confirm(text))return;
+    if(modern){
+      if(started){
+        try{if(typeof saveGeti30Session==='function')saveGeti30Session(state.sessionPhase||'question');}catch(e){console.warn('GETI session save failed',e);alert('Unable to save your exam progress. Please try again.');return;}
+      }
+      try{clearInterval(state&&state.timerInterval);}catch(e){}
+      if(state){state.started=false;state.timerInterval=null;}
+      try{if(typeof getiDisableExamLock==='function')getiDisableExamLock();}catch(e){}
+      try{if(window.speechSynthesis)window.speechSynthesis.cancel();}catch(e){}
+      try{if(typeof getiSpeakingState!=='undefined'&&getiSpeakingState.recognition)getiSpeakingState.recognition.stop();}catch(e){}
+      var panel=panelFor('modern');
+      if(panel){panel.classList.remove('active');panel.innerHTML='';}
+      var list=document.getElementById('geti30ExamList');
+      if(list){list.classList.add('show');list.scrollIntoView({behavior:'smooth',block:'start'});}
+      else{document.getElementById('geti-30-exams')?.scrollIntoView({behavior:'smooth',block:'start'});}
+    }else{
+      try{clearInterval(state&&state.timerInterval);}catch(e){}
+      if(state){state.started=false;state.timerInterval=null;}
+      try{if(typeof disableExamProtection==='function')disableExamProtection();}catch(e){}
+      var panel=panelFor('classic');
+      if(panel){panel.classList.remove('active','exam-protected');panel.innerHTML='';}
+      (document.querySelector('[onclick*="openExamRegistration"]')||document.getElementById('geti-30-exams'))?.scrollIntoView({behavior:'smooth',block:'start'});
     }
-    return indicator;
+  };
+  function attach(which){
+    var panel=panelFor(which);if(!panel||!panel.classList.contains('active'))return;
+    if(panel.querySelector('.geti-leave-exam-btn'))return;
+    // Only render in actual registration/examination screens.
+    if(!panel.querySelector('input,button,.exam-question,.exam30-question,.exam30-subject-summary,.geti-voice-exam'))return;
+    var button=document.createElement('button');
+    button.type='button';button.className='geti-leave-exam-btn';button.textContent='← LEAVE EXAM / CHOOSE ANOTHER';
+    button.setAttribute('aria-label','Leave exam without submitting a result');
+    button.onclick=function(){window.getiLeaveExam2026(which);};
+    var note=document.createElement('p');note.className='geti-leave-exam-note';
+    note.textContent=which==='modern'?'Not ready? Leave now and choose this examination again to resume your saved progress.':'Not ready? Leave now and choose another examination. Unfinished classic attempts are not saved.';
+    panel.appendChild(button);panel.appendChild(note);
   }
-  window.getiShowSelectedAnswerLetter=function(optionIndex){
-    const letter=["A","B","C","D"][Number(optionIndex)];
-    if(!letter)return;
-    const indicator=getIndicator();
-    if(!indicator)return;
-    clearTimeout(clearIndicatorTimer);
-    indicator.textContent=letter;
-    indicator.classList.add("geti-show");
-    clearIndicatorTimer=setTimeout(function(){
-      indicator.classList.remove("geti-show");
-      indicator.textContent="";
-      clearIndicatorTimer=0;
-    },2000);
-  };
-  window.getiClearSelectedAnswerLetter=function(){
-    clearTimeout(clearIndicatorTimer);
-    clearIndicatorTimer=0;
-    const indicator=document.getElementById("getiSelectedAnswerIndicator");
-    if(indicator){
-      indicator.textContent="";
-      indicator.classList.remove("geti-show");
-    }
-  };
+  function initialize(){
+    ['classic','modern'].forEach(function(which){
+      var panel=panelFor(which);if(!panel)return;
+      var obs=new MutationObserver(function(){attach(which);});
+      obs.observe(panel,{childList:true,subtree:false,attributes:true,attributeFilter:['class']});
+      attach(which);
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize);
+  else initialize();
 })();
 </script>
 </body>
