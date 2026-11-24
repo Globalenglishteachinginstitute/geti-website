@@ -7771,6 +7771,13 @@ html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {disp
 /* GETI QR scanner: isolated presentation; existing certificate verification is unchanged. */
 .geti-qr-card{max-width:850px;margin:0 auto 22px;padding:20px 22px;border:1px solid rgba(220,183,92,.6);border-radius:18px;background:linear-gradient(125deg,#fff,#f0f7ff);box-shadow:0 14px 35px rgba(4,25,58,.14);color:#16365b}
 .geti-qr-top{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.geti-qr-main-trigger{display:flex;width:100%;padding:0;border:0;background:transparent;text-align:left;cursor:pointer;color:inherit;font:inherit;margin:0}
+.geti-qr-main-trigger:focus-visible{outline:3px solid #1576bb;outline-offset:5px;border-radius:10px}
+.geti-qr-main-trigger>div:nth-child(2){flex:1}
+.geti-qr-chevron{margin-left:auto;font-size:27px;color:#b38a28;line-height:1;transition:transform .2s}
+.geti-qr-main-trigger[aria-expanded="true"] .geti-qr-chevron{transform:rotate(180deg)}
+#getiQrOptions[hidden]{display:none!important}
+#getiQrOptions{padding-top:18px;border-top:1px solid #d8e5ef;margin-top:17px}
 .geti-qr-symbol{width:53px;height:53px;display:grid;place-items:center;flex:none;border-radius:15px;background:linear-gradient(135deg,#0a376c,#1576bb);color:#fff;box-shadow:0 7px 18px rgba(7,49,102,.18)}
 .geti-qr-symbol svg{width:28px;height:28px}
 .geti-qr-card h3{margin:0;color:#082e5d;font-size:clamp(17px,2.5vw,22px)}
@@ -7854,10 +7861,12 @@ html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {disp
 
       <!-- GETI QR SCANNER: use existing certificate verification after decoding -->
       <div class="geti-qr-card" id="getiQrScanCard">
-        <div class="geti-qr-top">
+        <button type="button" class="geti-qr-top geti-qr-main-trigger" id="getiQrToggleButton" aria-controls="getiQrOptions" aria-expanded="false" onclick="getiQrToggleOptions()">
           <div class="geti-qr-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="7" height="7" rx="1"/><rect x="15" y="2" width="7" height="7" rx="1"/><rect x="2" y="15" width="7" height="7" rx="1"/><path d="M5 5h1M18 5h1M5 18h1M13 13h3v3h-3zM20 13v3M18 20h4M13 20h2"/></svg></div>
-          <div><h3>SCAN QR CODE TO VERIFY CERTIFICATE</h3><p>Scan the QR code printed on your GETI certificate or upload an image. The official GETI record will be checked automatically.</p></div>
-        </div>
+          <div><h3>SCAN QR CODE TO VERIFY CERTIFICATE</h3><p>Scan your GETI certificate QR code for official verification.</p></div>
+          <span class="geti-qr-chevron" aria-hidden="true">⌄</span>
+        </button>
+        <div id="getiQrOptions" hidden>
         <div class="geti-qr-actions">
           <button type="button" class="geti-qr-btn" id="getiQrCameraBtn" onclick="getiQrOpenCamera()">▣ &nbsp; SCAN WITH CAMERA</button>
           <button type="button" class="geti-qr-btn alt" onclick="document.getElementById('getiQrFile').click()">▧ &nbsp; UPLOAD QR IMAGE</button>
@@ -7869,6 +7878,7 @@ html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {disp
         </div>
         <p class="geti-qr-status" id="getiQrStatus" role="status" aria-live="polite">Ready to scan. Camera access requires HTTPS and your permission.</p>
         <p class="geti-qr-tip">Your QR code is decoded in your browser. A valid Certificate ID is checked against GETI records; scanning alone does not prove a certificate is genuine.</p>
+        </div>
       </div>
       <div class="geti-home-v2-verify-oldmethod geti-auto-verify-box">
         <div class="geti-auto-verify-intro">Search with a Certificate ID or certificate holder name in the same box.</div>
@@ -12819,7 +12829,7 @@ function saveGeti30Session(phase){
         version:2,phase:geti30State.sessionPhase,exam:geti30State.exam,examTitle:geti30State.examTitle,
         examLevel:geti30State.examLevel,passMark:geti30State.passMark,teflHours:geti30State.teflHours,
         student:geti30State.student,subjectIndex:geti30State.subjectIndex,questionIndex:geti30State.questionIndex,
-        answers:geti30State.answers,subjectScores:geti30State.subjectScores,questionSets:geti30State.questionSets,
+        answers:geti30State.answers,subjectScores:geti30State.subjectScores,questionSets:geti30State.questionSets,liveSubjectIndexes:geti30State.liveSubjectIndexes||[],liveAttemptKey:geti30State.liveAttemptKey||"",
         failureCount:Number(geti30State.failureCount||0),retryMode:!!geti30State.retryMode,
         retryQuestionIndexes:geti30State.retryQuestionIndexes,timeRemaining:geti30State.timeRemaining,
         speakingResult:geti30State.speakingResult||null,savedAt:new Date().toISOString()
@@ -12979,7 +12989,7 @@ function openGeneralExamHourSelector(examName){
 
     panel.innerHTML=
         '<h2 class="exam-title">CHOOSE YOUR '+escapeHTML(displayName).toUpperCase()+'</h2>'+
-        '<p class="exam-subtitle">Select the course hours. Registration appears after your selection.</p>'+
+        '<p class="exam-subtitle">Select the course hours. Higher hours mean more challenging questions, with advanced case analysis from 100 hours. Registration appears after your selection.</p>'+
         '<div class="tefl-course-grid">'+cards+'</div>';
 
     panel.scrollIntoView({behavior:"smooth",block:"start"});
@@ -13257,6 +13267,18 @@ function geti30HashString(text){
     return h>>>0;
 }
 
+const GETI_EXAM_RANDOM_SESSION_SEED=(function(){
+    try {const x=new Uint32Array(1);window.crypto.getRandomValues(x);return x[0]>>>0;}
+    catch(e){return (Date.now() ^ Math.floor(Math.random()*0xFFFFFFFF))>>>0;}
+})();
+function geti30RandomizedChoices(item,rnd){
+    if(!Array.isArray(item)||item.length<6)return item;
+    const correct=Number(item[5]);
+    if(correct<0||correct>3)return item;
+    const options=item.slice(1,5).map(function(text,index){return {text:text,correct:index===correct};});
+    const mixed=geti30Shuffle(options,rnd);
+    return [item[0],...mixed.map(function(x){return x.text;}),mixed.findIndex(function(x){return x.correct;})];
+}
 function geti30SeededRandom(seed){
     let x=seed>>>0;
     return function(){
@@ -13750,48 +13772,221 @@ function geti30ProfessionalQuestions(examName,subjectIndex,rnd){
  });
 }
 
-function buildGeti30QuestionSets(){
-    const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam] || [];
-    const registrationKey=[
-        geti30State.examTitle||geti30State.exam,
-        geti30State.examLevel||"B2",
-        geti30State.student ? geti30State.student.id : "",
-        Date.now(),
-        Math.random()
-    ].join("|");
-
-    const masterSeed=geti30HashString(registrationKey);
-
-    geti30State.questionSets=subjects.map(function(subject,subjectIndex){
-        const rnd=geti30SeededRandom(
-            masterSeed ^
-            geti30HashString(subject) ^
-            ((subjectIndex+1)*2654435761)
-        );
-
-        const professionalItems=geti30ProfessionalQuestions(geti30State.exam,subjectIndex,rnd);
-        if(professionalItems)return professionalItems;
-        const teylItems=getiBuildTEYLItems(geti30State.exam,subjectIndex,rnd);
-        if(teylItems)return teylItems;
-        const originalTeacherItems=geti30BuildTeacherEducationItems(geti30State.exam,subjectIndex,rnd);
-        if(originalTeacherItems)return originalTeacherItems;
-
-        const questionCount=getGeti30QuestionCount(geti30State.exam);
-        const indexes=geti30Shuffle(
-            Array.from({length:30},function(_,i){return i;}),
-            rnd
-        ).slice(0,questionCount);
-
-        return indexes.map(function(templateIndex){
-            return geti30MakeQuestion(subject,templateIndex,rnd);
+/* GETI hour-based assessment blueprint. Each higher tier progressively replaces
+   foundational recall with analytical scenarios and expert judgement items.
+   Questions remain original GETI practice items; not externally accredited. */
+const GETI_HOUR_DIFFICULTY_BLUEPRINT=[
+ {min:0,  label:"Introductory",basic:12,core:3, advanced:0,expert:0},
+ {min:30, label:"Foundation",  basic:10,core:5, advanced:0,expert:0},
+ {min:40, label:"Foundation Plus",basic:9,core:6,advanced:0,expert:0},
+ {min:50, label:"Developing",basic:7,core:7,advanced:1,expert:0},
+ {min:60, label:"Developing Plus",basic:6,core:7,advanced:2,expert:0},
+ {min:80, label:"Intermediate",basic:3,core:7,advanced:5,expert:0},
+ {min:100,label:"Advanced",basic:0,core:4,advanced:9,expert:2},
+ {min:120,label:"Advanced Plus",basic:0,core:3,advanced:9,expert:3},
+ {min:140,label:"Professional",basic:0,core:2,advanced:9,expert:4},
+ {min:150,label:"Professional Plus",basic:0,core:2,advanced:8,expert:5},
+ {min:168,label:"Specialist",basic:0,core:1,advanced:8,expert:6},
+ {min:180,label:"Specialist Plus",basic:0,core:1,advanced:7,expert:7},
+ {min:200,label:"Expert",basic:0,core:0,advanced:7,expert:8},
+ {min:250,label:"Expert Plus",basic:0,core:0,advanced:5,expert:10},
+ {min:300,label:"Mastery",basic:0,core:0,advanced:3,expert:12},
+ {min:420,label:"Mastery Plus",basic:0,core:0,advanced:1,expert:14}
+];
+function getiHourDifficulty(hours){
+ const h=Number(hours)||20;
+ return GETI_HOUR_DIFFICULTY_BLUEPRINT.reduce(function(a,b){return h>=b.min?b:a;},GETI_HOUR_DIFFICULTY_BLUEPRINT[0]);
+}
+/* Each row has a correct first answer and three plausible distractors. */
+const GETI_HOUR_BASIC_ITEMS=[
+ ["What is the first step when starting work on {S}?","Clarify what learners or stakeholders need to achieve","Begin without knowing the objective","Avoid asking questions","Choose activities at random"],
+ ["Why do clear instructions matter in {S}?","They help people understand what to do","They replace all practice","They remove the need for feedback","They guarantee everyone will succeed"],
+ ["Which action helps a beginner understand {S}?","Use a clear example and check understanding","Use unexplained terminology","Introduce every detail at once","Avoid demonstrations"],
+ ["What is an appropriate way to check progress in {S}?","Ask a relevant question or observe a short task","Assume understanding from silence","Only count attendance","Wait until the end without checking"],
+ ["Why is feedback useful in {S}?","It helps identify what is working and what needs improvement","It is only used to criticize","It replaces learning activities","It should never be specific"],
+ ["What does planning in {S} usually include?","Objectives, activities, materials and checks","Only the title","Only the final grade","Only the duration"],
+ ["When a participant is confused about {S}, what should happen?","Explain again using an accessible example","Ignore the question","Criticize the participant","Increase difficulty immediately"],
+ ["What makes a learning goal for {S} useful?","It describes something observable or measurable","It uses the longest possible words","It cannot be checked","It changes without explanation"],
+ ["Which resource is best for a simple introduction to {S}?","An accurate, relevant and understandable example","An unrelated document","An unexplained specialist chart","An outdated answer key"],
+ ["What does a respectful response to an error in {S} involve?","Identify the issue and explain a constructive next step","Publicly shame the person","Ignore every error","Assume the person cannot learn"],
+ ["Which method supports remembering ideas from {S}?","Review and apply them in a new example","Read once and never revisit","Avoid practice","Only memorize headings"],
+ ["What should come after demonstrating a basic {S} technique?","Allow guided practice and check comprehension","End all participation","Skip any opportunity for practice","Change topic before explaining"],
+ ["Why adapt an {S} activity to an audience?","Different people have different needs and prior knowledge","All audiences are identical","It eliminates the need for accuracy","It guarantees a perfect score"],
+ ["Which statement about assessment in {S} is correct?","Assessment should reflect the stated learning objectives","Every assessment should be unrelated to the objective","Only speed is important","Feedback is unnecessary"],
+ ["What is the purpose of a simple recap in {S}?","Reinforce the essential points and check what was learned","Introduce unrelated topics","Replace the entire lesson","Avoid all questions"]
+];
+const GETI_HOUR_ADVANCED_ITEMS=[
+ ["A training programme in {S} reports strong attendance but weak performance transfer. What is the best next diagnostic step?","Compare target competencies with tasks, feedback, practice conditions and workplace evidence","Assume attendance proves mastery","Increase publicity instead of inspecting learning","Remove all assessments"],
+ ["Learners in {S} show persistent errors after repeated explanation. Which redesign is best supported?","Diagnose misconceptions, model contrasting examples, scaffold practice and reassess transfer","Repeat the same lecture with no change","Award full credit to avoid frustration","Remove the competency from the course"],
+ ["Two {S} assessments yield conflicting results for the same group. What is the most defensible investigation?","Examine alignment, task demands, reliability, scoring criteria and testing conditions","Select the score that looks most impressive","Ignore both outcomes","Assume all instruments measure the same skill equally"],
+ ["An intervention in {S} improves short quizzes but not authentic performance. Which interpretation is strongest?","Near-term recall improved, but transfer validity still requires evidence from realistic tasks","The programme is proven effective in every setting","The final tasks must be discarded","The trainees deliberately underperformed"],
+ ["A limited budget forces a redesign of {S} instruction. Which choice is most justified?","Prioritize high-impact objectives using evidence, accessibility, risk and measurable learning outcomes","Cut every activity equally regardless of its function","Retain only the most visually impressive resources","Eliminate feedback to save all costs"],
+ ["In {S}, learners succeed with prompts but fail independently. What should the instructor test next?","Gradually fade support and assess independent application in comparable conditions","Keep permanent prompts and call it mastery","Make the task unrelated to prior learning","Stop collecting evidence"],
+ ["A {S} assessment disadvantages students unfamiliar with its context. Which improvement best protects validity?","Remove irrelevant contextual barriers while preserving the intended construct and cognitive demand","Automatically lower all scores","Add more unfamiliar references","Change the target skill after grading"],
+ ["A pilot {S} course produces improvement, but there is no comparison group. What is a reasonable conclusion?","The results are promising but alternative explanations cannot yet be excluded","The course conclusively caused every change","No learning occurred","The numbers require no interpretation"],
+ ["Stakeholders request a simpler {S} exam, yet the intended credential requires applied competence. What is the strongest response?","Preserve construct-aligned challenge while improving instructions, accessibility and preparation","Replace complex competencies with attendance","Publish answer keys before the test","Remove all performance standards"],
+ ["A {S} rubric gives inconsistent grades between two assessors. What should happen first?","Calibrate raters against annotated samples and clarify observable descriptors","Average random scores without discussion","Remove the rubric","Allow each assessor to invent different criteria"],
+ ["A lesson on {S} uses engaging activities, but students cannot explain their purpose. What design change is warranted?","Make objectives explicit and connect activities with success criteria and reflection","Add more unrelated games","Stop giving feedback","Assume enjoyment proves learning"],
+ ["A large improvement in {S} is observed only among participants who completed all sessions. What is the key inference risk?","Selection and attrition may partly explain the apparent treatment effect","Completion automatically proves causality","Non-completers must be ignored in every analysis","The sample is guaranteed representative"],
+ ["Learners can recall {S} principles yet make unsafe choices under pressure. What is the best evaluation approach?","Use realistic decision tasks that measure application, prioritization and justification under constraints","Use only definition matching","Reduce every question to true or false","Assume theory recall proves judgment"],
+ ["Which evidence most strengthens a claim that {S} instruction caused sustained improvement?","Comparable baseline and follow-up measures, relevant controls and demonstrated retention or transfer","A single positive testimonial","A high attendance count alone","An unverified promotional claim"],
+ ["When designing differentiated {S} tasks, which principle is most important?","Vary scaffolding and complexity while maintaining transparent core objectives and fair evaluation","Assign easier grades to preferred students","Use unrelated tasks for different groups","Hide learning objectives"]
+];
+const GETI_HOUR_EXPERT_ITEMS=[
+ ["An {S} evaluation reports statistically significant gains but negligible practical impact. What is the most defensible interpretation?","Distinguish statistical significance from effect size, uncertainty and real-world relevance","Declare total success based solely on the p-value","Discard the evidence without explanation","Assume significance establishes causal transfer"],
+ ["A complex {S} programme improves outcomes overall but widens gaps between subgroups. Which decision is best?","Investigate heterogeneous effects, measurement fairness and targeted support before scaling","Scale unchanged because the mean improved","Suppress subgroup data","Assume disadvantaged groups lack motivation"],
+ ["A {S} team proposes replacing established assessment with an AI scorer. Which validation is essential before deployment?","Test construct validity, bias, reliability, privacy and human appeal against representative benchmark judgments","Assume algorithmic output is objective","Use only vendor accuracy claims","Remove human oversight completely"],
+ ["A longitudinal {S} study shows declining performance despite excellent immediate post-test scores. Which explanation should be investigated?","Retention intervals, retrieval practice, transfer conditions and alignment between tests and target performance","Treat delayed measures as invalid","Assume the course was perfect","Ignore learners who forgot"],
+ ["Two studies on {S} appear contradictory but used different populations and outcomes. Which synthesis is most rigorous?","Compare intervention mechanisms, populations, contexts, measures and threats to validity before generalizing","Select the study with the larger headline","Conclude all research is useless","Average findings without examining differences"],
+ ["In high-stakes {S} assessment, a score threshold determines eligibility. Which procedure best defends the cut score?","Use documented standard setting, evidence of decision accuracy and periodic fairness review","Choose a number because it seems prestigious","Change the threshold for individual candidates secretly","Use item difficulty as the sole justification"],
+ ["A {S} intervention appears effective only when delivered by its original developer. What is the primary scalability risk?","Implementation fidelity and trainer effects may limit transportability across contexts","The intervention is universally effective","The outcome cannot be measured","Other facilitators must be excluded forever"],
+ ["A high-performing {S} cohort scores poorly on a new assessment with unfamiliar scenarios. What evidence is needed before calling this failure?","Analyze construct representation, transfer demands, difficulty, item functioning and score reliability","Assume all participants forgot the content","Remove unfamiliar scenarios automatically","Publish a new pass list without review"],
+ ["A {S} programme seeks to infer causal effects from observational data. Which strategy is strongest?","Specify a causal model, measure key confounders, test assumptions and use a defensible comparison design","Treat correlation as proof","Ignore selection effects","Use the largest available graph only"],
+ ["Expert practitioners disagree about the optimal {S} method under uncertainty. What is the best governance process?","Document assumptions and trade-offs, consider disconfirming evidence, and establish a monitored decision rule","Follow the most senior voice without review","Use whichever option is cheapest regardless of risk","Pretend uncertainty does not exist"],
+ ["A {S} assessment has high internal consistency but poor coverage of the intended competency. What follows?","Reliability alone cannot establish validity; revise content representation and gather broader evidence","The exam is valid because alpha is high","Question count should be reduced to one","Every score should be increased"],
+ ["A {S} adaptive test yields unequal exposure to advanced items between candidates. What needs to be audited?","Item calibration, routing rules, content balancing, measurement precision and subgroup fairness","The visual theme of the test only","Only the final percentage","Whether students prefer fewer questions"],
+ ["A {S} certification board faces pressure to award credentials using unverified completion hours. Which response protects standards?","Separate participation hours from demonstrated competence and verify assessment evidence before credential decisions","Treat hours as direct evidence of proficiency","Approve everyone to improve satisfaction","Replace independent review with marketing language"],
+ ["An {S} intervention works in controlled trials but fails across diverse institutions. Which framework best guides revision?","Analyze context-mechanism-outcome relationships, fidelity, implementation barriers and adaptation boundaries","Declare every institution incompetent","Duplicate materials without investigating context","Remove evaluation requirements"],
+ ["A {S} assessment's observed pass rate rises after easier items are introduced. What must be checked before claiming learning improved?","Score comparability, item equating and changes in ability distribution versus test difficulty","Assume a higher pass rate proves better competence","Stop archiving item versions","Compare raw percentages without adjustment"]
+];
+function getiHourBuildItems(rows,subject,rnd){
+ return geti30Shuffle(rows.slice(),rnd).map(function(row){
+  const choices=geti30Shuffle(row.slice(1).map(function(t,i){return {text:t,correct:i===0};}),rnd);
+  return [row[0].replace(/\{S\}/g,subject),...choices.map(function(x){return x.text;}),choices.findIndex(function(x){return x.correct;})];
+ });
+}
+/* Prevent repeated question statements within one examination.
+   Fill shortages from the available subject bank without lowering the count of
+   15 questions required by the secure server-side scoring contract. */
+function getiUniqueQuestionKey(item){
+ return String((item&&item[0])||"").normalize("NFKC").toLowerCase().replace(/\s+/g," ").trim();
+}
+function getiHourCombine(coreItems,subject,rnd,seenQuestions){
+ const tier=getiHourDifficulty(geti30State.teflHours||getGetiExamHoursFromTitle(geti30State.examTitle));
+ const basic=getiHourBuildItems(GETI_HOUR_BASIC_ITEMS,subject,rnd);
+ const advanced=getiHourBuildItems(GETI_HOUR_ADVANCED_ITEMS,subject,rnd);
+ const expert=getiHourBuildItems(GETI_HOUR_EXPERT_ITEMS,subject,rnd);
+ const core=geti30Shuffle((coreItems||[]).slice(),rnd);
+ const seen=seenQuestions||new Set();
+ const local=new Set();
+ const selected=[];
+ function add(item){
+  if(!item||item.length<6)return false;
+  const key=getiUniqueQuestionKey(item);
+  if(!key||seen.has(key)||local.has(key))return false;
+  local.add(key);selected.push(item);return true;
+ }
+ [[basic,tier.basic],[core,tier.core],[advanced,tier.advanced],[expert,tier.expert]].forEach(function(part){
+  let count=0;
+  for(const item of part[0]){if(count>=part[1]||selected.length>=15)break;if(add(item))count++;}
+ });
+ // Only fill from question banks appropriate for the level; no repeated items.
+ const fallback=tier.min>=200?[expert,advanced,core,basic]:tier.min>=100?[advanced,expert,core,basic]:tier.min>=50?[core,advanced,basic,expert]:[core,basic,advanced,expert];
+ for(const bank of fallback){for(const item of bank){if(selected.length>=15)break;add(item);}if(selected.length>=15)break;}
+ selected.forEach(function(q){seen.add(getiUniqueQuestionKey(q));});
+ return geti30Shuffle(selected,rnd);
+}
+/* GETI LIVE EXAM SUBJECT ENGINE
+   Student-facing labels remain GETI Exam; generation provider stays server-side.
+   Questions are generated once per subject and held for the active session.
+   A generated batch is never silently replaced by legacy/static content. */
+const GETI_LIVE_EXAM_SUBJECT_FUNCTION = "https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-live-exam-subject";
+let getiLiveSubjectBusy=false;
+function getiLiveLevel(hours){
+    const h=Number(hours)||20;
+    return h>=200?"C2":h>=100?"C1":h>=80?"B2":h>=40?"B1":"A2";
+}
+async function getiLoadLiveExamSubject(subjectIndex, forceNew){
+    const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam]||[];
+    if(!subjects[subjectIndex])throw new Error("Exam subject is missing.");
+    if(!forceNew && Array.isArray(geti30State.questionSets)&&Array.isArray(geti30State.questionSets[subjectIndex])&&Array.isArray(geti30State.liveSubjectIndexes)&&geti30State.liveSubjectIndexes.includes(subjectIndex))return;
+    if(getiLiveSubjectBusy)throw new Error("Another subject is being prepared. Please try again.");
+    const count=getGeti30QuestionCount(geti30State.exam);
+    getiLiveSubjectBusy=true;
+    try{
+        const used=new Set();
+        (geti30State.questionSets||[]).forEach(function(set,i){
+            if(i!==subjectIndex && set && Array.isArray(geti30State.liveSubjectIndexes)&&geti30State.liveSubjectIndexes.includes(i))set.forEach(function(q){used.add(String(q[0]).toLowerCase().replace(/\s+/g," ").trim());});
         });
-    });
+        for(let attempt=0;attempt<3;attempt++){
+            const response=await fetch(GETI_LIVE_EXAM_SUBJECT_FUNCTION,{
+                method:"POST",cache:"no-store",
+                headers:{"Content-Type":"application/json","apikey":GETI_SUPABASE_KEY},
+                body:JSON.stringify({
+                    candidate_id:geti30State.student.id,
+                    attempt_key:geti30State.liveAttemptKey,
+                    email:geti30State.student.email,
+                    program:geti30State.examTitle,
+                    exam:geti30State.exam,
+                    subject:subjects[subjectIndex],
+                    subject_index:subjectIndex,
+                    hours:Number(geti30State.teflHours)||20,
+                    count:count
+                })
+            });
+            let payload={};try{payload=await response.json();}catch(e){}
+            if(!response.ok)throw new Error(payload.error||"GETI question service is temporarily unavailable. Please retry.");
+            if(!Array.isArray(payload.questions)||payload.questions.length!==count)continue;
+            const seen=new Set(used),rows=[];
+            let valid=true;
+            for(const q of payload.questions){
+                const prompt=String(q.question||"").trim(),opts=q.options,correct=Number(q.correctIndex);
+                const key=prompt.toLowerCase().replace(/\s+/g," ").trim();
+                if(prompt.length<12||!Array.isArray(opts)||opts.length!==4||!Number.isInteger(correct)||correct<0||correct>3||seen.has(key)){
+                    valid=false;break;
+                }
+                seen.add(key);
+                const row=[prompt,...opts.map(String),correct];
+                rows.push(geti30RandomizedChoices(row,Math.random));
+            }
+            if(!valid)continue;
+            if(!Array.isArray(geti30State.questionSets))geti30State.questionSets=[];
+            const shuffled=geti30Shuffle(rows,Math.random);
+            Object.defineProperty(shuffled,"_getiLive",{value:true,enumerable:false,configurable:true});
+            geti30State.questionSets[subjectIndex]=shuffled;
+            // Persist a separately serializable marker, since custom array properties are lost in JSON.
+            if(!Array.isArray(geti30State.liveSubjectIndexes))geti30State.liveSubjectIndexes=[];
+            if(!geti30State.liveSubjectIndexes.includes(subjectIndex))geti30State.liveSubjectIndexes.push(subjectIndex);
+            saveGeti30Session("question");
+            return;
+        }
+        throw new Error("A unique, complete subject could not be prepared. Please retry.");
+    }finally{getiLiveSubjectBusy=false;}
+}
+function buildGeti30QuestionSets(){
+ const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam]||[];
+ const registrationKey=[geti30State.examTitle||geti30State.exam,geti30State.examLevel||"B2",geti30State.student?geti30State.student.id:"",Date.now(),Math.random()].join("|");
+ const masterSeed=geti30HashString(registrationKey);
+ const usedQuestions=new Set();
+ geti30State.questionSets=subjects.map(function(subject,subjectIndex){
+  const rnd=geti30SeededRandom(masterSeed^geti30HashString(subject)^((subjectIndex+1)*2654435761));
+  // Preserve the A2 bank, but never return the same question twice in a sitting.
+  if(geti30State.exam==="A2 Exam"){
+   const pool=GETI_A2_EXAM_BANK.filter(function(item){const key=getiUniqueQuestionKey(item);if(usedQuestions.has(key))return false;usedQuestions.add(key);return true;});
+   return geti30Shuffle(pool,rnd).slice(0,15).map(function(item){return geti30RandomizedChoices(item,rnd);});
+  }
+  const professional=geti30ProfessionalQuestions(geti30State.exam,subjectIndex,rnd);
+  const teyl=professional?null:getiBuildTEYLItems(geti30State.exam,subjectIndex,rnd);
+  const teacher=professional||teyl?null:geti30BuildTeacherEducationItems(geti30State.exam,subjectIndex,rnd);
+  const core=professional||teyl||teacher;
+  if(core)return getiHourCombine(core,subject,rnd,usedQuestions);
+  const basicOriginal=geti30Shuffle(Array.from({length:30},function(_,i){return i;}),rnd).map(function(i){return geti30MakeQuestion(subject,i,rnd);});
+  return getiHourCombine(basicOriginal,subject,rnd,usedQuestions);
+ });
 }
 
 function getGeti30Question(examName,subject,qIndex){
+    const liveSubjects=GETI_30_EXAM_SUBJECTS[examName]||[];
+    const liveIndex=liveSubjects.indexOf(subject);
+    if(liveIndex>=0 && Array.isArray(geti30State.liveSubjectIndexes) && geti30State.liveSubjectIndexes.includes(liveIndex)){
+        const liveQuestion=geti30State.questionSets&&geti30State.questionSets[liveIndex]&&geti30State.questionSets[liveIndex][qIndex];
+        if(liveQuestion)return liveQuestion;
+    }
     if(examName==="A2 Exam"){
+        const saved=geti30State.questionSets&&geti30State.questionSets[0];
+        if(saved&&saved[qIndex])return saved[qIndex];
         const item=GETI_A2_EXAM_BANK[qIndex % GETI_A2_EXAM_BANK.length];
-        return [item[0],item[1],item[2],item[3],item[4],item[5]];
+        return geti30RandomizedChoices(item,geti30SeededRandom(GETI_EXAM_RANDOM_SESSION_SEED^geti30HashString("A2|"+qIndex)));
     }
     if(examName==="Chinese Language Exam") return getLocalizedLanguageExamQuestion("zh",subject,qIndex);
     if(examName==="Korean Language Exam") return getLocalizedLanguageExamQuestion("ko",subject,qIndex);
@@ -13807,7 +14002,7 @@ function getGeti30Question(examName,subject,qIndex){
     }
 
     const rnd=geti30SeededRandom(
-        geti30HashString(examName+"|"+subject+"|"+qIndex)
+        (GETI_EXAM_RANDOM_SESSION_SEED^geti30HashString(examName+"|"+subject+"|"+qIndex))
     );
     return geti30MakeQuestion(subject,qIndex,rnd);
 }
@@ -13859,8 +14054,10 @@ function getLocalizedLanguageExamQuestion(lang,subject,qIndex){
     const bank=lang==="zh"?GETI_CHINESE_EXAM_BANK:GETI_KOREAN_EXAM_BANK;
     const exam=lang==="zh"?"Chinese Language Exam":"Korean Language Exam";
     const subjects=GETI_30_EXAM_SUBJECTS[exam]||[];
-    const item=bank[(qIndex+Math.max(0,subjects.indexOf(subject))*3)%bank.length];
-    return [item[0],item[1],item[2],item[3],item[4],item[5]];
+    const rnd=geti30SeededRandom(GETI_EXAM_RANDOM_SESSION_SEED^geti30HashString(exam+"|"+subject));
+    const selected=geti30Shuffle(bank.map(function(_,i){return i;}),rnd);
+    const item=bank[selected[qIndex%selected.length]];
+    return geti30RandomizedChoices(item,geti30SeededRandom(GETI_EXAM_RANDOM_SESSION_SEED^geti30HashString(exam+"|"+subject+"|"+qIndex)));
 }
 
 function getGetiActiveQuestionIndexes(subjectIndex){
@@ -14173,9 +14370,17 @@ function calculateGeti30OverallPercentage(){
     return academicPercentage;
 }
 
-function continueGeti30Exam(){
+async function continueGeti30Exam(){
+    if(getiLiveSubjectBusy)return;
     const nextSubject=getGetiNextRetrySubject(geti30State.subjectIndex+1);
     if(nextSubject!==-1){
+        const button=document.querySelector("#geti30ExamPanel button");
+        if(button){button.disabled=true;button.textContent="PREPARING NEXT SUBJECT...";}
+        try{await getiLoadLiveExamSubject(nextSubject,false);}catch(err){
+            if(button){button.disabled=false;button.textContent="RETRY NEXT SUBJECT";}
+            alert(err.message||"Could not prepare the next subject. Please retry.");
+            return;
+        }
         geti30State.subjectIndex=nextSubject;
         const indexes=getGetiActiveQuestionIndexes(nextSubject);
         geti30State.questionIndex=indexes[0];
@@ -17439,14 +17644,20 @@ async function submitGeti30Registration(){
         geti30State.started=true;
         geti30State.timeRemaining=getCurrentGetiExamPolicy().durationMinutes*60;
 
-        getiEnableExamLock();
         buildGeti30QuestionSets();
+        geti30State.liveSubjectIndexes=[];
+        geti30State.liveAttemptKey=crypto.randomUUID();
+        if(button)button.textContent="PREPARING YOUR EXAM...";
+        await getiLoadLiveExamSubject(0,false);
+        getiEnableExamLock();
         saveGeti30Session("question");
 
         startGeti30Timer();
         showGeti30Question();
 
     }catch(err){
+        geti30State.started=false;
+        getiDisableExamLock();
         console.error("GETI registration error:",err);
         alert(err && err.message ? err.message : "Registration could not be completed. Please check your internet connection and try again.");
     }finally{
@@ -17705,10 +17916,14 @@ function restartGetiExamRegistration(){
     openGeti30Registration(exam,course);
 }
 
-function startGetiFailedQuestionRetry(restartAll){
+async function startGetiFailedQuestionRetry(restartAll){
+    if(getiLiveSubjectBusy)return;
     const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam]||[];
     restartAll=true;
     buildGeti30QuestionSets();
+    geti30State.liveSubjectIndexes=[];
+    geti30State.liveAttemptKey=crypto.randomUUID();
+    try{await getiLoadLiveExamSubject(0,true);}catch(err){alert(err.message||"Exam questions could not be prepared. Please retry.");return;}
     geti30State.timeoutSubmitting=false;
     geti30State.timedOut=false;
     if(restartAll){
@@ -18875,7 +19090,7 @@ window.getGeti200OutlineHTML=function(exam,subject){const c=cfg(exam);if(!c)retu
 
 // Native exam questions for all six dedicated language examinations.
 const originalGetQ=window.getGeti30Question;
-window.getGeti30Question=function(exam,subject,qIndex){const c=cfg(exam);if(!c)return originalGetQ(exam,subject,qIndex);const bank=c.bank||[];if(!bank.length)return originalGetQ(exam,subject,qIndex);const item=bank[(qIndex+nativeIndex(exam,subject)*3)%bank.length];const opts=[{text:item[1],correct:item[5]===0},{text:item[2],correct:item[5]===1},{text:item[3],correct:item[5]===2},{text:item[4],correct:item[5]===3}];const rnd=geti30SeededRandom(geti30HashString(exam+"|"+subject+"|native|"+qIndex));const shuffled=geti30Shuffle(opts,rnd);return [item[0],shuffled[0].text,shuffled[1].text,shuffled[2].text,shuffled[3].text,shuffled.findIndex(function(o){return o.correct;})];};
+window.getGeti30Question=function(exam,subject,qIndex){const subjects=GETI_30_EXAM_SUBJECTS[exam]||[];const idx=subjects.indexOf(subject);if(idx>=0&&Array.isArray(geti30State.liveSubjectIndexes)&&geti30State.liveSubjectIndexes.includes(idx)){const q=geti30State.questionSets?.[idx]?.[qIndex];if(q)return q;}const c=cfg(exam);if(!c)return originalGetQ(exam,subject,qIndex);const bank=c.bank||[];if(!bank.length)return originalGetQ(exam,subject,qIndex);const orderRnd=geti30SeededRandom(GETI_EXAM_RANDOM_SESSION_SEED^geti30HashString(exam+"|"+subject+"|native-order"));const order=geti30Shuffle(bank.map(function(_,i){return i;}),orderRnd);const item=bank[order[qIndex%order.length]];const rnd=geti30SeededRandom(GETI_EXAM_RANDOM_SESSION_SEED^geti30HashString(exam+"|"+subject+"|native|"+qIndex));return geti30RandomizedChoices(item,rnd);};
 
 // Show native names in both the exam list and lesson list.
 const originalRenderExamButtons=window.renderGetiExamButtons;
@@ -26269,13 +26484,95 @@ body.geti-pub-body-open{overflow:hidden!important}
     status('Reading QR code from the image…');
     try{
       await stop();await loadLibrary();
+      var panel=byId('getiQrPanel');if(panel)panel.hidden=false;
       var reader=new window.Html5Qrcode('getiQrReader');
       var result=await reader.scanFile(file,false);
       try{reader.clear();}catch(e){}
+      if(panel)panel.hidden=true;
       await decoded(result);
-    }catch(e){status('Could not read a QR code from this image. Try a sharper photo or enter the Certificate ID manually.','error');}
+    }catch(e){var panel=byId('getiQrPanel');if(panel)panel.hidden=true;status('Could not read a QR code from this image. Try a sharper photo or enter the Certificate ID manually.','error');}
   };
   window.addEventListener('pagehide',function(){void stop();});
+})();
+</script>
+
+<script id="geti-qr-collapse-handler">
+function getiQrToggleOptions(){
+  const options=document.getElementById('getiQrOptions');
+  const button=document.getElementById('getiQrToggleButton');
+  if(!options||!button)return;
+  const opening=options.hidden;
+  options.hidden=!opening;
+  button.setAttribute('aria-expanded',String(opening));
+  if(!opening && typeof getiQrCloseCamera==='function')getiQrCloseCamera();
+}
+</script>
+
+<style id="geti-question-bank-editor-style">
+#getiQbeOpen{position:fixed;bottom:85px;left:18px;z-index:20015;background:#152d63;color:white;border:1px solid #7a97d1;border-radius:13px;padding:12px 17px;box-shadow:0 12px 30px #0003;cursor:pointer;font-weight:700}
+#getiQbeBackdrop{position:fixed;inset:0;background:#071527b8;z-index:20100;display:flex;align-items:center;justify-content:center;padding:18px}
+#getiQbeBackdrop[hidden],#getiQbeOpen[hidden]{display:none!important}
+#getiQbePanel{box-sizing:border-box;background:#f7f9ff;color:#14213e;width:min(100%,1040px);max-height:92vh;overflow:auto;padding:27px;border-radius:20px;box-shadow:0 18px 65px #0008;font-family:Arial,sans-serif}
+#getiQbePanel *{box-sizing:border-box}
+#getiQbePanel h2{font-size:23px;margin:0 0 9px;color:#152d63}
+#getiQbePanel p{font-size:14px;color:#50627b;margin:0 0 16px;line-height:1.5}
+.getiQbeGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#getiQbePanel label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#243956;margin-bottom:12px}
+#getiQbePanel input,#getiQbePanel select,#getiQbePanel textarea{border:1px solid #c6d0e1;border-radius:9px;background:white;padding:10px;font:inherit;color:#10243e;width:100%;font-weight:400}
+#getiQbePanel textarea{min-height:70px;resize:vertical}
+.getiQbeActions{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:5px 0 14px}
+.getiQbeActions button,#getiQbeClose{background:#143977;color:#fff;border:none;border-radius:9px;padding:11px 16px;cursor:pointer;font-weight:700}
+#getiQbeClose{background:#e7edf7;color:#243956;float:right}
+#getiQbePublish{background:#13774d}
+#getiQbeCards{display:grid;gap:12px}
+.getiQbeCard{background:white;border:1px solid #d1dbeb;padding:14px;border-radius:13px}
+.getiQbeCard strong{display:block;margin:0 0 10px;font-size:13px}
+.getiQbeOptions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#getiQbeNotice{padding:10px;background:#eaf0f9;border-radius:9px;margin-top:8px;white-space:pre-wrap;font-size:13px}
+@media(max-width:700px){.getiQbeGrid,.getiQbeOptions{grid-template-columns:1fr}#getiQbePanel{padding:17px}}
+</style>
+<button type="button" id="getiQbeOpen" hidden>QUESTION BANK EDITOR</button>
+<div id="getiQbeBackdrop" hidden role="dialog" aria-modal="true" aria-labelledby="getiQbeTitle">
+ <section id="getiQbePanel">
+  <button type="button" id="getiQbeClose" aria-label="Close editor">CLOSE ✕</button>
+  <h2 id="getiQbeTitle">GETI Question Bank Editor</h2>
+  <p>Administration only. Generate draft subjects, review every answer, then publish to the secure examination question bank. Nothing is published automatically.</p>
+  <div class="getiQbeGrid">
+   <label>Examination / Programme<input id="getiQbeProgram" value="TEFL Exam" maxlength="120"></label>
+   <label>Exam Hours<select id="getiQbeHours"><option>20</option><option>40</option><option>60</option><option>80</option><option selected>100</option><option>120</option><option>180</option><option>200</option><option>250</option><option>300</option><option>420</option></select></label>
+   <label>Subject Number (1–10)<select id="getiQbeSubjectNo"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></label>
+   <label>Subject Name<input id="getiQbeSubjectName" value="Teaching Methodology" maxlength="120"></label>
+   <label>Number of questions<select id="getiQbeCount"><option>3</option><option>5</option><option selected>10</option><option>12</option></select></label>
+   <label>Optional focus<input id="getiQbeTopic" placeholder="Classroom assessment, lesson planning..."></label>
+  </div>
+  <div class="getiQbeActions">
+   <button id="getiQbeGenerate" type="button">GENERATE DRAFT QUESTIONS</button>
+   <button id="getiQbePublish" type="button" disabled>PUBLISH REVIEWED QUESTIONS</button>
+   <button id="getiQbeStats" type="button">CHECK QUESTION COUNT</button>
+  </div>
+  <div id="getiQbeCards" aria-live="polite"></div>
+  <div id="getiQbeNotice" role="status">Sign in with an authorized exam-editor account to use this tool.</div>
+ </section>
+</div>
+<script id="geti-question-bank-editor-script">
+(function(){'use strict';
+const host='https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-question-bank-editor';
+const $=id=>document.getElementById(id);
+const open=$('getiQbeOpen'),dialog=$('getiQbeBackdrop'),cards=$('getiQbeCards'),notice=$('getiQbeNotice');
+let drafts=[],busy=false;
+const say=t=>{notice.textContent=t;};
+const clean=x=>String(x||'').trim();
+function ctx(){return {program:clean($('getiQbeProgram').value),exam_hours:Number($('getiQbeHours').value),subject_index:Number($('getiQbeSubjectNo').value)-1,subject_name:clean($('getiQbeSubjectName').value),topic:clean($('getiQbeTopic').value),count:Number($('getiQbeCount').value)}}
+async function client(){if(typeof GETI_SB==='undefined'||!GETI_SB||!GETI_SB.auth)throw Error('GETI account connection unavailable');let {data,error}=await GETI_SB.auth.getSession();if(error||!data?.session?.access_token)throw Error('Please sign in to GETI with your exam editor account.');return data.session.access_token}
+async function send(body){const token=await client();const res=await fetch(host,{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+token,'apikey':GETI_SUPABASE_KEY},body:JSON.stringify(body)});const data=await res.json();if(!res.ok)throw Error(data.error||'Request failed');return data}
+function field(label,value,change,kind='input'){const el=document.createElement('label');el.textContent=label;const c=document.createElement(kind);c.value=value;c.addEventListener('input',()=>change(c.value));el.appendChild(c);return el}
+function render(){cards.replaceChildren();drafts.forEach((q,i)=>{const c=document.createElement('div');c.className='getiQbeCard';const h=document.createElement('strong');h.textContent='Draft question '+(i+1);c.appendChild(h);c.appendChild(field('Question',q.question,v=>q.question=v,'textarea'));const options=document.createElement('div');options.className='getiQbeOptions';q.options.forEach((v,j)=>options.appendChild(field('Option '+('ABCD'[j]),v,x=>q.options[j]=x)));c.appendChild(options);const correct=document.createElement('label');correct.textContent='Correct answer (verify carefully)';const select=document.createElement('select');q.options.forEach((v,j)=>{const o=document.createElement('option');o.value=j;o.textContent='Option '+('ABCD'[j]);select.appendChild(o)});select.value=q.correctIndex;select.addEventListener('change',()=>q.correctIndex=Number(select.value));correct.appendChild(select);c.appendChild(correct);const pick=document.createElement('label');const check=document.createElement('input');check.type='checkbox';check.checked=true;check.style.width='auto';check.addEventListener('change',()=>q.include=check.checked);pick.style.display='block';pick.append('Approved for publishing ');pick.appendChild(check);c.appendChild(pick);cards.appendChild(c)});$('getiQbePublish').disabled=!drafts.length}
+async function perform(action){if(busy)return;busy=true;try{say(action==='generate'?'Creating original questions for review…':'Working…');const payload=ctx();if(action==='generate')drafts=[];if(action==='publish'){payload.questions=drafts.filter(q=>q.include!==false).map(({question,options,correctIndex})=>({question,options,correctIndex}));if(!payload.questions.length)throw Error('Approve at least one question.');if(!confirm('Publish '+payload.questions.length+' reviewed questions to the GETI bank?')){say('Publication cancelled.');return}}
+ const data=await send({action,...payload});if(action==='generate'){drafts=data.questions;render();say('Draft created. Check the accuracy and correct option of every question before publishing.')}else if(action==='publish'){drafts=[];render();say('Published '+data.accepted+' questions. Duplicates skipped: '+data.duplicates_skipped+'.')}else say('Question bank contains '+data.count+' questions for this subject and level.');
+}catch(e){say('Error: '+(e?.message||e))}finally{busy=false}}
+$('getiQbeGenerate').onclick=()=>perform('generate');$('getiQbePublish').onclick=()=>perform('publish');$('getiQbeStats').onclick=()=>perform('stats');open.onclick=()=>{dialog.hidden=false};$('getiQbeClose').onclick=()=>{dialog.hidden=true};dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.hidden=true});
+async function authorize(){try{if(typeof GETI_SB==='undefined')return;const {data}=await GETI_SB.auth.getUser();open.hidden=data?.user?.app_metadata?.geti_exam_editor!==true;if(!open.hidden)say('Exam editor authorized. Choose the programme and subject to generate a draft.')}catch(e){open.hidden=true}}
+window.addEventListener('load',authorize);if(typeof GETI_SB!=='undefined'&&GETI_SB.auth)GETI_SB.auth.onAuthStateChange(()=>{setTimeout(authorize,0)});
 })();
 </script>
 
