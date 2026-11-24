@@ -11738,6 +11738,7 @@ function showQuestion(){
     )+
 
     '</button>'+
+    '<button type="button" class="geti-restart-exam-btn" onclick="getiRestartActiveExam(\'classic\')">↻ RESTART EXAM</button>'+
 
     '</div>'+
 
@@ -14095,7 +14096,8 @@ function showGeti30Question(){
         '<div class="exam-controls">'+
         '<button class="next-btn" onclick="nextGeti30Question()">'+
         (activePosition===activeIndexes.length-1 ? ui.submit : ui.next)+
-        '</button></div></div>';
+        '</button>'+
+        '<button type="button" class="geti-restart-exam-btn" onclick="getiRestartActiveExam(\'geti30\')">↻ RESTART EXAM</button></div></div>';
 
     const c=document.getElementById("geti30Options");
     for(let i=1;i<=4;i++){
@@ -14167,7 +14169,8 @@ function submitGeti30Subject(){
         (getGetiNextRetrySubject(geti30State.subjectIndex+1)!==-1
             ? "NEXT SUBJECT"
             : (isGetiProficiencyExam() && !geti30State.speakingResult?"START SPEAKING TEST":"VIEW FINAL RESULT"))+
-        '</button></div>';
+        '</button>'+
+        '<button type="button" class="geti-restart-exam-btn" onclick="getiRestartActiveExam(\'geti30\')">↻ RESTART EXAM</button></div>';
 }
 
 const GETI_SPEAKING_PROMPTS=[
@@ -15781,8 +15784,8 @@ function showGetCertAdminChat(){
         '<div class="getcert-admin-avatar">A</div>'+
         '<div><strong>Administrator</strong><br><small>GETI Student Support · Messages · Images · PDF</small></div>'+
         '<div class="getcert-chat-actions">'+
-        '<button class="getcert-mini-btn back" onclick="backToGetiMenu()">BACK TO MENU</button>'+
         '<button class="getcert-mini-btn logout" onclick="logoutGetCertAccount()">LOG OUT</button>'+
+        '<button class="getcert-mini-btn back" onclick="backToGetiMenu()">BACK TO MENU</button>'+
         '</div>'+
         '</div>'+
         '<div id="getCertMessages" class="getcert-messages"></div>'+
@@ -16721,8 +16724,8 @@ async function showGetCertAdminChat(){
         '<div class="getcert-admin-avatar">A</div>'+
         '<div><strong>Administrator</strong><br><small>GETI Student Support · Messages · Images · PDF</small></div>'+
         '<div class="getcert-chat-actions">'+
-        '<button class="getcert-mini-btn back" onclick="backToGetiMenu()">BACK TO MENU</button>'+
         '<button class="getcert-mini-btn logout" onclick="logoutGetCertAccount()">LOG OUT</button>'+
+        '<button class="getcert-mini-btn back" onclick="backToGetiMenu()">BACK TO MENU</button>'+
         '</div>'+
         '</div>'+
         '<div id="getCertMessages" class="getcert-messages"></div>'+
@@ -26632,6 +26635,58 @@ function getiQrToggleOptions(){
   // Subject navigation restores the indicator on the next question view.
   window.getiLiveProgressUpdate=function(){render(true);render(false);};
 })();
+</script>
+
+<style id="geti-restart-exam-style">
+.geti-restart-exam-btn {
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:44px;margin:8px 0 0 10px;padding:11px 18px;
+  background:#fff;color:#7c2542;border:2px solid #b45372;
+  border-radius:10px;font-weight:800;font-size:13px;cursor:pointer;
+}
+.geti-restart-exam-btn:hover,
+.geti-restart-exam-btn:focus-visible {background:#fff0f4;border-color:#9f234d;}
+@media(max-width:600px){.geti-restart-exam-btn{width:100%;margin:10px 0 0;}}
+</style>
+<script id="geti-restart-exam-script">
+/* Exam-only restart; never touches certificate verification or account login. */
+window.getiRestartActiveExam=function(which){
+  var isModern=which==="geti30";
+  var state=isModern?window.geti30State:window.examState;
+  // Top-level `let` variables are global lexical bindings, not window properties.
+  try{state=isModern?geti30State:examState;}catch(e){}
+  if(!state||!state.started||!state.student){
+    alert("No active examination to restart.");
+    return;
+  }
+  var confirmed=window.confirm(
+    "RESTART EXAM?\n\nYour current answers, completed subjects and progress will be cleared. "+
+    "The exam will restart from the first question with a fresh timer. "+
+    "This action does not submit a result.\n\nContinue?"
+  );
+  if(!confirmed)return;
+  if(isModern){
+    // Existing GETI function refreshes randomized question sets, resets every
+    // subject and answer, starts the timer and saves the fresh active session.
+    if(typeof window.startGetiFailedQuestionRetry==="function"){
+      window.startGetiFailedQuestionRetry(true);
+    }else if(typeof startGetiFailedQuestionRetry==="function"){
+      startGetiFailedQuestionRetry(true);
+    }
+  }else{
+    clearInterval(state.timerInterval);
+    state.answers=Array.from({length:10},function(){return Array(15).fill(null);});
+    state.subjectScores=[];
+    state.subjectIndex=Array.isArray(state.subjectOrder)&&state.subjectOrder.length
+      ?state.subjectOrder[0]:0;
+    state.questionIndex=0;
+    state.timeExpired=false;
+    state.started=true;
+    startExamTimer();
+    showQuestion();
+  }
+  try{if(typeof window.getiLiveProgressUpdate==="function")window.getiLiveProgressUpdate();}catch(e){}
+};
 </script>
 </body>
 </html>
