@@ -88,7 +88,7 @@ dialog::backdrop{background:#071b37d9}
     if(!name||seen.has(name)||!imageTypes.test(name))return;
     seen.add(name);
     const title=titleFromFilename(name);
-    const url="/gallery/images/"+encodeURIComponent(name);
+    const url="https://raw.githubusercontent.com/Globalenglishteachinginstitute/geti-website/main/gallery/images/"+encodeURIComponent(name);
     const figure=document.createElement("figure");
     figure.dataset.filename=name;
     const a=document.createElement("a");a.className="photo";a.href=url;a.dataset.title=title;
@@ -101,15 +101,26 @@ dialog::backdrop{background:#071b37d9}
   }
   // The repository folder is public. Load only image filenames; never execute content from GitHub.
   const endpoint="https://api.github.com/repos/Globalenglishteachinginstitute/geti-website/contents/gallery/images?ref=main";
-  fetch(endpoint,{headers:{"Accept":"application/vnd.github+json"},cache:"no-store"})
-    .then(r=>{if(!r.ok)throw new Error("Gallery listing unavailable");return r.json()})
-    .then(files=>{
+  let refreshing=false;
+  async function refreshGallery(){
+    if(refreshing)return;
+    refreshing=true;
+    try{
+      const response=await fetch(endpoint+"&_="+Date.now(),{headers:{"Accept":"application/vnd.github+json"},cache:"no-store"});
+      if(!response.ok)throw new Error("Gallery listing unavailable");
+      const files=await response.json();
       if(!Array.isArray(files))throw new Error("Unexpected listing");
       files.filter(file=>file&&file.type==="file"&&typeof file.name==="string"&&imageTypes.test(file.name))
         .sort((a,b)=>a.name.localeCompare(b.name)).forEach(file=>addImage(file.name));
-      status.textContent=seen.size+" official photo"+(seen.size===1?"":"s")+" available. New photos appear automatically after upload to the GitHub gallery/images folder.";
-    })
-    .catch(()=>{status.textContent="Showing available GETI photos. Additional images may appear after refreshing the page.";});
+      status.textContent=seen.size+" official photo"+(seen.size===1?"":"s")+" available. New photos are checked automatically every 30 seconds.";
+    }catch(e){
+      status.textContent=seen.size+" official photos displayed. Automatic updates will retry shortly.";
+    }finally{refreshing=false;}
+  }
+  refreshGallery();
+  setInterval(()=>{if(!document.hidden)refreshGallery();},30000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshGallery();});
+  window.addEventListener("focus",refreshGallery);
   gallery.addEventListener("click",event=>{
     const anchor=event.target.closest("a.photo");
     if(!anchor||!dialog.showModal)return;
