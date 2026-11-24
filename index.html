@@ -7766,6 +7766,32 @@ html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {disp
 <style id="geti-exam-quality-2026">
 .geti-exam-original-notice{margin:12px auto 22px;padding:15px 18px;border:1px solid #d1dceb;border-left:5px solid #c49a35;border-radius:12px;background:#f5f9ff;color:#153b64;font-size:14px;line-height:1.6;font-weight:650}
 </style>
+
+<style id="geti-qr-scanner-style">
+/* GETI QR scanner: isolated presentation; existing certificate verification is unchanged. */
+.geti-qr-card{max-width:850px;margin:0 auto 22px;padding:20px 22px;border:1px solid rgba(220,183,92,.6);border-radius:18px;background:linear-gradient(125deg,#fff,#f0f7ff);box-shadow:0 14px 35px rgba(4,25,58,.14);color:#16365b}
+.geti-qr-top{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.geti-qr-symbol{width:53px;height:53px;display:grid;place-items:center;flex:none;border-radius:15px;background:linear-gradient(135deg,#0a376c,#1576bb);color:#fff;box-shadow:0 7px 18px rgba(7,49,102,.18)}
+.geti-qr-symbol svg{width:28px;height:28px}
+.geti-qr-card h3{margin:0;color:#082e5d;font-size:clamp(17px,2.5vw,22px)}
+.geti-qr-card p{margin:4px 0 0;font-size:13px;color:#546a80;line-height:1.55}
+.geti-qr-actions{display:flex;flex-wrap:wrap;gap:10px}
+.geti-qr-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:45px;padding:10px 17px;border:1px solid transparent;border-radius:10px;background:linear-gradient(125deg,#082e5d,#1665a7);color:white;font-size:14px;font-weight:800;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.geti-qr-btn:hover{transform:translateY(-1px);box-shadow:0 7px 17px rgba(8,46,93,.2)}
+.geti-qr-btn.alt{background:white;color:#143d70;border-color:#b5cce0}
+.geti-qr-btn.stop{background:#b12b39}
+.geti-qr-btn:disabled{opacity:.65;cursor:wait}
+.geti-qr-panel{margin-top:16px;border:1px solid #d8e5ef;border-radius:14px;background:#fff;padding:16px}
+.geti-qr-panel[hidden]{display:none!important}
+#getiQrReader{max-width:480px;margin:auto;min-height:0;border-radius:12px;overflow:hidden}
+#getiQrReader video{max-width:100%;border-radius:10px}
+.geti-qr-status{margin:11px 0 0!important;padding:10px 12px;background:#eff5fb;border-left:4px solid #1876b6;border-radius:7px;color:#254564!important;font-weight:600;overflow-wrap:anywhere}
+.geti-qr-status.error{background:#fff1f1;border-left-color:#bc3247;color:#9b273a!important}
+.geti-qr-status.ok{background:#edf9f1;border-left-color:#168047;color:#176538!important}
+.geti-qr-tip{font-size:12px!important;color:#687a8c!important}
+@media(max-width:620px){.geti-qr-card{padding:15px}.geti-qr-actions{flex-direction:column}.geti-qr-btn{width:100%}.geti-qr-top{align-items:flex-start}}
+</style>
+
 </head>
 
 <body translate="no" class="notranslate">
@@ -7824,6 +7850,25 @@ html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {disp
       <div class="geti-home-v2-section-title light">
         <span class="geti-home-v2-shield">✓</span>
         <div><h2>Verify Your GETI Certificate</h2><p>Instant official verification of GETI certificate records.</p></div>
+      </div>
+
+      <!-- GETI QR SCANNER: use existing certificate verification after decoding -->
+      <div class="geti-qr-card" id="getiQrScanCard">
+        <div class="geti-qr-top">
+          <div class="geti-qr-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="7" height="7" rx="1"/><rect x="15" y="2" width="7" height="7" rx="1"/><rect x="2" y="15" width="7" height="7" rx="1"/><path d="M5 5h1M18 5h1M5 18h1M13 13h3v3h-3zM20 13v3M18 20h4M13 20h2"/></svg></div>
+          <div><h3>SCAN QR CODE TO VERIFY CERTIFICATE</h3><p>Scan the QR code printed on your GETI certificate or upload an image. The official GETI record will be checked automatically.</p></div>
+        </div>
+        <div class="geti-qr-actions">
+          <button type="button" class="geti-qr-btn" id="getiQrCameraBtn" onclick="getiQrOpenCamera()">▣ &nbsp; SCAN WITH CAMERA</button>
+          <button type="button" class="geti-qr-btn alt" onclick="document.getElementById('getiQrFile').click()">▧ &nbsp; UPLOAD QR IMAGE</button>
+          <input id="getiQrFile" type="file" accept="image/*" style="display:none" aria-label="Upload certificate QR image" onchange="getiQrScanImage(this.files&&this.files[0]);this.value='';">
+        </div>
+        <div class="geti-qr-panel" id="getiQrPanel" hidden>
+          <div id="getiQrReader" aria-label="Camera QR code scanner"></div>
+          <div class="geti-qr-actions" style="margin-top:12px"><button type="button" class="geti-qr-btn stop" onclick="getiQrCloseCamera()">STOP CAMERA</button></div>
+        </div>
+        <p class="geti-qr-status" id="getiQrStatus" role="status" aria-live="polite">Ready to scan. Camera access requires HTTPS and your permission.</p>
+        <p class="geti-qr-tip">Your QR code is decoded in your browser. A valid Certificate ID is checked against GETI records; scanning alone does not prove a certificate is genuine.</p>
       </div>
       <div class="geti-home-v2-verify-oldmethod geti-auto-verify-box">
         <div class="geti-auto-verify-intro">Search with a Certificate ID or certificate holder name in the same box.</div>
@@ -9678,6 +9723,8 @@ function getiVerificationRequest(type,value,serial){
   });
 }
 
+window.getiVerificationRequest = getiVerificationRequest;
+
 function getiDetectVerifyType(){
 var idValue=getiGetVerifyValue('id');
 var nameValue=getiGetVerifyValue('name');
@@ -10119,7 +10166,11 @@ var clone=cert.cloneNode(true);
 var images=cert.querySelectorAll("img"),clones=clone.querySelectorAll("img");
 for(var i=0;i<images.length;i++)clones[i].src=images[i].src;
 win.document.open();
-win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'
+win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'</body></html>');
+win.document.close();
+win.onload=function(){setTimeout(function(){win.print();},400);};
+}
+</script>
 <style id="geti-teacher-practical-result-style">
 </style>
 <script id="geti-passed-sheet-verification-sync-v4">
@@ -10219,11 +10270,6 @@ win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI
 })();
 </script>
 
-</body></html>');
-win.document.close();
-win.onload=function(){setTimeout(function(){win.print();},400);};
-}
-</script>
 <script id="geti-password-recovery-final-fix">
 (function(){
   function node(id){return document.getElementById(id);}
@@ -13058,7 +13104,7 @@ function openGeti30Registration(examName,course){
     const savedSession=loadGeti30Session(examName,selectedTitle);
     if(savedSession){
         // Resume an unfinished exam only. A PASSED exam is redirected to
-        // certificate payment by geti-passed-exam-payment-gate (server-checked).
+        // existing result checks before a new attempt is accepted.
         resumeGeti30Session(savedSession);
         return;
     }
@@ -24311,184 +24357,7 @@ document.addEventListener(&quot;DOMContentLoaded&quot;,()=&gt;{refreshPaymentNot
 })();
 </script>
 <!-- END GETI PAYMENT AREA INTEGRATION -->
-<script id="geti-passed-exam-payment-gate">
-
-(function(){
- 'use strict';
- const API='https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-exam-payment-gate';
- const fees={0:2,20:2,30:2,40:3,50:3,60:4,80:5,100:6,120:7,140:8,150:9,168:10,180:11,200:12,250:13,300:14,420:15};
- let checking=false;
- const qs=x=>document.getElementById(x);
- function toast(message){
-   let box=qs('getiPassedExamPaymentNotice');
-   if(!box){
-     box=document.createElement('div');box.id='getiPassedExamPaymentNotice';
-     box.setAttribute('role','alert');
-     box.style.cssText='position:fixed;z-index:2147483646;top:15px;left:50%;transform:translateX(-50%);max-width:min(92vw,680px);width:max-content;background:white;border:2px solid #0958ae;border-radius:14px;padding:18px 22px;box-shadow:0 14px 45px #08234b55;font:600 15px Arial;color:#163663';
-     document.body.appendChild(box);
-   }
-   box.textContent=message;
-   box.hidden=false;clearTimeout(box._timer);
-   box._timer=setTimeout(()=>box.hidden=true,9500);
- }
- function baseName(exam){
-   return String(exam||'').replace(/\b\d{2,3}\s*(?:-| )?\s*hours?\b/ig,'').replace(/\bexam(?:ination)?\b/ig,'').replace(/^[\s-]+|[\s-]+$/g,'').trim();
- }
- async function verify(exam,hours){
-   const auth=window.GETI_SB?.auth;
-   if(!auth)return {unavailable:true};
-   const session=(await auth.getSession()).data?.session;
-   if(!session?.access_token)return {notLogged:true};
-   const response=await fetch(API,{
-      method:'POST',
-      headers:{'Authorization':'Bearer '+session.access_token,'Content-Type':'application/json'},
-      body:JSON.stringify({exam,hours}),cache:'no-store'
-   });
-   const result=await response.json().catch(()=>({}));
-   if(!response.ok)throw Error(result.error||'Could not verify exam record');
-   return result;
- }
- function checkout(exam,hours){
-    const isA2=/(?:^|[^a-z0-9])A2(?:$|[^a-z0-9])/i.test(String(exam));
-    const price=isA2 ? 1.5 : (Object.prototype.hasOwnProperty.call(fees,hours) ? fees[hours] : 0);
-    if(!price){toast('Please choose a valid exam duration to calculate its certificate price.');return;}
-    if(typeof window.getiOpenExamCertificatePayment!=='function'){
-      toast('Payment Area unavailable. Please reload.');return;
-    }
-    window.getiOpenExamCertificatePayment(baseName(exam),hours,price);
- }
- function hasLocalPassedResult(exam,hours){
-   // Legacy completed results can exist locally before database synchronization.
-   // They can display the payment UI but NEVER grant access or mark any order PAID.
-   try{
-     const stored=JSON.parse(localStorage.getItem('GETI_30_EXAM_RECORDS')||'[]');
-     if(!Array.isArray(stored))return false;
-     const expected=baseName(exam).toLowerCase().replace(/[^a-z0-9]/g,'');
-     return stored.some(record=>{
-       if(String(record?.status||'').toUpperCase()!=='PASSED')return false;
-       const actual=baseName(record?.baseExam||record?.exam||'').toLowerCase().replace(/[^a-z0-9]/g,'');
-       const recordHours=Number(record?.hours||0);
-       return actual===expected && recordHours===Number(hours||0);
-     });
-   }catch{return false;}
- }
- function findStoredPassed(exam,hours){
-   try{
-     const records=JSON.parse(localStorage.getItem('GETI_30_EXAM_RECORDS')||'[]');
-     if(!Array.isArray(records))return null;
-     const norm=x=>baseName(x).toLowerCase().replace(/[^a-z0-9]/g,'');
-     const wanted=norm(exam), h=Number(hours||0);
-     const match=records.filter(r=>String(r?.status||'').toUpperCase()==='PASSED' &&
-       norm(r.baseExam||r.exam)===wanted && Number(r.hours||0)===h)
-       .sort((a,b)=>Date.parse(b.date||0)-Date.parse(a.date||0))[0];
-     if(match)return match;
-     // Reuse the site's existing legacy-examination history as a read-only result source.
-     // Never infer PAID from local data: payment remains checked on the server.
-     const keys=['GETI_EXAM_RECORDS','getiExamRecords','examRecords'];
-     for(const key of keys){
-       const rows=JSON.parse(localStorage.getItem(key)||'[]');
-       if(!Array.isArray(rows))continue;
-       const found=rows.filter(r=>String(r?.status||'').toUpperCase()==='PASSED' &&
-         norm(r?.program||r?.exam||r?.examTitle)===wanted)
-         .sort((a,b)=>Date.parse(b.date||0)-Date.parse(a.date||0))[0];
-       if(found)return {...found,exam:found.exam||found.program,percentage:found.percentage??found.score};
-     }
-     return null;
-   }catch{return null;}
- }
- function presentPassedResult(exam,hours,paid){
-   // Only the result UI is rebuilt; certificate / QR verification is untouched.
-   const record=findStoredPassed(exam,hours);
-   const fee=/(?:^|[^a-z0-9])A2(?:$|[^a-z0-9])/i.test(String(exam))?1.5:
-     (Object.prototype.hasOwnProperty.call(fees,Number(hours))?fees[Number(hours)]:null);
-   const panel=qs('geti30ExamPanel')||qs('examPanel');
-   if(!panel){toast('Exam result area is unavailable.');return;}
-   const safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-   const title=String(record?.exam||exam+(hours?' '+hours+' Hours':''));
-   const box=document.createElement('div');
-   box.className='result-box geti-passed-history-result';
-   const heading=document.createElement('h2');heading.textContent='FINAL EXAMINATION RESULT';box.appendChild(heading);
-   if(record?.name){const x=document.createElement('p');x.textContent=record.name;box.appendChild(x);}
-   if(record?.id){const x=document.createElement('p');x.textContent='Candidate ID: '+record.id;box.appendChild(x);}
-   const subtitle=document.createElement('p');subtitle.textContent='Exam: '+title;box.appendChild(subtitle);
-   if(Number.isFinite(Number(record?.percentage)) && record?.percentage!=null){
-     const score=document.createElement('div');score.className='final-score';score.textContent=Number(record.percentage)+'%';box.appendChild(score);
-   }
-   const status=document.createElement('h2');status.className='pass';status.textContent='PASSED';box.appendChild(status);
-   const note=document.createElement('div');note.className='exam-message';
-   note.textContent='Congratulations! Your examination result is saved. You do not need to retake this examination.';
-   box.appendChild(note);
-   if(Array.isArray(record?.subjects)&&record.subjects.length){
-     const t=document.createElement('h3');t.textContent='Subject Results';box.appendChild(t);
-     const grid=document.createElement('div');grid.className='geti-final-subject-grid';
-     record.subjects.forEach(sub=>{
-       const cell=document.createElement('div');cell.className='geti-passed-subject-card';
-       cell.style.cssText='padding:12px;border:1px solid #d7e5f6;border-radius:10px;margin:7px 0;background:#f7fbff';
-       const label=document.createElement('strong');label.textContent=String(sub.subject||'Subject');cell.appendChild(label);
-       const grade=document.createElement('p');grade.textContent='Score: '+(sub.percentage??'—')+'%'+(sub.grade?' · Grade: '+sub.grade:'');cell.appendChild(grade);
-       grid.appendChild(cell);
-     });box.appendChild(grid);
-   }
-   const footer=document.createElement('div');footer.className='geti-exam-certificate-payment';
-   footer.style.cssText='margin-top:20px;padding:18px;background:#eef7ff;border:1px solid #bed9f6;border-radius:12px';
-   const label=document.createElement('strong');label.textContent='Certificate payment';footer.appendChild(label);
-   const price=document.createElement('p');price.textContent=fee==null?'Certificate price unavailable.':
-     'Official certificate price: $'+fee+' USD'+(hours?' ('+hours+' Hours)':'');footer.appendChild(price);
-   if(paid){const confirmed=document.createElement('p');confirmed.textContent='Payment confirmed.';footer.appendChild(confirmed);}
-   else if(fee!=null){
-     const pay=document.createElement('button');pay.type='button';pay.textContent='Get Certificate — $'+fee+' USD';
-     pay.addEventListener('click',()=>{
-       if(typeof window.getiOpenExamCertificatePayment==='function')
-         window.getiOpenExamCertificatePayment(baseName(exam),Number(hours),fee);
-       else toast('Payment form is not available. Please reload this page.');
-     });footer.appendChild(pay);
-   }
-   box.appendChild(footer);
-   panel.replaceChildren(box);
-   // Result-only mode: a PASSED examination never reopens, regardless of payment.
-   panel.classList.add('active');
-   try{const area=panel.closest('#geti-30-exams');if(area)area.classList.add('geti-stage-detail');}catch{}
-   panel.scrollIntoView({behavior:'smooth',block:'start'});
- }
- async function guard(original,exam,hours,args,self){
-   if(checking)return;
-   checking=true;
-   try{
-     const result=await verify(exam,hours);
-     if(result.unavailable || result.notLogged){
-       if(hasLocalPassedResult(exam,hours)){presentPassedResult(exam,hours,false);return;}
-       toast('Please sign in to your GETI account to check your previous exam results.');
-       return;
-     }
-     if(result.passed===true || hasLocalPassedResult(exam,hours)){
-       // A PASSED exam is final: payment never unlocks another attempt.
-       // Reopening the exam displays the saved final result and certificate payment.
-       presentPassedResult(exam,hours,result.paid===true);
-       return;
-     }
-     return original.apply(self,args);
-   }catch(error){
-     if(hasLocalPassedResult(exam,hours)){presentPassedResult(exam,hours,false);return;}
-     toast('Unable to verify your previous results. Please try again. '+(error?.message||''));
-   }finally{checking=false;}
- }
- const original30=window.openGeti30Registration;
- if(typeof original30==='function'){
-   window.openGeti30Registration=function(exam,course){
-     const hours=Number(course?.hours||0);
-     return guard(original30,exam,hours,arguments,this);
-   };
- }
- const originalLegacy=window.openExamRegistration;
- if(typeof originalLegacy==='function'){
-   window.openExamRegistration=function(program){
-     const m=String(program).match(/\b(\d{2,3})\s*[- ]?\s*hours?\b/i);
-     const hours=m?Number(m[1]):0;
-     return guard(originalLegacy,program,hours,arguments,this);
-   };
- }
-})();
-</script>
+<!-- GETI FIX: Unavailable legacy precheck removed. Existing registration, result saving and certificate verification remain unchanged. -->
 <script id="geti-certificate-service-payment-routing">
 
 (function(){
@@ -25307,11 +25176,11 @@ body.geti-checkout-active{overflow:hidden!important}
 </style>
 <button id="getiRobotLaunch" type="button" aria-label="Open GETI Robot Chat" aria-controls="getiRobotPanel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="6" width="18" height="15" rx="4"/><path d="M12 3v3M9 3h6M8 13h.01M16 13h.01M8 17c2.5 2 5.5 2 8 0"/></svg> GETI Robot Chat</button>
 <section id="getiRobotPanel" hidden role="dialog" aria-modal="false" aria-label="GETI Robot Chat">
-<div class="geti-robot-head"><span aria-hidden="true" style="font-size:27px">🤖</span><div><strong>GETI Assistant</strong><small>Powered by Gemini AI • GETI Student Support</small></div><button id="getiRobotClose" type="button" aria-label="Close chat">×</button></div>
+<div class="geti-robot-head"><span aria-hidden="true" style="font-size:27px">🤖</span><div><strong>GETI Assistant</strong><small>Powered by Gemini AI • Ask me anything</small></div><button id="getiRobotClose" type="button" aria-label="Close chat">×</button></div>
 <div id="getiRobotMessages" role="log" aria-live="polite" aria-relevant="additions"></div>
-<div class="geti-robot-quick" aria-label="Suggested questions"><button type="button" data-geti-question="What is GETI?">About GETI</button><button type="button" data-geti-question="What courses and exams are available?">Programs</button><button type="button" data-geti-question="How do I verify a certificate?">Certificates</button><button type="button" data-geti-question="How can I pay?">Payment</button></div>
-<form id="getiRobotForm"><input id="getiRobotInput" type="text" maxlength="1500" placeholder="Ask about GETI, TEFL, TESOL..." aria-label="Your question" required autocomplete="off"><button type="submit">Send</button></form>
-<div class="geti-robot-disclaimer">Powered by Gemini AI. For guidance only; the robot cannot access private records or validate certificates. Never share passwords or confirmation codes.</div>
+<div class="geti-robot-quick" aria-label="Suggested questions"><button type="button" data-geti-question="Explain English tenses with examples.">Learn English</button><button type="button" data-geti-question="Help me solve a maths problem step by step.">Mathematics</button><button type="button" data-geti-question="Explain artificial intelligence in simple words.">Technology</button><button type="button" data-geti-question="What courses and exams does GETI offer?">GETI Programs</button></div>
+<form id="getiRobotForm"><input id="getiRobotInput" type="text" maxlength="1500" placeholder="Ask anything: English, science, business, life..." aria-label="Your question" required autocomplete="off"><button type="submit">Send</button></form>
+<div class="geti-robot-disclaimer">Powered by Gemini AI. Ask about any topic. AI answers may be inaccurate; check important information. Never share passwords or confirmation codes.</div>
 </section>
 <style id="getiRobotRichAnswerStyle">
 /* Rich formatting is restricted to GETI Robot Chat; verification is untouched. */
@@ -25374,7 +25243,7 @@ function renderRobotAnswer(el,message){
  }
 }
 function bubble(message,who){const el=document.createElement('div');el.className='geti-robot-bubble '+who;if(who==='bot')renderRobotAnswer(el,message);else el.textContent=message;log.appendChild(el);log.scrollTop=log.scrollHeight;return el;}
-function openChat(){panel.hidden=false;trigger.setAttribute('aria-expanded','true');if(!log.children.length)bubble('Hello! 👋 I am your GETI Assistant. Ask about TEFL, TESOL, GETI English programs, exams, accounts, payments or certificate verification.','bot');input.focus();}
+function openChat(){panel.hidden=false;trigger.setAttribute('aria-expanded','true');if(!log.children.length)bubble('Hello! 👋 I am GETI AI Assistant, powered by Gemini. You can ask me about anything: English, maths, science, technology, business, daily life and GETI. What would you like to learn today?','bot');input.focus();}
 function hideChat(){panel.hidden=true;trigger.setAttribute('aria-expanded','false');trigger.focus();}
 trigger.addEventListener('click',()=>panel.hidden?openChat():hideChat());close.addEventListener('click',hideChat);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)hideChat();});
@@ -25385,14 +25254,14 @@ async function ask(message){
  try{
   const control=new AbortController();const timer=setTimeout(()=>control.abort(),32000);
   let response;
-  try{response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','apikey':publicKey},body:JSON.stringify({message:value,history:history.slice(-8)}),signal:control.signal});}
+  try{response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','apikey':publicKey},body:JSON.stringify({message:value,history:history.slice(-12)}),signal:control.signal});}
   finally{clearTimeout(timer);}
   let data;try{data=await response.json();}catch{throw new Error('The AI server returned an invalid response.');}
   if(!response.ok)throw new Error(data.error||'Unable to answer right now.');
   const answer=String(data.answer||'').trim();if(!answer)throw new Error('GETI Assistant did not return a reply.');
   renderRobotAnswer(placeholder,answer);
   if(data.mode==='setup-required'){const note=document.createElement('p');note.textContent='Administrator: set GEMINI_API_KEY in Supabase Edge Function Secrets.';placeholder.appendChild(note);}
-  history.push({role:'user',content:value},{role:'assistant',content:answer});if(history.length>16)history.splice(0,history.length-16);
+  history.push({role:'user',content:value},{role:'assistant',content:answer});if(history.length>24)history.splice(0,history.length-24);
  }catch(error){renderRobotAnswer(placeholder,error.name==='AbortError'?'GETI Assistant timed out. Please try again.':(error.message||'Unable to connect to GETI Assistant right now.'));}
  finally{sending=false;if(sendBtn)sendBtn.disabled=false;log.scrollTop=log.scrollHeight;input.focus();}
 }
@@ -26310,6 +26179,105 @@ body.geti-pub-body-open{overflow:hidden!important}
 
 
 
+
+
+<script id="geti-qr-scanner-script">
+/* Separate GETI scanner module — does not change the verification engine. */
+(function(){
+  "use strict";
+  var scanner=null, cameraOn=false, busy=false, loading=null, scannerReady=false;
+  function byId(id){return document.getElementById(id);}
+  function status(message,kind){var el=byId('getiQrStatus');if(el){el.textContent=message;el.className='geti-qr-status'+(kind?' '+kind:'');}}
+  function loadLibrary(){
+    if(window.Html5Qrcode)return Promise.resolve();
+    if(loading)return loading;
+    loading=new Promise(function(resolve,reject){
+      var script=document.createElement('script');
+      script.src='https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
+      script.async=true;
+      script.onload=function(){window.Html5Qrcode?resolve():reject(new Error('QR library did not load'));};
+      script.onerror=function(){reject(new Error('Unable to load QR scanner library. Check your connection.'));};
+      document.head.appendChild(script);
+    }).catch(function(e){loading=null;throw e;});
+    return loading;
+  }
+  function extractId(decoded){
+    var value=String(decoded||'').trim();if(!value||value.length>4096)return '';
+    var candidates=[value];
+    try{
+      var url=new URL(value);
+      if(url.protocol==='https:'||url.protocol==='http:'){
+        ['verify','certificate_id','certificateId','id','cert','code'].forEach(function(key){var v=url.searchParams.get(key);if(v)candidates.push(v);});
+        candidates.push(decodeURIComponent(url.pathname));
+        if(url.hash)candidates.push(decodeURIComponent(url.hash));
+      }
+    }catch(e){}
+    candidates.push(value);
+    for(var i=0;i<candidates.length;i++){
+      var candidate=candidates[i];
+      try{candidate=decodeURIComponent(candidate);}catch(e){}
+      var match=String(candidate).match(/GETI-CERT\d{6,12}/i);
+      if(match)return match[0].toUpperCase();
+    }
+    return '';
+  }
+  async function stop(){
+    if(scanner&&cameraOn){try{await scanner.stop();}catch(e){}}
+    cameraOn=false;
+    if(scanner){try{scanner.clear();}catch(e){}}
+    scanner=null;
+    var panel=byId('getiQrPanel');if(panel)panel.hidden=true;
+    var btn=byId('getiQrCameraBtn');if(btn)btn.disabled=false;
+  }
+  async function decoded(text){
+    if(busy)return;
+    busy=true;
+    var id=extractId(text);
+    if(!id){status('This QR code does not contain a recognized GETI Certificate ID (GETI-CERT...). You can still enter the ID manually below.','error');busy=false;return;}
+    await stop();
+    var input=byId('verifyInput');
+    if(!input){status('Verification input was not found. Please refresh the page.','error');busy=false;return;}
+    input.value=id;
+    status('QR code read: '+id+'. Checking the official certificate record…','ok');
+    if(typeof window.setVerifyType==='function')window.setVerifyType('id');
+    if(typeof window.verifyCertificate==='function'){
+      try{await window.verifyCertificate('id');}catch(e){status('The QR was read, but verification is temporarily unavailable. Try VERIFY CERTIFICATE below.','error');}
+    }else{status('The QR was read. Click VERIFY CERTIFICATE below to check its official record.','error');}
+    byId('verifyResult')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+    busy=false;
+  }
+  window.getiQrOpenCamera=async function(){
+    var panel=byId('getiQrPanel');var btn=byId('getiQrCameraBtn');
+    if(cameraOn)return;
+    if(!window.isSecureContext){status('Camera scanning requires HTTPS. Use the upload option or enter the Certificate ID manually.','error');return;}
+    if(btn)btn.disabled=true;
+    if(panel)panel.hidden=false;
+    status('Starting camera. Please allow access when your browser asks…');
+    try{
+      await loadLibrary();
+      scanner=new window.Html5Qrcode('getiQrReader');
+      await scanner.start({facingMode:'environment'},{fps:8,qrbox:function(w,h){var size=Math.min(255,Math.max(130,Math.floor(Math.min(w,h)*0.7)));return {width:size,height:size};}},function(text){void decoded(text);},function(){});
+      cameraOn=true;status('Point your camera at the QR code on the certificate.');
+    }catch(e){await stop();status('Unable to start camera: '+(e&&e.message?e.message:'Camera unavailable')+'. Try uploading a QR image.','error');}
+    if(btn)btn.disabled=false;
+  };
+  window.getiQrCloseCamera=async function(){await stop();status('Camera stopped. You can scan again or enter the ID manually.');};
+  window.getiQrScanImage=async function(file){
+    if(!file)return;
+    if(!file.type.startsWith('image/')){status('Please select an image containing a QR code.','error');return;}
+    if(file.size>10*1024*1024){status('Image too large (maximum 10 MB).','error');return;}
+    status('Reading QR code from the image…');
+    try{
+      await stop();await loadLibrary();
+      var reader=new window.Html5Qrcode('getiQrReader');
+      var result=await reader.scanFile(file,false);
+      try{reader.clear();}catch(e){}
+      await decoded(result);
+    }catch(e){status('Could not read a QR code from this image. Try a sharper photo or enter the Certificate ID manually.','error');}
+  };
+  window.addEventListener('pagehide',function(){void stop();});
+})();
+</script>
 
 </body>
 </html>
