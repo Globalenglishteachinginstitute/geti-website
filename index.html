@@ -12163,7 +12163,7 @@ function showFinalResult(timeExpired){
     let oldExamHours=getGetiExamHoursFromTitle(
         examState.student && examState.student.program
     );
-    let passMark=100;
+    let passMark=90;
 
     let status=
         percentage>=passMark
@@ -12901,11 +12901,11 @@ function toggleGeti30Exams(){
 
 function getGetiExamPolicy(hours){
     const h=Number(hours)||0;
-    if(h>=300)return {level:"C2",passMark:100,durationMinutes:120};
-    if(h>=200)return {level:"C1",passMark:100,durationMinutes:90};
-    if(h>=150)return {level:"B2",passMark:100,durationMinutes:75};
-    if(h>=100)return {level:"B1",passMark:100,durationMinutes:60};
-    return {level:"A2",passMark:100,durationMinutes:45};
+    if(h>=300)return {level:"C2",passMark:90,durationMinutes:120};
+    if(h>=200)return {level:"C1",passMark:90,durationMinutes:90};
+    if(h>=150)return {level:"B2",passMark:90,durationMinutes:75};
+    if(h>=100)return {level:"B1",passMark:90,durationMinutes:60};
+    return {level:"A2",passMark:90,durationMinutes:45};
 }
 
 function getCurrentGetiExamPolicy(){
@@ -13143,7 +13143,7 @@ function openGeti30Registration(examName,course){
         exam:examName,
         examTitle:selectedTitle,
         examLevel:course ? selectedPolicy.level : "A2",
-        passMark:100,
+        passMark:90,
         teflHours:course ? course.hours : null,
         student:null,
         subjectIndex:0,
@@ -13174,7 +13174,6 @@ function openGeti30Registration(examName,course){
 
     panel.innerHTML=
         '<h2 class="exam-title">'+escapeHTML(geti30State.examTitle)+'</h2>'+
-        (geti30State.exam==='TEFL Exam'||geti30State.exam==='TESOL Exam' ? '<p class="geti-exam-original-notice">GETI independent examination. Original scenario-based questions inspired by standard teacher-training competencies. Not a Cambridge CELTA or Trinity CertTESOL examination, qualification or endorsement. Teaching practice and assessed written assignments are separate requirements for equivalent practical evaluation.</p>' : '')+
         '<p class="exam-subtitle">Register once to begin. Your progress is saved after every answer and subject. If you leave, choose this same examination again to continue. One registration covers up to three failed correction attempts; a new registration is available only after the third failed attempt. Exam duration: '+selectedPolicy.durationMinutes+' minutes.</p>'+
         '<div style="text-align:center;margin-bottom:22px;">'+chips+'</div>'+
         '<div class="registration-form geti-complete-registration-form">'+
@@ -17555,7 +17554,7 @@ async function submitGeti30Registration(){
     if(isA2Standalone){
         geti30State.examTitle="A2 Exam";
         geti30State.examLevel="A2";
-        geti30State.passMark=100;
+        geti30State.passMark=90;
     }else if(/^\d+-Hour\s+/i.test(geti30State.examTitle||"")){
         geti30State.examTitle=String(geti30State.examTitle).replace(/^\d+-Hour/i,examHours+"-Hour");
     }else{
@@ -17892,7 +17891,7 @@ function showGeti30ActualResult(){
     const failedThird=false;
     const failureText=failedThird
         ? GETI_THIRD_FAILURE_MESSAGE
-        : "You did not achieve 100%. You must restart the entire exam from question one with a newly generated set of questions. The full examination will not restart.";
+        : "You did not achieve the required 90%. You must restart the entire exam from question one with a newly generated set of questions. You may restart the full examination according to GETI rules.";
     const action=status==="PASSED"
         ? '<div class="geti-final-certificate-action"><a href="mailto:admin@getienglish.com?subject=GETI%20Passed%20Examination%20Support" class="btn btn-gold geti-result-cert-btn">admin@getienglish.com</a></div>'
         : '<div class="geti-final-certificate-action"><button class="btn btn-gold geti-result-cert-btn" onclick="restartGetiExamRegistration()">RESTART FULL EXAM — NEW QUESTIONS</button></div>';
@@ -21185,7 +21184,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
                     phone:record.phone,institution:record.institution,
                     program:record.exam||record.program,
                     percentage:record.percentage,
-                    pass_mark:record.passMark||record.pass_mark||95,
+                    pass_mark:record.passMark||record.pass_mark||90,
                     status:record.status,
                     subjects:record.subjects
                 }
@@ -26511,6 +26510,128 @@ function getiQrToggleOptions(){
   button.setAttribute('aria-expanded',String(opening));
   if(!opening && typeof getiQrCloseCamera==='function')getiQrCloseCamera();
 }
+</script>
+<style id="geti-live-exam-progress-css">
+.geti-live-progress{box-sizing:border-box;max-width:100%;margin:12px 0 22px;padding:15px 16px;border:1px solid #dce6ef;border-radius:14px;background:#fff;box-shadow:0 3px 12px rgba(19,43,78,.07);font-family:Arial,Helvetica,sans-serif}
+.geti-live-progress *{box-sizing:border-box}
+.geti-live-progress-header,.geti-live-progress-stats{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 15px}
+.geti-live-progress-header{font-size:13px;font-weight:800;color:#16314d;margin-bottom:10px}
+.geti-live-progress-percentage{font-size:19px;font-weight:900;font-variant-numeric:tabular-nums}
+.geti-live-progress-rail{height:15px;width:100%;background:#e9eef5;border-radius:12px;overflow:hidden;position:relative}
+.geti-live-progress-fill{height:100%;width:0;background:#16a34a;border-radius:12px;transition:width .25s ease,background-color .25s ease}
+.geti-live-progress.red .geti-live-progress-fill{background:#dc2626}
+.geti-live-progress.green .geti-live-progress-fill{background:#16a34a}
+.geti-live-progress-stats{font-size:12px;color:#475569;margin-top:10px}
+.geti-live-progress-stats strong{color:#12345b;font-variant-numeric:tabular-nums}
+.geti-live-progress-message{font-size:12px;line-height:1.55;margin-top:10px;font-weight:700;color:#187442}
+.geti-live-progress.red .geti-live-progress-message{color:#b91c1c}
+.geti-live-progress.red .geti-live-progress-percentage{color:#dc2626}
+.geti-live-progress.green .geti-live-progress-percentage{color:#16803c}
+@media(max-width:480px){.geti-live-progress{padding:11px}.geti-live-progress-header{font-size:12px}.geti-live-progress-stats{font-size:11px}}
+</style>
+<script id="geti-live-exam-progress-v90">
+(function(){
+  'use strict';
+  var PASS=90;
+  function clamp(n){return Math.max(0,Math.min(100,Number(n)||0));}
+  function pct(a,b){return b>0?Math.round(a/b*1000)/10:0;}
+  function fmt(n){return (Math.round(n*10)/10).toFixed(1).replace(/\.0$/,'')+'%';}
+  function compute(primary){
+    var answers,subjects,total=0,answered=0,correct=0,wrong=0;
+    var state=primary?(typeof geti30State!=='undefined'?geti30State:null):(typeof examState!=='undefined'?examState:null);
+    if(!state || !Array.isArray(state.answers) || !state.answers.length) return null;
+    answers=state.answers;
+    subjects=primary?(typeof GETI_30_EXAM_SUBJECTS!=='undefined'?GETI_30_EXAM_SUBJECTS:{})[state.exam]:(state.program==='TEFL'?TEFL_SUBJECTS:TESOL_SUBJECTS);
+    if(!subjects || !subjects.length)return null;
+    for(var si=0;si<subjects.length;si++){
+      var sub=subjects[si];
+      var rows=Array.isArray(answers[si])?answers[si]:[];
+      var count=primary?window.getGeti30QuestionCount(state.exam):15;
+      var bank=primary?null:(state.program==='TEFL'?TEFL_DATA:TESOL_DATA);
+      var questions=primary?null:(bank&&bank[sub]);
+      if(!Number.isFinite(count)||count<1)count=15;
+      for(var qi=0;qi<count;qi++){
+        total++;
+        var value=rows[qi];
+        if(value===null||value===undefined||value==="")continue;
+        var q;
+        try{q=primary?window.getGeti30Question(state.exam,sub,qi):(questions&&questions[qi]);}catch(_){q=null;}
+        if(!q||!Number.isInteger(Number(q[5])))continue;
+        answered++;
+        if(Number(value)===Number(q[5]))correct++;
+        else wrong++;
+      }
+    }
+    if(!total)return null;
+    var remaining=total-answered;
+    var possiblePct=pct(correct+remaining,total);
+    // For English Proficiency, speaking is separately weighted at 20%.
+    // Treat remaining speaking points as potentially achievable, unless
+    // an already-scored speaking result exists.
+    var needsSpeaking=primary && /English Proficiency/i.test(String(state.examTitle||state.exam||''));
+    var speakingResult=state.speakingResult;
+    if(needsSpeaking){
+      var speakingWeight=speakingResult&&Number.isFinite(Number(speakingResult.percentage))?Number(speakingResult.percentage)*.2:20;
+      possiblePct=pct(correct+remaining,total)*.8+speakingWeight;
+    }
+    var impossible=possiblePct+0.00001<PASS;
+    var red=impossible||(wrong>correct);
+    var complete=answered>=total && (!needsSpeaking||!!speakingResult);
+    return {total:total,answered:answered,correct:correct,wrong:wrong,completed:pct(answered,total),correctPercent:pct(correct,total),wrongPercent:pct(wrong,total),maximum:clamp(possiblePct),impossible:impossible,red:red,complete:complete};
+  }
+  function build(){
+    var el=document.createElement('div');
+    el.className='geti-live-progress green';
+    el.setAttribute('role','status');
+    el.innerHTML='<div class="geti-live-progress-header"><span>EXAM PROGRESS · PASS MARK 90%</span><span class="geti-live-progress-percentage">0%</span></div>'+
+      '<div class="geti-live-progress-rail" role="progressbar" aria-label="Examination completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="geti-live-progress-fill"></div></div>'+
+      '<div class="geti-live-progress-stats"><span>Completed: <strong data-geti-stat="completed">0%</strong></span><span>Correct: <strong data-geti-stat="correct">0%</strong></span><span>Incorrect: <strong data-geti-stat="wrong">0%</strong></span><span>Maximum possible: <strong data-geti-stat="possible">100%</strong></span></div>'+
+      '<div class="geti-live-progress-message">90% is still achievable.</div>';
+    return el;
+  }
+  function render(primary){
+    var panel=document.getElementById(primary?'geti30ExamPanel':'examPanel');
+    if(!panel)return;
+    var metrics=compute(primary);
+    if(!metrics)return;
+    var anchor=panel.querySelector('.exam-progress');
+    if(!anchor)return;
+    var box=panel.querySelector('.geti-live-progress');
+    if(!box){box=build();anchor.insertAdjacentElement('afterend',box);}
+    box.classList.toggle('red',metrics.red);
+    box.classList.toggle('green',!metrics.red);
+    box.querySelector('.geti-live-progress-percentage').textContent=fmt(metrics.completed);
+    box.querySelector('.geti-live-progress-fill').style.width=clamp(metrics.completed)+'%';
+    var rail=box.querySelector('.geti-live-progress-rail');
+    rail.setAttribute('aria-valuenow',String(Math.round(metrics.completed)));
+    var stats={completed:metrics.completed,correct:metrics.correctPercent,wrong:metrics.wrongPercent,possible:metrics.maximum};
+    Object.keys(stats).forEach(function(k){var tag=box.querySelector('[data-geti-stat="'+k+'"]');if(tag)tag.textContent=fmt(stats[k]);});
+    var msg=box.querySelector('.geti-live-progress-message');
+    if(metrics.impossible)msg.textContent='FAILED TRAJECTORY · Even 100% on the remaining questions cannot reach 90%. Continue to complete your examination.';
+    else if(metrics.complete)msg.textContent=metrics.correctPercent>=PASS?'PASSED · Required 90% achieved.':'FAILED · Final result is below 90%.';
+    else if(metrics.red)msg.textContent='MORE INCORRECT THAN CORRECT · Recoverable: 90% is still mathematically possible.';
+    else msg.textContent='ON TRACK · 90% is still achievable if you answer enough remaining questions correctly.';
+  }
+  // Wrap the last-loaded question renderers and selectors so the indicator
+  // updates immediately as an answer is chosen and survives question redraws.
+  function wrap(name,primary){
+    var original=window[name];
+    if(typeof original!=='function'||original.__getiProgressWrapped)return;
+    var wrapped=function(){
+      var result=original.apply(this,arguments);
+      try{render(primary);}catch(err){console.warn('GETI progress:',err);}
+      return result;
+    };
+    wrapped.__getiProgressWrapped=true;
+    window[name]=wrapped;
+  }
+  wrap('showGeti30Question',true);
+  wrap('selectGeti30Answer',true);
+  wrap('showQuestion',false);
+  wrap('selectAnswer',false);
+  // Subject navigation restores the indicator on the next question view.
+  window.getiLiveProgressUpdate=function(){render(true);render(false);};
+})();
 </script>
 </body>
 </html>
