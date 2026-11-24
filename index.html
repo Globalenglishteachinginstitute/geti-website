@@ -11660,6 +11660,7 @@ function calculateAllSubjectScores(){
 ========================================================= */
 
 function showQuestion(){
+    window.getiClassicAutoAdvanceLocked=false;
 
     let subjects=
         examState.program==="TEFL"
@@ -11728,16 +11729,7 @@ function showQuestion(){
 
     '<div class="exam-controls">'+
 
-    '<button class="next-btn" '+
-    'onclick="nextExamQuestion()">'+
 
-    (
-        examState.questionIndex===14
-        ? "SUBMIT SUBJECT"
-        : "NEXT QUESTION"
-    )+
-
-    '</button>'+
     '<button type="button" class="geti-restart-exam-btn" onclick="getiRestartActiveExam(\'classic\')">↻ RESTART EXAM</button>'+
 
     '</div>'+
@@ -11790,6 +11782,11 @@ function showQuestion(){
 ========================================================= */
 
 function selectAnswer(answer){
+    if(window.getiClassicAutoAdvanceLocked)return;
+    window.getiClassicAutoAdvanceLocked=true;
+    if(typeof window.getiShowSelectedAnswerLetter==="function")window.getiShowSelectedAnswerLetter(answer);
+    const currentSubject=examState.subjectIndex;
+    const currentQuestion=examState.questionIndex;
 
     examState.answers
     [examState.subjectIndex]
@@ -11810,6 +11807,12 @@ function selectAnswer(answer){
 
     });
 
+    clearTimeout(window.getiClassicAutoAdvanceTimer);
+    window.getiClassicAutoAdvanceTimer=setTimeout(function(){
+        if(examState.subjectIndex===currentSubject && examState.questionIndex===currentQuestion){
+            nextExamQuestion();
+        }
+    },180);
 }
 
 /* =========================================================
@@ -14072,6 +14075,7 @@ function getGetiNextRetrySubject(fromIndex){
 }
 
 function showGeti30Question(){
+    window.geti30AutoAdvanceLocked=false;
     const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam];
     const subject=subjects[geti30State.subjectIndex];
     const q=getGeti30Question(geti30State.exam,subject,geti30State.questionIndex);
@@ -14094,9 +14098,7 @@ function showGeti30Question(){
         '<div class="question-text">'+(activePosition+1)+'. '+escapeHTML(q[0])+'</div>'+
         '<div id="geti30Options"></div>'+
         '<div class="exam-controls">'+
-        '<button class="next-btn" onclick="nextGeti30Question()">'+
-        (activePosition===activeIndexes.length-1 ? ui.submit : ui.next)+
-        '</button>'+
+
         '<button type="button" class="geti-restart-exam-btn" onclick="getiRestartActiveExam(\'geti30\')">↻ RESTART EXAM</button></div></div>';
 
     const c=document.getElementById("geti30Options");
@@ -14113,11 +14115,22 @@ function showGeti30Question(){
 }
 
 function selectGeti30Answer(answer){
+    if(window.geti30AutoAdvanceLocked)return;
+    window.geti30AutoAdvanceLocked=true;
+    if(typeof window.getiShowSelectedAnswerLetter==="function")window.getiShowSelectedAnswerLetter(answer);
+    const currentSubject=geti30State.subjectIndex;
+    const currentQuestion=geti30State.questionIndex;
     geti30State.answers[geti30State.subjectIndex][geti30State.questionIndex]=answer;
     document.querySelectorAll("#geti30Options .option").forEach(function(el,i){
         el.classList.toggle("selected",i===answer);
     });
     saveGeti30Session("question");
+    clearTimeout(window.geti30AutoAdvanceTimer);
+    window.geti30AutoAdvanceTimer=setTimeout(function(){
+        if(geti30State.subjectIndex===currentSubject && geti30State.questionIndex===currentQuestion){
+            nextGeti30Question();
+        }
+    },180);
 }
 
 function nextGeti30Question(){
@@ -26665,6 +26678,11 @@ window.getiRestartActiveExam=function(which){
     "This action does not submit a result.\n\nContinue?"
   );
   if(!confirmed)return;
+  if(typeof window.getiClearSelectedAnswerLetter==="function")window.getiClearSelectedAnswerLetter();
+  clearTimeout(window.getiClassicAutoAdvanceTimer);
+  clearTimeout(window.geti30AutoAdvanceTimer);
+  window.getiClassicAutoAdvanceLocked=false;
+  window.geti30AutoAdvanceLocked=false;
   if(isModern){
     // Existing GETI function refreshes randomized question sets, resets every
     // subject and answer, starts the timer and saves the fresh active session.
@@ -26687,6 +26705,55 @@ window.getiRestartActiveExam=function(which){
   }
   try{if(typeof window.getiLiveProgressUpdate==="function")window.getiLiveProgressUpdate();}catch(e){}
 };
+</script>
+
+<style id="geti-short-answer-indicator-style">
+#getiSelectedAnswerIndicator {
+ display:none;vertical-align:middle;margin-left:10px;padding:4px 11px;
+ border-radius:999px;background:#1b8c56;color:#fff;font-weight:900;
+ font-size:15px;line-height:1.5;letter-spacing:.4px;
+}
+#getiSelectedAnswerIndicator.geti-show {display:inline-block;}
+</style>
+<script id="geti-short-answer-indicator-script">
+(function(){
+  let clearIndicatorTimer=0;
+  function getIndicator(){
+    const heading=document.querySelector(".geti-second-area-entrybar-inner > strong");
+    if(!heading)return null;
+    let indicator=document.getElementById("getiSelectedAnswerIndicator");
+    if(!indicator){
+      indicator=document.createElement("span");
+      indicator.id="getiSelectedAnswerIndicator";
+      indicator.setAttribute("aria-live","polite");
+      heading.insertAdjacentElement("afterend",indicator);
+    }
+    return indicator;
+  }
+  window.getiShowSelectedAnswerLetter=function(optionIndex){
+    const letter=["A","B","C","D"][Number(optionIndex)];
+    if(!letter)return;
+    const indicator=getIndicator();
+    if(!indicator)return;
+    clearTimeout(clearIndicatorTimer);
+    indicator.textContent=letter;
+    indicator.classList.add("geti-show");
+    clearIndicatorTimer=setTimeout(function(){
+      indicator.classList.remove("geti-show");
+      indicator.textContent="";
+      clearIndicatorTimer=0;
+    },2000);
+  };
+  window.getiClearSelectedAnswerLetter=function(){
+    clearTimeout(clearIndicatorTimer);
+    clearIndicatorTimer=0;
+    const indicator=document.getElementById("getiSelectedAnswerIndicator");
+    if(indicator){
+      indicator.textContent="";
+      indicator.classList.remove("geti-show");
+    }
+  };
+})();
 </script>
 </body>
 </html>
