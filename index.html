@@ -11521,6 +11521,7 @@ async function submitRegistration(){
         try{
             registration=await getiRegisterExam(extendedRegistration);
         }catch(extendedError){
+            if(/jwt|session|sign in|unauthoriz|forbidden|token/i.test(String(extendedError.message||extendedError))) throw extendedError;
             /* Compatibility fallback: preserve existing backend registration if
                its current schema does not yet accept the additional profile fields. */
             registration=await getiRegisterExam({
@@ -16453,11 +16454,38 @@ async function getiFetchJson(url, options){
 }
 
 async function getiRegisterExam(registration){
-    return await getiFetchJson(GETI_EXAM_FUNCTION,{
-        method:"POST",
-        headers:{"Content-Type":"application/json","apikey":GETI_SUPABASE_KEY},
-        body:JSON.stringify({action:"register_exam",registration:registration})
-    });
+    // Use the signed-in student's JWT, not the public API key as a bearer token.
+    const auth=GETI_SB.auth;
+    const current=await auth.getSession();
+    if(current.error || !current.data?.session?.access_token){
+        throw new Error("Please sign in again before registering for an exam.");
+    }
+    let session=current.data.session;
+    const send=async function(token){
+        const response=await fetch(GETI_EXAM_FUNCTION,{
+            method:"POST",
+            headers:{"Content-Type":"application/json","apikey":GETI_SUPABASE_KEY,"Authorization":"Bearer "+token},
+            body:JSON.stringify({action:"register_exam",registration:registration})
+        });
+        let data={};try{data=await response.json();}catch(e){}
+        return {response,data};
+    };
+    let result=await send(session.access_token);
+    const message=()=>String(result.data.error?.message || result.data.error || result.data.message || "Request failed");
+    // Retry only a rejected authentication request, never an arbitrary failed write.
+    if([400,401,403].includes(result.response.status) && /jwt.*(?:future|expired|invalid)|(?:future|expired|invalid).*jwt|token.*expired/i.test(message())){
+        await new Promise(resolve=>setTimeout(resolve,1500));
+        const refreshed=await auth.refreshSession();
+        if(refreshed.error || !refreshed.data?.session?.access_token){
+            throw new Error("Session expired. Please sign out and sign in again.");
+        }
+        result=await send(refreshed.data.session.access_token);
+    }
+    if(!result.response.ok){
+        if(/jwt.*future|future.*jwt/i.test(message())) throw new Error("JWT issued at future: enable automatic date and time, sign out and sign in again. If it persists, contact GETI support to check server clock synchronization.");
+        throw new Error(message());
+    }
+    return result.data;
 }
 
 function getiAnalyticsIdentifier(storage,key){
@@ -17706,6 +17734,7 @@ async function submitGeti30Registration(){
         try{
             registration=await getiRegisterExam(extendedRegistration);
         }catch(firstRegistrationError){
+            if(/jwt|session|sign in|unauthoriz|forbidden|token/i.test(String(firstRegistrationError.message||firstRegistrationError))) throw firstRegistrationError;
             console.warn("GETI extended registration fallback:",firstRegistrationError);
             registration=await getiRegisterExam({
                 full_name:name,
