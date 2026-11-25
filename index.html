@@ -9909,7 +9909,7 @@ html+=
 '<div class="verify-official-body">'+
 '<div class="verify-certificate-title"><small>Certificate Awarded</small><strong>'+escapeHTML(certificateDetails.title)+'</strong></div>'+
 '<div class="verify-professional-grid">'+
-'<div class="verify-detail-card name"><span class="verify-label">Certificate Holder</span><span class="verify-value">'+escapeHTML(c.name)+'</span></div>'+
+'<div class="verify-detail-card name"><span class="verify-label">Certificate Holder</span><span class="verify-value">'+escapeHTML(String(c.name||'').toUpperCase())+'</span></div>'+
 '<div class="verify-detail-card"><span class="verify-label">Nationality</span><span class="verify-value">'+escapeHTML(c.nationality)+'</span></div>'+
 '<div class="verify-detail-card"><span class="verify-label">Certificate ID</span><span class="verify-value"><span class="verify-id-code">'+escapeHTML(c.id)+'</span></span></div>'+
 '<div class="verify-detail-card"><span class="verify-label">Certificate Type</span><span class="verify-value">'+escapeHTML(c.type)+'</span></div>'+
@@ -11400,7 +11400,7 @@ function openExamRegistration(program){
 
     '<label class="geti-reg-field"><span>Street Address</span><input id="regAddress" autocomplete="street-address" placeholder="Address"></label>'+
 
-    '<label class="geti-reg-field geti-country-code-field"><span>Country Calling Code *</span><input id="regCountryCode" inputmode="tel" autocomplete="tel-country-code" placeholder="+261"></label>'+
+    '<input type="hidden" id="regCountryCode" value="">'+
 
     '<label class="geti-reg-field"><span>Phone Number *</span><input id="regPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="Phone number"></label>'+
 
@@ -11453,7 +11453,7 @@ async function submitRegistration(){
     let language=document.getElementById("regLanguage").value.trim();
     let consent=document.getElementById("regConsent").checked;
 
-    if(!name || !email || !nationality || !country || !city || !countryCode || !phone || !employment){
+    if(!name || !email || !nationality || !country || !city || !phone || !employment){
         alert("Please complete all required fields marked with *.");
         return;
     }
@@ -11463,12 +11463,8 @@ async function submitRegistration(){
         return;
     }
 
-    if(!/^\+\d{1,4}$/.test(countryCode)){
-        alert("Please enter a valid country calling code, for example +261.");
-        return;
-    }
 
-    if(!/^[0-9 ()-]{5,20}$/.test(phone)){
+    if(!/^\+?[0-9 ()-]{5,20}$/.test(phone)){
         alert("Please enter a valid phone number.");
         return;
     }
@@ -11494,7 +11490,7 @@ async function submitRegistration(){
     const button=document.querySelector("#examPanel .registration-form button");
     if(button){button.disabled=true;button.textContent="REGISTERING...";}
 
-    const fullPhone=(countryCode+" "+phone).trim();
+    const fullPhone=phone.startsWith("+") ? phone : (countryCode+" "+phone).trim();
     const extendedRegistration={
         full_name:name,
         email:email,
@@ -13250,7 +13246,7 @@ function openGeti30Registration(examName,course){
         '<label class="geti-reg-field"><span>City *</span><input id="g30City" type="text" autocomplete="address-level2" placeholder="City"></label>'+
         '<label class="geti-reg-field"><span>Postal / ZIP Code</span><input id="g30PostalCode" type="text" autocomplete="postal-code" placeholder="Postal / ZIP Code"></label>'+
         '<label class="geti-reg-field"><span>Street Address</span><input id="g30Address" type="text" autocomplete="street-address" placeholder="Street Address"></label>'+
-        '<label class="geti-reg-field"><span>Country Calling Code *</span><input id="g30CountryCode" type="text" inputmode="tel" placeholder="+261"></label>'+
+        '<input type="hidden" id="g30CountryCode" value="">'+
         '<label class="geti-reg-field"><span>Phone Number *</span><input id="g30Phone" type="tel" autocomplete="tel-national" placeholder="Phone Number"></label>'+
 
         '<div class="geti-reg-section-title">Education & Professional Information</div>'+
@@ -17623,14 +17619,14 @@ async function submitGeti30Registration(){
     const education=document.getElementById("g30Education").value.trim();
     const language=document.getElementById("g30Language").value.trim();
     const consent=document.getElementById("g30Consent").checked;
-    const fullPhone=(countryCode+" "+phone).trim();
+    const fullPhone=phone.startsWith("+") ? phone : (countryCode+" "+phone).trim();
 
     const hoursElement=document.getElementById("g30Hours");
     const isA2Standalone=geti30State.exam==="A2 Exam";
     const examHours=isA2Standalone ? 20 : (hoursElement ? Number(hoursElement.value) : 0);
     const button=document.querySelector("#geti30ExamPanel .registration-form button");
 
-    if(!name || !email || !nationality || !country || !city || !countryCode || !phone || !employment){
+    if(!name || !email || !nationality || !country || !city || !phone || !employment){
         alert("Please complete all required registration fields marked with *.");
         return;
     }
@@ -17642,13 +17638,8 @@ async function submitGeti30Registration(){
         return;
     }
 
-    if(!/^\+\d{1,4}$/.test(countryCode)){
-        alert("Country Calling Code must start with +, for example +261.");
-        document.getElementById("g30CountryCode").focus();
-        return;
-    }
 
-    if(!/^[0-9\s().-]{5,20}$/.test(phone)){
+    if(!/^\+?[0-9\s().-]{5,20}$/.test(phone)){
         alert("Please enter a valid phone number.");
         document.getElementById("g30Phone").focus();
         return;
@@ -27346,7 +27337,7 @@ window.getiShuffleClassicExamAnswers=function(program){
     const dateDisplay=valid?date.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'—';
     const year=valid?date.getFullYear():new Date().getFullYear();
     const candidate=String(r.id||r.candidate_id||'');
-    const name=htmlEscape(r.name||r.full_name||'Student');
+    const name=htmlEscape(String(r.name||r.full_name||'Student').toUpperCase());
     // Prefer the selected examination title; retain any duration/level recorded on registration.
     const programName=String(r.program||r.examTitle||r.exam||r.baseExam||'GETI Examination').trim();
     const level=String(r.level||r.examLevel||'').trim();
