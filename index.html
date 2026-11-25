@@ -22293,6 +22293,22 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
 </script>
 
 
+<script id="geti-all-20-hour-answer-a">
+(function(){
+  "use strict";
+  const original=window.getGeti30Question;
+  if(typeof original!=="function")return;
+  window.getGeti30Question=function(examName,subject,qIndex){
+    const q=original.apply(this,arguments);
+    if(getiExamActiveHours()!==20 || !Array.isArray(q) || q.length<6)return q;
+    const correct=Number(q[5]);
+    if(!Number.isInteger(correct)||correct<0||correct>3)return q;
+    const choices=q.slice(1,5);
+    return [q[0],choices[correct],...choices.filter((_,i)=>i!==correct),0];
+  };
+})();
+</script>
+
 <script id="geti-student-auto-certificate-pdf-script">
 (function(){
   "use strict";
