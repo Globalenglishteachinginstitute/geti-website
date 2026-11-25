@@ -7866,6 +7866,49 @@ html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {disp
 }
 </style>
 <style id="geti-stage-progress-style">.geti-stage-progress{margin:12px 0 18px;padding:12px 14px;background:#f2f6fc;border:1px solid #d7e2ef;border-radius:10px;color:#123b65}.geti-stage-label{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:13px;font-weight:700}.geti-stage-progress progress{display:block;width:100%;height:12px;margin:9px 0 5px;accent-color:#1968a8}.geti-stage-progress small{font-size:12px;color:#52677c}</style>
+<style id="geti-student-tools-logout-style">
+#getiStudentToolsMenu .geti-student-tools-logout{margin-top:7px;border-top:1px solid rgba(127,127,127,.3);color:#c0394b;font-weight:800}
+#getiStudentToolsMenu .geti-student-tools-logout:hover,#getiStudentToolsMenu .geti-student-tools-logout:focus-visible{background:#fff0f2;color:#9b1832}
+</style>
+
+<style id="geti-qr-same-as-verify-button-style">
+/* Keep the QR click-to-reveal logic; match the VERIFY CERTIFICATE button. */
+#getiQrScanCard.geti-qr-card{max-width:850px;padding:8px;border-radius:12px}
+#getiQrToggleButton.geti-qr-main-trigger{
+  box-sizing:border-box!important;display:flex!important;flex-direction:row!important;
+  width:100%!important;min-height:48px!important;height:auto!important;
+  margin:0!important;padding:9px 15px!important;gap:11px!important;
+  border:0!important;border-radius:8px!important;
+  background:linear-gradient(135deg,#f0bd47,#ffd56a)!important;
+  color:#082e5d!important;font-weight:950!important;
+  box-shadow:none!important;align-items:center!important;
+}
+#getiQrToggleButton.geti-qr-main-trigger:hover,
+#getiQrToggleButton.geti-qr-main-trigger[aria-expanded="true"]{
+  background:linear-gradient(135deg,#e5ae38,#ffcf56)!important;
+}
+#getiQrToggleButton .geti-qr-symbol{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  background:transparent!important;box-shadow:none!important;border-radius:0!important;
+  height:27px!important;width:27px!important;min-width:27px!important;
+}
+#getiQrToggleButton .geti-qr-symbol svg{height:25px!important;width:25px!important;stroke:#082e5d!important}
+#getiQrToggleButton .geti-qr-trigger-copy{display:block!important;min-width:0;flex:1;text-align:center!important}
+#getiQrToggleButton .geti-qr-trigger-title{
+  display:block!important;color:#082e5d!important;font-size:clamp(11px,2.2vw,14px)!important;
+  font-weight:950!important;line-height:1.25!important;letter-spacing:.12px!important;
+}
+#getiQrToggleButton .geti-qr-eyebrow,
+#getiQrToggleButton .geti-qr-trigger-desc,
+#getiQrToggleButton .geti-qr-trigger-action{display:none!important}
+#getiQrToggleButton .geti-qr-chevron{font-size:18px!important;color:#082e5d!important;margin:0!important}
+@media(max-width:400px){
+  #getiQrToggleButton.geti-qr-main-trigger{padding:11px 8px!important;gap:5px!important}
+  #getiQrToggleButton .geti-qr-symbol{height:22px!important;width:22px!important;min-width:22px!important}
+  #getiQrToggleButton .geti-qr-symbol svg{height:21px!important;width:21px!important}
+  #getiQrToggleButton .geti-qr-trigger-title{font-size:11px!important}
+}
+</style>
 </head>
 
 <body translate="no" class="notranslate">
@@ -10238,19 +10281,7 @@ var clone=cert.cloneNode(true);
 var images=cert.querySelectorAll("img"),clones=clone.querySelectorAll("img");
 for(var i=0;i<images.length;i++)clones[i].src=images[i].src;
 win.document.open();
-win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'<script id="geti-special-exam-randomize">
-window.getiRandomizeSpecialExam=function(items){
- function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
- for(let start=0;start<items.length;start+=12){
-  const group=shuffle(items.slice(start,start+12));
-  const mcq=group.filter(q=>Array.isArray(q.options)&&Number.isInteger(q.correct)&&q.correct>=0&&q.correct<q.options.length);
-  const positions=shuffle(mcq.map((q,i)=>i%4));
-  mcq.forEach((q,i)=>{const correct=q.options[q.correct];const distractors=shuffle(q.options.filter((_,j)=>j!==q.correct));const target=positions[i]%q.options.length;distractors.splice(target,0,correct);q.options=distractors;q.correct=target;});
-  items.splice(start,group.length,...group);
- }
-};
-</script>
-</body></html>');
+win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>GETI Verified Certificate</title><style>'+styles+'body{margin:0;padding:24px;background:#fff}.verified-certificate-preview{width:min(1120px,100%);margin:auto;box-sizing:border-box}@page{size:landscape;margin:10mm}</style></head><body>'+clone.outerHTML+'</body></html>');
 win.document.close();
 win.onload=function(){setTimeout(function(){win.print();},400);};
 }
@@ -19273,50 +19304,7 @@ const originalOpenLesson=window.openGetiLesson;
 window.openGetiLesson=function(exam,subject){const c=cfg(exam);if(!c)return originalOpenLesson(exam,subject);getiLessonState.exam=exam;getiLessonState.subject=subject;const panel=document.getElementById("lessonPanel"),nativeSubject=window.getLocalizedCourseSubject(exam,subject),level=window.getGeti200SubjectLevel(exam,subject);panel.classList.add("active");panel.innerHTML='<div class="geti-200-book-shell"><div class="geti-200-book-cover"><span class="geti-200-kicker">GETI · '+escapeHTML(c.ui.textbook)+'</span><h2>'+escapeHTML(nativeSubject)+'</h2><p>'+escapeHTML(c.ui.bookDesc)+'</p><div class="geti-200-meta"><span>'+escapeHTML(level)+'</span><span>'+escapeHTML(c.ui.chaptersLabel)+'</span><span>'+escapeHTML(c.ui.pagesLabel)+'</span><span>'+escapeHTML(c.ui.pagesPer)+'</span></div></div><div class="geti-200-resource-row"><button class="geti-200-resource" onclick="openGetiLessonPDF()"><strong>'+escapeHTML(c.ui.openPdf)+'</strong><span>'+escapeHTML(c.ui.openPdfSub)+'</span><em>'+escapeHTML(c.ui.openPdf)+'</em></button><button class="geti-200-resource" onclick="downloadLessonPDF()"><strong>'+escapeHTML(c.ui.downloadPdf)+'</strong><span>'+escapeHTML(c.ui.downloadPdfSub)+'</span><em>'+escapeHTML(c.ui.downloadPdf)+'</em></button></div>'+window.getGeti200OutlineHTML(exam,subject)+'</div>';panel.scrollIntoView({behavior:"smooth",block:"start"});};
 
 function nativePrintableBook(exam,subject,autoPrint){const c=cfg(exam);if(!c)return false;const w=window.open("","_blank");if(!w){alert("Popup blocked");return true;}const nativeSubject=window.getLocalizedCourseSubject(exam,subject);let pages="";for(let n=1;n<=200;n++){const d=nativePageText(exam,subject,n);pages+='<section class="pdfpage"><header>'+escapeHTML(c.ui.bookHeader)+'</header><h1>'+escapeHTML(nativeSubject)+'</h1><div class="meta">'+escapeHTML(c.exam)+' · '+escapeHTML(d.level)+' · '+escapeHTML(d.stage)+'</div><h2>'+escapeHTML(c.ui.chapter+' '+d.chapter+' · '+d.role)+'</h2>'+d.paragraphs.map(function(x){return '<p>'+escapeHTML(x)+'</p>';}).join("")+'<footer>'+escapeHTML(c.ui.page)+' '+n+' / 200</footer></section>';}
-  const html='<!doctype html><html lang="'+c.code+'"><head><meta charset="utf-8"><title>'+escapeHTML(nativeSubject)+' · 200</title><style>@page{size:A4;margin:0}*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans",sans-serif;color:#18283b}.pdfpage{width:210mm;height:297mm;padding:15mm 16mm 13mm;page-break-after:always;position:relative;overflow:hidden;background:#fff}.pdfpage:last-child{page-break-after:auto}header{background:#0b2d5c;color:#fff;padding:8px 10px;font-size:9pt;font-weight:700;letter-spacing:.03em}h1{font-size:18pt;margin:12px 0 3px;color:#0b2d5c}h2{font-size:12pt;color:#294d73;border-bottom:1px solid #d7e0ea;padding-bottom:5px;margin:12px 0 8px}.meta{font-size:8.5pt;color:#5b6c7d}p{font-size:9.7pt;line-height:1.48;margin:7px 0;text-align:justify}footer{position:absolute;bottom:6mm;left:16mm;right:16mm;border-top:1px solid #d7e0ea;padding-top:4px;font-size:8pt;color:#5c6b78;text-align:right}@media print{body{background:#fff}.pdfpage{box-shadow:none}}</style><style id="geti-student-tools-logout-style">
-#getiStudentToolsMenu .geti-student-tools-logout{margin-top:7px;border-top:1px solid rgba(127,127,127,.3);color:#c0394b;font-weight:800}
-#getiStudentToolsMenu .geti-student-tools-logout:hover,#getiStudentToolsMenu .geti-student-tools-logout:focus-visible{background:#fff0f2;color:#9b1832}
-</style>
-
-<style id="geti-qr-same-as-verify-button-style">
-/* Keep the QR click-to-reveal logic; match the VERIFY CERTIFICATE button. */
-#getiQrScanCard.geti-qr-card{max-width:850px;padding:8px;border-radius:12px}
-#getiQrToggleButton.geti-qr-main-trigger{
-  box-sizing:border-box!important;display:flex!important;flex-direction:row!important;
-  width:100%!important;min-height:48px!important;height:auto!important;
-  margin:0!important;padding:9px 15px!important;gap:11px!important;
-  border:0!important;border-radius:8px!important;
-  background:linear-gradient(135deg,#f0bd47,#ffd56a)!important;
-  color:#082e5d!important;font-weight:950!important;
-  box-shadow:none!important;align-items:center!important;
-}
-#getiQrToggleButton.geti-qr-main-trigger:hover,
-#getiQrToggleButton.geti-qr-main-trigger[aria-expanded="true"]{
-  background:linear-gradient(135deg,#e5ae38,#ffcf56)!important;
-}
-#getiQrToggleButton .geti-qr-symbol{
-  display:flex!important;align-items:center!important;justify-content:center!important;
-  background:transparent!important;box-shadow:none!important;border-radius:0!important;
-  height:27px!important;width:27px!important;min-width:27px!important;
-}
-#getiQrToggleButton .geti-qr-symbol svg{height:25px!important;width:25px!important;stroke:#082e5d!important}
-#getiQrToggleButton .geti-qr-trigger-copy{display:block!important;min-width:0;flex:1;text-align:center!important}
-#getiQrToggleButton .geti-qr-trigger-title{
-  display:block!important;color:#082e5d!important;font-size:clamp(11px,2.2vw,14px)!important;
-  font-weight:950!important;line-height:1.25!important;letter-spacing:.12px!important;
-}
-#getiQrToggleButton .geti-qr-eyebrow,
-#getiQrToggleButton .geti-qr-trigger-desc,
-#getiQrToggleButton .geti-qr-trigger-action{display:none!important}
-#getiQrToggleButton .geti-qr-chevron{font-size:18px!important;color:#082e5d!important;margin:0!important}
-@media(max-width:400px){
-  #getiQrToggleButton.geti-qr-main-trigger{padding:11px 8px!important;gap:5px!important}
-  #getiQrToggleButton .geti-qr-symbol{height:22px!important;width:22px!important;min-width:22px!important}
-  #getiQrToggleButton .geti-qr-symbol svg{height:21px!important;width:21px!important}
-  #getiQrToggleButton .geti-qr-trigger-title{font-size:11px!important}
-}
-</style>
-</head><body>'+pages+'</body></html>';
+  const html='<!doctype html><html lang="'+c.code+'"><head><meta charset="utf-8"><title>'+escapeHTML(nativeSubject)+' · 200</title><style>@page{size:A4;margin:0}*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans",sans-serif;color:#18283b}.pdfpage{width:210mm;height:297mm;padding:15mm 16mm 13mm;page-break-after:always;position:relative;overflow:hidden;background:#fff}.pdfpage:last-child{page-break-after:auto}header{background:#0b2d5c;color:#fff;padding:8px 10px;font-size:9pt;font-weight:700;letter-spacing:.03em}h1{font-size:18pt;margin:12px 0 3px;color:#0b2d5c}h2{font-size:12pt;color:#294d73;border-bottom:1px solid #d7e0ea;padding-bottom:5px;margin:12px 0 8px}.meta{font-size:8.5pt;color:#5b6c7d}p{font-size:9.7pt;line-height:1.48;margin:7px 0;text-align:justify}footer{position:absolute;bottom:6mm;left:16mm;right:16mm;border-top:1px solid #d7e0ea;padding-top:4px;font-size:8pt;color:#5c6b78;text-align:right}@media print{body{background:#fff}.pdfpage{box-shadow:none}}</style></head><body>'+pages+'</body></html>';
   w.document.open();w.document.write(html);w.document.close();if(autoPrint)setTimeout(function(){w.focus();w.print();},500);return true;}
 const originalOpenPDF=window.openGetiLessonPDF;
 window.openGetiLessonPDF=function(){if(cfg(getiLessonState.exam))return nativePrintableBook(getiLessonState.exam,getiLessonState.subject,false);return originalOpenPDF();};
@@ -27610,6 +27598,19 @@ window.getiShowProvisionalAssessment=function(panel,record){
  if(typeof window.getiAppendExamTranscript==='function')window.getiAppendExamTranscript(panel.id,record);
 };
 })();
+</script>
+
+<script id="geti-special-exam-randomize">
+window.getiRandomizeSpecialExam=function(items){
+ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+ for(let start=0;start<items.length;start+=12){
+  const group=shuffle(items.slice(start,start+12));
+  const mcq=group.filter(q=>Array.isArray(q.options)&&Number.isInteger(q.correct)&&q.correct>=0&&q.correct<q.options.length);
+  const positions=shuffle(mcq.map((q,i)=>i%4));
+  mcq.forEach((q,i)=>{const correct=q.options[q.correct];const distractors=shuffle(q.options.filter((_,j)=>j!==q.correct));const target=positions[i]%q.options.length;distractors.splice(target,0,correct);q.options=distractors;q.correct=target;});
+  items.splice(start,group.length,...group);
+ }
+};
 </script>
 
 </body>
