@@ -17838,6 +17838,7 @@ function saveGetiResultToGoogleSheet(record){
 
         var params=new URLSearchParams();
         params.set("action","saveExam");
+        params.set("certificateId",String(record.certificate_id||record.certificateId||""));
         params.set("id",String(record.id||record.candidate_id||""));
         params.set("name",String(record.name||""));
         params.set("email",String(record.email||"").trim().toLowerCase());
@@ -21339,12 +21340,13 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     function extractCertificateId(data){
         data=data||{};
         const first=Array.isArray(data.records)&&data.records.length?data.records[0]:null;
-        return norm((first&&(first.id||first.certificate_id))||data.first_id||data.id||data.certificate_id);
+        return [first&&first.certificate_id,first&&first.certificateId,first&&first.id,data.certificate_id,data.certificateId,data.first_id,data.id].map(v=>norm(v).toUpperCase()).find(v=>/^GETI-CERT\d+$/.test(v))||"";
     }
 
     function updateIssuedCertificateUI(record){
         const id=norm(record&&record.certificate_id);
         const candidate=norm(record&&(record.id||record.candidate_id));
+        if(candidate && /^GETI-CERT\d+$/i.test(id) && typeof window.getiRefreshTranscriptCertificate==="function") window.getiRefreshTranscriptCertificate(candidate,id);
         ["examPanel","geti30ExamPanel"].forEach(function(panelId){
             const panel=document.getElementById(panelId);if(!panel)return;
             let row=panel.querySelector(".geti-auto-issued-certificate-id");
@@ -21366,9 +21368,9 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     async function issueCertificateForPassed(record,saveResponse){
         const candidateId=norm(record.id||record.candidate_id);
         if(!candidateId||String(record.status||"").toUpperCase()!=="PASSED")return null;
-        if(record.certificate_id){updateIssuedCertificateUI(record);return record.certificate_id;}
+        if(/^GETI-CERT\d+$/i.test(norm(record.certificate_id))){updateIssuedCertificateUI(record);return record.certificate_id;}
         const existing=norm(saveResponse&&((saveResponse.result&&saveResponse.result.certificate_id)||saveResponse.certificate_id));
-        if(existing){record.certificate_id=existing;updateIssuedCertificateUI(record);window.saveGetiResultToGoogleSheet(record);return existing;}
+        if(/^GETI-CERT\d+$/i.test(existing)){record.certificate_id=existing;updateIssuedCertificateUI(record);window.saveGetiResultToGoogleSheet(record);return existing;}
         if(issuePromises[candidateId])return issuePromises[candidateId];
 
         updateIssuedCertificateUI(record);
@@ -21390,6 +21392,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
                 const certificateId=extractCertificateId(certData);
                 if(!certificateId)throw new Error("Google Sheet did not return a Certificate ID.");
                 record.certificate_id=certificateId;
+                updateIssuedCertificateUI(record);
                 try{await attachCertificate(candidateId,certificateId);}catch(e){console.warn("Certificate ID saved in Google Sheet but Supabase link failed:",e);}
                 try{window.saveGetiResultToGoogleSheet(record);}catch(e){}
                 try{
@@ -22981,7 +22984,7 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
             var result=previousSaveExamRecord.apply(this,arguments);
             if(record && String(record.status||"").toUpperCase()==="PASSED"){
                 setTimeout(function(){
-                    try{getiSendPassedEmailWithGoogleScript(record);}catch(e){
+                    try{/* Transcript email is handled by emailPassedTranscript. */}catch(e){
                         console.error("GETI automatic Google Script PASSED email failed:",e);
                     }
                 },700);
@@ -26587,7 +26590,7 @@ body.geti-pub-body-open{overflow:hidden!important}
     for(var i=0;i<candidates.length;i++){
       var candidate=candidates[i];
       try{candidate=decodeURIComponent(candidate);}catch(e){}
-      var match=String(candidate).match(/GETI-CERT\d{6,12}/i);
+      var match=String(candidate).match(/GETI-CERT\d+/i);
       if(match)return match[0].toUpperCase();
     }
     return '';
@@ -27319,11 +27322,11 @@ window.getiShuffleClassicExamAnswers=function(program){
     const programName=String(r.program||r.examTitle||r.exam||r.baseExam||'GETI Examination').trim();
     const level=String(r.level||r.examLevel||'').trim();
     const program=htmlEscape(programName+(level && !programName.toLowerCase().includes(level.toLowerCase())?' — '+level:''));
-    const certificate=String(r.certificate_id||r.certificateId||'').trim();
+    const certificate=String(r.certificate_id||r.certificateId||'').trim().toUpperCase();
     // Never create an invented certificate ID or a QR for an unissued certificate.
-    const certLink=certificate&&/^GETI-CERT\d+$/i.test(certificate)
-      ? 'https://getienglish.com/?verify='+encodeURIComponent(certificate)+'#verify':'https://getienglish.com/#verify';
-    const qr='<div class="geti-tr-qr"><a href="'+htmlEscape(certLink)+'" target="_blank" rel="noopener"><img alt="GETI verification QR code" width="200" height="200" loading="eager" src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&amp;qzone=4&amp;ecc=M&amp;data='+encodeURIComponent(certLink)+'"></a><div><a href="'+htmlEscape(certLink)+'" target="_blank" rel="noopener">SCAN QR CODE | ONLINE VERIFICATION</a></div>'+(!/^GETI-CERT\d+$/i.test(certificate)?'<div>Certificate verification requires an officially issued certificate ID.</div>':'')+'</div>';
+    const certLink=passed&&certificate&&/^GETI-CERT\d+$/i.test(certificate)
+      ? 'https://getienglish.com/?verify='+encodeURIComponent(certificate):'';
+    const qr=certLink?'<div class="geti-tr-qr"><a href="'+htmlEscape(certLink)+'" target="_blank" rel="noopener"><img alt="GETI verification QR code" width="200" height="200" loading="eager" src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&amp;qzone=4&amp;ecc=M&amp;data='+encodeURIComponent(certLink)+'"></a><div><a href="'+htmlEscape(certLink)+'" target="_blank" rel="noopener">SCAN QR CODE | ONLINE VERIFICATION</a></div><strong>'+htmlEscape(certificate)+'</strong><div><small>'+htmlEscape(certLink)+'</small></div>'+(!/^GETI-CERT\d+$/i.test(certificate)?'<div>Certificate verification requires an officially issued certificate ID.</div>':'')+'</div>':'<div class="geti-tr-qr">'+(passed?'Certificate ID pending — QR will appear automatically after issuance.':'No certificate issued for this result.')+'</div>';
     const rows=subjects.map(function(s){const data=rowData(s);return '<tr><td>'+htmlEscape(data.name)+'</td><td>'+fmt(data.pct)+'</td><td>'+htmlEscape(data.grade)+'</td></tr>';}).join('') || '<tr><td colspan="3">Subject details not available</td></tr>';
     const desc=passed?'This academic transcript summarizes the examination results recorded for the above-named candidate. A PASSED result confirms that the candidate met the applicable GETI examination pass mark. An officially issued certificate, director approval and seal are separate administrative actions.':'This transcript summarizes the completed examination attempt. The passing score has not been achieved. It does not certify successful completion or eligibility for a certificate.';
     return '<section class="geti-academic-transcript" aria-label="GETI academic transcript">'+
@@ -27337,21 +27340,122 @@ window.getiShuffleClassicExamAnswers=function(program){
       '<div class="geti-tr-warning">Automatically generated examination transcript preview. Subject to verification and official issuance by GETI Administration.</div>'+
       '</section>';
   }
+  const transcriptRecords=new Map();
+  const issuedIds=new Map();
+  function resolveTranscriptId(record){
+    const candidate=String(record.id||record.candidate_id||'');
+    if(!candidate)return '';
+    const valid=v=>/^GETI-CERT\d+$/i.test(String(v||'').trim());
+    if(issuedIds.has(candidate))return issuedIds.get(candidate);
+    if(valid(record.certificate_id||record.certificateId))return String(record.certificate_id||record.certificateId).trim().toUpperCase();
+    for(const key of ['GETI_EXAM_RECORDS','GETI_30_EXAM_RECORDS']){
+      try{const rows=JSON.parse(localStorage.getItem(key)||'[]');const found=rows.find(x=>String(x.id||x.candidate_id)===candidate&&valid(x.certificate_id||x.certificateId));if(found)return String(found.certificate_id||found.certificateId).trim().toUpperCase();}catch(e){}
+    }
+    return '';
+  }
+  window.getiRefreshTranscriptCertificate=function(candidate,id){
+    candidate=String(candidate||'');id=String(id||'').trim().toUpperCase();
+    if(!candidate||!/^GETI-CERT\d+$/.test(id))return;
+    issuedIds.set(candidate,id);
+    for(const [panelId,record] of transcriptRecords){
+      const panel=document.getElementById(panelId);
+      if(panel&&panel.querySelector('.geti-academic-transcript')&&String(record.status||'').toUpperCase()==='PASSED'&&String(record.id||record.candidate_id)===candidate){record.certificate_id=id;appendTranscript(panelId,record);}
+    }
+  };
+  const pdfLibraries=new Map();
+  function loadPdfLibrary(url,ready){
+    if(ready())return Promise.resolve();
+    if(!pdfLibraries.has(url))pdfLibraries.set(url,new Promise((resolve,reject)=>{
+      const script=document.createElement('script');script.src=url;script.async=true;
+      script.onload=()=>ready()?resolve():reject(new Error('PDF library unavailable'));
+      script.onerror=()=>reject(new Error('Unable to load PDF library. Check your connection.'));
+      document.head.appendChild(script);
+    }).catch(error=>{pdfLibraries.delete(url);throw error;}));
+    return pdfLibraries.get(url);
+  }
+  async function downloadTranscript(panel,record,button,automatic=false){
+    if(button){button.disabled=true;button.textContent='GENERATING PDF…';}
+    let host;
+    try{
+      const original=panel.querySelector('.geti-academic-transcript');
+      if(!original)throw new Error('Transcript unavailable');
+      const issued=resolveTranscriptId(record);
+      if(String(record.status||'').toUpperCase()==='PASSED'&&!issued)throw new Error('Waiting for official certificate ID.');
+      await Promise.all([
+        loadPdfLibrary('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',()=>typeof window.html2canvas==='function'),
+        loadPdfLibrary('https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js',()=>!!window.jspdf?.jsPDF)
+      ]);
+      const clone=original.cloneNode(true);
+      host=document.createElement('div');host.style.cssText='position:absolute;left:-10000px;top:0;width:794px;background:white;pointer-events:none;';
+      const style=document.createElement('style');style.textContent=`
+        .geti-pdf-export .geti-academic-transcript{box-sizing:border-box!important;width:794px!important;max-width:none!important;margin:0!important;padding:28px 36px!important;background:#fff!important;color:#182b45!important;box-shadow:none!important;font-family:Arial,sans-serif!important;}
+        .geti-pdf-export .geti-tr-head{padding-bottom:8px}.geti-pdf-export .geti-tr-logo-wrap{margin-bottom:3px}.geti-pdf-export .geti-tr-logo{width:62px;max-width:none}.geti-pdf-export .geti-tr-heading{margin:5px 0;font-size:20px}.geti-pdf-export .geti-tr-short{margin:2px 0;font-size:20px}
+        .geti-pdf-export .geti-tr-meta{grid-template-columns:1fr 1fr;gap:6px 16px;margin:12px 0;font-size:13px}.geti-pdf-export h3{margin:10px 0 5px;font-size:15px}.geti-pdf-export .geti-tr-table{font-size:13px}.geti-pdf-export .geti-tr-table td,.geti-pdf-export .geti-tr-table th{padding:5px 7px}
+        .geti-pdf-export .geti-tr-summary{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin:12px 0}.geti-pdf-export .geti-tr-stat{padding:7px 5px;font-size:11px}.geti-pdf-export .geti-tr-stat strong{font-size:15px}.geti-pdf-export .geti-tr-statement{margin-top:8px;padding-top:8px;font-size:12px;line-height:1.4}
+        .geti-pdf-export .geti-tr-bottom{margin:14px 0 5px;gap:25px}.geti-pdf-export .geti-tr-director-signature{height:65px;width:150px;object-fit:contain}.geti-pdf-export .geti-tr-second-signature{height:65px;width:150px}.geti-pdf-export .geti-tr-footer{margin-top:8px;padding-top:7px;font-size:11px;line-height:1.3}.geti-pdf-export .geti-tr-qr{margin-top:5px}.geti-pdf-export .geti-tr-qr img{width:200px;height:200px;max-width:none;margin-bottom:3px}.geti-pdf-export .geti-tr-warning{margin-top:7px;font-size:10px}
+      `;
+      host.className='geti-pdf-export';host.append(style,clone);document.body.appendChild(host);
+      // Inline the verification QR so the exported canvas cannot silently omit it.
+      const qr=clone.querySelector('.geti-tr-qr img');
+      if(qr){const response=await fetch(qr.src,{mode:'cors'});if(!response.ok)throw new Error('Verification QR could not be loaded.');const blob=await response.blob();qr.src=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(blob);});}
+      await Promise.all(Array.from(clone.querySelectorAll('img')).map(async img=>{await img.decode();if(!img.naturalWidth)throw new Error('Transcript image unavailable');}));
+      if(document.fonts?.ready)await document.fonts.ready;
+      const canvas=await window.html2canvas(clone,{scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false,windowWidth:1000,windowHeight:Math.max(1200,clone.scrollHeight)});
+      const pdf=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
+      const ratio=Math.min(198/canvas.width,285/canvas.height),w=canvas.width*ratio,h=canvas.height*ratio;
+      pdf.addImage(canvas.toDataURL('image/png'),'PNG',(210-w)/2,6,w,h,undefined,'FAST');
+      const link=qr?.closest('a')?.href;
+      if(link){const a=qr.getBoundingClientRect(),b=clone.getBoundingClientRect();pdf.link((210-w)/2+(a.left-b.left)*w/b.width,6+(a.top-b.top)*h/b.height,a.width*w/b.width,a.height*h/b.height,{url:link});}
+      const filename=String(issued||record.id||record.candidate_id||'GETI').replace(/[^a-zA-Z0-9_-]/g,'_');
+      if(automatic)return pdf.output('blob');
+      pdf.save('GETI_Transcript_'+filename+'.pdf');
+    }catch(error){console.error('GETI PDF export:',error);if(automatic)throw error;alert('Unable to download transcript: '+(error.message||error));}
+    finally{host?.remove();if(button){button.disabled=false;button.textContent='DOWNLOAD TRANSCRIPT (PDF)';}}
+  }
+  const transcriptMailJobs=new Set();
+  async function emailPassedTranscript(panel,record,issued,notice){
+    if(transcriptMailJobs.has(issued))return;
+    transcriptMailJobs.add(issued);
+    try{
+      const endpoint=window.GETI_TRANSCRIPT_MAIL_URL||API_URL;
+      const sync=new URLSearchParams({action:'saveExam',id:String(record.id||record.candidate_id||''),name:String(record.name||''),email:String(record.email||''),nationality:String(record.nationality||''),country:String(record.country||''),phone:String(record.phone||''),institution:String(record.institution||''),program:String(record.exam||record.program||''),percentage:String(record.percentage||0),totalScore:String(record.totalScore||0),totalQuestions:String(record.totalQuestions||0),status:'PASSED',subjectsJSON:JSON.stringify(record.subjects||[]),examHours:String(record.hours||record.examHours||''),date:String(record.date||new Date().toISOString()),certificateId:issued});
+      const saved=await fetch(endpoint,{method:'POST',body:sync,redirect:'follow'}).then(r=>r.json());
+      if(!saved.success)throw new Error(saved.message||'Result synchronization failed');
+      const body=new URLSearchParams({action:'sendPassedTranscript',certificateId:issued,candidateId:String(record.id||record.candidate_id||'')});
+      const response=await fetch(endpoint,{method:'POST',body,redirect:'follow'});
+      const result=await response.json();
+      if(!response.ok||result.ok!==true)throw new Error(result.error||'Email service unavailable');
+      notice.textContent='Transcript sent to your registered email.';
+    }catch(error){notice.textContent='Automatic email not confirmed. You can still download your transcript.';console.warn('GETI transcript email:',error);}
+    finally{transcriptMailJobs.delete(issued);}
+
+  }
   function appendTranscript(panelId,record){
     const panel=document.getElementById(panelId);
     if(!panel||!record)return;
+    transcriptRecords.set(panelId,record);
+    const issued=resolveTranscriptId(record);
+    if(issued&&String(record.status||'').toUpperCase()==='PASSED')record.certificate_id=issued;
     const html=buildTranscript(record);
     if(!html)return;
     panel.querySelectorAll('.geti-academic-transcript,.geti-tr-actions').forEach(e=>e.remove());
     const container=document.createElement('div');container.innerHTML=html;
-    panel.prepend(container.firstElementChild);
+    panel.append(container.firstElementChild);
     const actions=document.createElement('div');actions.className='geti-tr-actions';
-    actions.innerHTML='<button type="button" onclick="window.print()">PRINT / SAVE TRANSCRIPT AS PDF</button>';
+    const pending=String(record.status||'').toUpperCase()==='PASSED'&&!/^GETI-CERT\d+$/i.test(String(record.certificate_id||record.certificateId||''));
+    actions.innerHTML=pending?'<button type="button" disabled>WAITING FOR OFFICIAL CERTIFICATE ID</button>':'<button type="button">DOWNLOAD TRANSCRIPT (PDF)</button>';
+    if(!pending){const button=actions.querySelector("button");button.addEventListener("click",()=>downloadTranscript(panel,record,button));}
     panel.querySelector('.geti-academic-transcript').insertAdjacentElement('afterend',actions);
+    if(!pending&&issued&&String(record.status||'').toUpperCase()==='PASSED'){
+      const notice=document.createElement('div');notice.textContent='Preparing automatic transcript email…';notice.setAttribute('role','status');actions.append(notice);
+      emailPassedTranscript(panel,record,issued,notice);
+    }
   }
   function classicRecord(){
     try{
       const student=examState.student||{};
+      const saved=typeof getExamRecords==='function'?getExamRecords().find(x=>String(x.id||x.candidate_id)===String(student.id)):null;
+      if(saved)return saved;
       const scores=Array.isArray(examState.subjectScores)?examState.subjectScores:[];
       const max=scores.reduce((sum,s)=>sum+number(s.totalQuestions??s.total??15),0);
       const actual=scores.reduce((sum,s)=>sum+number(s.score),0);
