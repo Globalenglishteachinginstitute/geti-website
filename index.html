@@ -7806,6 +7806,44 @@ html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {disp
 .myresult-card .geti-passed-email-retry:disabled{opacity:.62;cursor:wait}
 .myresult-card .geti-passed-mail-note{margin:10px 0 0;font-size:12px;line-height:1.5;color:#3a5877}
 </style>
+<style id="geti-qr-trigger-premium-style">
+/* Presentation only: scanner, QR parsing, and certificate verification stay unchanged. */
+#getiQrScanCard.geti-qr-card{padding:12px;border-radius:19px;border:1px solid #b6cbe4;background:linear-gradient(135deg,#ffffff 0%,#f3f8ff 60%,#fff9e9 100%);box-shadow:0 12px 30px rgba(13,43,80,.12)}
+#getiQrToggleButton.geti-qr-main-trigger{width:100%;min-height:110px;margin:0;padding:17px 18px;border-radius:14px;display:flex;align-items:center;gap:16px;background:transparent;transition:background .18s ease,box-shadow .18s ease;color:#12345c}
+#getiQrToggleButton.geti-qr-main-trigger:hover{background:#eaf3ff;box-shadow:inset 0 0 0 1px #ccdef3}
+#getiQrToggleButton.geti-qr-main-trigger:focus-visible{outline:3px solid #1e72bb;outline-offset:3px}
+#getiQrToggleButton .geti-qr-symbol{height:60px;width:60px;border-radius:17px;background:linear-gradient(145deg,#12396d,#236fb8);box-shadow:0 8px 20px rgba(15,58,112,.23);flex-shrink:0}
+#getiQrToggleButton .geti-qr-symbol svg{width:31px;height:31px}
+#getiQrToggleButton .geti-qr-trigger-copy{display:flex;flex:1;flex-direction:column;gap:7px;min-width:0;text-align:left}
+#getiQrToggleButton .geti-qr-eyebrow{color:#977327;font-size:10px;font-weight:900;letter-spacing:1.1px}
+#getiQrToggleButton .geti-qr-trigger-title{color:#123b6e;font-size:clamp(15px,2.2vw,21px);font-weight:900;line-height:1.35;letter-spacing:.1px}
+#getiQrToggleButton .geti-qr-trigger-desc{color:#4c627e;font-size:13px;line-height:1.5;font-weight:500}
+#getiQrToggleButton .geti-qr-trigger-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:#164c83;color:#fff;border-radius:999px;white-space:nowrap;padding:12px 14px;font-size:12px;font-weight:900;letter-spacing:.5px;flex:none}
+#getiQrToggleButton .geti-qr-trigger-action svg{width:16px;height:16px}
+#getiQrToggleButton .geti-qr-chevron{margin:0;color:#1a568c;font-size:25px;font-weight:800;flex-shrink:0}
+#getiQrToggleButton[aria-expanded="true"]{background:#eaf3ff}
+#getiQrToggleButton[aria-expanded="true"] .geti-qr-trigger-action{background:#1d7954}
+#getiQrScanCard #getiQrOptions{margin:0 8px 8px;padding:18px 12px 12px;border-top:1px solid #d7e4f2}
+#getiQrScanCard .geti-qr-btn{min-height:52px;border-radius:12px;box-shadow:0 4px 10px rgba(12,50,92,.08)}
+@media(max-width:690px){
+ #getiQrToggleButton.geti-qr-main-trigger{padding:15px 12px;gap:11px;min-height:104px}
+ #getiQrToggleButton .geti-qr-symbol{width:48px;height:48px;border-radius:13px}
+ #getiQrToggleButton .geti-qr-symbol svg{width:25px;height:25px}
+ #getiQrToggleButton .geti-qr-trigger-action{display:none}
+ #getiQrToggleButton .geti-qr-chevron{margin-left:auto}
+ #getiQrToggleButton .geti-qr-trigger-desc{font-size:12px}
+ #getiQrToggleButton .geti-qr-eyebrow{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){#getiQrToggleButton.geti-qr-main-trigger{transition:none}}
+</style>
+<style id="geti-qr-scanner-actions-polish">
+#getiQrScanCard .geti-qr-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:stretch}
+#getiQrScanCard .geti-qr-actions>.geti-qr-btn{flex:1 1 210px;min-height:54px;font-size:13px;font-weight:850;letter-spacing:.25px;cursor:pointer}
+#getiQrScanCard .geti-qr-actions>.geti-qr-btn:focus-visible{outline:3px solid #1678cc;outline-offset:2px}
+#getiQrScanCard .geti-qr-status{padding:12px 14px;background:#f1f6fd;border:1px solid #dce8f7;border-radius:10px;line-height:1.5}
+#getiQrScanCard .geti-qr-tip{font-size:12px;line-height:1.7;color:#566b83}
+@media(max-width:540px){#getiQrScanCard .geti-qr-actions{display:grid;grid-template-columns:1fr}#getiQrScanCard .geti-qr-actions>.geti-qr-btn{width:100%;min-height:50px}}
+</style>
 </head>
 
 <body translate="no" class="notranslate">
@@ -7870,7 +7908,8 @@ html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {disp
       <div class="geti-qr-card" id="getiQrScanCard">
         <button type="button" class="geti-qr-top geti-qr-main-trigger" id="getiQrToggleButton" aria-controls="getiQrOptions" aria-expanded="false" onclick="getiQrToggleOptions()">
           <div class="geti-qr-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="7" height="7" rx="1"/><rect x="15" y="2" width="7" height="7" rx="1"/><rect x="2" y="15" width="7" height="7" rx="1"/><path d="M5 5h1M18 5h1M5 18h1M13 13h3v3h-3zM20 13v3M18 20h4M13 20h2"/></svg></div>
-          <div><h3>SCAN QR CODE TO VERIFY CERTIFICATE</h3><p>Scan your GETI certificate QR code for official verification.</p></div>
+          <span class="geti-qr-trigger-copy"><span class="geti-qr-eyebrow">OFFICIAL GETI CERTIFICATE VERIFICATION</span><strong class="geti-qr-trigger-title">SCAN QR CODE TO VERIFY CERTIFICATE</strong><span class="geti-qr-trigger-desc">Use your camera or upload a QR image to check a certificate against GETI records.</span></span>
+          <span class="geti-qr-trigger-action" aria-hidden="true">SCAN QR <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
           <span class="geti-qr-chevron" aria-hidden="true">⌄</span>
         </button>
         <div id="getiQrOptions" hidden>
@@ -9130,6 +9169,7 @@ html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {disp
             <button type="button" role="menuitem" onclick="getiStudentTool('download')">DOWNLOAD MY RECORD</button>
             <button type="button" role="menuitem" onclick="getiStudentTool('resources')">GETI RESOURCES</button>
             <button type="button" role="menuitem" onclick="getiStudentTool('career')">CAREER OPPORTUNITIES</button>
+            <button type="button" role="menuitem" class="geti-student-tools-logout" onclick="window.getiToggleStudentTools(event);window.getiLogoutToFirstArea()">LOG OUT</button>
           </div>
         </div>
         <a class="geti-certificate-verification-small-btn" href="https://getienglish.com/certificate-verification.html">CERTIFICATE VERIFICATION</a>
@@ -9145,11 +9185,11 @@ html:not([data-geti-accreditation="visible"]) .geti-accreditation-pathways {disp
           <span><strong>Take an Exam</strong><small>Open the selected GETI examinations</small></span>
           <b>›</b>
         </button>
-        <button type="button" class="geti-first-quick-card" onclick="enterGetiPortal('lesson')">
+        <a class="geti-first-quick-card" href="https://getienglish.com/prolesson" style="text-decoration:none;">
           <span class="geti-first-quick-icon">▣</span>
-          <span><strong>Professional Lessons</strong><small>Open structured learning programs</small></span>
+          <span><strong>Professional Lessons</strong><small>Open professional lessons website</small></span>
           <b>›</b>
-        </button>
+        </a>
         <a class="geti-first-quick-card" href="https://getienglish.com/library" style="text-decoration:none;color:inherit;" aria-label="Library — Open GETI library">
           <span class="geti-first-quick-icon">▤</span>
           <span><strong>Library</strong><small>Explore learning resources and books</small></span>
@@ -9331,16 +9371,9 @@ TEFL, TESOL and assessment.
 
 
 
-<section class="geti-lessons-section" id="geti-lessons">
-<div class="container">
-
-
-<div id="lessonExamList" class="lesson-exam-list"></div>
-
-<div id="lessonSubjectArea"></div>
-
-<div id="lessonPanel" class="lesson-panel"></div>
-</div>
+<!-- Embedded Professional Lessons removed. The public Professional Lessons link goes to /prolesson. -->
+<section id="geti-lessons" hidden aria-hidden="true" style="display:none!important">
+<div id="lessonExamList" hidden></div><div id="lessonSubjectArea" hidden></div><div id="lessonPanel" hidden></div>
 </section>
 
 <section class="exams30-section" id="geti-30-exams">
@@ -11507,6 +11540,10 @@ async function submitRegistration(){
         program:examState.program
     };
 
+    // Shuffle answer positions while keeping each correct key paired with its text.
+    if(typeof window.getiShuffleClassicExamAnswers==="function"){
+        window.getiShuffleClassicExamAnswers(examState.program);
+    }
     examState.started=true;
     examState.timeRemaining=2700;
     examState.timeExpired=false;
@@ -11659,44 +11696,6 @@ function calculateAllSubjectScores(){
    SHOW QUESTION
 ========================================================= */
 
-
-/* GETI 2026: choice-length fairness for scenario-based examination items.
-   Original option text and correct indices in the question bank are unchanged.
-   Added context is answer-neutral, deterministic, and only used for pedagogical
-   scenario / professional judgement questions; grammar/lexical test sentences
-   are never changed. */
-function getiBalancedChoiceTexts(question, originalOptions){
-  const raw=(originalOptions||[]).map(function(x){return String(x??"");});
-  if(raw.length!==4)return raw;
-  const questionText=String(question||"");
-  const isScenario=/(?:teacher|learner|student|lesson|classroom|course|teaching|training|feedback|assessment|policy|intervention|professional|planning|evaluate|evaluation|practice|research|curriculum|instruction|learning|management|project|decision|evidence|approach|situation|scenario|methodology|development|task)/i.test(questionText);
-  const isLiteral=/(?:which sentence|choose the correct sentence|correct spelling|which word|what does ["'“]|meaning of ["'“]|relative clause|grammar form|which tense|punctuation|which letter|translation|which expression means|fill in the blank|pronounced|pronunciation of)/i.test(questionText);
-  if(!isScenario||isLiteral)return raw;
-  const longest=Math.max(...raw.map(function(x){return x.length;}));
-  if(longest<42)return raw;
-  const minimum=Math.min(96,Math.round(longest*0.76));
-  const endings=[
-    " as the main option for this situation",
-    " as the proposed action in this case",
-    " as the preferred response to the task",
-    " as the selected approach for this case"
-  ];
-  return raw.map(function(value){
-    // Leave meaningful longer answers intact. Avoid arbitrary truncation,
-    // changing quotations, or changing the underlying scoring key.
-    if(value.length>=minimum)return value;
-    const normalized=value.replace(/[.?!]+$/g,"");
-    let best="";
-    let nearest=Infinity;
-    for(const phrase of endings){
-      const candidate=normalized+phrase;
-      const error=Math.abs(candidate.length-Math.max(minimum,longest));
-      if(error<nearest){nearest=error;best=candidate;}
-    }
-    return best||value;
-  });
-}
-
 function showQuestion(){
     window.getiClassicAutoAdvanceLocked=false;
 
@@ -11777,8 +11776,6 @@ function showQuestion(){
     let container=
         document.getElementById("optionsContainer");
 
-    const getiDisplayChoices=getiBalancedChoiceTexts(q[0],q.slice(1,5));
-
     for(let i=1;i<=4;i++){
 
         let button=
@@ -11796,7 +11793,7 @@ function showQuestion(){
             "<strong>"+
             String.fromCharCode(64+i)+
             ".</strong> "+
-            escapeHTML(getiDisplayChoices[i-1]);
+            escapeHTML(q[i]);
 
         button.onclick=function(){
 
@@ -13963,6 +13960,24 @@ function getiExamFreshSeed(){
  try{const bytes=new Uint32Array(2);crypto.getRandomValues(bytes);return (bytes[0]^Math.imul(bytes[1],0x9E3779B1))>>>0;}
  catch(e){return (Date.now()^Math.floor(Math.random()*0xFFFFFFFF))>>>0;}
 }
+/* Distribute correct answers among A, B, C and D in every subject. */
+function geti30BalanceAnswerPositions(questionSets,seed){
+ if(!Array.isArray(questionSets))return questionSets;
+ return questionSets.map(function(items,subjectIndex){
+   if(!Array.isArray(items))return items;
+   var rnd=geti30SeededRandom((seed^geti30HashString("answer-positions-"+subjectIndex))>>>0);
+   var positions=geti30Shuffle(items.map(function(_,i){return i%4;}),rnd);
+   return items.map(function(item,index){
+     if(!Array.isArray(item)||item.length<6)return item;
+     var old=Number(item[5]),desired=positions[index];
+     if(!Number.isInteger(old)||old<0||old>3)return item;
+     var choices=item.slice(1,5);
+     var tmp=choices[old];choices[old]=choices[desired];choices[desired]=tmp;
+     return [item[0],...choices,desired];
+   });
+ });
+}
+
 function buildGeti30QuestionSets(){
  const subjects=GETI_30_EXAM_SUBJECTS[geti30State.exam]||[];
  const hours=getiExamActiveHours();
@@ -13993,6 +14008,7 @@ function buildGeti30QuestionSets(){
   const selected=getiHourCombine(domainBank,subject,rnd,usedQuestions);
   return selected.map(function(q){return geti30RandomizedChoices(q,rnd);});
  });
+ geti30State.questionSets=geti30BalanceAnswerPositions(geti30State.questionSets,masterSeed);
  geti30State.selectedQuestionHours=hours;
 }
 
@@ -14142,11 +14158,10 @@ function showGeti30Question(){
         '<button type="button" class="geti-restart-exam-btn" onclick="getiRestartActiveExam(\'geti30\')">↻ RESTART EXAM</button></div></div>';
 
     const c=document.getElementById("geti30Options");
-    const getiDisplayChoices=getiBalancedChoiceTexts(q[0],q.slice(1,5));
     for(let i=1;i<=4;i++){
         const b=document.createElement("button");
         b.className="option"+(selected===i-1?" selected":"");
-        b.innerHTML="<strong>"+String.fromCharCode(64+i)+".</strong> "+escapeHTML(getiDisplayChoices[i-1]);
+        b.innerHTML="<strong>"+String.fromCharCode(64+i)+".</strong> "+escapeHTML(q[i]);
         b.onclick=function(){selectGeti30Answer(i-1);};
         c.appendChild(b);
     }
@@ -19203,7 +19218,50 @@ const originalOpenLesson=window.openGetiLesson;
 window.openGetiLesson=function(exam,subject){const c=cfg(exam);if(!c)return originalOpenLesson(exam,subject);getiLessonState.exam=exam;getiLessonState.subject=subject;const panel=document.getElementById("lessonPanel"),nativeSubject=window.getLocalizedCourseSubject(exam,subject),level=window.getGeti200SubjectLevel(exam,subject);panel.classList.add("active");panel.innerHTML='<div class="geti-200-book-shell"><div class="geti-200-book-cover"><span class="geti-200-kicker">GETI · '+escapeHTML(c.ui.textbook)+'</span><h2>'+escapeHTML(nativeSubject)+'</h2><p>'+escapeHTML(c.ui.bookDesc)+'</p><div class="geti-200-meta"><span>'+escapeHTML(level)+'</span><span>'+escapeHTML(c.ui.chaptersLabel)+'</span><span>'+escapeHTML(c.ui.pagesLabel)+'</span><span>'+escapeHTML(c.ui.pagesPer)+'</span></div></div><div class="geti-200-resource-row"><button class="geti-200-resource" onclick="openGetiLessonPDF()"><strong>'+escapeHTML(c.ui.openPdf)+'</strong><span>'+escapeHTML(c.ui.openPdfSub)+'</span><em>'+escapeHTML(c.ui.openPdf)+'</em></button><button class="geti-200-resource" onclick="downloadLessonPDF()"><strong>'+escapeHTML(c.ui.downloadPdf)+'</strong><span>'+escapeHTML(c.ui.downloadPdfSub)+'</span><em>'+escapeHTML(c.ui.downloadPdf)+'</em></button></div>'+window.getGeti200OutlineHTML(exam,subject)+'</div>';panel.scrollIntoView({behavior:"smooth",block:"start"});};
 
 function nativePrintableBook(exam,subject,autoPrint){const c=cfg(exam);if(!c)return false;const w=window.open("","_blank");if(!w){alert("Popup blocked");return true;}const nativeSubject=window.getLocalizedCourseSubject(exam,subject);let pages="";for(let n=1;n<=200;n++){const d=nativePageText(exam,subject,n);pages+='<section class="pdfpage"><header>'+escapeHTML(c.ui.bookHeader)+'</header><h1>'+escapeHTML(nativeSubject)+'</h1><div class="meta">'+escapeHTML(c.exam)+' · '+escapeHTML(d.level)+' · '+escapeHTML(d.stage)+'</div><h2>'+escapeHTML(c.ui.chapter+' '+d.chapter+' · '+d.role)+'</h2>'+d.paragraphs.map(function(x){return '<p>'+escapeHTML(x)+'</p>';}).join("")+'<footer>'+escapeHTML(c.ui.page)+' '+n+' / 200</footer></section>';}
-  const html='<!doctype html><html lang="'+c.code+'"><head><meta charset="utf-8"><title>'+escapeHTML(nativeSubject)+' · 200</title><style>@page{size:A4;margin:0}*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans",sans-serif;color:#18283b}.pdfpage{width:210mm;height:297mm;padding:15mm 16mm 13mm;page-break-after:always;position:relative;overflow:hidden;background:#fff}.pdfpage:last-child{page-break-after:auto}header{background:#0b2d5c;color:#fff;padding:8px 10px;font-size:9pt;font-weight:700;letter-spacing:.03em}h1{font-size:18pt;margin:12px 0 3px;color:#0b2d5c}h2{font-size:12pt;color:#294d73;border-bottom:1px solid #d7e0ea;padding-bottom:5px;margin:12px 0 8px}.meta{font-size:8.5pt;color:#5b6c7d}p{font-size:9.7pt;line-height:1.48;margin:7px 0;text-align:justify}footer{position:absolute;bottom:6mm;left:16mm;right:16mm;border-top:1px solid #d7e0ea;padding-top:4px;font-size:8pt;color:#5c6b78;text-align:right}@media print{body{background:#fff}.pdfpage{box-shadow:none}}</style></head><body>'+pages+'</body></html>';
+  const html='<!doctype html><html lang="'+c.code+'"><head><meta charset="utf-8"><title>'+escapeHTML(nativeSubject)+' · 200</title><style>@page{size:A4;margin:0}*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans",sans-serif;color:#18283b}.pdfpage{width:210mm;height:297mm;padding:15mm 16mm 13mm;page-break-after:always;position:relative;overflow:hidden;background:#fff}.pdfpage:last-child{page-break-after:auto}header{background:#0b2d5c;color:#fff;padding:8px 10px;font-size:9pt;font-weight:700;letter-spacing:.03em}h1{font-size:18pt;margin:12px 0 3px;color:#0b2d5c}h2{font-size:12pt;color:#294d73;border-bottom:1px solid #d7e0ea;padding-bottom:5px;margin:12px 0 8px}.meta{font-size:8.5pt;color:#5b6c7d}p{font-size:9.7pt;line-height:1.48;margin:7px 0;text-align:justify}footer{position:absolute;bottom:6mm;left:16mm;right:16mm;border-top:1px solid #d7e0ea;padding-top:4px;font-size:8pt;color:#5c6b78;text-align:right}@media print{body{background:#fff}.pdfpage{box-shadow:none}}</style><style id="geti-student-tools-logout-style">
+#getiStudentToolsMenu .geti-student-tools-logout{margin-top:7px;border-top:1px solid rgba(127,127,127,.3);color:#c0394b;font-weight:800}
+#getiStudentToolsMenu .geti-student-tools-logout:hover,#getiStudentToolsMenu .geti-student-tools-logout:focus-visible{background:#fff0f2;color:#9b1832}
+</style>
+
+<style id="geti-qr-same-as-verify-button-style">
+/* Keep the QR click-to-reveal logic; match the VERIFY CERTIFICATE button. */
+/* Preserve the original QR card location, width, margins and padding. */
+#getiQrToggleButton.geti-qr-main-trigger{
+  box-sizing:border-box!important;display:flex!important;flex-direction:row!important;
+  width:100%!important;min-height:48px!important;height:auto!important;
+  margin:0!important;padding:9px 15px!important;gap:11px!important;
+  border:0!important;border-radius:8px!important;
+  background:linear-gradient(135deg,#f0bd47,#ffd56a)!important;
+  color:#082e5d!important;font-weight:950!important;
+  box-shadow:none!important;align-items:center!important;
+}
+#getiQrToggleButton.geti-qr-main-trigger:hover,
+#getiQrToggleButton.geti-qr-main-trigger[aria-expanded="true"]{
+  background:linear-gradient(135deg,#e5ae38,#ffcf56)!important;
+}
+#getiQrToggleButton .geti-qr-symbol{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  background:transparent!important;box-shadow:none!important;border-radius:0!important;
+  height:27px!important;width:27px!important;min-width:27px!important;
+}
+#getiQrToggleButton .geti-qr-symbol svg{height:25px!important;width:25px!important;stroke:#082e5d!important}
+#getiQrToggleButton .geti-qr-trigger-copy{display:block!important;min-width:0;flex:1;text-align:center!important}
+#getiQrToggleButton .geti-qr-trigger-title{
+  display:block!important;color:#082e5d!important;font-size:clamp(11px,2.2vw,14px)!important;
+  font-weight:950!important;line-height:1.25!important;letter-spacing:.12px!important;
+}
+#getiQrToggleButton .geti-qr-eyebrow,
+#getiQrToggleButton .geti-qr-trigger-desc,
+#getiQrToggleButton .geti-qr-trigger-action{display:none!important}
+#getiQrToggleButton .geti-qr-chevron{font-size:18px!important;color:#082e5d!important;margin:0!important}
+@media(max-width:400px){
+  #getiQrToggleButton.geti-qr-main-trigger{padding:11px 8px!important;gap:5px!important}
+  #getiQrToggleButton .geti-qr-symbol{height:22px!important;width:22px!important;min-width:22px!important}
+  #getiQrToggleButton .geti-qr-symbol svg{height:21px!important;width:21px!important}
+  #getiQrToggleButton .geti-qr-trigger-title{font-size:11px!important}
+}
+</style>
+</head><body>'+pages+'</body></html>';
   w.document.open();w.document.write(html);w.document.close();if(autoPrint)setTimeout(function(){w.focus();w.print();},500);return true;}
 const originalOpenPDF=window.openGetiLessonPDF;
 window.openGetiLessonPDF=function(){if(cfg(getiLessonState.exam))return nativePrintableBook(getiLessonState.exam,getiLessonState.subject,false);return originalOpenPDF();};
@@ -26558,15 +26616,31 @@ body.geti-pub-body-open{overflow:hidden!important}
 </script>
 
 <script id="geti-qr-collapse-handler">
-function getiQrToggleOptions(){
-  const options=document.getElementById('getiQrOptions');
-  const button=document.getElementById('getiQrToggleButton');
-  if(!options||!button)return;
-  const opening=options.hidden;
-  options.hidden=!opening;
-  button.setAttribute('aria-expanded',String(opening));
-  if(!opening && typeof getiQrCloseCamera==='function')getiQrCloseCamera();
-}
+(function(){
+  'use strict';
+  function syncQRPanel(open){
+    var options=document.getElementById('getiQrOptions');
+    var trigger=document.getElementById('getiQrToggleButton');
+    if(!options||!trigger)return;
+    options.hidden=!open;
+    trigger.setAttribute('aria-expanded',open?'true':'false');
+    trigger.setAttribute('aria-label',open?'Hide QR verification options':'Show QR verification options');
+    if(!open&&typeof window.getiQrCloseCamera==='function'){
+      try{window.getiQrCloseCamera();}catch(e){console.warn('GETI QR close camera',e);}
+    }
+  }
+  // Camera and upload controls are not shown until the heading is clicked.
+  window.getiQrToggleOptions=function(){
+    var options=document.getElementById('getiQrOptions');
+    if(!options)return;
+    syncQRPanel(options.hidden);
+  };
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){syncQRPanel(false);},{once:true});
+  }else{
+    syncQRPanel(false);
+  }
+})();
 </script>
 <style id="geti-live-exam-progress-css">
 .geti-live-progress{box-sizing:border-box;max-width:100%;margin:12px 0 22px;padding:15px 16px;border:1px solid #dce6ef;border-radius:14px;background:#fff;box-shadow:0 3px 12px rgba(19,43,78,.07);font-family:Arial,Helvetica,sans-serif}
@@ -26588,106 +26662,162 @@ function getiQrToggleOptions(){
 </style>
 <script id="geti-live-exam-progress-v90">
 (function(){
-  'use strict';
-  var PASS=90;
-  function clamp(n){return Math.max(0,Math.min(100,Number(n)||0));}
-  function pct(a,b){return b>0?Math.round(a/b*1000)/10:0;}
-  function fmt(n){return (Math.round(n*10)/10).toFixed(1).replace(/\.0$/,'')+'%';}
-  function compute(primary){
-    var answers,subjects,total=0,answered=0,correct=0,wrong=0;
-    var state=primary?(typeof geti30State!=='undefined'?geti30State:null):(typeof examState!=='undefined'?examState:null);
-    if(!state || !Array.isArray(state.answers) || !state.answers.length) return null;
-    answers=state.answers;
-    subjects=primary?(typeof GETI_30_EXAM_SUBJECTS!=='undefined'?GETI_30_EXAM_SUBJECTS:{})[state.exam]:(state.program==='TEFL'?TEFL_SUBJECTS:TESOL_SUBJECTS);
-    if(!subjects || !subjects.length)return null;
-    for(var si=0;si<subjects.length;si++){
-      var sub=subjects[si];
-      var rows=Array.isArray(answers[si])?answers[si]:[];
-      var count=primary?window.getGeti30QuestionCount(state.exam):15;
-      var bank=primary?null:(state.program==='TEFL'?TEFL_DATA:TESOL_DATA);
-      var questions=primary?null:(bank&&bank[sub]);
-      if(!Number.isFinite(count)||count<1)count=15;
-      for(var qi=0;qi<count;qi++){
+  "use strict";
+  const PASS_MARK=90;
+  const boundNames=new Set();
+
+  const clamp=n=>Math.max(0,Math.min(100,Number(n)||0));
+  const percent=(a,b)=>b>0?Math.round((a/b)*1000)/10:0;
+  const format=n=>String(Math.round(n*10)/10).replace(/\.0$/,"")+"%";
+
+  function stateFor(kind){
+    try{
+      return kind==="modern"
+        ? (typeof geti30State!=="undefined"?geti30State:null)
+        : (typeof examState!=="undefined"?examState:null);
+    }catch(_){return null;}
+  }
+
+  function getQuestion(kind,state,subject,subjectIndex,questionIndex){
+    try{
+      if(kind==="modern"){
+        return getGeti30Question(state.exam,subject,questionIndex);
+      }
+      const bank=state.program==="TEFL"?TEFL_DATA:TESOL_DATA;
+      return bank&&bank[subject]?bank[subject][questionIndex]:null;
+    }catch(_){return null;}
+  }
+
+  function getActiveIndexes(kind,state,subjectIndex){
+    if(kind==="classic")return Array.from({length:15},(_,i)=>i);
+    try{
+      const count=getGeti30QuestionCount(state.exam);
+      if(state.retryMode && Array.isArray(state.retryQuestionIndexes)){
+        const selected=state.retryQuestionIndexes[subjectIndex];
+        return Array.isArray(selected)?selected:[];
+      }
+      return Array.from({length:count},(_,i)=>i);
+    }catch(_){return Array.from({length:15},(_,i)=>i);}
+  }
+
+  function measure(kind){
+    const state=stateFor(kind);
+    if(!state||!state.started||!Array.isArray(state.answers))return null;
+    const subjects=kind==="modern"
+      ? (typeof GETI_30_EXAM_SUBJECTS!=="undefined"?GETI_30_EXAM_SUBJECTS[state.exam]:null)
+      : (state.program==="TEFL"?TEFL_SUBJECTS:TESOL_SUBJECTS);
+    if(!Array.isArray(subjects)||!subjects.length)return null;
+    let total=0,answered=0,correct=0,wrong=0;
+    for(let si=0;si<subjects.length;si++){
+      const rows=Array.isArray(state.answers[si])?state.answers[si]:[];
+      const active=getActiveIndexes(kind,state,si);
+      for(const qi of active){
+        const q=getQuestion(kind,state,subjects[si],si,qi);
+        if(!Array.isArray(q)||q.length<6)continue;
         total++;
-        var value=rows[qi];
+        const value=rows[qi];
         if(value===null||value===undefined||value==="")continue;
-        var q;
-        try{q=primary?window.getGeti30Question(state.exam,sub,qi):(questions&&questions[qi]);}catch(_){q=null;}
-        if(!q||!Number.isInteger(Number(q[5])))continue;
         answered++;
         if(Number(value)===Number(q[5]))correct++;
         else wrong++;
       }
     }
     if(!total)return null;
-    var remaining=total-answered;
-    var possiblePct=pct(correct+remaining,total);
-    // For English Proficiency, speaking is separately weighted at 20%.
-    // Treat remaining speaking points as potentially achievable, unless
-    // an already-scored speaking result exists.
-    var needsSpeaking=primary && /English Proficiency/i.test(String(state.examTitle||state.exam||''));
-    var speakingResult=state.speakingResult;
-    if(needsSpeaking){
-      var speakingWeight=speakingResult&&Number.isFinite(Number(speakingResult.percentage))?Number(speakingResult.percentage)*.2:20;
-      possiblePct=pct(correct+remaining,total)*.8+speakingWeight;
+    const remaining=total-answered;
+    const score=percent(correct,total);
+    let maximum=percent(correct+remaining,total);
+    // For English Proficiency, speaking has a separate 20% contribution.
+    const speaking=kind==="modern" && /English Proficiency/i.test(String(state.examTitle||state.exam||""));
+    if(speaking){
+      const r=state.speakingResult;
+      const available=r&&Number.isFinite(Number(r.percentage))
+        ? Number(r.percentage)*.2:20;
+      maximum=maximum*.8+available;
     }
-    var impossible=possiblePct+0.00001<PASS;
-    var red=impossible||(wrong>correct);
-    var complete=answered>=total && (!needsSpeaking||!!speakingResult);
-    return {total:total,answered:answered,correct:correct,wrong:wrong,completed:pct(answered,total),correctPercent:pct(correct,total),wrongPercent:pct(wrong,total),maximum:clamp(possiblePct),impossible:impossible,red:red,complete:complete};
+    const impossible=maximum+0.000001<PASS_MARK;
+    const completed=percent(answered,total);
+    const final=answered===total && (!speaking||!!state.speakingResult);
+    const red=impossible || (wrong>correct);
+    return {total,answered,correct,wrong,remaining,
+      completed,correctPct:score,wrongPct:percent(wrong,total),
+      maximum:clamp(maximum),impossible,red,final,
+      result: speaking && state.speakingResult
+        ? score*.8+Number(state.speakingResult.percentage)*.2
+        : score};
   }
-  function build(){
-    var el=document.createElement('div');
-    el.className='geti-live-progress green';
-    el.setAttribute('role','status');
-    el.innerHTML='<div class="geti-live-progress-header"><span>EXAM PROGRESS · PASS MARK 90%</span><span class="geti-live-progress-percentage">0%</span></div>'+
-      '<div class="geti-live-progress-rail" role="progressbar" aria-label="Examination completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="geti-live-progress-fill"></div></div>'+
+
+  function createWidget(){
+    const wrapper=document.createElement("div");
+    wrapper.className="geti-live-progress green";
+    wrapper.setAttribute("role","status");
+    wrapper.setAttribute("aria-live","polite");
+    wrapper.innerHTML=
+      '<div class="geti-live-progress-header"><span>EXAM PROGRESS · PASS MARK 90%</span><span class="geti-live-progress-percentage">0%</span></div>'+
+      '<div class="geti-live-progress-rail" role="progressbar" aria-label="Examination completed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="geti-live-progress-fill"></div></div>'+
       '<div class="geti-live-progress-stats"><span>Completed: <strong data-geti-stat="completed">0%</strong></span><span>Correct: <strong data-geti-stat="correct">0%</strong></span><span>Incorrect: <strong data-geti-stat="wrong">0%</strong></span><span>Maximum possible: <strong data-geti-stat="possible">100%</strong></span></div>'+
       '<div class="geti-live-progress-message">90% is still achievable.</div>';
-    return el;
+    return wrapper;
   }
-  function render(primary){
-    var panel=document.getElementById(primary?'geti30ExamPanel':'examPanel');
+
+  function paint(kind){
+    const panel=document.getElementById(kind==="modern"?"geti30ExamPanel":"examPanel");
     if(!panel)return;
-    var metrics=compute(primary);
+    const metrics=measure(kind);
     if(!metrics)return;
-    var anchor=panel.querySelector('.exam-progress');
-    if(!anchor)return;
-    var box=panel.querySelector('.geti-live-progress');
-    if(!box){box=build();anchor.insertAdjacentElement('afterend',box);}
-    box.classList.toggle('red',metrics.red);
-    box.classList.toggle('green',!metrics.red);
-    box.querySelector('.geti-live-progress-percentage').textContent=fmt(metrics.completed);
-    box.querySelector('.geti-live-progress-fill').style.width=clamp(metrics.completed)+'%';
-    var rail=box.querySelector('.geti-live-progress-rail');
-    rail.setAttribute('aria-valuenow',String(Math.round(metrics.completed)));
-    var stats={completed:metrics.completed,correct:metrics.correctPercent,wrong:metrics.wrongPercent,possible:metrics.maximum};
-    Object.keys(stats).forEach(function(k){var tag=box.querySelector('[data-geti-stat="'+k+'"]');if(tag)tag.textContent=fmt(stats[k]);});
-    var msg=box.querySelector('.geti-live-progress-message');
-    if(metrics.impossible)msg.textContent='FAILED TRAJECTORY · Even 100% on the remaining questions cannot reach 90%. Continue to complete your examination.';
-    else if(metrics.complete)msg.textContent=metrics.correctPercent>=PASS?'PASSED · Required 90% achieved.':'FAILED · Final result is below 90%.';
-    else if(metrics.red)msg.textContent='MORE INCORRECT THAN CORRECT · Recoverable: 90% is still mathematically possible.';
-    else msg.textContent='ON TRACK · 90% is still achievable if you answer enough remaining questions correctly.';
+    let box=panel.querySelector(".geti-live-progress");
+    if(!box){
+      box=createWidget();
+      const anchor=panel.querySelector(".exam-progress");
+      if(anchor)anchor.insertAdjacentElement("afterend",box);
+      else panel.insertAdjacentElement&&panel.prepend(box);
+    }
+    box.classList.toggle("red",metrics.red);
+    box.classList.toggle("green",!metrics.red);
+    box.querySelector(".geti-live-progress-percentage").textContent=format(metrics.completed);
+    box.querySelector(".geti-live-progress-fill").style.width=clamp(metrics.completed)+"%";
+    box.querySelector(".geti-live-progress-rail").setAttribute("aria-valuenow",String(Math.round(metrics.completed)));
+    const values={completed:metrics.completed,correct:metrics.correctPct,
+      wrong:metrics.wrongPct,possible:metrics.maximum};
+    Object.keys(values).forEach(key=>{
+      const el=box.querySelector('[data-geti-stat="'+key+'"]');
+      if(el)el.textContent=format(values[key]);
+    });
+    const msg=box.querySelector(".geti-live-progress-message");
+    if(metrics.impossible){
+      msg.textContent="FAILED TRAJECTORY · Even with every remaining question correct, 90% is no longer reachable.";
+    }else if(metrics.final){
+      msg.textContent=metrics.result>=PASS_MARK
+        ?"PASSED · The 90% pass requirement has been met."
+        :"FAILED · The final score is below 90%.";
+    }else if(metrics.red){
+      msg.textContent="MORE INCORRECT THAN CORRECT · 90% is still mathematically possible.";
+    }else{
+      msg.textContent="ON TRACK · 90% is still achievable.";
+    }
   }
-  // Wrap the last-loaded question renderers and selectors so the indicator
-  // updates immediately as an answer is chosen and survives question redraws.
-  function wrap(name,primary){
-    var original=window[name];
-    if(typeof original!=='function'||original.__getiProgressWrapped)return;
-    var wrapped=function(){
-      var result=original.apply(this,arguments);
-      try{render(primary);}catch(err){console.warn('GETI progress:',err);}
-      return result;
-    };
-    wrapped.__getiProgressWrapped=true;
+
+  function wrap(name,kind){
+    const original=window[name];
+    if(typeof original!=="function"||original.__getiProgressAllWrapped)return;
+    function wrapped(){
+      const value=original.apply(this,arguments);
+      try{paint(kind);}catch(e){console.warn("GETI exam progress",e);}
+      return value;
+    }
+    wrapped.__getiProgressAllWrapped=true;
     window[name]=wrapped;
   }
-  wrap('showGeti30Question',true);
-  wrap('selectGeti30Answer',true);
-  wrap('showQuestion',false);
-  wrap('selectAnswer',false);
-  // Subject navigation restores the indicator on the next question view.
-  window.getiLiveProgressUpdate=function(){render(true);render(false);};
+
+  // Both examination engines and all their subject screens use these functions.
+  ["showGeti30Question","selectGeti30Answer","submitGeti30Subject",
+   "continueGeti30Exam"].forEach(n=>wrap(n,"modern"));
+  ["showQuestion","selectAnswer","submitSubject","showFinalResult"]
+   .forEach(n=>wrap(n,"classic"));
+
+  window.getiLiveProgressUpdate=function(){
+    paint("classic");
+    paint("modern");
+  };
 })();
 </script>
 
@@ -26749,149 +26879,298 @@ window.getiRestartActiveExam=function(which){
 </script>
 
 <style id="geti-short-answer-indicator-style">
-.getiSelectedAnswerIndicator{
-  display:none!important;vertical-align:middle;margin-right:7px;
-  padding:3px 9px;border-radius:7px;background:#1b8c56!important;color:white!important;
-  font-weight:900!important;font-size:15px!important;line-height:1.5;
+#getiSelectedAnswerIndicator {
+ display:none;vertical-align:middle;margin-right:10px;padding:4px 11px;
+ border-radius:999px;background:#1b8c56;color:#fff;font-weight:900;
+ font-size:15px;line-height:1.5;letter-spacing:.4px;
 }
-.getiSelectedAnswerIndicator.geti-show{display:inline-flex!important;align-items:center;justify-content:center;}
-#getiAnswerVisibleFallback{display:none;position:fixed;top:10px;left:10px;z-index:2147483646;
- background:#082e5d;color:#fff;box-shadow:0 5px 18px #0005;border:2px solid #fff;
- border-radius:10px;padding:11px 14px;align-items:center;gap:8px;font-size:13px;font-weight:900;}
-#getiAnswerVisibleFallback.geti-show{display:flex!important;}
-#getiAnswerVisibleFallback .geti-answer-leading{background:#168b55;color:white;padding:4px 8px;border-radius:6px;}
+#getiSelectedAnswerIndicator.geti-show {display:inline-block;}
 </style>
 <script id="geti-short-answer-indicator-script">
 (function(){
- let timer=0;
- function getLabels(){
-   return Array.from(document.querySelectorAll(
-     '.geti-second-area-entrybar-inner > strong, .geti-inside-portal-badge'
-   )).filter(function(el){return el.textContent.trim().includes('GETI STUDENT AREA');});
- }
- function getMarkers(){
-   const markers=[];
-   getLabels().forEach(function(label){
-      let indicator=label.previousElementSibling;
-      if(!indicator||!indicator.classList.contains('getiSelectedAnswerIndicator')){
-         indicator=document.createElement('span');
-         indicator.className='getiSelectedAnswerIndicator';
-         indicator.setAttribute('aria-live','polite');
-         label.parentNode.insertBefore(indicator,label);
-      }
-      markers.push(indicator);
-   });
-   return markers;
- }
- function visible(el){if(!el)return false;const r=el.getBoundingClientRect();const cs=getComputedStyle(el);
-   return cs.display!=='none'&&cs.visibility!=='hidden'&&r.width>0&&r.height>0;
- }
- function fallback(){
-   let el=document.getElementById('getiAnswerVisibleFallback');
-   if(!el){el=document.createElement('div');el.id='getiAnswerVisibleFallback';el.innerHTML='<span class="geti-answer-leading"></span><span>GETI STUDENT AREA</span>';document.body.appendChild(el);}
-   return el;
- }
- window.getiShowSelectedAnswerLetter=function(answer){
-   const letter=['A','B','C','D'][Number(answer)];
-   if(!letter)return;
-   clearTimeout(timer);
-   const markers=getMarkers();
-   markers.forEach(function(el){el.textContent=letter;el.classList.add('geti-show');});
-   const visibleMarker=markers.some(visible);
-   const floating=fallback();
-   floating.querySelector('.geti-answer-leading').textContent=letter;
-   floating.classList.toggle('geti-show',!visibleMarker);
-   timer=setTimeout(window.getiClearSelectedAnswerLetter,2000);
- };
- window.getiClearSelectedAnswerLetter=function(){
-   clearTimeout(timer);timer=0;
-   document.querySelectorAll('.getiSelectedAnswerIndicator').forEach(function(el){el.textContent='';el.classList.remove('geti-show');});
-   const floating=document.getElementById('getiAnswerVisibleFallback');
-   if(floating)floating.classList.remove('geti-show');
- };
+  let clearIndicatorTimer=0;
+  function getIndicator(){
+    const heading=document.querySelector(".geti-second-area-entrybar-inner > strong");
+    if(!heading)return null;
+    let indicator=document.getElementById("getiSelectedAnswerIndicator");
+    if(!indicator){
+      indicator=document.createElement("span");
+      indicator.id="getiSelectedAnswerIndicator";
+      indicator.setAttribute("aria-live","polite");
+      heading.insertAdjacentElement("beforebegin",indicator);
+    }
+    return indicator;
+  }
+  window.getiShowSelectedAnswerLetter=function(optionIndex){
+    const letter=["A","B","C","D"][Number(optionIndex)];
+    if(!letter)return;
+    const indicator=getIndicator();
+    if(!indicator)return;
+    clearTimeout(clearIndicatorTimer);
+    indicator.textContent=letter;
+    indicator.classList.add("geti-show");
+    clearIndicatorTimer=setTimeout(function(){
+      indicator.classList.remove("geti-show");
+      indicator.textContent="";
+      clearIndicatorTimer=0;
+    },2000);
+  };
+  window.getiClearSelectedAnswerLetter=function(){
+    clearTimeout(clearIndicatorTimer);
+    clearIndicatorTimer=0;
+    const indicator=document.getElementById("getiSelectedAnswerIndicator");
+    if(indicator){
+      indicator.textContent="";
+      indicator.classList.remove("geti-show");
+    }
+  };
 })();
 </script>
-<style id="geti-answer-length-fairness">
-#optionsContainer, #geti30Options { display:grid;grid-template-columns:minmax(0,1fr);gap:10px; }
-#optionsContainer .option, #geti30Options .option {
-  display:flex;align-items:center;min-height:76px;box-sizing:border-box;
-  width:100%;padding:15px 18px;line-height:1.6;text-align:left;
-  overflow-wrap:anywhere;word-break:normal;white-space:normal;
+
+<style id="geti-equal-option-lengths-v2">
+/* Equal visual height and width for all answer choices, without hiding any words. */
+#optionsContainer, #geti30Options { width:100%; display:flex; flex-direction:column; align-items:stretch; gap:10px; }
+#optionsContainer button.option, #geti30Options button.option {
+  box-sizing:border-box!important;
+  width:100%!important; max-width:100%!important;
+  min-height:92px!important; margin:0!important;
+  padding:17px 21px!important; display:flex!important;
+  align-items:center!important; justify-content:flex-start!important;
+  text-align:left!important; line-height:1.55!important;
+  white-space:normal!important; overflow-wrap:anywhere!important;
+  overflow:visible!important; text-overflow:clip!important;
 }
-#optionsContainer .option strong, #geti30Options .option strong {
-  display:inline-block;min-width:24px;margin-right:9px;flex-shrink:0;
+#optionsContainer button.option strong, #geti30Options button.option strong {
+  flex:none; margin-right:9px; min-width:21px;
+}
+@media(min-width:900px){
+  #optionsContainer button.option, #geti30Options button.option { min-height:104px!important; }
 }
 @media(max-width:600px){
- #optionsContainer .option, #geti30Options .option {min-height:88px;padding:13px 14px;}
+  #optionsContainer button.option, #geti30Options button.option { min-height:86px!important; padding:15px!important; }
 }
 </style>
 
-<style id="geti-leave-exam-style">
-.geti-leave-exam-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;margin:13px 0 8px;padding:11px 21px;background:#fff;color:#274c7d;border:2px solid #718dac;border-radius:10px;font-size:13px;font-weight:800;letter-spacing:.3px;cursor:pointer;max-width:100%;}
-.geti-leave-exam-btn:hover,.geti-leave-exam-btn:focus-visible{background:#edf4fc;border-color:#285b90;}
-.geti-leave-exam-note{font-size:12px;color:#68778b;margin:6px 0 10px;line-height:1.6;}
-@media(max-width:600px){.geti-leave-exam-btn{width:100%;}}
-</style>
-<script id="geti-leave-exam-2026">
-/* LEAVE does not finish, grade or submit an examination. */
-(function(){
-  function panelFor(which){return document.getElementById(which==='classic'?'examPanel':'geti30ExamPanel');}
-  function modernSession(){try{return typeof geti30State!=='undefined'?geti30State:null;}catch(e){return null;}}
-  function classicSession(){try{return typeof examState!=='undefined'?examState:null;}catch(e){return null;}}
-  window.getiLeaveExam2026=function(which){
-    var modern=which==='modern', state=modern?modernSession():classicSession();
-    var started=!!(state&&state.started);
-    var text=started?
-      (modern?'LEAVE EXAM?\n\nYour answers and exam progress will be saved. Choose the same examination again to resume. No exam result will be submitted.':
-        'LEAVE EXAM?\n\nThis examination does not support saving an unfinished attempt. Your current answers will be lost. No result will be submitted.'):
-      'LEAVE REGISTRATION?\n\nYou can choose another examination or come back when you are ready.';
-    if(!window.confirm(text))return;
-    if(modern){
-      if(started){
-        try{if(typeof saveGeti30Session==='function')saveGeti30Session(state.sessionPhase||'question');}catch(e){console.warn('GETI session save failed',e);alert('Unable to save your exam progress. Please try again.');return;}
-      }
-      try{clearInterval(state&&state.timerInterval);}catch(e){}
-      if(state){state.started=false;state.timerInterval=null;}
-      try{if(typeof getiDisableExamLock==='function')getiDisableExamLock();}catch(e){}
-      try{if(window.speechSynthesis)window.speechSynthesis.cancel();}catch(e){}
-      try{if(typeof getiSpeakingState!=='undefined'&&getiSpeakingState.recognition)getiSpeakingState.recognition.stop();}catch(e){}
-      var panel=panelFor('modern');
-      if(panel){panel.classList.remove('active');panel.innerHTML='';}
-      var list=document.getElementById('geti30ExamList');
-      if(list){list.classList.add('show');list.scrollIntoView({behavior:'smooth',block:'start'});}
-      else{document.getElementById('geti-30-exams')?.scrollIntoView({behavior:'smooth',block:'start'});}
-    }else{
-      try{clearInterval(state&&state.timerInterval);}catch(e){}
-      if(state){state.started=false;state.timerInterval=null;}
-      try{if(typeof disableExamProtection==='function')disableExamProtection();}catch(e){}
-      var panel=panelFor('classic');
-      if(panel){panel.classList.remove('active','exam-protected');panel.innerHTML='';}
-      (document.querySelector('[onclick*="openExamRegistration"]')||document.getElementById('geti-30-exams'))?.scrollIntoView({behavior:'smooth',block:'start'});
+<script id="geti-classic-answer-position-shuffle">
+/* Shuffles options together with their answer key; never changes the wording or correctness. */
+window.getiShuffleClassicExamAnswers=function(program){
+  var banks=(program==="TEFL"?TEFL_DATA:TESOL_DATA);
+  if(!banks)return;
+  function randomInt(n){
+    var a=new Uint32Array(1);
+    if(window.crypto && window.crypto.getRandomValues){
+      var limit=Math.floor(4294967296/n)*n;
+      do{window.crypto.getRandomValues(a);}while(a[0]>=limit);
+      return a[0]%n;
     }
-  };
-  function attach(which){
-    var panel=panelFor(which);if(!panel||!panel.classList.contains('active'))return;
-    if(panel.querySelector('.geti-leave-exam-btn'))return;
-    // Only render in actual registration/examination screens.
-    if(!panel.querySelector('input,button,.exam-question,.exam30-question,.exam30-subject-summary,.geti-voice-exam'))return;
-    var button=document.createElement('button');
-    button.type='button';button.className='geti-leave-exam-btn';button.textContent='← LEAVE EXAM / CHOOSE ANOTHER';
-    button.setAttribute('aria-label','Leave exam without submitting a result');
-    button.onclick=function(){window.getiLeaveExam2026(which);};
-    var note=document.createElement('p');note.className='geti-leave-exam-note';
-    note.textContent=which==='modern'?'Not ready? Leave now and choose this examination again to resume your saved progress.':'Not ready? Leave now and choose another examination. Unfinished classic attempts are not saved.';
-    panel.appendChild(button);panel.appendChild(note);
+    return Math.floor(Math.random()*n);
   }
-  function initialize(){
-    ['classic','modern'].forEach(function(which){
-      var panel=panelFor(which);if(!panel)return;
-      var obs=new MutationObserver(function(){attach(which);});
-      obs.observe(panel,{childList:true,subtree:false,attributes:true,attributeFilter:['class']});
-      attach(which);
+  Object.keys(banks).forEach(function(subject){
+    var items=(banks[subject]||[]);
+    var targetPositions=[];
+    for(var k=0;k<items.length;k++){targetPositions.push(k%4);}
+    for(var k=targetPositions.length-1;k>0;k--){
+      var j=randomInt(k+1),tmp=targetPositions[k];
+      targetPositions[k]=targetPositions[j];targetPositions[j]=tmp;
+    }
+    items.forEach(function(item,qIndex){
+      if(!Array.isArray(item)||item.length<6)return;
+      var correct=Number(item[5]);
+      if(!Number.isInteger(correct)||correct<0||correct>3)return;
+      var options=item.slice(1,5).map(function(value,i){
+        return {text:value,correct:i===correct};
+      });
+      for(var i=options.length-1;i>0;i--){
+        var j=randomInt(i+1),tmp=options[i];options[i]=options[j];options[j]=tmp;
+      }
+      var target=targetPositions[qIndex],now=options.findIndex(function(x){return x.correct;});
+      var tmp=options[target];options[target]=options[now];options[now]=tmp;
+      options.forEach(function(option,i){item[i+1]=option.text;});
+      item[5]=target;
+    });
+  });
+};
+</script>
+
+<!-- GETI Editable Registration: visible after exam registration in both exam engines -->
+<style id="geti-edit-registration-style">
+.geti-edit-reg-action{display:inline-flex;align-items:center;justify-content:center;padding:10px 17px;margin:10px 8px 10px 0;background:#143b76;color:#fff;border:1px solid #24589c;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;min-height:42px}
+.geti-edit-reg-action:hover{background:#24589c}
+#geti-edit-reg-backdrop{position:fixed;inset:0;z-index:2147482500;background:rgba(11,20,38,.8);display:none;align-items:center;justify-content:center;padding:12px;overflow:auto}
+#geti-edit-reg-dialog{box-sizing:border-box;background:#fff;color:#172a46;width:min(640px,100%);max-height:92vh;overflow:auto;padding:24px;border-radius:17px;box-shadow:0 20px 70px rgba(0,0,0,.3);font-family:Arial,sans-serif}
+#geti-edit-reg-dialog h2{margin:0 0 7px;font-size:22px;color:#153d76}
+#geti-edit-reg-dialog p{font-size:13px;color:#607189;line-height:1.6}
+#geti-edit-reg-dialog .geti-edit-reg-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:15px 0}
+#geti-edit-reg-dialog label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:800}
+#geti-edit-reg-dialog input{width:100%;min-width:0;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:8px;padding:11px;font-size:14px}
+#geti-edit-reg-dialog input:disabled{background:#eff3f8;color:#596c84}
+#geti-edit-reg-dialog .geti-edit-reg-footer{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+#geti-edit-reg-dialog button{padding:11px 16px;border-radius:9px;cursor:pointer;font-weight:800}
+#geti-edit-reg-save{background:#153d76;color:#fff;border:0}
+#geti-edit-reg-cancel{background:#fff;color:#153d76;border:1px solid #cbd5e1}
+#geti-edit-reg-error{min-height:18px;color:#a32737;font-size:13px;margin-bottom:10px}
+@media(max-width:600px){#geti-edit-reg-dialog .geti-edit-reg-fields{grid-template-columns:1fr}}
+</style>
+<script id="geti-edit-registration-script">
+(function(){
+  'use strict';
+  var mode=null;
+  var active=false;
+  var fields=[['name','Full Name'],['email','Email (cannot change)'],['nationality','Nationality'],['country','Country'],['city','City'],['postalCode','Postal Code'],['address','Street Address'],['countryCode','Country Code'],['phone','Phone Number'],['institution','Institution'],['employment','Employment Status'],['job','Job Title'],['education','Education'],['language','Preferred Language']];
+  function currentState(which){try{return which==='modern'?geti30State:examState}catch(e){return null}}
+  function safe(text){return String(text==null?'':text).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function stateIsActive(st){return !!(st&&st.started&&st.student&&st.student.id)}
+  function ensureAction(which){
+    var panel=document.getElementById(which==='modern'?'geti30ExamPanel':'examPanel');
+    var st=currentState(which);
+    if(!panel||!panel.classList.contains('active')||!stateIsActive(st))return;
+    if(!panel.querySelector('.geti-edit-reg-action')){
+      var b=document.createElement('button');b.type='button';b.className='geti-edit-reg-action';b.textContent='✎ EDIT MY REGISTRATION';
+      b.onclick=function(){window.getiOpenRegistrationEditor(which)};
+      var title=panel.querySelector('.exam-title');
+      if(title)title.insertAdjacentElement('afterend',b);else panel.prepend(b);
+    }
+  }
+  function root(){
+    var node=document.getElementById('geti-edit-reg-backdrop');if(node)return node;
+    node=document.createElement('div');node.id='geti-edit-reg-backdrop';node.innerHTML='<div id="geti-edit-reg-dialog" role="dialog" aria-modal="true" aria-label="Edit My Registration"><h2>EDIT MY REGISTRATION</h2><p>Edit your personal information without restarting the examination. Candidate ID, examination type, results and grading cannot be changed.</p><form id="geti-edit-reg-form"><div class="geti-edit-reg-fields"></div><div id="geti-edit-reg-error" role="alert"></div><div class="geti-edit-reg-footer"><button id="geti-edit-reg-cancel" type="button">CANCEL</button><button id="geti-edit-reg-save" type="submit">SAVE CHANGES</button></div></form></div>';
+    document.body.appendChild(node);
+    node.querySelector('#geti-edit-reg-cancel').onclick=function(){node.style.display='none';mode=null};
+    node.addEventListener('click',function(event){if(event.target===node){node.style.display='none';mode=null}});
+    node.querySelector('#geti-edit-reg-form').addEventListener('submit',save);
+    return node;
+  }
+  window.getiOpenRegistrationEditor=function(which){
+    var st=currentState(which);if(!stateIsActive(st)){alert('Finish your registration first.');return}
+    mode=which;
+    var container=root();var list=container.querySelector('.geti-edit-reg-fields');
+    list.innerHTML=fields.map(function(f){
+      var value=f[0]==='email'?st.student.email:st.student[f[0]];
+      return '<label>'+safe(f[1])+'<input type="text" data-reg-field="'+f[0]+'" value="'+safe(value)+'" '+(f[0]==='email'?'disabled':'')+' maxlength="180"></label>';
+    }).join('');
+    container.querySelector('#geti-edit-reg-error').textContent='';
+    container.style.display='flex';
+    var first=container.querySelector('[data-reg-field="name"]');if(first)first.focus();
+  };
+  async function save(event){
+    event.preventDefault();if(active||!mode)return;
+    var st=currentState(mode);if(!stateIsActive(st))return;
+    var panel=root(),error=panel.querySelector('#geti-edit-reg-error');
+    var data={};panel.querySelectorAll('input[data-reg-field]').forEach(function(i){data[i.dataset.regField]=i.value.trim()});
+    if(!data.name||!data.nationality||!data.country||!data.phone){error.textContent='Full Name, Nationality, Country and Phone Number are required.';return}
+    active=true;var saveButton=panel.querySelector('#geti-edit-reg-save');saveButton.disabled=true;saveButton.textContent='SAVING...';
+    try{
+      if(mode==='classic'){
+        // Persist the real Supabase registration only for its authenticated owner.
+        var sessionResult=await GETI_SB.auth.getSession();
+        var token=sessionResult&&sessionResult.data&&sessionResult.data.session&&sessionResult.data.session.access_token;
+        if(!token)throw Error('Sign in to your GETI account to save your registration securely.');
+        await getiFetchJson(GETI_EXAM_FUNCTION,{
+          method:'POST',headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY,'Authorization':'Bearer '+token},
+          body:JSON.stringify({action:'edit_my_registration',candidate_id:st.student.id,details:{
+            full_name:data.name,nationality:data.nationality,country:data.country,phone:data.phone,institution:data.institution,
+            city:data.city,postal_code:data.postalCode,address:data.address,country_code:data.countryCode,
+            employment_status:data.employment,job_title:data.job,education_level:data.education,preferred_language:data.language
+          }})
+        });
+      }
+      // Modern exams keep their current in-progress registration in the saved session.
+      Object.keys(data).forEach(function(k){if(k!=='email')st.student[k]=data[k]});
+      if(mode==='modern'){
+        try{if(typeof saveGeti30Session==='function')saveGeti30Session(st.sessionPhase||'question')}catch(e){}
+      }
+      panel.style.display='none';mode=null;
+      alert('Registration updated successfully. Your answers and exam progress are unchanged.');
+    }catch(err){error.textContent=err.message||'Unable to save registration.'}
+    finally{active=false;saveButton.disabled=false;saveButton.textContent='SAVE CHANGES'}
+  }
+  // Render after question panels change; avoid touching exam scoring or navigation.
+  var queued=false;
+  var observer=new MutationObserver(function(){if(queued)return;queued=true;requestAnimationFrame(function(){queued=false;ensureAction('classic');ensureAction('modern')})});
+  function init(){observer.observe(document.body,{subtree:true,childList:true});ensureAction('classic');ensureAction('modern')}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+<script id="geti-country-calling-code-auto">
+(function(){
+  "use strict";
+  var map={"Afghanistan":"+93","افغانستان":"+93","Afganistán":"+93","アフガニスタン":"+93","Albania":"+355","Shqipëria":"+355","Albanien":"+355","Albanie":"+355","アルバニア":"+355","Algeria":"+213","الجزائر":"+213","Algerien":"+213","Argelia":"+213","Algérie":"+213","アルジェリア":"+213","American Samoa":"+1684","Amerikanisch-Samoa":"+1684","Samoa Americana":"+1684","Samoa américaines":"+1684","アメリカ領サモア":"+1684","Samoa Americane":"+1684","Angola":"+244","アンゴラ":"+244","Anguilla":"+1264","アンギラ":"+1264","Antigua and Barbuda":"+1268","Antigua und Barbuda":"+1268","Antigua y Barbuda":"+1268","Antigua-et-Barbuda":"+1268","アンティグア・バーブーダ":"+1268","Antigua e Barbuda":"+1268","Argentina":"+54","Argentinien":"+54","Argentine":"+54","アルゼンチン":"+54","Armenia":"+374","Հայաստան":"+374","Armenien":"+374","Arménie":"+374","アルメニア":"+374","Aruba":"+297","アルバ":"+297","Australia":"+61","Australien":"+61","Australie":"+61","オーストラリア":"+61","Austria":"+43","Österreich":"+43","Autriche":"+43","オーストリア":"+43","Azerbaijan":"+994","Azərbaycan":"+994","Aserbaidschan":"+994","Azerbaiyán":"+994","Azerbaïdjan":"+994","アゼルバイジャン":"+994","The Bahamas":"+1242","Bahamas":"+1242","バハマ":"+1242","Bahrain":"+973","‏البحرين":"+973","Bahrein":"+973","Bahreïn":"+973","バーレーン":"+973","Bangladesh":"+880","বাংলাদেশ":"+880","Bangladesch":"+880","バングラデシュ":"+880","Barbados":"+1246","Barbade":"+1246","バルバドス":"+1246","Belarus":"+375","Белару́сь":"+375","Weißrussland":"+375","Bielorrusia":"+375","Biélorussie":"+375","ベラルーシ":"+375","Bielorussia":"+375","Belgium":"+32","België":"+32","Belgien":"+32","Bélgica":"+32","Belgique":"+32","ベルギー":"+32","Belgio":"+32","Belize":"+501","Belice":"+501","ベリーズ":"+501","Benin":"+229","Bénin":"+229","Benín":"+229","ベナン":"+229","Bermuda":"+1441","Bermudas":"+1441","Bermudes":"+1441","バミューダ":"+1441","Bhutan":"+975","ʼbrug-yul":"+975","Bután":"+975","Bhoutan":"+975","ブータン":"+975","Bolivia":"+591","Bolivien":"+591","Bolivie":"+591","ボリビア多民族国":"+591","Bosnia and Herzegovina":"+387","Bosna i Hercegovina":"+387","Bosnien und Herzegowina":"+387","Bosnia y Herzegovina":"+387","Bosnie-Herzégovine":"+387","ボスニア・ヘルツェゴビナ":"+387","Bosnia ed Erzegovina":"+387","Botswana":"+267","ボツワナ":"+267","Brazil":"+55","Brasil":"+55","Brasilien":"+55","Brésil":"+55","ブラジル":"+55","Brasile":"+55","British Indian Ocean Territory":"+246","Britisches Territorium im Indischen Ozean":"+246","Territorio Británico del Océano Índico":"+246","Territoire britannique de l'océan Indien":"+246","イギリス領インド洋地域":"+246","Territorio britannico dell'oceano indiano":"+246","Brunei":"+673","Negara Brunei Darussalam":"+673","ブルネイ・ダルサラーム":"+673","Bulgaria":"+359","България":"+359","Bulgarien":"+359","Bulgarie":"+359","ブルガリア":"+359","Burkina Faso":"+226","ブルキナファソ":"+226","Burundi":"+257","ブルンジ":"+257","Cambodia":"+855","Kâmpŭchéa":"+855","Kambodscha":"+855","Camboya":"+855","Cambodge":"+855","カンボジア":"+855","Cambogia":"+855","Cameroon":"+237","Kamerun":"+237","Camerún":"+237","Cameroun":"+237","カメルーン":"+237","Camerun":"+237","Canada":"+1","Kanada":"+1","Canadá":"+1","カナダ":"+1","Cape Verde":"+238","Cabo Verde":"+238","Kap Verde":"+238","Cap Vert":"+238","カーボベルデ":"+238","Capo Verde":"+238","Cayman Islands":"+1345","Kaimaninseln":"+1345","Islas Caimán":"+1345","Îles Caïmans":"+1345","ケイマン諸島":"+1345","Isole Cayman":"+1345","Central African Republic":"+236","Ködörösêse tî Bêafrîka":"+236","Zentralafrikanische Republik":"+236","República Centroafricana":"+236","République centrafricaine":"+236","中央アフリカ共和国":"+236","Repubblica Centrafricana":"+236","Chad":"+235","Tchad":"+235","Tschad":"+235","チャド":"+235","Ciad":"+235","Chile":"+56","Chili":"+56","Cile":"+56","China":"+86","Chine":"+86","Cina":"+86","Christmas Island":"+61","Weihnachtsinsel":"+61","Isla de Navidad":"+61","Île Christmas":"+61","クリスマス島":"+61","Isola di Natale":"+61","Cocos (Keeling) Islands":"+61","Kokosinseln":"+61","Islas Cocos o Islas Keeling":"+61","Îles Cocos":"+61","ココス（キーリング）諸島":"+61","Isole Cocos e Keeling":"+61","Colombia":"+57","Kolumbien":"+57","Colombie":"+57","コロンビア":"+57","Comoros":"+269","Komori":"+269","Union der Komoren":"+269","Comoras":"+269","Comores":"+269","コモロ":"+269","Comore":"+269","Republic of the Congo":"+242","République du Congo":"+242","Kongo":"+242","Congo":"+242","コンゴ共和国":"+242","Democratic Republic of the Congo":"+243","République démocratique du Congo":"+243","Kongo (Dem. Rep.)":"+243","Congo (Rep. Dem.)":"+243","Congo (Rép. dém.)":"+243","コンゴ民主共和国":"+243","Cook Islands":"+682","Cookinseln":"+682","Islas Cook":"+682","Îles Cook":"+682","クック諸島":"+682","Isole Cook":"+682","Costa Rica":"+506","コスタリカ":"+506","Ivory Coast":"+225","Côte d'Ivoire":"+225","Elfenbeinküste":"+225","Costa de Marfil":"+225","コートジボワール":"+225","Costa D'Avorio":"+225","Croatia":"+385","Hrvatska":"+385","Kroatien":"+385","Croacia":"+385","Croatie":"+385","クロアチア":"+385","Croazia":"+385","Cuba":"+53","Kuba":"+53","キューバ":"+53","Cyprus":"+357","Κύπρος":"+357","Zypern":"+357","Chipre":"+357","Chypre":"+357","キプロス":"+357","Cipro":"+357","Czech Republic":"+420","Česká republika":"+420","Tschechische Republik":"+420","República Checa":"+420","République tchèque":"+420","チェコ":"+420","Repubblica Ceca":"+420","Denmark":"+45","Danmark":"+45","Dänemark":"+45","Dinamarca":"+45","Danemark":"+45","デンマーク":"+45","Danimarca":"+45","Djibouti":"+253","Dschibuti":"+253","Yibuti":"+253","ジブチ":"+253","Gibuti":"+253","Dominica":"+1767","Dominique":"+1767","ドミニカ国":"+1767","Dominican Republic":"+1809","República Dominicana":"+1809","Dominikanische Republik":"+1809","République dominicaine":"+1809","ドミニカ共和国":"+1809","Repubblica Dominicana":"+1809","Ecuador":"+593","Équateur":"+593","エクアドル":"+593","Egypt":"+20","مصر‎":"+20","Ägypten":"+20","Egipto":"+20","Égypte":"+20","エジプト":"+20","Egitto":"+20","El Salvador":"+503","Salvador":"+503","エルサルバドル":"+503","Equatorial Guinea":"+240","Guinea Ecuatorial":"+240","Äquatorial-Guinea":"+240","Guinée-Équatoriale":"+240","赤道ギニア":"+240","Guinea Equatoriale":"+240","Eritrea":"+291","ኤርትራ":"+291","Érythrée":"+291","エリトリア":"+291","Estonia":"+372","Eesti":"+372","Estland":"+372","Estonie":"+372","エストニア":"+372","Ethiopia":"+251","ኢትዮጵያ":"+251","Äthiopien":"+251","Etiopía":"+251","Éthiopie":"+251","エチオピア":"+251","Etiopia":"+251","Falkland Islands":"+500","Falklandinseln":"+500","Islas Malvinas":"+500","Îles Malouines":"+500","フォークランド（マルビナス）諸島":"+500","Isole Falkland o Isole Malvine":"+500","Faroe Islands":"+298","Føroyar":"+298","Färöer-Inseln":"+298","Islas Faroe":"+298","Îles Féroé":"+298","フェロー諸島":"+298","Isole Far Oer":"+298","Fiji":"+679","Fidschi":"+679","Fiyi":"+679","Fidji":"+679","フィジー":"+679","Figi":"+679","Finland":"+358","Suomi":"+358","Finnland":"+358","Finlandia":"+358","Finlande":"+358","フィンランド":"+358","France":"+33","Frankreich":"+33","Francia":"+33","フランス":"+33","French Guiana":"+594","Guyane française":"+594","Französisch Guyana":"+594","Guayana Francesa":"+594","Guayane":"+594","フランス領ギアナ":"+594","Guyana francese":"+594","French Polynesia":"+689","Polynésie française":"+689","Französisch-Polynesien":"+689","Polinesia Francesa":"+689","フランス領ポリネシア":"+689","Polinesia Francese":"+689","Gabon":"+241","Gabun":"+241","Gabón":"+241","ガボン":"+241","The Gambia":"+220","Gambia":"+220","Gambie":"+220","ガンビア":"+220","Georgia":"+995","საქართველო":"+995","Georgien":"+995","Géorgie":"+995","グルジア":"+995","Germany":"+49","Deutschland":"+49","Alemania":"+49","Allemagne":"+49","ドイツ":"+49","Germania":"+49","Duitsland":"+49","Niemcy":"+49","Tyskland":"+49","Ghana":"+233","ガーナ":"+233","Gibraltar":"+350","ジブラルタル":"+350","Gibilterra":"+350","Greece":"+30","Ελλάδα":"+30","Griechenland":"+30","Grecia":"+30","Grèce":"+30","ギリシャ":"+30","Greenland":"+299","Kalaallit Nunaat":"+299","Grönland":"+299","Groenlandia":"+299","Groenland":"+299","グリーンランド":"+299","Grenada":"+1473","Grenade":"+1473","グレナダ":"+1473","Guadeloupe":"+590","Guadalupe":"+590","グアドループ":"+590","Guadeloupa":"+590","Guam":"+1671","グアム":"+1671","Guatemala":"+502","グアテマラ":"+502","Guernsey":"+44","Guernesey":"+44","ガーンジー":"+44","Guinea":"+224","Guinée":"+224","ギニア":"+224","Guinea-Bissau":"+245","Guiné-Bissau":"+245","Guinea-Bisáu":"+245","Guinée-Bissau":"+245","ギニアビサウ":"+245","Guyana":"+592","Guyane":"+592","ガイアナ":"+592","Haiti":"+509","Haïti":"+509","ハイチ":"+509","Honduras":"+504","ホンジュラス":"+504","Hong Kong":"+852","Hungary":"+36","Magyarország":"+36","Ungarn":"+36","Hungría":"+36","Hongrie":"+36","ハンガリー":"+36","Ungheria":"+36","Iceland":"+354","Ísland":"+354","Island":"+354","Islandia":"+354","Islande":"+354","アイスランド":"+354","Islanda":"+354","India":"+91","भारत":"+91","Indien":"+91","Inde":"+91","インド":"+91","Indonesia":"+62","Indonesien":"+62","Indonésie":"+62","インドネシア":"+62","Iran":"+98","Irān":"+98","イラン・イスラム共和国":"+98","Iraq":"+964","العراق":"+964","Irak":"+964","イラク":"+964","Ireland":"+353","Éire":"+353","Irland":"+353","Irlanda":"+353","Irlande":"+353","アイルランド":"+353","Israel":"+972","יִשְׂרָאֵל":"+972","Israël":"+972","イスラエル":"+972","Israele":"+972","Italy":"+39","Italia":"+39","Italien":"+39","Italie":"+39","イタリア":"+39","Jamaica":"+1876","Jamaika":"+1876","Jamaïque":"+1876","ジャマイカ":"+1876","Giamaica":"+1876","Japan":"+81","Japón":"+81","Japon":"+81","Giappone":"+81","Jersey":"+44","ジャージー":"+44","Isola di Jersey":"+44","Jordan":"+962","الأردن":"+962","Jordanien":"+962","Jordania":"+962","Jordanie":"+962","ヨルダン":"+962","Giordania":"+962","Kazakhstan":"+76","Қазақстан":"+76","Kasachstan":"+76","Kazajistán":"+76","カザフスタン":"+76","Kazakistan":"+76","Kenya":"+254","Kenia":"+254","ケニア":"+254","Kiribati":"+686","キリバス":"+686","North Korea":"+850","Nordkorea":"+850","Corea del Norte":"+850","Corée du Nord":"+850","朝鮮民主主義人民共和国":"+850","Corea del Nord":"+850","South Korea":"+82","대한민국":"+82","Südkorea":"+82","Corea del Sur":"+82","Corée du Sud":"+82","大韓民国":"+82","Corea del Sud":"+82","Kuwait":"+965","الكويت":"+965","Koweït":"+965","クウェート":"+965","Kyrgyzstan":"+996","Кыргызстан":"+996","Kirgisistan":"+996","Kirguizistán":"+996","Kirghizistan":"+996","キルギス":"+996","Laos":"+856","ສປປລາວ":"+856","ラオス人民民主共和国":"+856","Latvia":"+371","Latvija":"+371","Lettland":"+371","Letonia":"+371","Lettonie":"+371","ラトビア":"+371","Lettonia":"+371","Lebanon":"+961","لبنان":"+961","Libanon":"+961","Líbano":"+961","Liban":"+961","レバノン":"+961","Libano":"+961","Lesotho":"+266","レソト":"+266","Liberia":"+231","リベリア":"+231","Libya":"+218","‏ليبيا":"+218","Libyen":"+218","Libia":"+218","Libye":"+218","リビア":"+218","Liechtenstein":"+423","リヒテンシュタイン":"+423","Lithuania":"+370","Lietuva":"+370","Litauen":"+370","Lituania":"+370","Lituanie":"+370","リトアニア":"+370","Luxembourg":"+352","Luxemburg":"+352","Luxemburgo":"+352","ルクセンブルク":"+352","Lussemburgo":"+352","Macau":"+853","Macao":"+853","マカオ":"+853","Republic of Macedonia":"+389","Македонија":"+389","Mazedonien":"+389","Macedonia":"+389","Macédoine":"+389","マケドニア旧ユーゴスラビア共和国":"+389","Madagascar":"+261","Madagasikara":"+261","Madagaskar":"+261","マダガスカル":"+261","Malawi":"+265","マラウイ":"+265","Malaysia":"+60","Malasia":"+60","Malaisie":"+60","マレーシア":"+60","Malesia":"+60","Maldives":"+960","Malediven":"+960","Maldivas":"+960","モルディブ":"+960","Maldive":"+960","Mali":"+223","Malta":"+356","Malte":"+356","マルタ":"+356","Isle of Man":"+44","Insel Man":"+44","Isla de Man":"+44","Île de Man":"+44","マン島":"+44","Isola di Man":"+44","Marshall Islands":"+692","M̧ajeļ":"+692","Marshallinseln":"+692","Islas Marshall":"+692","Îles Marshall":"+692","マーシャル諸島":"+692","Isole Marshall":"+692","Martinique":"+596","Martinica":"+596","マルティニーク":"+596","Mauritania":"+222","موريتانيا":"+222","Mauretanien":"+222","Mauritanie":"+222","モーリタニア":"+222","Mauritius":"+230","Maurice":"+230","Mauricio":"+230","Île Maurice":"+230","モーリシャス":"+230","Mayotte":"+262","マヨット":"+262","Mexico":"+52","México":"+52","Mexiko":"+52","Mexique":"+52","メキシコ":"+52","Messico":"+52","Federated States of Micronesia":"+691","Micronesia":"+691","Mikronesien":"+691","Micronésie":"+691","ミクロネシア連邦":"+691","Moldova":"+373","Moldawie":"+373","Moldavia":"+373","Moldavie":"+373","モルドバ共和国":"+373","Monaco":"+377","Mónaco":"+377","モナコ":"+377","Principato di Monaco":"+377","Mongolia":"+976","Монгол улс":"+976","Mongolei":"+976","Mongolie":"+976","モンゴル":"+976","Montserrat":"+1664","モントセラト":"+1664","Morocco":"+212","المغرب":"+212","Marokko":"+212","Marruecos":"+212","Maroc":"+212","モロッコ":"+212","Marocco":"+212","Mozambique":"+258","Moçambique":"+258","Mosambik":"+258","モザンビーク":"+258","Mozambico":"+258","Namibia":"+264","Namibie":"+264","ナミビア":"+264","Nauru":"+674","ナウル":"+674","Nepal":"+977","नेपाल":"+977","Népal":"+977","ネパール":"+977","Netherlands":"+31","Nederland":"+31","Niederlande":"+31","Países Bajos":"+31","Pays-Bas":"+31","オランダ":"+31","Paesi Bassi":"+31","New Caledonia":"+687","Nouvelle-Calédonie":"+687","Neukaledonien":"+687","Nueva Caledonia":"+687","ニューカレドニア":"+687","Nuova Caledonia":"+687","New Zealand":"+64","Neuseeland":"+64","Nueva Zelanda":"+64","Nouvelle-Zélande":"+64","ニュージーランド":"+64","Nuova Zelanda":"+64","Nicaragua":"+505","ニカラグア":"+505","Niger":"+227","Níger":"+227","ニジェール":"+227","Nigeria":"+234","Nigéria":"+234","ナイジェリア":"+234","Niue":"+683","Niuē":"+683","ニウエ":"+683","Norfolk Island":"+672","Norfolkinsel":"+672","Isla de Norfolk":"+672","Île de Norfolk":"+672","ノーフォーク島":"+672","Isola Norfolk":"+672","Northern Mariana Islands":"+1670","Nördliche Marianen":"+1670","Islas Marianas del Norte":"+1670","Îles Mariannes du Nord":"+1670","北マリアナ諸島":"+1670","Isole Marianne Settentrionali":"+1670","Norway":"+47","Norge":"+47","Norwegen":"+47","Noruega":"+47","Norvège":"+47","ノルウェー":"+47","Norvegia":"+47","Oman":"+968","عمان":"+968","Omán":"+968","オマーン":"+968","oman":"+968","Pakistan":"+92","Pakistán":"+92","パキスタン":"+92","Palau":"+680","Palaos":"+680","パラオ":"+680","Panama":"+507","Panamá":"+507","パナマ":"+507","Papua New Guinea":"+675","Papua Niugini":"+675","Papua-Neuguinea":"+675","Papúa Nueva Guinea":"+675","Papouasie-Nouvelle-Guinée":"+675","パプアニューギニア":"+675","Papua Nuova Guinea":"+675","Paraguay":"+595","パラグアイ":"+595","Peru":"+51","Perú":"+51","Pérou":"+51","ペルー":"+51","Perù":"+51","Philippines":"+63","Pilipinas":"+63","Philippinen":"+63","Filipinas":"+63","フィリピン":"+63","Filippine":"+63","Pitcairn Islands":"+64","Pitcairn":"+64","Islas Pitcairn":"+64","Îles Pitcairn":"+64","ピトケアン":"+64","Isole Pitcairn":"+64","Poland":"+48","Polska":"+48","Polen":"+48","Polonia":"+48","Pologne":"+48","ポーランド":"+48","Portugal":"+351","ポルトガル":"+351","Portogallo":"+351","Puerto Rico":"+1787","Porto Rico":"+1787","プエルトリコ":"+1787","Qatar":"+974","قطر":"+974","Katar":"+974","Catar":"+974","カタール":"+974","Réunion":"+262","La Réunion":"+262","Reunión":"+262","レユニオン":"+262","Riunione":"+262","Romania":"+40","România":"+40","Rumänien":"+40","Rumania":"+40","Roumanie":"+40","ルーマニア":"+40","Russia":"+7","Россия":"+7","Russland":"+7","Rusia":"+7","Russie":"+7","ロシア連邦":"+7","Rwanda":"+250","Ruanda":"+250","ルワンダ":"+250","Saint Helena":"+290","Sankt Helena":"+290","Santa Helena":"+290","Sainte-Hélène":"+290","セントヘレナ・アセンションおよびトリスタンダクーニャ":"+290","Sant'Elena":"+290","Saint Kitts and Nevis":"+1869","St. Kitts und Nevis":"+1869","San Cristóbal y Nieves":"+1869","Saint-Christophe-et-Niévès":"+1869","セントクリストファー・ネイビス":"+1869","Saint Kitts e Nevis":"+1869","Saint Lucia":"+1758","Santa Lucía":"+1758","Saint-Lucie":"+1758","セントルシア":"+1758","Santa Lucia":"+1758","Saint Pierre and Miquelon":"+508","Saint-Pierre-et-Miquelon":"+508","Saint-Pierre und Miquelon":"+508","San Pedro y Miquelón":"+508","サンピエール島・ミクロン島":"+508","Saint-Pierre e Miquelon":"+508","Saint Vincent and the Grenadines":"+1784","Saint Vincent und die Grenadinen":"+1784","San Vicente y Granadinas":"+1784","Saint-Vincent-et-les-Grenadines":"+1784","セントビンセントおよびグレナディーン諸島":"+1784","Saint Vincent e Grenadine":"+1784","Samoa":"+685","サモア":"+685","San Marino":"+378","Saint-Marin":"+378","サンマリノ":"+378","São Tomé and Príncipe":"+239","São Tomé e Príncipe":"+239","São Tomé und Príncipe":"+239","Santo Tomé y Príncipe":"+239","Sao Tomé-et-Principe":"+239","サントメ・プリンシペ":"+239","Saudi Arabia":"+966","العربية السعودية":"+966","Saudi-Arabien":"+966","Arabia Saudí":"+966","Arabie Saoudite":"+966","サウジアラビア":"+966","Arabia Saudita":"+966","Senegal":"+221","Sénégal":"+221","セネガル":"+221","Serbia":"+381","Srbija":"+381","Serbien":"+381","Serbie":"+381","セルビア":"+381","Seychelles":"+248","Seychellen":"+248","セーシェル":"+248","Sierra Leone":"+232","シエラレオネ":"+232","Singapore":"+65","Singapur":"+65","Singapour":"+65","シンガポール":"+65","Slovakia":"+421","Slovensko":"+421","Slowakei":"+421","República Eslovaca":"+421","Slovaquie":"+421","スロバキア":"+421","Slovacchia":"+421","Slovenia":"+386","Slovenija":"+386","Slowenien":"+386","Eslovenia":"+386","Slovénie":"+386","スロベニア":"+386","Solomon Islands":"+677","Salomonen":"+677","Islas Salomón":"+677","Îles Salomon":"+677","ソロモン諸島":"+677","Isole Salomone":"+677","Somalia":"+252","Soomaaliya":"+252","Somalie":"+252","ソマリア":"+252","South Africa":"+27","Republik Südafrika":"+27","República de Sudáfrica":"+27","Afrique du Sud":"+27","南アフリカ":"+27","Sud Africa":"+27","South Georgia":"+500","Südgeorgien und die Südlichen Sandwichinseln":"+500","Islas Georgias del Sur y Sandwich del Sur":"+500","Géorgie du Sud-et-les Îles Sandwich du Sud":"+500","サウスジョージア・サウスサンドウィッチ諸島":"+500","Georgia del Sud e Isole Sandwich Meridionali":"+500","South Sudan":"+211","Südsudan":"+211","Sudán del Sur":"+211","Soudan du Sud":"+211","南スーダン":"+211","Sudan del sud":"+211","Spain":"+34","España":"+34","Spanien":"+34","Espagne":"+34","スペイン":"+34","Spagna":"+34","Sri Lanka":"+94","śrī laṃkāva":"+94","スリランカ":"+94","Sudan":"+249","السودان":"+249","Sudán":"+249","Soudan":"+249","スーダン":"+249","Suriname":"+597","Surinam":"+597","スリナム":"+597","Svalbard and Jan Mayen":"+4779","Svalbard og Jan Mayen":"+4779","Svalbard und Jan Mayen":"+4779","Islas Svalbard y Jan Mayen":"+4779","Svalbard et Jan Mayen":"+4779","スヴァールバル諸島およびヤンマイエン島":"+4779","Svalbard e Jan Mayen":"+4779","Swaziland":"+268","Swasiland":"+268","Suazilandia":"+268","スワジランド":"+268","Sweden":"+46","Sverige":"+46","Schweden":"+46","Suecia":"+46","Suède":"+46","スウェーデン":"+46","Svezia":"+46","Switzerland":"+41","Schweiz":"+41","Suiza":"+41","Suisse":"+41","スイス":"+41","Svizzera":"+41","Syria":"+963","سوريا":"+963","Syrien":"+963","Siria":"+963","Syrie":"+963","シリア・アラブ共和国":"+963","Taiwan":"+886","Taiwán":"+886","Taïwan":"+886","台湾（台湾省/中華民国）":"+886","Tajikistan":"+992","Тоҷикистон":"+992","Tadschikistan":"+992","Tayikistán":"+992","Tadjikistan":"+992","タジキスタン":"+992","Tagikistan":"+992","Tanzania":"+255","Tansania":"+255","Tanzanie":"+255","タンザニア":"+255","Thailand":"+66","ประเทศไทย":"+66","Tailandia":"+66","Thaïlande":"+66","East Timor":"+670","Timor-Leste":"+670","Timor Oriental":"+670","Timor oriental":"+670","東ティモール":"+670","Timor Est":"+670","Togo":"+228","トーゴ":"+228","Tokelau":"+690","Islas Tokelau":"+690","トケラウ":"+690","Isole Tokelau":"+690","Tonga":"+676","トンガ":"+676","Trinidad and Tobago":"+1868","Trinidad und Tobago":"+1868","Trinidad y Tobago":"+1868","Trinité et Tobago":"+1868","トリニダード・トバゴ":"+1868","Trinidad e Tobago":"+1868","Tunisia":"+216","تونس":"+216","Tunesien":"+216","Túnez":"+216","Tunisie":"+216","チュニジア":"+216","Turkey":"+90","Türkiye":"+90","Türkei":"+90","Turquía":"+90","Turquie":"+90","トルコ":"+90","Turchia":"+90","Turkmenistan":"+993","Türkmenistan":"+993","Turkmenistán":"+993","Turkménistan":"+993","トルクメニスタン":"+993","Tuvalu":"+688","ツバル":"+688","Uganda":"+256","ウガンダ":"+256","Ukraine":"+380","Україна":"+380","Ucrania":"+380","ウクライナ":"+380","Ucraina":"+380","United Arab Emirates":"+971","دولة الإمارات العربية المتحدة":"+971","Vereinigte Arabische Emirate":"+971","Emiratos Árabes Unidos":"+971","Émirats arabes unis":"+971","アラブ首長国連邦":"+971","Emirati Arabi Uniti":"+971","United Kingdom":"+44","Vereinigtes Königreich":"+44","Reino Unido":"+44","Royaume-Uni":"+44","イギリス":"+44","Regno Unito":"+44","United States":"+1","Vereinigte Staaten von Amerika":"+1","Estados Unidos":"+1","États-Unis":"+1","アメリカ合衆国":"+1","Stati Uniti D'America":"+1","Uruguay":"+598","ウルグアイ":"+598","Uzbekistan":"+998","O‘zbekiston":"+998","Usbekistan":"+998","Uzbekistán":"+998","Ouzbékistan":"+998","ウズベキスタン":"+998","Vanuatu":"+678","バヌアツ":"+678","Venezuela":"+58","ベネズエラ・ボリバル共和国":"+58","Vietnam":"+84","Việt Nam":"+84","Viêt Nam":"+84","ベトナム":"+84","Wallis and Futuna":"+681","Wallis et Futuna":"+681","Wallis und Futuna":"+681","Wallis y Futuna":"+681","Wallis-et-Futuna":"+681","ウォリス・フツナ":"+681","Wallis e Futuna":"+681","Western Sahara":"+212","الصحراء الغربية":"+212","Westsahara":"+212","Sahara Occidental":"+212","西サハラ":"+212","Sahara Occidentale":"+212","Yemen":"+967","اليَمَن":"+967","Jemen":"+967","Yémen":"+967","イエメン":"+967","Zambia":"+260","Sambia":"+260","Zambie":"+260","ザンビア":"+260","Zimbabwe":"+263","Simbabwe":"+263","Zimbabue":"+263","ジンバブエ":"+263","USA":"+1","US":"+1","UK":"+44","Great Britain":"+44","Reunion":"+262","Côte d’Ivoire":"+225","Cote d'Ivoire":"+225","DR Congo":"+243","RDC":"+243","Congo Brazzaville":"+242","UAE":"+971"};
+  function norm(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g,"").replace(/[^a-zA-Z0-9]+/g," ").trim().toLowerCase();}
+  var lookup={};Object.keys(map).forEach(function(name){lookup[norm(name)]=map[name];});
+  function pair(country){
+    if(country.id==="regCountry")return document.getElementById("regCountryCode");
+    if(country.id==="g30Country")return document.getElementById("g30CountryCode");
+    if(country.dataset&&country.dataset.regField==="country"){
+      var dlg=country.closest("#geti-edit-reg-dialog");
+      return dlg&&dlg.querySelector('input[data-reg-field="countryCode"]');
+    }
+    return null;
+  }
+  function isCountry(el){return !!(el&&(el.id==="regCountry"||el.id==="g30Country"||(el.dataset&&el.dataset.regField==="country")));}
+  function update(country){
+    var codeField=pair(country);if(!codeField)return;
+    var code=lookup[norm(country.value)];
+    if(code){codeField.value=code;codeField.dispatchEvent(new Event("input",{bubbles:true}));}
+  }
+  document.addEventListener("input",function(e){if(isCountry(e.target))update(e.target);},true);
+  document.addEventListener("change",function(e){if(isCountry(e.target))update(e.target);},true);
+  var listId="geti-country-name-suggestions";
+  function installList(country){
+    if(!country||country.getAttribute("list")===listId)return;
+    var list=document.getElementById(listId);
+    if(!list){list=document.createElement("datalist");list.id=listId;
+      Object.keys(map).filter(function(n){return n.length>=4&&/^[A-Za-zÀ-ÿ]/.test(n);}).sort().forEach(function(name){var option=document.createElement("option");option.value=name;list.appendChild(option);});
+      document.body.appendChild(list);}
+    country.setAttribute("list",listId);
+  }
+  document.addEventListener("focusin",function(e){if(isCountry(e.target))installList(e.target);},true);
+  window.getiUpdateCountryCallingCode=update;
+})();
+</script>
+<script id="geti-professional-lessons-direct-link">
+/* Professional Lessons now lives at getienglish.com/prolesson.
+   All legacy lesson portal actions are intercepted after the original scripts load.
+   Examinations, login, registration and certificate verification remain unchanged. */
+(function(){
+  "use strict";
+  const destination="https://getienglish.com/prolesson";
+  const previous=window.enterGetiPortal;
+  if(typeof previous==="function"){
+    window.enterGetiPortal=function(mode){
+      if(String(mode).toLowerCase()==="lesson"){
+        window.location.assign(destination);
+        return;
+      }
+      return previous.apply(this,arguments);
+    };
+  }
+  // Keep old lesson lists out of the student area: the public lesson site replaces them.
+  const style=document.createElement("style");
+  style.id="geti-professional-lessons-internal-disabled";
+  style.textContent="#geti-lessons{display:none!important}";
+  document.head.appendChild(style);
+})();
+</script>
+
+<style id="geti-lessons-completely-removed-style">
+#geti-lessons,#lessonExamList,#lessonSubjectArea,#lessonPanel{display:none!important;visibility:hidden!important}
+</style>
+<script id="geti-lessons-completely-removed-script">
+(function(){
+  var destination="https://getienglish.com/prolesson";
+  function go(){window.location.assign(destination)}
+  // Retire the old embedded lesson UI. These functions are not used for exams.
+  window.initGetiLessons=function(){};
+  window.openLessonSubjects=go;
+  window.openGetiLesson=go;
+  window.openLessonExamList=go;
+  function clearOldLessonUI(){
+    ["lessonExamList","lessonSubjectArea","lessonPanel"].forEach(function(id){
+      var el=document.getElementById(id);if(el)el.replaceChildren();
     });
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize);
-  else initialize();
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",clearOldLessonUI);
+  else clearOldLessonUI();
 })();
 </script>
 </body>
