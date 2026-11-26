@@ -20796,7 +20796,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
       '<div class="geti-stage-progress"><div class="geti-stage-label"><span>Objective assessment</span><strong>'+Math.round((n-1)/60*100)+'% completed</strong></div><progress max="60" value="'+(n-1)+'" aria-label="Objective assessment progress"></progress><small>'+(n-1)+' of 60 questions completed</small></div>'+
       ((item.type==="listen"||item.type==="pronounce")?'<div class="expert-audio-status">AUDIO PLAYING AUTOMATICALLY</div>':"")+
       content+
-      '<div class="exam-controls"><button class="next-btn" type="button" onclick="nextProficiencyQuestion()">'+(n===60?"FINISH EXAM":"NEXT QUESTION")+'</button></div>'+
+      '<div class="exam-controls"><button class="next-btn" type="button" onclick="nextProficiencyQuestion()">'+(n===60?"CONTINUE TO WRITING":"NEXT QUESTION")+'</button></div>'+
       '</div>';
     if(item.type==="listen"){const input=document.getElementById("pExamAnswer");if(input)input.focus();}
     if(item.type==="listen"||item.type==="pronounce")setTimeout(function(){if(pState&&pState.active&&pState.index===n-1)pSpeak(item.audio);},250);
@@ -20833,7 +20833,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     const scores={};P_SUBJECTS.forEach(function(s){scores[s]={score:0,total:12};});
     P_ITEMS.forEach(function(item,i){
       const submitted=pState.answers[i];
-      const ok=item.type==="listen"?pSimilarity(submitted,item.answer)>=.92:Number(submitted)===Number(item.correct);
+      const ok=item.type==="listen"?pSimilarity(submitted,item.answer)>=.92:(submitted!==null&&submitted!==undefined&&String(submitted).trim()!==""&&Number(submitted)===Number(item.correct));
       if(ok){correct++;scores[item.subject].score++;}
       else wrong.push({number:i+1,subject:item.subject,submitted:submitted,correct:item.type==="listen"?item.answer:item.options[item.correct]});
     });
@@ -20843,15 +20843,20 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
       return {subject:s,score:scores[s].score,total:12,percentage:pct,grade:pct>=90?"A":pct>=80?"B":pct>=70?"C":"F"};
     });
     const record={id:pState.id,name:pState.name,email:pState.email,nationality:pState.nationality,country:pState.country,city:pState.city,postalCode:pState.postalCode,address:pState.address,phone:pState.phone,employment:pState.employment,job:pState.job,institution:pState.institution,education:pState.education,language:pState.language,exam:"English Proficiency Exam",baseExam:"English Proficiency Exam",level:"B2",hours:120,passMark:P_PASS,percentage:percentage,status:status,date:new Date().toISOString(),totalScore:correct,totalQuestions:60,subjects:subjects};
-    const written=await window.getiWrittenAssessment("English Proficiency Exam",pPanel());
-    const writtenPct=written.reduce((sum,x)=>sum+x.percentage,0)/written.length;
-    record.objectivePercentage=record.percentage;
-    record.writtenPercentage=Math.round(writtenPct);
-    record.percentage=Math.round(record.objectivePercentage*.6+writtenPct*.4);
-    record.subjects=record.subjects.concat(written);
-    record.status="PENDING REVIEW";
-    window.getiShowProvisionalAssessment(pPanel(),record);
-
+    window.getiShortWriting(pPanel(),record);
+    return;
+    const subjectHtml=subjects.map(function(s){return '<div class="subject-result"><span>'+pEsc(s.subject)+'</span><strong>'+s.score+'/12 — '+s.percentage+'%</strong></div>';}).join("");
+    const wrongHtml=wrong.length?'<div class="expert-wrong-list"><h3>Incorrect Answers</h3>'+wrong.map(function(w){return '<div class="subject-result"><span>Question '+w.number+' — '+pEsc(w.subject)+'</span><strong>Your answer: '+pEsc(w.submitted||"(no answer)")+'<br>Correct: '+pEsc(w.correct)+'</strong></div>';}).join("")+'</div>':'<div class="exam-message">All answers were correct.</div>';
+    const mail=pMail(record);
+    pPanel().innerHTML='<div class="result-box">'+
+      '<h2>FINAL EXAMINATION RESULT</h2><p><strong>'+pEsc(record.name)+'</strong></p><p>Candidate ID: <strong>'+pEsc(record.id)+'</strong></p><p>Exam: <strong>English Proficiency Exam</strong></p>'+
+      '<div class="final-score">'+percentage+'%</div><h2 class="'+(status==="PASSED"?"pass":"fail")+'">'+status+'</h2>'+
+      '<div class="'+(status==="PASSED"?"exam-message":"exam-fail-message")+'">'+(status==="PASSED"?"Congratulations! You reached the required passing score of "+P_PASS+"%.":"Your final result did not reach the required passing score of "+P_PASS+"%.")+'</div>'+
+      '<h3>Subject Results</h3>'+subjectHtml+wrongHtml+
+      (status==="PASSED"?'<a class="btn btn-gold" href="'+mail+'">admin@getienglish.com</a>':"")+
+      '</div>';
+    if(status==='PASSED')window.GETI_specialExam.certificate(pPanel(),record,'English Proficiency Exam',false);
+    if(typeof window.getiAppendExamTranscript==="function")window.getiAppendExamTranscript("geti30ExamPanel",record);
   }
 
   document.addEventListener("visibilitychange",function(){
@@ -21121,7 +21126,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
       '<div class="geti-stage-progress"><div class="geti-stage-label"><span>Objective assessment</span><strong>'+Math.round((n-1)/60*100)+'% completed</strong></div><progress max="60" value="'+(n-1)+'" aria-label="Objective assessment progress"></progress><small>'+(n-1)+' of 60 questions completed</small></div>'+
       (item.type==="listen"||item.type==="pronounce"?'<div class="expert-audio-status">AUDIO PLAYING AUTOMATICALLY</div>':"")+
       content+
-      '<div class="exam-controls"><button class="next-btn" type="button" onclick="nextExpertQuestion()">'+(last?"FINISH EXAM":"NEXT QUESTION")+'</button></div>'+
+      '<div class="exam-controls"><button class="next-btn" type="button" onclick="nextExpertQuestion()">'+(last?"CONTINUE TO WRITING":"NEXT QUESTION")+'</button></div>'+
       '</div>';
 
     if(item.type==="listen"){
@@ -21199,7 +21204,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
       if(item.type==="listen"){
         ok=similarity(submitted,item.answer)>=0.92;
       }else{
-        ok=Number(submitted)===Number(item.correct);
+        ok=(submitted!==null&&submitted!==undefined&&String(submitted).trim()!==""&&Number(submitted)===Number(item.correct));
       }
       if(ok){
         correct++;
@@ -21231,15 +21236,43 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
       totalScore:correct,totalQuestions:60,subjects:subjects
     };
 
-    const written=await window.getiWrittenAssessment("Expert Exam",panel());
-    const writtenPct=written.reduce((sum,x)=>sum+x.percentage,0)/written.length;
-    record.objectivePercentage=record.percentage;
-    record.writtenPercentage=Math.round(writtenPct);
-    record.percentage=Math.round(record.objectivePercentage*.6+writtenPct*.4);
-    record.subjects=record.subjects.concat(written);
-    record.status="PENDING REVIEW";
-    window.getiShowProvisionalAssessment(panel(),record);
+    window.getiShortWriting(panel(),record);
+    return;
+    try{if(typeof window.saveGetiResultToSupabase==="function")window.saveGetiResultToSupabase(record);}catch(e){}
+    try{if(typeof window.saveGetiResultToGoogleSheet==="function")window.saveGetiResultToGoogleSheet(record);}catch(e){}
 
+    const subjectHtml=subjects.map(function(s){
+      return '<div class="subject-result"><span>'+esc(s.subject)+'</span><strong>'+s.score+'/12 — '+s.percentage+'%</strong></div>';
+    }).join("");
+
+    const wrongHtml=wrong.length
+      ?'<div class="expert-wrong-list"><h3>Incorrect Answers</h3>'+
+        wrong.map(function(w){
+          return '<div class="subject-result"><span>Question '+w.number+' — '+esc(w.subject)+'</span>'+
+            '<strong>Your answer: '+esc(w.submitted||"(no answer)")+'<br>Correct: '+esc(w.correct)+'</strong></div>';
+        }).join("")+'</div>'
+      :'<div class="exam-message">All answers were correct.</div>';
+
+    const mail=resultMail(record);
+
+    panel().innerHTML='<div class="result-box">'+
+      '<h2>FINAL EXAMINATION RESULT</h2>'+
+      '<p><strong>'+esc(record.name)+'</strong></p>'+
+      '<p>Candidate ID: <strong>'+esc(record.id)+'</strong></p>'+
+      '<p>Exam: <strong>Expert Exam</strong></p>'+
+      '<div class="final-score">'+percentage+'%</div>'+
+      '<h2 class="'+(status==="PASSED"?"pass":"fail")+'">'+status+'</h2>'+
+      '<div class="'+(status==="PASSED"?"exam-message":"exam-fail-message")+'">'+
+        (status==="PASSED"
+          ?"Congratulations! You reached the required passing score of "+PASS+"%."
+          :"Your final result did not reach the required passing score of "+PASS+"%.")+
+      '</div>'+
+      '<h3>Subject Results</h3>'+subjectHtml+
+      wrongHtml+
+      (status==="PASSED"?'<a class="btn btn-gold" href="'+mail+'">admin@getienglish.com</a>':"")+
+      '</div>';
+    if(status==='PASSED')window.GETI_specialExam.certificate(panel(),record,'Expert Exam',false);
+    if(typeof window.getiAppendExamTranscript==="function")window.getiAppendExamTranscript("geti30ExamPanel",record);
   }
 
   document.addEventListener("visibilitychange",function(){
@@ -27560,45 +27593,7 @@ window.getiShuffleClassicExamAnswers=function(program){
 </script>
 
 
-<script id="geti-ai-assessment-draft">
-(function(){
-const bank={"English Proficiency Exam": [["Professional Communication", "Write a polite email to a client explaining that a delivery will be delayed by two days. Offer a practical solution. (80–120 words)"], ["Writing Skills", "Describe a challenge you faced while learning a skill and explain how you overcame it. (100–150 words)"], ["Argumentative Essay", "Should students be allowed to use mobile phones in class? Discuss both sides and justify your opinion. (150–220 words)"], ["Interview", "Imagine you are attending a job interview. Answer all three questions in English, numbered 1–3: 1. Tell me about yourself and your strengths. 2. Describe a challenge you faced and how you solved it. 3. Why should we select you for this position? Give specific examples. (150–220 words total)"]], "Expert Exam": [["Reading Comprehension", "Read: A university introduced an online course to widen access. Completion rates fell initially, but improved after tutors began providing weekly feedback. The researchers cautioned that the students who received feedback also had better internet access. Explain the findings, one possible confounder and one limitation."], ["Writing Skills", "Write a formal report to a department director proposing a strategy to improve staff communication. Include evidence, recommendations and limitations. (180–250 words)"], ["Argumentative Essay", "Evaluate whether artificial intelligence should be used in high-stakes examinations. Address counterarguments and propose safeguards. (220–300 words)"], ["Critical Thinking", "A school reports that its new teaching method raised average scores by 15%. There was no control group and the tests differed. Evaluate the claim and propose a stronger study design. (120–180 words)"], ["Advanced Academic English", "Summarize and critically evaluate this claim: Online learning improves educational access, but its effectiveness depends on resources, instructional design and learner support. Use precise academic language and qualified conclusions. (150–220 words)"], ["Interview", "Imagine you are being interviewed for an international leadership position. Answer all four questions in English, numbered 1–4: 1. How would you resolve a conflict between colleagues from different cultures? 2. Describe a difficult ethical decision and justify your approach. 3. How would you respond to criticism of your leadership? 4. What strategy would you propose to improve organizational performance, and how would you evaluate it? Use precise professional language and concrete examples. (220–320 words total)"]]};
-const endpoint='https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-exam-grade';
-const publicKey='sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8';
-window.getiWrittenAssessment=function(exam,panel){
- return new Promise((resolve)=>{
- const tasks=bank[exam],answers=[];let index=0,busy=false;
- function render(){
- panel.innerHTML='';const box=document.createElement('div');box.className='result-box';panel.append(box);
- const h=document.createElement('h2');h.textContent=(tasks[index][0]==='Interview'?'INTERVIEW (WRITTEN) — ':'WRITTEN ASSESSMENT — ')+(index+1)+' / '+tasks.length;box.append(h);
- const progress=document.createElement('div');progress.className='geti-stage-progress';
- const progressLabel=document.createElement('div');progressLabel.className='geti-stage-label';progressLabel.textContent='Written assessment — '+Math.round(index/tasks.length*100)+'% completed';progress.append(progressLabel);
- const meter=document.createElement('progress');meter.max=tasks.length;meter.value=index;meter.setAttribute('aria-label','Written assessment progress');progress.append(meter);
- const count=document.createElement('small');count.textContent=index+' of '+tasks.length+' subjects completed';progress.append(count);box.append(progress);
- const label=document.createElement('h3');label.textContent=tasks[index][0];box.append(label);
- const q=document.createElement('p');q.textContent=tasks[index][1];box.append(q);
- const t=document.createElement('textarea');t.rows=10;t.maxLength=5000;t.style.cssText='width:100%;padding:12px;border:1px solid #aab9cc;border-radius:8px';t.placeholder='Write your answer in English. Unanswered subjects receive 0 points.';box.append(t);
- const status=document.createElement('p');status.setAttribute('role','status');box.append(status);
- const b=document.createElement('button');b.className='btn btn-gold';b.textContent=index===tasks.length-1?'SUBMIT FOR ASSESSMENT':'NEXT SUBJECT';box.append(b);
- b.onclick=async()=>{if(busy)return;const a=t.value.trim();if(!a&&!window.confirm('Submit this subject without an answer? It will receive 0 points.'))return;answers[index]=a;if(index<tasks.length-1){index++;render();return;}busy=true;b.disabled=true;t.disabled=true;status.textContent='Assessing your written answers…';meter.value=tasks.length;progressLabel.textContent='Written assessment — 100% submitted';count.textContent=tasks.length+' of '+tasks.length+' subjects submitted';try{
- const auth=window.GETI_SB?.auth||(typeof GETI_SB!=='undefined'?GETI_SB.auth:null);const session=(await auth?.getSession())?.data?.session;if(!session?.access_token)throw Error('Please sign in to your GETI account and retry.');
- const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','apikey':publicKey,'Authorization':'Bearer '+session.access_token},body:JSON.stringify({exam,answers}),signal:AbortSignal.timeout(90000)});
- const data=await response.json();if(!response.ok||!Array.isArray(data.scores)||data.scores.length!==tasks.length)throw Error(data.error||'Assessment unavailable');
- const scores=data.scores.map((x,i)=>{if(x.subject!==tasks[i][0]||!Number.isInteger(x.score)||x.score<0||x.score>100)throw Error('Invalid assessment response');return {subject:x.subject,score:x.score,total:100,percentage:x.score,grade:x.score>=90?'A+':x.score>=80?'A':x.score>=70?'B':x.score>=60?'C':'F',feedback:String(x.feedback||'')};});resolve(scores);
- }catch(e){status.textContent='Assessment not completed. '+(e.message||'Try again.')+' Your answers have been retained on this page.';busy=false;b.disabled=false;t.disabled=false;}};
- panel.scrollIntoView({block:'start'});
- }render();});};
-window.getiShowProvisionalAssessment=function(panel,record){
- panel.innerHTML='';const box=document.createElement('div');box.className='result-box';panel.append(box);
- function add(tag,value){const el=document.createElement(tag);el.textContent=value;box.append(el);return el;}
- add('h2','PROVISIONAL EXAMINATION RESULT');add('h3',String(record.name).toUpperCase());add('p',record.exam+' • '+record.id);add('h2',record.percentage+'% — PENDING ACADEMIC REVIEW');add('p','Objective assessment: 60%; written assessment: 40%. Official certification is not yet authorized.');
- for(const x of record.subjects){add('h3',x.subject+' — '+x.percentage+'%');if(x.feedback)add('p',x.feedback);}
- add('p','Required passing score: '+record.passMark+'%. This provisional score is not an official certificate.');
- if(!panel.id)panel.id='geti-provisional-assessment-panel';
- if(typeof window.getiAppendExamTranscript==='function')window.getiAppendExamTranscript(panel.id,record);
-};
-})();
-</script>
+
 
 <script id="geti-special-exam-randomize">
 window.getiRandomizeSpecialExam=function(items){
@@ -27613,5 +27608,22 @@ window.getiRandomizeSpecialExam=function(items){
 };
 </script>
 
+<script id="geti-short-writing-manual">
+(function(){
+const bank={
+ B2:[['Explain why learning English is useful.','Describe your professional ambition.','Explain how technology helps students.','Describe a good leader.'],['Describe a problem you solved.','Explain how you manage your time.','Describe a useful daily habit.','Explain how teamwork helps you.'],['Write a polite request for information.','Apologize to a customer for a delay.','Invite a colleague to a meeting.','Ask your manager for assistance.'],['Should students use phones in class? Give a reason.','Is online learning effective? Explain.','Should people work from home? Explain.','Is learning a second language necessary? Explain.'],['Describe a memorable learning experience.','Explain how you prepare for an interview.','Describe how you handle criticism.','Explain how you would welcome a new colleague.']],
+ C2:[['Evaluate one limitation of online education.','Explain how leaders build trust.','Assess one risk of automated assessment.','Explain why precise language matters.'],['Propose a response to workplace conflict.','Explain how to challenge an unreliable claim.','Suggest a strategy to improve productivity.','Explain how to balance competing priorities.'],['Write a diplomatic rejection of a proposal.','Summarize a delay and recommend action to a director.','Write a concise professional complaint.','Request clarification of an ambiguous policy.'],['Defend a position on workplace surveillance.','Evaluate a benefit and drawback of remote work.','Justify a policy for academic integrity.','Assess whether qualifications predict competence.'],['Explain how to evaluate a training program.','Describe a response to an ethical dilemma.','Explain how cultural differences affect negotiation.','Suggest how an institution can improve accessibility.']]
+};
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function count(t){return (t.trim().match(/\S+/g)||[]).length;}
+window.getiShortWriting=function(panel,record){
+ const groups=shuffle(bank[record.exam==='Expert Exam'?'C2':'B2']).map(shuffle);let i=0;const answers=[];
+ function el(tag,text,parent){let e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(parent)parent.appendChild(e);return e;}
+ function draw(){panel.replaceChildren();const box=el('div',undefined,panel);box.className='result-box expert-exam-panel';el('h2','WRITING ASSESSMENT',box);el('p',`Question ${i+1} of 5 · 20 points · Choose ONE topic`,box);const prog=el('progress',undefined,box);prog.max=5;prog.value=i;prog.style.width='100%';const form=el('div',undefined,box);let chosen=-1;groups[i].forEach((topic,j)=>{const label=el('label',undefined,form);label.style.cssText='display:block;padding:10px;border:1px solid #ccd6e2;margin:6px 0;cursor:pointer';const radio=el('input',undefined,label);radio.type='radio';radio.name='geti-writing-topic';radio.addEventListener('change',()=>{chosen=j;});label.append(document.createTextNode(' '+String.fromCharCode(65+j)+'. '+topic));});el('p','Write 20–30 words in English.',box);const answer=el('textarea',undefined,box);answer.rows=4;answer.maxLength=1500;answer.style.cssText='width:100%;padding:12px;box-sizing:border-box';const counter=el('p','0 / 30 words',box);answer.addEventListener('input',()=>{const n=count(answer.value);counter.textContent=n+' / 30 words';counter.style.color=n>30?'#b42318':n>=20?'#167044':'#555';});const next=el('button',i===4?'SUBMIT WRITING':'NEXT QUESTION',box);next.className='btn btn-gold';next.onclick=()=>{const n=count(answer.value);if(chosen<0||n<20||n>30){alert('Choose one topic and write 20–30 words.');return;}answers.push({question:i+1,topic:groups[i][chosen],answer:answer.value.trim(),words:n,maxPoints:20});i++;if(i<5)draw();else finish();};const skip=el('button','SKIP — 0 points',box);skip.className='btn';skip.onclick=()=>{if(!confirm('Skip this writing question? It will receive 0 points.'))return;answers.push({question:i+1,topic:chosen<0?'Not selected':groups[i][chosen],answer:'',words:0,maxPoints:20,score:0});i++;if(i<5)draw();else finish();};}
+ function finish(){panel.replaceChildren();const box=el('div',undefined,panel);box.className='result-box';el('h2','PROVISIONAL ACADEMIC RESULT',box);el('p',String(record.name||'').toUpperCase(),box);el('p',record.exam+' · '+record.id,box);el('h3','Objective assessment: '+record.percentage+'%',box);for(const subject of record.subjects||[])el('p',subject.subject+': '+subject.percentage+'%',box);el('p','Writing: PENDING EXAMINER REVIEW (5 questions, 100 points)',box);el('p','Final result and certificate are pending manual review. Download your submission and send it to GETI Administration.',box);const submission={...record,status:'PENDING ACADEMIC REVIEW',objectivePercentage:record.percentage,percentage:null,writing:answers,writingScore:null,official:false};const download=el('button','DOWNLOAD WRITING SUBMISSION',box);download.className='btn btn-gold';download.onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(submission,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=record.id+'_writing.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};const mail=el('a','EMAIL GETI ADMINISTRATION',box);mail.className='btn';mail.href='mailto:admin@getienglish.com?subject='+encodeURIComponent('Writing review '+record.id)+'&body='+encodeURIComponent('Please attach the downloaded writing submission for examiner review.');}
+ draw();
+};
+})();
+</script>
 </body>
 </html>
