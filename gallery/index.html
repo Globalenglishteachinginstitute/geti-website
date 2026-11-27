@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GETI Official Photo Gallery | Global English Teaching Institute</title>
 <meta name="description" content="Official photographs and updates from Global English Teaching Institute (GETI): English learning, TEFL, TESOL training, certificates and educational activities.">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<meta name="googlebot" content="index,follow,max-image-preview:large">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="googlebot" content="noindex,nofollow,noarchive">
 <link rel="canonical" href="https://getienglish.com/gallery/">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <style>
@@ -39,30 +39,19 @@ dialog::backdrop{background:#071b37d9}
 .preview-head p{margin:0;font-weight:650;overflow-wrap:anywhere}
 .preview-head button{background:#eaf0f7;border:0;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:20px}
 @media(max-width:560px){.site-header{padding:35px 16px}.wrap{padding:24px 15px 40px}.gallery{grid-template-columns:1fr;gap:16px}}
-</style>
+[hidden]{display:none!important}.gate{max-width:440px;margin:50px auto;padding:30px;background:white;border:1px solid var(--line);border-radius:16px;text-align:center}.gate input,.gate button{display:block;width:100%;padding:12px;margin:10px 0;border:1px solid var(--line);border-radius:8px;font:inherit}.gate button,.lock{background:var(--navy);color:white;cursor:pointer;border:0;border-radius:8px;padding:12px}#gate-error{color:#b42318}</style>
 </head>
 <body>
 <header class="site-header">
 <h1>Global English Teaching Institute</h1>
 <p>GETI • Official Photo Gallery</p>
 </header>
-<main class="wrap">
+<section class="gate" id="gate"><h2>GETI Private Gallery</h2><p>Authorized access only.</p><form id="gate-form"><label for="gate-password">Access password</label><input id="gate-password" type="password" required autocomplete="current-password"><button>Unlock Gallery</button><p id="gate-error" role="alert"></p></form><a href="/">← GETI Home</a></section><main class="wrap" id="private-gallery" hidden>
 <div class="topline">
 <div><h2>Our Official Photos</h2><p>Explore GETI educational activities, training and certificate services.</p></div>
-<a class="back" href="/">← GETI Home</a>
+<button class="lock" id="lock-gallery" type="button">Lock Gallery</button><a class="back" href="/">← GETI Home</a>
 </div>
 <section id="geti-gallery" class="gallery" aria-label="GETI official photographs">
-<!-- These initial images are included in HTML for Google and for visitors whose browsers block the GitHub API. -->
-<figure data-filename="geti.jpg">
-<a class="photo" href="/gallery/images/geti.jpg" data-title="Global English Teaching Institute">
-<img src="/gallery/images/geti.jpg" alt="Official GETI Global English Teaching Institute photograph" loading="eager" decoding="async">
-</a><figcaption>Global English Teaching Institute<small>GETI official gallery</small></figcaption>
-</figure>
-<figure data-filename="geti cert.jpg">
-<a class="photo" href="/gallery/images/geti%20cert.jpg" data-title="GETI Certificates">
-<img src="/gallery/images/geti%20cert.jpg" alt="GETI official certificate photo" loading="lazy" decoding="async">
-</a><figcaption>GETI Certificates<small>Certificates and training</small></figcaption>
-</figure>
 </section>
 <p id="gallery-status" class="status" role="status" aria-live="polite">Official GETI images. New uploads are checked automatically.</p>
 </main>
@@ -101,9 +90,9 @@ dialog::backdrop{background:#071b37d9}
   }
   // The repository folder is public. Load only image filenames; never execute content from GitHub.
   const endpoint="https://api.github.com/repos/Globalenglishteachinginstitute/geti-website/contents/gallery/images?ref=main";
-  let refreshing=false;
+  let refreshing=false;let unlocked=false;
   async function refreshGallery(){
-    if(refreshing)return;
+    if(refreshing||!unlocked)return;
     refreshing=true;
     try{
       const response=await fetch(endpoint+"&_="+Date.now(),{headers:{"Accept":"application/vnd.github+json"},cache:"no-store"});
@@ -117,7 +106,20 @@ dialog::backdrop{background:#071b37d9}
       status.textContent=seen.size+" official photos displayed. Automatic updates will retry shortly.";
     }finally{refreshing=false;}
   }
-  refreshGallery();
+  document.getElementById("gate-form").addEventListener("submit",async e=>{
+    e.preventDefault();
+    const field=document.getElementById("gate-password"),error=document.getElementById("gate-error");
+    try{
+      const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(field.value));
+      const hash=Array.from(new Uint8Array(bytes),x=>x.toString(16).padStart(2,"0")).join("");
+      if(hash!=="11b7fb879ac48bd4c52b20d9404a8213d847b8e3a5825a61368d6bea4ab6f43b"){error.textContent="Incorrect password. Please try again.";return;}
+      field.value="";error.textContent="";unlocked=true;
+      document.getElementById("gate").hidden=true;
+      document.getElementById("private-gallery").hidden=false;
+      addImage("geti.jpg");addImage("geti cert.jpg");refreshGallery();
+    }catch(e){error.textContent="Unable to verify password. Please use HTTPS.";}
+  });
+  document.getElementById("lock-gallery").addEventListener("click",()=>location.reload());
   setInterval(()=>{if(!document.hidden)refreshGallery();},30000);
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshGallery();});
   window.addEventListener("focus",refreshGallery);
