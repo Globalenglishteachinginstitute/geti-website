@@ -1,0 +1,32 @@
+name: Refresh GETI image index
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'gallery/images/**'
+      - 'scripts/update-photo-index.py'
+      - '.github/workflows/update-photo-index.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: geti-photo-index
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Refresh public photo index and sitemap
+        run: python3 scripts/update-photo-index.py
+      - name: Commit generated index
+        run: |
+          git config user.name "GETI Gallery Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add photos/index.html image-sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Refresh GETI public image index"
+            git push origin main
+          fi
