@@ -112,7 +112,7 @@ dialog::backdrop{background:#071b37d9}
     try{
       const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(field.value));
       const hash=Array.from(new Uint8Array(bytes),x=>x.toString(16).padStart(2,"0")).join("");
-      if(hash!=="11b7fb879ac48bd4c52b20d9404a8213d847b8e3a5825a61368d6bea4ab6f43b"){error.textContent="Incorrect password. Please try again.";return;}
+      if(hash!=="8001c27439650c5c5a6b4ed94163b5ddeb4476362c71380e613fa20dfffcef50"){error.textContent="Incorrect password. Please try again.";return;}
       field.value="";error.textContent="";unlocked=true;
       document.getElementById("gate").hidden=true;
       document.getElementById("private-gallery").hidden=false;
