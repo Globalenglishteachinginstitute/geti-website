@@ -16442,6 +16442,28 @@ const GETI_ANALYTICS_FUNCTION = GETI_SUPABASE_URL + "/functions/v1/geti-analytic
 const GETI_COMMUNITY_ADMIN_FUNCTION = GETI_SUPABASE_URL + "/functions/v1/geti-community-admin";
 const GETI_PUBLISH_FUNCTION = GETI_SUPABASE_URL + "/functions/v1/geti-publish";
 
+// GETI Auth transport: preserve sessions during temporary refresh throttling.
+let getiRefreshCooldownUntil = 0;
+async function getiAuthTransport(input, init){
+    const url = new URL(typeof input === 'string' ? input : input.url || String(input), location.href);
+    const refresh = url.origin === new URL(GETI_SUPABASE_URL).origin &&
+        url.pathname === '/auth/v1/token' && url.searchParams.get('grant_type') === 'refresh_token';
+    if (!refresh) return fetch(input, init);
+    const temporary = () => new Response(JSON.stringify({message:'Session refresh temporarily rate limited; please retry later.'}), {
+        status:503, headers:{'Content-Type':'application/json','Retry-After':String(Math.max(1,Math.ceil((getiRefreshCooldownUntil-Date.now())/1000)))}
+    });
+    if (Date.now() < getiRefreshCooldownUntil) return temporary();
+    const response = await fetch(input, init);
+    if (response.status === 429){
+        const retry = response.headers.get('Retry-After');
+        const seconds = retry && /^\d+$/.test(retry) ? Number(retry) : 60;
+        const dateDelay = retry && !/^\d+$/.test(retry) ? Date.parse(retry)-Date.now() : 0;
+        getiRefreshCooldownUntil = Date.now()+Math.max(60000,seconds*1000,Number.isFinite(dateDelay)?dateDelay:0);
+        // A temporary refresh failure is not evidence of a revoked session.
+        return temporary();
+    }
+    return response;
+}
 const GETI_SB = window.supabase.createClient(
     GETI_SUPABASE_URL,
     GETI_SUPABASE_KEY,
@@ -16450,7 +16472,8 @@ const GETI_SB = window.supabase.createClient(
             persistSession:true,
             autoRefreshToken:true,
             detectSessionInUrl:true
-        }
+        },
+        global:{fetch:getiAuthTransport}
     }
 );
 
@@ -20210,7 +20233,7 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
   /* Recover the existing session after transient failures, without signing out or resetting an open exam. */
   var restorePending=false;
   async function retrySessionRestore(){
-    if(!sessionCheckTemporary||restorePending||!navigator.onLine)return;
+    if(!sessionCheckTemporary||restorePending||!navigator.onLine||Date.now()<getiRefreshCooldownUntil)return;
     restorePending=true;
     try{
       if(document.body.classList.contains('geti-second-area-open')){await getVerifiedSession();}
