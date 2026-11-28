@@ -25546,7 +25546,1702 @@ body.geti-checkout-active{overflow:hidden!important}
    // The embedded payment form may still be initializing, but the window opens now.
    return result;
  };
+})();
+</script>
 
+<!-- GETI ROBOT HELP CHAT: standalone, no changes to existing functions -->
+<style id="getiRobotChatStyles">
+#getiRobotLaunch{position:fixed;bottom:20px;left:20px;z-index:2147482000;display:flex;align-items:center;justify-content:center;gap:9px;background:#073d83;color:#fff;border:2px solid #f2c94c;border-radius:40px;padding:12px 15px;font:700 14px Arial,sans-serif;cursor:pointer;box-shadow:0 6px 20px #082e5d55}
+#getiRobotLaunch svg{width:25px;height:25px;flex:none}#getiRobotLaunch:hover{background:#0755a5}
+#getiRobotPanel{position:fixed;bottom:83px;left:20px;width:min(370px,calc(100vw - 24px));height:min(590px,calc(100dvh - 105px));background:#fff;color:#172b49;border:1px solid #cad6e7;border-radius:17px;box-shadow:0 16px 50px #102e5159;z-index:2147482000;display:flex;flex-direction:column;overflow:hidden;font:14px/1.45 Arial,sans-serif}
+#getiRobotPanel[hidden]{display:none!important}
+.geti-robot-head{padding:13px 14px;background:#073d83;color:#fff;display:flex;align-items:center;gap:10px}
+.geti-robot-head strong{font-size:16px}.geti-robot-head small{display:block;color:#dcecff;font-size:11px}.geti-robot-head button{margin-left:auto;background:transparent;color:white;border:0;font-size:26px;cursor:pointer;line-height:1}
+#getiRobotMessages{flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:9px;background:#f7faff;min-height:0}
+.geti-robot-bubble{max-width:92%;padding:10px 12px;border-radius:13px;white-space:pre-wrap;overflow-wrap:anywhere}
+.geti-robot-bubble.bot{align-self:flex-start;background:#e7f0fe;color:#17345a;border-bottom-left-radius:3px}
+.geti-robot-bubble.user{align-self:flex-end;background:#073d83;color:#fff;border-bottom-right-radius:3px}
+.geti-robot-quick{padding:8px 11px;display:flex;gap:6px;overflow-x:auto;border-top:1px solid #e2eaf5}
+.geti-robot-quick button{white-space:nowrap;border:1px solid #9ab9df;background:#fff;color:#073d83;border-radius:20px;padding:7px 10px;font:12px Arial,sans-serif;cursor:pointer}
+#getiRobotForm{display:flex;gap:7px;padding:10px;border-top:1px solid #e2eaf5}
+#getiRobotInput{flex:1;min-width:0;border:1px solid #a6bad6;border-radius:10px;padding:11px;font:14px Arial,sans-serif}
+#getiRobotForm button{border:0;border-radius:9px;background:#073d83;color:#fff;padding:0 14px;font-weight:bold;cursor:pointer}
+.geti-robot-disclaimer{font-size:10px;padding:0 12px 8px;color:#58677c}
+@media(max-width:520px){#getiRobotLaunch{left:12px;bottom:12px;padding:11px 13px}#getiRobotPanel{left:12px;bottom:72px;height:min(520px,calc(100dvh - 88px))}}
+</style>
+<button id="getiRobotLaunch" type="button" aria-label="Open GETI Robot Chat" aria-controls="getiRobotPanel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="6" width="18" height="15" rx="4"/><path d="M12 3v3M9 3h6M8 13h.01M16 13h.01M8 17c2.5 2 5.5 2 8 0"/></svg> GETI Robot Chat</button>
+<section id="getiRobotPanel" hidden role="dialog" aria-modal="false" aria-label="GETI Robot Chat">
+<div class="geti-robot-head"><span aria-hidden="true" style="font-size:27px">🤖</span><div><strong>GETI Assistant</strong><small>Powered by Gemini AI • Ask me anything</small></div><button id="getiRobotClose" type="button" aria-label="Close chat">×</button></div>
+<div id="getiRobotMessages" role="log" aria-live="polite" aria-relevant="additions"></div>
+<div class="geti-robot-quick" aria-label="Suggested questions"><button type="button" data-geti-question="Explain English tenses with examples.">Learn English</button><button type="button" data-geti-question="Help me solve a maths problem step by step.">Mathematics</button><button type="button" data-geti-question="Explain artificial intelligence in simple words.">Technology</button><button type="button" data-geti-question="What courses and exams does GETI offer?">GETI Programs</button></div>
+<form id="getiRobotForm"><input id="getiRobotInput" type="text" maxlength="1500" placeholder="Ask anything: English, science, business, life..." aria-label="Your question" required autocomplete="off"><button type="submit">Send</button></form>
+<div class="geti-robot-disclaimer">Powered by Gemini AI. Ask about any topic. AI answers may be inaccurate; check important information. Never share passwords or confirmation codes.</div>
+</section>
+<style id="getiRobotRichAnswerStyle">
+/* Rich formatting is restricted to GETI Robot Chat; verification is untouched. */
+#getiRobotPanel .geti-robot-bubble.bot.geti-robot-rich{width:100%;max-width:100%;padding:16px;border-radius:16px 16px 16px 5px;background:linear-gradient(145deg,#fff,#f4f8ff);border:1px solid #cfdff3;box-shadow:0 6px 17px rgba(10,48,95,.09);white-space:normal;color:#183655;line-height:1.65}
+#getiRobotPanel .geti-robot-answer-line{margin:0 0 12px;font-size:13.5px;line-height:1.7;white-space:pre-wrap}
+#getiRobotPanel .geti-robot-answer-line:last-child{margin-bottom:0}
+#getiRobotPanel h4.geti-robot-answer-line{color:#0b3b73;font-size:15px;line-height:1.45}
+#getiRobotPanel .geti-robot-rich strong{color:#073f82;font-weight:850}
+#getiRobotPanel .geti-robot-rich a{color:#075cb1;text-decoration:underline;text-underline-offset:2px;font-weight:800;overflow-wrap:anywhere}
+#getiRobotPanel .geti-robot-option-list{display:grid;gap:9px;margin:13px 0}
+#getiRobotPanel .geti-robot-option{display:grid;grid-template-columns:28px minmax(0,1fr);align-items:center;gap:9px;padding:12px;border:1px solid #cde0f4;border-left:4px solid #1674bf;border-radius:11px;background:#eaf4ff;color:#143d66;font-size:13px;line-height:1.5;box-shadow:0 3px 8px rgba(16,72,130,.04)}
+#getiRobotPanel .geti-robot-option:nth-child(5n + 2){background:#f1ebff;border-color:#ddd0fa;border-left-color:#805ad5}
+#getiRobotPanel .geti-robot-option:nth-child(5n + 3){background:#e9f8f0;border-color:#c5e8d5;border-left-color:#2a9b67}
+#getiRobotPanel .geti-robot-option:nth-child(5n + 4){background:#fff5e3;border-color:#f2dbaa;border-left-color:#ce9232}
+#getiRobotPanel .geti-robot-option:nth-child(5n + 5){background:#fff0f2;border-color:#f3cbd1;border-left-color:#ca6473}
+#getiRobotPanel .geti-robot-option-icon{display:grid;place-items:center;width:27px;height:27px;border-radius:9px;background:#0f5fa6;color:white;font-size:14px;font-weight:900}
+#getiRobotPanel .geti-robot-option:nth-child(5n + 2) .geti-robot-option-icon{background:#805ad5}
+#getiRobotPanel .geti-robot-option:nth-child(5n + 3) .geti-robot-option-icon{background:#248b5c}
+#getiRobotPanel .geti-robot-option:nth-child(5n + 4) .geti-robot-option-icon{background:#c18423}
+#getiRobotPanel .geti-robot-option:nth-child(5n + 5) .geti-robot-option-icon{background:#c45b70}
+@media(max-width:520px){#getiRobotPanel .geti-robot-bubble.bot.geti-robot-rich{padding:13px}#getiRobotPanel .geti-robot-option{padding:10px}}
+</style>
+<script id="getiRobotChatScript">
+(function(){
+'use strict';
+const trigger=document.getElementById('getiRobotLaunch'), panel=document.getElementById('getiRobotPanel'), close=document.getElementById('getiRobotClose'), log=document.getElementById('getiRobotMessages'), form=document.getElementById('getiRobotForm'), input=document.getElementById('getiRobotInput');
+if(!trigger||!panel||!close||!log||!form||!input)return;
+const endpoint='https://syawyulrelrhjprnxdyn.supabase.co/functions/v1/geti-ai-chat';
+const publicKey='sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8';
+const history=[];
+let sending=false;
+function addRobotInline(parent,raw){
+ const source=String(raw||'').replace(/\\\*/g,'*');
+ const tokens=/(\*\*([^*]+)\*\*)|(\[([^\]]+)\]\((https?:\/\/[^\s)]+)\))|(https?:\/\/[^\s<>]+)/g;
+ let start=0,match;
+ while((match=tokens.exec(source))!==null){
+  if(match.index>start)parent.appendChild(document.createTextNode(source.slice(start,match.index)));
+  if(match[2]){const strong=document.createElement('strong');strong.textContent=match[2];parent.appendChild(strong);}
+  else{const url=match[5]||match[6];try{const parsed=new URL(url);if(!['https:','http:'].includes(parsed.protocol))throw Error('Invalid URL');const a=document.createElement('a');a.href=parsed.href;a.target='_blank';a.rel='noopener noreferrer';a.textContent=match[4]||url;parent.appendChild(a);}catch{parent.appendChild(document.createTextNode(match[0]));}}
+  start=tokens.lastIndex;
+ }
+ if(start<source.length)parent.appendChild(document.createTextNode(source.slice(start)));
+}
+function renderRobotAnswer(el,message){
+ el.replaceChildren();el.classList.add('geti-robot-rich');
+ const lines=String(message||'').replace(/\r\n?/g,'\n').split('\n');
+ let list=null;
+ for(const line of lines){
+  const trimmed=line.trim();if(!trimmed){list=null;continue;}
+  const bullet=trimmed.match(/^(?:[-•*]|\d+[.)])\s+(.+)$/);
+  if(bullet){
+   if(!list){list=document.createElement('div');list.className='geti-robot-option-list';el.appendChild(list);}
+   const item=document.createElement('div');item.className='geti-robot-option';
+   const mark=document.createElement('span');mark.className='geti-robot-option-icon';mark.textContent=['✦','✓','★','➤','◆'][list.children.length%5];mark.setAttribute('aria-hidden','true');
+   const content=document.createElement('div');addRobotInline(content,bullet[1]);item.append(mark,content);list.appendChild(item);continue;
+  }
+  list=null;
+  const node=document.createElement(/^#{1,3}\s/.test(trimmed)?'h4':'p');
+  node.className='geti-robot-answer-line';addRobotInline(node,trimmed.replace(/^#{1,3}\s+/,''));el.appendChild(node);
+ }
+}
+function bubble(message,who){const el=document.createElement('div');el.className='geti-robot-bubble '+who;if(who==='bot')renderRobotAnswer(el,message);else el.textContent=message;log.appendChild(el);log.scrollTop=log.scrollHeight;return el;}
+function openChat(){panel.hidden=false;trigger.setAttribute('aria-expanded','true');if(!log.children.length)bubble('Hello! 👋 I am GETI AI Assistant, powered by Gemini. You can ask me about anything: English, maths, science, technology, business, daily life and GETI. What would you like to learn today?','bot');input.focus();}
+function hideChat(){panel.hidden=true;trigger.setAttribute('aria-expanded','false');trigger.focus();}
+trigger.addEventListener('click',()=>panel.hidden?openChat():hideChat());close.addEventListener('click',hideChat);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)hideChat();});
+async function ask(message){
+ const value=String(message||'').trim();if(!value||sending)return;
+ sending=true;const sendBtn=form.querySelector('button[type="submit"]');if(sendBtn)sendBtn.disabled=true;
+ bubble(value,'user');const placeholder=bubble('Thinking…','bot');
+ try{
+  const control=new AbortController();const timer=setTimeout(()=>control.abort(),32000);
+  let response;
+  try{response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','apikey':publicKey},body:JSON.stringify({message:value,history:history.slice(-12)}),signal:control.signal});}
+  finally{clearTimeout(timer);}
+  let data;try{data=await response.json();}catch{throw new Error('The AI server returned an invalid response.');}
+  if(!response.ok)throw new Error(data.error||'Unable to answer right now.');
+  const answer=String(data.answer||'').trim();if(!answer)throw new Error('GETI Assistant did not return a reply.');
+  renderRobotAnswer(placeholder,answer);
+  if(data.mode==='setup-required'){const note=document.createElement('p');note.textContent='Administrator: set GEMINI_API_KEY in Supabase Edge Function Secrets.';placeholder.appendChild(note);}
+  history.push({role:'user',content:value},{role:'assistant',content:answer});if(history.length>24)history.splice(0,history.length-24);
+ }catch(error){renderRobotAnswer(placeholder,error.name==='AbortError'?'GETI Assistant timed out. Please try again.':(error.message||'Unable to connect to GETI Assistant right now.'));}
+ finally{sending=false;if(sendBtn)sendBtn.disabled=false;log.scrollTop=log.scrollHeight;input.focus();}
+}
+form.addEventListener('submit',e=>{e.preventDefault();if(sending)return;const value=input.value;input.value='';ask(value);});
+panel.querySelectorAll('[data-geti-question]').forEach(btn=>btn.addEventListener('click',()=>ask(btn.getAttribute('data-geti-question'))));
+})();
+</script>
+
+<style id="geti-signup-completed-style">
+#getiSignupCompletedStep[hidden]{display:none!important}
+#getiSignupCompletedStep{max-width:440px;margin:18px auto 12px;padding:26px 20px;background:#f5f9ff;border:1px solid #c9dcf7;border-radius:18px;text-align:center;color:#12345a}
+#getiSignupCompletedStep h3{font-size:23px;line-height:1.3;margin:14px 0 10px;color:#0a3d7c}
+#getiSignupCompletedStep p{font-size:15px;line-height:1.65;margin:0 0 12px}
+#getiSignupCompletedStep .geti-signup-completed-check{display:grid;place-items:center;width:72px;height:72px;border-radius:50%;margin:auto;background:#1668ba;color:#fff;font-size:38px;font-weight:800}
+#getiSignupCompletedNext{margin-top:10px;cursor:pointer}
+@media(max-width:520px){#getiSignupCompletedStep{padding:22px 14px}#getiSignupCompletedStep h3{font-size:20px}}
+</style>
+<script id="geti-signup-completed-next-script">
+window.getiFinishSignupToStudent=function(){
+  var button=document.getElementById('getiSignupCompletedNext');
+  if(button){button.disabled=true;button.textContent='OPENING STUDENT AREA...';}
+  try{
+    if(typeof window.getiOpenSecondArea==='function'){
+      window.getiOpenSecondArea();
+    }else{
+      window.location.href='student.html';
+    }
+  }catch(e){
+    if(button){button.disabled=false;button.textContent='NEXT → STUDENT AREA';}
+    var status=document.getElementById('getiSignupCodeStatus');
+    if(status){status.hidden=false;status.style.display='block';status.textContent='Unable to open Student Area. Please try again.';}
+  }
+};
+</script>
+
+<!-- GETI Student Area: restore quick buttons after returning from a feature. -->
+<style id="geti-student-return-quicklinks-fix">
+body.geti-second-area-open:not(.geti-portal-mode) #getiSecondArea .geti-second-area-quicklinks {
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+body.geti-second-area-open:not(.geti-portal-mode) #getiSecondArea .geti-second-area-quicklinks .geti-first-quick-grid {
+  display:grid !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+body.geti-second-area-open:not(.geti-portal-mode) #getiSecondArea .geti-second-area-quicklinks .geti-first-quick-card {
+  display:grid !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+</style>
+<script id="geti-student-return-quicklinks-script">
+(function () {
+  'use strict';
+  function restoreStudentButtons() {
+    if (!document.body.classList.contains('geti-second-area-open') ||
+        document.body.classList.contains('geti-portal-mode')) return;
+    var area = document.getElementById('getiSecondArea');
+    if (!area) return;
+    area.setAttribute('aria-hidden', 'false');
+    var quick = area.querySelector('.geti-second-area-quicklinks');
+    if (!quick) return;
+    // Clear only stale inline visibility on the student quick-link container.
+    ['display','visibility','opacity'].forEach(function(prop){quick.style.removeProperty(prop);});
+    var grid = quick.querySelector('.geti-first-quick-grid');
+    if (grid) ['display','visibility','opacity'].forEach(function(prop){grid.style.removeProperty(prop);});
+  }
+  function start() {
+    if (typeof window.exitGetiPortal === 'function') {
+      var previousExit = window.exitGetiPortal;
+      window.exitGetiPortal = function () {
+        var result = previousExit.apply(this, arguments);
+        restoreStudentButtons();
+        return result;
+      };
+    }
+    if (typeof window.getiSmartBack === 'function') {
+      var previousBack = window.getiSmartBack;
+      window.getiSmartBack = function () {
+        var result = previousBack.apply(this, arguments);
+        restoreStudentButtons();
+        return result;
+      };
+    }
+    // Handles return from other student tools and browser back navigation.
+    var observer = new MutationObserver(function(mutations) {
+      for (var i=0;i<mutations.length;i++) {
+        if (mutations[i].attributeName === 'class') {restoreStudentButtons();break;}
+      }
+    });
+    observer.observe(document.body, {attributes:true,attributeFilter:['class']});
+    window.addEventListener('pageshow', restoreStudentButtons);
+    window.addEventListener('popstate', restoreStudentButtons);
+    restoreStudentButtons();
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+})();
+</script>
+<style id="geti-social-share-style">
+.geti-social-share-panel{margin:-5px 0 16px;padding:16px;border:1px solid #c6d9f0;border-radius:14px;background:#f8fbff;box-shadow:0 6px 20px rgba(18,60,112,.07)}
+.geti-social-share-panel[hidden]{display:none!important}
+.geti-social-share-title{margin:0 0 12px;color:#123c70;font-size:15px;font-weight:800}
+.geti-social-share-actions{display:flex;flex-wrap:wrap;gap:10px}
+.geti-social-share-actions button,.geti-social-copy{border:0;border-radius:10px;padding:11px 14px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer}
+.geti-social-facebook{background:#1877f2;color:#fff}.geti-social-instagram{background:linear-gradient(110deg,#833ab4,#e1306c,#f77737);color:#fff}
+.geti-social-copy{background:#134b87;color:#fff;margin-top:10px}.geti-social-share-help{font-size:12px;color:#365b82;margin:10px 0}
+#getiSocialShareCaption{display:block;width:100%;box-sizing:border-box;resize:vertical;border:1px solid #b8d7fa;border-radius:10px;padding:12px;color:#223b58;background:#fff;font:13px/1.55 inherit}
+#getiSocialShareStatus{font-size:12px;color:#155e42;margin-left:8px}
+</style><script id="geti-social-share-script">(function(){
+var caption="Join GETI and take a confident step toward your English learning goals! The Global English Teaching Institute (GETI) is an online educational platform where learners can explore English programs, develop communication skills, and discover opportunities for continued learning. Through GETI, students can learn about available courses, explore teaching knowledge, access practice resources, and find information about examinations and certificates. The platform also provides a Student Area and certificate verification features to support its educational services. Whether you want to strengthen your vocabulary, improve your confidence, or learn more about English teaching, GETI welcomes you to discover its learning community. Visit our website, explore the programs, and begin your learning journey with GETI. Keep Learning, Keep Growing! English Opens Opportunities. https://getienglish.com"; var website='https://getienglish.com/';
+function status(t){var e=document.getElementById('getiSocialShareStatus');if(e)e.textContent=t;}
+window.getiToggleSocialShare=function(){var p=document.getElementById('getiSocialSharePanel');if(!p)return;var opening=p.hidden;p.hidden=!opening;var b=document.querySelector('.geti-precreate-action');if(b)b.setAttribute('aria-expanded',String(opening));if(opening){var f=document.getElementById('getiSocialShareCaption');if(f)f.value=caption;}};
+window.getiCopyShareCaption=async function(){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(caption);}else{var e=document.getElementById('getiSocialShareCaption');if(!e)return;e.focus();e.select();if(!document.execCommand('copy'))throw Error('unavailable');}status('Caption copied. Paste it into your post.');}catch(e){status('Select and copy the caption manually.');}};
+window.getiShareFacebook=function(){window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(website),'_blank','noopener,noreferrer');status('Facebook sharing opened. Copy the caption if needed.');};
+window.getiShareInstagram=function(){window.getiCopyShareCaption();window.open('https://www.instagram.com/','_blank','noopener,noreferrer');status('Instagram opened. Paste the caption when you create your post.');};
+})();</script>
+<style id="geti-certificate-interactivity-style">
+#getiCertificateInfoView .geti-cert-choice{width:100%;text-align:left;justify-content:space-between;gap:12px;cursor:pointer;font:inherit;transition:border-color .15s,box-shadow .15s,transform .15s}
+#getiCertificateInfoView .geti-cert-choice:hover,#getiCertificateInfoView .geti-cert-choice:focus-visible{border-color:#2473c5;box-shadow:0 6px 18px rgba(22,80,146,.16);transform:translateY(-1px)}
+#getiCertificateInfoView .geti-cert-choice:focus-visible,#getiCertificateInfoView .geti-certificate-action-row button:focus-visible{outline:3px solid #76b5fd;outline-offset:2px}
+#getiCertificateInfoView .geti-cert-interactive-topic{background:#f8fbff;border:1px solid #dce6f0;border-radius:12px;padding:0 14px;min-height:56px;color:#16385f}
+#getiCertificateInfoView .geti-cert-interactive-topic summary{cursor:pointer;padding:16px 4px;font-weight:700;line-height:1.45}
+#getiCertificateInfoView .geti-cert-interactive-topic p{font-size:13px;line-height:1.65;color:#556e84;margin:0 0 14px}
+#getiCertificateInfoView .geti-certificate-interactive-box{border:1px solid #c5daed;background:#eef6ff;border-radius:14px;padding:17px;margin-top:15px}
+#getiCertificateInfoView .geti-certificate-interactive-box[hidden]{display:none!important}
+#getiCertificateInfoView .geti-certificate-interactive-box h4{margin:0 0 8px;color:#103d6e;font-size:20px}
+#getiCertificateInfoView .geti-certificate-interactive-box p{margin:0 0 13px;font-size:14px;line-height:1.55;color:#34516b}
+#getiCertificateInfoView .geti-certificate-action-row{display:flex;flex-wrap:wrap;gap:10px}
+#getiCertificateInfoView .geti-certificate-action-row button{border:0;background:#104b87;color:white;border-radius:10px;min-height:44px;padding:10px 16px;cursor:pointer;font-weight:800}
+#getiCertificateInfoView .geti-certificate-action-row button:hover{background:#0a3767}
+#getiCertificateInfoView .geti-certificate-below-topics{margin-top:16px}
+@media(max-width:520px){#getiCertificateInfoView .geti-certificate-action-row{flex-direction:column}#getiCertificateInfoView .geti-certificate-action-row button{width:100%}}
+</style>
+
+<script id="geti-certificate-interactivity-script">
+(function(){
+ var selected='TEFL';
+ var descriptions={
+  TEFL:'Teaching English as a Foreign Language: explore teaching methods, lesson planning, communication skills, and available GETI learning and assessment pathways.',
+  TESOL:'Teaching English to Speakers of Other Languages: explore language learning, teaching strategies, student support, and available GETI learning and assessment pathways.'
+ };
+ window.getiChooseCertificatePathway=function(program){
+  if(!Object.prototype.hasOwnProperty.call(descriptions,program))return false;
+  selected=program;
+  var box=document.getElementById('getiCertificatePathwayDetails');
+  var title=document.getElementById('getiCertificatePathwayHeading');
+  var para=document.getElementById('getiCertificatePathwayText');
+  if(title)title.textContent=program+' — GETI Program';
+  if(para)para.textContent=descriptions[program];
+  if(box){box.hidden=false;box.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  return false;
+ };
+ // Reuse the real GETI program and exam navigation rather than creating fake content.
+ function returnHome(){
+  if(typeof window.closeGetiCertificateInfo==='function')window.closeGetiCertificateInfo();
+  var section=document.querySelector('.geti-first-area');
+  if(section)section.style.display='';
+ }
+ window.getiCertificateOpenProgramLessons=function(){
+  returnHome();
+  window.setTimeout(function(){
+    var target=document.getElementById(selected==='TEFL'?'getiProgramTEFL':'getiProgramTESOL');
+    if(target){target.click();}
+    else {var programs=document.getElementById('getiHomePrograms');if(programs)programs.scrollIntoView({behavior:'smooth'});}
+  },80);
+  return false;
+ };
+ window.getiCertificateStartExam=function(){
+  returnHome();
+  window.setTimeout(function(){
+    var btn=document.querySelector('.geti-home-v2-level button');
+    if(btn){btn.click();return;}
+    if(typeof window.getiFocusFirstAccount==='function')window.getiFocusFirstAccount('signin');
+  },80);
+  return false;
+ };
+})();
+</script>
+
+<!-- GETI mobile student 10-item menu visibility & alignment fix: CSS only -->
+<style id="geti-student-menu-mobile-visibility-fix">
+/* Override the older white menu styling declared later in this page. */
+#getiSecondArea .geti-student-tools-menu{
+  box-sizing:border-box !important;
+  width:min(380px, calc(100vw - 28px)) !important;
+  padding:12px !important;
+  border:1px solid #77b5e8 !important;
+  border-radius:16px !important;
+  background:#e6f2ff !important;
+  box-shadow:0 18px 45px rgba(2,28,64,.3) !important;
+  max-height:min(78vh, 680px) !important;
+  overflow-y:auto !important;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+#getiSecondArea .geti-student-tools-menu.open{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:8px !important;
+}
+#getiSecondArea .geti-student-tools-menu button,
+#getiSecondArea .geti-student-tools-menu button[role="menuitem"]{
+  box-sizing:border-box !important;
+  display:flex !important;
+  align-items:center !important;
+  width:100% !important;
+  min-width:0 !important;
+  min-height:46px !important;
+  margin:0 !important;
+  padding:12px 14px !important;
+  border:1px solid #2a83d0 !important;
+  border-left:5px solid #9bd6ff !important;
+  border-radius:10px !important;
+  background:#075ba8 !important;
+  background-image:linear-gradient(135deg,#073f87,#0a74c7) !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+  line-height:1.4 !important;
+  letter-spacing:.02em !important;
+  text-align:left !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+  text-transform:none !important;
+  text-decoration:none !important;
+  box-shadow:0 3px 10px rgba(5,57,117,.13) !important;
+}
+#getiSecondArea .geti-student-tools-menu button:hover,
+#getiSecondArea .geti-student-tools-menu button:focus-visible{
+  background:#063d76 !important;
+  background-image:linear-gradient(135deg,#062c65,#07569b) !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+}
+@media (max-width:700px){
+  #getiSecondArea .geti-student-tools-wrap{position:static !important;}
+  #getiSecondArea .geti-student-tools-menu{
+    position:fixed !important;
+    z-index:99999 !important;
+    left:14px !important;
+    right:14px !important;
+    top:calc(70px + env(safe-area-inset-top, 0px)) !important;
+    bottom:auto !important;
+    width:calc(100vw - 28px) !important;
+    max-width:430px !important;
+    max-height:calc(100dvh - 95px) !important;
+    margin:0 auto !important;
+    transform:none !important;
+  }
+  #getiSecondArea .geti-student-tools-menu button{
+    font-size:12px !important;
+    min-height:45px !important;
+    padding:11px 12px !important;
+  }
+}
+</style>
+
+
+<style id="geti-exam-steps-inside-style">
+/* Only the GETI examinations flow. All certificate/lesson functions remain untouched. */
+body.geti-portal-mode.geti-inside-portal-open #geti-30-exams.geti-portal-active { min-height:100vh!important; }
+body.geti-portal-mode.geti-inside-portal-open #geti-30-exams.geti-portal-active > .container { width:min(1150px,94%)!important; max-width:1150px!important; margin-inline:auto!important; }
+#geti-30-exams .geti-exam-progress {display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 15px;margin:10px 0 18px;border-radius:12px;background:#eaf2fc;color:#143d6b;font-size:12px;font-weight:900}
+#geti-30-exams .geti-exam-progress span {padding:7px 9px;border-radius:8px;white-space:nowrap}
+#geti-30-exams .geti-exam-progress span.active {color:#fff;background:#09539c}
+#geti-30-exams .geti-exam-progress em {font-style:normal;color:#66809d}
+#geti-30-exams .geti-exam-inline-back {display:inline-flex;align-items:center;justify-content:center;gap:8px;margin:0 0 18px!important;padding:12px 17px!important;border:0!important;border-radius:10px!important;background:#0c4a86!important;color:#fff!important;font-size:13px!important;font-weight:900!important;cursor:pointer!important}
+#geti-30-exams .geti-exam-stage-shell {width:100%;max-width:100%;min-width:0;margin:0 auto;padding:0}
+body.geti-inside-portal-open #geti-30-exams.geti-stage-detail #geti30ExamList{display:none!important}
+body.geti-inside-portal-open #geti-30-exams.geti-stage-list #geti30ExamPanel{display:none!important}
+body.geti-inside-portal-open #geti30ExamPanel.active{display:block!important;width:100%!important;max-width:100%!important;margin:0 auto!important;overflow:visible!important}
+body.geti-inside-portal-open #geti30ExamPanel .geti-complete-registration-form,
+body.geti-inside-portal-open #geti30ExamPanel .registration-form{max-width:100%!important;min-width:0!important}
+@media(max-width:700px){
+ #geti-30-exams .geti-exam-progress{gap:3px;padding:9px;justify-content:center;font-size:10px}
+ #geti-30-exams .geti-exam-progress span{padding:5px 6px}
+ body.geti-inside-portal-open #geti30ExamPanel.active{padding:16px 12px!important}
+ body.geti-inside-portal-open #geti30ExamPanel .tefl-course-grid{grid-template-columns:1fr!important}
+ body.geti-inside-portal-open #geti30ExamPanel .registration-form{grid-template-columns:1fr!important}
+}
+</style>
+<script id="geti-exam-steps-inside-script">
+(function(){
+  'use strict';
+  var selectedExam='', hoursSnapshot='', phase='list', selectedHours='';
+  function panel(){return document.getElementById('geti30ExamPanel');}
+  function section(){return document.getElementById('geti-30-exams');}
+  function active(){return !!(document.body.classList.contains('geti-portal-mode')&&section()&&section().classList.contains('geti-portal-active'));}
+  function refresh(){
+    var p=panel();if(!p||!active())return;
+    var step=phase==='list'?1:phase==='hours'?2:3;
+    var bar='<nav class="geti-exam-progress" aria-label="Examination steps">'+
+      '<span class="'+(step===1?'active':'')+'">1. EXAMS</span><em>›</em>'+
+      '<span class="'+(step===2?'active':'')+'">2. HOURS</span><em>›</em>'+
+      '<span class="'+(step===3?'active':'')+'">3. REGISTRATION</span></nav>';
+    var existing=p.querySelector(':scope > .geti-exam-progress');if(existing)existing.remove();
+    if(phase==='list') return;
+    p.insertAdjacentHTML('afterbegin',bar);
+    var back=p.querySelector(':scope > .geti-exam-inline-back');if(back)back.remove();
+    var btn=document.createElement('button');btn.type='button';btn.className='geti-exam-inline-back';
+    btn.textContent=phase==='registration'?'← BACK TO HOURS':'← BACK TO EXAMS';
+    btn.onclick=function(){ window.getiExamStepBack(); };
+    p.querySelector('.geti-exam-progress').insertAdjacentElement('afterend',btn);
+    var block=p.querySelector('.geti-exam-stage-shell');if(block){block.style.maxWidth='100%';}
+  }
+  function activateHours(exam){
+    if(!active())return;
+    selectedExam=exam||selectedExam;phase='hours';selectedHours='';
+    var p=panel();if(p){p.classList.add('active');hoursSnapshot=p.innerHTML;}
+    refresh();
+  }
+  function activateRegistration(exam,hr){
+    if(!active())return;
+    selectedExam=exam||selectedExam;selectedHours=String(hr||'');phase='registration';
+    refresh();
+    var field=document.getElementById('g30Hours');
+    if(field&&selectedHours){
+      var match=Array.from(field.options).some(function(x){return x.value===selectedHours;});
+      if(match){field.value=selectedHours;field.setAttribute('data-geti-selected-hour',selectedHours);}
+    }
+  }
+  window.getiExamStepBack=function(){
+    if(!active())return;
+    var p=panel();if(!p)return;
+    if(phase==='registration'&&hoursSnapshot){
+      phase='hours';p.classList.add('active');p.innerHTML=hoursSnapshot;refresh();p.scrollIntoView({behavior:'smooth',block:'start'});return;
+    }
+    phase='list';selectedExam='';selectedHours='';hoursSnapshot='';
+    if(typeof window.getiStopExamTimer==='function')try{window.getiStopExamTimer();}catch(e){}
+    p.classList.remove('active');p.innerHTML='';
+    var list=document.getElementById('geti30ExamList');if(list)list.classList.add('show');
+    var sec=section();if(sec){sec.classList.remove('geti-stage-detail');sec.classList.add('geti-stage-list');}
+    if(list)list.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+  function wrap(name,fn){var prev=window[name];if(typeof prev!=='function')return;window[name]=function(){var result=prev.apply(this,arguments);try{fn.apply(this,arguments);}catch(e){console.warn('GETI steps',e);}return result;};}
+  function setup(){
+    // Both generic and TEFL / TESOL / TEYL / Proficiency selectors render Hours inside the original panel.
+    ['openGeneralExamHourSelector','openTeflCourseSelector','openTesolCourseSelector','openTeylCourseSelector','openEnglishAchievementSelector','openEnglishTestTeachingSelector'].forEach(function(name){
+      wrap(name,function(exam){activateHours(typeof exam==='string'?exam:name.replace(/^open/,'').replace(/CourseSelector$/,'')+' Exam');});
+    });
+    wrap('selectEnglishTestTeachingExam',function(){ /* nested selector becomes the same Hours step */ });
+    var historyOpen=window.openGeti30Registration; if(typeof historyOpen==='function')window.openGeti30Registration=async function(exam,course){var r=await historyOpen.apply(this,arguments);if(document.getElementById('g30Name'))activateRegistration(exam,course&&course.hours);return r;};
+    // Special advanced exam: preserve its existing registration and 60-question engine.
+    var expertPrev=window.openExpertExamRegistration;
+    if(typeof expertPrev==='function')window.openExpertExamRegistration=function(){
+      var r=expertPrev.apply(this,arguments);activateRegistration('Expert Exam',selectedHours);return r;
+    };
+    var prevEnter=window.enterGetiPortal;
+    if(typeof prevEnter==='function')window.enterGetiPortal=function(mode){
+      if(mode==='exam'){phase='list';selectedExam='';hoursSnapshot='';selectedHours='';}
+      return prevEnter.apply(this,arguments);
+    };
+    var list=document.getElementById('geti30ExamList');
+    if(list)list.addEventListener('click',function(ev){
+      var btn=ev.target.closest('.exam30-btn');if(!btn)return;
+      selectedExam=btn.textContent.trim();
+    },true);
+  }
+  // Expert has its own safe Hours selector and keeps the original Expert-specific exam engine.
+  window.getiOpenExpertHoursInside=function(){
+    var p=panel();if(!p)return;
+    p.classList.add('active');
+    var options=(typeof GETI_GENERAL_EXAM_HOURS!=='undefined'?GETI_GENERAL_EXAM_HOURS:[]);
+    p.innerHTML='<h2 class="exam-title">EXPERT EXAM — CHOOSE HOURS</h2><p class="exam-subtitle">Select your hours, then complete registration inside this examination area.</p><div class="tefl-course-grid">'+options.map(function(o){return '<button type="button" class="tefl-course-card" onclick="getiChooseExpertHoursInside('+o.hours+')"><strong>'+o.hours+' Hours</strong><span>Expert Exam</span></button>';}).join('')+'</div>';
+    activateHours('Expert Exam');p.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+  window.getiChooseExpertHoursInside=function(h){selectedHours=String(h);if(typeof window.openExpertExamRegistration==='function')window.openExpertExamRegistration();};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
+})();
+</script>
+
+
+<script id="geti-password-recovery-otp-fix">
+(function(){
+  'use strict';
+  function byId(id){return document.getElementById(id);}
+  function safeText(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function statusMessage(node,html){if(node)node.innerHTML=html;}
+  window.getiFirstAreaResetPasswordInline=async function(){
+    var email=byId('getiFirstResetEmail'),status=byId('getiFirstResetStatus');
+    if(!email||!status)return;
+    var address=String(email.value||'').trim().toLowerCase();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)){
+      statusMessage(status,'<span class="bad">Please enter a valid email address.</span>');return;
+    }
+    statusMessage(status,'<span class="ok">Requesting a secure password reset code...</span>');
+    try{
+      if(!window.GETI_SB||!GETI_SB.auth)throw new Error('GETI account service is unavailable.');
+      var result=await GETI_SB.auth.resetPasswordForEmail(address,{redirectTo:'https://getienglish.com/'});
+      if(result&&result.error)throw result.error;
+      statusMessage(status,
+        '<div class="ok">A password reset code has been requested for <strong>'+safeText(address)+'</strong>. Check your inbox and spam folder, then enter the code below.</div>'+
+        '<label class="geti-first-field full" style="display:block;margin-top:12px"><span>6-digit recovery code</span><input id="getiRecoveryOtp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="Enter the 6-digit code"></label>'+
+        '<button type="button" class="geti-first-primary-auth full" style="margin-top:10px" onclick="getiVerifyPasswordRecoveryCode()">VERIFY CODE</button>'+
+        '<p style="font-size:12px;margin-top:8px">If no code arrives, check Spam/Junk or contact GETI support.</p>');
+      try{sessionStorage.setItem('GETI_RECOVERY_EMAIL',address);sessionStorage.setItem('GETI_RECOVERY_DEADLINE',String(Date.now()+60000));}catch(e){}
+    }catch(err){
+      statusMessage(status,'<span class="bad">'+safeText(err&&err.message||'Unable to send the recovery email. Please try again later.')+'</span>');
+    }
+  };
+  window.getiVerifyPasswordRecoveryCode=async function(){
+    var status=byId('getiFirstResetStatus'),otp=byId('getiRecoveryOtp'),email='';
+    try{email=sessionStorage.getItem('GETI_RECOVERY_EMAIL')||'';}catch(e){}
+    var token=String(otp&&otp.value||'').replace(/\s+/g,'');
+    if(!/^\d{6}$/.test(token)){statusMessage(status,'<span class="bad">Enter the 6-digit code from your email.</span>');return;}
+    if(!email){statusMessage(status,'<span class="bad">Please request a new recovery code first.</span>');return;}
+    statusMessage(status,'<span class="ok">Verifying your recovery code...</span>');
+    try{
+      if(Date.now()>=Number(sessionStorage.getItem('GETI_RECOVERY_DEADLINE')||0))throw new Error('Code expired. Request a new confirmation code.');
+      var result=await GETI_SB.auth.verifyOtp({email:email,token:token,type:'recovery'});
+      if(result&&result.error)throw result.error;
+      if(!result||!result.data||!result.data.session)throw new Error('The recovery code could not be verified. Request a new code and try again.');
+      statusMessage(status,'<div class="ok">Code verified. Create your new password below.</div>'+
+        '<label class="geti-first-field full" style="display:block;margin-top:12px"><span>New Password</span><input id="getiRecoveryNewPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="6 to 12 characters"></label>'+
+        '<label class="geti-first-field full" style="display:block;margin-top:10px"><span>Confirm New Password</span><input id="getiRecoveryConfirmPassword" type="password" autocomplete="new-password" minlength="6" maxlength="12" placeholder="Repeat your new password"></label>'+
+        '<button type="button" class="geti-first-primary-auth full" style="margin-top:10px" onclick="getiCompletePasswordRecovery()">UPDATE PASSWORD</button>');
+    }catch(err){statusMessage(status,'<span class="bad">'+safeText(err&&err.message||'Invalid or expired recovery code.')+'</span>');}
+  };
+  window.getiCompletePasswordRecovery=async function(){
+    var pw=byId('getiRecoveryNewPassword'),confirm=byId('getiRecoveryConfirmPassword'),status=byId('getiFirstResetStatus');
+    if(!pw||!confirm||!status)return;
+    if(pw.value.length<6||pw.value.length>12){statusMessage(status,'<span class="bad">Password must contain 6 to 12 characters.</span>');return;}
+    if(pw.value!==confirm.value){statusMessage(status,'<span class="bad">Passwords do not match.</span>');return;}
+    statusMessage(status,'<span class="ok">Updating your password securely...</span>');
+    try{
+      var result=await GETI_SB.auth.updateUser({password:pw.value});
+      if(result&&result.error)throw result.error;
+      await GETI_SB.auth.signOut();
+      try{sessionStorage.removeItem('GETI_RECOVERY_EMAIL');}catch(e){}
+      statusMessage(status,'<span class="ok">Password updated successfully. You can now sign in with your new password.</span>');
+      var loginStatus=byId('getiFirstLoginStatus');
+      if(loginStatus)loginStatus.innerHTML='<span class="ok">Password updated securely. Sign in with your new password.</span>';
+      if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('signin');
+    }catch(err){statusMessage(status,'<span class="bad">'+safeText(err&&err.message||'Unable to update the password.')+'</span>');}
+  };
+})();
+</script>
+
+<style id="geti-pub-private-panel-style">
+#geti-publications{display:none!important}
+#getiPubOverlay{display:none;position:fixed;inset:0;z-index:20000;background:rgba(3,16,36,.88);overflow:auto;padding:24px 12px}
+#getiPubOverlay.show{display:block}
+.geti-pub-panel{width:min(1050px,100%);margin:22px auto;background:#f5f8fc;border-radius:16px;overflow:hidden;box-shadow:0 25px 80px rgba(0,0,0,.35)}
+.geti-pub-panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 22px;background:linear-gradient(135deg,#082e5d,#126cab);color:#fff}
+.geti-pub-panel-head strong{font-size:1.1rem;letter-spacing:.08em}
+.geti-pub-panel-head button{border:0;background:transparent;color:#fff;font-size:30px;cursor:pointer}
+.geti-pub-panel-body{padding:22px}
+.geti-pub-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.geti-pub-card{overflow:hidden;border:1px solid #d9e3ed;border-radius:12px;background:#fff;box-shadow:0 8px 22px rgba(8,46,93,.07)}
+.geti-pub-card img{display:block;width:100%;height:220px;object-fit:cover;background:#eef3f8}
+.geti-pub-card-copy{padding:14px}
+.geti-pub-card-copy h3{margin:0 0 7px;color:#082e5d;font-size:1rem}
+.geti-pub-card-copy p{margin:0;color:#5f7083;font-size:.88rem;line-height:1.55}
+.geti-pub-card-copy small{display:block;margin-top:10px;color:#8a6b22;font-weight:800}
+.geti-pub-status{padding:22px;text-align:center;color:#52657a;background:#fff;border:1px dashed #cbd7e4;border-radius:10px}
+.geti-pub-email-btn{display:inline-flex;align-items:center;justify-content:center;margin:3px 0 3px 8px;padding:5px 11px;border:1px solid #c49a35;border-radius:7px;background:linear-gradient(135deg,#0b3b75,#082e5d);color:#fff!important;font-size:11px;font-weight:900;letter-spacing:.08em;line-height:1.3;cursor:pointer;vertical-align:middle;box-shadow:0 3px 9px rgba(8,46,93,.15)}
+.geti-pub-email-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
+@media(max-width:760px){.geti-pub-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.geti-pub-panel-body{padding:14px}}
+@media(max-width:520px){.geti-pub-grid{grid-template-columns:1fr}.geti-pub-card img{height:230px}}
+</style>
+
+
+  </section>
+</div>
+
+<script id="geti-pub-email-password-gate">
+(function(){
+  "use strict";
+  var PUB_PASSWORD="pub123";
+
+  function safeText(value){
+    return String(value==null?"":value).replace(/[&<>"']/g,function(ch){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch];
+    });
+  }
+
+  window.getiClosePub=function(){
+    var overlay=document.getElementById("getiPubOverlay");
+    if(overlay)overlay.classList.remove("show");
+    document.body.style.overflow="";
+  };
+
+  async function loadPubPosts(){
+    var host=document.getElementById("getiPubPosts");
+    if(!host)return;
+    host.innerHTML='<div class="geti-pub-status">Loading all administrator publications…</div>';
+    try{
+      if(typeof GETI_SB==="undefined"||!GETI_SB)throw new Error("Publication service is unavailable.");
+      var response=await GETI_SB.from("published_images")
+        .select("id,title,alt_text,description,image_url,created_at")
+        .eq("published",true)
+        .order("created_at",{ascending:false})
+        .limit(500);
+      if(response.error)throw response.error;
+      var posts=response.data||[];
+      if(!posts.length){
+        host.innerHTML='<div class="geti-pub-status">There are no published posts yet.</div>';
+        return;
+      }
+      host.innerHTML=posts.map(function(post){
+        var title=post.title||"GETI Publication";
+        var desc=post.description||post.alt_text||"";
+        var date="";
+        try{date=post.created_at?new Date(post.created_at).toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"}):"";}catch(e){}
+        return '<article class="geti-pub-card">'+
+          '<a href="'+safeText(post.image_url||"#")+'" target="_blank" rel="noopener">'+
+          '<img src="'+safeText(post.image_url||"")+'" alt="'+safeText(post.alt_text||title)+'" loading="lazy" decoding="async"></a>'+
+          '<div class="geti-pub-card-copy"><h3>'+safeText(title)+'</h3><p>'+safeText(desc)+'</p><small>Published by GETI'+(date?' · '+safeText(date):'')+'</small></div>'+
+          '</article>';
+      }).join("");
+    }catch(error){
+      host.innerHTML='<div class="geti-pub-status">Unable to load posts: '+safeText(error&&error.message||error)+'</div>';
+    }
+  }
+
+  window.getiOpenPub=function(){
+    var section=document.getElementById("geti-publications-index");
+    if(!section)return;
+    section.classList.add("geti-pub-visible");
+    section.setAttribute("aria-hidden","false");
+    document.body.classList.add("geti-pub-body-open");
+    var closeButton=document.getElementById("getiPubCloseButton");
+    if(closeButton)closeButton.focus();
+    if(typeof window.getiRefreshPublications==="function")window.getiRefreshPublications();
+  };
+  window.getiClosePub=function(){
+    var section=document.getElementById("geti-publications-index");
+    if(section){
+      section.classList.remove("geti-pub-visible");
+      section.setAttribute("aria-hidden","true");
+    }
+    document.body.classList.remove("geti-pub-body-open");
+    var pubButton=document.getElementById("getiSinglePubButton");
+    if(pubButton)pubButton.focus();
+  };
+
+  function requestPubAccess(){
+    var entered=window.prompt("Enter the PUB password:");
+    if(entered===null)return;
+    if(entered!==PUB_PASSWORD){window.alert("Incorrect password. Access denied.");return;}
+    window.getiOpenPub();
+  }
+
+  function ensureSinglePubButton(){
+    // One PUB button, next to the administration email in the contact area.
+    var buttons=Array.prototype.slice.call(document.querySelectorAll('.geti-pub-email-btn'));
+    var button=document.getElementById('getiSinglePubButton') || buttons[0];
+    buttons.forEach(function(extra){if(extra!==button)extra.remove();});
+    if(!button){button=document.createElement('button');}
+    button.type='button';
+    button.id='getiSinglePubButton';
+    button.className='geti-pub-email-btn';
+    button.textContent='PUB';
+    button.setAttribute('aria-label','Open GETI publications with password');
+    button.onclick=requestPubAccess;
+    // Avoid accidentally placing the only button in a hidden or unrelated section.
+    var emailLink=document.querySelector('.geti-email-home-entry a[href="mailto:admin@getienglish.com"]')
+      || document.querySelector('.geti-email-home-entry a[href^="mailto:"]');
+    var actionBar=document.querySelector('#getiSecondArea .geti-second-area-entry-actions');
+    if(emailLink){
+      if(button.previousElementSibling!==emailLink || button.parentElement!==emailLink.parentElement){
+        emailLink.insertAdjacentElement('afterend',button);
+      }
+    }else if(actionBar){
+      if(button.parentElement!==actionBar)actionBar.appendChild(button);
+    }else if(!button.isConnected){
+      document.body.appendChild(button);
+    }
+  }
+
+  function init(){
+    ensureSinglePubButton();
+    if(window.MutationObserver){
+      var scheduled=false;
+      var observer=new MutationObserver(function(records){
+        if(scheduled)return;
+        var needsUpdate=records.some(function(record){
+          return Array.prototype.some.call(record.addedNodes,function(n){
+            return n.nodeType===1&&(n.matches&&n.matches('a[href^="mailto:"]') || n.querySelector&&n.querySelector('a[href^="mailto:"]'));
+          });
+        });
+        if(needsUpdate){
+          scheduled=true;
+          Promise.resolve().then(function(){scheduled=false;ensureSinglePubButton();});
+        }
+      });
+      observer.observe(document.body,{childList:true,subtree:true});
+    }
+    document.addEventListener("keydown",function(event){if(event.key==="Escape")window.getiClosePub();});
+    var dialog=document.getElementById("geti-publications-index");
+    if(dialog)dialog.addEventListener("click",function(event){if(event.target===dialog)window.getiClosePub();});
+    var overlay=document.getElementById("getiPubOverlay");
+    if(overlay)overlay.addEventListener("click",function(event){if(event.target===overlay)window.getiClosePub();});
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
+  else init();
+})();
+</script>
+
+
+<!-- GETI publications dialog: hidden until the PUB button is unlocked -->
+<section id="geti-publications-index" aria-labelledby="geti-publications-index-title" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="geti-pub-dialog-inner" style="max-width:1180px;width:94%;margin:42px auto 60px">
+    <div class="geti-pub-header" style="text-align:center;padding:30px 18px;background:linear-gradient(135deg,#082e5d,#126cab);color:#fff;border-bottom:4px solid #c49a35;border-radius:14px 14px 0 0">
+      <button type="button" id="getiPubCloseButton" onclick="window.getiClosePub()" aria-label="Close GETI Publications">← Back / Close</button>
+      <div style="font-size:.75rem;letter-spacing:.16em;font-weight:800;color:#f2d889">GLOBAL ENGLISH TEACHING INSTITUTE</div>
+      <h2 id="geti-publications-index-title" style="font-size:clamp(1.7rem,4vw,2.5rem);margin:8px 0">GETI Publications</h2>
+      <p style="max-width:760px;margin:auto;color:#e8f1fb">Official announcements, educational resources and images published by Global English Teaching Institute.</p>
+    </div>
+    <div id="geti-index-publications-status" role="status" style="padding:20px;text-align:center;background:#fff;border:1px solid #dbe4ee;color:#5c6e82">Loading GETI publications…</div>
+    <div id="geti-index-publications-grid" class="geti-index-publications-grid"></div>
+  </div>
+</section>
+<style id="geti-publications-only-inside-pub">
+#geti-publications-index{display:none!important;position:fixed!important;inset:0!important;z-index:2147482000!important;overflow-y:auto!important;overscroll-behavior:contain;background:#edf3fa!important;visibility:hidden!important}
+#geti-publications-index.geti-pub-visible{display:block!important;visibility:visible!important}
+body.geti-pub-body-open{overflow:hidden!important}
+#geti-publications-index .geti-pub-dialog-inner{padding-bottom:30px}
+#getiPubCloseButton{display:block;margin:0 0 12px auto;padding:11px 18px;background:#fff;color:#082e5d;border:2px solid #d2b76f;border-radius:10px;font:700 15px/1.2 system-ui,sans-serif;cursor:pointer}
+#getiPubCloseButton:hover,#getiPubCloseButton:focus-visible{background:#ffeab8;outline:2px solid #fff;outline-offset:2px}
+@media(max-width:600px){
+ #geti-publications-index .geti-pub-dialog-inner{width:96%!important;margin:12px auto 40px!important}
+ #geti-publications-index .geti-pub-header{padding:18px 12px!important}
+}
+</style>
+<style id="geti-index-publications-css">
+.geti-index-publications-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;max-width:1180px;width:94%;margin:-1px auto 50px}
+.geti-index-publications-grid article{overflow:hidden;background:#fff;border:1px solid #dbe4ee;border-radius:14px;box-shadow:0 8px 24px rgba(8,46,93,.07)}
+.geti-index-publications-grid article a{display:block;background:#eaf0f6}
+.geti-index-publications-grid article img{display:block;width:100%;height:260px;object-fit:contain;background:#eef3f8}
+.geti-index-publications-grid .copy{padding:15px}
+.geti-index-publications-grid h3{font-size:1.05rem;color:#082e5d;margin:0 0 7px}
+.geti-index-publications-grid p{margin:0;color:#52657a;font-size:.92rem;line-height:1.55}
+.geti-index-publications-grid small{display:block;margin-top:11px;color:#8a6b22;font-weight:800}
+@media(max-width:850px){.geti-index-publications-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.geti-index-publications-grid{grid-template-columns:1fr}.geti-index-publications-grid article img{height:230px}}
+</style>
+<script id="geti-index-publications-loader">
+(function(){
+  'use strict';
+  var host=document.getElementById('geti-index-publications-grid');
+  var status=document.getElementById('geti-index-publications-status');
+  if(!host||!status)return;
+  function escapeText(value){return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]});}
+  function formatDate(value){if(!value)return '';var date=new Date(value);return isNaN(date.getTime())?'':date.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});}
+  function publicClient(){
+    if(window.supabase && typeof window.supabase.createClient==='function'){
+      return window.supabase.createClient('https://syawyulrelrhjprnxdyn.supabase.co','sb_publishable_4TupKAcHcAcvnJC9NxdhAg_fbxwEy_8');
+    }
+    return (typeof GETI_SB!=='undefined') ? GETI_SB : null;
+  }
+  async function refreshPublications(){
+    try{
+      var client=publicClient();
+      if(!client){status.textContent='The publication service is not available. Reload the page and try again.';return;}
+      var response=await client.from('published_images')
+        .select('id,title,alt_text,description,keywords,image_url,created_at')
+        .eq('published',true).order('created_at',{ascending:false}).limit(1000);
+      if(response.error)throw response.error;
+      var items=(response.data||[]).filter(function(item){return item&&item.image_url;});
+      if(!items.length){
+        host.innerHTML='';
+        status.hidden=false;
+        status.textContent='No GETI publications have been published yet. New official images will appear here after the administrator publishes them.';
+        return;
+      }
+      status.hidden=true;
+      host.innerHTML=items.map(function(item,i){
+        var title=item.title||'GETI Publication';
+        var alt=item.alt_text||title;
+        var caption=item.description||'Official GETI publication.';
+        return '<article itemscope itemtype="https://schema.org/ImageObject">'+
+          '<a href="'+escapeText(item.image_url)+'" target="_blank" rel="noopener">'+
+          '<img src="'+escapeText(item.image_url)+'" alt="'+escapeText(alt)+'" title="'+escapeText(title)+'" itemprop="contentUrl" loading="'+(i?'lazy':'eager')+'" decoding="async"></a>'+
+          '<div class="copy"><h3 itemprop="name">'+escapeText(title)+'</h3><p itemprop="caption">'+escapeText(caption)+'</p><small>Published by GETI'+(item.created_at?' · '+escapeText(formatDate(item.created_at)):'')+'</small></div></article>';
+      }).join('');
+      var schema=document.getElementById('geti-index-publication-images-schema');
+      if(!schema){schema=document.createElement('script');schema.type='application/ld+json';schema.id='geti-index-publication-images-schema';document.head.appendChild(schema);}
+      schema.textContent=JSON.stringify({'@context':'https://schema.org','@graph':items.map(function(item){return {'@type':'ImageObject','name':item.title||'GETI Publication','contentUrl':item.image_url,'description':item.description||item.alt_text||item.title||'GETI Publication','keywords':item.keywords||'GETI, Global English Teaching Institute','datePublished':item.created_at||undefined,'creditText':'Global English Teaching Institute (GETI)'};})});
+    }catch(error){
+      console.error('GETI publications could not load:',error);
+      status.hidden=false;
+      status.textContent='Unable to load GETI publications. Please check your connection or try again later.';
+    }
+  }
+  window.getiRefreshPublications=refreshPublications;
+  refreshPublications();
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)refreshPublications();});
+})();
+</script>
+
+
+<!-- GETI full-screen modal + in-page full-page navigation (v2) -->
+<style id="geti-navigation-fullscreen-v2">
+/* Limit full-screen treatment to known dialogs, preserving their existing logic. */
+#myResultOverlay.show, #getCertOverlay.show {
+  position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
+  min-height:100vh!important;overflow-y:auto!important;padding:0!important;
+  margin:0!important;border-radius:0!important;z-index:2147482000!important;
+}
+#myResultOverlay.show .myresult-shell, #getCertOverlay.show .getcert-modal {
+  width:100%!important;max-width:none!important;min-height:100dvh!important;
+  height:auto!important;margin:0!important;border-radius:0!important;box-shadow:none!important;
+}
+#getiSecondArea {min-height:100dvh!important}
+#getiSecondArea .geti-second-area-entrybar {position:sticky!important;top:0!important;z-index:200!important}
+.geti-navigation-back {
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-height:37px;padding:8px 13px;margin-right:10px;
+  border:1px solid #c9d8e9;border-radius:9px;background:#fff;color:#103968;
+  cursor:pointer;font-size:14px;font-family:inherit;font-weight:800;
+}
+.geti-navigation-back:focus-visible {outline:3px solid #e8b841;outline-offset:2px}
+.geti-navigation-back:hover {background:#eaf2fc}
+.geti-navigation-back--dialog {position:sticky;top:9px;left:12px;z-index:2147482002;margin:10px 0 0 12px}
+@media(max-width:600px){.geti-navigation-back{padding:8px 10px;font-size:13px}}
+</style>
+<script id="geti-navigation-fullscreen-v2">
+(function(){
+  'use strict';
+  var modalConfig=[
+    {id:'myResultOverlay', close:'closeMyResult'},
+    {id:'getCertOverlay',close:'closeGetCertPortal'}
+  ];
+  function removeOpenClass(el){el.classList.remove('show','open','active');}
+  function closeDialog(id,handler){
+    try{if(typeof window[handler]==='function'){window[handler]();return;}}catch(e){console.warn('GETI close',e);}
+    var panel=document.getElementById(id);if(panel)removeOpenClass(panel);
+  }
+  function makeBack(action,label,dialog){
+    var btn=document.createElement('button');
+    btn.type='button';btn.className='geti-navigation-back'+(dialog?' geti-navigation-back--dialog':'');
+    btn.textContent='← '+(label||'BACK');
+    btn.setAttribute('aria-label','Back to previous GETI page');
+    btn.addEventListener('click',action);
+    return btn;
+  }
+  function init(){
+    modalConfig.forEach(function(item){
+      var overlay=document.getElementById(item.id);
+      if(!overlay||overlay.querySelector(':scope > .geti-navigation-back'))return;
+      overlay.insertBefore(makeBack(function(){closeDialog(item.id,item.close);},'BACK',true),overlay.firstChild);
+    });
+    var area=document.getElementById('getiSecondArea');
+    if(area){
+      var bar=area.querySelector('.geti-second-area-entrybar-inner')||area.querySelector('.geti-second-area-entrybar');
+      if(bar&&!bar.querySelector('.geti-navigation-back')){
+        bar.insertBefore(makeBack(function(){
+          try{
+            if(typeof window.getiLeaveSecondArea==='function'){window.getiLeaveSecondArea();return;}
+            if(typeof window.getiBackToFirstArea==='function'){window.getiBackToFirstArea();return;}
+          }catch(e){console.warn('GETI return',e);}
+          document.body.classList.remove('geti-second-area-open');
+          area.setAttribute('aria-hidden','true');
+          window.scrollTo({top:0,behavior:'smooth'});
+        },'BACK',false),bar.firstChild);
+      }
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});
+  else init();
+})();
+</script>
+
+
+<div class="geti-accreditation-admin-modal" id="getiAccreditationAdminModal" role="dialog" aria-modal="true" aria-labelledby="getiAccreditationAdminTitle">
+  <div class="geti-accreditation-admin-box">
+    <h3 id="getiAccreditationAdminTitle">BMM — Accreditation Management</h3>
+    <p>Enter the administrator password to manage the accreditation display.</p>
+    <div class="geti-bmm-help">
+      <strong>ACTIVATE ACCREDITATION:</strong> shows all GETI accreditation panels and logos for every visitor.<br>
+      <strong>DEACTIVATE ACCREDITATION:</strong> hides those panels and logos for every visitor.<br>
+      This visibility setting is stored securely on the GETI server and applies to website visitors on all devices. It only controls the public display; it does not change any organisation's actual recognition or membership.
+    </div>
+    <div class="geti-bmm-password-row" id="getiBmmPasswordRow">
+      <div class="geti-bmm-password-field">
+        <input id="getiAccreditationAdminPassword" type="password" autocomplete="current-password" placeholder="Administrator password" aria-label="Administrator password">
+        <button type="button" class="geti-bmm-password-toggle" id="getiBmmPasswordToggle" onclick="getiToggleBmmPassword()" aria-controls="getiAccreditationAdminPassword" aria-pressed="false">SHOW</button>
+      </div>
+      <button type="button" class="geti-bmm-unlock" onclick="getiUnlockAccreditationAdmin()">UNLOCK</button>
+    </div>
+    <div id="getiAccreditationAdminMessage" role="status" aria-live="polite"></div>
+    <div class="geti-accreditation-admin-actions" id="getiAccreditationAdminControls" hidden>
+      <button type="button" class="geti-accreditation-activate" onclick="getiSetAccreditationVisibility(true)">ACTIVATE ACCREDITATION</button>
+      <button type="button" class="geti-accreditation-deactivate" onclick="getiSetAccreditationVisibility(false)">DEACTIVATE ACCREDITATION</button>
+    </div>
+    <button type="button" class="geti-accreditation-admin-close" onclick="getiCloseAccreditationAdmin()">Close</button>
+  </div>
+</div>
+<script id="geti-accreditation-admin-script">
+(function(){
+ 'use strict';
+ var unlocked=false, adminPassword='', state=null, fetching=false;
+ function panels(){return document.querySelectorAll('.geti-cpd-panel, .geti-accreditation-pathways');}
+ function apply(visible){
+   state=!!visible;
+   document.documentElement.setAttribute('data-geti-accreditation', state?'visible':'hidden');
+   panels().forEach(function(el){
+     el.classList.toggle('geti-accreditation-hidden',!state);
+     el.setAttribute('aria-hidden',state?'false':'true');
+   });
+ }
+ function message(text,ok){
+   var el=document.getElementById('getiAccreditationAdminMessage');
+   if(el){el.textContent=text;el.style.color=ok?'#087443':'#b42318';}
+ }
+ async function rpc(name,args){
+   var client=window.GETI_SB;
+   if(!client || typeof client.rpc!=='function')throw new Error('GETI online service unavailable.');
+   var r=await client.rpc(name,args||{});
+   if(r.error)throw new Error(r.error.message||'Unable to contact the server.');
+   return r.data;
+ }
+ async function refresh(){
+   if(fetching)return;
+   fetching=true;
+   try{
+     var visible=await rpc('geti_public_accreditation_visibility');
+     apply(visible===true);
+   }catch(err){
+     // On server errors, do not display accreditation information without confirmation.
+     apply(false);
+   }finally{fetching=false;}
+ }
+ window.getiOpenAccreditationAdmin=function(){
+   var modal=document.getElementById('getiAccreditationAdminModal');
+   if(!modal)return;
+   unlocked=false;adminPassword='';
+   modal.classList.add('is-open');
+   var input=document.getElementById('getiAccreditationAdminPassword');
+   var controls=document.getElementById('getiAccreditationAdminControls');
+   if(input){input.value='';input.type='password';input.disabled=false;}
+   var t=document.getElementById('getiBmmPasswordToggle');
+   if(t){t.textContent='SHOW';t.setAttribute('aria-pressed','false');t.setAttribute('aria-label','Show password');}
+   if(controls)controls.hidden=true;
+   message('This control applies to all visitors of the website.',true);
+   refresh();
+   setTimeout(function(){if(input)input.focus();},50);
+ };
+ window.getiUnlockAccreditationAdmin=async function(){
+   var input=document.getElementById('getiAccreditationAdminPassword');
+   var controls=document.getElementById('getiAccreditationAdminControls');
+   if(!input||!input.value){message('Enter the BMM administrator password.',false);return;}
+   var candidate=input.value;
+   input.disabled=true;
+   message('Checking administrator access...',true);
+   try{
+     var accepted=await rpc('geti_validate_bmm_password',{p_password:candidate});
+     if(accepted!==true)throw new Error('Incorrect administrator password.');
+     adminPassword=candidate;
+     unlocked=true;
+     if(controls)controls.hidden=false;
+     message('Access granted. These actions affect every website visitor.',true);
+   }catch(err){
+     unlocked=false;adminPassword='';
+     if(controls)controls.hidden=true;
+     message(err.message||'Password verification failed.',false);
+     input.disabled=false;input.focus();input.select();
+   }
+ };
+ window.getiToggleBmmPassword=function(){
+   var input=document.getElementById('getiAccreditationAdminPassword');
+   var toggle=document.getElementById('getiBmmPasswordToggle');
+   if(!input||!toggle)return;
+   var reveal=input.type==='password';
+   input.type=reveal?'text':'password';
+   toggle.textContent=reveal?'HIDE':'SHOW';
+   toggle.setAttribute('aria-pressed',reveal?'true':'false');
+   toggle.setAttribute('aria-label',reveal?'Hide password':'Show password');
+ };
+ window.getiCloseAccreditationAdmin=function(){
+   var modal=document.getElementById('getiAccreditationAdminModal');
+   if(modal)modal.classList.remove('is-open');
+   unlocked=false;adminPassword='';
+ };
+ window.getiSetAccreditationVisibility=async function(visible){
+   if(!unlocked || !adminPassword){message('Unlock BMM first.',false);return;}
+   var controls=document.getElementById('getiAccreditationAdminControls');
+   var buttons=controls?controls.querySelectorAll('button'):[];
+   buttons.forEach(function(b){b.disabled=true;});
+   message('Saving global accreditation visibility...',true);
+   try{
+     var result=await rpc('geti_set_global_accreditation_visibility',{
+       p_password:adminPassword,p_visible:!!visible
+     });
+     if(result!==!!visible)throw new Error('Unexpected server response.');
+     apply(result);
+     message(result?'ACTIVATED for all website visitors.':'DEACTIVATED for all website visitors.',true);
+   }catch(err){
+     message('Could not update global settings: '+(err.message||'Unknown error'),false);
+     await refresh();
+   }finally{buttons.forEach(function(b){b.disabled=false;});}
+ };
+ document.addEventListener('keydown',function(event){
+   var modal=document.getElementById('getiAccreditationAdminModal');
+   if(event.key==='Enter' && modal && modal.classList.contains('is-open') && !unlocked){
+     if(event.target && event.target.id==='getiAccreditationAdminPassword'){
+       event.preventDefault();window.getiUnlockAccreditationAdmin();
+     }
+   }
+   if(event.key==='Escape')window.getiCloseAccreditationAdmin();
+ });
+ // Poll while open so changes from one device reach other browsers.
+ setInterval(function(){if(!document.hidden)refresh();},15000);
+ document.addEventListener('visibilitychange',function(){if(!document.hidden)refresh();});
+ function begin(){refresh();setTimeout(refresh,1200);}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',begin,{once:true});
+ else begin();
+})();
+</script>
+
+
+
+
+
+
+<script id="geti-qr-scanner-script">
+/* Separate GETI scanner module — does not change the verification engine. */
+(function(){
+  "use strict";
+  var scanner=null, cameraOn=false, busy=false, loading=null, scannerReady=false;
+  function byId(id){return document.getElementById(id);}
+  function status(message,kind){var el=byId('getiQrStatus');if(el){el.textContent=message;el.className='geti-qr-status'+(kind?' '+kind:'');}}
+  function loadLibrary(){
+    if(window.Html5Qrcode)return Promise.resolve();
+    if(loading)return loading;
+    loading=new Promise(function(resolve,reject){
+      var script=document.createElement('script');
+      script.src='https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
+      script.async=true;
+      script.onload=function(){window.Html5Qrcode?resolve():reject(new Error('QR library did not load'));};
+      script.onerror=function(){reject(new Error('Unable to load QR scanner library. Check your connection.'));};
+      document.head.appendChild(script);
+    }).catch(function(e){loading=null;throw e;});
+    return loading;
+  }
+  function extractId(decoded){
+    var value=String(decoded||'').trim();if(!value||value.length>4096)return '';
+    var candidates=[value];
+    try{
+      var url=new URL(value);
+      if(url.protocol==='https:'||url.protocol==='http:'){
+        ['verify','certificate_id','certificateId','id','cert','code'].forEach(function(key){var v=url.searchParams.get(key);if(v)candidates.push(v);});
+        candidates.push(decodeURIComponent(url.pathname));
+        if(url.hash)candidates.push(decodeURIComponent(url.hash));
+      }
+    }catch(e){}
+    candidates.push(value);
+    for(var i=0;i<candidates.length;i++){
+      var candidate=candidates[i];
+      try{candidate=decodeURIComponent(candidate);}catch(e){}
+      var match=String(candidate).match(/GETI-CERT\d+/i);
+      if(match)return match[0].toUpperCase();
+    }
+    return '';
+  }
+  async function stop(){
+    if(scanner&&cameraOn){try{await scanner.stop();}catch(e){}}
+    cameraOn=false;
+    if(scanner){try{scanner.clear();}catch(e){}}
+    scanner=null;
+    var panel=byId('getiQrPanel');if(panel)panel.hidden=true;
+    var btn=byId('getiQrCameraBtn');if(btn)btn.disabled=false;
+  }
+  async function decoded(text){
+    if(busy)return;
+    busy=true;
+    var id=extractId(text);
+    if(!id){status('This QR code does not contain a recognized GETI Certificate ID (GETI-CERT...). You can still enter the ID manually below.','error');busy=false;return;}
+    await stop();
+    var input=byId('verifyInput');
+    if(!input){status('Verification input was not found. Please refresh the page.','error');busy=false;return;}
+    input.value=id;
+    status('QR code read: '+id+'. Checking the official certificate record…','ok');
+    if(typeof window.setVerifyType==='function')window.setVerifyType('id');
+    if(typeof window.verifyCertificate==='function'){
+      try{await window.verifyCertificate('id');}catch(e){status('The QR was read, but verification is temporarily unavailable. Try VERIFY CERTIFICATE below.','error');}
+    }else{status('The QR was read. Click VERIFY CERTIFICATE below to check its official record.','error');}
+    byId('verifyResult')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+    busy=false;
+  }
+  window.getiQrOpenCamera=async function(){
+    var panel=byId('getiQrPanel');var btn=byId('getiQrCameraBtn');
+    if(cameraOn)return;
+    if(!window.isSecureContext){status('Camera scanning requires HTTPS. Use the upload option or enter the Certificate ID manually.','error');return;}
+    if(btn)btn.disabled=true;
+    if(panel)panel.hidden=false;
+    status('Starting camera. Please allow access when your browser asks…');
+    try{
+      await loadLibrary();
+      scanner=new window.Html5Qrcode('getiQrReader');
+      await scanner.start({facingMode:'environment'},{fps:8,qrbox:function(w,h){var size=Math.min(255,Math.max(130,Math.floor(Math.min(w,h)*0.7)));return {width:size,height:size};}},function(text){void decoded(text);},function(){});
+      cameraOn=true;status('Point your camera at the QR code on the certificate.');
+    }catch(e){await stop();status('Unable to start camera: '+(e&&e.message?e.message:'Camera unavailable')+'. Try uploading a QR image.','error');}
+    if(btn)btn.disabled=false;
+  };
+  window.getiQrCloseCamera=async function(){await stop();status('Camera stopped. You can scan again or enter the ID manually.');};
+  window.getiQrScanImage=async function(file){
+    if(!file)return;
+    if(!file.type.startsWith('image/')){status('Please select an image containing a QR code.','error');return;}
+    if(file.size>10*1024*1024){status('Image too large (maximum 10 MB).','error');return;}
+    status('Reading QR code from the image…');
+    try{
+      await stop();await loadLibrary();
+      var panel=byId('getiQrPanel');if(panel)panel.hidden=false;
+      var reader=new window.Html5Qrcode('getiQrReader');
+      var result=await reader.scanFile(file,false);
+      try{reader.clear();}catch(e){}
+      if(panel)panel.hidden=true;
+      await decoded(result);
+    }catch(e){var panel=byId('getiQrPanel');if(panel)panel.hidden=true;status('Could not read a QR code from this image. Try a sharper photo or enter the Certificate ID manually.','error');}
+  };
+  window.addEventListener('pagehide',function(){void stop();});
+})();
+</script>
+
+<script id="geti-qr-collapse-handler">
+(function(){
+  'use strict';
+  function syncQRPanel(open){
+    var options=document.getElementById('getiQrOptions');
+    var trigger=document.getElementById('getiQrToggleButton');
+    if(!options||!trigger)return;
+    options.hidden=!open;
+    trigger.setAttribute('aria-expanded',open?'true':'false');
+    trigger.setAttribute('aria-label',open?'Hide QR verification options':'Show QR verification options');
+    if(!open&&typeof window.getiQrCloseCamera==='function'){
+      try{window.getiQrCloseCamera();}catch(e){console.warn('GETI QR close camera',e);}
+    }
+  }
+  // Camera and upload controls are not shown until the heading is clicked.
+  window.getiQrToggleOptions=function(){
+    var options=document.getElementById('getiQrOptions');
+    if(!options)return;
+    syncQRPanel(options.hidden);
+  };
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){syncQRPanel(false);},{once:true});
+  }else{
+    syncQRPanel(false);
+  }
+})();
+</script>
+<style id="geti-live-exam-progress-css">
+.geti-live-progress{box-sizing:border-box;max-width:100%;margin:12px 0 22px;padding:15px 16px;border:1px solid #dce6ef;border-radius:14px;background:#fff;box-shadow:0 3px 12px rgba(19,43,78,.07);font-family:Arial,Helvetica,sans-serif}
+.geti-live-progress *{box-sizing:border-box}
+.geti-live-progress-header,.geti-live-progress-stats{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 15px}
+.geti-live-progress-header{font-size:13px;font-weight:800;color:#16314d;margin-bottom:10px}
+.geti-live-progress-percentage{font-size:19px;font-weight:900;font-variant-numeric:tabular-nums}
+.geti-live-progress-rail{height:15px;width:100%;background:#e9eef5;border-radius:12px;overflow:hidden;position:relative}
+.geti-live-progress-fill{height:100%;width:0;background:#16a34a;border-radius:12px;transition:width .25s ease,background-color .25s ease}
+.geti-live-progress.red .geti-live-progress-fill{background:#dc2626}
+.geti-live-progress.green .geti-live-progress-fill{background:#16a34a}
+.geti-live-progress-stats{font-size:12px;color:#475569;margin-top:10px}
+.geti-live-progress-stats strong{color:#12345b;font-variant-numeric:tabular-nums}
+.geti-live-progress-message{font-size:12px;line-height:1.55;margin-top:10px;font-weight:700;color:#187442}
+.geti-live-progress.red .geti-live-progress-message{color:#b91c1c}
+.geti-live-progress.red .geti-live-progress-percentage{color:#dc2626}
+.geti-live-progress.green .geti-live-progress-percentage{color:#16803c}
+@media(max-width:480px){.geti-live-progress{padding:11px}.geti-live-progress-header{font-size:12px}.geti-live-progress-stats{font-size:11px}}
+</style>
+<script id="geti-live-exam-progress-v90">
+(function(){
+  "use strict";
+  const PASS_MARK=90;
+  const boundNames=new Set();
+
+  const clamp=n=>Math.max(0,Math.min(100,Number(n)||0));
+  const percent=(a,b)=>b>0?Math.round((a/b)*1000)/10:0;
+  const format=n=>String(Math.round(n*10)/10).replace(/\.0$/,"")+"%";
+
+  function stateFor(kind){
+    try{
+      return kind==="modern"
+        ? (typeof geti30State!=="undefined"?geti30State:null)
+        : (typeof examState!=="undefined"?examState:null);
+    }catch(_){return null;}
+  }
+
+  function getQuestion(kind,state,subject,subjectIndex,questionIndex){
+    try{
+      if(kind==="modern"){
+        return getGeti30Question(state.exam,subject,questionIndex);
+      }
+      const bank=state.program==="TEFL"?TEFL_DATA:TESOL_DATA;
+      return bank&&bank[subject]?bank[subject][questionIndex]:null;
+    }catch(_){return null;}
+  }
+
+  function getActiveIndexes(kind,state,subjectIndex){
+    if(kind==="classic")return Array.from({length:15},(_,i)=>i);
+    try{
+      const count=getGeti30QuestionCount(state.exam);
+      if(state.retryMode && Array.isArray(state.retryQuestionIndexes)){
+        const selected=state.retryQuestionIndexes[subjectIndex];
+        return Array.isArray(selected)?selected:[];
+      }
+      return Array.from({length:count},(_,i)=>i);
+    }catch(_){return Array.from({length:15},(_,i)=>i);}
+  }
+
+  function measure(kind){
+    const state=stateFor(kind);
+    if(!state||!state.started||!Array.isArray(state.answers))return null;
+    const subjects=kind==="modern"
+      ? (typeof GETI_30_EXAM_SUBJECTS!=="undefined"?GETI_30_EXAM_SUBJECTS[state.exam]:null)
+      : (state.program==="TEFL"?TEFL_SUBJECTS:TESOL_SUBJECTS);
+    if(!Array.isArray(subjects)||!subjects.length)return null;
+    let total=0,answered=0,correct=0,wrong=0;
+    for(let si=0;si<subjects.length;si++){
+      const rows=Array.isArray(state.answers[si])?state.answers[si]:[];
+      const active=getActiveIndexes(kind,state,si);
+      for(const qi of active){
+        const q=getQuestion(kind,state,subjects[si],si,qi);
+        if(!Array.isArray(q)||q.length<6)continue;
+        total++;
+        const value=rows[qi];
+        if(value===null||value===undefined||value==="")continue;
+        answered++;
+        if(Number(value)===Number(q[5]))correct++;
+        else wrong++;
+      }
+    }
+    if(!total)return null;
+    const remaining=total-answered;
+    const score=percent(correct,total);
+    let maximum=percent(correct+remaining,total);
+    // For English Proficiency, speaking has a separate 20% contribution.
+    const speaking=kind==="modern" && /English Proficiency/i.test(String(state.examTitle||state.exam||""));
+    if(speaking){
+      const r=state.speakingResult;
+      const available=r&&Number.isFinite(Number(r.percentage))
+        ? Number(r.percentage)*.2:20;
+      maximum=maximum*.8+available;
+    }
+    const impossible=maximum+0.000001<PASS_MARK;
+    const completed=percent(answered,total);
+    const final=answered===total && (!speaking||!!state.speakingResult);
+    const red=impossible || (wrong>correct);
+    return {total,answered,correct,wrong,remaining,
+      completed,correctPct:score,wrongPct:percent(wrong,total),
+      maximum:clamp(maximum),impossible,red,final,
+      result: speaking && state.speakingResult
+        ? score*.8+Number(state.speakingResult.percentage)*.2
+        : score};
+  }
+
+  function createWidget(){
+    const wrapper=document.createElement("div");
+    wrapper.className="geti-live-progress green";
+    wrapper.setAttribute("role","status");
+    wrapper.setAttribute("aria-live","polite");
+    wrapper.innerHTML=
+      '<div class="geti-live-progress-header"><span>EXAM PROGRESS · PASS MARK 90%</span><span class="geti-live-progress-percentage">0%</span></div>'+
+      '<div class="geti-live-progress-rail" role="progressbar" aria-label="Examination completed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="geti-live-progress-fill"></div></div>'+
+      '<div class="geti-live-progress-stats"><span>Completed: <strong data-geti-stat="completed">0%</strong></span><span>Correct: <strong data-geti-stat="correct">0%</strong></span><span>Incorrect: <strong data-geti-stat="wrong">0%</strong></span><span>Maximum possible: <strong data-geti-stat="possible">100%</strong></span></div>'+
+      '<div class="geti-live-progress-message">90% is still achievable.</div>';
+    return wrapper;
+  }
+
+  function paint(kind){
+    const panel=document.getElementById(kind==="modern"?"geti30ExamPanel":"examPanel");
+    if(!panel)return;
+    const metrics=measure(kind);
+    if(!metrics)return;
+    let box=panel.querySelector(".geti-live-progress");
+    if(!box){
+      box=createWidget();
+      const anchor=panel.querySelector(".exam-progress");
+      if(anchor)anchor.insertAdjacentElement("afterend",box);
+      else panel.insertAdjacentElement&&panel.prepend(box);
+    }
+    box.classList.toggle("red",metrics.red);
+    box.classList.toggle("green",!metrics.red);
+    box.querySelector(".geti-live-progress-percentage").textContent=format(metrics.completed);
+    box.querySelector(".geti-live-progress-fill").style.width=clamp(metrics.completed)+"%";
+    box.querySelector(".geti-live-progress-rail").setAttribute("aria-valuenow",String(Math.round(metrics.completed)));
+    const values={completed:metrics.completed,correct:metrics.correctPct,
+      wrong:metrics.wrongPct,possible:metrics.maximum};
+    Object.keys(values).forEach(key=>{
+      const el=box.querySelector('[data-geti-stat="'+key+'"]');
+      if(el)el.textContent=format(values[key]);
+    });
+    const msg=box.querySelector(".geti-live-progress-message");
+    if(metrics.impossible){
+      msg.textContent="FAILED TRAJECTORY · Even with every remaining question correct, 90% is no longer reachable.";
+    }else if(metrics.final){
+      msg.textContent=metrics.result>=PASS_MARK
+        ?"PASSED · The 90% pass requirement has been met."
+        :"FAILED · The final score is below 90%.";
+    }else if(metrics.red){
+      msg.textContent="MORE INCORRECT THAN CORRECT · 90% is still mathematically possible.";
+    }else{
+      msg.textContent="ON TRACK · 90% is still achievable.";
+    }
+  }
+
+  function wrap(name,kind){
+    const original=window[name];
+    if(typeof original!=="function"||original.__getiProgressAllWrapped)return;
+    function wrapped(){
+      const value=original.apply(this,arguments);
+      try{paint(kind);}catch(e){console.warn("GETI exam progress",e);}
+      return value;
+    }
+    wrapped.__getiProgressAllWrapped=true;
+    window[name]=wrapped;
+  }
+
+  // Both examination engines and all their subject screens use these functions.
+  ["showGeti30Question","selectGeti30Answer","submitGeti30Subject",
+   "continueGeti30Exam"].forEach(n=>wrap(n,"modern"));
+  ["showQuestion","selectAnswer","submitSubject","showFinalResult"]
+   .forEach(n=>wrap(n,"classic"));
+
+  window.getiLiveProgressUpdate=function(){
+    paint("classic");
+    paint("modern");
+  };
+})();
+</script>
+
+<style id="geti-restart-exam-style">
+.geti-restart-exam-btn {
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:44px;margin:8px 0 0 10px;padding:11px 18px;
+  background:#fff;color:#7c2542;border:2px solid #b45372;
+  border-radius:10px;font-weight:800;font-size:13px;cursor:pointer;
+}
+.geti-restart-exam-btn:hover,
+.geti-restart-exam-btn:focus-visible {background:#fff0f4;border-color:#9f234d;}
+@media(max-width:600px){.geti-restart-exam-btn{width:100%;margin:10px 0 0;}}
+</style>
+<script id="geti-restart-exam-script">
+/* Exam-only restart; never touches certificate verification or account login. */
+window.getiRestartActiveExam=function(which){
+  var isModern=which==="geti30";
+  var state=isModern?window.geti30State:window.examState;
+  // Top-level `let` variables are global lexical bindings, not window properties.
+  try{state=isModern?geti30State:examState;}catch(e){}
+  if(!state||!state.started||!state.student){
+    alert("No active examination to restart.");
+    return;
+  }
+  var confirmed=window.confirm(
+    "RESTART EXAM?\n\nYour current answers, completed subjects and progress will be cleared. "+
+    "The exam will restart from the first question with a fresh timer. "+
+    "This action does not submit a result.\n\nContinue?"
+  );
+  if(!confirmed)return;
+  if(typeof window.getiClearSelectedAnswerLetter==="function")window.getiClearSelectedAnswerLetter();
+  clearTimeout(window.getiClassicAutoAdvanceTimer);
+  clearTimeout(window.geti30AutoAdvanceTimer);
+  window.getiClassicAutoAdvanceLocked=false;
+  window.geti30AutoAdvanceLocked=false;
+  if(isModern){
+    // Existing GETI function refreshes randomized question sets, resets every
+    // subject and answer, starts the timer and saves the fresh active session.
+    if(typeof window.startGetiFailedQuestionRetry==="function"){
+      window.startGetiFailedQuestionRetry(true);
+    }else if(typeof startGetiFailedQuestionRetry==="function"){
+      startGetiFailedQuestionRetry(true);
+    }
+  }else{
+    clearInterval(state.timerInterval);
+    state.answers=Array.from({length:10},function(){return Array(15).fill(null);});
+    state.subjectScores=[];
+    state.subjectIndex=Array.isArray(state.subjectOrder)&&state.subjectOrder.length
+      ?state.subjectOrder[0]:0;
+    state.questionIndex=0;
+    state.timeExpired=false;
+    state.started=true;
+    startExamTimer();
+    showQuestion();
+  }
+  try{if(typeof window.getiLiveProgressUpdate==="function")window.getiLiveProgressUpdate();}catch(e){}
+};
+</script>
+
+<style id="geti-short-answer-indicator-style">
+#getiSelectedAnswerIndicator {
+ display:none;vertical-align:middle;margin-right:10px;padding:4px 11px;
+ border-radius:999px;background:#1b8c56;color:#fff;font-weight:900;
+ font-size:15px;line-height:1.5;letter-spacing:.4px;
+}
+#getiSelectedAnswerIndicator.geti-show {display:inline-block;}
+</style>
+<script id="geti-short-answer-indicator-script">
+(function(){
+  let clearIndicatorTimer=0;
+  function getIndicator(){
+    const heading=document.querySelector(".geti-second-area-entrybar-inner > strong");
+    if(!heading)return null;
+    let indicator=document.getElementById("getiSelectedAnswerIndicator");
+    if(!indicator){
+      indicator=document.createElement("span");
+      indicator.id="getiSelectedAnswerIndicator";
+      indicator.setAttribute("aria-live","polite");
+      heading.insertAdjacentElement("beforebegin",indicator);
+    }
+    return indicator;
+  }
+  window.getiShowSelectedAnswerLetter=function(optionIndex){
+    const letter=["A","B","C","D"][Number(optionIndex)];
+    if(!letter)return;
+    const indicator=getIndicator();
+    if(!indicator)return;
+    clearTimeout(clearIndicatorTimer);
+    indicator.textContent=letter;
+    indicator.classList.add("geti-show");
+    clearIndicatorTimer=setTimeout(function(){
+      indicator.classList.remove("geti-show");
+      indicator.textContent="";
+      clearIndicatorTimer=0;
+    },2000);
+  };
+  window.getiClearSelectedAnswerLetter=function(){
+    clearTimeout(clearIndicatorTimer);
+    clearIndicatorTimer=0;
+    const indicator=document.getElementById("getiSelectedAnswerIndicator");
+    if(indicator){
+      indicator.textContent="";
+      indicator.classList.remove("geti-show");
+    }
+  };
+})();
+</script>
+
+<style id="geti-equal-option-lengths-v2">
+/* Restore the original compact answer-box proportions in ALL exams. */
+#optionsContainer, #geti30Options {
+  width:100%; display:flex; flex-direction:column; align-items:stretch; gap:7px;
+}
+#optionsContainer button.option, #geti30Options button.option {
+  box-sizing:border-box!important;
+  width:100%!important;max-width:100%!important;
+  min-height:0!important;height:auto!important;
+  margin:0!important;padding:12px 14px!important;
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  text-align:left!important;line-height:1.4!important;
+  white-space:normal!important;overflow-wrap:break-word!important;
+  overflow:visible!important;text-overflow:clip!important;
+}
+#optionsContainer button.option strong, #geti30Options button.option strong {
+  flex:none;margin-right:8px;min-width:20px;
+}
+@media(min-width:900px){
+  #optionsContainer button.option, #geti30Options button.option {
+    min-height:0!important;padding:12px 14px!important;
+  }
+}
+@media(max-width:600px){
+  #optionsContainer button.option, #geti30Options button.option {
+    min-height:0!important;padding:11px 12px!important;
+  }
+}
+</style>
+
+<script id="geti-classic-answer-position-shuffle">
+/* Shuffles options together with their answer key; never changes the wording or correctness. */
+window.getiShuffleClassicExamAnswers=function(program){
+  var banks=(program==="TEFL"?TEFL_DATA:TESOL_DATA);
+  if(!banks)return;
+  function randomInt(n){
+    var a=new Uint32Array(1);
+    if(window.crypto && window.crypto.getRandomValues){
+      var limit=Math.floor(4294967296/n)*n;
+      do{window.crypto.getRandomValues(a);}while(a[0]>=limit);
+      return a[0]%n;
+    }
+    return Math.floor(Math.random()*n);
+  }
+  Object.keys(banks).forEach(function(subject){
+    var items=(banks[subject]||[]);
+    var targetPositions=[];
+    for(var k=0;k<items.length;k++){targetPositions.push(k%4);}
+    for(var k=targetPositions.length-1;k>0;k--){
+      var j=randomInt(k+1),tmp=targetPositions[k];
+      targetPositions[k]=targetPositions[j];targetPositions[j]=tmp;
+    }
+    items.forEach(function(item,qIndex){
+      if(!Array.isArray(item)||item.length<6)return;
+      var correct=Number(item[5]);
+      if(!Number.isInteger(correct)||correct<0||correct>3)return;
+      var options=item.slice(1,5).map(function(value,i){
+        return {text:value,correct:i===correct};
+      });
+      for(var i=options.length-1;i>0;i--){
+        var j=randomInt(i+1),tmp=options[i];options[i]=options[j];options[j]=tmp;
+      }
+      var target=targetPositions[qIndex],now=options.findIndex(function(x){return x.correct;});
+      var tmp=options[target];options[target]=options[now];options[now]=tmp;
+      options.forEach(function(option,i){item[i+1]=option.text;});
+      item[5]=target;
+    });
+  });
+};
+</script>
+
+<!-- GETI Editable Registration: visible after exam registration in both exam engines -->
+<style id="geti-edit-registration-style">
+.geti-edit-reg-action{display:inline-flex;align-items:center;justify-content:center;padding:10px 17px;margin:10px 8px 10px 0;background:#143b76;color:#fff;border:1px solid #24589c;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;min-height:42px}
+.geti-edit-reg-action:hover{background:#24589c}
+#geti-edit-reg-backdrop{position:fixed;inset:0;z-index:2147482500;background:rgba(11,20,38,.8);display:none;align-items:center;justify-content:center;padding:12px;overflow:auto}
+#geti-edit-reg-dialog{box-sizing:border-box;background:#fff;color:#172a46;width:min(640px,100%);max-height:92vh;overflow:auto;padding:24px;border-radius:17px;box-shadow:0 20px 70px rgba(0,0,0,.3);font-family:Arial,sans-serif}
+#geti-edit-reg-dialog h2{margin:0 0 7px;font-size:22px;color:#153d76}
+#geti-edit-reg-dialog p{font-size:13px;color:#607189;line-height:1.6}
+#geti-edit-reg-dialog .geti-edit-reg-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:15px 0}
+#geti-edit-reg-dialog label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:800}
+#geti-edit-reg-dialog input{width:100%;min-width:0;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:8px;padding:11px;font-size:14px}
+#geti-edit-reg-dialog input:disabled{background:#eff3f8;color:#596c84}
+#geti-edit-reg-dialog .geti-edit-reg-footer{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+#geti-edit-reg-dialog button{padding:11px 16px;border-radius:9px;cursor:pointer;font-weight:800}
+#geti-edit-reg-save{background:#153d76;color:#fff;border:0}
+#geti-edit-reg-cancel{background:#fff;color:#153d76;border:1px solid #cbd5e1}
+#geti-edit-reg-error{min-height:18px;color:#a32737;font-size:13px;margin-bottom:10px}
+@media(max-width:600px){#geti-edit-reg-dialog .geti-edit-reg-fields{grid-template-columns:1fr}}
+</style>
+<script id="geti-edit-registration-script">
+(function(){
+  'use strict';
+  var mode=null;
+  var active=false;
+  var fields=[['name','Full Name'],['email','Email Address'],['nationality','Nationality'],['country','Country'],['city','City'],['postalCode','Postal Code'],['address','Street Address'],['countryCode','Country Code'],['phone','Phone Number'],['institution','Institution'],['employment','Employment Status'],['job','Job Title'],['education','Education'],['language','Preferred Language']];
+  function currentState(which){try{return which==='modern'?geti30State:examState}catch(e){return null}}
+  function safe(text){return String(text==null?'':text).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function stateIsActive(st){return !!(st&&st.started&&st.student&&st.student.id)}
+  function ensureAction(which){
+    var panel=document.getElementById(which==='modern'?'geti30ExamPanel':'examPanel');
+    var st=currentState(which);
+    if(!panel||!panel.classList.contains('active')||!stateIsActive(st))return;
+    if(!panel.querySelector('.geti-edit-reg-action')){
+      var b=document.createElement('button');b.type='button';b.className='geti-edit-reg-action';b.textContent='✎ EDIT MY REGISTRATION';
+      b.onclick=function(){window.getiOpenRegistrationEditor(which)};
+      var title=panel.querySelector('.exam-title');
+      if(title)title.insertAdjacentElement('afterend',b);else panel.prepend(b);
+    }
+  }
+  function root(){
+    var node=document.getElementById('geti-edit-reg-backdrop');if(node)return node;
+    node=document.createElement('div');node.id='geti-edit-reg-backdrop';node.innerHTML='<div id="geti-edit-reg-dialog" role="dialog" aria-modal="true" aria-label="Edit My Registration"><h2>EDIT MY REGISTRATION</h2><p>Edit your personal information without restarting the examination. You may edit your personal details and email. A new email requires verification before it replaces the address on your official record. Candidate ID, exam type, results and grades remain protected.</p><form id="geti-edit-reg-form"><div class="geti-edit-reg-fields"></div><div id="geti-edit-reg-error" role="alert"></div><div class="geti-edit-reg-footer"><button id="geti-edit-reg-cancel" type="button">CANCEL</button><button id="geti-edit-reg-save" type="submit">SAVE CHANGES</button></div></form></div>';
+    document.body.appendChild(node);
+    node.querySelector('#geti-edit-reg-cancel').onclick=function(){node.style.display='none';mode=null};
+    node.addEventListener('click',function(event){if(event.target===node){node.style.display='none';mode=null}});
+    node.querySelector('#geti-edit-reg-form').addEventListener('submit',save);
+    return node;
+  }
+  window.getiOpenRegistrationEditor=function(which){
+    var st=currentState(which);if(!stateIsActive(st)){alert('Finish your registration first.');return}
+    mode=which;
+    var container=root();var list=container.querySelector('.geti-edit-reg-fields');
+    list.innerHTML=fields.map(function(f){
+      var value=f[0]==='email'?st.student.email:st.student[f[0]];
+      return '<label>'+safe(f[1])+'<input type="'+(f[0]==='email'?'email':'text')+'" data-reg-field="'+f[0]+'" value="'+safe(value)+'" maxlength="180"></label>';
+    }).join('');
+    container.querySelector('#geti-edit-reg-error').textContent='';
+    container.style.display='flex';
+    var first=container.querySelector('[data-reg-field="name"]');if(first)first.focus();
+    if(which==='classic'){
+      // After email confirmation and new login, migrate the official candidate record.
+      (async function(){
+        try{
+          var sessionResult=await GETI_SB.auth.getSession();
+          var session=sessionResult&&sessionResult.data&&sessionResult.data.session;
+          if(!session||!session.user||!session.user.email)return;
+          if(String(st.student.email||'').toLowerCase()===String(session.user.email||'').toLowerCase())return;
+          var result=await getiFetchJson(GETI_EXAM_FUNCTION,{
+            method:'POST',headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY,'Authorization':'Bearer '+session.access_token},
+            body:JSON.stringify({action:'finalize_registration_email_change',candidate_id:st.student.id})
+          });
+          if(result&&result.success){
+            st.student.email=result.email;
+            var emailField=container.querySelector('[data-reg-field="email"]');
+            if(emailField)emailField.value=result.email;
+            container.querySelector('#geti-edit-reg-error').textContent='Your verified email is now linked to this registration.';
+          }
+        }catch(e){ /* Email may still be awaiting confirmation; keep the old verified record. */ }
+      })();
+    }
+  };
+  async function save(event){
+    event.preventDefault();if(active||!mode)return;
+    var st=currentState(mode);if(!stateIsActive(st))return;
+    var panel=root(),error=panel.querySelector('#geti-edit-reg-error');
+    var data={};panel.querySelectorAll('input[data-reg-field]').forEach(function(i){data[i.dataset.regField]=i.value.trim()});
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email||'')){error.textContent='Enter a valid email address.';return}
+    if(!data.name||!data.nationality||!data.country||!data.phone){error.textContent='Full Name, Nationality, Country and Phone Number are required.';return}
+    active=true;var saveButton=panel.querySelector('#geti-edit-reg-save');saveButton.disabled=true;saveButton.textContent='SAVING...';
+    try{
+      var needsConfirmation=false;
+      if(mode==='classic'){
+        // Persist the real Supabase registration only for its authenticated owner.
+        var sessionResult=await GETI_SB.auth.getSession();
+        var token=sessionResult&&sessionResult.data&&sessionResult.data.session&&sessionResult.data.session.access_token;
+        if(!token)throw Error('Sign in to your GETI account to save your registration securely.');
+        var saved=await getiFetchJson(GETI_EXAM_FUNCTION,{
+          method:'POST',headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY,'Authorization':'Bearer '+token},
+          body:JSON.stringify({action:'edit_my_registration',candidate_id:st.student.id,details:{
+            full_name:data.name,email:data.email,nationality:data.nationality,country:data.country,phone:data.phone,institution:data.institution,
+            city:data.city,postal_code:data.postalCode,address:data.address,country_code:data.countryCode,
+            employment_status:data.employment,job_title:data.job,education_level:data.education,preferred_language:data.language
+          }})
+        });
+        if(saved&&saved.email_verification_required){
+          // Supabase Auth sends the verification link; the database email stays unchanged.
+          var authUpdate=await GETI_SB.auth.updateUser({email:data.email});
+          if(authUpdate.error)throw Error('Registration details saved, but email confirmation failed: '+authUpdate.error.message);
+          needsConfirmation=true;
+        }
+      }
+      // For classic exams, keep the verified email until confirmation is completed.
+      // Modern offline registration records are local to the current exam session.
+      Object.keys(data).forEach(function(k){if(k!=='email'||mode==='modern')st.student[k]=data[k]});
+      if(mode==='modern'){
+        try{if(typeof saveGeti30Session==='function')saveGeti30Session(st.sessionPhase||'question')}catch(e){}
+      }
+      panel.style.display='none';mode=null;
+      alert(needsConfirmation?'Registration details saved. Check your new email (and current email if requested) for the confirmation link. The official email will change only after verification. Your exam progress is unchanged.':'Registration updated successfully. Your answers and exam progress are unchanged.');
+    }catch(err){error.textContent=err.message||'Unable to save registration.'}
+    finally{active=false;saveButton.disabled=false;saveButton.textContent='SAVE CHANGES'}
+  }
+  // Render after question panels change; avoid touching exam scoring or navigation.
+  var queued=false;
+  var observer=new MutationObserver(function(){if(queued)return;queued=true;requestAnimationFrame(function(){queued=false;ensureAction('classic');ensureAction('modern')})});
+  function init(){observer.observe(document.body,{subtree:true,childList:true});ensureAction('classic');ensureAction('modern')}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+<script id="geti-country-calling-code-auto">
+(function(){
+  "use strict";
+  var map={"Afghanistan":"+93","افغانستان":"+93","Afganistán":"+93","アフガニスタン":"+93","Albania":"+355","Shqipëria":"+355","Albanien":"+355","Albanie":"+355","アルバニア":"+355","Algeria":"+213","الجزائر":"+213","Algerien":"+213","Argelia":"+213","Algérie":"+213","アルジェリア":"+213","American Samoa":"+1684","Amerikanisch-Samoa":"+1684","Samoa Americana":"+1684","Samoa américaines":"+1684","アメリカ領サモア":"+1684","Samoa Americane":"+1684","Angola":"+244","アンゴラ":"+244","Anguilla":"+1264","アンギラ":"+1264","Antigua and Barbuda":"+1268","Antigua und Barbuda":"+1268","Antigua y Barbuda":"+1268","Antigua-et-Barbuda":"+1268","アンティグア・バーブーダ":"+1268","Antigua e Barbuda":"+1268","Argentina":"+54","Argentinien":"+54","Argentine":"+54","アルゼンチン":"+54","Armenia":"+374","Հայաստան":"+374","Armenien":"+374","Arménie":"+374","アルメニア":"+374","Aruba":"+297","アルバ":"+297","Australia":"+61","Australien":"+61","Australie":"+61","オーストラリア":"+61","Austria":"+43","Österreich":"+43","Autriche":"+43","オーストリア":"+43","Azerbaijan":"+994","Azərbaycan":"+994","Aserbaidschan":"+994","Azerbaiyán":"+994","Azerbaïdjan":"+994","アゼルバイジャン":"+994","The Bahamas":"+1242","Bahamas":"+1242","バハマ":"+1242","Bahrain":"+973","‏البحرين":"+973","Bahrein":"+973","Bahreïn":"+973","バーレーン":"+973","Bangladesh":"+880","বাংলাদেশ":"+880","Bangladesch":"+880","バングラデシュ":"+880","Barbados":"+1246","Barbade":"+1246","バルバドス":"+1246","Belarus":"+375","Белару́сь":"+375","Weißrussland":"+375","Bielorrusia":"+375","Biélorussie":"+375","ベラルーシ":"+375","Bielorussia":"+375","Belgium":"+32","België":"+32","Belgien":"+32","Bélgica":"+32","Belgique":"+32","ベルギー":"+32","Belgio":"+32","Belize":"+501","Belice":"+501","ベリーズ":"+501","Benin":"+229","Bénin":"+229","Benín":"+229","ベナン":"+229","Bermuda":"+1441","Bermudas":"+1441","Bermudes":"+1441","バミューダ":"+1441","Bhutan":"+975","ʼbrug-yul":"+975","Bután":"+975","Bhoutan":"+975","ブータン":"+975","Bolivia":"+591","Bolivien":"+591","Bolivie":"+591","ボリビア多民族国":"+591","Bosnia and Herzegovina":"+387","Bosna i Hercegovina":"+387","Bosnien und Herzegowina":"+387","Bosnia y Herzegovina":"+387","Bosnie-Herzégovine":"+387","ボスニア・ヘルツェゴビナ":"+387","Bosnia ed Erzegovina":"+387","Botswana":"+267","ボツワナ":"+267","Brazil":"+55","Brasil":"+55","Brasilien":"+55","Brésil":"+55","ブラジル":"+55","Brasile":"+55","British Indian Ocean Territory":"+246","Britisches Territorium im Indischen Ozean":"+246","Territorio Británico del Océano Índico":"+246","Territoire britannique de l'océan Indien":"+246","イギリス領インド洋地域":"+246","Territorio britannico dell'oceano indiano":"+246","Brunei":"+673","Negara Brunei Darussalam":"+673","ブルネイ・ダルサラーム":"+673","Bulgaria":"+359","България":"+359","Bulgarien":"+359","Bulgarie":"+359","ブルガリア":"+359","Burkina Faso":"+226","ブルキナファソ":"+226","Burundi":"+257","ブルンジ":"+257","Cambodia":"+855","Kâmpŭchéa":"+855","Kambodscha":"+855","Camboya":"+855","Cambodge":"+855","カンボジア":"+855","Cambogia":"+855","Cameroon":"+237","Kamerun":"+237","Camerún":"+237","Cameroun":"+237","カメルーン":"+237","Camerun":"+237","Canada":"+1","Kanada":"+1","Canadá":"+1","カナダ":"+1","Cape Verde":"+238","Cabo Verde":"+238","Kap Verde":"+238","Cap Vert":"+238","カーボベルデ":"+238","Capo Verde":"+238","Cayman Islands":"+1345","Kaimaninseln":"+1345","Islas Caimán":"+1345","Îles Caïmans":"+1345","ケイマン諸島":"+1345","Isole Cayman":"+1345","Central African Republic":"+236","Ködörösêse tî Bêafrîka":"+236","Zentralafrikanische Republik":"+236","República Centroafricana":"+236","République centrafricaine":"+236","中央アフリカ共和国":"+236","Repubblica Centrafricana":"+236","Chad":"+235","Tchad":"+235","Tschad":"+235","チャド":"+235","Ciad":"+235","Chile":"+56","Chili":"+56","Cile":"+56","China":"+86","Chine":"+86","Cina":"+86","Christmas Island":"+61","Weihnachtsinsel":"+61","Isla de Navidad":"+61","Île Christmas":"+61","クリスマス島":"+61","Isola di Natale":"+61","Cocos (Keeling) Islands":"+61","Kokosinseln":"+61","Islas Cocos o Islas Keeling":"+61","Îles Cocos":"+61","ココス（キーリング）諸島":"+61","Isole Cocos e Keeling":"+61","Colombia":"+57","Kolumbien":"+57","Colombie":"+57","コロンビア":"+57","Comoros":"+269","Komori":"+269","Union der Komoren":"+269","Comoras":"+269","Comores":"+269","コモロ":"+269","Comore":"+269","Republic of the Congo":"+242","République du Congo":"+242","Kongo":"+242","Congo":"+242","コンゴ共和国":"+242","Democratic Republic of the Congo":"+243","République démocratique du Congo":"+243","Kongo (Dem. Rep.)":"+243","Congo (Rep. Dem.)":"+243","Congo (Rép. dém.)":"+243","コンゴ民主共和国":"+243","Cook Islands":"+682","Cookinseln":"+682","Islas Cook":"+682","Îles Cook":"+682","クック諸島":"+682","Isole Cook":"+682","Costa Rica":"+506","コスタリカ":"+506","Ivory Coast":"+225","Côte d'Ivoire":"+225","Elfenbeinküste":"+225","Costa de Marfil":"+225","コートジボワール":"+225","Costa D'Avorio":"+225","Croatia":"+385","Hrvatska":"+385","Kroatien":"+385","Croacia":"+385","Croatie":"+385","クロアチア":"+385","Croazia":"+385","Cuba":"+53","Kuba":"+53","キューバ":"+53","Cyprus":"+357","Κύπρος":"+357","Zypern":"+357","Chipre":"+357","Chypre":"+357","キプロス":"+357","Cipro":"+357","Czech Republic":"+420","Česká republika":"+420","Tschechische Republik":"+420","República Checa":"+420","République tchèque":"+420","チェコ":"+420","Repubblica Ceca":"+420","Denmark":"+45","Danmark":"+45","Dänemark":"+45","Dinamarca":"+45","Danemark":"+45","デンマーク":"+45","Danimarca":"+45","Djibouti":"+253","Dschibuti":"+253","Yibuti":"+253","ジブチ":"+253","Gibuti":"+253","Dominica":"+1767","Dominique":"+1767","ドミニカ国":"+1767","Dominican Republic":"+1809","República Dominicana":"+1809","Dominikanische Republik":"+1809","République dominicaine":"+1809","ドミニカ共和国":"+1809","Repubblica Dominicana":"+1809","Ecuador":"+593","Équateur":"+593","エクアドル":"+593","Egypt":"+20","مصر‎":"+20","Ägypten":"+20","Egipto":"+20","Égypte":"+20","エジプト":"+20","Egitto":"+20","El Salvador":"+503","Salvador":"+503","エルサルバドル":"+503","Equatorial Guinea":"+240","Guinea Ecuatorial":"+240","Äquatorial-Guinea":"+240","Guinée-Équatoriale":"+240","赤道ギニア":"+240","Guinea Equatoriale":"+240","Eritrea":"+291","ኤርትራ":"+291","Érythrée":"+291","エリトリア":"+291","Estonia":"+372","Eesti":"+372","Estland":"+372","Estonie":"+372","エストニア":"+372","Ethiopia":"+251","ኢትዮጵያ":"+251","Äthiopien":"+251","Etiopía":"+251","Éthiopie":"+251","エチオピア":"+251","Etiopia":"+251","Falkland Islands":"+500","Falklandinseln":"+500","Islas Malvinas":"+500","Îles Malouines":"+500","フォークランド（マルビナス）諸島":"+500","Isole Falkland o Isole Malvine":"+500","Faroe Islands":"+298","Føroyar":"+298","Färöer-Inseln":"+298","Islas Faroe":"+298","Îles Féroé":"+298","フェロー諸島":"+298","Isole Far Oer":"+298","Fiji":"+679","Fidschi":"+679","Fiyi":"+679","Fidji":"+679","フィジー":"+679","Figi":"+679","Finland":"+358","Suomi":"+358","Finnland":"+358","Finlandia":"+358","Finlande":"+358","フィンランド":"+358","France":"+33","Frankreich":"+33","Francia":"+33","フランス":"+33","French Guiana":"+594","Guyane française":"+594","Französisch Guyana":"+594","Guayana Francesa":"+594","Guayane":"+594","フランス領ギアナ":"+594","Guyana francese":"+594","French Polynesia":"+689","Polynésie française":"+689","Französisch-Polynesien":"+689","Polinesia Francesa":"+689","フランス領ポリネシア":"+689","Polinesia Francese":"+689","Gabon":"+241","Gabun":"+241","Gabón":"+241","ガボン":"+241","The Gambia":"+220","Gambia":"+220","Gambie":"+220","ガンビア":"+220","Georgia":"+995","საქართველო":"+995","Georgien":"+995","Géorgie":"+995","グルジア":"+995","Germany":"+49","Deutschland":"+49","Alemania":"+49","Allemagne":"+49","ドイツ":"+49","Germania":"+49","Duitsland":"+49","Niemcy":"+49","Tyskland":"+49","Ghana":"+233","ガーナ":"+233","Gibraltar":"+350","ジブラルタル":"+350","Gibilterra":"+350","Greece":"+30","Ελλάδα":"+30","Griechenland":"+30","Grecia":"+30","Grèce":"+30","ギリシャ":"+30","Greenland":"+299","Kalaallit Nunaat":"+299","Grönland":"+299","Groenlandia":"+299","Groenland":"+299","グリーンランド":"+299","Grenada":"+1473","Grenade":"+1473","グレナダ":"+1473","Guadeloupe":"+590","Guadalupe":"+590","グアドループ":"+590","Guadeloupa":"+590","Guam":"+1671","グアム":"+1671","Guatemala":"+502","グアテマラ":"+502","Guernsey":"+44","Guernesey":"+44","ガーンジー":"+44","Guinea":"+224","Guinée":"+224","ギニア":"+224","Guinea-Bissau":"+245","Guiné-Bissau":"+245","Guinea-Bisáu":"+245","Guinée-Bissau":"+245","ギニアビサウ":"+245","Guyana":"+592","Guyane":"+592","ガイアナ":"+592","Haiti":"+509","Haïti":"+509","ハイチ":"+509","Honduras":"+504","ホンジュラス":"+504","Hong Kong":"+852","Hungary":"+36","Magyarország":"+36","Ungarn":"+36","Hungría":"+36","Hongrie":"+36","ハンガリー":"+36","Ungheria":"+36","Iceland":"+354","Ísland":"+354","Island":"+354","Islandia":"+354","Islande":"+354","アイスランド":"+354","Islanda":"+354","India":"+91","भारत":"+91","Indien":"+91","Inde":"+91","インド":"+91","Indonesia":"+62","Indonesien":"+62","Indonésie":"+62","インドネシア":"+62","Iran":"+98","Irān":"+98","イラン・イスラム共和国":"+98","Iraq":"+964","العراق":"+964","Irak":"+964","イラク":"+964","Ireland":"+353","Éire":"+353","Irland":"+353","Irlanda":"+353","Irlande":"+353","アイルランド":"+353","Israel":"+972","יִשְׂרָאֵל":"+972","Israël":"+972","イスラエル":"+972","Israele":"+972","Italy":"+39","Italia":"+39","Italien":"+39","Italie":"+39","イタリア":"+39","Jamaica":"+1876","Jamaika":"+1876","Jamaïque":"+1876","ジャマイカ":"+1876","Giamaica":"+1876","Japan":"+81","Japón":"+81","Japon":"+81","Giappone":"+81","Jersey":"+44","ジャージー":"+44","Isola di Jersey":"+44","Jordan":"+962","الأردن":"+962","Jordanien":"+962","Jordania":"+962","Jordanie":"+962","ヨルダン":"+962","Giordania":"+962","Kazakhstan":"+76","Қазақстан":"+76","Kasachstan":"+76","Kazajistán":"+76","カザフスタン":"+76","Kazakistan":"+76","Kenya":"+254","Kenia":"+254","ケニア":"+254","Kiribati":"+686","キリバス":"+686","North Korea":"+850","Nordkorea":"+850","Corea del Norte":"+850","Corée du Nord":"+850","朝鮮民主主義人民共和国":"+850","Corea del Nord":"+850","South Korea":"+82","대한민국":"+82","Südkorea":"+82","Corea del Sur":"+82","Corée du Sud":"+82","大韓民国":"+82","Corea del Sud":"+82","Kuwait":"+965","الكويت":"+965","Koweït":"+965","クウェート":"+965","Kyrgyzstan":"+996","Кыргызстан":"+996","Kirgisistan":"+996","Kirguizistán":"+996","Kirghizistan":"+996","キルギス":"+996","Laos":"+856","ສປປລາວ":"+856","ラオス人民民主共和国":"+856","Latvia":"+371","Latvija":"+371","Lettland":"+371","Letonia":"+371","Lettonie":"+371","ラトビア":"+371","Lettonia":"+371","Lebanon":"+961","لبنان":"+961","Libanon":"+961","Líbano":"+961","Liban":"+961","レバノン":"+961","Libano":"+961","Lesotho":"+266","レソト":"+266","Liberia":"+231","リベリア":"+231","Libya":"+218","‏ليبيا":"+218","Libyen":"+218","Libia":"+218","Libye":"+218","リビア":"+218","Liechtenstein":"+423","リヒテンシュタイン":"+423","Lithuania":"+370","Lietuva":"+370","Litauen":"+370","Lituania":"+370","Lituanie":"+370","リトアニア":"+370","Luxembourg":"+352","Luxemburg":"+352","Luxemburgo":"+352","ルクセンブルク":"+352","Lussemburgo":"+352","Macau":"+853","Macao":"+853","マカオ":"+853","Republic of Macedonia":"+389","Македонија":"+389","Mazedonien":"+389","Macedonia":"+389","Macédoine":"+389","マケドニア旧ユーゴスラビア共和国":"+389","Madagascar":"+261","Madagasikara":"+261","Madagaskar":"+261","マダガスカル":"+261","Malawi":"+265","マラウイ":"+265","Malaysia":"+60","Malasia":"+60","Malaisie":"+60","マレーシア":"+60","Malesia":"+60","Maldives":"+960","Malediven":"+960","Maldivas":"+960","モルディブ":"+960","Maldive":"+960","Mali":"+223","Malta":"+356","Malte":"+356","マルタ":"+356","Isle of Man":"+44","Insel Man":"+44","Isla de Man":"+44","Île de Man":"+44","マン島":"+44","Isola di Man":"+44","Marshall Islands":"+692","M̧ajeļ":"+692","Marshallinseln":"+692","Islas Marshall":"+692","Îles Marshall":"+692","マーシャル諸島":"+692","Isole Marshall":"+692","Martinique":"+596","Martinica":"+596","マルティニーク":"+596","Mauritania":"+222","موريتانيا":"+222","Mauretanien":"+222","Mauritanie":"+222","モーリタニア":"+222","Mauritius":"+230","Maurice":"+230","Mauricio":"+230","Île Maurice":"+230","モーリシャス":"+230","Mayotte":"+262","マヨット":"+262","Mexico":"+52","México":"+52","Mexiko":"+52","Mexique":"+52","メキシコ":"+52","Messico":"+52","Federated States of Micronesia":"+691","Micronesia":"+691","Mikronesien":"+691","Micronésie":"+691","ミクロネシア連邦":"+691","Moldova":"+373","Moldawie":"+373","Moldavia":"+373","Moldavie":"+373","モルドバ共和国":"+373","Monaco":"+377","Mónaco":"+377","モナコ":"+377","Principato di Monaco":"+377","Mongolia":"+976","Монгол улс":"+976","Mongolei":"+976","Mongolie":"+976","モンゴル":"+976","Montserrat":"+1664","モントセラト":"+1664","Morocco":"+212","المغرب":"+212","Marokko":"+212","Marruecos":"+212","Maroc":"+212","モロッコ":"+212","Marocco":"+212","Mozambique":"+258","Moçambique":"+258","Mosambik":"+258","モザンビーク":"+258","Mozambico":"+258","Namibia":"+264","Namibie":"+264","ナミビア":"+264","Nauru":"+674","ナウル":"+674","Nepal":"+977","नेपाल":"+977","Népal":"+977","ネパール":"+977","Netherlands":"+31","Nederland":"+31","Niederlande":"+31","Países Bajos":"+31","Pays-Bas":"+31","オランダ":"+31","Paesi Bassi":"+31","New Caledonia":"+687","Nouvelle-Calédonie":"+687","Neukaledonien":"+687","Nueva Caledonia":"+687","ニューカレドニア":"+687","Nuova Caledonia":"+687","New Zealand":"+64","Neuseeland":"+64","Nueva Zelanda":"+64","Nouvelle-Zélande":"+64","ニュージーランド":"+64","Nuova Zelanda":"+64","Nicaragua":"+505","ニカラグア":"+505","Niger":"+227","Níger":"+227","ニジェール":"+227","Nigeria":"+234","Nigéria":"+234","ナイジェリア":"+234","Niue":"+683","Niuē":"+683","ニウエ":"+683","Norfolk Island":"+672","Norfolkinsel":"+672","Isla de Norfolk":"+672","Île de Norfolk":"+672","ノーフォーク島":"+672","Isola Norfolk":"+672","Northern Mariana Islands":"+1670","Nördliche Marianen":"+1670","Islas Marianas del Norte":"+1670","Îles Mariannes du Nord":"+1670","北マリアナ諸島":"+1670","Isole Marianne Settentrionali":"+1670","Norway":"+47","Norge":"+47","Norwegen":"+47","Noruega":"+47","Norvège":"+47","ノルウェー":"+47","Norvegia":"+47","Oman":"+968","عمان":"+968","Omán":"+968","オマーン":"+968","oman":"+968","Pakistan":"+92","Pakistán":"+92","パキスタン":"+92","Palau":"+680","Palaos":"+680","パラオ":"+680","Panama":"+507","Panamá":"+507","パナマ":"+507","Papua New Guinea":"+675","Papua Niugini":"+675","Papua-Neuguinea":"+675","Papúa Nueva Guinea":"+675","Papouasie-Nouvelle-Guinée":"+675","パプアニューギニア":"+675","Papua Nuova Guinea":"+675","Paraguay":"+595","パラグアイ":"+595","Peru":"+51","Perú":"+51","Pérou":"+51","ペルー":"+51","Perù":"+51","Philippines":"+63","Pilipinas":"+63","Philippinen":"+63","Filipinas":"+63","フィリピン":"+63","Filippine":"+63","Pitcairn Islands":"+64","Pitcairn":"+64","Islas Pitcairn":"+64","Îles Pitcairn":"+64","ピトケアン":"+64","Isole Pitcairn":"+64","Poland":"+48","Polska":"+48","Polen":"+48","Polonia":"+48","Pologne":"+48","ポーランド":"+48","Portugal":"+351","ポルトガル":"+351","Portogallo":"+351","Puerto Rico":"+1787","Porto Rico":"+1787","プエルトリコ":"+1787","Qatar":"+974","قطر":"+974","Katar":"+974","Catar":"+974","カタール":"+974","Réunion":"+262","La Réunion":"+262","Reunión":"+262","レユニオン":"+262","Riunione":"+262","Romania":"+40","România":"+40","Rumänien":"+40","Rumania":"+40","Roumanie":"+40","ルーマニア":"+40","Russia":"+7","Россия":"+7","Russland":"+7","Rusia":"+7","Russie":"+7","ロシア連邦":"+7","Rwanda":"+250","Ruanda":"+250","ルワンダ":"+250","Saint Helena":"+290","Sankt Helena":"+290","Santa Helena":"+290","Sainte-Hélène":"+290","セントヘレナ・アセンションおよびトリスタンダクーニャ":"+290","Sant'Elena":"+290","Saint Kitts and Nevis":"+1869","St. Kitts und Nevis":"+1869","San Cristóbal y Nieves":"+1869","Saint-Christophe-et-Niévès":"+1869","セントクリストファー・ネイビス":"+1869","Saint Kitts e Nevis":"+1869","Saint Lucia":"+1758","Santa Lucía":"+1758","Saint-Lucie":"+1758","セントルシア":"+1758","Santa Lucia":"+1758","Saint Pierre and Miquelon":"+508","Saint-Pierre-et-Miquelon":"+508","Saint-Pierre und Miquelon":"+508","San Pedro y Miquelón":"+508","サンピエール島・ミクロン島":"+508","Saint-Pierre e Miquelon":"+508","Saint Vincent and the Grenadines":"+1784","Saint Vincent und die Grenadinen":"+1784","San Vicente y Granadinas":"+1784","Saint-Vincent-et-les-Grenadines":"+1784","セントビンセントおよびグレナディーン諸島":"+1784","Saint Vincent e Grenadine":"+1784","Samoa":"+685","サモア":"+685","San Marino":"+378","Saint-Marin":"+378","サンマリノ":"+378","São Tomé and Príncipe":"+239","São Tomé e Príncipe":"+239","São Tomé und Príncipe":"+239","Santo Tomé y Príncipe":"+239","Sao Tomé-et-Principe":"+239","サントメ・プリンシペ":"+239","Saudi Arabia":"+966","العربية السعودية":"+966","Saudi-Arabien":"+966","Arabia Saudí":"+966","Arabie Saoudite":"+966","サウジアラビア":"+966","Arabia Saudita":"+966","Senegal":"+221","Sénégal":"+221","セネガル":"+221","Serbia":"+381","Srbija":"+381","Serbien":"+381","Serbie":"+381","セルビア":"+381","Seychelles":"+248","Seychellen":"+248","セーシェル":"+248","Sierra Leone":"+232","シエラレオネ":"+232","Singapore":"+65","Singapur":"+65","Singapour":"+65","シンガポール":"+65","Slovakia":"+421","Slovensko":"+421","Slowakei":"+421","República Eslovaca":"+421","Slovaquie":"+421","スロバキア":"+421","Slovacchia":"+421","Slovenia":"+386","Slovenija":"+386","Slowenien":"+386","Eslovenia":"+386","Slovénie":"+386","スロベニア":"+386","Solomon Islands":"+677","Salomonen":"+677","Islas Salomón":"+677","Îles Salomon":"+677","ソロモン諸島":"+677","Isole Salomone":"+677","Somalia":"+252","Soomaaliya":"+252","Somalie":"+252","ソマリア":"+252","South Africa":"+27","Republik Südafrika":"+27","República de Sudáfrica":"+27","Afrique du Sud":"+27","南アフリカ":"+27","Sud Africa":"+27","South Georgia":"+500","Südgeorgien und die Südlichen Sandwichinseln":"+500","Islas Georgias del Sur y Sandwich del Sur":"+500","Géorgie du Sud-et-les Îles Sandwich du Sud":"+500","サウスジョージア・サウスサンドウィッチ諸島":"+500","Georgia del Sud e Isole Sandwich Meridionali":"+500","South Sudan":"+211","Südsudan":"+211","Sudán del Sur":"+211","Soudan du Sud":"+211","南スーダン":"+211","Sudan del sud":"+211","Spain":"+34","España":"+34","Spanien":"+34","Espagne":"+34","スペイン":"+34","Spagna":"+34","Sri Lanka":"+94","śrī laṃkāva":"+94","スリランカ":"+94","Sudan":"+249","السودان":"+249","Sudán":"+249","Soudan":"+249","スーダン":"+249","Suriname":"+597","Surinam":"+597","スリナム":"+597","Svalbard and Jan Mayen":"+4779","Svalbard og Jan Mayen":"+4779","Svalbard und Jan Mayen":"+4779","Islas Svalbard y Jan Mayen":"+4779","Svalbard et Jan Mayen":"+4779","スヴァールバル諸島およびヤンマイエン島":"+4779","Svalbard e Jan Mayen":"+4779","Swaziland":"+268","Swasiland":"+268","Suazilandia":"+268","スワジランド":"+268","Sweden":"+46","Sverige":"+46","Schweden":"+46","Suecia":"+46","Suède":"+46","スウェーデン":"+46","Svezia":"+46","Switzerland":"+41","Schweiz":"+41","Suiza":"+41","Suisse":"+41","スイス":"+41","Svizzera":"+41","Syria":"+963","سوريا":"+963","Syrien":"+963","Siria":"+963","Syrie":"+963","シリア・アラブ共和国":"+963","Taiwan":"+886","Taiwán":"+886","Taïwan":"+886","台湾（台湾省/中華民国）":"+886","Tajikistan":"+992","Тоҷикистон":"+992","Tadschikistan":"+992","Tayikistán":"+992","Tadjikistan":"+992","タジキスタン":"+992","Tagikistan":"+992","Tanzania":"+255","Tansania":"+255","Tanzanie":"+255","タンザニア":"+255","Thailand":"+66","ประเทศไทย":"+66","Tailandia":"+66","Thaïlande":"+66","East Timor":"+670","Timor-Leste":"+670","Timor Oriental":"+670","Timor oriental":"+670","東ティモール":"+670","Timor Est":"+670","Togo":"+228","トーゴ":"+228","Tokelau":"+690","Islas Tokelau":"+690","トケラウ":"+690","Isole Tokelau":"+690","Tonga":"+676","トンガ":"+676","Trinidad and Tobago":"+1868","Trinidad und Tobago":"+1868","Trinidad y Tobago":"+1868","Trinité et Tobago":"+1868","トリニダード・トバゴ":"+1868","Trinidad e Tobago":"+1868","Tunisia":"+216","تونس":"+216","Tunesien":"+216","Túnez":"+216","Tunisie":"+216","チュニジア":"+216","Turkey":"+90","Türkiye":"+90","Türkei":"+90","Turquía":"+90","Turquie":"+90","トルコ":"+90","Turchia":"+90","Turkmenistan":"+993","Türkmenistan":"+993","Turkmenistán":"+993","Turkménistan":"+993","トルクメニスタン":"+993","Tuvalu":"+688","ツバル":"+688","Uganda":"+256","ウガンダ":"+256","Ukraine":"+380","Україна":"+380","Ucrania":"+380","ウクライナ":"+380","Ucraina":"+380","United Arab Emirates":"+971","دولة الإمارات العربية المتحدة":"+971","Vereinigte Arabische Emirate":"+971","Emiratos Árabes Unidos":"+971","Émirats arabes unis":"+971","アラブ首長国連邦":"+971","Emirati Arabi Uniti":"+971","United Kingdom":"+44","Vereinigtes Königreich":"+44","Reino Unido":"+44","Royaume-Uni":"+44","イギリス":"+44","Regno Unito":"+44","United States":"+1","Vereinigte Staaten von Amerika":"+1","Estados Unidos":"+1","États-Unis":"+1","アメリカ合衆国":"+1","Stati Uniti D'America":"+1","Uruguay":"+598","ウルグアイ":"+598","Uzbekistan":"+998","O‘zbekiston":"+998","Usbekistan":"+998","Uzbekistán":"+998","Ouzbékistan":"+998","ウズベキスタン":"+998","Vanuatu":"+678","バヌアツ":"+678","Venezuela":"+58","ベネズエラ・ボリバル共和国":"+58","Vietnam":"+84","Việt Nam":"+84","Viêt Nam":"+84","ベトナム":"+84","Wallis and Futuna":"+681","Wallis et Futuna":"+681","Wallis und Futuna":"+681","Wallis y Futuna":"+681","Wallis-et-Futuna":"+681","ウォリス・フツナ":"+681","Wallis e Futuna":"+681","Western Sahara":"+212","الصحراء الغربية":"+212","Westsahara":"+212","Sahara Occidental":"+212","西サハラ":"+212","Sahara Occidentale":"+212","Yemen":"+967","اليَمَن":"+967","Jemen":"+967","Yémen":"+967","イエメン":"+967","Zambia":"+260","Sambia":"+260","Zambie":"+260","ザンビア":"+260","Zimbabwe":"+263","Simbabwe":"+263","Zimbabue":"+263","ジンバブエ":"+263","USA":"+1","US":"+1","UK":"+44","Great Britain":"+44","Reunion":"+262","Côte d’Ivoire":"+225","Cote d'Ivoire":"+225","DR Congo":"+243","RDC":"+243","Congo Brazzaville":"+242","UAE":"+971"};
+  function norm(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g,"").replace(/[^a-zA-Z0-9]+/g," ").trim().toLowerCase();}
+  var lookup={};Object.keys(map).forEach(function(name){lookup[norm(name)]=map[name];});
+  function pair(country){
+    if(country.id==="regCountry")return document.getElementById("regCountryCode");
+    if(country.id==="g30Country")return document.getElementById("g30CountryCode");
+    if(country.dataset&&country.dataset.regField==="country"){
+      var dlg=country.closest("#geti-edit-reg-dialog");
+      return dlg&&dlg.querySelector('input[data-reg-field="countryCode"]');
+    }
+    return null;
+  }
+  function isCountry(el){return !!(el&&(el.id==="regCountry"||el.id==="g30Country"||(el.dataset&&el.dataset.regField==="country")));}
+  function update(country){
+    var codeField=pair(country);if(!codeField)return;
+    var code=lookup[norm(country.value)];
+    if(code){codeField.value=code;codeField.dispatchEvent(new Event("input",{bubbles:true}));}
+  }
+  document.addEventListener("input",function(e){if(isCountry(e.target))update(e.target);},true);
+  document.addEventListener("change",function(e){if(isCountry(e.target))update(e.target);},true);
+  var listId="geti-country-name-suggestions";
+  function installList(country){
+    if(!country||country.getAttribute("list")===listId)return;
+    var list=document.getElementById(listId);
+    if(!list){list=document.createElement("datalist");list.id=listId;
+      Object.keys(map).filter(function(n){return n.length>=4&&/^[A-Za-zÀ-ÿ]/.test(n);}).sort().forEach(function(name){var option=document.createElement("option");option.value=name;list.appendChild(option);});
+      document.body.appendChild(list);}
+    country.setAttribute("list",listId);
+  }
+  document.addEventListener("focusin",function(e){if(isCountry(e.target))installList(e.target);},true);
+  window.getiUpdateCountryCallingCode=update;
+})();
+</script>
+<script id="geti-professional-lessons-direct-link">
+/* Professional Lessons now lives at getienglish.com/prolesson.
+   All legacy lesson portal actions are intercepted after the original scripts load.
+   Examinations, login, registration and certificate verification remain unchanged. */
+(function(){
+  "use strict";
+  const destination="https://getienglish.com/prolesson";
+  const previous=window.enterGetiPortal;
+  if(typeof previous==="function"){
+    window.enterGetiPortal=function(mode){
+      if(String(mode).toLowerCase()==="lesson"){
+        window.location.assign(destination);
+        return;
+      }
+      return previous.apply(this,arguments);
+    };
+  }
   // Keep old lesson lists out of the student area: the public lesson site replaces them.
   const style=document.createElement("style");
   style.id="geti-professional-lessons-internal-disabled";
