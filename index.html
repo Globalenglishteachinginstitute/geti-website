@@ -10447,9 +10447,8 @@ win.onload=function(){setTimeout(function(){win.print();},400);};
     message('<span class="ok">Updating your password securely...</span>');
     try{var result=await GETI_SB.auth.updateUser({password:pw.value});if(result&&result.error)throw result.error;
       try{sessionStorage.removeItem('GETI_RECOVERY_EMAIL');}catch(e){}
-      await GETI_SB.auth.signOut();
-      message('<span class="ok">Password updated. You can now sign in with your new password.</span>');
-      if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('signin');
+      message('<span class="ok">Password updated. Checking your current session...</span>');
+      if(typeof window.getiOpenSecondArea==='function')await window.getiOpenSecondArea();
     }catch(err){message('<span class="bad">'+safe(err&&err.message||'Unable to update password.')+'</span>');}
   };
 })();
@@ -10644,9 +10643,8 @@ window.printVerifiedCertificate=function(){return false;};
     status.innerHTML='<span class="ok">Updating your password...</span>';
     var r=await GETI_SB.auth.updateUser({password:pw.value});
     if(r.error){status.innerHTML='<span class="bad">'+escapeHTML(r.error.message)+'</span>';return;}
-    await GETI_SB.auth.signOut();
-    if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('signin');
-    var loginStatus=el('getiFirstLoginStatus');if(loginStatus)loginStatus.innerHTML='<span class="ok">Password updated securely. Sign in with your new password.</span>';
+    status.innerHTML='<span class="ok">Password updated securely. Checking your current session...</span>';
+    if(typeof window.getiOpenSecondArea==='function')await window.getiOpenSecondArea();
   };
 
   function showRecoveryForm(){
@@ -16645,6 +16643,7 @@ async function loadMyResults(session){
         });
         renderMyResults(data.results||[],session.user);
     }catch(error){
+        if(/jwt.*future|future.*jwt|clock skew|rate.limit|timeout|network|fetch|temporar/i.test(String(error.message||error))){body.innerHTML='<div class="myresult-empty">Connection temporarily unavailable. Your account has not been logged out.<button class="myresult-refresh" onclick="openMyResult()">TRY AGAIN</button></div>';return;}
         if(/auth|session|jwt|unauthorized/i.test(String(error.message||error))){showMyResultLogin("Please sign in again to view your results.");return;}
         body.innerHTML='<div class="myresult-empty">Unable to load your results. Please check your internet connection and try again.<button class="myresult-refresh" onclick="openMyResult()">TRY AGAIN</button></div>';
     }
@@ -16836,7 +16835,8 @@ async function logoutGetCertAccount(){
         getiStudentChannel=null;
     }
 
-    await GETI_SB.auth.signOut();
+    const logoutResult=await GETI_SB.auth.signOut({scope:'local'});
+    if(logoutResult.error){alert('Unable to complete secure logout. Please reconnect and try again.');return;}
     getCertCurrentUser=null;
     getCertSelectedFile=null;
     showGetCertLogin();
@@ -19954,7 +19954,10 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
         if(response.error){
           var status=Number(response.error.status||0);
           var code=String(response.error.code||'');
-          sessionCheckTemporary=!(status===401 || status===403 || /refresh_token_not_found|refresh_token_already_used|session_not_found/i.test(code));
+          var detail=code+' '+String(response.error.message||'');
+          var transient=/issued at future|issued in the future|jwt.*future|clock skew|rate.limit|timeout|network|fetch|temporar/i.test(detail) || status===429 || status>=500 || status===0;
+          var revoked=/refresh_token_not_found|refresh_token_already_used|session_not_found|user_banned|user_not_found/i.test(detail);
+          sessionCheckTemporary=transient || (!revoked && status!==401 && status!==403);
           return null;
         }
         var session=response.data&&response.data.session;
@@ -20204,7 +20207,19 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
     }
   }
 
-  window.addEventListener('online',function(){if(sessionCheckTemporary&&!document.body.classList.contains('geti-second-area-open'))boot();});
+  /* Recover the existing session after transient failures, without signing out or resetting an open exam. */
+  var restorePending=false;
+  async function retrySessionRestore(){
+    if(!sessionCheckTemporary||restorePending||!navigator.onLine)return;
+    restorePending=true;
+    try{
+      if(document.body.classList.contains('geti-second-area-open')){await getVerifiedSession();}
+      else{await boot();}
+    }finally{restorePending=false;}
+  }
+  window.addEventListener('online',retrySessionRestore);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)retrySessionRestore();});
+  window.setInterval(retrySessionRestore,15000);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
@@ -26048,12 +26063,9 @@ body.geti-inside-portal-open #geti30ExamPanel .registration-form{max-width:100%!
     try{
       var result=await GETI_SB.auth.updateUser({password:pw.value});
       if(result&&result.error)throw result.error;
-      await GETI_SB.auth.signOut();
       try{sessionStorage.removeItem('GETI_RECOVERY_EMAIL');}catch(e){}
-      statusMessage(status,'<span class="ok">Password updated successfully. You can now sign in with your new password.</span>');
-      var loginStatus=byId('getiFirstLoginStatus');
-      if(loginStatus)loginStatus.innerHTML='<span class="ok">Password updated securely. Sign in with your new password.</span>';
-      if(typeof window.getiSwitchFirstAccount==='function')window.getiSwitchFirstAccount('signin');
+      statusMessage(status,'<span class="ok">Password updated successfully. Checking your current session...</span>');
+      if(typeof window.getiOpenSecondArea==='function')await window.getiOpenSecondArea();
     }catch(err){statusMessage(status,'<span class="bad">'+safeText(err&&err.message||'Unable to update the password.')+'</span>');}
   };
 })();
@@ -26370,9 +26382,8 @@ body.geti-pub-body-open{overflow:hidden!important}
             if(typeof window.getiLeaveSecondArea==='function'){window.getiLeaveSecondArea();return;}
             if(typeof window.getiBackToFirstArea==='function'){window.getiBackToFirstArea();return;}
           }catch(e){console.warn('GETI return',e);}
-          document.body.classList.remove('geti-second-area-open');
-          area.setAttribute('aria-hidden','true');
-          window.scrollTo({top:0,behavior:'smooth'});
+          // BACK is navigation only; leaving the Student Area requires explicit LOG OUT.
+          if(typeof window.getiSmartBack==='function')window.getiSmartBack();
         },'BACK',false),bar.firstChild);
       }
     }
@@ -27594,11 +27605,13 @@ window.getiShortWriting=function(panel,record){
 <script id="geti-lor-verification">(function(){async function run(){const id=new URLSearchParams(location.search).get('recommendation');if(!id)return;const box=document.createElement('section');box.style.cssText='position:fixed;inset:10% 5% auto;z-index:2147483647;background:white;color:#17355e;border:2px solid #17355e;padding:24px;box-shadow:0 0 0 100vmax #0007;max-width:650px;margin:auto';const h=document.createElement('h2');h.textContent='GETI Recommendation Verification';box.append(h);const input=document.createElement('input');input.placeholder='Candidate full name (optional)';box.append(input);const result=document.createElement('p');result.textContent='Checking record…';const check=document.createElement('button');check.textContent='Verify';const close=document.createElement('button');close.textContent='Close';close.onclick=()=>box.remove();box.append(check,close,result);document.body.append(box);check.onclick=async()=>{try{const {data,error}=await window.GETI_SB.rpc('geti_lor_verify',{p_reference:id,p_full_name:input.value.trim()||null});if(error)throw error;result.textContent=data?.status==='ISSUED'?'VERIFIED — OFFICIALLY ISSUED | '+data.reference+' | '+data.program:data?.status==='REVOKED'?'REVOKED':'RECORD NOT FOUND';}catch(e){result.textContent='Verification service unavailable.';}};check.click();}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();})();</script>
 <script id="geti-lor-admin-interface-v1">
 (function(){'use strict';
-let mounted=false;
+let mounted=false,checking=false,checkedToken=null;
 async function start(){
- if(mounted||!window.GETI_SB)return;
+ if(mounted||checking||!window.GETI_SB)return;
  const client=window.GETI_SB;
- let user;try{const r=await client.auth.getUser();user=r.data?.user;}catch{return;}
+ checking=true;
+ let user;
+ try{const sessionResult=await client.auth.getSession();if(sessionResult.error)return;const token=sessionResult.data?.session?.access_token;if(!token||token===checkedToken)return;const r=await client.auth.getUser(token);if(r.error)return;user=r.data?.user;checkedToken=token;}catch{return;}finally{checking=false;}
  if(user?.app_metadata?.role!=='admin')return;
  mounted=true;
  const launch=document.createElement('button');launch.type='button';launch.textContent='RECOMMENDATION ADMIN';launch.style.cssText='position:fixed;bottom:80px;right:16px;z-index:9999;background:#17355e;color:white;padding:12px;border:0;border-radius:6px;cursor:pointer';document.body.append(launch);
@@ -27613,7 +27626,14 @@ async function start(){
  const label=element('label','Verified academic achievements (10–500 characters)',section);const input=element('textarea','',label);input.maxLength=500;input.minLength=10;input.rows=3;input.style.cssText='display:block;width:100%;box-sizing:border-box;margin:5px 0';const att=element('label','',section);const title=element('input','',att);title.type='checkbox';att.append(' Approve Authorized Signatory title');const evidence=element('label','',section);evidence.style.display='block';const checked=element('input','',evidence);checked.type='checkbox';evidence.append(' I independently verified the examination record and supporting evidence.');button('APPROVE & ISSUE',section,async()=>{if(!checked.checked||input.value.trim().length<10){status.textContent='Independent verification and achievement text required.';return;}if(!confirm('Issue an official immutable recommendation for this candidate?'))return;try{const ref=await rpc('geti_lor_issue',{p_exam_result_id:r.id,p_verified_achievement:input.value.trim(),p_title_approved:title.checked});await refresh();status.textContent='Issued '+ref;}catch(e){status.textContent=e.message;}});}}catch(e){status.textContent='Unable to load: '+e.message;}}
  button('REFRESH',dialog,refresh);button('CLOSE',dialog,()=>dialog.close());launch.onclick=()=>{dialog.showModal();refresh();};client.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){dialog.remove();launch.remove();mounted=false;}});
 }
-window.addEventListener('load',start);setInterval(start,4000);
+window.addEventListener('load',function(){
+  start();
+  if(window.GETI_SB?.auth)window.GETI_SB.auth.onAuthStateChange(function(event){
+    if(event==='SIGNED_OUT'){checkedToken=null;return;}
+    if(['SIGNED_IN','TOKEN_REFRESHED','USER_UPDATED','INITIAL_SESSION'].includes(event))setTimeout(start,0);
+  });
+});
+window.addEventListener('online',start);
 })();
 </script>
 </body>
