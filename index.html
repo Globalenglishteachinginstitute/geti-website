@@ -13165,9 +13165,7 @@ function getiPassedRecordMatches(r,exam,title,hours){
  return !!primary&&getiPassedExamKey(primary,h)===selected;
 }
 async function getiGetPassedHistory(exam,title,hours,email){
- const {data,error}=await GETI_SB.auth.getSession();
- const session=data&&data.session;
- if(error||!session||!session.user||!session.access_token)throw new Error('Please sign in to your GETI account before selecting this examination.');
+ const session=await getiRegistrationSession(email);
  const account=String(session.user.email||'').trim().toLowerCase();
  if(email&&String(email).trim().toLowerCase()!==account)throw new Error('Use the email address of your signed-in GETI account.');
  const dataResult=await getiFetchJson(GETI_EXAM_FUNCTION,{method:'POST',headers:{'Content-Type':'application/json','apikey':GETI_SUPABASE_KEY,'Authorization':'Bearer '+session.access_token},body:JSON.stringify({action:'get_my_results'})});
@@ -13209,10 +13207,12 @@ async function openGeti30Registration(examName,course){
     historyPanel.classList.add('active');
     const selectedPolicy=getGetiExamPolicy(course ? course.hours : 0);
     const selectedTitle=course ? course.title : examName;
+    let current;
+    try{current=await getiRegistrationSession();}catch(e){alert(e.message||e);return;}
+    if(sequence!==getiPassedSelectionSequence)return;
     const savedSession=loadGeti30Session(examName,selectedTitle);
     if(savedSession){
-        const current=await GETI_SB.auth.getSession();
-        if(String(savedSession.student.email||'').toLowerCase()!==String(current.data?.session?.user?.email||'').toLowerCase()){
+        if(String(savedSession.student.email||'').toLowerCase()!==String(current.user.email||'').toLowerCase()){
             clearGeti30Session(examName,selectedTitle);
         }else{
         // Resume an unfinished exam only. A PASSED exam is redirected to
@@ -13303,6 +13303,8 @@ async function openGeti30Registration(examName,course){
         '<label class="geti-reg-consent"><input id="g30Consent" type="checkbox"> <span>I confirm that the information provided is accurate and belongs to me. *</span></label>'+
         '<button class="btn btn-gold" type="button" onclick="submitGeti30Registration()">REGISTER & START EXAM</button>'+
         '</div>';
+    const accountEmail=document.getElementById('g30Email');
+    if(accountEmail)accountEmail.value=current.user.email;
 
     panel.scrollIntoView({behavior:"smooth",block:"start"});
 }
@@ -16496,24 +16498,35 @@ async function getiFetchJson(url, options){
     return data;
 }
 
-// Resolve the actual SDK session once per registration. Never substitute a UI flag for authentication.
+// Share in-flight SDK session checks. Never substitute a UI flag for authentication.
+let getiSessionReadPending=null;
+function getiReadSession(){
+    if(!getiSessionReadPending){
+        getiSessionReadPending=Promise.resolve().then(()=>GETI_SB.auth.getSession()).finally(()=>{getiSessionReadPending=null;});
+    }
+    return getiSessionReadPending;
+}
 async function getiRegistrationSession(email){
     const expected=String(email||'').trim().toLowerCase();
     let lastError=null;
-    for(const delay of [0,1500,3000]){
+    for(const delay of [0,500,1500]){
         if(delay)await new Promise(resolve=>setTimeout(resolve,delay));
         let result;
-        try{result=await GETI_SB.auth.getSession();}catch(e){result={error:e};}
+        try{result=await getiReadSession();}catch(e){result={error:e};}
         const session=result?.data?.session;
         if(!result?.error && session?.access_token && session?.user?.email){
             if(!session.user.email_confirmed_at)throw new Error('Please verify your GETI account email before registering.');
-            if(expected!==String(session.user.email).trim().toLowerCase())throw new Error('Use the email address of your signed-in GETI account.');
+            if(expected && expected!==String(session.user.email).trim().toLowerCase())throw new Error('Use the email address of your signed-in GETI account.');
             return session;
         }
         lastError=result?.error;
         const detail=String(lastError?.code||'')+' '+String(lastError?.message||'');
         if(/refresh_token_not_found|refresh_token_already_used|session_not_found|user_banned|user_not_found/i.test(detail))throw new Error('Your secure session is no longer valid. Please sign in again.');
-        if(lastError && !(/jwt.*future|issued.*future|rate.limit|temporar|timeout|network|fetch/i.test(detail)||Number(lastError.status)===429||Number(lastError.status)>=500||!lastError.status))throw lastError;
+        if(Date.now()<getiRefreshCooldownUntil || Number(lastError?.status)===429 || /rate.limit/i.test(detail)){
+            const seconds=Math.max(1,Math.ceil((getiRefreshCooldownUntil-Date.now())/1000));
+            throw new Error('GETI session refresh is temporarily rate limited. Please retry'+(getiRefreshCooldownUntil>Date.now()?' in '+seconds+' seconds':' shortly')+'. Your registration details are unchanged.');
+        }
+        if(lastError && !(/jwt.*future|issued.*future|temporar|timeout|network|fetch/i.test(detail)||Number(lastError.status)>=500||!lastError.status))throw lastError;
     }
     if(lastError)throw new Error('Unable to restore your secure session: '+String(lastError.message||'Temporary connection error')+'. Your registration details are unchanged. Please retry.');
     throw new Error('No active secure GETI session was returned. Please sign in again. Your registration details are unchanged.');
@@ -20003,7 +20016,7 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
       sessionCheckTemporary=false;
       try{
         if(!window.GETI_SB || !window.GETI_SB.auth){sessionCheckTemporary=true;return null;}
-        var response=await window.GETI_SB.auth.getSession();
+        var response=await getiReadSession();
         if(response.error){
           var status=Number(response.error.status||0);
           var code=String(response.error.code||'');
