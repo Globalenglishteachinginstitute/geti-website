@@ -16496,14 +16496,31 @@ async function getiFetchJson(url, options){
     return data;
 }
 
-async function getiRegisterExam(registration){
-    // Use the signed-in student's JWT, not the public API key as a bearer token.
-    const auth=GETI_SB.auth;
-    const current=await auth.getSession();
-    if(current.error || !current.data?.session?.access_token){
-        throw new Error("Please sign in again before registering for an exam.");
+// Resolve the actual SDK session once per registration. Never substitute a UI flag for authentication.
+async function getiRegistrationSession(email){
+    const expected=String(email||'').trim().toLowerCase();
+    let lastError=null;
+    for(const delay of [0,1500,3000]){
+        if(delay)await new Promise(resolve=>setTimeout(resolve,delay));
+        let result;
+        try{result=await GETI_SB.auth.getSession();}catch(e){result={error:e};}
+        const session=result?.data?.session;
+        if(!result?.error && session?.access_token && session?.user?.email){
+            if(!session.user.email_confirmed_at)throw new Error('Please verify your GETI account email before registering.');
+            if(expected!==String(session.user.email).trim().toLowerCase())throw new Error('Use the email address of your signed-in GETI account.');
+            return session;
+        }
+        lastError=result?.error;
+        const detail=String(lastError?.code||'')+' '+String(lastError?.message||'');
+        if(/refresh_token_not_found|refresh_token_already_used|session_not_found|user_banned|user_not_found/i.test(detail))throw new Error('Your secure session is no longer valid. Please sign in again.');
+        if(lastError && !(/jwt.*future|issued.*future|rate.limit|temporar|timeout|network|fetch/i.test(detail)||Number(lastError.status)===429||Number(lastError.status)>=500||!lastError.status))throw lastError;
     }
-    let session=current.data.session;
+    if(lastError)throw new Error('Unable to restore your secure session: '+String(lastError.message||'Temporary connection error')+'. Your registration details are unchanged. Please retry.');
+    throw new Error('No active secure GETI session was returned. Please sign in again. Your registration details are unchanged.');
+}
+async function getiRegisterExam(registration){
+    const auth=GETI_SB.auth;
+    let session=await getiRegistrationSession(registration.email);
     const send=async function(token){
         const response=await fetch(GETI_EXAM_FUNCTION,{
             method:"POST",
@@ -17734,10 +17751,7 @@ async function submitGeti30Registration(){
     }
 
     try{
-        const current=await GETI_SB.auth.getSession();
-        const account=String(current.data?.session?.user?.email||'').trim().toLowerCase();
-        if(current.error||!account||!current.data?.session?.access_token)throw new Error('Please sign in to your GETI account before registering.');
-        if(account!==email)throw new Error('Use the email address of your signed-in GETI account.');
+        // The shared registration function validates the real session and account email before submitting.
         // Registration endpoint enforces the passed-exam and blocked-email checks.
         const check=await getiCheckExamEmail(email,geti30State.examTitle);
 
