@@ -16485,6 +16485,11 @@ const GETI_PUBLISH_FUNCTION = GETI_SUPABASE_URL + "/functions/v1/geti-publish";
 
 // GETI Auth transport: preserve sessions during temporary refresh throttling.
 let getiRefreshCooldownUntil = 0;
+let getiLastRefreshSuccess = 0;
+function getiRefreshPauseUntil(){
+    let shared=0;try{shared=Number(localStorage.getItem('GETI_AUTH_REFRESH_PAUSE_UNTIL')||0);}catch(e){}
+    return Math.max(getiRefreshCooldownUntil,Math.min(shared||0,Date.now()+300000));
+}
 async function getiAuthTransport(input, init){
     const url = new URL(typeof input === 'string' ? input : input.url || String(input), location.href);
     const refresh = url.origin === new URL(GETI_SUPABASE_URL).origin &&
@@ -16493,16 +16498,19 @@ async function getiAuthTransport(input, init){
     const temporary = () => new Response(JSON.stringify({message:'Session refresh temporarily rate limited; please retry later.'}), {
         status:503, headers:{'Content-Type':'application/json','Retry-After':String(Math.max(1,Math.ceil((getiRefreshCooldownUntil-Date.now())/1000)))}
     });
-    if (Date.now() < getiRefreshCooldownUntil) return temporary();
+    if (Date.now() < getiRefreshPauseUntil()) return temporary();
+    if (getiLastRefreshSuccess && Date.now()-getiLastRefreshSuccess<10000) return temporary();
     const response = await fetch(input, init);
     if (response.status === 429){
         const retry = response.headers.get('Retry-After');
         const seconds = retry && /^\d+$/.test(retry) ? Number(retry) : 60;
         const dateDelay = retry && !/^\d+$/.test(retry) ? Date.parse(retry)-Date.now() : 0;
         getiRefreshCooldownUntil = Date.now()+Math.max(60000,seconds*1000,Number.isFinite(dateDelay)?dateDelay:0);
+        try{localStorage.setItem('GETI_AUTH_REFRESH_PAUSE_UNTIL',String(getiRefreshCooldownUntil));}catch(e){}
         // A temporary refresh failure is not evidence of a revoked session.
         return temporary();
     }
+    if(response.ok)getiLastRefreshSuccess=Date.now();
     return response;
 }
 const GETI_SB = window.supabase.createClient(
@@ -16511,7 +16519,7 @@ const GETI_SB = window.supabase.createClient(
     {
         auth:{
             persistSession:true,
-            autoRefreshToken:true,
+            autoRefreshToken:false,
             detectSessionInUrl:true
         },
         global:{fetch:getiAuthTransport}
@@ -16534,7 +16542,7 @@ async function getiFetchJson(url, options){
     let data={};
     try{data=await response.json();}catch(e){}
     if(!response.ok){
-        throw new Error(data.error || data.message || "Request failed");
+        throw Object.assign(new Error(data.error || data.message || "Request failed"),{status:response.status,code:data.code||""});
     }
     return data;
 }
@@ -16550,6 +16558,7 @@ function getiUsableSession(){
 function getiReadSession(){
     const current=getiUsableSession();
     if(current)return Promise.resolve({data:{session:current},error:null});
+    if(Date.now()<getiRefreshPauseUntil())return Promise.resolve({data:{session:null},error:Object.assign(new Error('Session refresh rate limited. Retry after the cooldown.'),{status:429})});
     if(!getiSessionReadPending){
         getiSessionReadPending=Promise.resolve().then(()=>GETI_SB.auth.getSession()).then(r=>{if(!r.error)getiRecentSession=r.data?.session||null;return r;}).finally(()=>{getiSessionReadPending=null;});
     }
@@ -16602,7 +16611,7 @@ async function getiRegisterExam(registration){
         result=await send(session.access_token);
     }
     if([400,401,403].includes(result.response.status)&&/jwt.*expired|expired.*jwt|token.*expired/i.test(message())){
-        const refreshed=await auth.getSession();
+        const refreshed=await getiReadSession();
         if(!refreshed.error&&refreshed.data?.session?.access_token&&refreshed.data.session.access_token!==session.access_token){
             result=await send(refreshed.data.session.access_token);
         }
@@ -16661,7 +16670,7 @@ function getiInitAnalytics(){
 document.addEventListener("DOMContentLoaded",getiInitAnalytics);
 
 async function getiGetCurrentStudent(){
-    const {data:{session}}=await GETI_SB.auth.getSession();
+    const {data:{session}}=await getiReadSession();
     if(!session || !session.user)return null;
 
     const {data:profile}=await GETI_SB
@@ -16745,7 +16754,8 @@ async function loadMyResults(session){
         });
         renderMyResults(data.results||[],session.user);
     }catch(error){
-        if(/jwt.*future|future.*jwt|clock skew|rate.limit|timeout|network|fetch|temporar/i.test(String(error.message||error))){body.innerHTML='<div class="myresult-empty">Connection temporarily unavailable. Your account has not been logged out.<button class="myresult-refresh" onclick="openMyResult()">TRY AGAIN</button></div>';return;}
+        if(error.status===429 || /rate.limit/i.test(String(error.message||error))){body.innerHTML='<div class="myresult-empty">Session requests are temporarily rate limited. Please retry after the cooldown. Your account has not been logged out.<button class="myresult-refresh" onclick="openMyResult()">TRY AGAIN</button></div>';return;}
+        if(error.status>=500 || /jwt.*future|future.*jwt|clock skew|timeout|network|fetch|temporar/i.test(String(error.message||error))){body.innerHTML='<div class="myresult-empty">Unable to retrieve results. '+escapeHTML(String(error.status?'HTTP '+error.status+' — ':'')+String(error.message||error))+'<br>Your account has not been logged out.<button class="myresult-refresh" onclick="openMyResult()">TRY AGAIN</button></div>';return;}
         if(/auth|session|jwt|unauthorized/i.test(String(error.message||error))){showMyResultLogin("Please sign in again to view your results.");return;}
         body.innerHTML='<div class="myresult-empty">Unable to load your results. Please check your internet connection and try again.<button class="myresult-refresh" onclick="openMyResult()">TRY AGAIN</button></div>';
     }
@@ -16820,7 +16830,7 @@ async function getiRetryPassedEmail(button){
     button.disabled=true;button.textContent='SENDING...';
     if(note)note.textContent='Checking your GETI account and email delivery...';
     try{
-        const auth=await GETI_SB.auth.getSession();
+        const auth=await getiReadSession();
         const session=auth&&auth.data&&auth.data.session;
         if(!session||!session.access_token)throw new Error('Please sign in to your GETI account first.');
         const data=await getiFetchJson(GETI_EXAM_FUNCTION,{
@@ -20678,7 +20688,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
   const cfg=configurations[exam];if(!cfg)return {passed:false,paid:false};
   const auth=window.GETI_SB?.auth;
   if(!auth)return {passed:false,paid:false,unavailable:true};
-  let session;try{session=(await auth.getSession()).data?.session;}catch{}
+  let session;try{session=(await getiReadSession()).data?.session;}catch{}
   if(!session?.access_token)return {passed:false,paid:false,unavailable:true};
   const response=await fetch(API,{method:'POST',headers:{'Authorization':'Bearer '+session.access_token,'Content-Type':'application/json'},body:JSON.stringify({exam,hours:cfg.hours}),cache:'no-store'});
   const payload=await response.json().catch(()=>({}));
@@ -22278,7 +22288,7 @@ body.geti-second-area-open:not(.geti-inside-portal-open) #getiSecondArea #geti-l
     forgotSaveBusy=true;if(btn){btn.disabled=true;btn.textContent='SAVING...'}
     if(status)status.innerHTML='<span class="ok">Saving your new password...</span>';
     try{
-      var existing=await sb.auth.getSession();
+      var existing=await getiReadSession();
       if(existing.error||!existing.data||!existing.data.session||!existing.data.session.user||String(existing.data.session.user.email||'').toLowerCase()!==recoveryVerifiedEmail)
         throw new Error('Your recovery session has expired. Please request and verify a new code.');
       var result=await sb.auth.updateUser({password:p});
@@ -22590,7 +22600,7 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
     const list=document.getElementById("getiMyCertificatePdfList");
     if(!section||!list||!window.GETI_SB)return;
     try{
-      const res=await window.GETI_SB.auth.getSession();
+      const res=await getiReadSession();
       const session=res?.data?.session;
       if(!session?.access_token){section.style.display="none";list.innerHTML="";return}
 
@@ -22694,7 +22704,7 @@ body:not(.geti-second-area-open) #verify #verifyResult:not(:empty){display:block
   async function currentSession(){
     if(!window.GETI_SB)return null;
     try{
-      const r=await window.GETI_SB.auth.getSession();
+      const r=await getiReadSession();
       return r?.data?.session||null;
     }catch(e){
       return null;
@@ -23569,7 +23579,7 @@ a[href],
         alert('GETI account service is temporarily unavailable. Please try again.');
         return;
       }
-      var response = await GETI_SB.auth.getSession();
+      var response = await getiReadSession();
       var session = response && response.data ? response.data.session : null;
       if(!session || !session.user || !session.access_token){
         alert('Please sign in to your GETI student account first. Passing an examination is not required.');
@@ -23744,7 +23754,7 @@ a[href],
   function pct(r){var n=Number(r&&r.percentage);return Number.isFinite(n)?n:0;}
   async function accountData(){
     if(typeof GETI_SB==='undefined'||!GETI_SB||!GETI_SB.auth)throw new Error('Secure GETI account service is unavailable.');
-    var sr=await GETI_SB.auth.getSession();
+    var sr=await getiReadSession();
     var session=sr&&sr.data?sr.data.session:null;
     if(!session||!session.user||!session.access_token)throw new Error('Please sign in to your GETI student account first.');
     var results=[];
@@ -25129,7 +25139,7 @@ document.addEventListener(&quot;DOMContentLoaded&quot;,()=&gt;{refreshPaymentNot
   let desired = null, busy = false, lastCheck = 0;
   async function session(){
     if (typeof GETI_SB === 'undefined') return null;
-    const result = await GETI_SB.auth.getSession();
+    const result = await getiReadSession();
     return result?.data?.session || null;
   }
   async function access(product){
@@ -27277,7 +27287,7 @@ window.getiShuffleClassicExamAnswers=function(program){
       // After email confirmation and new login, migrate the official candidate record.
       (async function(){
         try{
-          var sessionResult=await GETI_SB.auth.getSession();
+          var sessionResult=await getiReadSession();
           var session=sessionResult&&sessionResult.data&&sessionResult.data.session;
           if(!session||!session.user||!session.user.email)return;
           if(String(st.student.email||'').toLowerCase()===String(session.user.email||'').toLowerCase())return;
@@ -27307,7 +27317,7 @@ window.getiShuffleClassicExamAnswers=function(program){
       var needsConfirmation=false;
       if(mode==='classic'){
         // Persist the real Supabase registration only for its authenticated owner.
-        var sessionResult=await GETI_SB.auth.getSession();
+        var sessionResult=await getiReadSession();
         var token=sessionResult&&sessionResult.data&&sessionResult.data.session&&sessionResult.data.session.access_token;
         if(!token)throw Error('Sign in to your GETI account to save your registration securely.');
         var saved=await getiFetchJson(GETI_EXAM_FUNCTION,{
@@ -29306,7 +29316,7 @@ async function start(){
  const client=window.GETI_SB;
  checking=true;
  let user;
- try{const sessionResult=await client.auth.getSession();if(sessionResult.error)return;const token=sessionResult.data?.session?.access_token;if(!token||token===checkedToken)return;const r=await client.auth.getUser(token);if(r.error)return;user=r.data?.user;checkedToken=token;}catch{return;}finally{checking=false;}
+ try{const sessionResult=await getiReadSession();if(sessionResult.error)return;const token=sessionResult.data?.session?.access_token;if(!token||token===checkedToken)return;const r=await client.auth.getUser(token);if(r.error)return;user=r.data?.user;checkedToken=token;}catch{return;}finally{checking=false;}
  if(user?.app_metadata?.role!=='admin')return;
  mounted=true;
  const launch=document.createElement('button');launch.type='button';launch.textContent='RECOMMENDATION ADMIN';launch.style.cssText='position:fixed;bottom:80px;right:16px;z-index:9999;background:#17355e;color:white;padding:12px;border:0;border-radius:6px;cursor:pointer';document.body.append(launch);
