@@ -7925,6 +7925,14 @@ dialog.geti-collab-centered form{margin:0!important;width:100%!important;box-siz
 dialog.geti-collab-centered input{max-width:100%!important;box-sizing:border-box!important}
 @media(max-width:480px){dialog.geti-collab-centered[open]{padding:18px!important}}
 </style>
+<style id="geti-session-restore-lock-style">
+#geti-session-restore-lock{display:none!important}
+body.geti-session-restore-pending #geti-session-restore-lock{display:flex!important;position:fixed;inset:0;z-index:2147483646;background:#f5f7fb;align-items:center;justify-content:center;padding:20px;text-align:center}
+body.geti-session-restore-pending .geti-first-area,body.geti-session-restore-pending #getiSecondArea{display:none!important}
+#geti-session-restore-lock article{max-width:420px;width:100%;padding:28px;background:#fff;border:1px solid #dce5ef;border-radius:16px;color:#082e5d;box-shadow:0 12px 40px #082e5d18}
+#geti-session-restore-lock button{margin:8px 4px;padding:10px 16px;border-radius:8px;border:1px solid #082e5d;background:#082e5d;color:white;cursor:pointer;font-weight:700}
+#geti-session-restore-lock #geti-session-restore-logout{background:white;color:#082e5d}
+</style>
 </head>
 
 <body translate="no" class="notranslate">
@@ -13199,16 +13207,6 @@ async function openGeti30Registration(examName,course){
     const hours=course?course.hours:0;
     const historyPanel=document.getElementById('geti30ExamPanel');
     historyPanel.classList.add('active');
-    historyPanel.innerHTML='<div class="exam-message" data-geti-history-check>Checking your saved examination results...</div>';
-    try{
-        const history=await getiGetPassedHistory(examName,title,hours);
-        if(sequence!==getiPassedSelectionSequence||!historyPanel.querySelector('[data-geti-history-check]'))return;
-        if(history.record){getiShowPassedHistory(history,examName,title,hours);return;}
-    }catch(e){
-        if(sequence===getiPassedSelectionSequence&&historyPanel.querySelector('[data-geti-history-check]'))historyPanel.innerHTML='<div class="exam-fail-message">'+escapeHTML(String(e.message||e))+'</div><button class="btn btn-gold" type="button" onclick="openMyResult()">VIEW MY RESULTS</button>';
-        return;
-    }
-
     const selectedPolicy=getGetiExamPolicy(course ? course.hours : 0);
     const selectedTitle=course ? course.title : examName;
     const savedSession=loadGeti30Session(examName,selectedTitle);
@@ -17635,6 +17633,7 @@ async function getiCheckExamEmail(email,examTitle){
                 body:JSON.stringify({
                     action:"check_email",
                     email:String(email||"").trim().toLowerCase(),
+                    exam:String(examTitle||""),
                     exam_name:String(examTitle||"")
                 })
             }
@@ -17735,8 +17734,11 @@ async function submitGeti30Registration(){
     }
 
     try{
-        const history=await getiGetPassedHistory(geti30State.exam,geti30State.examTitle,examHours,email);
-        if(history.record){getiShowPassedHistory(history,geti30State.exam,geti30State.examTitle,examHours);return;}
+        const current=await GETI_SB.auth.getSession();
+        const account=String(current.data?.session?.user?.email||'').trim().toLowerCase();
+        if(current.error||!account||!current.data?.session?.access_token)throw new Error('Please sign in to your GETI account before registering.');
+        if(account!==email)throw new Error('Use the email address of your signed-in GETI account.');
+        // Registration endpoint enforces the passed-exam and blocked-email checks.
         const check=await getiCheckExamEmail(email,geti30State.examTitle);
 
         if(check.blocked){
@@ -17773,6 +17775,7 @@ async function submitGeti30Registration(){
             education_level:education,
             preferred_language:language,
             exam_name:geti30State.examTitle,
+            exam_hours:String(examHours),
             exam_category:"GETI Professional Examination",
             programme:geti30State.exam,
             option_track:(isA2Standalone?"A2 Level":examHours+" Hours"),
@@ -19960,6 +19963,19 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
 (function(){
   var allowFirstAreaOnce=false;
   var checkingAccess=false;
+  var areaLockKey='GETI_STUDENT_AREA_ACTIVE';
+  var rememberedArea=false;
+  try{rememberedArea=localStorage.getItem(areaLockKey)==='1';}catch(e){}
+  var logoutInProgress=false;
+  function rememberArea(active){
+    rememberedArea=!!active;
+    try{if(active)localStorage.setItem(areaLockKey,'1');else localStorage.removeItem(areaLockKey);}catch(e){}
+  }
+  function showSessionPending(active){
+    document.body.classList.toggle('geti-session-restore-pending',!!active);
+  }
+  function studentLocked(){return rememberedArea||document.body.classList.contains('geti-second-area-open');}
+  if(rememberedArea)showSessionPending(true);
 
   function byId(id){return document.getElementById(id);}
   function secondArea(){return byId('getiSecondArea');}
@@ -20019,6 +20035,8 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
         }
         showLoginRequired('A GETI account and secure sign-in are required before entering the Student Area.');return false;
       }
+      rememberArea(true);
+      showSessionPending(false);
       if(typeof onAllowed==='function') return await onAllowed(session);
       return true;
     }finally{checkingAccess=false;}
@@ -20094,7 +20112,7 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
 
   /* Once authenticated and inside the Student Area, First Area cannot be restored by Home/Return. */
   window.getiShowFirstArea=function(){
-    if(document.body.classList.contains('geti-second-area-open') && !allowFirstAreaOnce){
+    if(studentLocked() && !allowFirstAreaOnce){
       return false;
     }
     if(typeof rawShowFirst==='function') return rawShowFirst.apply(window,arguments);
@@ -20118,11 +20136,14 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
   }
 
   window.getiLogoutToFirstArea=async function(){
+    if(logoutInProgress)return false;
+    logoutInProgress=true;
     try{
       if(!window.GETI_SB || !GETI_SB.auth)throw new Error('Account service unavailable');
       var signedOut=await GETI_SB.auth.signOut({scope:'local'});
       if(signedOut.error)throw signedOut.error;
-    }catch(e){alert('Unable to complete secure logout. Please reconnect and try again.');return false;}
+    }catch(e){logoutInProgress=false;alert('Unable to complete secure logout. Please reconnect and try again.');return false;}
+    rememberArea(false);showSessionPending(false);
     try{localStorage.removeItem('GETI_CERT_SESSION');}catch(e){}
     try{window.getCertCurrentUser=null;}catch(e){}
     try{if(typeof window.closeMyResult==='function')window.closeMyResult();}catch(e){}
@@ -20138,6 +20159,7 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
     if(status)status.innerHTML='<span class="ok">You have been logged out. Sign in again to enter the Student Area.</span>';
     var panel=byId('getiFirstAccountPanel');
     if(panel)window.setTimeout(function(){try{panel.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}},60);
+    logoutInProgress=false;
     return true;
   };
 
@@ -20208,8 +20230,11 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
   async function boot(){
     /* A verified signed-in student stays inside the Student Area, including after refresh.
        The First Area becomes available again only after the student uses LOG OUT. */
+    if(logoutInProgress)return;
     var session=await getVerifiedSession();
+    if(logoutInProgress)return;
     if(session){
+      rememberArea(true);showSessionPending(false);
       var area=secondArea();
       if(area)area.setAttribute('aria-hidden','false');
       document.body.classList.add('geti-second-area-open');
@@ -20217,8 +20242,10 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
       document.querySelectorAll('.geti-portal-active').forEach(function(node){node.classList.remove('geti-portal-active');});
       try{window.scrollTo({top:0,behavior:'auto'});}catch(e){window.scrollTo(0,0);}
     }else if(!sessionCheckTemporary){
+      rememberArea(false);showSessionPending(false);
       closeStudentUiImmediately();
     }else{
+      if(rememberedArea&&!document.body.classList.contains('geti-second-area-open'))showSessionPending(true);
       var status=loginStatus();
       if(status)status.textContent='Connection temporarily unavailable. Your session will be checked when the connection returns.';
     }
@@ -20233,7 +20260,7 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
   /* Recover the existing session after transient failures, without signing out or resetting an open exam. */
   var restorePending=false;
   async function retrySessionRestore(){
-    if(!sessionCheckTemporary||restorePending||!navigator.onLine||Date.now()<getiRefreshCooldownUntil)return;
+    if(logoutInProgress||!sessionCheckTemporary||restorePending||!navigator.onLine||Date.now()<(typeof getiRefreshCooldownUntil==='number'?getiRefreshCooldownUntil:0))return;
     restorePending=true;
     try{
       if(document.body.classList.contains('geti-second-area-open')){await getVerifiedSession();}
@@ -20241,6 +20268,13 @@ body.geti-inside-portal-open .lesson-subject-btn{min-height:78px!important;borde
     }finally{restorePending=false;}
   }
   window.addEventListener('online',retrySessionRestore);
+  window.addEventListener('pageshow',function(event){if(event.persisted&&!logoutInProgress&&rememberedArea&&!document.body.classList.contains('geti-second-area-open'))boot();});
+  document.addEventListener('click',function(event){
+    var button=event.target&&event.target.closest?event.target.closest('#geti-session-restore-retry'):null;
+    if(button){event.preventDefault();retrySessionRestore();}
+    var logout=event.target&&event.target.closest?event.target.closest('#geti-session-restore-logout'):null;
+    if(logout){event.preventDefault();window.getiLogoutToFirstArea();}
+  });
   document.addEventListener('visibilitychange',function(){if(!document.hidden)retrySessionRestore();});
   window.setInterval(retrySessionRestore,15000);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
@@ -27659,5 +27693,6 @@ window.addEventListener('load',function(){
 window.addEventListener('online',start);
 })();
 </script>
+<section id="geti-session-restore-lock" role="status" aria-live="polite"><article><h2>GETI STUDENT AREA</h2><p>Restoring your secure session. If the connection is unavailable, reconnect and try again. Your account has not been logged out automatically.</p><button type="button" id="geti-session-restore-retry">RETRY CONNECTION</button><button type="button" id="geti-session-restore-logout">LOG OUT</button></article></section>
 </body>
 </html>
